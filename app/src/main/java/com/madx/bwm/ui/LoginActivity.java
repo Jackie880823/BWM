@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,9 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,11 +27,10 @@ import com.madx.bwm.R;
 import com.madx.bwm.entity.AppTokenEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.PreferencesUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
@@ -80,7 +77,6 @@ public class LoginActivity extends Activity {
         UserEntity userEntity = App.getLoginedUser();
         if (userEntity != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                intent.putExtra("user", userEntity);
             startActivity(intent);
 
             String tokenString = PreferencesUtil.getValue(this, "token", null);
@@ -104,11 +100,8 @@ public class LoginActivity extends Activity {
 
         ivRemove = (LinearLayout)findViewById(R.id.iv_move);
 
-        //begin 初始化
         do_faile_login_tv = (TextView) findViewById(R.id.do_faile_login_tv);
         do_faile_login_linear = (LinearLayout) findViewById(R.id.do_faile_login_linear);
-        //end
-        //login
 
         ivRemove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,20 +115,11 @@ public class LoginActivity extends Activity {
             public void onClick(View v) {
 
                 if (!NetworkUtil.isNetworkConnected(LoginActivity.this)) {
-                    /**
-                     * begin QK
-                     */
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
-                    /**
-                     * end
-                     */
                     return;
                 }
 
-
-
                 if ((etAccount.getText().toString().length() != 0) && (etPassword.getText().toString().length() != 0)) {
-
                     progressDialog.show();
                     btnLogin.setClickable(false);
 
@@ -164,14 +148,22 @@ public class LoginActivity extends Activity {
                     params.put("condition", jsonParamsString);
                     String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
 
-                    StringRequest stringRequestLogin = new StringRequest(url, new Response.Listener<String>() {
+                    new HttpTools(LoginActivity.this).get(url,null,new HttpCallback() {
+                        @Override
+                        public void onStart() {
 
-                        GsonBuilder gsonb = new GsonBuilder();
-
-                        Gson gson = gsonb.create();
+                        }
 
                         @Override
-                        public void onResponse(String response) {
+                        public void onFinish() {
+
+                        }
+
+                        @Override
+                        public void onResult(String response) {
+                            GsonBuilder gsonb = new GsonBuilder();
+                            Gson gson = gsonb.create();
+
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
 
@@ -195,45 +187,149 @@ public class LoginActivity extends Activity {
                                     btnLogin.setClickable(true);
                                 }
 
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
+                                MessageUtil.showMessage(LoginActivity.this, R.string.msg_action_failed);
                                 progressDialog.dismiss();
                                 btnLogin.setClickable(true);
                                 e.printStackTrace();
-                            }finally {
-                                progressDialog.dismiss();
-                                btnLogin.setClickable(true);
                             }
                         }
-                    }, new Response.ErrorListener() {
+
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.i("", "error=====" + error.getMessage());
+                        public void onError(Exception e) {
+                            MessageUtil.showMessage(LoginActivity.this, R.string.msg_action_failed);
                             progressDialog.dismiss();
                             btnLogin.setClickable(true);
-                            // Toast.makeText(LoginActivity.this, "Login ID/password is incorrect. Please try again.", Toast.LENGTH_SHORT).show();
-                            //begin 初始化
+
                             do_faile_login_linear.setVisibility(View.VISIBLE);
                             String failePrompt = tvCountryCode.getText().toString() + " "
                                     + etAccount.getText().toString();
                             do_faile_login_tv.setText(failePrompt);
-                            //end
+                        }
+
+                        @Override
+                        public void onCancelled() {
+
+                        }
+
+                        @Override
+                        public void onLoading(long count, long current) {
+
                         }
                     });
-
-                    VolleyUtil.addRequest2Queue(LoginActivity.this, stringRequestLogin, "");
-                } else if ((etAccount.getText().toString().length() == 0) && (etPassword.getText().toString().length() == 0)) {
-                    /**
-                     * begin QK
-                     */
+                }else if ((etAccount.getText().toString().length() == 0) && (etPassword.getText().toString().length() == 0)) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_enter_details), Toast.LENGTH_SHORT).show();
                 } else if (etAccount.getText().toString().length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
                 } else if (etPassword.getText().toString().length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
-                    /**
-                     * end
-                     */
                 }
+
+
+
+
+
+
+
+
+
+
+
+
+//                if ((etAccount.getText().toString().length() != 0) && (etPassword.getText().toString().length() != 0)) {
+//
+//                    progressDialog.show();
+//                    btnLogin.setClickable(false);
+//
+//                    HashMap<String, String> jsonParams = new HashMap<String, String>();
+//                    if ((etAccount.getText().toString().length() != 0)) {
+//
+//                        if (TextUtils.isEmpty(tvCountryCode.getText())) {
+//                            jsonParams.put("user_phone", etAccount.getText().toString());//是否可以不需要
+//                            jsonParams.put("username", tvCountryCode.getText() + etAccount.getText().toString());
+//                            jsonParams.put("login_type", "username");
+//                        } else {
+//                            jsonParams.put("username", tvCountryCode.getText().toString() + etAccount.getText().toString());//是否可以不需要
+//                            jsonParams.put("user_phone", etAccount.getText().toString());
+//                            jsonParams.put("login_type", "phone");
+//                        }
+//                    }
+//
+//                    jsonParams.put("user_country_code", tvCountryCode.getText().toString());
+//                    jsonParams.put("user_password", MD5(etPassword.getText().toString()));
+//                    jsonParams.put("user_uuid", Settings.Secure.getString(LoginActivity.this.getContentResolver(),
+//                            Settings.Secure.ANDROID_ID));
+//                    jsonParams.put("user_app_version", "1.8.0");
+//                    jsonParams.put("user_app_os", "android");
+//                    String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+//                    HashMap<String, String> params = new HashMap<String, String>();
+//                    params.put("condition", jsonParamsString);
+//                    String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
+//
+//                    StringRequest stringRequestLogin = new StringRequest(url, new Response.Listener<String>() {
+//
+//                        GsonBuilder gsonb = new GsonBuilder();
+//
+//                        Gson gson = gsonb.create();
+//
+//                        @Override
+//                        public void onResponse(String response) {
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(response);
+//
+//                                //bad response data...
+//                                userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {
+//                                }.getType());
+//
+//                                AppTokenEntity tokenEntity = gson.fromJson(jsonObject.getString("token"), AppTokenEntity.class);
+//
+//                                if (userList != null && userList.get(0) != null) {
+//                                    UserEntity userEntity = userList.get(0);//登录的用户数据
+//                                    App.changeLoginedUser(userEntity, tokenEntity);
+//                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+////                                    intent.putExtra("user", userEntity);
+//                                    PreferencesUtil.saveValue(LoginActivity.this, "user", gson.toJson(userEntity));
+//                                    PreferencesUtil.saveValue(LoginActivity.this, "token", gson.toJson(tokenEntity));
+//
+//                                    startActivity(intent);
+//                                    finish();
+//                                    progressDialog.dismiss();
+//                                    btnLogin.setClickable(true);
+//                                }
+//
+//                            } catch (JSONException e) {
+//                                progressDialog.dismiss();
+//                                btnLogin.setClickable(true);
+//                                e.printStackTrace();
+//                            }finally {
+//                                progressDialog.dismiss();
+//                                btnLogin.setClickable(true);
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            Log.i("", "error=====" + error.getMessage());
+//                            progressDialog.dismiss();
+//                            btnLogin.setClickable(true);
+//                            // Toast.makeText(LoginActivity.this, "Login ID/password is incorrect. Please try again.", Toast.LENGTH_SHORT).show();
+//                            //begin 初始化
+//                            do_faile_login_linear.setVisibility(View.VISIBLE);
+//                            String failePrompt = tvCountryCode.getText().toString() + " "
+//                                    + etAccount.getText().toString();
+//                            do_faile_login_tv.setText(failePrompt);
+//                            //end
+//                        }
+//                    });
+//
+//                    VolleyUtil.addRequest2Queue(LoginActivity.this, stringRequestLogin, "");
+//                } else if ((etAccount.getText().toString().length() == 0) && (etPassword.getText().toString().length() == 0)) {
+//                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_enter_details), Toast.LENGTH_SHORT).show();
+//                } else if (etAccount.getText().toString().length() == 0) {
+//                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
+//                } else if (etPassword.getText().toString().length() == 0) {
+//                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
+//                }
 
             }
         });

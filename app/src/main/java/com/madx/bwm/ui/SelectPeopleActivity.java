@@ -24,7 +24,10 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.StringRequest;
+import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -33,6 +36,7 @@ import com.madx.bwm.R;
 import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 
 import org.json.JSONException;
@@ -64,6 +68,9 @@ public class SelectPeopleActivity extends BaseActivity {
 
     EditText etSearch;
     Boolean isSearch = false;
+
+    ProgressDialog progressDialog;
+
 
     @Override
     protected void initBottomBar() {
@@ -120,7 +127,7 @@ public class SelectPeopleActivity extends BaseActivity {
     @Override
     public void initView() {
 
-
+        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
         Intent intent = getIntent();
 
         data = intent.getStringExtra("members_data");
@@ -262,14 +269,21 @@ public class SelectPeopleActivity extends BaseActivity {
     @Override
     public void requestData() {
 
-        String url = "http://sc.bondwith.me/bondwithme/index.php/api/everyone/";
+        progressDialog.show();
 
-        url += MainActivity.getUser().getUser_id();
-
-        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
+        new HttpTools(SelectPeopleActivity.this).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()),null,new HttpCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
 
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
 
                 Gson gson = gsonb.create();
@@ -314,20 +328,97 @@ public class SelectPeopleActivity extends BaseActivity {
 
                     rightButton.setVisibility(View.VISIBLE);
 
-
+                    progressDialog.dismiss();
                 } catch (JSONException e) {
+                    MessageUtil.showMessage(SelectPeopleActivity.this, R.string.msg_action_failed);
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(SelectPeopleActivity.this, R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("", "error=====" + error.getMessage());
+            public void onLoading(long count, long current) {
+
             }
         });
 
-        VolleyUtil.addRequest2Queue(this.getApplicationContext(), stringRequest, "");
+
+
+
+
+
+//        StringRequest stringRequest = new StringRequest(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                GsonBuilder gsonb = new GsonBuilder();
+//
+//                Gson gson = gsonb.create();
+//
+//                try {
+//                    JSONObject jsonObject = new JSONObject(response);
+//
+//                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {
+//                    }.getType());
+//                    groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {
+//                    }.getType());
+//
+//                    if (type == 0) { //创建 已选上的人还会显示
+//                        ll = initList();//排序
+//                        for(int i = 0;i<inList.size();i++){
+//                            checkItem.add(inList.get(i).getUser_id());
+//                        }
+//
+//                    } else if (type == 1) { //update, 已选上的人不显示 隐藏
+//                        for (int i = 0; i < inList.size(); i++) {
+//                            for (int j = 0; j < userList.size(); j++) {
+//                                if (!TextUtils.isEmpty(userList.get(j).getUser_id()))
+//                                {
+//                                    if (userList.get(j).getUser_id().equals(inList.get(i).getUser_id())) {
+//                                        userList.remove(j);
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        inList.clear();
+//                        ll.addAll(userList);
+//                    } else {
+//                        finish();
+//                    }
+//
+//                    CreateGroupAdapter createGroupAdapter = new CreateGroupAdapter(SelectPeopleActivity.this, R.layout.gridview_item_for_creategroup, ll);
+//
+//                    mGridView.setAdapter(createGroupAdapter);
+//
+//                    createGroupAdapter.notifyDataSetChanged();
+//
+//                    rightButton.setVisibility(View.VISIBLE);
+//
+//                    progressDialog.dismiss();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                progressDialog.dismiss();
+//                Log.i("", "error=====" + error.getMessage());
+//            }
+//        });
+//
+//        VolleyUtil.addRequest2Queue(this.getApplicationContext(), stringRequest, "");
 
     }
 

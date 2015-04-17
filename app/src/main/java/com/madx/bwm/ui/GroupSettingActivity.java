@@ -18,14 +18,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.StringRequest;
 import com.gc.materialdesign.widgets.Dialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,7 +41,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GroupSettingActivity extends BaseActivity {
 
@@ -295,16 +289,21 @@ public class GroupSettingActivity extends BaseActivity {
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_GROUP_MEMBERS, params);
 
-        StringRequest srMembers = new StringRequest(url, new Response.Listener<String>() {
+        new HttpTools(GroupSettingActivity.this).get(url, null, new HttpCallback() {
+            @Override
+            public void onStart() {
 
-            GsonBuilder gsonb = new GsonBuilder();
-
-            Gson gson = gsonb.create();
+            }
 
             @Override
-            public void onResponse(String response) {
+            public void onFinish() {
 
-                Log.d("","response" + response);
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
 
                 userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
 
@@ -313,23 +312,79 @@ public class GroupSettingActivity extends BaseActivity {
                     GroupSettingAdapter groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
 
                     lvMembers.setAdapter(groupSettingAdapter);
-                    /**
-                     * begin QK
-                     */
+
                     tvNumMembers.setText(userList.size() + getResources().getString(R.string.text_members));
-                    /**
-                     * end
-                     */
 
                 }
             }
-        },new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onError(Exception e) {
+                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
 
             }
         });
-        VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srMembers, "");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        StringRequest srMembers = new StringRequest(url, new Response.Listener<String>() {
+//
+//            GsonBuilder gsonb = new GsonBuilder();
+//
+//            Gson gson = gsonb.create();
+//
+//            @Override
+//            public void onResponse(String response) {
+//
+//                Log.d("","response" + response);
+//
+//                userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+//
+//                if (userList != null)
+//                {
+//                    GroupSettingAdapter groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
+//
+//                    lvMembers.setAdapter(groupSettingAdapter);
+//                    /**
+//                     * begin QK
+//                     */
+//                    tvNumMembers.setText(userList.size() + getResources().getString(R.string.text_members));
+//                    /**
+//                     * end
+//                     */
+//
+//                }
+//            }
+//        },new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        });
+//        VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srMembers, "");
     }
 
     @Override
@@ -420,67 +475,113 @@ public class GroupSettingActivity extends BaseActivity {
         tvRemoveUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                RequestInfo requestInfo = new RequestInfo();
+
                 HashMap<String, String> jsonParams = new HashMap<String, String>();
                 jsonParams.put("user_id", userList.get(position).getUser_id());//MainActivity
                 final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-                StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId), new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+                requestInfo.url = String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId);
+                requestInfo.jsonParam = jsonParamsString;
 
+                new HttpTools(GroupSettingActivity.this).put(requestInfo, new HttpCallback() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onResult(String response) {
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
 
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
-                                /**
-                                 * begin QK
-                                 */
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();//成功
-                                /**
-                                 * end
-                                 */
                                 showAdminDialog1.dismiss();
                                 getMembersList();
 
                             } else {
-                                /**
-                                 * begin QK
-                                 */
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();//成功
-                                /**
-                                 * end
-                                 */
                                 showAdminDialog1.dismiss();
-
                             }
                         } catch (JSONException e) {
+                            Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
-
                     }
-                }, new Response.ErrorListener() {
+
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        /**
-                         * begin QK
-                         */
+                    public void onError(Exception e) {
                         Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                        /**
-                         * end
-                         */
                         showAdminDialog1.dismiss();
                     }
-                }) {
 
                     @Override
-                    public byte[] getBody() throws AuthFailureError {
-                        return jsonParamsString.getBytes();
+                    public void onCancelled() {
+
                     }
 
-                };
-                VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srRemoveMember, "");
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+
+
+
+
+
+
+
+
+
+
+
+//                StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId), new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//
+//                        try {
+//
+//                            JSONObject jsonObject = new JSONObject(response);
+//
+//                            if (("200").equals(jsonObject.getString("response_status_code"))) {
+//                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();//成功
+//                                showAdminDialog1.dismiss();
+//                                getMembersList();
+//
+//                            } else {
+//                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();//成功
+//                                showAdminDialog1.dismiss();
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        error.printStackTrace();
+//                        Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                        showAdminDialog1.dismiss();
+//                    }
+//                }) {
+//
+//                    @Override
+//                    public byte[] getBody() throws AuthFailureError {
+//                        return jsonParamsString.getBytes();
+//                    }
+//
+//                };
+//                VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srRemoveMember, "");
             }
         });
 
@@ -526,63 +627,100 @@ public class GroupSettingActivity extends BaseActivity {
         tvRemoveUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                RequestInfo requestInfo = new RequestInfo();
+
                 HashMap<String, String> jsonParams = new HashMap<String, String>();
                 jsonParams.put("user_id", userList.get(position).getUser_id());//MainActivity
                 final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+                requestInfo.url = String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId);
+                requestInfo.jsonParam = jsonParamsString;
 
-                StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId), new Response.Listener<String>() {
+
+                new HttpTools(GroupSettingActivity.this).put(requestInfo, new HttpCallback() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onStart() {
 
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onResult(String response) {
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
 
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
-                                /**
-                                 * begin QK
-                                 */
                                 Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();
-                                /**
-                                 * end
-                                 */
                                 showAdminDialog0.dismiss();
                                 getMembersList();
                             } else {
-                                /**
-                                 * begin QK
-                                 */
                                 Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();
-                                /**
-                                 * end
-                                 */
                                 showAdminDialog0.dismiss();
                             }
                         } catch (JSONException e) {
+                            Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        /**
-                         * begin QK
-                         */
-                        Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                        /**
-                         * end
-                         */
-                        showAdminDialog0.dismiss();
-                    }
-                }) {
 
                     @Override
-                    public byte[] getBody() throws AuthFailureError {
-                        return jsonParamsString.getBytes();
+                    public void onError(Exception e) {
+                        Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                        showAdminDialog0.dismiss();
                     }
-                };
-                VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srRemoveMember, "");
+
+                    @Override
+                    public void onCancelled() {
+
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+
+
+
+//                StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId), new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//
+//                        try {
+//
+//                            JSONObject jsonObject = new JSONObject(response);
+//
+//                            if (("200").equals(jsonObject.getString("response_status_code"))) {
+//                                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();
+//                                showAdminDialog0.dismiss();
+//                                getMembersList();
+//                            } else {
+//                                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();
+//                                showAdminDialog0.dismiss();
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        error.printStackTrace();
+//                        Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                        showAdminDialog0.dismiss();
+//                    }
+//                }) {
+//
+//                    @Override
+//                    public byte[] getBody() throws AuthFailureError {
+//                        return jsonParamsString.getBytes();
+//                    }
+//                };
+//                VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srRemoveMember, "");
             }
         });
 
@@ -723,50 +861,81 @@ public class GroupSettingActivity extends BaseActivity {
 
     public void addGroupMember(final String strGroupMembers)
     {
-        StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_GROUP_ADD_MEMBERS, new Response.Listener<String>() {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("group_id", groupId);
+        params.put("group_owner_id", MainActivity.getUser().getUser_id());
+        params.put("query_on", "addGroupMember");
+        params.put("group_members", strGroupMembers);
 
-            GsonBuilder gsonb = new GsonBuilder();
+        new HttpTools(GroupSettingActivity.this).post(Constant.API_GROUP_ADD_MEMBERS, params, new HttpCallback() {
+            @Override
+            public void onStart() {
 
-            Gson gson = gsonb.create();
+            }
 
             @Override
-            public void onResponse(String response) {
-                /**
-                 * begin QK
-                 */
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success), Toast.LENGTH_SHORT).show();
-                /**
-                 * end
-                 */
                 getMembersList();
-
             }
-        }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                /**
-                 * begin QK
-                 */
+            public void onError(Exception e) {
                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                /**
-                 * end
-                 */
             }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("group_id", groupId);
-                params.put("group_owner_id", MainActivity.getUser().getUser_id());
-                params.put("query_on", "addGroupMember");
-                params.put("group_members", strGroupMembers);
 
-                return params;
+            @Override
+            public void onCancelled() {
+
             }
-        };
-        VolleyUtil.addRequest2Queue(GroupSettingActivity.this, stringRequestPost, "");
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
+
+//
+//        StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_GROUP_ADD_MEMBERS, new Response.Listener<String>() {
+//
+//            GsonBuilder gsonb = new GsonBuilder();
+//
+//            Gson gson = gsonb.create();
+//
+//            @Override
+//            public void onResponse(String response) {
+//
+//                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success), Toast.LENGTH_SHORT).show();
+//
+//                getMembersList();
+//
+//            }
+//        }, new Response.ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                error.printStackTrace();
+//                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//            }
+//        }) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                HashMap<String, String> params = new HashMap<String, String>();
+//                params.put("group_id", groupId);
+//                params.put("group_owner_id", MainActivity.getUser().getUser_id());
+//                params.put("query_on", "addGroupMember");
+//                params.put("group_members", strGroupMembers);
+//
+//                return params;
+//            }
+//        };
+//        VolleyUtil.addRequest2Queue(GroupSettingActivity.this, stringRequestPost, "");
     }
 
 
@@ -799,6 +968,7 @@ public class GroupSettingActivity extends BaseActivity {
             public void onClick(View v) {
                 leaveGroupAlertDialog.dismiss();
 
+                RequestInfo requestInfo = new RequestInfo();
                 HashMap<String, String> jsonParams = new HashMap<String, String>();
                 jsonParams.put("group_id", groupId);
                 jsonParams.put("group_owner_id", groupOwnerId);
@@ -806,52 +976,105 @@ public class GroupSettingActivity extends BaseActivity {
                 jsonParams.put("query_on", "exitGroup");
                 jsonParams.put("user_id", MainActivity.getUser().getUser_id());
                 final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+                requestInfo.url = String.format(Constant.API_LEAVE_GROUP, groupId);
+                requestInfo.jsonParam = jsonParamsString;
 
-                StringRequest srUpdateGroupName = new StringRequest(Request.Method.PUT, String.format(Constant.API_LEAVE_GROUP, groupId), new Response.Listener<String>() {
+                new HttpTools(GroupSettingActivity.this).put(requestInfo, new HttpCallback() {
                     @Override
-                    public void onResponse(String response) {
-                        Log.d("","#########" + response);
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onResult(String response) {
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
 
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
-                                /**
-                                 * begin QK
-                                 */
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_leave_group), Toast.LENGTH_SHORT).show();//成功
                                 finish();
                             } else {
                                 Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_fail_leave_group), Toast.LENGTH_SHORT).show();//失败
-                                /**
-                                 * end
-                                 */
                             }
                         } catch (JSONException e) {
+                            Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
-
                     }
-                }, new Response.ErrorListener() {
+
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        /**
-                         * begin QK
-                         */
+                    public void onError(Exception e) {
                         Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                        /**
-                         * end
-                         */
                     }
-                }) {
 
                     @Override
-                    public byte[] getBody() throws AuthFailureError {
-                        return jsonParamsString.getBytes();
+                    public void onCancelled() {
+
                     }
-                };
-                VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srUpdateGroupName, "");
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+
+
+
+
+
+
+
+//                StringRequest srUpdateGroupName = new StringRequest(Request.Method.PUT, String.format(Constant.API_LEAVE_GROUP, groupId), new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Log.d("","#########" + response);
+//                        try {
+//
+//                            JSONObject jsonObject = new JSONObject(response);
+//
+//                            if (("200").equals(jsonObject.getString("response_status_code"))) {
+//                                /**
+//                                 * begin QK
+//                                 */
+//                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_leave_group), Toast.LENGTH_SHORT).show();//成功
+//                                finish();
+//                            } else {
+//                                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_fail_leave_group), Toast.LENGTH_SHORT).show();//失败
+//                                /**
+//                                 * end
+//                                 */
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//
+//                    }
+//                }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        error.printStackTrace();
+//                        /**
+//                         * begin QK
+//                         */
+//                        Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                        /**
+//                         * end
+//                         */
+//                    }
+//                }) {
+//
+//                    @Override
+//                    public byte[] getBody() throws AuthFailureError {
+//                        return jsonParamsString.getBytes();
+//                    }
+//                };
+//                VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srUpdateGroupName, "");
             }
         });
         leaveGroupAlertDialog.setButtonCancel(this.getString(R.string.cancel), new View.OnClickListener() {

@@ -574,7 +574,7 @@
     <string name="text_old_password_wrong">Old password is incorrect.</string>
     <string name="text_full_all_fields">Please fill up and check all fields.</string>
     <string name="text_success_add_member">Add member successfully.</string>
-    <string name="text_fail_add_member">Add member failed.</string>
+    <string name="text_fail_add_member">Add member failed. Try again.</string>
     <string name="title_select_relationship">Select Relationship</string>
     <string name="title_reset_password">Reset Password</string>
     <string name="title_select_members">Select Members</string>
@@ -594,15 +594,6 @@
     <string name="text_lwait_for_respons">Awaiting member response.</string>
     <string name="text_input_personal_message">Input personal message</string>
     <string name="text_choose_contact_information">Please select at least a contact</string>
-    <string name="text_invited_event">invited you to %s event.</string>
-    <string name="text_responded_event">responded for %s event.</string>
-    <string name="text_commented_event">commented on %s event.</string>
-    <string name="text_also_commented_event">also commented on %s event.</string>
-    <string name="text_updated_event">updated %s event.</string>
-    <string name="text_cancelled_event">cancelled %s event.</string>
-    <string name="text_love_comment_event">loved your comment in %s event.</string>
-    <string name="text_love_event">loved your %s event.</string>
-    <string name="text_upcoming_event">Upcoming event: %s </string>
 
     <!--end-->
 

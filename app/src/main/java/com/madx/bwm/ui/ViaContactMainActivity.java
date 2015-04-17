@@ -22,15 +22,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
-import com.madx.bwm.http.VolleyUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +34,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ViaContactMainActivity extends BaseActivity {
 
@@ -151,14 +146,33 @@ public class ViaContactMainActivity extends BaseActivity {
 
                 if (!TextUtils.isEmpty(tvSelectContact.getText()) && !TextUtils.isEmpty(tvRelationship.getText()) && !TextUtils.isEmpty(etMessage.getText()) && ( (!"[]".equals(gson.toJson(dataNumber))) || (!"[]".equals(gson.toJson(dataEmail))) ) )
                 {
-                    StringRequest srAddMember = new StringRequest(Request.Method.POST, Constant.API_ADD_MEMBER_THROUGH_CONTACT, new Response.Listener<String>() {
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put("user_fullname", tvSelectContact.getText().toString());
+                    params.put("user_relationship_name", tvRelationship.getText().toString());
+                    params.put("user_status", "invite");
+                    params.put("personal_Msg", etMessage.getText().toString());
+                    params.put("creator_id", MainActivity.getUser().getUser_id());
+                    params.put("creator_given_name", MainActivity.getUser().getUser_given_name());
+                    params.put("creator_country_code", MainActivity.getUser().getUser_country_code());
+                    params.put("userEmailList", gson.toJson(dataEmail));
+                    params.put("userPhoneList", gson.toJson(dataNumber));
+
+
+                    new HttpTools(ViaContactMainActivity.this).post(Constant.API_ADD_MEMBER_THROUGH_CONTACT, params, new HttpCallback() {
+                        @Override
+                        public void onStart() {
+
+                        }
 
                         @Override
-                        public void onResponse(String response) {
+                        public void onFinish() {
 
+                        }
+
+                        @Override
+                        public void onResult(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                Log.d("","@@@@@@---->" + response);
                                 if ("Success".equals(jsonObject.getString("response_status")))
                                 {
                                     Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_lwait_for_respons), Toast.LENGTH_SHORT).show();
@@ -168,38 +182,27 @@ public class ViaContactMainActivity extends BaseActivity {
                                 {
                                     Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                                 }
-
-
                             } catch (JSONException e) {
+                                Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
-                    }, new Response.ErrorListener() {
 
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-                            //TODO
-                            error.printStackTrace();
+                        public void onError(Exception e) {
                             Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                         }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            HashMap<String, String> params = new HashMap<String, String>();
-                            params.put("user_fullname", tvSelectContact.getText().toString());
-                            params.put("user_relationship_name", tvRelationship.getText().toString());
-                            params.put("user_status", "invite");
-                            params.put("personal_Msg", etMessage.getText().toString());
-                            params.put("creator_id", MainActivity.getUser().getUser_id());
-                            params.put("creator_given_name", MainActivity.getUser().getUser_given_name());
-                            params.put("creator_country_code", MainActivity.getUser().getUser_country_code());
-                            params.put("userEmailList", gson.toJson(dataEmail));
-                            params.put("userPhoneList", gson.toJson(dataNumber));
 
-                            return params;
+                        @Override
+                        public void onCancelled() {
+
                         }
-                    };
-                    VolleyUtil.addRequest2Queue(ViaContactMainActivity.this, srAddMember, "");
+
+                        @Override
+                        public void onLoading(long count, long current) {
+
+                        }
+                    });
                 }
                 else if(TextUtils.isEmpty(tvSelectContact.getText()))
                 {
@@ -217,6 +220,81 @@ public class ViaContactMainActivity extends BaseActivity {
                 {
                     Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_choose_contact_information), Toast.LENGTH_SHORT).show();
                 }
+
+
+
+
+
+
+
+//                if (!TextUtils.isEmpty(tvSelectContact.getText()) && !TextUtils.isEmpty(tvRelationship.getText()) && !TextUtils.isEmpty(etMessage.getText()) && ( (!"[]".equals(gson.toJson(dataNumber))) || (!"[]".equals(gson.toJson(dataEmail))) ) )
+//                {
+//                    StringRequest srAddMember = new StringRequest(Request.Method.POST, Constant.API_ADD_MEMBER_THROUGH_CONTACT, new Response.Listener<String>() {
+//
+//                        @Override
+//                        public void onResponse(String response) {
+//
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(response);
+//                                Log.d("","@@@@@@---->" + response);
+//                                if ("Success".equals(jsonObject.getString("response_status")))
+//                                {
+//                                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_lwait_for_respons), Toast.LENGTH_SHORT).show();
+//                                    finish();
+//                                }
+//                                else if ("Fail".equals(jsonObject.getString("response_status")))
+//                                {
+//                                    Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+//                                }
+//
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            //TODO
+//                            error.printStackTrace();
+//                            Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }) {
+//                        @Override
+//                        protected Map<String, String> getParams() throws AuthFailureError {
+//                            HashMap<String, String> params = new HashMap<String, String>();
+//                            params.put("user_fullname", tvSelectContact.getText().toString());
+//                            params.put("user_relationship_name", tvRelationship.getText().toString());
+//                            params.put("user_status", "invite");
+//                            params.put("personal_Msg", etMessage.getText().toString());
+//                            params.put("creator_id", MainActivity.getUser().getUser_id());
+//                            params.put("creator_given_name", MainActivity.getUser().getUser_given_name());
+//                            params.put("creator_country_code", MainActivity.getUser().getUser_country_code());
+//                            params.put("userEmailList", gson.toJson(dataEmail));
+//                            params.put("userPhoneList", gson.toJson(dataNumber));
+//
+//                            return params;
+//                        }
+//                    };
+//                    VolleyUtil.addRequest2Queue(ViaContactMainActivity.this, srAddMember, "");
+//                }
+//                else if(TextUtils.isEmpty(tvSelectContact.getText()))
+//                {
+//                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_select_contact), Toast.LENGTH_SHORT).show();
+//                }
+//                else if(TextUtils.isEmpty(tvRelationship.getText()))
+//                {
+//                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_select_relationship), Toast.LENGTH_SHORT).show();
+//                }
+//                else if(TextUtils.isEmpty(etMessage.getText()))
+//                {
+//                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_input_personal_message), Toast.LENGTH_SHORT).show();
+//                }
+//                else if ("[]".equals(gson.toJson(dataNumber)) && "[]".equals(gson.toJson(dataEmail)) )
+//                {
+//                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_choose_contact_information), Toast.LENGTH_SHORT).show();
+//                }
 
             }
         });

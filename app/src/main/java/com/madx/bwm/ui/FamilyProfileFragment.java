@@ -17,11 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -42,7 +39,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -161,48 +157,97 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         ibMiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if ((data != null) && (data.size() > 0)) {
-                    StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_MISS_MEMBER, new Response.Listener<String>() {
 
-                        GsonBuilder gsonb = new GsonBuilder();
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put("from_user_id", MainActivity.getUser().getUser_id());
+                    params.put("to_user_id", memberId);
+                    params.put("to_user_fullname", userEntity.getUser_given_name());
 
-                        Gson gson = gsonb.create();
+                    new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params, new HttpCallback() {
+                        @Override
+                        public void onStart() {
+
+                        }
 
                         @Override
-                        public void onResponse(String response) {
+                        public void onFinish() {
+
+                        }
+
+                        @Override
+                        public void onResult(String response) {
+                            GsonBuilder gsonb = new GsonBuilder();
+                            Gson gson = gsonb.create();
+
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
 
                                 Toast.makeText(getActivity(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
+                                Toast.makeText(getActivity(), getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
-                    }, new Response.ErrorListener() {
 
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                            /**
-                             * begin QK
-                             */
+                        public void onError(Exception e) {
                             Toast.makeText(getActivity(), getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                            /**
-                             * end
-                             */
                         }
-                    }) {
+
                         @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            HashMap<String, String> params = new HashMap<String, String>();
-                            params.put("from_user_id", MainActivity.getUser().getUser_id());
-                            params.put("to_user_id", memberId);
-                            params.put("to_user_fullname", userEntity.getUser_given_name());
-                            return params;
+                        public void onCancelled() {
+
                         }
-                    };
-                    VolleyUtil.addRequest2Queue(getActivity(), stringRequestPost, "");
+
+                        @Override
+                        public void onLoading(long count, long current) {
+
+                        }
+                    });
                 }
+
+
+
+
+
+//                if ((data != null) && (data.size() > 0)) {
+//                    StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_MISS_MEMBER, new Response.Listener<String>() {
+//
+//                        GsonBuilder gsonb = new GsonBuilder();
+//
+//                        Gson gson = gsonb.create();
+//
+//                        @Override
+//                        public void onResponse(String response) {
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(response);
+//
+//                                Toast.makeText(getActivity(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            error.printStackTrace();
+//                            Toast.makeText(getActivity(), getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }) {
+//                        @Override
+//                        protected Map<String, String> getParams() throws AuthFailureError {
+//                            HashMap<String, String> params = new HashMap<String, String>();
+//                            params.put("from_user_id", MainActivity.getUser().getUser_id());
+//                            params.put("to_user_id", memberId);
+//                            params.put("to_user_fullname", userEntity.getUser_given_name());
+//                            return params;
+//                        }
+//                    };
+//                    VolleyUtil.addRequest2Queue(getActivity(), stringRequestPost, "");
+//                }
             }
         });
 
@@ -258,15 +303,21 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_MEMBER_PROFILE_DETAIL, params);
 
-        StringRequest srMemberProfile = new StringRequest(url, new Response.Listener<String>() {
+        new HttpTools(getActivity()).get(url, params, new HttpCallback() {
             @Override
-            public void onResponse(String response)
-            {
+            public void onStart() {
 
-                Log.d("", "@@@@@@@@@@@@!!!!" + response);
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
 
                 GsonBuilder gsonb = new GsonBuilder();
-
                 Gson gson = gsonb.create();
 
                 data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
@@ -287,23 +338,82 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                             Bitmap bitmap= BitmapFactory.decodeStream(is);
                             ivBottomLeft.setImageBitmap(bitmap);
 
-//                    Drawable da = Drawable.createFromStream(is, null);
-//                    ivBottomLeft.setImageDrawable(da);
                         } catch (IOException e) {
+                            Toast.makeText(getActivity(), getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
                 }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(getActivity(), getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled() {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onLoading(long count, long current) {
 
             }
         });
 
-        VolleyUtil.addRequest2Queue(getActivity(), srMemberProfile, "");
+
+
+
+
+
+
+//        StringRequest srMemberProfile = new StringRequest(url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response)
+//            {
+//
+//                Log.d("", "@@@@@@@@@@@@!!!!" + response);
+//
+//                GsonBuilder gsonb = new GsonBuilder();
+//
+//                Gson gson = gsonb.create();
+//
+//                data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+//
+//                if( (data != null) && (data.size()>0) )
+//                {
+//                    userEntity = data.get(0);
+//
+//                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+//                    tvName1.setText(userEntity.getUser_given_name());
+//                    getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
+//                    tvId1.setText("ID:" + userEntity.getDis_bondwithme_id());
+//
+//                    if (!TextUtils.isEmpty(userEntity.getUser_emoticon()))
+//                    {
+//                        try {
+//                            InputStream is = App.getAppContext().getAssets().open(userEntity.getUser_emoticon()+".png");
+//                            Bitmap bitmap= BitmapFactory.decodeStream(is);
+//                            ivBottomLeft.setImageBitmap(bitmap);
+//
+////                    Drawable da = Drawable.createFromStream(is, null);
+////                    ivBottomLeft.setImageDrawable(da);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        });
+//
+//        VolleyUtil.addRequest2Queue(getActivity(), srMemberProfile, "");
     }
 
     @Override

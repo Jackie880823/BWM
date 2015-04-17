@@ -15,13 +15,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.StringRequest;
 import com.gc.materialdesign.widgets.Dialog;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
@@ -180,7 +176,7 @@ public class GroupNameSettingActivity extends BaseActivity {
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(GroupNameSettingActivity.this, CACHE_PIC_NAME_TEMP));
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getFile(GroupNameSettingActivity.this, CACHE_PIC_NAME_TEMP));
                     if (new File(uri.getPath()).exists()) {
                         try {
                             startPhotoZoom(uri,false);
@@ -303,7 +299,7 @@ public class GroupNameSettingActivity extends BaseActivity {
             intent.putExtra("noFaceDetection", true);
 
             //		if(fromPhoto){
-            File f = PicturesCacheUtil.getCachePicFileByName(GroupNameSettingActivity.this, CACHE_PIC_NAME);
+            File f = PicturesCacheUtil.getFile(GroupNameSettingActivity.this, CACHE_PIC_NAME);
             mCropImagedUri = Uri.fromFile(f);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
             //		}else{
@@ -435,28 +431,36 @@ public class GroupNameSettingActivity extends BaseActivity {
 
         isUploadName = true;
 
+        RequestInfo requestInfo = new RequestInfo();
+
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("group_id", groupId);
         jsonParams.put("group_name", etGroupName.getText().toString());
         jsonParams.put("query_on", "editGroupTitle");
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-        StringRequest srUpdateGroupName = new StringRequest(Request.Method.PUT, String.format(Constant.API_UPDATE_GROUP_NAME, groupId), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+        requestInfo.url = String.format(Constant.API_UPDATE_GROUP_NAME, groupId);
+        requestInfo.jsonParam = jsonParamsString;
 
+        new HttpTools(GroupNameSettingActivity.this).put(requestInfo, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
 
                     if (("200").equals(jsonObject.getString("response_status_code"))) {
-                        /**
-                         * begin QK
-                         */
                         Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_success_update_group_name), Toast.LENGTH_SHORT).show();//成功
-                        /**
-                         * end
-                         */
                         isUploadNameSuccess = true;
                         if (!isUploadImage)
                         {
@@ -466,39 +470,94 @@ public class GroupNameSettingActivity extends BaseActivity {
                             finish();
                         }
                     } else {
-                        /**
-                         * begin QK
-                         */
                         Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_fail_update_group_name), Toast.LENGTH_SHORT).show();//失败
-                        /**
-                         * end
-                         */
                     }
                 } catch (JSONException e) {
+                    Toast.makeText(GroupNameSettingActivity.this,getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                /**
-                 * begin QK
-                 */
-                Toast.makeText(GroupNameSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                /**
-                 * end
-                 */
-            }
-        }) {
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
-                return jsonParamsString.getBytes();
+            public void onError(Exception e) {
+                Toast.makeText(GroupNameSettingActivity.this,getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
-        };
-        VolleyUtil.addRequest2Queue(GroupNameSettingActivity.this, srUpdateGroupName, "");
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
+
+
+
+
+
+
+//        StringRequest srUpdateGroupName = new StringRequest(Request.Method.PUT, String.format(Constant.API_UPDATE_GROUP_NAME, groupId), new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                try {
+//
+//                    JSONObject jsonObject = new JSONObject(response);
+//
+//                    if (("200").equals(jsonObject.getString("response_status_code"))) {
+//                        /**
+//                         * begin QK
+//                         */
+//                        Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_success_update_group_name), Toast.LENGTH_SHORT).show();//成功
+//                        /**
+//                         * end
+//                         */
+//                        isUploadNameSuccess = true;
+//                        if (!isUploadImage)
+//                        {
+//                            Intent intent = new Intent();
+//                            intent.putExtra("groupName",etGroupName.getText().toString());
+//                            setResult(RESULT_OK, intent);
+//                            finish();
+//                        }
+//                    } else {
+//                        /**
+//                         * begin QK
+//                         */
+//                        Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_fail_update_group_name), Toast.LENGTH_SHORT).show();//失败
+//                        /**
+//                         * end
+//                         */
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                error.printStackTrace();
+//                /**
+//                 * begin QK
+//                 */
+//                Toast.makeText(GroupNameSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                /**
+//                 * end
+//                 */
+//            }
+//        }) {
+//
+//            @Override
+//            public byte[] getBody() throws AuthFailureError {
+//                return jsonParamsString.getBytes();
+//            }
+//        };
+//        VolleyUtil.addRequest2Queue(GroupNameSettingActivity.this, srUpdateGroupName, "");
     }
 
 
@@ -526,7 +585,7 @@ public class GroupNameSettingActivity extends BaseActivity {
 
                 // 下面这句指定调用相机拍照后的照片存储的路径
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getCachePicFileByName(GroupNameSettingActivity.this,
+                        .fromFile(PicturesCacheUtil.getFile(GroupNameSettingActivity.this,
                                 CACHE_PIC_NAME_TEMP)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);

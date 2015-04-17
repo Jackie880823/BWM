@@ -229,7 +229,8 @@ public class MainActivity extends BaseActivity {
         WallFragment wallFragment = WallFragment.newInstance();
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
-        fragments.add(MessageFragment.newInstance());
+//        fragments.add(MessageFragment.newInstance());
+        fragments.add(MessageMainFragment.newInstance());
         fragments.add(MoreFragment.newInstance());
 
 

@@ -22,13 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.StringRequest;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,7 +37,6 @@ import com.madx.bwm.entity.MsgEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MyTextUtil;
@@ -354,7 +348,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
 
                 // 下面这句指定调用相机拍照后的照片存储的路径
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getCachePicFileByName(ChatActivity.this,
+                        .fromFile(PicturesCacheUtil.getFile(ChatActivity.this,
                                 CACHE_PIC_NAME_TEMP)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
@@ -417,7 +411,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                 listView.setSelection(listView.getBottom());
 
                 if (!MyTextUtil.isInvalidText(content)) {
-
                     //直接显示在list上
                     MsgEntity msgEntity = new MsgEntity();
                     msgEntity.setUser_id(MainActivity.getUser().getUser_id());
@@ -429,58 +422,120 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                     etChat.setText("");
                     listView.setSelection(listView.getBottom());
 
-                    //上传文本内容
-                    StringRequest srText = new StringRequest(Request.Method.POST, Constant.API_MESSAGE_POST_TEXT, new Response.Listener<String>() {
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put("content_creator_id", MainActivity.getUser().getUser_id());
+                    params.put("group_id", groupId);
+                    params.put("content_type", "post");
+                    params.put("text_description", content);
+                    params.put("group_ind_type", "");
+                    params.put("content_group_public", "0");
+
+
+                    new HttpTools(ChatActivity.this).post(Constant.API_MESSAGE_POST_TEXT, params, new HttpCallback() {
+                        @Override
+                        public void onStart() {
+
+                        }
 
                         @Override
-                        public void onResponse(String response) {
+                        public void onFinish() {
 
-                            Log.d("", "-------" + response);
+                        }
 
+                        @Override
+                        public void onResult(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
 
                                 if ("postText".equals(jsonObject.getString("postType"))) {
-
-//                                    Toast.makeText(ChatActivity.this, "Success", Toast.LENGTH_SHORT).show();
-
                                     getMsg();//成功后再次get
-
                                 }
 
                             } catch (JSONException e) {
+                                Toast.makeText(ChatActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
-                    }, new Response.ErrorListener() {
 
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-                            //TODO
-                            error.printStackTrace();
-                            /**
-                             * begin QK
-                             */
+                        public void onError(Exception e) {
                             Toast.makeText(ChatActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                            /**
-                             * end
-                             */
                         }
-                    }) {
+
                         @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            HashMap<String, String> params = new HashMap<String, String>();
-                            params.put("content_creator_id", MainActivity.getUser().getUser_id());
-                            params.put("group_id", groupId);
-                            params.put("content_type", "post");
-                            params.put("text_description", content);
-                            params.put("group_ind_type", "");
-                            params.put("content_group_public", "0");
-                            return params;
+                        public void onCancelled() {
+
                         }
-                    };
-                    VolleyUtil.addRequest2Queue(ChatActivity.this, srText, "");
+
+                        @Override
+                        public void onLoading(long count, long current) {
+
+                        }
+                    });
                 }
+
+
+//                if (!MyTextUtil.isInvalidText(content)) {
+//
+//                    //直接显示在list上
+//                    MsgEntity msgEntity = new MsgEntity();
+//                    msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+//                    msgEntity.setText_id("1");
+//                    msgEntity.setText_description(content);
+//                    msgList.add(0, msgEntity);
+//                    listView.setAdapter(chatAdapter);
+//                    chatAdapter.notifyDataSetChanged();
+//                    etChat.setText("");
+//                    listView.setSelection(listView.getBottom());
+//
+//                    //上传文本内容
+//                    StringRequest srText = new StringRequest(Request.Method.POST, Constant.API_MESSAGE_POST_TEXT, new Response.Listener<String>() {
+//
+//                        @Override
+//                        public void onResponse(String response) {
+//
+//                            Log.d("", "-------" + response);
+//
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(response);
+//
+//                                if ("postText".equals(jsonObject.getString("postType"))) {
+//
+////                                    Toast.makeText(ChatActivity.this, "Success", Toast.LENGTH_SHORT).show();
+//
+//                                    getMsg();//成功后再次get
+//
+//                                }
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            error.printStackTrace();
+//                            Toast.makeText(ChatActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    }) {
+//                        @Override
+//                        protected Map<String, String> getParams() throws AuthFailureError {
+//                            HashMap<String, String> params = new HashMap<String, String>();
+//                            params.put("content_creator_id", MainActivity.getUser().getUser_id());
+//                            params.put("group_id", groupId);
+//                            params.put("content_type", "post");
+//                            params.put("text_description", content);
+//                            params.put("group_ind_type", "");
+//                            params.put("content_group_public", "0");
+//                            return params;
+//                        }
+//                    };
+//                    VolleyUtil.addRequest2Queue(ChatActivity.this, srText, "");
+//                }
+
+
             }
         });
 
@@ -506,13 +561,21 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         params.put("page", "1");
         params.put("start", "0");
         params.put("view_user", MainActivity.getUser().getUser_id());
-
         String url = UrlUtil.generateUrl(Constant.API_GET_MESSAGE, params);
 
-        StringRequest srMsg = new StringRequest(url, new Response.Listener<String>() {
+        new HttpTools(ChatActivity.this).get(url, null, new HttpCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
 
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
 
                 Gson gson = gsonb.create();
@@ -526,12 +589,51 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                 etChat.setText("");
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onError(Exception e) {
+                Toast.makeText(ChatActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
             }
         });
-        VolleyUtil.addRequest2Queue(ChatActivity.this, srMsg, "");
+
+
+
+
+
+
+//        StringRequest srMsg = new StringRequest(url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                GsonBuilder gsonb = new GsonBuilder();
+//
+//                Gson gson = gsonb.create();
+//
+//                msgList = gson.fromJson(response, new TypeToken<ArrayList<MsgEntity>>() {
+//                }.getType());
+//
+//                chatAdapter = new ChatAdapter(ChatActivity.this, msgList);
+//                listView.setAdapter(chatAdapter);
+//                listView.setSelection(listView.getBottom());
+//                etChat.setText("");
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//            }
+//        });
+//        VolleyUtil.addRequest2Queue(ChatActivity.this, srMsg, "");
     }
 
 
@@ -539,48 +641,97 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
     private int offset = 20;
 
     public void getHistoryMsg() {
+
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("limit", offset + "");
         params.put("offset", "0");
         params.put("group_id", groupId);
         params.put("page", "1");
         params.put("start", startIndex + "");
-
         String url = UrlUtil.generateUrl(Constant.API_GET_MESSAGE, params);
 
-        StringRequest srMsg = new StringRequest(url, new Response.Listener<String>() {
+        new HttpTools(ChatActivity.this).get(url, null, new HttpCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
 
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
-
                 Gson gson = gsonb.create();
 
                 msgList = gson.fromJson(response, new TypeToken<ArrayList<MsgEntity>>() {
                 }.getType());
-
                 if (isRefresh) {
                     finishReFresh();
                     offset += 10;
                 }
-
                 chatAdapter = new ChatAdapter(ChatActivity.this, msgList);
                 listView.setAdapter(chatAdapter);
-
                 chatAdapter.notifyDataSetChanged();
-
-
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onError(Exception e) {
+                Toast.makeText(ChatActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                 if (isRefresh) {
                     finishReFresh();
                 }
             }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
         });
 
-        VolleyUtil.addRequest2Queue(ChatActivity.this, srMsg, "");
+
+//
+//
+//        StringRequest srMsg = new StringRequest(url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                GsonBuilder gsonb = new GsonBuilder();
+//
+//                Gson gson = gsonb.create();
+//
+//                msgList = gson.fromJson(response, new TypeToken<ArrayList<MsgEntity>>() {
+//                }.getType());
+//
+//                if (isRefresh) {
+//                    finishReFresh();
+//                    offset += 10;
+//                }
+//
+//                chatAdapter = new ChatAdapter(ChatActivity.this, msgList);
+//                listView.setAdapter(chatAdapter);
+//
+//                chatAdapter.notifyDataSetChanged();
+//
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                if (isRefresh) {
+//                    finishReFresh();
+//                }
+//            }
+//        });
+//
+//        VolleyUtil.addRequest2Queue(ChatActivity.this, srMsg, "");
     }
 
     List<Uri> pickUries = new ArrayList();
@@ -631,7 +782,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
 
-                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(ChatActivity.this, CACHE_PIC_NAME_TEMP));
+                    uri = Uri.fromFile(PicturesCacheUtil.getFile(ChatActivity.this, CACHE_PIC_NAME_TEMP));
 
                     handler.sendEmptyMessage(1);
 
@@ -1183,15 +1334,23 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         params.put("page", "1");
         params.put("start", "0");
         params.put("view_user", MainActivity.getUser().getUser_id());
-
         String url = UrlUtil.generateUrl(Constant.API_GET_MESSAGE, params);
 
-        StringRequest srMsg = new StringRequest(url, new Response.Listener<String>() {
+
+        new HttpTools(ChatActivity.this).get(url, null, new HttpCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
 
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
-
                 Gson gson = gsonb.create();
 
                 msgList = gson.fromJson(response, new TypeToken<ArrayList<MsgEntity>>() {
@@ -1202,16 +1361,57 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                 listView.setSelection(listView.getBottom());
                 etChat.setText("");
                 progressDialog.dismiss();
-
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onError(Exception e) {
                 progressDialog.dismiss();
             }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
         });
-        VolleyUtil.addRequest2Queue(ChatActivity.this, srMsg, "");
+
+
+//        StringRequest srMsg = new StringRequest(url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                GsonBuilder gsonb = new GsonBuilder();
+//
+//                Gson gson = gsonb.create();
+//
+//                msgList = gson.fromJson(response, new TypeToken<ArrayList<MsgEntity>>() {
+//                }.getType());
+//
+//                chatAdapter = new ChatAdapter(ChatActivity.this, msgList);
+//                listView.setAdapter(chatAdapter);
+//                listView.setSelection(listView.getBottom());
+//                etChat.setText("");
+//                progressDialog.dismiss();
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                progressDialog.dismiss();
+//            }
+//        });
+//        VolleyUtil.addRequest2Queue(ChatActivity.this, srMsg, "");
     }
 
-
+    @Override
+    protected void onDestroy() {
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        super.onDestroy();
+    }
 }

@@ -14,22 +14,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.util.NetworkUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class SignUpPhoneActivity extends BaseActivity {
 
@@ -137,103 +132,74 @@ public class SignUpPhoneActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
+                if (!NetworkUtil.isNetworkConnected(SignUpPhoneActivity.this)) {
+                    Toast.makeText(SignUpPhoneActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if ((etPhone.getText().toString().length() != 0) && (tvCountryCode.getText().toString().length() != 0))//输入了号码才去请求验证码
                 {
                     /*
                     * 先检查loginId(区号+手机号)是否能用，不合法:提示，合法:post得到验证码
-                    * post
-                    * Parameter
-                    *   user_phone_number       userPhoneNumber
-                    *   verification_action     "register"
                     * */
-                    String url;//检查手机注册合法性检查URL
                     HashMap<String, String> jsonParams = new HashMap<String, String>();
                     jsonParams.put("login_id", tvCountryCode.getText().toString() + etPhone.getText().toString());
                     String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("condition", jsonParamsString);
-                    url = UrlUtil.generateUrl(Constant.API_LOGINID_AVAILABILITY, params);//检查手机注册合法性检查URL
+                    String url = UrlUtil.generateUrl(Constant.API_LOGINID_AVAILABILITY, params);//检查手机注册合法性检查URL
 
                     //手机注册合法性检查请求
-                    StringRequest srLoginAvailability = new StringRequest(url, new Response.Listener<String>() {
+                    new HttpTools(SignUpPhoneActivity.this).get(url, null, new HttpCallback() {
                         @Override
-                        public void onResponse(String response) {
+                        public void onStart() {
 
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+
+                        @Override
+                        public void onResult(String response) {
                             try {
-                                String responseStatus;//Fail or Success
                                 JSONObject jsonObject = new JSONObject(response);
-                                responseStatus = jsonObject.getString("response_status");
-
                                 tvWarningPhone.setText(tvCountryCode.getText().toString() + etPhone.getText().toString());
                                 llWarning.setVisibility(View.VISIBLE);
 
-                                //手机注册合法性检查状态信息为Fail时
-                                if (responseStatus.equals("Fail")) {
-                                    //fail：手机号注册过的时候，展示Text，Toast。
-
+                                if ("Fail".equals(jsonObject.getString("response_status"))) {
                                     Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_account_already_exist), Toast.LENGTH_SHORT).show();
-                                }
-
-                                //手机注册合法性检查状态信息为Success时，申请验证码
-                                else {
+                                } else if ("Success".equals(jsonObject.getString("response_status"))){
                                     time.start();//开始计时,手机合法才倒计时。
-                                    StringRequest srVerification = new StringRequest(Request.Method.POST, Constant.API_VERIFICATION, new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-
-                                            try {
-                                                String responseStatus;
-                                                JSONObject jsonObject = new JSONObject(response);
-                                                responseStatus = jsonObject.getString("response_status");//申请验证码状态信息，失败也分两种情况
-                                                if (responseStatus.equals("Fail")) {
-                                                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_verification_fail), Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_verification_successful), Toast.LENGTH_SHORT).show();
-                                                    etVerifyCode.requestFocus();
-                                                }
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                        }
-                                    }, new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            //TODO
-                                            error.printStackTrace();
-                                            Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();//验证码
-                                        }
-                                    }) {
-                                        @Override
-                                        protected Map<String, String> getParams() throws AuthFailureError {
-                                            HashMap<String, String> params = new HashMap<String, String>();
-
-                                            params.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
-                                            params.put("verification_action", "register");
-
-                                            return params;
-                                        }
-                                    };
-                                    srVerification.setShouldCache(false);
-                                    VolleyUtil.addRequest2Queue(SignUpPhoneActivity.this, srVerification, "");
+                                    //手机号码合法获取验证码
+                                    getVerification();
+                                }
+                                else {
+                                    Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                                 }
 
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
+                                Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
-                    }, new Response.ErrorListener() {
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-
+                        public void onError(Exception e) {
                             Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onCancelled() {
+
+                        }
+
+                        @Override
+                        public void onLoading(long count, long current) {
 
                         }
                     });
-                    srLoginAvailability.setShouldCache(false);
-                    VolleyUtil.addRequest2Queue(SignUpPhoneActivity.this, srLoginAvailability, "");
                 }
-
                 else if (tvCountryCode.getText().toString().length() == 0)
                 {
                     Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_choose_country_code), Toast.LENGTH_SHORT).show();
@@ -243,11 +209,137 @@ public class SignUpPhoneActivity extends BaseActivity {
                 {
                     Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
                 }
-
                 else
                 {
                     Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_full_all_fields), Toast.LENGTH_SHORT).show();
                 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//                if ((etPhone.getText().toString().length() != 0) && (tvCountryCode.getText().toString().length() != 0))//输入了号码才去请求验证码
+//                {
+//                    /*
+//                    * 先检查loginId(区号+手机号)是否能用，不合法:提示，合法:post得到验证码
+//                    * post
+//                    * Parameter
+//                    *   user_phone_number       userPhoneNumber
+//                    *   verification_action     "register"
+//                    * */
+//                    String url;//检查手机注册合法性检查URL
+//                    HashMap<String, String> jsonParams = new HashMap<String, String>();
+//                    jsonParams.put("login_id", tvCountryCode.getText().toString() + etPhone.getText().toString());
+//                    String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+//                    HashMap<String, String> params = new HashMap<String, String>();
+//                    params.put("condition", jsonParamsString);
+//                    url = UrlUtil.generateUrl(Constant.API_LOGINID_AVAILABILITY, params);//检查手机注册合法性检查URL
+//
+//                    //手机注册合法性检查请求
+//                    StringRequest srLoginAvailability = new StringRequest(url, new Response.Listener<String>() {
+//                        @Override
+//                        public void onResponse(String response) {
+//
+//                            try {
+//                                String responseStatus;//Fail or Success
+//                                JSONObject jsonObject = new JSONObject(response);
+//                                responseStatus = jsonObject.getString("response_status");
+//
+//                                tvWarningPhone.setText(tvCountryCode.getText().toString() + etPhone.getText().toString());
+//                                llWarning.setVisibility(View.VISIBLE);
+//
+//                                //手机注册合法性检查状态信息为Fail时
+//                                if (responseStatus.equals("Fail")) {
+//                                    //fail：手机号注册过的时候，展示Text，Toast。
+//                                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_account_already_exist), Toast.LENGTH_SHORT).show();
+//                                }
+//
+//                                //手机注册合法性检查状态信息为Success时，申请验证码
+//                                else {
+//                                    time.start();//开始计时,手机合法才倒计时。
+//                                    StringRequest srVerification = new StringRequest(Request.Method.POST, Constant.API_VERIFICATION, new Response.Listener<String>() {
+//                                        @Override
+//                                        public void onResponse(String response) {
+//
+//                                            try {
+//                                                String responseStatus;
+//                                                JSONObject jsonObject = new JSONObject(response);
+//                                                responseStatus = jsonObject.getString("response_status");//申请验证码状态信息，失败也分两种情况
+//                                                if (responseStatus.equals("Fail")) {
+//                                                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_verification_fail), Toast.LENGTH_SHORT).show();
+//                                                } else {
+//                                                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_verification_successful), Toast.LENGTH_SHORT).show();
+//                                                    etVerifyCode.requestFocus();
+//                                                }
+//                                            } catch (JSONException e) {
+//                                                e.printStackTrace();
+//                                            }
+//
+//                                        }
+//                                    }, new Response.ErrorListener() {
+//                                        @Override
+//                                        public void onErrorResponse(VolleyError error) {
+//                                            error.printStackTrace();
+//                                            Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();//验证码
+//                                        }
+//                                    }) {
+//                                        @Override
+//                                        protected Map<String, String> getParams() throws AuthFailureError {
+//                                            HashMap<String, String> params = new HashMap<String, String>();
+//
+//                                            params.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
+//                                            params.put("verification_action", "register");
+//
+//                                            return params;
+//                                        }
+//                                    };
+//                                    srVerification.setShouldCache(false);
+//                                    VolleyUtil.addRequest2Queue(SignUpPhoneActivity.this, srVerification, "");
+//                                }
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//
+//                            Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//
+//                        }
+//                    });
+//                    VolleyUtil.addRequest2Queue(SignUpPhoneActivity.this, srLoginAvailability, "");
+//                }
+//                else if (tvCountryCode.getText().toString().length() == 0)
+//                {
+//                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_choose_country_code), Toast.LENGTH_SHORT).show();
+//                }
+//
+//                else if (etPhone.getText().toString().length() == 0)
+//                {
+//                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
+//                }
+//                else
+//                {
+//                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_full_all_fields), Toast.LENGTH_SHORT).show();
+//                }
+
+
             }
         });
 
@@ -256,34 +348,42 @@ public class SignUpPhoneActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
+                if (!NetworkUtil.isNetworkConnected(SignUpPhoneActivity.this)) {
+                    Toast.makeText(SignUpPhoneActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                 if ((etPhone.getText().toString().length() != 0) && (etVerifyCode.getText().toString().length() != 0)) {
-                    /*
-                    * 检查验证码是否正确, 不正确:提示， 正确:跳转到下个界面填写个人资料
-                    * get
-                    * Parameter
-                    *   user_phone_number   userPhoneNumber
-                    *   verify_code         verifyCode
-                    * */
-                    String url;
+
                     HashMap<String, String> jsonParams = new HashMap<String, String>();
                     jsonParams.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
                     jsonParams.put("verify_code", etVerifyCode.getText().toString());
                     String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("condition", jsonParamsString);
-                    url = UrlUtil.generateUrl(Constant.API_VERIFY_CODE, params);
+                    String url = UrlUtil.generateUrl(Constant.API_VERIFY_CODE, params);
 
-                    StringRequest stringRequest3 = new StringRequest(url, new Response.Listener<String>() {
+                    new HttpTools(SignUpPhoneActivity.this).get(url, null, new HttpCallback() {
+                        @Override
+                        public void onStart() {
+
+                        }
 
                         @Override
-                        public void onResponse(String response) {
+                        public void onFinish() {
+
+                        }
+
+                        @Override
+                        public void onResult(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
 
-                                if ((jsonObject.getString("response_status")).equals("Fail"))
+                                if ("Fail".equals(jsonObject.getString("response_status")))
                                 {
                                     Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_fail_verify_phone_number), Toast.LENGTH_SHORT).show();
-                                } else
+                                } else if ("Success".equals(jsonObject.getString("response_status")))
                                 {
                                     Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_verification_successful), Toast.LENGTH_SHORT).show();
 
@@ -298,39 +398,131 @@ public class SignUpPhoneActivity extends BaseActivity {
 
                                     startActivity(intent);
                                 }
-                            } catch (JSONException e) {
+                                else
+                                {
+                                    Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_LONG).show();
+                                }
+                            } catch (Exception e) {
+                                Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_LONG).show();
                                 e.printStackTrace();
                             }
                         }
-                    }, new Response.ErrorListener() {
+
                         @Override
-                        public void onErrorResponse(VolleyError error) {
+                        public void onError(Exception e) {
                             Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_LONG).show();
                         }
-                    });
-                    stringRequest3.setShouldCache(false);
-                    VolleyUtil.addRequest2Queue(SignUpPhoneActivity.this, stringRequest3, "");
-                }
 
+                        @Override
+                        public void onCancelled() {
+
+                        }
+
+                        @Override
+                        public void onLoading(long count, long current) {
+
+                        }
+                    });
+                }
                 else if (tvCountryCode.getText().toString().length() == 0)
                 {
                     Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_choose_country_code), Toast.LENGTH_SHORT).show();
                 }
-
                 else if (etPhone.getText().toString().length() == 0)
                 {
                     Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
                 }
-
                 else if (etVerifyCode.getText().toString().length() == 0)
                 {
                     Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_fill_in_verification_code), Toast.LENGTH_SHORT).show();
                 }
-
                 else
                 {
-                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_up_all_fields), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_full_all_fields), Toast.LENGTH_SHORT).show();
                 }
+
+
+
+
+//
+//
+//                if ((etPhone.getText().toString().length() != 0) && (etVerifyCode.getText().toString().length() != 0)) {
+//                    /*
+//                    * 检查验证码是否正确, 不正确:提示， 正确:跳转到下个界面填写个人资料
+//                    * get
+//                    * Parameter
+//                    *   user_phone_number   userPhoneNumber
+//                    *   verify_code         verifyCode
+//                    * */
+//                    String url;
+//                    HashMap<String, String> jsonParams = new HashMap<String, String>();
+//                    jsonParams.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
+//                    jsonParams.put("verify_code", etVerifyCode.getText().toString());
+//                    String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+//                    HashMap<String, String> params = new HashMap<String, String>();
+//                    params.put("condition", jsonParamsString);
+//                    url = UrlUtil.generateUrl(Constant.API_VERIFY_CODE, params);
+//
+//                    StringRequest stringRequest3 = new StringRequest(url, new Response.Listener<String>() {
+//
+//                        @Override
+//                        public void onResponse(String response) {
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(response);
+//
+//                                if ((jsonObject.getString("response_status")).equals("Fail"))
+//                                {
+//                                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_fail_verify_phone_number), Toast.LENGTH_SHORT).show();
+//                                } else
+//                                {
+//                                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_verification_successful), Toast.LENGTH_SHORT).show();
+//
+//                                    Intent intent = new Intent(SignUpPhoneActivity.this, SignUpPhonePasswordActivity.class);
+//
+//                                    userEntity.setUser_country_code(tvCountryCode.getText().toString());//国家区号
+//                                    userEntity.setUser_phone(etPhone.getText().toString());//手机号
+//                                    userEntity.setUser_login_id(tvCountryCode.getText().toString() + etPhone.getText().toString());//账号
+//                                    userEntity.setUser_login_type("phone");//注册类型phone
+//
+//                                    intent.putExtra("userEntity",userEntity);
+//
+//                                    startActivity(intent);
+//                                }
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_LONG).show();
+//                        }
+//                    });
+//                    stringRequest3.setShouldCache(false);
+//                    VolleyUtil.addRequest2Queue(SignUpPhoneActivity.this, stringRequest3, "");
+//                }
+//
+//                else if (tvCountryCode.getText().toString().length() == 0)
+//                {
+//                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_choose_country_code), Toast.LENGTH_SHORT).show();
+//                }
+//
+//                else if (etPhone.getText().toString().length() == 0)
+//                {
+//                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
+//                }
+//
+//                else if (etVerifyCode.getText().toString().length() == 0)
+//                {
+//                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_fill_in_verification_code), Toast.LENGTH_SHORT).show();
+//                }
+//
+//                else
+//                {
+//                    Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_up_all_fields), Toast.LENGTH_SHORT).show();
+//                }
+
+
             }
         });
 
@@ -381,5 +573,63 @@ public class SignUpPhoneActivity extends BaseActivity {
             }
         }
         return CountryZipCode;
+    }
+
+
+
+    //获取验证码
+    public void getVerification()
+    {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
+        params.put("verification_action", "register");
+
+        new HttpTools(SignUpPhoneActivity.this).post(Constant.API_VERIFICATION, params,new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+
+                    if ("Fail".equals(jsonObject.getString("response_status"))) {
+                        Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_verification_fail), Toast.LENGTH_SHORT).show();
+                    } else if ("Success".equals(jsonObject.getString("response_status"))){
+                        Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_verification_successful), Toast.LENGTH_SHORT).show();
+                        etVerifyCode.requestFocus();
+                    }
+                    else {
+                        Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(SignUpPhoneActivity.this,getString(R.string.text_error), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 }

@@ -11,11 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -161,14 +159,21 @@ public class PathRelationshipActivity extends BaseActivity {
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_PATH_RELATIONSHIP, params);
 
-        StringRequest srPhoto = new StringRequest(url, new Response.Listener<String>() {
+        new HttpTools(PathRelationshipActivity.this).get(url, null, new HttpCallback() {
+            @Override
+            public void onStart() {
 
-            GsonBuilder gsonb = new GsonBuilder();
-
-            Gson gson = gsonb.create();
+            }
 
             @Override
-            public void onResponse(String response) {
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
 
                 Log.d("","!!!!!!!!" + response);
 //                if ("[]".equals(response))
@@ -190,17 +195,75 @@ public class PathRelationshipActivity extends BaseActivity {
                 {
                     ll[j].setVisibility(View.INVISIBLE);
                 }
+            }
 
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(PathRelationshipActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onCancelled() {
 
             }
-        },new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onLoading(long count, long current) {
 
             }
         });
-        VolleyUtil.addRequest2Queue(PathRelationshipActivity.this, srPhoto, "");
+
+
+
+
+
+
+
+
+
+
+
+
+//        StringRequest srPhoto = new StringRequest(url, new Response.Listener<String>() {
+//
+//            GsonBuilder gsonb = new GsonBuilder();
+//
+//            Gson gson = gsonb.create();
+//
+//            @Override
+//            public void onResponse(String response) {
+//
+//                Log.d("","!!!!!!!!" + response);
+////                if ("[]".equals(response))
+////                {
+////                    Toast.makeText(PathRelationshipActivity.this, "", Toast.LENGTH_SHORT).show();
+////                    finish();
+////                }
+//                pathList = gson.fromJson(response, new TypeToken<ArrayList<MemberPathEntity>>() {
+//                }.getType());
+//
+//                for (int i = 0; i < pathList.size(); i++) {//关系列表
+//                    ll[i].setVisibility(View.VISIBLE);
+//                    VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+//                    tvRelationships[i].setText(pathList.get(i).getRelationship());
+//                    tvNames[i].setText(pathList.get(i).getMember_fullname());
+//                }
+//
+//                for (int j = pathList.size(); j < 4 ; j++)//其他空位
+//                {
+//                    ll[j].setVisibility(View.INVISIBLE);
+//                }
+//
+//
+//
+//            }
+//        },new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//            }
+//        });
+//        VolleyUtil.addRequest2Queue(PathRelationshipActivity.this, srPhoto, "");
     }
 
     @Override
@@ -233,6 +296,8 @@ public class PathRelationshipActivity extends BaseActivity {
 
     public void updateRelationship()
     {
+        RequestInfo requestInfo = new RequestInfo();
+
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("member_id", memberId);
         jsonParams.put("user_relationship_name", tvRelationship.getText().toString());
@@ -240,10 +305,22 @@ public class PathRelationshipActivity extends BaseActivity {
         jsonParams.put("member_status", member_status);
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-        StringRequest srUpdateRelationship = new StringRequest(Request.Method.PUT, String.format(Constant.API_UPDATE_RELATIONSHIP_NICKNAME, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+        requestInfo.url = String.format(Constant.API_UPDATE_RELATIONSHIP_NICKNAME, MainActivity.getUser().getUser_id());
+        requestInfo.jsonParam = jsonParamsString;
 
+        new HttpTools(PathRelationshipActivity.this).put(requestInfo, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
 
@@ -254,24 +331,68 @@ public class PathRelationshipActivity extends BaseActivity {
                         Toast.makeText(PathRelationshipActivity.this, getString(R.string.fail_update_relationship), Toast.LENGTH_SHORT).show();//失败
                     }
                 } catch (JSONException e) {
+                    Toast.makeText(PathRelationshipActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                //TODO
-                error.printStackTrace();
+            public void onError(Exception e) {
                 Toast.makeText(PathRelationshipActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
             }
-        }) {
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
-                return jsonParamsString.getBytes();
+            public void onCancelled() {
+
             }
-        };
-        VolleyUtil.addRequest2Queue(PathRelationshipActivity.this, srUpdateRelationship, "");
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+//        StringRequest srUpdateRelationship = new StringRequest(Request.Method.PUT, String.format(Constant.API_UPDATE_RELATIONSHIP_NICKNAME, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                try {
+//                    JSONObject jsonObject = new JSONObject(response);
+//
+//                    if (("200").equals(jsonObject.getString("response_status_code"))) {
+//                        Toast.makeText(PathRelationshipActivity.this, getString(R.string.successfully_update_relationship), Toast.LENGTH_SHORT).show();//成功
+//                        requestData();
+//                    } else {
+//                        Toast.makeText(PathRelationshipActivity.this, getString(R.string.fail_update_relationship), Toast.LENGTH_SHORT).show();//失败
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                //TODO
+//                error.printStackTrace();
+//                Toast.makeText(PathRelationshipActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//            }
+//        }) {
+//
+//            @Override
+//            public byte[] getBody() throws AuthFailureError {
+//                return jsonParamsString.getBytes();
+//            }
+//        };
+//        VolleyUtil.addRequest2Queue(PathRelationshipActivity.this, srUpdateRelationship, "");
     }
 }

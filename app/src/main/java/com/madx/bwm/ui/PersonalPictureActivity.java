@@ -10,7 +10,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -30,8 +29,8 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.NetworkUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -129,7 +128,7 @@ public class PersonalPictureActivity extends BaseActivity {
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(PersonalPictureActivity.this, CACHE_PIC_NAME_TEMP));
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getFile(PersonalPictureActivity.this, CACHE_PIC_NAME_TEMP));
                     if (new File(uri.getPath()).exists()) {
                         try {
                             startPhotoZoom(uri, false);
@@ -246,7 +245,7 @@ public class PersonalPictureActivity extends BaseActivity {
             intent.putExtra("noFaceDetection", true);
 
             //		if(fromPhoto){
-            File f = PicturesCacheUtil.getCachePicFileByName(PersonalPictureActivity.this, CACHE_PIC_NAME);
+            File f = PicturesCacheUtil.getFile(PersonalPictureActivity.this, CACHE_PIC_NAME);
             mCropImagedUri = Uri.fromFile(f);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
             //		}else{
@@ -274,6 +273,8 @@ public class PersonalPictureActivity extends BaseActivity {
         userEntity = (UserEntity) getIntent().getExtras().getSerializable("user");
         appTokenEntity = (AppTokenEntity)getIntent().getExtras().getSerializable("token");
 
+        App.initToken(userEntity.getUser_login_id(), appTokenEntity);
+
         ivPhone = getViewById(R.id.iv_personal_picture);
 
         llCamera = getViewById(R.id.ll_from_camera);
@@ -281,8 +282,6 @@ public class PersonalPictureActivity extends BaseActivity {
 
         tvSkip = getViewById(R.id.tv_skip);
         btnStartingBonding = getViewById(R.id.btn_starting_bonding);
-
-
 
         llCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -293,7 +292,7 @@ public class PersonalPictureActivity extends BaseActivity {
 
                 // 下面这句指定调用相机拍照后的照片存储的路径
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getCachePicFileByName(PersonalPictureActivity.this,
+                        .fromFile(PicturesCacheUtil.getFile(PersonalPictureActivity.this,
                                 CACHE_PIC_NAME_TEMP)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
@@ -329,9 +328,13 @@ public class PersonalPictureActivity extends BaseActivity {
         btnStartingBonding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
 
-                uploadImage();
+                if (!NetworkUtil.isNetworkConnected(PersonalPictureActivity.this)) {
+                    Toast.makeText(PersonalPictureActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                uploadImage();//上传照片
             }
         });
     }
@@ -354,7 +357,7 @@ public class PersonalPictureActivity extends BaseActivity {
             return;
         }
 
-        String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 720, 1280, false);
+        String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 480, 800, false);
         File file = new File(path);
 
 //        File f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
@@ -373,43 +376,38 @@ public class PersonalPictureActivity extends BaseActivity {
         new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, new HttpCallback() {
             @Override
             public void onStart() {
-                Log.i("", "11response==========");
             }
 
             @Override
             public void onFinish() {
-                Log.i("", "222response==========");
             }
 
             @Override
             public void onResult(String response) {
-                Log.i("", "333response==========" + response);
                 try {
                     String responseStatus;
                     JSONObject jsonObject = new JSONObject(response);
                     responseStatus = jsonObject.getString("response_status");
-                    if (responseStatus.equals("Fail")) {
+                    if ("Fail".equals(responseStatus)) {
                         progressDialog.dismiss();
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_updateProPicFail), Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else if ("Success".equals(responseStatus)){
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
-
-//                        Intent intent = new Intent(PersonalPictureActivity.this, MainActivity.class);
-//                        App.changeLoginedUser(userEntity, appTokenEntity);
-//                        startActivity(intent);
-//                        progressDialog.dismiss();
-//                        finish();
 
                         Intent intent = new Intent(PersonalPictureActivity.this, MainActivity.class);
                         ComponentName cn = intent.getComponent();
                         Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-                        App.changeLoginedUser(userEntity, appTokenEntity);
+                        App.changeLoginedUser(userEntity, appTokenEntity);//可能会传入没有数据的???
                         startActivity(mainIntent);
+                    }
+                    else
+                    {
+                        Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
-
                     }
 
-                } catch (JSONException e) {
+                } catch (Exception e) {
+                    Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                     e.printStackTrace();
                 }
@@ -417,14 +415,12 @@ public class PersonalPictureActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                Log.i("", "444response==========");
                 Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
 
             @Override
             public void onCancelled() {
-                Log.i("", "555response==========");
             }
 
             @Override
@@ -446,5 +442,13 @@ public class PersonalPictureActivity extends BaseActivity {
             }
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

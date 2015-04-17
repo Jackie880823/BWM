@@ -17,13 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.StringRequest;
 import com.gc.materialdesign.widgets.Dialog;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
@@ -330,6 +326,9 @@ public class MyViewProfileActivity extends BaseActivity {
             userGender = "F";
         }
 
+
+        RequestInfo requestInfo = new RequestInfo();
+
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_surname", etLastName.getText().toString());
         jsonParams.put("user_given_name", etFirstName.getText().toString());
@@ -338,85 +337,146 @@ public class MyViewProfileActivity extends BaseActivity {
         jsonParams.put("user_location_name", etRegion.getText().toString());
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-        StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+        requestInfo.url =String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id());
+        requestInfo.jsonParam = jsonParamsString;
 
-            GsonBuilder gsonb = new GsonBuilder();
+        new HttpTools(MyViewProfileActivity.this).put(requestInfo, new HttpCallback() {
+            @Override
+            public void onStart() {
 
-            Gson gson = gsonb.create();
+            }
 
             @Override
-            public void onResponse(String response) {
+            public void onFinish() {
 
-                try {
+            }
 
-                    if(!TextUtils.isEmpty(response)){
-                        if(response.contains("changedFlag")){
-//                            Toast.makeText(MyViewProfileActivity.this, "You didn't change information.", Toast.LENGTH_SHORT).show();
-                        }else if(response.contains("response_status")){
-                            /**
-                             * begin QK
-                             */
-                            Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_fail_update_information), Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_success_update_information), Toast.LENGTH_SHORT).show();
-                            /**
-                             * end
-                             */
-                            isUploadNameSuccess = true;
+            @Override
+            public void onResult(String response) {
 
-                            App.changeLoginedUser(gson.fromJson(response, UserEntity.class));
-                            List userList = new ArrayList<UserEntity>();
-                            userList.add(gson.fromJson(response, UserEntity.class));
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
 
-                            PreferencesUtil.saveValue(MyViewProfileActivity.this, "user", gson.toJson(gson.fromJson(response, UserEntity.class)));
-
-
-                            if (!isUploadImage)
-                            {
-                                Intent intent = new Intent();
-                                intent.putExtra("name", etFirstName.getText().toString());
-                                setResult(RESULT_OK, intent);
-                                finish();
-                            }
-
+                if(!TextUtils.isEmpty(response)){
+                    if(response.contains("changedFlag")){
+                    }else if(response.contains("response_status")){
+                        Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_fail_update_information), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_success_update_information), Toast.LENGTH_SHORT).show();
+                        isUploadNameSuccess = true;
+                        App.changeLoginedUser(gson.fromJson(response, UserEntity.class));
+                        List userList = new ArrayList<UserEntity>();
+                        userList.add(gson.fromJson(response, UserEntity.class));
+                        PreferencesUtil.saveValue(MyViewProfileActivity.this, "user", gson.toJson(gson.fromJson(response, UserEntity.class)));
+                        if (!isUploadImage)
+                        {
+                            Intent intent = new Intent();
+                            intent.putExtra("name", etFirstName.getText().toString());
+                            setResult(RESULT_OK, intent);
+                            finish();
                         }
                     }
-
-                } catch (Exception e) {
-                    /**
-                     * begin QK
-                     */
-                    Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
-                    /**
-                     * end
-                     */
-                    e.printStackTrace();
                 }
-
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
 
-                error.printStackTrace();
-                /**
-                 * begin QK
-                 */
+            @Override
+            public void onError(Exception e) {
                 Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                /**
-                 * end
-                 */
             }
-        }) {
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
-                return jsonParamsString.getBytes();
+            public void onCancelled() {
+
             }
 
-        };
+            @Override
+            public void onLoading(long count, long current) {
 
-        VolleyUtil.addRequest2Queue(MyViewProfileActivity.this, srRemoveMember, "");
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        HashMap<String, String> jsonParams = new HashMap<String, String>();
+//        jsonParams.put("user_surname", etLastName.getText().toString());
+//        jsonParams.put("user_given_name", etFirstName.getText().toString());
+//        jsonParams.put("user_gender", userGender);
+//        jsonParams.put("user_dob", tvBirthday.getText().toString());
+//        jsonParams.put("user_location_name", etRegion.getText().toString());
+//        final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+//
+//        StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+//
+//            GsonBuilder gsonb = new GsonBuilder();
+//
+//            Gson gson = gsonb.create();
+//
+//            @Override
+//            public void onResponse(String response) {
+//
+//                if(!TextUtils.isEmpty(response)){
+//                    if(response.contains("changedFlag")){
+////                            Toast.makeText(MyViewProfileActivity.this, "You didn't change information.", Toast.LENGTH_SHORT).show();
+//                    }else if(response.contains("response_status")){
+//                        /**
+//                         * begin QK
+//                         */
+//                        Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_fail_update_information), Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_success_update_information), Toast.LENGTH_SHORT).show();
+//                        /**
+//                         * end
+//                         */
+//                        isUploadNameSuccess = true;
+//
+//                        App.changeLoginedUser(gson.fromJson(response, UserEntity.class));
+//                        List userList = new ArrayList<UserEntity>();
+//                        userList.add(gson.fromJson(response, UserEntity.class));
+//
+//                        PreferencesUtil.saveValue(MyViewProfileActivity.this, "user", gson.toJson(gson.fromJson(response, UserEntity.class)));
+//
+//
+//                        if (!isUploadImage)
+//                        {
+//                            Intent intent = new Intent();
+//                            intent.putExtra("name", etFirstName.getText().toString());
+//                            setResult(RESULT_OK, intent);
+//                            finish();
+//                        }
+//
+//                    }
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//
+//                error.printStackTrace();
+//
+//                Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//
+//            }
+//        }) {
+//
+//            @Override
+//            public byte[] getBody() throws AuthFailureError {
+//                return jsonParamsString.getBytes();
+//            }
+//
+//        };
+//
+//        VolleyUtil.addRequest2Queue(MyViewProfileActivity.this, srRemoveMember, "");
     }
 
     private void showSelectDialog()
@@ -468,7 +528,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
                 // 下面这句指定调用相机拍照后的照片存储的路径
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getCachePicFileByName(MyViewProfileActivity.this,
+                        .fromFile(PicturesCacheUtil.getFile(MyViewProfileActivity.this,
                                 CACHE_PIC_NAME_TEMP)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
@@ -512,7 +572,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(MyViewProfileActivity.this, CACHE_PIC_NAME_TEMP));
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getFile(MyViewProfileActivity.this, CACHE_PIC_NAME_TEMP));
                     if (new File(uri.getPath()).exists()) {
                         try {
                             startPhotoZoom(uri, false);
@@ -634,7 +694,7 @@ public class MyViewProfileActivity extends BaseActivity {
             intent.putExtra("noFaceDetection", true);
 
             //		if(fromPhoto){
-            File f = PicturesCacheUtil.getCachePicFileByName(MyViewProfileActivity.this, CACHE_PIC_NAME);
+            File f = PicturesCacheUtil.getFile(MyViewProfileActivity.this, CACHE_PIC_NAME);
             mCropImagedUri = Uri.fromFile(f);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
             //		}else{
@@ -663,8 +723,6 @@ public class MyViewProfileActivity extends BaseActivity {
             return;
         }
 
-        progressDialog.show();
-
         String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 480, 800, false);
         File file = new File(path);
 
@@ -675,6 +733,9 @@ public class MyViewProfileActivity extends BaseActivity {
 
             return;
         }
+
+        progressDialog.show();
+
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
         params.put("fileName", "UploadPersonalPicture" + MainActivity.getUser().getUser_id());
@@ -702,20 +763,13 @@ public class MyViewProfileActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     responseStatus = jsonObject.getString("response_status");
                     if (responseStatus.equals("Fail")) {
-                        /**
-                         * begin QK
-                         */
                         Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_update_proPicFail), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
 
                     } else {
                         progressDialog.dismiss();
                         Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
-                        /**
-                         * end
-                         */
                         isUploadImageSuccess = true;
-
                         Intent intent = new Intent();
                         intent.putExtra("name", etFirstName.getText().toString());
                         setResult(RESULT_OK, intent);
@@ -729,20 +783,12 @@ public class MyViewProfileActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                Log.i("", "444response==========");
                 progressDialog.dismiss();
-                /**
-                 * begin QK
-                 */
                 Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
-                /**
-                 * end
-                 */
             }
 
             @Override
             public void onCancelled() {
-                Log.i("", "555response==========");
             }
 
             @Override
@@ -823,5 +869,13 @@ public class MyViewProfileActivity extends BaseActivity {
         });
 
         pickDateTimeDialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        super.onDestroy();
     }
 }

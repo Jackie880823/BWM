@@ -21,9 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,6 +32,7 @@ import com.madx.bwm.R;
 import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 
 import org.json.JSONException;
@@ -240,10 +240,19 @@ public class CreateGroupActivity extends BaseActivity {
     @Override
     public void requestData() {
 
-        StringRequest stringRequest = new StringRequest(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+        new HttpTools(CreateGroupActivity.this).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
 
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
 
                 Gson gson = gsonb.create();
@@ -264,18 +273,68 @@ public class CreateGroupActivity extends BaseActivity {
 
                 } catch (JSONException e)
                 {
+                    MessageUtil.showMessage(CreateGroupActivity.this, getResources().getString(R.string.text_error));
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(CreateGroupActivity.this, getResources().getString(R.string.text_error));
+            }
+
+            @Override
+            public void onCancelled() {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("", "error=====" + error.getMessage());
+            public void onLoading(long count, long current) {
+
             }
         });
 
-        VolleyUtil.addRequest2Queue(this.getApplicationContext(), stringRequest, "");
+
+
+
+
+
+//        StringRequest stringRequest = new StringRequest(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                GsonBuilder gsonb = new GsonBuilder();
+//
+//                Gson gson = gsonb.create();
+//
+//                try {
+//                    JSONObject jsonObject = new JSONObject(response);
+//
+//                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {}.getType());
+//                    groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {}.getType());
+//
+//                    CreateGroupAdapter createGroupAdapter = new CreateGroupAdapter(CreateGroupActivity.this, R.layout.gridview_item_for_creategroup, userList, groupList);
+//
+//                    mGridView.setAdapter(createGroupAdapter);
+//
+//                    createGroupAdapter.notifyDataSetChanged();
+//
+//                    progressBar.setVisibility(View.GONE);
+//
+//                } catch (JSONException e)
+//                {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.i("", "error=====" + error.getMessage());
+//            }
+//        });
+//
+//        VolleyUtil.addRequest2Queue(this.getApplicationContext(), stringRequest, "");
 
     }
 
@@ -365,7 +424,6 @@ public class CreateGroupActivity extends BaseActivity {
                 viewHolder.imageRight.setChecked(false);
                 VolleyUtil.initNetworkImageView(mContext,viewHolder.imageMain,String.format(Constant.API_GET_PIC,Constant.Module_profile, userEntity.getUser_id(),"profile"),R.drawable.network_image_default, R.drawable.network_image_default);
             }
-
 
             return convertView;
         }

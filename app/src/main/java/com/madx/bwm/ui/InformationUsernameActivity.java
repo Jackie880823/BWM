@@ -26,7 +26,6 @@ import com.madx.bwm.entity.AppTokenEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.VolleyUtil;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -219,7 +218,8 @@ public class InformationUsernameActivity extends BaseActivity {
                                     intent.putExtra("token", tokenEntity);
                                     startActivity(intent);
                                 }
-                            } catch (JSONException e) {
+                            } catch (Exception e) {
+                                Toast.makeText(InformationUsernameActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
@@ -227,15 +227,9 @@ public class InformationUsernameActivity extends BaseActivity {
 
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            //TODO
                             error.printStackTrace();
-                            /**
-                             * begin QK
-                             */
                             Toast.makeText(InformationUsernameActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                            /**
-                             * end
-                             */
+
                         }
                     }) {
                         @Override
@@ -258,7 +252,6 @@ public class InformationUsernameActivity extends BaseActivity {
                             return params;
                         }
                     };
-                    stringRequestPost.setShouldCache(false);
                     VolleyUtil.addRequest2Queue(InformationUsernameActivity.this, stringRequestPost, "");
                 }
                 else if (etFirstName.getText().toString().length() == 0)
@@ -282,7 +275,7 @@ public class InformationUsernameActivity extends BaseActivity {
                 }
                 else
                 {
-                    Toast.makeText(InformationUsernameActivity.this,getResources().getString(R.string.text_up_all_fields), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InformationUsernameActivity.this,getResources().getString(R.string.text_full_all_fields), Toast.LENGTH_SHORT).show();
                 }
                 /**
                  * end

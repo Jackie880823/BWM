@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,12 +23,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.StringRequest;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesign.widgets.Dialog;
 import com.gc.materialdesign.widgets.ProgressDialog;
@@ -42,6 +40,7 @@ import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.MessageUtil;
+import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.MyDialog;
 
@@ -64,7 +63,6 @@ public class MyFamilyActivity extends BaseActivity {
 
     List<UserEntity> searchUserList = new ArrayList<>();//好友
     List<GroupEntity> searchGroupList = new ArrayList<>();;//群组
-
     EditText etSearch;//搜索
     Boolean isSearch = false;
 
@@ -77,6 +75,9 @@ public class MyFamilyActivity extends BaseActivity {
     private Dialog showSelectDialog;
 
     ProgressBarCircularIndeterminate ProgressBar;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean isRefresh;
 
     @Override
     public int getLayout() {
@@ -111,6 +112,9 @@ public class MyFamilyActivity extends BaseActivity {
 
     @Override
     public void initView() {
+
+        swipeRefreshLayout = getViewById(R.id.swipe_refresh_layout);
+
         etSearch = getViewById(R.id.et_search);
 
         mGridView = getViewById(R.id.myfamily_gridView);
@@ -121,6 +125,29 @@ public class MyFamilyActivity extends BaseActivity {
 
         progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_download));
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                if (!NetworkUtil.isNetworkConnected(MyFamilyActivity.this)) {
+                    /**
+                     * begin QK
+                     */
+                    Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+                    finishReFresh();
+                    /**
+                     * end
+                     */
+                    return;
+                }
+
+                isRefresh = true;
+                requestData();
+
+            }
+
+        });
+
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -130,7 +157,6 @@ public class MyFamilyActivity extends BaseActivity {
                     if (position == 0)
                     {
                         //下载PDF,并查看
-                        progressDialog.show();
                         getUrl();
                     }
                     else
@@ -290,10 +316,26 @@ public class MyFamilyActivity extends BaseActivity {
     @Override
     public void requestData() {
 
-        StringRequest stringRequest = new StringRequest(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+        if (!NetworkUtil.isNetworkConnected(this)) {
+            Toast.makeText(this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+            finishReFresh();
+            return;
+        }
 
+
+        new HttpTools(this).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
 
                 Gson gson = gsonb.create();
@@ -303,26 +345,74 @@ public class MyFamilyActivity extends BaseActivity {
 
                     userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {}.getType());
                     groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {}.getType());
-
+                    finishReFresh();
                     MyFamilyAdapter myFamilyAdapter = new MyFamilyAdapter(MyFamilyActivity.this, R.layout.gridview_item_for_myfamily, userList, groupList);
                     mGridView.setAdapter(myFamilyAdapter);
                     ProgressBar.setVisibility(View.GONE);
                 } catch (JSONException e)
                 {
-                    ProgressBar.setVisibility(View.GONE);
+                    MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                    if (isRefresh) {
+                        finishReFresh();
+                    }
                     e.printStackTrace();
                 }
+            }
 
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                if (isRefresh) {
+                    finishReFresh();
+                }
+            }
+
+            @Override
+            public void onCancelled() {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                ProgressBar.setVisibility(View.GONE);
-                Log.i("", "error=====" + error.getMessage());
+            public void onLoading(long count, long current) {
+
             }
         });
-        VolleyUtil.addRequest2Queue(this.getApplicationContext(), stringRequest, "");
+
+
+
+//        StringRequest stringRequest = new StringRequest(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                GsonBuilder gsonb = new GsonBuilder();
+//
+//                Gson gson = gsonb.create();
+//
+//                try {
+//                    JSONObject jsonObject = new JSONObject(response);
+//
+//                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {}.getType());
+//                    groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {}.getType());
+//
+//                    MyFamilyAdapter myFamilyAdapter = new MyFamilyAdapter(MyFamilyActivity.this, R.layout.gridview_item_for_myfamily, userList, groupList);
+//                    mGridView.setAdapter(myFamilyAdapter);
+//                    ProgressBar.setVisibility(View.GONE);
+//                } catch (JSONException e)
+//                {
+//                    ProgressBar.setVisibility(View.GONE);
+//                    e.printStackTrace();
+//                }
+//
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                ProgressBar.setVisibility(View.GONE);
+//                Log.i("", "error=====" + error.getMessage());
+//            }
+//        });
+//        VolleyUtil.addRequest2Queue(this.getApplicationContext(), stringRequest, "");
     }
 
     @Override
@@ -415,13 +505,7 @@ public class MyFamilyActivity extends BaseActivity {
 
             if (position == 0)
             {
-                /**
-                 * begin QK
-                 */
                 viewHolder.textName.setText(getResources().getString(R.string.text_family_tree));
-                /**
-                 * end
-                 */
                 viewHolder.imageMain.setDefaultImageResId(R.drawable.family_tree);
                 viewHolder.imageMain.setImageResource(R.drawable.family_tree);
             }
@@ -520,18 +604,33 @@ public class MyFamilyActivity extends BaseActivity {
 
     private void getUrl()
     {
-        StringRequest srUrl = new StringRequest(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+
+
+        if (!NetworkUtil.isNetworkConnected(MyFamilyActivity.this)) {
+            Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        progressDialog.show();
+
+        new HttpTools(this).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()),null, new HttpCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if ("Success".equals(jsonObject.getString("response_status")))
                     {
                         urlString = jsonObject.getString("filePath");
-                        /**
-                         * begin QK
-                         */
-//                        Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_success_get_pdf), Toast.LENGTH_SHORT).show();
                         if (!TextUtils.isEmpty(urlString))
                         {
                             getPdf();
@@ -539,23 +638,70 @@ public class MyFamilyActivity extends BaseActivity {
                     }
                     else
                     {
-//                        Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_fail_get_pdf), Toast.LENGTH_SHORT).show();
-                        /**
-                         * end
-                         */
+                        MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
                         progressDialog.dismiss();
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
+                    MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                    progressDialog.dismiss();
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onError(Exception e) {
+                MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
                 progressDialog.dismiss();
             }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
         });
-        VolleyUtil.addRequest2Queue(MyFamilyActivity.this, srUrl, "");
+
+//
+//        StringRequest srUrl = new StringRequest(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                try {
+//                    JSONObject jsonObject = new JSONObject(response);
+//                    if ("Success".equals(jsonObject.getString("response_status")))
+//                    {
+//                        urlString = jsonObject.getString("filePath");
+//                        /**
+//                         * begin QK
+//                         */
+////                        Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_success_get_pdf), Toast.LENGTH_SHORT).show();
+//                        if (!TextUtils.isEmpty(urlString))
+//                        {
+//                            getPdf();
+//                        }
+//                    }
+//                    else
+//                    {
+////                        Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_fail_get_pdf), Toast.LENGTH_SHORT).show();
+//                        /**
+//                         * end
+//                         */
+//                        progressDialog.dismiss();
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                progressDialog.dismiss();
+//            }
+//        });
+//        VolleyUtil.addRequest2Queue(MyFamilyActivity.this, srUrl, "");
     }
 
     private final static String CACHE_FILE_NAME="/cache_%s.pdf";
@@ -564,7 +710,6 @@ public class MyFamilyActivity extends BaseActivity {
     public void getPdf(){
 
         final String target = FileUtil.getCacheFilePath(this)+String.format(CACHE_FILE_NAME,""+System.currentTimeMillis());
-//        final String target = Environment.getExternalStorageDirectory()+ "/download/0.pdf";
 
         new HttpTools(this).download(urlString, target, true, new HttpCallback() {
             @Override
@@ -591,6 +736,7 @@ public class MyFamilyActivity extends BaseActivity {
                         startActivity(intent);
                     }
                     catch (ActivityNotFoundException e) {
+                        MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
                         System.out.println("打开失败");
                     }
                 }
@@ -600,6 +746,7 @@ public class MyFamilyActivity extends BaseActivity {
             @Override
             public void onError(Exception e) {
                 progressDialog.dismiss();
+                MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
             }
 
             @Override
@@ -681,10 +828,6 @@ public class MyFamilyActivity extends BaseActivity {
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_UPDATE_MISS, MainActivity.getUser().getUser_id());
 
-        Log.d("","member_id" + member_id);
-
-        Log.d("","member_id2" + requestInfo.jsonParam);
-
         new HttpTools(this).put(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
@@ -703,15 +846,10 @@ public class MyFamilyActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(string);
                     if ("200".equals(jsonObject.getString("response_status_code")))
                     {
-                        /**
-                         * begin QK
-                         */
                         Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
-                        /**
-                         * end
-                         */
                     }
                 } catch (JSONException e) {
+                    MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
                     e.printStackTrace();
                 }
 
@@ -719,7 +857,7 @@ public class MyFamilyActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-
+                MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
             }
 
             @Override
@@ -732,5 +870,10 @@ public class MyFamilyActivity extends BaseActivity {
 
             }
         });
+    }
+
+    private void finishReFresh() {
+        swipeRefreshLayout.setRefreshing(false);
+        isRefresh = false;
     }
 }

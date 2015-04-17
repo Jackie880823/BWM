@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -13,10 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesign.widgets.Dialog;
 import com.google.gson.Gson;
@@ -28,8 +30,8 @@ import com.madx.bwm.adapter.MessageFragmentPagerAdapter;
 import com.madx.bwm.adapter.MessageGroupAdapter;
 import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
-import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.util.MessageUtil;
+import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.widget.MyDialog;
 
 import org.json.JSONException;
@@ -106,6 +108,22 @@ public class MessageFragment extends BaseFragment<MainActivity> {
             }
         });
 
+        mPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        swipeRefreshLayout.setEnabled(false);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        swipeRefreshLayout.setEnabled(true);
+                        break;
+                }
+                return false;
+            }
+        });
+
 
         //重写MainActivity右button事件
         getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
@@ -120,6 +138,12 @@ public class MessageFragment extends BaseFragment<MainActivity> {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
+                if (!NetworkUtil.isNetworkConnected(getActivity())) {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+                    finishReFresh();
+                    return;
+                }
 
                 isRefresh = true;
 
@@ -137,7 +161,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                 }
 
                 groupEntityList.clear();
-                messageGroupAdapter = new MessageGroupAdapter(getActivity(), R.layout.message_listview_item, groupEntityList);
+                messageGroupAdapter = new MessageGroupAdapter(getActivity(),  groupEntityList);
                 listView.setAdapter(messageGroupAdapter);
                 messageGroupAdapter.notifyDataSetChanged();
                 requestData();
@@ -150,16 +174,33 @@ public class MessageFragment extends BaseFragment<MainActivity> {
     @Override
     public void requestData() {
 
-        HashMap<String, String> params = new HashMap<String, String>();
+        if (!NetworkUtil.isNetworkConnected(getActivity())) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+            finishReFresh();
+            return;
+        }
 
+        RequestInfo requestInfo = new RequestInfo();
+
+        HashMap<String, String> params = new HashMap<String, String>();
         params.put("limit", "20");
         params.put("start", "0");
+        requestInfo.params = params;
+        requestInfo.url = String.format(Constant.API_MESSAGE_MAIN, MainActivity.getUser().getUser_id());
 
-        String url = UrlUtil.generateUrl(Constant.API_MESSAGE_MAIN, params);
-
-        StringRequest stringRequest = new StringRequest(String.format(url, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+        new HttpTools(getActivity()).get(requestInfo, new HttpCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
 
                 GsonBuilder gsonb = new GsonBuilder();
 
@@ -175,7 +216,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
                     finishReFresh();
 
-                    messageGroupAdapter = new MessageGroupAdapter(getActivity(), R.layout.message_listview_item, groupEntityList);
+                    messageGroupAdapter = new MessageGroupAdapter(getActivity(),  groupEntityList);
                     listView.setAdapter(messageGroupAdapter);
 //                    messageGroupAdapter.notifyDataSetChanged();
 
@@ -229,21 +270,130 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                     mPager.setOnPageChangeListener(new MyOnPageChangeListener());
                     progressBar.setVisibility(View.GONE);
                 } catch (JSONException e) {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     if (isRefresh) {
                         finishReFresh();
                     }
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                if (isRefresh) {
-                    finishReFresh();
-                }
+            public void onError(Exception e) {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    if (isRefresh) {
+                        finishReFresh();
+                    }
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
             }
         });
-        VolleyUtil.addRequest2Queue(getActivity().getApplicationContext(), stringRequest, "");
+
+
+
+        /**旧请求*/
+//        HashMap<String, String> params = new HashMap<String, String>();
+//
+//        params.put("limit", "20");
+//        params.put("start", "0");
+//
+//        String url = UrlUtil.generateUrl(Constant.API_MESSAGE_MAIN, params);
+//
+//        StringRequest stringRequest = new StringRequest(String.format(url, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                GsonBuilder gsonb = new GsonBuilder();
+//
+//                Gson gson = gsonb.create();
+//
+//                try {
+//                    JSONObject jsonObject = new JSONObject(response);
+//
+//                    userEntityList = gson.fromJson(jsonObject.getString("member"), new TypeToken<ArrayList<UserEntity>>() {
+//                    }.getType());
+//                    groupEntityList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {
+//                    }.getType());
+//
+//                    finishReFresh();
+//
+//                    messageGroupAdapter = new MessageGroupAdapter(getActivity(), R.layout.message_listview_item, groupEntityList);
+//                    listView.setAdapter(messageGroupAdapter);
+////                    messageGroupAdapter.notifyDataSetChanged();
+//
+//                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                            Intent intent = new Intent(getActivity(), ChatActivity.class);
+//                            intent.putExtra("type", 1);
+//                            intent.putExtra("groupEntity", groupEntityList.get(position));
+//                            view.findViewById(R.id.tv_num).setVisibility(View.GONE);//服务器会消除。本地直接直接消除。
+//                            startActivity(intent);
+//                        }
+//                    });
+//
+//                    fragmentsList = new ArrayList<Fragment>();
+//
+//                    //fragment页数
+//                    count = (userEntityList.size() % 8) == 0 ? (userEntityList.size() / 8) : (userEntityList.size() / 8 + 1);
+//
+//                    for (int i = 0; i < count; i++) {
+//                        pagerList = (ArrayList<UserEntity>) getPageData(i * 8);//传给每个Fragment的数据List
+//
+////                                fragment = new MessageTopFragment(pagerList);
+//
+//                        Bundle bundle = new Bundle();
+//
+////                                bundle.putParcelableArrayList("data",pagerList);
+//
+//                        bundle.putSerializable("data", pagerList);
+//
+//                        fragment = new MessageTopFragment();
+//
+//                        fragment.setArguments(bundle);
+//
+//                        fragmentsList.add(fragment);
+//                    }
+//
+//                    MessageFragmentPagerAdapter messageFragmentPagerAdapter = new MessageFragmentPagerAdapter(getChildFragmentManager(), fragmentsList);
+//                    mPager.setAdapter(messageFragmentPagerAdapter);
+//
+//                    for (int i = 0; i < fragmentsList.size(); i++) {
+//                        TextView tv = new TextView(getActivity());
+//                        tv.setBackgroundResource(R.drawable.bg_num_gray_message);
+//                        LinearLayout.LayoutParams mLayoutParams = new LinearLayout.LayoutParams(20, 20);
+//                        mLayoutParams.leftMargin = 10;
+//                        mLayoutParams.topMargin = 10;
+//                        mNumLayout.addView(tv,mLayoutParams);
+//                    }
+//
+//                    mPager.setCurrentItem(0);
+//                    mPager.setOnPageChangeListener(new MyOnPageChangeListener());
+//                    progressBar.setVisibility(View.GONE);
+//                } catch (JSONException e) {
+//                    if (isRefresh) {
+//                        finishReFresh();
+//                    }
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                if (isRefresh) {
+//                    finishReFresh();
+//                }
+//            }
+//        });
+//        VolleyUtil.addRequest2Queue(getActivity().getApplicationContext(), stringRequest, "");
     }
 
     public List<UserEntity> getPageData(int startIndex) {
@@ -279,11 +429,16 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
+
         }
 
         @Override
         public void onPageScrollStateChanged(int arg0) {
         }
+
+
+
+
     }
 
     public static MessageFragment newInstance(String... params) {
@@ -321,8 +476,9 @@ public class MessageFragment extends BaseFragment<MainActivity> {
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
-        progressBar.setVisibility(View.GONE);
     }
+
+
 
 }
 

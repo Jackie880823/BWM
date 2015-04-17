@@ -7,17 +7,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.MsgEntity;
-import com.madx.bwm.http.VolleyUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +21,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by christepherzhang on 15/4/1.
@@ -160,17 +155,30 @@ public class StickerFragment extends BaseFragment {
     //上传sticker 成功后再下载
     void postSticker(final int stickerName)
     {
-        StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_POST_STICKER, new Response.Listener<String>() {
 
-            GsonBuilder gsonb = new GsonBuilder();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("content_creator_id", MainActivity.getUser().getUser_id());
+        params.put("group_id", groupId);
+        params.put("content_type", "post");
+        params.put("sticker_group_path", path);
+        params.put("sticker_name", stickerName+"");
+        params.put("sticker_type", type);
 
-            Gson gson = gsonb.create();
+        new HttpTools(getActivity()).post(Constant.API_POST_STICKER, params, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
 
             @Override
-            public void onResponse(String response) {
+            public void onFinish() {
 
-//                getParentActivity();
-//                getActivity();//这两个什么区别呢?
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
 
                 chatActivity.getMsg();
 
@@ -179,30 +187,84 @@ public class StickerFragment extends BaseFragment {
 
 
                 } catch (JSONException e) {
+                    Toast.makeText(getActivity(), getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                //TODO
-                error.printStackTrace();
+            public void onError(Exception e) {
                 Toast.makeText(getActivity(), getString(R.string.text_error), Toast.LENGTH_SHORT).show();
             }
-        }) {
+
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("content_creator_id", MainActivity.getUser().getUser_id());
-                params.put("group_id", groupId);
-                params.put("content_type", "post");
-                params.put("sticker_group_path", path);
-                params.put("sticker_name", stickerName+"");
-                params.put("sticker_type", type);
-                return params;
+            public void onCancelled() {
+
             }
-        };
-        VolleyUtil.addRequest2Queue(getActivity(), stringRequestPost, "");
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_POST_STICKER, new Response.Listener<String>() {
+//
+//            GsonBuilder gsonb = new GsonBuilder();
+//
+//            Gson gson = gsonb.create();
+//
+//            @Override
+//            public void onResponse(String response) {
+//
+////                getParentActivity();
+////                getActivity();//这两个什么区别呢?
+//
+//                chatActivity.getMsg();
+//
+//                try {
+//                    JSONObject jsonObject = new JSONObject(response);
+//
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }, new Response.ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                //TODO
+//                error.printStackTrace();
+//                Toast.makeText(getActivity(), getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//            }
+//        }) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                HashMap<String, String> params = new HashMap<String, String>();
+//                params.put("content_creator_id", MainActivity.getUser().getUser_id());
+//                params.put("group_id", groupId);
+//                params.put("content_type", "post");
+//                params.put("sticker_group_path", path);
+//                params.put("sticker_name", stickerName+"");
+//                params.put("sticker_type", type);
+//                return params;
+//            }
+//        };
+//        VolleyUtil.addRequest2Queue(getActivity(), stringRequestPost, "");
     }
 }

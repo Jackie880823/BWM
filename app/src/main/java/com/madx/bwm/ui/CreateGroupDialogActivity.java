@@ -78,14 +78,8 @@ public class CreateGroupDialogActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group_dialog);
 
-        /**
-         * begin QK
-         */
         progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
 
-        /**
-         * end
-         */
         groupMembers = getIntent().getStringExtra("members_json");//上一个界面传来的成员数据(JSON格式)
         Log.d("", "groupMembers--->" + groupMembers);
 
@@ -110,13 +104,7 @@ public class CreateGroupDialogActivity extends Activity {
             public void onClick(View v) {
                 if (TextUtils.isEmpty(etGroupName.getText()))
                 {
-                    /**
-                     * begin QK
-                     */
                     Toast.makeText(CreateGroupDialogActivity.this,getResources().getString(R.string.text_input_your_group_name), Toast.LENGTH_SHORT).show();
-                    /**
-                     * end
-                     */
                 }
                 else
                 {
@@ -161,7 +149,7 @@ public class CreateGroupDialogActivity extends Activity {
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(CreateGroupDialogActivity.this, CACHE_PIC_NAME_TEMP));
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getFile(CreateGroupDialogActivity.this, CACHE_PIC_NAME_TEMP));
                     if (new File(uri.getPath()).exists()) {
                         try {
                             startPhotoZoom(uri,false);
@@ -287,7 +275,7 @@ public class CreateGroupDialogActivity extends Activity {
             intent.putExtra("noFaceDetection", true);
 
             //		if(fromPhoto){
-            File f = PicturesCacheUtil.getCachePicFileByName(CreateGroupDialogActivity.this, CACHE_PIC_NAME);
+            File f = PicturesCacheUtil.getFile(CreateGroupDialogActivity.this, CACHE_PIC_NAME);
             mCropImagedUri = Uri.fromFile(f);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
             //		}else{
@@ -349,12 +337,10 @@ public class CreateGroupDialogActivity extends Activity {
         new HttpTools(this).upload(Constant.API_CREATE_GROUP, params, new HttpCallback() {
             @Override
             public void onStart() {
-                Log.i("", "11response==========");
             }
 
             @Override
             public void onFinish() {
-                Log.i("", "222response==========");
             }
 
             @Override
@@ -366,23 +352,14 @@ public class CreateGroupDialogActivity extends Activity {
                     groupId = jsonObject.getString("group_id");
                     if (TextUtils.isEmpty(groupId))
                     {
-                        /**
-                         * begin QK
-                         */
+                        progressDialog.dismiss();
+                        btnDone.setEnabled(true);
                         Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_fail_to_create_group), Toast.LENGTH_SHORT).show();
-                        /**
-                         * end
-                         */
                     }
                     else
                     {
-                        /**
-                         * begin QK
-                         */
                         Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_success_to_create_group), Toast.LENGTH_SHORT).show();
-                        /**
-                         * end
-                         */
+
                         GroupEntity groupEntity = new GroupEntity();
                         groupEntity.setGroup_id(groupId);
                         groupEntity.setGroup_name(etGroupName.getText().toString());
@@ -398,27 +375,22 @@ public class CreateGroupDialogActivity extends Activity {
 
 
                 } catch (JSONException e) {
+                    progressDialog.dismiss();
+                    btnDone.setEnabled(true);
+                    Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                Log.i("", "444response==========");
                 progressDialog.dismiss();
                 btnDone.setEnabled(true);
-                /**
-                 * begin QK
-                 */
                 Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
-                /**
-                 * end
-                 */
             }
 
             @Override
             public void onCancelled() {
-                Log.i("", "555response==========");
             }
 
             @Override
@@ -452,7 +424,7 @@ public class CreateGroupDialogActivity extends Activity {
 
                 // 下面这句指定调用相机拍照后的照片存储的路径
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getCachePicFileByName(CreateGroupDialogActivity.this,
+                        .fromFile(PicturesCacheUtil.getFile(CreateGroupDialogActivity.this,
                                 CACHE_PIC_NAME_TEMP)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);

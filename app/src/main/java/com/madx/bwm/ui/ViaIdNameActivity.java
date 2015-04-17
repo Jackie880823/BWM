@@ -163,6 +163,9 @@ public class ViaIdNameActivity extends BaseActivity {
 //            }
 //        };
 //        VolleyUtil.addRequest2Queue(ViaIdNameActivity.this, srAddMember, "");
+
+
+
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("user_relationship_name", tvRelationship.getText().toString());
@@ -188,23 +191,24 @@ public class ViaIdNameActivity extends BaseActivity {
                         JSONObject jsonObject = new JSONObject(response);
                         if ("Success".equals(jsonObject.getString("response_status")))
                         {
-                            Toast.makeText(ViaIdNameActivity.this, "Success to add member.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ViaIdNameActivity.this, getString(R.string.text_success_add_member), Toast.LENGTH_SHORT).show();
                             finish();
                         }
                         else
                         {
-                            tvWarning.setText("Fail to add member. try again.");
+                            tvWarning.setText(getString(R.string.text_fail_add_member));
                             tvWarning.setVisibility(View.VISIBLE);
                         }
 
                 } catch (JSONException e) {
+                    Toast.makeText(ViaIdNameActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-
+                Toast.makeText(ViaIdNameActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
             }
 
             @Override
