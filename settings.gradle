@@ -1,1 +1,1 @@
-include ':app', ':Volley', ':MaterialDesignDemo', ':MaterialDesign', ':PhotoView'
+include ':app', ':Volley', ':MaterialDesign', ':PhotoView'
