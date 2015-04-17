@@ -1,0 +1,14 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/MaterialDesignDemo
+/fzAndroidMap
+/android_Holo_DateTimePicker
+/MaterialDesign/build
+/PhotoView/build
+/app/build
+/app/*.apk
+/app/*.iml
