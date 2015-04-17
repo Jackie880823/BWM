@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+        <TextView
+            android:id="@+id/tv_remove_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_remove_user"
+            android:gravity="center_horizontal"
+            android:textSize="@dimen/text_large_size"
+            android:textColor="@color/default_text_color_dark"
+            android:paddingTop="2dp"
+            android:padding="@dimen/default_content_padding"
+            android:background="@drawable/bg_white_gray"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_split_line"/>
+
+        <TextView
+            android:id="@+id/tv_family_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/text_view_profile"
+            android:textSize="@dimen/text_large_size"
+            android:background="@drawable/bg_white_gray"
+            android:textColor="@color/default_text_color_dark"
+            android:padding="@dimen/default_content_padding"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_split_line"/>
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/text_message_user"
+            android:background="@drawable/bg_white_gray"
+            android:textSize="@dimen/text_large_size"
+            android:textColor="@color/default_text_color_dark"
+            android:padding="@dimen/default_content_padding"/>
+
+</LinearLayout>

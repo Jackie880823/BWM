@@ -1,0 +1,86 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/top_event"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/CardViewDefault"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_content_padding">
+
+        <com.madx.bwm.widget.CircularNetworkImage
+            android:id="@+id/civ_user_head"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/birthday" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_brithday_title"
+                style="@style/text_title_default"
+                android:textColor="@color/default_text_color_dark"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                android:text="@string/title_birthday_title"
+                 />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_brithday_title"
+                android:layout_marginTop="@dimen/default_view_margin">
+
+                <View
+                    android:id="@+id/line"
+                    android:layout_width="1dp"
+                    android:layout_height="20dp"
+                    android:layout_centerInParent="true"
+
+                    android:background="@color/default_split_line" />
+
+                <TextView
+                    android:id="@+id/tv_birthday_date"
+                    style="@style/text_light_default"
+                    android:layout_marginRight="40dp"
+                    android:layout_toLeftOf="@+id/line"
+                    android:text="11 Dec" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:layout_toRightOf="@+id/line">
+
+
+                    <TextView
+                        android:id="@+id/tv_birthday_left_day_count"
+                        style="@style/text_light_default"
+                        android:layout_marginRight="@dimen/default_view_margin"
+                        android:textColor="@color/default_text_color_red" />
+
+                    <TextView
+                        android:id="@+id/tv_date_desc"
+                        style="@style/text_dark_default"
+                        android:layout_marginRight="@dimen/default_view_margin"
+                        android:text="@string/title_birthday_left_day_desc" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

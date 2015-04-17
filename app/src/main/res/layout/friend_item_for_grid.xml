@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/top_event"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/default_content_padding"
+    android:paddingBottom="@dimen/default_content_padding"
+    >
+
+     <com.madx.bwm.widget.CircularNetworkImage
+         android:id="@+id/iv_friend_head"
+         android:layout_width="@dimen/default_user_head_width_height"
+         android:layout_height="@dimen/default_user_head_width_height"
+         android:layout_gravity="center_horizontal"
+         />
+
+    <TextView
+        style="@style/text_light_default"
+        android:layout_width="wrap_content"
+        android:id="@+id/tv_friend_name"
+        android:textSize="@dimen/text_size_10sp"
+        android:lines="1"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        />
+
+
+
+</LinearLayout>
+

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<item android:state_enabled="false" android:drawable="@drawable/gs_btn_from" />
+    <item android:state_pressed="true" android:drawable="@drawable/gs_btn_to" />
+    <item android:state_focused="true"  android:drawable="@drawable/gs_btn_from" />-->
+
+    <item android:state_pressed="true" >
+        <shape>
+            <gradient
+                android:endColor="#005a7d"
+                android:startColor="#005a7d" />
+            <corners
+                android:radius="6dp" />
+        </shape>
+    </item>
+
+    <item android:state_focused="true"  >
+        <shape>
+            <gradient
+                android:endColor="#005a7d"
+                android:startColor="#005a7d" />
+            <corners
+                android:radius="6dp"  />
+        </shape>
+    </item>
+
+    <item android:state_enabled="false" >
+        <shape>
+            <gradient
+                android:endColor="#0087FF"
+                android:startColor="#0087FF" />
+            <corners
+                android:radius="6dp"  />
+        </shape>
+    </item>
+</selector>

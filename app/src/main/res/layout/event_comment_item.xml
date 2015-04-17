@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_content_padding"
+        android:layout_marginRight="@dimen/default_content_padding"
+        android:layout_marginTop="@dimen/default_content_padding"
+        android:orientation="horizontal">
+
+        <com.madx.bwm.widget.CircularNetworkImage
+            android:id="@+id/civ_comment_owner_head"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+             />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_comment_owner_name"
+                    style="@style/text_dark_default"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/btn_comment_del"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:src="@drawable/icon_delete"
+                    android:visibility="gone"
+                    />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_comment_content"
+                style="@style/text_dark_default" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_view_margin">
+
+                <TextView
+                    android:id="@+id/comment_date"
+                    style="@style/text_light_default"
+                    android:layout_alignParentBottom="true" />
+
+                <TextView
+                    android:id="@+id/tv_like_desc"
+                    style="@style/text_dark_default"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/text_like_desc"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_agree_count"
+                    style="@style/text_dark_default"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="@dimen/default_view_margin"
+                    android:layout_toLeftOf="@+id/tv_like_desc"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/iv_agree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/default_view_margin"
+                    android:layout_toLeftOf="@+id/tv_agree_count"
+                    android:background="@null" />
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        style="@style/split_line_default"
+        android:layout_marginTop="@dimen/default_view_margin" />
+</LinearLayout>

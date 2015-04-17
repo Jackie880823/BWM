@@ -1,0 +1,38 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:drawablePadding="10dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:singleLine="true"
+        android:paddingLeft="10dp"
+        android:hint=""
+        android:gravity="center_vertical"
+        android:drawableLeft="@drawable/search"
+        android:layout_below="@+id/fragment_main_top"
+        android:background="@drawable/et_round_white"
+        />
+
+    <com.madx.bwm.widget.LetterListView
+        android:id="@+id/letterListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/et_search">
+    </com.madx.bwm.widget.LetterListView>
+
+</RelativeLayout>

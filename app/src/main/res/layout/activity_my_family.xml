@@ -1,0 +1,85 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/default_content_bg"
+    tools:context="com.example.christepherzhang.myapplication.MyFamilyActivity">
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+            <!--<ScrollView-->
+                <!--android:id="@+id/sv"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent">-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                            <LinearLayout
+                                android:id="@+id/ll_search"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:gravity="center">
+                                    <EditText
+                                        android:id="@+id/et_search"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="@dimen/default_content_padding"
+                                        android:padding="@dimen/default_content_padding"
+                                        android:singleLine="true"
+                                        android:background="@drawable/et_oval_white"
+                                        android:drawablePadding="@dimen/default_view_margin"
+                                        android:drawableLeft="@drawable/search"/>
+                                    <!--<ImageButton-->
+                                        <!--android:layout_width="0dp"-->
+                                        <!--android:layout_height="match_parent"-->
+                                        <!--android:layout_weight="1"-->
+                                        <!--android:background="@color/default_content_bg"-->
+                                        <!--android:src="@drawable/search"/>-->
+                            </LinearLayout>
+
+                            <GridView
+                                android:id="@+id/myfamily_gridView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:numColumns="3"
+                                android:stretchMode="columnWidth"
+                                android:gravity="center"/>
+
+                    </LinearLayout>
+
+
+            <!--</ScrollView>-->
+            <ImageButton
+                android:id="@+id/ib_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:background="@null"
+                android:src="@drawable/top"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
+                <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+                    android:id="@+id/gv_progress_bar"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="#1E88E5" />
+            </RelativeLayout>
+
+    </FrameLayout>
+</LinearLayout>

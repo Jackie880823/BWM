@@ -1,0 +1,257 @@
+<resources xmlns:app="http://schemas.android.com/apk/com.madx.bwm">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+
+        <item name="numberPickerUpButtonStyle">@style/AiWidget.ImageButton.NumberPickerUpButton
+        </item>
+        <item name="numberPickerDownButtonStyle">
+            @style/AiWidget.ImageButton.NumberPickerDownButton
+        </item>
+        <item name="numberPickerInputTextStyle">@style/AiWidget.EditText.NumberPickerInputText
+        </item>
+        <item name="numberPickerStyle">@style/AiWidget.NumberPicker</item>
+
+        <!--<item name="numberPickerUpButtonStyle">@style/AiWidget.ImageButton.NumberPickerUpButton.Light</item>-->
+        <!--<item name="numberPickerDownButtonStyle">@style/AiWidget.ImageButton.NumberPickerDownButton.Light</item>-->
+        <!--<item name="numberPickerInputTextStyle">@style/AiWidget.EditText.NumberPickerInputText.Light</item>-->
+        <!--<item name="numberPickerStyle">@style/AiWidget.NumberPicker</item>-->
+    </style>
+
+    <style name="FullscreenTheme" parent="android:Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="text_default">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_small_size</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="text_dark_default" parent="text_default">
+        <item name="android:textColor">@color/default_text_color_dark</item>
+    </style>
+
+    <style name="text_light_default" parent="text_default">
+        <item name="android:textColor">@color/default_text_color_light</item>
+    </style>
+
+    <style name="text_title_default" parent="text_default">
+        <item name="android:textSize">@dimen/text_medium_size</item>
+    </style>
+
+    <style name="text_max_default" parent="text_title_default">
+        <item name="android:textSize">@dimen/text_large_size</item>
+    </style>
+
+    <style name="text_button_default">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">@dimen/default_content_padding</item>
+        <item name="android:paddingRight">@dimen/default_content_padding</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:clickable">true</item>
+        <item name="android:paddingTop">@dimen/default_text_padding</item>
+        <item name="android:paddingBottom">@dimen/default_text_padding</item>
+        <item name="android:textSize">@dimen/text_medium_size</item>
+    </style>
+
+    <style name="editview_default" parent="text_dark_default">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/et_chat_bg</item>
+        <item name="android:padding">@dimen/default_content_padding</item>
+
+    </style>
+
+    <style name="editview_panel_default">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/default_editor_panel_bg</item>
+        <item name="android:padding">@dimen/default_content_padding</item>
+    </style>
+
+    <style name="user_header_base">
+        <item name="com.madx.bwm:border_color">@color/default_text_color_light</item>
+        <item name="com.madx.bwm:border_width">1dp</item>
+    </style>
+
+    <style name="user_header_normal" parent="user_header_base">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+    </style>
+
+
+    <style name="split_line_default">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/default_line_height</item>
+        <item name="android:background">@color/default_split_line</item>
+    </style>
+
+    <!--Data time picker -->
+    <!-- Don't touch this -->
+    <attr name="numberPickerStyle" format="reference" />
+    <attr name="numberPickerUpButtonStyle" format="reference" />
+    <attr name="numberPickerDownButtonStyle" format="reference" />
+    <attr name="numberPickerInputTextStyle" format="reference" />
+
+    <declare-styleable name="NumberPicker">
+
+        <!-- @hide Color for the solid color background if such for optimized rendering. -->
+        <attr name="solidColor" format="color|reference" />
+        <!-- @hide Whether the number picker supports fligning. -->
+        <attr name="flingable" format="boolean" />
+        <!-- @hide The divider for making the selection area. -->
+        <attr name="selectionDivider" format="reference" />
+        <!-- @hide The height of the selection divider. -->
+        <attr name="selectionDividerHeight" format="dimension" />
+        <!-- @hide The distance of the selection divider -->
+        <attr name="selectionDividersDistance" format="dimension" />
+        <!-- @hide The min height of the NumberPicker. -->
+        <attr name="android:minHeight" />
+        <!-- @hide The max height of the NumberPicker. -->
+        <attr name="android:maxHeight" />
+        <!-- @hide The min width of the NumberPicker. -->
+        <attr name="android:minWidth" />
+        <!-- @hide The max width of the NumberPicker. -->
+        <attr name="android:maxWidth" />
+
+        <!-- We need some extra attributes -->
+        <attr name="android:orientation" />
+        <attr name="android:fadingEdgeLength" />
+    </declare-styleable>
+
+    <style name="AiWidget">
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+    </style>
+    app
+
+    <style name="AiWidget.NumberPicker">
+        <item name="android:orientation">vertical</item>
+        <item name="android:fadingEdge">vertical</item>
+        <item name="android:fadingEdgeLength">50dip</item>
+        <item name="solidColor">@android:color/transparent</item>
+        <item name="flingable">true</item>
+        <item name="selectionDivider">@drawable/dialog_set_time_divider</item>
+        <item name="selectionDividerHeight">2dip</item>
+        <item name="android:minWidth">48dip</item>
+        <item name="android:maxHeight">200dip</item>
+    </style>
+
+
+    <style name="AiWidget.Light.NumberPicker" parent="AiWidget.NumberPicker"></style>
+
+    <style name="AiWidget.EditText.NumberPickerInputText.Light" parent="AiWidget.EditText.NumberPickerInputText"></style>
+
+    <style name="AiWidget.ImageButton.NumberPickerUpButton.Light" parent="AiWidget.ImageButton.NumberPickerUpButton">
+        <item name="android:src">@drawable/np_numberpicker_up_btn_holo_light</item>
+    </style>
+
+    <style name="AiWidget.ImageButton.NumberPickerDownButton.Light" parent="AiWidget.ImageButton.NumberPickerDownButton">
+        <item name="android:src">@drawable/np_numberpicker_down_btn_holo_light</item>
+    </style>
+
+    <style name="AiWidget.EditText.NumberPickerInputText">
+        <item name="android:paddingTop">13sp</item>
+        <item name="android:paddingBottom">13sp</item>
+        <item name="android:paddingLeft">2sp</item>
+        <item name="android:paddingRight">2sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:background">@null</item>
+    </style>
+
+    <!--<style name="AiWidget.EditText" parent="AiWidget.EditText"></style>-->
+
+    <style name="AiWidget.EditText">
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="AiWidget.ImageButton.NumberPickerUpButton">
+        <item name="android:background">@null</item>
+        <item name="android:src">@drawable/np_numberpicker_up_btn_holo_dark</item>
+        <item name="android:paddingTop">16dip</item>
+        <item name="android:paddingBottom">22dip</item>
+    </style>
+
+    <style name="AiWidget.ImageButton.NumberPickerDownButton">
+        <item name="android:background">@null</item>
+        <item name="android:src">@drawable/np_numberpicker_down_btn_holo_dark</item>
+        <item name="android:paddingTop">22dip</item>
+        <item name="android:paddingBottom">16dip</item>
+    </style>
+
+    <style name="AiWidget.ImageButton">
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:background">@android:drawable/btn_default</item>
+    </style>
+
+    <style name="CardViewDefault">
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardCornerRadius">@dimen/default_button_radius</item>
+
+    </style>
+
+    <style name="CardViewClickStyle" parent="CardViewDefault">
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="ListImageDefault">
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:paddingLeft">1dp</item>
+        <item name="android:paddingRight">1dp</item>
+    </style>
+
+
+    <style name="PopupAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/snackbar_show_animation</item>
+        <item name="android:windowExitAnimation">@anim/snackbar_hide_animation</item>
+    </style>
+
+    <style name="RedPoint" >
+        <item name="android:layout_width">@dimen/default_icon_width_height</item>
+        <item name="android:layout_height">@dimen/default_icon_width_height</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/bg_num_red_message</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/text_mirco_size</item>
+        <item name="android:textColor">@color/default_text_color_while</item>
+
+    </style>
+
+
+    <!-- other-->
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_style</item>
+    </style>
+
+    <style name="MissCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/miss_style</item>
+    </style>
+
+    <style name="PlusCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/chat_plus</item>
+    </style>
+
+    <style name="ExpressionCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/chat_expression</item>
+    </style>
+
+    <style name="Widget_GifView" >
+        <!-- Customize your theme here. -->
+    </style>
+
+</resources>

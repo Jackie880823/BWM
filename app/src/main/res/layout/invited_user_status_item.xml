@@ -1,0 +1,61 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/top_event"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/default_view_margin"
+    style="@style/CardViewDefault"
+    android:clickable="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="@dimen/default_content_padding"
+        >
+
+        <com.madx.bwm.widget.CircularNetworkImage
+            android:id="@+id/user_head"
+            android:layout_width="@dimen/default_user_head_width_height"
+            android:layout_height="@dimen/default_user_head_width_height"
+            android:layout_centerVertical="true"
+             />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_toRightOf="@+id/user_head"
+            android:layout_centerVertical="true"
+            >
+
+            <TextView
+                android:id="@+id/user_name"
+                style="@style/text_dark_default"
+                android:layout_marginLeft="@dimen/default_view_margin" />
+
+            <ImageButton
+                android:id="@+id/add"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_add_member"
+                android:layout_marginRight="@dimen/default_content_padding"
+                android:visibility="gone"
+                 />
+
+            <ImageButton
+                android:id="@+id/chat"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/default_content_padding"
+                android:background="@drawable/btn_chat"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

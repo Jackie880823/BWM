@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        >
+
+        <ImageView
+            android:id="@+id/iv_feel_icon"
+            android:layout_width="@dimen/default_button_width_height"
+            android:layout_height="@dimen/default_button_width_height"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/tv_feel_desc"
+            style="@style/text_dark_default"
+            android:layout_toRightOf="@+id/iv_feel_icon"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:id="@+id/checked_icon"
+            android:layout_width="@dimen/default_button_width_height"
+            android:layout_height="@dimen/default_button_width_height"
+            android:src="@drawable/ok_press"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            />
+
+
+    </RelativeLayout>
+    <View
+        style="@style/split_line_default" />
+</LinearLayout>

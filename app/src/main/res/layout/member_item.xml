@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_event_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_view_margin">
+
+        <com.madx.bwm.widget.CircularNetworkImage
+            android:id="@+id/owner_head"
+            android:layout_width="@dimen/default_user_head_width_height"
+            android:layout_height="@dimen/default_user_head_width_height"
+            android:layout_centerVertical="true" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/owner_head"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/owner_name"
+                    style="@style/text_dark_default"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/tab_color_press4"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:id="@+id/owner_content"
+                    style="@style/text_dark_default"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:layout_centerVertical="true"
+                    />
+                </LinearLayout>
+
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/added"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone"
+                    android:textSize="@dimen/text_medium_size"
+                    android:text="Added"
+                    android:textColor="#db000000"
+                    />
+                <TextView
+                    android:id="@+id/add"
+                    style="@style/text_button_default"
+                    android:layout_alignParentRight="true"
+                    android:visibility="visible"
+                    android:layout_width="90dp"
+                    android:gravity="center"
+                    android:text="Add"
+                    android:background="@drawable/btn_member_add_bg"
+                    android:textColor="@color/default_text_color_while"
+                    android:layout_centerVertical="true" />
+                <TextView
+                    android:id="@+id/awaiting"
+                    style="@style/text_button_default"
+                    android:layout_height="wrap_content"
+                    android:layout_width="90dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone"
+                    android:background="@drawable/btn_member_awiting"
+                    android:textSize="@dimen/text_medium_size"
+                    android:text="Awaiting"
+                     />
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+    <View style="@style/split_line_default" />
+</LinearLayout>

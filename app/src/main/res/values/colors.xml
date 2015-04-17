@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_theme_color">#bf360c</color>
+    <color name="actionbar_color">#bf360c</color>
+    <color name="dialog_bg_color">#55000000</color>
+
+    <color name="default_text_color_light">#aaa9a9</color>
+    <!--<color name="default_text_color_light">#525252</color>-->
+    <color name="default_text_color_dark">#343434</color>
+    <color name="default_text_color_purple">#8f2af3</color>
+    <color name="default_text_color_red">#d32b23</color>
+    <color name="default_text_color_green">#28c521</color>
+    <color name="default_text_color_while">@android:color/white</color>
+
+    <color name="default_content_bg">#e0e0e0</color>
+    <color name="default_split_line">#c8c8c8</color>
+
+    <color name="default_editor_panel_bg">#f7f7f7</color>
+    <color name="default_unenable_item_bg">#a6C7C7C7</color><!--  65% -->
+
+
+    <color name="tab_color_normal">#545454</color>
+    <color name="tab_color_press1">#a8e300</color>
+    <color name="tab_color_press2">#8d42eb</color>
+    <color name="tab_color_press3">#feb400</color>
+    <color name="tab_color_press4">#00b7ff</color>
+
+    <!--不同模块按钮点击效果,只对GO -->
+    <color name="tab_color_press11">#65BE00</color>
+    <color name="tab_color_press21">#570099</color>
+    <color name="tab_color_press31">#D89000</color>
+    <color name="tab_color_press41">#0077AE</color>
+
+    <color name="btn_text_color_press_green">#87d488</color>
+    <color name="btn_text_color_press_red">#CFB1B1</color>
+    <color name="btn_text_color_press_gray">#A6A6A6</color>
+
+    <color name="btn_bg_color_green_normal">#32E500</color>
+    <color name="btn_bg_color_red_normal">#FF5833</color>
+    <color name="btn_bg_color_gray_normal">#989898</color>
+
+    <color name="btn_bg_color_green_press">#00AD00</color>
+    <color name="btn_bg_color_red_press">#C5270C</color>
+    <color name="btn_bg_color_gray_press">#6E6E6E</color>
+
+
+
+    <color name="bg_progressBar">#1E88E5</color>
+
+
+
+
+   <!--christopher-->
+    <color name="tab_color_login">#c1c1c1</color>
+    <color name="et_hint">#9b9b9b</color>
+    <color name="et_sign_up_phone">#878787</color>
+    <color name="bold_text_color_red">#d32b23</color>
+    <color name="default_text_color_blue">#0087FF</color>
+
+    <color name="default_sticker">#feb400</color><!--  65% -->
+
+
+</resources>

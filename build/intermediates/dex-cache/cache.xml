@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/classes-4e95663b3339f61dee7200c4e4e1d4985d5447f3.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c6d79137693d494dee16372d3921f919eb724ced">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/classes-18fef9b88902fcb93d0445f192090d8e69490c34.jar" />
+    </item>
+    <item
+        jar="/Users/wing/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/gson-2.3.1-8bb7933444422e41c9ac0d0b130dc682645c90e0.jar" />
+    </item>
+    <item
+        jar="/Users/wing/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/library-2.4.0-bfde4936166c7b569f1dd5aa045e92e7b86412e3.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/com.android.support/gridlayout-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2e8c06a7aad26ba8d2d5cab8134556594fe36856">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/classes-5d793622dbe08bea71643cba014fb340d4b54890.jar" />
+    </item>
+    <item
+        jar="/Users/wing/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.3.5/1dd0d38df9c6d21e893f2e52403f1cd99e91cd81/httpmime-4.3.5.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="1dd0d38df9c6d21e893f2e52403f1cd99e91cd81">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/httpmime-4.3.5-04f26cf04b10f79bbbf9223f0b3fed6b19928a52.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/Bwm/PhotoView/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="9aeb02e0c66dc70ca76567bbb8cb051171bb3b89">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/classes-13edf22bfd97cf4a4caba660612879854d166496.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/libs/internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/internal_impl-22.0.0-f80d02263eeec647b7ee6174b95f60be9f0408ee.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="11842de6a309c447b3a3d60d73ad637a87c58994">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/classes-97ff777e63b37f815d7b4b9ce049dd33a9fdfee9.jar" />
+    </item>
+    <item
+        jar="/Users/wing/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/support-annotations-22.0.0-495b92ee4c67eb0257b94aa64140cd38f0940ee4.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/Bwm/Volley/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c0d1b556f9d947228c621274adbebf9f1a972ccf">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/classes-4dfaeeb8c05eedb1d315bb223f3e28acf910c9e6.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/libs/pinyin4j-2.5.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="3e03fe596036f172959244b7ba658b1639dde342">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/pinyin4j-2.5.0-45c8b503d88df2a8af19b67bae7f6fd1c6baba2d.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="dd9247ea0fabe8ee479638c4b4a23e93752be256">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/classes-4ea885041c468f4b1c7b70b4775813c9c505e958.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/pl.droidsonroids.gif/android-gif-drawable/1.1.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="256e047e78394be70de6e048d2c17c50d4cb4376">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/classes-8d168da34ce2ededb310ceb8cd1f1e43c9b45e80.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/Bwm/MaterialDesign/unspecified/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b2dfcd1427bc268087987f20aa81d731d265ebd">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/classes-4a6c1bc5bd262a4999400e99857adffe4985636a.jar" />
+    </item>
+    <item
+        jar="/Users/wing/work/Bwm/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="/Users/wing/work/Bwm/app/build/intermediates/pre-dexed/baidu/debug/classes-cacf65f6a4f91b2cafbc896df4e142f87ebd3b15.jar" />
+    </item>
+
+</items>

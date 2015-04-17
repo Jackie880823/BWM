@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/left_rl"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="left"
+    android:paddingTop="@dimen/default_view_margin"
+    android:paddingBottom="@dimen/default_view_margin"
+    >
+
+    <com.madx.bwm.widget.CircularNetworkImage
+        android:id="@+id/left_iv"
+        app:border="false"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="6dp"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="46dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/left_iv"
+        android:gravity="center"
+        android:layout_marginLeft="6dp"
+        android:textColor="@color/default_text_color_dark"
+        android:singleLine="true"/>
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/message_left"
+        android:layout_toRightOf="@+id/left_iv"
+        android:gravity="center">
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/left_message_niv"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:scaleType="fitXY"
+                />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/left_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/default_text_color_light"
+        android:textSize="12sp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_below="@+id/ll"
+        android:layout_alignLeft="@+id/ll"/>
+
+</RelativeLayout>

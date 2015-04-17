@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<item android:state_enabled="false" android:drawable="@drawable/gs_btn_from" />
+    <item android:state_pressed="true" android:drawable="@drawable/gs_btn_to" />
+    <item android:state_focused="true"  android:drawable="@drawable/gs_btn_from" />-->
+
+    <!--按下-->
+    <item android:state_pressed="true" >
+        <shape>
+            <gradient
+                android:endColor="#005e84"
+                android:startColor="#005e84" />
+            <corners
+                android:radius="5dp" />
+        </shape>
+    </item>
+
+    <!--焦点-->
+    <item android:state_focused="true"  >
+        <shape>
+            <gradient
+                android:endColor="#005e84"
+                android:startColor="#005e84" />
+            <corners
+                android:radius="5dp"  />
+        </shape>
+    </item>
+
+    <!--默认-->
+    <item android:state_enabled="false" >
+        <shape>
+            <gradient
+                android:endColor="#ffffff"
+                android:startColor="#ffffff" />
+            <corners
+                android:radius="5dp"  />
+        </shape>
+    </item>
+</selector>

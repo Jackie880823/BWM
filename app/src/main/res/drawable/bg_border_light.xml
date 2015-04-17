@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<item android:state_pressed="true" >-->
+        <!--<shape-->
+            <!--android:shape="rectangle">-->
+            <!--<stroke-->
+                <!--android:width="@dimen/default_border_width"-->
+                <!--android:color="@color/default_text_color_while"/>-->
+            <!--<gradient-->
+                <!--android:endColor="@color/default_text_color_while"-->
+                <!--android:startColor="@color/default_text_color_while" />-->
+            <!--<corners-->
+                <!--android:radius="@dimen/default_button_radius" />-->
+        <!--</shape>-->
+    <!--</item>-->
+
+    <!--&lt;!&ndash;焦点&ndash;&gt;-->
+    <!--<item android:state_focused="true"  >-->
+        <!--<shape-->
+            <!--android:shape="rectangle">-->
+            <!--<stroke-->
+                <!--android:width="@dimen/default_border_width"-->
+                <!--android:color="@color/default_text_color_while"/>-->
+            <!--<gradient-->
+                <!--android:endColor="@color/default_text_color_while"-->
+                <!--android:startColor="@color/default_text_color_while" />-->
+            <!--<corners-->
+                <!--android:radius="@dimen/default_button_radius"  />-->
+        <!--</shape>-->
+    <!--</item>-->
+
+    <!--默认-->
+    <item>
+        <shape
+            android:shape="rectangle">
+            <stroke
+                android:width="@dimen/default_border_width"
+                android:color="@color/default_split_line"/>
+            <gradient
+                android:endColor="@color/default_text_color_while"
+                android:startColor="@color/default_text_color_while" />
+            <corners
+                android:radius="@dimen/default_button_radius"
+                />
+        </shape>
+    </item>
+</selector>

@@ -1,0 +1,25 @@
+package com.madx.bwm.util;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+public class MyTextUtil {
+
+    private MyTextUtil() {}
+
+
+    /**
+     * 检查字符是否为空格，/r ,/n等无意义内容
+     * @return
+     */
+    public static boolean isInvalidText(String text) {
+        Pattern p = Pattern.compile("^\\s*$", java.util.regex.Pattern.MULTILINE);
+        Matcher m = p.matcher(text);
+        if (m.matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}

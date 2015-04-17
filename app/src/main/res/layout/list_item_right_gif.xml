@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/right_rl"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="right"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <com.madx.bwm.widget.CircularNetworkImage
+        android:id="@+id/right_iv"
+        app:border="false"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="6dp"/>
+
+    <RelativeLayout
+        android:id="@+id/ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/message_right"
+        android:gravity="center"
+        android:layout_toLeftOf="@+id/right_iv">
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/right_message_gif"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/no_image"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+                    <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+                        android:id="@+id/right_progress_bar"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="#1E88E5" />
+            </RelativeLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/right_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/default_text_color_light"
+        android:textSize="12sp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="6dp"
+        android:layout_below="@+id/ll"
+        android:layout_alignRight="@+id/ll"/>
+</RelativeLayout>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/comment_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical">
+
+    <View style="@style/split_line_default" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/default_editor_panel_bg"
+        android:orientation="horizontal"
+        android:padding="@dimen/default_content_padding">
+
+
+        <EditText
+            android:id="@+id/et_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/editview_default"
+            android:maxLines="3"
+             />
+
+        <!--<TextView-->
+        <!--android:id="@+id/btn_submit"-->
+        <!--style="@style/text_button_default"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginLeft="@dimen/default_view_margin"-->
+        <!--android:background="@drawable/btn_green_bg"-->
+        <!--android:text="@string/text_send"-->
+        <!--android:textColor="@drawable/btn_text_color_green" />-->
+
+        <LinearLayout
+            android:id="@+id/btn_submit"
+            android:layout_width="@dimen/default_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:background="@drawable/btn_green_bg"
+            android:padding="@dimen/default_text_padding"
+            >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@drawable/send_normal" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

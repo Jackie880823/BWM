@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/default_content_padding"
+    android:paddingRight="@dimen/default_content_padding"
+    >
+
+    <TextView
+        android:id="@+id/contact_name"
+        style="@style/text_dark_default"
+        android:layout_centerVertical="true"
+         />
+
+
+    <com.gc.materialdesign.views.CheckBox
+        android:id="@+id/cb_selector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@color/tab_color_press4"
+        />
+
+    <View
+        style="@style/split_line_default"
+        android:layout_height="1dp"
+        />
+
+
+</RelativeLayout>
+

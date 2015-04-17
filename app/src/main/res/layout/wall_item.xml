@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/top_event"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/CardViewDefault"
+    >
+    <!--app:cardUseCompatPadding="true"-->
+    <!--app:cardCornerRadius="@dimen/default_button_radius"-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:id="@+id/rl_event_head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:paddingRight="@dimen/default_content_padding"
+            >
+
+            <com.madx.bwm.widget.CircularNetworkImage
+                android:id="@+id/owner_head"
+                android:layout_width="@dimen/default_user_head_width_height"
+                android:layout_height="@dimen/default_user_head_width_height" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/owner_head"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/default_text_padding"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:layout_toLeftOf="@+id/btn_del"
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/owner_head"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/owner_name"
+                        style="@style/text_title_default"
+                        android:textColor="@color/tab_color_press4"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/iv_mood"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:scaleType="fitCenter"
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/push_date"
+                    style="@style/text_light_default"
+                    android:layout_marginTop="@dimen/default_view_margin"
+                    />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btn_del"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/icon_delete"
+                android:background="@null"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_wall_content"
+            style="@style/text_dark_default"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:paddingRight="@dimen/default_content_padding"
+            />
+
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/iv_walls_images"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/default_view_margin"
+            style="@style/ListImageDefault"
+             />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:paddingRight="@dimen/default_content_padding"
+            android:paddingTop="@dimen/default_content_padding">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                >
+
+                <ImageButton
+                    android:id="@+id/iv_love"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@null" />
+
+                <TextView
+                    android:id="@+id/tv_wall_agree_count"
+                    style="@style/text_light_default"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                >
+
+                <ImageButton
+                    android:id="@+id/iv_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@null"
+                    android:src="@drawable/btn_comment" />
+
+                <TextView
+                    android:id="@+id/tv_wall_relay_count"
+                    style="@style/text_light_default"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/default_view_margin" />
+
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    style="@style/text_light_default"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:text="Comments" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_text_color_while"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/send_layout"
+        android:layout_below="@+id/fragment_main_top"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/default_view_margin"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding"
+        android:paddingTop="@dimen/default_view_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/subject_spinner"
+            >
+
+            <TextView
+                android:id="@+id/mail_subject"
+                style="@style/text_dark_default"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="48dp"
+                android:background="#e0e0e0"
+                android:gravity="center_vertical"
+                android:hint="@string/hint_subject"
+                android:padding="@dimen/default_content_padding"
+                android:textStyle="bold" />
+            
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@color/btn_text_color_press_gray"
+                >
+                    <ImageView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:src="@drawable/spinner_arrow"
+                        android:layout_gravity="center"
+
+                        />
+            </LinearLayout>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/mail_from"
+            style="@style/editview_default"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:hint="@string/hint_mail"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/default_text_color_dark"
+            android:singleLine="true"
+            />
+
+        <EditText
+            android:id="@+id/mail_content"
+            style="@style/editview_default"
+            android:layout_width="match_parent"
+            android:layout_height="dp"
+            android:layout_below="@id/mail_from"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:hint="@string/hint_mail_content"
+            android:textColorHint="@color/default_text_color_dark"
+            android:scrollbars="vertical"
+             />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/send_layout"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding">
+
+        <com.gc.materialdesign.views.ButtonRectangle
+            android:id="@+id/btn_send_mail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@color/tab_color_press4"
+            android:text="@string/text_send"
+            app:rippleSpeed="36" />
+    </RelativeLayout>
+
+</RelativeLayout>

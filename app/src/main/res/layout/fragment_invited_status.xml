@@ -1,0 +1,146 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/default_content_bg"
+        android:paddingTop="@dimen/default_content_padding"
+        android:paddingBottom="@dimen/default_content_padding"
+        >
+
+
+        <LinearLayout
+            android:id="@+id/all"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
+            
+            <ImageView
+                android:id="@+id/tab_icon_all"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:src="@drawable/members_large_press"
+                />
+
+            <TextView
+                android:id="@+id/tab_text_all"
+                style="@style/text_title_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_all"
+                android:textColor="@color/default_text_color_dark" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:id="@+id/going"
+            >
+
+            <ImageView
+                android:id="@+id/tab_icon_going"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:src="@drawable/status_going_normal"
+                />
+
+            <TextView
+                android:id="@+id/tab_text_going"
+                style="@style/text_title_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_going"
+                android:textColor="@color/default_text_color_light" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:id="@+id/maybe"
+            >
+
+            <ImageView
+                android:id="@+id/tab_icon_maybe"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:src="@drawable/status_maybe_normal"
+                />
+
+            <TextView
+                android:id="@+id/tab_text_maybe"
+                style="@style/text_title_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_maybe"
+                android:textColor="@color/default_text_color_light" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:id="@+id/not_going"
+            >
+
+            <ImageView
+                android:id="@+id/tab_icon_not_going"
+                android:layout_width="@dimen/default_small_button_width_height"
+                android:layout_height="@dimen/default_small_button_width_height"
+                android:src="@drawable/status_not_going_normal"
+                />
+
+            <TextView
+                android:id="@+id/tab_text_not_going"
+                style="@style/text_title_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_not_going"
+                android:textColor="@color/default_text_color_light" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:weightSum="4">
+
+        <ImageView
+            android:id="@+id/cursor"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="matrix"
+            android:src="@color/default_text_color_green" />
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/mPaper"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:context=".ui.InvitedStatusActivity">
+
+    </android.support.v4.view.ViewPager>
+
+
+</LinearLayout>
+

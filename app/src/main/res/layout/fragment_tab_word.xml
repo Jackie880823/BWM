@@ -1,0 +1,26 @@
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/default_text_color_while"-->
+    <!--android:orientation="vertical"-->
+    <!--tools:context="com.madx.bwm.ui.TabWordFragment">-->
+
+
+    <com.madx.bwm.widget.WallEditView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/wall_text_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/default_view_margin"
+        android:layout_above="@+id/line"
+        android:background="@color/default_text_color_while"
+        android:padding="@dimen/default_content_padding"
+        android:fitsSystemWindows="true"
+        android:textSize="@dimen/text_medium_size"
+        android:textColor="@color/default_text_color_dark"
+        android:gravity="top" />
+
+<!--</RelativeLayout>-->
+
+
