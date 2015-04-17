@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,7 +16,6 @@ import com.madx.bwm.R;
 import com.madx.bwm.adapter.InvitedUserAdapter;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
 
 import java.util.ArrayList;
@@ -103,9 +100,19 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_INVITED, params);
 
-        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
+        new HttpTools(getActivity()).get(url,null,new HttpCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
                 data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
@@ -127,17 +134,23 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
                 rvList.setAdapter(adapter);
                 adapter.setOperaListener(InvitedTabFragment.this);
                 adapter.notifyDataSetChanged();
+            }
 
+            @Override
+            public void onError(Exception e) {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("", "errorX=====" + error.getMessage());
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
             }
         });
-        stringRequest.setShouldCache(false);
-        VolleyUtil.addRequest2Queue(getActivity().getApplicationContext(), stringRequest, "");
 
 
     }

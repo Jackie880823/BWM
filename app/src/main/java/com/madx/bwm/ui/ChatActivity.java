@@ -348,7 +348,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
 
                 // 下面这句指定调用相机拍照后的照片存储的路径
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getFile(ChatActivity.this,
+                        .fromFile(PicturesCacheUtil.getCachePicFileByName(ChatActivity.this,
                                 CACHE_PIC_NAME_TEMP)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
@@ -782,7 +782,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
 
-                    uri = Uri.fromFile(PicturesCacheUtil.getFile(ChatActivity.this, CACHE_PIC_NAME_TEMP));
+                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(ChatActivity.this, CACHE_PIC_NAME_TEMP));
 
                     handler.sendEmptyMessage(1);
 

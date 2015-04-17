@@ -128,7 +128,7 @@ public class PersonalPictureActivity extends BaseActivity {
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getFile(PersonalPictureActivity.this, CACHE_PIC_NAME_TEMP));
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(PersonalPictureActivity.this, CACHE_PIC_NAME_TEMP));
                     if (new File(uri.getPath()).exists()) {
                         try {
                             startPhotoZoom(uri, false);
@@ -245,7 +245,7 @@ public class PersonalPictureActivity extends BaseActivity {
             intent.putExtra("noFaceDetection", true);
 
             //		if(fromPhoto){
-            File f = PicturesCacheUtil.getFile(PersonalPictureActivity.this, CACHE_PIC_NAME);
+            File f = PicturesCacheUtil.getCachePicFileByName(PersonalPictureActivity.this, CACHE_PIC_NAME);
             mCropImagedUri = Uri.fromFile(f);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
             //		}else{
@@ -292,7 +292,7 @@ public class PersonalPictureActivity extends BaseActivity {
 
                 // 下面这句指定调用相机拍照后的照片存储的路径
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getFile(PersonalPictureActivity.this,
+                        .fromFile(PicturesCacheUtil.getCachePicFileByName(PersonalPictureActivity.this,
                                 CACHE_PIC_NAME_TEMP)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);

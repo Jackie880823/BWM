@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,12 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.StringRequest;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,7 +43,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -382,10 +378,29 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     private void sendComment() {
         progressBar.setVisibility(View.VISIBLE);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constant.API_EVENT_POST_COMMENT, new Response.Listener<String>() {
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("content_group_id", event.getContent_group_id());
+        params.put("comment_owner_id", MainActivity.getUser().getUser_id());
+        params.put("content_type", "comment");
+        params.put("comment_content", et_comment.getText().toString());
+        params.put("sticker_group_path", "");
+        params.put("sticker_name", "");
+        params.put("sticker_type", "");
+
+        new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT,params,new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
 
             @Override
-            public void onResponse(String response) {
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 startIndex = 0;
                 isRefresh = true;
                 requestComment();
@@ -393,82 +408,31 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 et_comment.setText("");
                 UIUtil.hideKeyboard(getActivity(), et_comment);
                 progressBar.setVisibility(View.GONE);
-
             }
-        }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+            public void onError(Exception e) {
                 UIUtil.hideKeyboard(getActivity(), et_comment);
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                 progressBar.setVisibility(View.GONE);
             }
-        }) {
+
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("X_BWM_DEVID", "anonymous");
-                headers.put("X_BWM_TOKEN", "ccebaf1e71d606204ad1c31e86696d3e");
-                headers.put("X_BWM_USEREMAIL", "kengwai.chiah@madxstudio.com");
-                return headers;
+            public void onCancelled() {
 
             }
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("content_group_id", event.getContent_group_id());
-                params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-                params.put("content_type", "comment");
-                params.put("comment_content", et_comment.getText().toString());
-                params.put("sticker_group_path", "");
-                params.put("sticker_name", "");
-                params.put("sticker_type", "");
+            public void onLoading(long count, long current) {
 
-                return params;
             }
-        };
-        stringRequest.setShouldCache(false);
-        VolleyUtil.addRequest2Queue(getActivity(), stringRequest, "event_comment");
+        });
+
 
     }
 
     @Override
     public void requestData() {
-//        String group_id = (String) getArguments().get(ARG_PARAM_PREFIX+0);
-//
-//        if (TextUtils.isEmpty(group_id))
-//            return;
-//
-//        HashMap<String, String> jsonParams = new HashMap<String, String>();
-//
-//        jsonParams.put("user_id", MainActivity.getUser().getUser_id());
-//        jsonParams.put("group_id", group_id);
-//        String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-//
-//        HashMap<String, String> params = new HashMap<String, String>();
-//        params.put("condition", jsonParamsString);
-//
-//        String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-//        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                mProgressDialog.dismiss();
-//                GsonBuilder gsonb = new GsonBuilder();
-//                event = new Gson().fromJson(response,EventEntity.class);
-//                bindData();
-//                requestComment();
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                mProgressDialog.dismiss();
-//            }
-//        });
-//        stringRequest.setShouldCache(false);
-//        VolleyUtil.addRequest2Queue(getActivity(), stringRequest, "request_comment");
 
     }
 
@@ -491,9 +455,20 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("limit", offset+"");
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_COMMENT, params);
-        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
+
+        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
                 data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {
@@ -510,18 +485,23 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 if (adapter != null && adapter.getItemCount() > 0) {
                     getViewById(R.id.comment_split_line).setVisibility(View.VISIBLE);
                 }
-                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(Exception e) {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("", "error=====" + error.getMessage());
-                progressBar.setVisibility(View.GONE);
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
             }
         });
-        stringRequest.setShouldCache(false);
-        VolleyUtil.addRequest2Queue(getActivity(), stringRequest, "request_comment");
     }
 
     private void goInvitedStutus() {
@@ -545,32 +525,41 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     private void cancelEvent() {
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, String.format(Constant.API_EVENT_CANCEL, event.getGroup_id()), new Response.Listener<String>() {
+
+        RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_EVENT_CANCEL, event.getGroup_id()),null);
+
+        new HttpTools(getActivity()).put(requestInfo,new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
 
             @Override
-            public void onResponse(String response) {
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
             }
-        }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+            public void onError(Exception e) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
-        }) {
+
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("X_BWM_DEVID", "anonymous");
-                headers.put("X_BWM_TOKEN", "ccebaf1e71d606204ad1c31e86696d3e");
-                headers.put("X_BWM_USEREMAIL", "kengwai.chiah@madxstudio.com");
-                return headers;
+            public void onCancelled() {
 
             }
-        };
-        stringRequest.setShouldCache(false);
-        VolleyUtil.addRequest2Queue(getActivity(), stringRequest, "event_cancel");
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
     }
 
     /**
@@ -590,10 +579,22 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         jsonParams.put("member_id", MainActivity.getUser().getUser_id());
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, String.format(Constant.API_EVENT_INTENT, event.getGroup_id()), new Response.Listener<String>() {
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.url = String.format(Constant.API_EVENT_INTENT, event.getGroup_id());
+        requestInfo.jsonParam = jsonParamsString;
+        new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
 
             @Override
-            public void onResponse(final String response) {
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 try {
                     JSONObject result = new JSONObject(response);
                     going_count.setText(result.getString("total_yes"));
@@ -605,31 +606,22 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+            public void onError(Exception e) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
-        }) {
+
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("X_BWM_DEVID", "anonymous");
-                headers.put("X_BWM_TOKEN", "ccebaf1e71d606204ad1c31e86696d3e");
-                headers.put("X_BWM_USEREMAIL", "kengwai.chiah@madxstudio.com");
-                return headers;
+            public void onCancelled() {
 
             }
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
-                return jsonParamsString.getBytes();
+            public void onLoading(long count, long current) {
+
             }
-        };
-        stringRequest.setShouldCache(false);
-        VolleyUtil.addRequest2Queue(getActivity(), stringRequest, "event_intent");
+        });
     }
 
     private ResponseStatus currentStatus;
@@ -707,9 +699,20 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             return;
 
 
-        StringRequest stringRequest = new StringRequest(String.format(Constant.API_EVENT_RESPONSE_INFOS, event.getGroup_id()), new Response.Listener<String>() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_EVENT_RESPONSE_INFOS, event.getGroup_id()), null, new HttpCallback() {
+
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 try {
                     JSONObject result;
                     result = new JSONObject(response);
@@ -719,45 +722,80 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onError(Exception e) {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("", "error=====" + error.getMessage());
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
             }
         });
-        stringRequest.setShouldCache(false);
-        VolleyUtil.addRequest2Queue(getActivity(), stringRequest, "request_comment");
 
     }
 
     private void removeComment(final String commentId) {
 
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_comment_del));
+
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.accept), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                StringRequest stringRequest = new StringRequest(Request.Method.DELETE, String.format(Constant.API_EVENT_COMMENT_DELETE, commentId), new Response.Listener<String>() {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("content_group_id", event.getContent_group_id());
+                params.put("comment_owner_id", MainActivity.getUser().getUser_id());
+                params.put("content_type", "comment");
+                params.put("comment_content", et_comment.getText().toString());
+                params.put("sticker_group_path", "");
+                params.put("sticker_name", "");
+                params.put("sticker_type", "");
+
+                RequestInfo requestInfo = new RequestInfo();
+                requestInfo.url = String.format(Constant.API_EVENT_COMMENT_DELETE, commentId);
+                requestInfo.params = params;
+                new HttpTools(getActivity()).delete(requestInfo,new HttpCallback() {
                     @Override
-                    public void onResponse(String response) {
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onResult(String response) {
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                         startIndex = 0;
                         isRefresh = true;
                         requestComment();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    }
+
+                    @Override
+                    public void onCancelled() {
 
                     }
-                }, new Response.ErrorListener() {
+
                     @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("", "error=====" + error.getMessage());
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    public void onLoading(long count, long current) {
 
                     }
                 });
-                stringRequest.setShouldCache(false);
-                VolleyUtil.addRequest2Queue(getActivity().getApplicationContext(), stringRequest, "");
                 removeAlertDialog.dismiss();
             }
         });
@@ -773,40 +811,45 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     private void doLoveComment(final EventCommentEntity commentEntity, final boolean love) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Constant.API_EVENT_COMMENT_LOVE, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
 
-            }
-        }, new Response.ErrorListener() {
 
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("comment_id", commentEntity.getComment_id());
+        params.put("love", love ? "1" : "0");// 0-取消，1-赞
+        params.put("user_id", "" + MainActivity.getUser().getUser_id());
+        RequestInfo requestInfo = new RequestInfo(Constant.API_EVENT_COMMENT_LOVE,params);
+        new HttpTools(getActivity()).post(requestInfo, new HttpCallback() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("X_BWM_DEVID", "anonymous");
-                headers.put("X_BWM_TOKEN", "ccebaf1e71d606204ad1c31e86696d3e");
-                headers.put("X_BWM_USEREMAIL", "kengwai.chiah@madxstudio.com");
-                return headers;
+            public void onStart() {
 
             }
 
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("comment_id", commentEntity.getComment_id());
-                params.put("love", love ? "1" : "0");// 0-取消，1-赞
-                params.put("user_id", "" + MainActivity.getUser().getUser_id());
+            public void onFinish() {
 
-                return params;
             }
-        };
-        stringRequest.setShouldCache(false);
-        VolleyUtil.addRequest2Queue(getActivity(), stringRequest, "event_comment");
+
+            @Override
+            public void onResult(String response) {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
     }
 
     @Override

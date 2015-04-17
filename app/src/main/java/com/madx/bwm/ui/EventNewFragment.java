@@ -12,11 +12,9 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,7 +23,6 @@ import com.madx.bwm.R;
 import com.madx.bwm.adapter.MembersGridAdapter;
 import com.madx.bwm.entity.EventEntity;
 import com.madx.bwm.entity.UserEntity;
-import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.widget.DatePicker;
@@ -36,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -145,60 +141,67 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
         if (validateForm()) {
             progressBar.setVisibility(View.VISIBLE);
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, Constant.API_EVENT_CREATE, new Response.Listener<String>() {
+
+            RequestInfo requestInfo = new RequestInfo();
+            requestInfo.url = Constant.API_EVENT_CREATE;
+
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("content_type", "post");
+            params.put("first_post", "1");
+            params.put("group_event_date", mEevent.getGroup_event_date());
+            params.put("group_event_status", "1");
+            params.put("group_name", event_title.getText().toString());
+            params.put("group_owner_id", MainActivity.getUser().getUser_id());
+            params.put("group_type", "1");
+            if(latitude==-1000||longitude==-1000) {
+                params.put("loc_latitude", "");
+                params.put("loc_longitude", "");
+            }else{
+                params.put("loc_latitude", latitude + "");
+                params.put("loc_longitude", longitude + "");
+            }
+            params.put("loc_name", position_name.getText().toString());
+            params.put("text_description", event_desc.getText().toString());
+            params.put("user_id", MainActivity.getUser().getUser_id());
+            params.put("event_member", gson.toJson(setGetMembersIds(members_data)));
+
+            requestInfo.params = params;
+
+            new HttpTools(getActivity()).post(requestInfo,new HttpCallback() {
+                @Override
+                public void onStart() {
+
+                }
 
                 @Override
-                public void onResponse(String response) {
+                public void onFinish() {
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onResult(String response) {
                     getParentActivity().setResult(Activity.RESULT_OK);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                    progressBar.setVisibility(View.GONE);
                     getParentActivity().finish();
                 }
-            }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
+                public void onError(Exception e) {
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    progressBar.setVisibility(View.GONE);
-                }
-            }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("X_BWM_DEVID", "anonymous");
-                    headers.put("X_BWM_TOKEN", "ccebaf1e71d606204ad1c31e86696d3e");
-                    headers.put("X_BWM_USEREMAIL", "kengwai.chiah@madxstudio.com");
-                    return headers;
 
                 }
 
                 @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    HashMap<String, String> params = new HashMap<String, String>();
-                    params.put("content_type", "post");
-                    params.put("first_post", "1");
-                    params.put("group_event_date", mEevent.getGroup_event_date());
-                    params.put("group_event_status", "1");
-                    params.put("group_name", event_title.getText().toString());
-                    params.put("group_owner_id", MainActivity.getUser().getUser_id());
-                    params.put("group_type", "1");
-                    if(latitude==-1000||longitude==-1000) {
-                        params.put("loc_latitude", "");
-                        params.put("loc_longitude", "");
-                    }else{
-                        params.put("loc_latitude", latitude + "");
-                        params.put("loc_longitude", longitude + "");
-                    }
-                    params.put("loc_name", position_name.getText().toString());
-                    params.put("text_description", event_desc.getText().toString());
-                    params.put("user_id", MainActivity.getUser().getUser_id());
-                    params.put("event_member", gson.toJson(setGetMembersIds(members_data)));
-                    return params;
+                public void onCancelled() {
+
                 }
-            };
-            stringRequest.setShouldCache(false);
-            VolleyUtil.addRequest2Queue(getActivity(), stringRequest, "event_new");
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+
         }
     }
 

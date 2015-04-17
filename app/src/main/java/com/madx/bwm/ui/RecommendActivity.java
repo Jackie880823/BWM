@@ -10,13 +10,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.StringRequest;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -25,7 +20,6 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.RecommendAdapter;
 import com.madx.bwm.entity.RecommendEntity;
-import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
 
 import org.json.JSONException;
@@ -218,11 +212,26 @@ public class RecommendActivity extends BaseActivity {
     }
 
     private void addUser(final String relationShip) {
-        StringRequest srAddMember = new StringRequest(Request.Method.POST, Constant.API_ADD_MEMBER, new Response.Listener<String>() {
+
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("user_id", MainActivity.getUser().getUser_id());
+        params.put("user_relationship_name", relationShip);
+        params.put("member_id", data.get(adapter.getPositionId()).getUser_id());
+
+        new HttpTools(this).post(Constant.API_ADD_MEMBER,params,new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
 
             @Override
-            public void onResponse(String response) {
+            public void onFinish() {
 
+            }
+
+            @Override
+            public void onResult(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if ("Success".equals(jsonObject.getString("response_status"))) {
@@ -237,25 +246,23 @@ public class RecommendActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-        }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                Toast.makeText(RecommendActivity.this, "error.", Toast.LENGTH_SHORT).show();
+            public void onError(Exception e) {
+                MessageUtil.showMessage(RecommendActivity.this,R.string.msg_action_failed);
             }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("user_id", MainActivity.getUser().getUser_id());
-                params.put("user_relationship_name", relationShip);
-                params.put("member_id", data.get(adapter.getPositionId()).getUser_id());
 
-                return params;
+            @Override
+            public void onCancelled() {
+
             }
-        };
-        VolleyUtil.addRequest2Queue(RecommendActivity.this, srAddMember, "");
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
     }
 
     //end

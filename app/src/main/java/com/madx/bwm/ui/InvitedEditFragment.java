@@ -6,20 +6,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.InvitedUserEditAdapter;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
 
 import org.json.JSONException;
@@ -28,7 +24,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -120,44 +115,6 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
     public void requestData() {
 
 
-//        if (TextUtils.isEmpty(group_id)) {
-//            if (!getParentActivity().isFinishing()) {
-//                getParentActivity().finish();
-//
-//            }
-//            return;
-//        }
-//        HashMap<String, String> jsonParams = new HashMap<String, String>();
-//        jsonParams.put("group_id", group_id);
-//        jsonParams.put("response", "all");
-//        String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-//
-//        HashMap<String, String> params = new HashMap<String, String>();
-//        params.put("condition", jsonParamsString);
-//
-//        String url = UrlUtil.generateUrl(Constant.API_EVENT_INVITED, params);
-//
-//        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                GsonBuilder gsonb = new GsonBuilder();
-//                Gson gson = gsonb.create();
-//                members_data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
-//                }.getType());
-//                //刷新
-//                changeData();
-//
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                MessageUtil.showMessage(getActivity(), R.string.msg_unknow_err);
-//            }
-//        });
-//        stringRequest.setShouldCache(false);
-//        VolleyUtil.addRequest2Queue(getActivity().getApplicationContext(), stringRequest, "");
-
     }
 
     @Override
@@ -209,10 +166,23 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         jsonParams.put("user_id", userId);//MainActivity
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-        StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_EVENT_REMOVE_MEMBER, group_id), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.jsonParam = jsonParamsString;
+        requestInfo.url = String.format(Constant.API_EVENT_REMOVE_MEMBER, group_id);
 
+        new HttpTools(getActivity()).put(requestInfo,new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
@@ -235,25 +205,23 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onError(Exception e) {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+            public void onCancelled() {
                 MessageUtil.showMessage(getActivity(),R.string.msg_action_failed);
             }
-        }) {
 
             @Override
-            public byte[] getBody() throws AuthFailureError {
-                return jsonParamsString.getBytes();
+            public void onLoading(long count, long current) {
+
             }
-
-        };
-
-        srRemoveMember.setShouldCache(false);
-        VolleyUtil.addRequest2Queue(getActivity(), srRemoveMember, "");
+        });
     }
     private void submitAddMember(final String members){
 
@@ -262,36 +230,50 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
             return;
         }
 
-        StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_EVENT_ADD_MEMBERS, new Response.Listener<String>() {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("group_id", group_id);
+        params.put("group_owner_id", MainActivity.getUser().getUser_id());
+        params.put("query_on", "addEventMember");
+        params.put("group_members", new Gson().toJson(setGetMembersIds(new_members_data)));
+
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.url = Constant.API_EVENT_ADD_MEMBERS;
+        requestInfo.params = params;
+        new HttpTools(getActivity()).post(requestInfo,new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
 
             @Override
-            public void onResponse(String response) {
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                 members_data.addAll(new_members_data);
                 changeData();
 //                getMembersList();
-
             }
-        }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+            public void onError(Exception e) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
-        }) {
+
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("group_id", group_id);
-                params.put("group_owner_id", MainActivity.getUser().getUser_id());
-                params.put("query_on", "addEventMember");
-                params.put("group_members", new Gson().toJson(setGetMembersIds(new_members_data)));
-                return params;
+            public void onCancelled() {
+
             }
-        };
-        stringRequestPost.setShouldCache(false);
-        VolleyUtil.addRequest2Queue(getActivity(), stringRequestPost, "");
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
     }
 
     private List<String> setGetMembersIds(List<UserEntity> users) {

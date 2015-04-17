@@ -178,33 +178,6 @@ public class EventDetailActivity extends BaseActivity {
 
             }
         });
-//        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//
-//                event = new Gson().fromJson(response, EventEntity.class);
-//                if (isCurrentUser()) {
-//                    rightButton.setImageResource(R.drawable.btn_edit);
-//                    rightButton.setVisibility(View.VISIBLE);
-//                    if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date()).getTime()))) {
-//                        rightButton.setImageResource(R.drawable.icon_edit_press);
-//                        rightButton.setEnabled(false);
-//                    }
-//                } else {
-//                    rightButton.setVisibility(View.INVISIBLE);
-//                }
-//                mProgressDialog.dismiss();
-//
-
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                mProgressDialog.dismiss();
-//            }
-//        });
-//        stringRequest.setShouldCache(false);
-//        VolleyUtil.addRequest2Queue(this, stringRequest, "request_event_detail");
     }
 
     @Override

@@ -4,18 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -25,7 +22,6 @@ import com.madx.bwm.adapter.MembersGridAdapter;
 import com.madx.bwm.entity.EventEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.widget.DatePicker;
@@ -38,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -167,53 +162,57 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
             progressBar.setVisibility(View.VISIBLE);
             mEevent.setEvent_member(setGetMembersIds(members_data));
 
-            StringRequest stringRequest = new StringRequest(Request.Method.PUT, Constant.API_EVENT_UPDATE + mEevent.getGroup_id(), new Response.Listener<String>() {
+            if (latitude == -1000 || longitude == -1000) {
+                mEevent.setLoc_latitude("");
+                mEevent.setLoc_longitude("");
+            } else {
+                mEevent.setLoc_latitude("" + latitude);
+                mEevent.setLoc_longitude("" + longitude);
+            }
+
+
+            RequestInfo requestInfo = new RequestInfo();
+            requestInfo.jsonParam = gson.toJson(mEevent);
+            requestInfo.url = Constant.API_EVENT_UPDATE + mEevent.getGroup_id();
+
+            new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
 
                 @Override
-                public void onResponse(String response) {
+                public void onStart() {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onResult(String response) {
                     Intent intent = new Intent();
                     intent.putExtra("event", mEevent);
                     getParentActivity().setResult(Activity.RESULT_OK, intent);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                    progressBar.setVisibility(View.GONE);
                     getActivity().finish();
                 }
-            }, new Response.ErrorListener() {
 
                 @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
+                public void onError(Exception e) {
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    progressBar.setVisibility(View.GONE);
-                }
-            }) {
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("X_BWM_DEVID", "anonymous");
-                    headers.put("X_BWM_TOKEN", "ccebaf1e71d606204ad1c31e86696d3e");
-                    headers.put("X_BWM_USEREMAIL", "kengwai.chiah@madxstudio.com");
-                    return headers;
 
                 }
 
                 @Override
-                public byte[] getBody() throws AuthFailureError {
-                    if (latitude == -1000 || longitude == -1000) {
-                        mEevent.setLoc_latitude("");
-                        mEevent.setLoc_longitude("");
-                    } else {
-                        mEevent.setLoc_latitude("" + latitude);
-                        mEevent.setLoc_longitude("" + longitude);
-                    }
-                    return gson.toJson(mEevent).getBytes();
-//                    return jsonParamsString.getBytes();
+                public void onCancelled() {
+
                 }
-            };
 
+                @Override
+                public void onLoading(long count, long current) {
 
-            stringRequest.setShouldCache(false);
-            VolleyUtil.addRequest2Queue(getActivity(), stringRequest, "event_new");
+                }
+            });
+
         }
     }
 
@@ -234,24 +233,40 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_INVITED, params);
 
-        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
+        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
             @Override
-            public void onResponse(String response) {
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 members_data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
                 //刷新
                 changeData();
+            }
 
+            @Override
+            public void onError(Exception e) {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("", "errorX=====" + error.getMessage());
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
             }
         });
-        stringRequest.setShouldCache(false);
-        VolleyUtil.addRequest2Queue(getActivity().getApplicationContext(), stringRequest, "");
     }
 
     private final static int GET_LOCATION = 1;
