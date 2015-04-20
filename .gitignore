@@ -2,7 +2,7 @@
 /local.properties
 /**/.DS_Store
 /**/*build/
-/.idea/*
+/.idea
 /MaterialDesignDemo
 /fzAndroidMap
 /**/*.apk
