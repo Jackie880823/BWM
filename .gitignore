@@ -5,10 +5,6 @@
 /.idea/*
 /MaterialDesignDemo
 /fzAndroidMap
-/android_Holo_DateTimePicker
-/MaterialDesign/build
-/PhotoView/build
-/app/build
 /**/*.apk
 /**/*.iml
 /app/manifest-merger-debug-report.txt
