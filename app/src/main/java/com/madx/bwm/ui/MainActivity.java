@@ -47,12 +47,12 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(App.getLoginedUser()==null){
+        if (App.getLoginedUser() == null) {
             finish();
         }
 
         super.onCreate(savedInstanceState);
-        mainActivityInstance= this;
+        mainActivityInstance = this;
     }
 
 
@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity {
 
 
     public static UserEntity getUser() {
-        if(App.getLoginedUser()==null){
+        if (App.getLoginedUser() == null) {
             App.exit(mainActivityInstance);
         }
         return App.getLoginedUser();
@@ -224,6 +224,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
+
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
         WallFragment wallFragment = WallFragment.newInstance();
@@ -242,15 +243,23 @@ public class MainActivity extends BaseActivity {
             }
         });
         mViewPager.setAdapter(tabPagerAdapter);
+
         mViewPager.setOffscreenPageLimit(0);
 
+        leaveGroup = getIntent().getStringExtra("leaveGroup");
 
     }
+
+    String leaveGroup;
 
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        changeTab(TabEnum.wall);//默认第一个
+        if ("leaveGroup".equals(leaveGroup)) {
+            mViewPager.setCurrentItem(2);
+        }else {
+            changeTab(TabEnum.wall);//默认第一个
+        }
     }
 
     @Override
@@ -373,7 +382,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if(snackBar!=null){
+        if (snackBar != null) {
             snackBar.dismiss();
         }
         super.onDestroy();
