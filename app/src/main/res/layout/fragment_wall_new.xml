@@ -189,15 +189,16 @@
             <!--android:text="@string/text_public"-->
             <!--android:textColor="@drawable/btn_text_color_4_post_range_all" />-->
 
-            <ImageButton
+            <Button
                 android:id="@+id/btn_share_option"
                 android:layout_width="93dp"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/default_view_margin"
                 android:layout_toRightOf="@+id/btn_notify"
-                android:background="@null"
-                android:src="@drawable/post_rang_all" />
+                android:text="@string/text_all"
+                android:textColor="@android:color/white"
+                android:background="@drawable/post_rang_all"/>
 
 
             <LinearLayout

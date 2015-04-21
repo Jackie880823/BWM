@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -324,6 +325,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void doLoveComment(final WallCommentEntity commentEntity, final boolean love) {
+        Log.i("WallCommentFragment", "doLoveComment& love = " + love);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("comment_id", commentEntity.getComment_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
@@ -336,27 +338,22 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             @Override
             public void onFinish() {
-
             }
 
             @Override
             public void onResult(String string) {
-
             }
 
             @Override
             public void onError(Exception e) {
-
             }
 
             @Override
             public void onCancelled() {
-
             }
 
             @Override
             public void onLoading(long count, long current) {
-
             }
         });
     }

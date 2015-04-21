@@ -308,6 +308,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallAdap
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Constant.ACTION_CREATE_WALL:
@@ -322,6 +323,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallAdap
                     break;
             }
         }
+
     }
 
     private void refresh() {
