@@ -18,14 +18,18 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.entity.AppTokenEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.util.PreferencesUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +54,8 @@ public class ResetPasswordActivity extends BaseActivity{
 
     private UserEntity userEntity = new UserEntity();
     private List<UserEntity> userList;
+
+    ProgressDialog progressDialog;
 
     @Override
     public int getLayout() {
@@ -85,6 +91,8 @@ public class ResetPasswordActivity extends BaseActivity{
 
     @Override
     public void initView() {
+        
+        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
 
         userEntity = (UserEntity) getIntent().getExtras().getSerializable("userEntity");
 
@@ -277,6 +285,8 @@ public class ResetPasswordActivity extends BaseActivity{
     //登录
     public void login()
     {
+        btnNext.setClickable(false);
+        progressDialog.show();
         HashMap<String, String> jsonParams = new HashMap<String, String>();
 
         jsonParams.put("username", userEntity.getUser_login_id());
@@ -305,22 +315,35 @@ public class ResetPasswordActivity extends BaseActivity{
                 try {
                     JSONObject jsonObject = new JSONObject(response);
 
-                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {
+                    }.getType());
+
+                    AppTokenEntity tokenEntity = gson.fromJson(jsonObject.getString("token"), AppTokenEntity.class);
 
                     if (userList != null && userList.get(0) != null) {
-                        userEntity = userList.get(0);//登录的用户数据
+                        UserEntity userEntity = userList.get(0);//登录的用户数据
+                        App.changeLoginedUser(userEntity, tokenEntity);
                         Intent intent = new Intent(ResetPasswordActivity.this, MainActivity.class);
-                        intent.putExtra("user", userEntity);
+//                                    intent.putExtra("user", userEntity);
+                        PreferencesUtil.saveValue(ResetPasswordActivity.this, "user", gson.toJson(userEntity));
+                        PreferencesUtil.saveValue(ResetPasswordActivity.this, "token", gson.toJson(tokenEntity));
+
                         startActivity(intent);
+                        finish();
+                        progressDialog.dismiss();
                     }
 
                 } catch (JSONException e) {
+                    btnNext.setClickable(true);
+                    progressDialog.dismiss();
                     e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                btnNext.setClickable(true);
+                progressDialog.dismiss();
                 Log.i("", "error=====" + error.getMessage());
                 Toast.makeText(ResetPasswordActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }

@@ -19,6 +19,7 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.widgets.Dialog;
+import com.gc.materialdesign.widgets.ProgressDialog;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.http.PicturesCacheUtil;
@@ -70,7 +71,7 @@ public class GroupNameSettingActivity extends BaseActivity {
     Boolean isUploadNameSuccess = false;
     Boolean isUploadImageSuccess = false;
 
-
+    ProgressDialog progressDialog;
 
     @Override
     public int getLayout() {
@@ -125,6 +126,9 @@ public class GroupNameSettingActivity extends BaseActivity {
 
     @Override
     public void initView() {
+
+        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
+
         civGroupPic = getViewById(R.id.iv_pic);
         etGroupName = getViewById(R.id.et_group_name);
 
@@ -338,6 +342,8 @@ public class GroupNameSettingActivity extends BaseActivity {
         if (!file.exists()) {
             return;
         }
+
+        progressDialog.show();
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
         params.put("fileName", "UploadGroupPicture" + MainActivity.getUser().getUser_id() + groupId);
@@ -376,6 +382,7 @@ public class GroupNameSettingActivity extends BaseActivity {
                         Intent intent = new Intent();
                         intent.putExtra("groupName",etGroupName.getText().toString());
                         setResult(RESULT_OK, intent);
+                        progressDialog.dismiss();
                         finish();
                     }
                     else
@@ -391,12 +398,14 @@ public class GroupNameSettingActivity extends BaseActivity {
 
 
                 } catch (JSONException e) {
+                    progressDialog.dismiss();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
+                progressDialog.dismiss();
                 Log.i("", "444response==========");
                 /**
                  * begin QK

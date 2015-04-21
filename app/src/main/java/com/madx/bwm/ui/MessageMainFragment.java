@@ -95,6 +95,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> {
                 @Override
                 public void onItemClick(AdapterView<?> arg0, View arg1,
                                         int arg2, long arg3) {
+                    arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra("type", 0);
                     intent.putExtra("userEntity", userEntityList.get(index * 8 + arg2));

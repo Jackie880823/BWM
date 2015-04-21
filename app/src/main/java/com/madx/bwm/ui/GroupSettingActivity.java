@@ -3,6 +3,7 @@ package com.madx.bwm.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
@@ -998,7 +999,10 @@ public class GroupSettingActivity extends BaseActivity {
 
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_leave_group), Toast.LENGTH_SHORT).show();//成功
-                                finish();
+                                Intent intent =new Intent(GroupSettingActivity.this,MainActivity.class);
+                                intent.putExtra("leaveGroup","leaveGroup");
+                                startActivity(intent);
+                                //finish();
                             } else {
                                 Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_fail_leave_group), Toast.LENGTH_SHORT).show();//失败
                             }

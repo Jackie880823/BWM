@@ -273,7 +273,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallAdap
                     @Override
                     public void onResult(String string) {
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-//                        refresh();
+                        refresh();
                     }
 
                     @Override

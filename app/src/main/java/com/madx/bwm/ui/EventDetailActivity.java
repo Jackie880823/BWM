@@ -66,9 +66,12 @@ public class EventDetailActivity extends BaseActivity {
 
     private boolean isCurrentUser() {
 
-        if (MainActivity.getUser() == null)
-            return false;
-        return event.getGroup_owner_id().equals(MainActivity.getUser().getUser_id());
+        if(event!=null) {
+            if (MainActivity.getUser() == null)
+                return false;
+            return event.getGroup_owner_id().equals(MainActivity.getUser().getUser_id());
+        }
+        return false;
     }
 
     @Override
@@ -149,6 +152,7 @@ public class EventDetailActivity extends BaseActivity {
             @Override
             public void onResult(String response) {
                 event = new Gson().fromJson(response, EventEntity.class);
+
                 if (isCurrentUser()) {
                     rightButton.setImageResource(R.drawable.btn_edit);
                     rightButton.setVisibility(View.VISIBLE);
