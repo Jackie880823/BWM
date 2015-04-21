@@ -139,6 +139,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             public void onFinish() {
                 getComments();
                 mProgressDialog.dismiss();
+                if(wall==null){
+                    getParentActivity().finish();
+                }
             }
 
             @Override

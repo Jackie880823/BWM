@@ -1,15 +1,36 @@
 /.gradle
+/**/*build/
 /local.properties
 /**/.DS_Store
-/**/*build/
 /.idea
 /MaterialDesignDemo
 /fzAndroidMap
 /**/*.apk
-/**/*.iml
+#/**/*.iml
 /app/manifest-merger-debug-report.txt
 /app/manifest-merger-taobao-debug-report.txt
 /app/manifest-merger-baidu-debug-report.txt
 /app/manifest-merger-baidu-release-report.txt
 /app/manifest-merger-release-report.txt
-local.properties
+
+# files for the dex VM
+*.dex
+# Java class files
+*.class
+# generated files
+bin/
+gen/
+# Windows thumbnail db
+Thumbs.db
+# Eclipse project files
+.classpath
+.project
+
+
+#other
+/*/out
+/*/*/production
+*.iws
+*.ipr
+*~
+*.swp

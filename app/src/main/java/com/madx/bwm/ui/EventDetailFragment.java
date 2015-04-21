@@ -31,6 +31,7 @@ import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
+import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.UIUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.FullyLinearLayoutManager;
@@ -87,7 +88,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     int colorIntentSelected;
     private ProgressBarCircularIndeterminate progressBar;
 
-    public static EventDetailFragment newInstance( String... params) {
+    public static EventDetailFragment newInstance(String... params) {
 //        event = eventEntity;
         return createInstance(new EventDetailFragment(), params);
     }
@@ -109,125 +110,126 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
 
-
     @Override
     public void initView() {
 
-        progressBar = getViewById(R.id.progressBar);
         rvList = getViewById(R.id.rv_event_comment_list);
         final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
 //        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
 //        rvList.setHasFixedSize(true);
         initAdapter();
+        if (NetworkUtil.isNetworkConnected(getActivity())) {
+
+            progressBar = getViewById(R.id.progressBar);
 
 
-        et_comment = getViewById(R.id.et_comment);
-        btn_submit = getViewById(R.id.btn_submit);
+            et_comment = getViewById(R.id.et_comment);
+            btn_submit = getViewById(R.id.btn_submit);
 
-        btn_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(et_comment.getText())) {
-                    MessageUtil.showMessage(getActivity(), R.string.alert_comment_null);
-                } else {
-                    sendComment();
+            btn_submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (TextUtils.isEmpty(et_comment.getText())) {
+                        MessageUtil.showMessage(getActivity(), R.string.alert_comment_null);
+                    } else {
+                        sendComment();
+                    }
                 }
-            }
-        });
+            });
 
-        push_date = getViewById(R.id.push_date);
-        owner_name = getViewById(R.id.owner_name);
-        owner_head = getViewById(R.id.owner_head);
-        event_title = getViewById(R.id.event_title);
-        event_picture_4_location = getViewById(R.id.event_picture_4_location);
+            push_date = getViewById(R.id.push_date);
+            owner_name = getViewById(R.id.owner_name);
+            owner_head = getViewById(R.id.owner_head);
+            event_title = getViewById(R.id.event_title);
+            event_picture_4_location = getViewById(R.id.event_picture_4_location);
 
-        event_desc = getViewById(R.id.event_desc);
-        event_date = getViewById(R.id.event_date);
-        location_desc = getViewById(R.id.location_desc);
-        btn_intent_all = getViewById(R.id.btn_intent_all);
-        iv_intent_agree = getViewById(R.id.iv_intent_agree);
-        iv_intent_maybe = getViewById(R.id.iv_intent_maybe);
-        iv_intent_no = getViewById(R.id.iv_intent_no);
-        going_count = getViewById(R.id.going_count);
-        maybe_count = getViewById(R.id.maybe_count);
-        not_going_count = getViewById(R.id.not_going_count);
+            event_desc = getViewById(R.id.event_desc);
+            event_date = getViewById(R.id.event_date);
+            location_desc = getViewById(R.id.location_desc);
+            btn_intent_all = getViewById(R.id.btn_intent_all);
+            iv_intent_agree = getViewById(R.id.iv_intent_agree);
+            iv_intent_maybe = getViewById(R.id.iv_intent_maybe);
+            iv_intent_no = getViewById(R.id.iv_intent_no);
+            going_count = getViewById(R.id.going_count);
+            maybe_count = getViewById(R.id.maybe_count);
+            not_going_count = getViewById(R.id.not_going_count);
 //        comment_container = getViewById(R.id.comment_container);
 
 
-        btn_intent_all.setOnClickListener(this);
-        iv_intent_agree.setOnClickListener(this);
-        iv_intent_maybe.setOnClickListener(this);
-        iv_intent_no.setOnClickListener(this);
-        option_status = getViewById(R.id.option_status);
-        option_cancel = getViewById(R.id.option_cancel);
-        event_options = getViewById(R.id.event_options);
-        option_no_going = getViewById(R.id.image_no_going);
-        option_maybe = getViewById(R.id.image_maybe);
-        option_going = getViewById(R.id.image_going);
+            btn_intent_all.setOnClickListener(this);
+            iv_intent_agree.setOnClickListener(this);
+            iv_intent_maybe.setOnClickListener(this);
+            iv_intent_no.setOnClickListener(this);
+            option_status = getViewById(R.id.option_status);
+            option_cancel = getViewById(R.id.option_cancel);
+            event_options = getViewById(R.id.event_options);
+            option_no_going = getViewById(R.id.image_no_going);
+            option_maybe = getViewById(R.id.image_maybe);
+            option_going = getViewById(R.id.image_going);
 //        option_no_going = getViewById(R.id.option_no_going);
 //        option_maybe = getViewById(R.id.option_maybe);
 //        option_going = getViewById(R.id.option_going);
-        colorIntentSelected = getResources().getColor(R.color.btn_bg_color_green_press);
+            colorIntentSelected = getResources().getColor(R.color.btn_bg_color_green_press);
 //        colorIntentSelected = getResources().getColor(R.color.default_text_color_while);
 
-        //bind data
+            //bind data
 //        bindData();
 
-        option_cancel.setOnClickListener(this);
-        option_no_going.setOnClickListener(this);
-        option_maybe.setOnClickListener(this);
-        option_going.setOnClickListener(this);
+            option_cancel.setOnClickListener(this);
+            option_no_going.setOnClickListener(this);
+            option_maybe.setOnClickListener(this);
+            option_going.setOnClickListener(this);
 
 
 //        ((ScrollView)getViewById(R.id.content)).On
 
 
-        rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItem = ((FullyLinearLayoutManager) llm).findLastVisibleItemPosition();
-                int totalItemCount = llm.getItemCount();
-                //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
-                // dy>0 表示向下滑动
-                if ((data.size()==(currentPage*offset))&&!loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
-                    loading = true;
-                    requestComment();
-                }
-            }
-        });
-
-
-        getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
-            @Override
-            public boolean execute(View v) {
-                if (R.id.tv_title == v.getId()) {
-                    if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
-                        option_cancel.setVisibility(View.VISIBLE);
-                        option_status.setVisibility(View.GONE);
-                    } else {
-                        option_cancel.setVisibility(View.GONE);
-                        option_status.setVisibility(View.VISIBLE);
-
+            rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    int lastVisibleItem = ((FullyLinearLayoutManager) llm).findLastVisibleItemPosition();
+                    int totalItemCount = llm.getItemCount();
+                    //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
+                    // dy>0 表示向下滑动
+                    if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                        loading = true;
+                        requestComment();
                     }
-                    if(event_options.getVisibility() == View.VISIBLE){
-                        event_options.setVisibility(View.GONE);
-                        getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
-                    }else{
-                        event_options.setVisibility(View.VISIBLE);
-                        getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
-                    }
-
-                } else if (R.id.ib_top_button_right == v.getId()) {
-                    Intent intent = new Intent(getParentActivity(), EventEditActivity.class);
-                    intent.putExtra("event", event);
-                    startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
                 }
-                return false;
-            }
-        });
+            });
 
+
+            getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
+                @Override
+                public boolean execute(View v) {
+                    if (R.id.tv_title == v.getId()) {
+                        if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
+                            option_cancel.setVisibility(View.VISIBLE);
+                            option_status.setVisibility(View.GONE);
+                        } else {
+                            option_cancel.setVisibility(View.GONE);
+                            option_status.setVisibility(View.VISIBLE);
+
+                        }
+                        if (event_options.getVisibility() == View.VISIBLE) {
+                            event_options.setVisibility(View.GONE);
+                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
+                        } else {
+                            event_options.setVisibility(View.VISIBLE);
+                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
+                        }
+
+                    } else if (R.id.ib_top_button_right == v.getId()) {
+                        Intent intent = new Intent(getParentActivity(), EventEditActivity.class);
+                        intent.putExtra("event", event);
+                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
+                    }
+                    return false;
+                }
+            });
+        }
 
     }
 
@@ -253,15 +255,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(event!=null){
+        if (event != null) {
             bindData();
             requestComment();
-        }else{
+        } else {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
-                    while (true){
-                        if(getParentActivity()!=null&&getParentActivity().getDataDone){
+                    while (true) {
+                        if (getParentActivity() != null && getParentActivity().getDataDone) {
                             break;
                         }
                     }
@@ -280,7 +282,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     public void bindData() {
 
-        if(getParentActivity().getEventEntity()!=null) {
+        if (getParentActivity().getEventEntity() != null) {
             event = getParentActivity().getEventEntity();
             push_date.setText(MyDateUtils.getLocalDateStringFromUTC(getActivity(), event.getGroup_creation_date()));
             owner_name.setText(event.getUser_given_name());
@@ -317,7 +319,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             }
             changeIntentUI(currentStatus);
 
-            if(!TextUtils.isEmpty(event.getLoc_latitude())&&!TextUtils.isEmpty(event.getLoc_longitude())) {
+            if (!TextUtils.isEmpty(event.getLoc_latitude()) && !TextUtils.isEmpty(event.getLoc_longitude())) {
                 event_picture_4_location.setVisibility(View.VISIBLE);
                 VolleyUtil.initNetworkImageView(getActivity(), event_picture_4_location
                         , String.format(Constant.MAP_API_GET_LOCATION_PIC, event.getLoc_latitude() + "," + event.getLoc_longitude(), getActivity().getString(R.string.google_map_pic_size), event.getLoc_latitude() + "," + event.getLoc_longitude())
@@ -325,7 +327,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 event_picture_4_location.setOnClickListener(this);
 //                btn_location.setOnClickListener(this);
-            }else{
+            } else {
                 event_picture_4_location.setVisibility(View.GONE);
             }
         }
@@ -377,57 +379,61 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     public EventCommentAdapter adapter;
 
     private void sendComment() {
-        progressBar.setVisibility(View.VISIBLE);
 
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("content_group_id", event.getContent_group_id());
-        params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-        params.put("content_type", "comment");
-        params.put("comment_content", et_comment.getText().toString());
-        params.put("sticker_group_path", "");
-        params.put("sticker_name", "");
-        params.put("sticker_type", "");
+        if (NetworkUtil.isNetworkConnected(getActivity())) {
+            progressBar.setVisibility(View.VISIBLE);
 
-        new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT,params,new HttpCallback() {
-            @Override
-            public void onStart() {
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("content_group_id", event.getContent_group_id());
+            params.put("comment_owner_id", MainActivity.getUser().getUser_id());
+            params.put("content_type", "comment");
+            params.put("comment_content", et_comment.getText().toString());
+            params.put("sticker_group_path", "");
+            params.put("sticker_name", "");
+            params.put("sticker_type", "");
 
-            }
+            new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
+                @Override
+                public void onStart() {
 
-            @Override
-            public void onFinish() {
+                }
 
-            }
+                @Override
+                public void onFinish() {
 
-            @Override
-            public void onResult(String response) {
-                startIndex = 0;
-                isRefresh = true;
-                requestComment();
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                et_comment.setText("");
-                UIUtil.hideKeyboard(getActivity(), et_comment);
-                progressBar.setVisibility(View.GONE);
-            }
+                }
 
-            @Override
-            public void onError(Exception e) {
-                UIUtil.hideKeyboard(getActivity(), et_comment);
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                progressBar.setVisibility(View.GONE);
-            }
+                @Override
+                public void onResult(String response) {
+                    startIndex = 0;
+                    isRefresh = true;
+                    requestComment();
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                    et_comment.setText("");
+                    UIUtil.hideKeyboard(getActivity(), et_comment);
+                    progressBar.setVisibility(View.GONE);
+                }
 
-            @Override
-            public void onCancelled() {
+                @Override
+                public void onError(Exception e) {
+                    UIUtil.hideKeyboard(getActivity(), et_comment);
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    progressBar.setVisibility(View.GONE);
+                }
 
-            }
+                @Override
+                public void onCancelled() {
 
-            @Override
-            public void onLoading(long count, long current) {
+                }
 
-            }
-        });
+                @Override
+                public void onLoading(long count, long current) {
 
+                }
+            });
+        } else {
+            MessageUtil.showMessage(getActivity(), R.string.msg_no_internet);
+        }
 
     }
 
@@ -437,71 +443,74 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
 
-    public void requestComment(){
+    public void requestComment() {
+        if (NetworkUtil.isNetworkConnected(getActivity())) {
+            if (event == null || MainActivity.getUser() == null)
+                return;
 
-        if (event == null || MainActivity.getUser() == null)
-            return;
+            HashMap<String, String> jsonParams = new HashMap<String, String>();
 
-        HashMap<String, String> jsonParams = new HashMap<String, String>();
+            jsonParams.put("user_id", MainActivity.getUser().getUser_id());
+            jsonParams.put("group_id", event.getGroup_id());
+            jsonParams.put("content_group_id", event.getContent_group_id());
+            String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-        jsonParams.put("user_id", MainActivity.getUser().getUser_id());
-        jsonParams.put("group_id", event.getGroup_id());
-        jsonParams.put("content_group_id", event.getContent_group_id());
-        String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("condition", jsonParamsString);
+            params.put("start", startIndex + "");
+            params.put("limit", offset + "");
 
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("condition", jsonParamsString);
-        params.put("start", startIndex + "");
-        params.put("limit", offset+"");
+            String url = UrlUtil.generateUrl(Constant.API_EVENT_COMMENT, params);
 
-        String url = UrlUtil.generateUrl(Constant.API_EVENT_COMMENT, params);
+            new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+                @Override
+                public void onStart() {
 
-        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onResult(String response) {
-                GsonBuilder gsonb = new GsonBuilder();
-                Gson gson = gsonb.create();
-                data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {
-                }.getType());
-                if (isRefresh) {
-                    isRefresh = false;
-                    currentPage = 1;
-                    initAdapter();
-                    adapter.notifyDataSetChanged();
-                } else {
-                    startIndex += data.size();
-                    adapter.addData(data);
                 }
-                if (adapter != null && adapter.getItemCount() > 0) {
-                    getViewById(R.id.comment_split_line).setVisibility(View.VISIBLE);
+
+                @Override
+                public void onFinish() {
+                    progressBar.setVisibility(View.GONE);
                 }
-            }
 
-            @Override
-            public void onError(Exception e) {
+                @Override
+                public void onResult(String response) {
+                    GsonBuilder gsonb = new GsonBuilder();
+                    Gson gson = gsonb.create();
+                    data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {
+                    }.getType());
+                    if (isRefresh) {
+                        isRefresh = false;
+                        currentPage = 1;
+                        initAdapter();
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        startIndex += data.size();
+                        adapter.addData(data);
+                    }
+                    if (adapter != null && adapter.getItemCount() > 0) {
+                        getViewById(R.id.comment_split_line).setVisibility(View.VISIBLE);
+                    }
+                }
 
-            }
+                @Override
+                public void onError(Exception e) {
 
-            @Override
-            public void onCancelled() {
+                }
 
-            }
+                @Override
+                public void onCancelled() {
 
-            @Override
-            public void onLoading(long count, long current) {
+                }
 
-            }
-        });
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+        } else {
+            MessageUtil.showMessage(getActivity(), R.string.msg_no_internet);
+        }
     }
 
     private void goInvitedStutus() {
@@ -519,16 +528,16 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=14&q=%f,%f", Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()), Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()));
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             getActivity().startActivity(intent);
-        }catch (Exception e){
-            MessageUtil.showMessage(getActivity(),R.string.msg_no_map_app);
+        } catch (Exception e) {
+            MessageUtil.showMessage(getActivity(), R.string.msg_no_map_app);
         }
     }
 
     private void cancelEvent() {
 
-        RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_EVENT_CANCEL, event.getGroup_id()),null);
+        RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_EVENT_CANCEL, event.getGroup_id()), null);
 
-        new HttpTools(getActivity()).put(requestInfo,new HttpCallback() {
+        new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -762,7 +771,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 RequestInfo requestInfo = new RequestInfo();
                 requestInfo.url = String.format(Constant.API_EVENT_COMMENT_DELETE, commentId);
                 requestInfo.params = params;
-                new HttpTools(getActivity()).delete(requestInfo,new HttpCallback() {
+                new HttpTools(getActivity()).delete(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -817,7 +826,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("comment_id", commentEntity.getComment_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
         params.put("user_id", "" + MainActivity.getUser().getUser_id());
-        RequestInfo requestInfo = new RequestInfo(Constant.API_EVENT_COMMENT_LOVE,params);
+        RequestInfo requestInfo = new RequestInfo(Constant.API_EVENT_COMMENT_LOVE, params);
         new HttpTools(getActivity()).post(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
