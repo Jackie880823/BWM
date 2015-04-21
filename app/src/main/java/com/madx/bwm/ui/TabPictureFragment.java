@@ -85,8 +85,8 @@ public class TabPictureFragment extends BaseFragment<MainActivity> implements Vi
     @Override
     public void initView() {
 
-        getViewById(R.id.btn_to_photo).setOnClickListener(this);
-        getViewById(R.id.btn_to_camera).setOnClickListener(this);
+        getViewById(R.id.ll_to_photo).setOnClickListener(this);
+        getViewById(R.id.ll_to_camera).setOnClickListener(this);
 
         gvPictures = getViewById(R.id.gv_pictures);
         adapter = new PickPicAdapter(getActivity(), datas, R.layout.picture_item_for_gridview
@@ -131,14 +131,14 @@ public class TabPictureFragment extends BaseFragment<MainActivity> implements Vi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_to_photo:
+            case R.id.ll_to_photo:
                 Intent intent = new Intent(Intent.ACTION_PICK, null);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 intent.setDataAndType(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, REQUEST_HEAD_PHOTO);
                 break;
-            case R.id.btn_to_camera:
+            case R.id.ll_to_camera:
 
                 cache_count++;
                 Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

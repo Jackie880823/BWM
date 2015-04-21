@@ -1,9 +1,11 @@
 package com.madx.bwm.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -312,7 +314,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             imWallsImages.setOnClickListener(this);
         }
 
-        boolean loving;
+        boolean loving = false;
 
         @Override
         public void onClick(View v) {
@@ -329,10 +331,14 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         wall.setLove_id(null);
                         tvAgreeCount.setText(count - 1 + "");
                     }
+                    Log.i("WallcommentAdapter", "love count = " + count);
                     //判断是否已经有进行中的判断
-                    if (!loving) {
+                    if(!loving) {
+                        Log.i("WallcommentAdapter", "prepare love");
                         loving = true;
                         check();
+                    } else {
+                        Log.i("WallcommentAdapter", "not love");
                     }
                     break;
                 case R.id.iv_walls_images:
@@ -391,7 +397,6 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             new HttpTools(mContext).post(requestInfo, new HttpCallback() {
                 @Override
                 public void onStart() {
-
                 }
 
                 @Override
@@ -401,7 +406,10 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 @Override
                 public void onResult(String response) {
-
+                    // 如果传进来的是Context对象是Activity设置Activity.RESULT_OK
+                    if(mContext instanceof Activity){
+                        ((Activity) mContext).setResult(Activity.RESULT_OK);
+                    }
                 }
 
                 @Override
