@@ -2,7 +2,7 @@
 /local.properties
 /**/.DS_Store
 /**/*build/
-/.idea/*
+/.idea
 /MaterialDesignDemo
 /fzAndroidMap
 /**/*.apk
@@ -12,3 +12,4 @@
 /app/manifest-merger-baidu-debug-report.txt
 /app/manifest-merger-baidu-release-report.txt
 /app/manifest-merger-release-report.txt
+local.properties
