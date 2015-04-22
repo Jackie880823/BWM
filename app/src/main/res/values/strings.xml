@@ -605,6 +605,8 @@
     <string name="text_love_comment_event">loved your comment in %s event.</string>
     <string name="text_love_event">loved your %s event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
+    <string name="text_photos">photos</string>
+    <string name="text_photo">photo</string>
 
     <!--end-->
 
