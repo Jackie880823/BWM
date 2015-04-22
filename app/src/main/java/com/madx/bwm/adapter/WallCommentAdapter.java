@@ -358,19 +358,24 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         List<Integer> runningList = new ArrayList<Integer>();
 
         private void check() {
+
+            // 判断传进来的Context对象是否为Activity
+            if(mContext instanceof Activity){
+                Log.i("WallCommentAdapter", "onResult setResult");
+                // 数据有修改设置result 为 Activity.RESULT_OK
+                ((Activity) mContext).setResult(Activity.RESULT_OK);
+            }
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    long startTime = System.currentTimeMillis();//点击时间
-                    long nowTime = System.currentTimeMillis();
-                    //缓冲时间为1000
-                    while (nowTime - startTime < 1000) {
-                        if (newClick) {
-                            startTime = System.currentTimeMillis();
-                            newClick = false;
-                        }
-                        nowTime = System.currentTimeMillis();
+                    try {
+                        //缓冲时间为100
+                        Thread.sleep(100);
+                    } catch(InterruptedException e) {
+                        e.printStackTrace();
                     }
+
                     try {
                         loving = false;
                     } catch (Exception e) {
@@ -397,19 +402,17 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             new HttpTools(mContext).post(requestInfo, new HttpCallback() {
                 @Override
                 public void onStart() {
+                    Log.i("WallCommentAdapter", "onStart");
                 }
 
                 @Override
                 public void onFinish() {
-
+                    Log.i("WallCommentAdapter", "onFinish");
                 }
 
                 @Override
                 public void onResult(String response) {
-                    // 如果传进来的是Context对象是Activity设置Activity.RESULT_OK
-                    if(mContext instanceof Activity){
-                        ((Activity) mContext).setResult(Activity.RESULT_OK);
-                    }
+                    Log.i("WallCommentAdapter", "onResult");
                 }
 
                 @Override

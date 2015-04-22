@@ -2,10 +2,10 @@
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
 
-    android:id="@+id/top_event"
-    style="@style/CardViewDefault"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+                                    android:id="@+id/top_event"
+                                    style="@style/CardViewDefault"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
     <!--app:cardUseCompatPadding="true"-->
     <!--app:cardCornerRadius="@dimen/default_button_radius"-->
 
@@ -25,7 +25,7 @@
             <com.madx.bwm.widget.CircularNetworkImage
                 android:id="@+id/owner_head"
                 android:layout_width="@dimen/default_user_head_width_height"
-                android:layout_height="@dimen/default_user_head_width_height" />
+                android:layout_height="@dimen/default_user_head_width_height"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,7 +46,7 @@
                         android:id="@+id/owner_name"
                         style="@style/text_title_default"
                         android:textColor="@color/tab_color_press4"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                     <ImageView
                         android:id="@+id/iv_mood"
@@ -54,13 +54,13 @@
                         android:layout_height="20dp"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:scaleType="fitCenter" />
+                        android:scaleType="fitCenter"/>
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/push_date"
                     style="@style/text_light_default"
-                    android:layout_marginTop="@dimen/default_view_margin" />
+                    android:layout_marginTop="@dimen/default_view_margin"/>
             </LinearLayout>
 
             <ImageButton
@@ -69,7 +69,7 @@
                 android:layout_height="@dimen/default_small_button_width_height"
                 android:layout_alignParentRight="true"
                 android:background="@null"
-                android:src="@drawable/icon_delete" />
+                android:src="@drawable/icon_delete"/>
         </RelativeLayout>
 
         <TextView
@@ -77,16 +77,32 @@
             style="@style/text_dark_default"
             android:layout_marginTop="@dimen/default_view_margin"
             android:paddingLeft="@dimen/default_content_padding"
-            android:paddingRight="@dimen/default_content_padding" />
+            android:paddingRight="@dimen/default_content_padding"/>
 
-
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/iv_walls_images"
-            style="@style/ListImageDefault"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_200dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/default_view_margin" />
+            android:layout_marginTop="@dimen/default_view_margin">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/iv_walls_images"
+                style="@style/ListImageDefault"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/tv_wall_photo_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:padding="@dimen/_4dp"
+                android:layout_marginRight="@dimen/_1dp"
+                android:textColor="@android:color/white"
+                android:background="@android:drawable/screen_background_dark_transparent"
+                android:textSize="@dimen/text_size_12sp"
+                android:text="@string/text_photos"/>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -106,13 +122,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:background="@null" />
+                    android:background="@null"/>
 
                 <TextView
                     android:id="@+id/tv_wall_agree_count"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/default_view_margin" />
+                    android:layout_marginLeft="@dimen/default_view_margin"/>
 
 
             </LinearLayout>
@@ -129,19 +145,19 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:background="@null"
-                    android:src="@drawable/btn_comment" />
+                    android:src="@drawable/btn_comment"/>
 
                 <TextView
                     android:id="@+id/tv_wall_relay_count"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/default_view_margin" />
+                    android:layout_marginLeft="@dimen/default_view_margin"/>
 
                 <TextView
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/default_view_margin"
-                    android:text="Comments" />
+                    android:text="Comments"/>
 
             </LinearLayout>
 
