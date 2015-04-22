@@ -100,8 +100,7 @@
                 android:layout_marginRight="@dimen/_1dp"
                 android:textColor="@android:color/white"
                 android:background="@android:drawable/screen_background_dark_transparent"
-                android:textSize="@dimen/text_size_12sp"
-                android:visibility="gone"/>
+                android:textSize="@dimen/text_size_12sp"/>
         </RelativeLayout>
 
         <RelativeLayout

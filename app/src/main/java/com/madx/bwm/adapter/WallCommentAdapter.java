@@ -109,10 +109,23 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //            holder.tvTime.setText(wall.getTime());
             holder.tvUserName.setText(wall.getUser_given_name());
             if (TextUtils.isEmpty(wall.getFile_id())) {
+                holder.tvPhotoCount.setVisibility(View.GONE);
                 holder.imWallsImages.setVisibility(View.GONE);
             } else {
+                holder.tvPhotoCount.setVisibility(View.VISIBLE);
                 holder.imWallsImages.setVisibility(View.VISIBLE);
+
                 VolleyUtil.initNetworkImageView(mContext, holder.imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, wall.getUser_id(), wall.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+
+                // 有图片显示图片总数
+                int count = Integer.valueOf(wall.getPhoto_count());
+                String photoCountStr;
+                if(count > 1) {
+                    photoCountStr = count + " " + mContext.getString(R.string.text_photos);
+                } else {
+                    photoCountStr = count + " " + mContext.getString(R.string.text_photo);
+                }
+                holder.tvPhotoCount.setText(photoCountStr);
             }
 
          /*is owner wall*/
@@ -286,6 +299,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView tvDate;
         TextView tvUserName;
         NetworkImageView imWallsImages;
+        TextView tvPhotoCount;
         TextView tvAgreeCount;
         TextView tvCommentCount;
         ImageButton ibAgree;
@@ -301,6 +315,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tvContent = (TextView) itemView.findViewById(R.id.tv_wall_content);
             tvDate = (TextView) itemView.findViewById(R.id.push_date);
             imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);
+            tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
             tvAgreeCount = (TextView) itemView.findViewById(R.id.tv_wall_agree_count);
             tvCommentCount = (TextView) itemView.findViewById(R.id.tv_wall_relay_count);
             ibAgree = (ImageButton) itemView.findViewById(R.id.iv_love);
