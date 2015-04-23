@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,7 +65,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private ImageButton btn_feeling;
     private ImageButton btn_notify;
     //    private TextView btn_share_option;
-    private ImageButton btn_share_option;
+    private Button btn_share_option;
     private LinearLayout btn_submit;
     private LinearLayout btn_location;
     private TextView location_desc;
@@ -110,7 +111,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     @Override
     public void initView() {
-//        progressBar = getViewById(R.id.progressBar);
+        //        progressBar = getViewById(R.id.progressBar);
 
         gson = new Gson();
         getViewById(R.id.tv_tab_word).setOnClickListener(this);
@@ -155,7 +156,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     @Override
     public void requestData() {
 
-//        uploadImages();
+        //        uploadImages();
     }
 
 
@@ -165,7 +166,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     public void onClick(View v) {
 
 
-        switch (v.getId()) {
+        switch(v.getId()) {
             case R.id.tv_tab_word:
                 changeTab(0);
                 break;
@@ -182,13 +183,16 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                 goChooseMembers();
                 break;
             case R.id.btn_share_option:
-                if (allRange) {
+                if(allRange) {
                     allRange = false;
-                    btn_share_option.setImageResource(R.drawable.post_rang_private);
-//                    btn_share_option.setBackground(R.drawable.);
+                    // btn_share_option.setImageResource(R.drawable.post_rang_private);
+                    btn_share_option.setBackgroundResource(R.drawable.post_rang_private);
+                    btn_share_option.setText(R.string.text_private);
                 } else {
                     allRange = true;
-                    btn_share_option.setImageResource(R.drawable.post_rang_all);
+                    // btn_share_option.setImageResource(R.drawable.post_rang_all);
+                    btn_share_option.setBackgroundResource(R.drawable.post_rang_all);
+                    btn_share_option.setText(R.string.text_all);
                 }
 
                 break;
@@ -210,30 +214,30 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private void submitWall() {
         hasTextContent = false;
         hasPicContent = false;
-        if (fragment1 != null) {
+        if(fragment1 != null) {
             WallEditView editText = fragment1.getEditText4Content();
             text_content = editText.getRelText();
-            if (TextUtils.isEmpty(text_content)) {
+            if(TextUtils.isEmpty(text_content)) {
                 hasTextContent = false;
             } else {
                 hasTextContent = true;
             }
         }
-        if (fragment2 != null) {
+        if(fragment2 != null) {
             pic_content = fragment2.getEditPic4Content();
-            if (pic_content == null || pic_content.size() == 0) {
+            if(pic_content == null || pic_content.size() == 0) {
                 hasPicContent = false;
             } else {
                 hasPicContent = true;
             }
         }
 
-        if (!hasTextContent && !hasPicContent) {
+        if(!hasTextContent && !hasPicContent) {
             MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
             return;
         }
 
-        if (!TextUtils.isEmpty(location_desc.getText())) {
+        if(!TextUtils.isEmpty(location_desc.getText())) {
             locationDesc = location_desc.getText().toString();
             latitudeDesc = "" + latitude;
             longitudeDesc = "" + longitude;
@@ -261,25 +265,25 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             int charIndex = selectFeelingPath.lastIndexOf("/");
             b.replace(charIndex, charIndex + 1, "_");
             params.put("dofeel_code", b.toString());
-        } catch (Exception e) {
+        } catch(Exception e) {
         }
         params.put("sticker_type", "");
         params.put("group_ind_type", "2");
         params.put("content_group_public", (allRange ? "1" : "0"));
 
-        if (pic_content == null || pic_content.size() == 0) {
+        if(pic_content == null || pic_content.size() == 0) {
             params.put("upload_photo", "0");
         } else {
             params.put("upload_photo", "1");
         }
         params.put("tag_group", null);
-//        params.put("tag_group", gson.toJson(setGetMembersIds(at_gourps_data)));
+        //        params.put("tag_group", gson.toJson(setGetMembersIds(at_gourps_data)));
         params.put("tag_member", gson.toJson(setGetMembersIds(at_members_data)));
 
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.params = params;
         requestInfo.url = Constant.API_WALL_TEXT_POST;
-        new HttpTools(getActivity()).post(requestInfo,new HttpCallback() {
+        new HttpTools(getActivity()).post(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -294,15 +298,15 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             public void onResult(String response) {
                 try {
                     JSONObject obj = new JSONObject(response);
-                    if ("1".equals(obj.getString("resultStatus")) && !TextUtils.isEmpty(obj.getString("contentID"))) {
+                    if("1".equals(obj.getString("resultStatus")) && !TextUtils.isEmpty(obj.getString("contentID"))) {
                         String contentId = obj.getString("contentID");
-                        if (!hasPicContent) {
+                        if(!hasPicContent) {
                             mHandler.sendEmptyMessage(ACTION_SUCCESSED);
                         } else {
                             int count = pic_content.size();
                             boolean multiple = (count > 0 ? false : true);
-                            for (int index = 0; index < count; index++) {
-                                if (index == count - 1) {
+                            for(int index = 0; index < count; index++) {
+                                if(index == count - 1) {
                                     new CompressBitmapTask(contentId, index, multiple, true).execute(pic_content.get(index));
                                 } else {
                                     new CompressBitmapTask(contentId, index, multiple, false).execute(pic_content.get(index));
@@ -313,7 +317,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     } else {
                         mHandler.sendEmptyMessage(ACTION_FAILED);
                     }
-                } catch (Throwable t) {
+                } catch(Throwable t) {
                     t.printStackTrace();
                     mHandler.sendEmptyMessage(ACTION_FAILED);
                 }
@@ -345,7 +349,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
+            switch(msg.what) {
                 case ACTION_FAILED:
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     sendEmptyMessage(HIDE_PROGRESS);
@@ -357,13 +361,13 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     getActivity().finish();
                     break;
                 case SHOW_PROGRESS:
-                    if (progressDialog == null) {
+                    if(progressDialog == null) {
                         progressDialog = new ProgressDialog(getActivity(), R.string.text_uploading);
                     }
                     progressDialog.show();
                     break;
                 case HIDE_PROGRESS:
-                    if (progressDialog != null) {
+                    if(progressDialog != null) {
                         progressDialog.dismiss();
                     }
                     break;
@@ -374,22 +378,22 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     @Override
     public void onDestroy() {
-        if (progressDialog != null) {
+        if(progressDialog != null) {
             progressDialog.dismiss();
         }
         super.onDestroy();
     }
 
     private void changeTab(final int tabIndex) {
-        if (currentTabIndex == tabIndex) {
+        if(currentTabIndex == tabIndex) {
             return;
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         BaseFragment fragment = null;
-        if (tabIndex == 0) {
+        if(tabIndex == 0) {
             fragment = fragment1;
 
-            if (translateAnimation1 == null) {
+            if(translateAnimation1 == null) {
                 translateAnimation1 = new TranslateAnimation(ivCursor.getWidth(), 0, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
                 translateAnimation1.setFillAfter(true);
                 translateAnimation1.setDuration(300);
@@ -397,7 +401,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             ivCursor.startAnimation(translateAnimation1);
         } else {
             fragment = fragment2;
-            if (translateAnimation2 == null) {
+            if(translateAnimation2 == null) {
                 translateAnimation2 = new TranslateAnimation(0, ivCursor.getWidth(), ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
                 translateAnimation2.setFillAfter(true);
                 translateAnimation2.setDuration(300);
@@ -421,7 +425,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         iv_feeling.setVisibility(View.VISIBLE);
         try {
             iv_feeling.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(selectFeelingPath)));
-        } catch (IOException e) {
+        } catch(IOException e) {
             e.printStackTrace();
         }
         popupwindow.dismiss();
@@ -444,7 +448,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
         @Override
         protected String doInBackground(Uri... params) {
-            if (params == null)
+            if(params == null)
                 return null;
             return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
         }
@@ -457,7 +461,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
         File f = new File(path);
-        if (!f.exists()) {
+        if(!f.exists()) {
             return;
         }
 
@@ -481,7 +485,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
             @Override
             public void onResult(String string) {
-                if (lastPic) {
+                if(lastPic) {
                     mHandler.sendEmptyMessage(ACTION_SUCCESSED);
                 }
             }
@@ -489,7 +493,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                if (lastPic) {
+                if(lastPic) {
                     mHandler.sendEmptyMessage(ACTION_FAILED);
                 }
             }
@@ -513,7 +517,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private void goLocationSetting() {
         Intent intent = new Intent(getActivity(), MapsActivity.class);
         //        intent.putExtra("has_location", position_name.getText().toString());
-        if (!TextUtils.isEmpty(location_desc.getText())) {
+        if(!TextUtils.isEmpty(location_desc.getText())) {
             intent.putExtra("location_name", location_desc.getText().toString());
             intent.putExtra("latitude", latitude);
             intent.putExtra("longitude", longitude);
@@ -530,13 +534,13 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == getActivity().RESULT_OK) {
-            switch (requestCode) {
+        if(resultCode == getActivity().RESULT_OK) {
+            switch(requestCode) {
                 case GET_LOCATION:
-                    if (data != null) {
+                    if(data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
                         locationName = data.getStringExtra("location_name");
-                        if (!TextUtils.isEmpty(locationName)) {
+                        if(!TextUtils.isEmpty(locationName)) {
                             location_desc.setText(locationName);
                             latitude = data.getDoubleExtra("latitude", 0);
                             longitude = data.getDoubleExtra("longitude", 0);
@@ -545,8 +549,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     break;
                 case GET_MEMBERS:
                     String members = data.getStringExtra("members_data");
-                    at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
-                    }.getType());
+                    at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
                     changeAtDesc();
                     break;
             }
@@ -554,14 +557,14 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     void changeAtDesc() {
-        if (fragment1 != null && at_members_data != null && at_members_data.size() > 0) {
+        if(fragment1 != null && at_members_data != null && at_members_data.size() > 0) {
             WallEditView editText = fragment1.getEditText4Content();
             editText.addAtDesc("@ " + at_members_data.size() + "members");
         }
     }
 
     private void showChooseFeeling() {
-        if (popupwindow != null && popupwindow.isShowing()) {
+        if(popupwindow != null && popupwindow.isShowing()) {
             popupwindow.dismiss();
             return;
         } else {
@@ -572,8 +575,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     public void initmPopupWindowView() {
         // // 获取自定义布局文件pop.xml的视图
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.feeling_list,
-                null, false);
+        View customView = getActivity().getLayoutInflater().inflate(R.layout.feeling_list, null, false);
         // 创建PopupWindow实例,200,150分别是宽度和高度
         popupwindow = new PopupWindow(customView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         // 设置动画效果 [R.style.AnimationFade 是自己事先定义好的]
@@ -584,10 +586,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-//                if (popupwindow != null && popupwindow.isShowing()) {
-//                    popupwindow.dismiss();
-//                    popupwindow = null;
-//                }
+                //                if (popupwindow != null && popupwindow.isShowing()) {
+                //                    popupwindow.dismiss();
+                //                    popupwindow = null;
+                //                }
 
                 return false;
             }
@@ -598,8 +600,8 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         feeling_icons.setLayoutManager(llm);
         fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), PATH_PREFIX);
         List<String> filePaths = new ArrayList<>();
-        if (fileNames != null) {
-            for (String name : fileNames) {
+        if(fileNames != null) {
+            for(String name : fileNames) {
                 filePaths.add(PATH_PREFIX + "/" + name);
             }
         }
@@ -613,9 +615,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     private List<String> setGetMembersIds(List<UserEntity> users) {
         List<String> ids = new ArrayList<>();
-        if (users != null) {
+        if(users != null) {
             int count = users.size();
-            for (int i = 0; i < count; i++) {
+            for(int i = 0; i < count; i++) {
                 ids.add(users.get(i).getUser_id());
             }
         }

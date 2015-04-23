@@ -1,5 +1,6 @@
 package com.madx.bwm.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -190,4 +191,16 @@ public class EventDetailActivity extends BaseActivity {
     }
 
     public boolean getDataDone;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        if(requestCode == 1 ){
+            if(resultCode == 1){
+                setResult(1);
+                finish();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

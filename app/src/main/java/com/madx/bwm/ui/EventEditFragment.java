@@ -114,9 +114,12 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
+                //??
                 if (v.getId() == getParentActivity().leftButton.getId()) {
-                    showSaveAlert();
+                    // showSaveAlert();
+                    getParentActivity().finish();
                 } else if (v.getId() == getParentActivity().rightButton.getId()) {
+                    //？？右边打勾按钮触发的事件的事件
                     submit();
                 }
                 return true;
@@ -193,6 +196,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                     intent.putExtra("event", mEevent);
                     getParentActivity().setResult(Activity.RESULT_OK, intent);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                    getActivity().setResult(1);
                     getActivity().finish();
                 }
 

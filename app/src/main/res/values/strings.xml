@@ -51,7 +51,7 @@
 
 
     <string name="text_word">Text</string>
-    <string name="text_picture">Photo</string>
+    <string name="text_picture">Picture</string>
     <string name="text_invited_members">Invited Members</string>
     <string name="text_all">All</string>
     <string name="text_going">Joined</string>
@@ -606,6 +606,8 @@
     <string name="text_love_comment_event">loved your comment in %s event.</string>
     <string name="text_love_event">loved your %s event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
+    <string name="text_photos">photos</string>
+    <string name="text_photo">photo</string>
 
     <!--end-->
 

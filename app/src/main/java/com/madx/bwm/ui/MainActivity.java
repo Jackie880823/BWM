@@ -76,7 +76,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
     public static UserEntity getUser() {
         if (App.getLoginedUser() == null) {
             App.exit(mainActivityInstance);
@@ -227,7 +226,7 @@ public class MainActivity extends BaseActivity {
 
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
-        WallFragment wallFragment = WallFragment.newInstance();
+//        WallFragment wallFragment = WallFragment.newInstance();
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
 //        fragments.add(MessageFragment.newInstance());

@@ -1,9 +1,11 @@
 package com.madx.bwm.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,10 +109,23 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //            holder.tvTime.setText(wall.getTime());
             holder.tvUserName.setText(wall.getUser_given_name());
             if (TextUtils.isEmpty(wall.getFile_id())) {
+                holder.tvPhotoCount.setVisibility(View.GONE);
                 holder.imWallsImages.setVisibility(View.GONE);
             } else {
+                holder.tvPhotoCount.setVisibility(View.VISIBLE);
                 holder.imWallsImages.setVisibility(View.VISIBLE);
+
                 VolleyUtil.initNetworkImageView(mContext, holder.imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, wall.getUser_id(), wall.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+
+                // 有图片显示图片总数
+                int count = Integer.valueOf(wall.getPhoto_count());
+                String photoCountStr;
+                if(count > 1) {
+                    photoCountStr = count + " " + mContext.getString(R.string.text_photos);
+                } else {
+                    photoCountStr = count + " " + mContext.getString(R.string.text_photo);
+                }
+                holder.tvPhotoCount.setText(photoCountStr);
             }
 
          /*is owner wall*/
@@ -284,6 +299,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView tvDate;
         TextView tvUserName;
         NetworkImageView imWallsImages;
+        TextView tvPhotoCount;
         TextView tvAgreeCount;
         TextView tvCommentCount;
         ImageButton ibAgree;
@@ -299,6 +315,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tvContent = (TextView) itemView.findViewById(R.id.tv_wall_content);
             tvDate = (TextView) itemView.findViewById(R.id.push_date);
             imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);
+            tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
             tvAgreeCount = (TextView) itemView.findViewById(R.id.tv_wall_agree_count);
             tvCommentCount = (TextView) itemView.findViewById(R.id.tv_wall_relay_count);
             ibAgree = (ImageButton) itemView.findViewById(R.id.iv_love);
@@ -312,7 +329,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             imWallsImages.setOnClickListener(this);
         }
 
-        boolean loving;
+        boolean loving = false;
 
         @Override
         public void onClick(View v) {
@@ -329,10 +346,14 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         wall.setLove_id(null);
                         tvAgreeCount.setText(count - 1 + "");
                     }
+                    Log.i("WallcommentAdapter", "love count = " + count);
                     //判断是否已经有进行中的判断
-                    if (!loving) {
+                    if(!loving) {
+                        Log.i("WallcommentAdapter", "prepare love");
                         loving = true;
                         check();
+                    } else {
+                        Log.i("WallcommentAdapter", "not love");
                     }
                     break;
                 case R.id.iv_walls_images:
@@ -352,19 +373,24 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         List<Integer> runningList = new ArrayList<Integer>();
 
         private void check() {
+
+            // 判断传进来的Context对象是否为Activity
+            if(mContext instanceof Activity){
+                Log.i("WallCommentAdapter", "onResult setResult");
+                // 数据有修改设置result 为 Activity.RESULT_OK
+                ((Activity) mContext).setResult(Activity.RESULT_OK);
+            }
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    long startTime = System.currentTimeMillis();//点击时间
-                    long nowTime = System.currentTimeMillis();
-                    //缓冲时间为1000
-                    while (nowTime - startTime < 1000) {
-                        if (newClick) {
-                            startTime = System.currentTimeMillis();
-                            newClick = false;
-                        }
-                        nowTime = System.currentTimeMillis();
+                    try {
+                        //缓冲时间为100
+                        Thread.sleep(100);
+                    } catch(InterruptedException e) {
+                        e.printStackTrace();
                     }
+
                     try {
                         loving = false;
                     } catch (Exception e) {
@@ -391,17 +417,17 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             new HttpTools(mContext).post(requestInfo, new HttpCallback() {
                 @Override
                 public void onStart() {
-
+                    Log.i("WallCommentAdapter", "onStart");
                 }
 
                 @Override
                 public void onFinish() {
-
+                    Log.i("WallCommentAdapter", "onFinish");
                 }
 
                 @Override
                 public void onResult(String response) {
-
+                    Log.i("WallCommentAdapter", "onResult");
                 }
 
                 @Override
