@@ -9,6 +9,8 @@ public class Constant {
      * for app
      */
     public static final String PREFERRENCE_NAME = "bwm_preferences";
+    public static final String GCM_PREF_REG_ID = "registration_id";
+    public static final String GCM_PREF_APP_VERSION = "appVersion";
 
     public static final int ACTION_CREATE_WALL = 10;
     public static final int ACTION_UPDATE_WALL = 11;
@@ -38,7 +40,8 @@ public class Constant {
     public static String API_WALL_COMMENT_DELETE = API_SERVER+"/bondwithme/index.php/api/comment/%s";
     public static String API_WALL_DELETE = API_SERVER+"/bondwithme/index.php/api/removeContent/%s";
 
-
+    /***/
+    public static String API_REGIST_PUSH = API_SERVER+"/bondwithme/index.php/api/pushToken";
 
     //event
     public static String API_EVENT_MAIN = API_SERVER+"/bondwithme/index.php/api/event";

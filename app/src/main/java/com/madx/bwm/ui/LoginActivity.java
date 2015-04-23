@@ -3,10 +3,12 @@ package com.madx.bwm.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.widgets.ProgressDialog;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -27,16 +31,21 @@ import com.madx.bwm.R;
 import com.madx.bwm.entity.AppTokenEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
+import com.madx.bwm.util.AppInfoUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.PreferencesUtil;
+import com.madx.bwm.util.SystemUtil;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class LoginActivity extends Activity {
 
@@ -70,10 +79,162 @@ public class LoginActivity extends Activity {
 
     ProgressDialog progressDialog;
 
+    /**
+     * wing begin test gcm
+     */
+    GoogleCloudMessaging gcm;
+    String regid;
+    private void initGCM() {
+        // Check device for Play Services APK. If check succeeds, proceed with
+        //  GCM registration.
+//        finishByNoPlayService();
+        if (SystemUtil.checkPlayServices(this)) {
+            gcm = GoogleCloudMessaging.getInstance(this);
+            regid = AppInfoUtil.getRegistrationId(this);
+
+            if (regid.isEmpty()) {
+
+                registerInBackground();
+            }
+        } else {
+            MessageUtil.showMessage(this,R.string.msg_google_service_not_found);
+        }
+    }
+    /**
+     * Registers the application with GCM servers asynchronously.
+     * <p>
+     * Stores the registration ID and app versionCode in the application's
+     * shared preferences.
+     */
+    private void registerInBackground() {
+        new AsyncTask<Void,Void,String>() {
+
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(LoginActivity.this);
+                    }
+                    regid = gcm.register(getString(R.string.gcm_sender_id));
+                    msg = "Device registered, registration ID=" + regid;
+
+                    // You should send the registration ID to your server over HTTP,
+                    // so it can use GCM/HTTP or CCS to send messages to your app.
+                    // The request to your server should be authenticated if your app
+                    // is using accounts.
+                    sendRegistrationIdToBackend(regid);
+
+                    // For this demo: we don't need to send it because the device
+                    // will send upstream messages to a server that echo back the
+                    // message using the 'from' address in the message.
+
+                    // Persist the registration ID - no need to register again.
+                    AppInfoUtil.storeRegistrationId(LoginActivity.this, regid);
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
+                    // If there is an error, don't just keep trying to register.
+                    // Require the user to click a button again, or perform
+                    // exponential back-off.
+                }
+                return msg;
+            }
+
+            @Override
+            protected void onPostExecute(String msg) {
+            }
+
+        }.execute(null, null, null);
+    }
+    /**
+     * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
+     * or CCS to send messages to your app. Not needed for this demo since the
+     * device sends upstream messages to a server that echoes back the message
+     * using the 'from' address in the message.
+     */
+    private void sendRegistrationIdToBackend(String regid) {
+        // Your implementation here.TODO
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.url = Constant.API_REGIST_PUSH;
+        Map<String,String> params = new HashMap<>();
+        params.put("pushToken",regid);
+        params.put("deviceUuid",AppInfoUtil.getDeviceUUID(this));
+        params.put("devicePlatform","android");
+        params.put("lang",Locale.getDefault().getCountry());
+        requestInfo.params = params;
+        new HttpTools(LoginActivity.this).post(requestInfo,new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                Log.i("","responseresponse====="+response);
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        finishByNoPlayService();
+    }
+
+    private void finishByNoPlayService(){
+        if(!SystemUtil.checkPlayServices(this)){
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        Thread.sleep(2*1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    finish();
+                }
+            }.execute();
+        }
+
+    }
+
+    /**wing end test gcm*/
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        /**wing begin test gcm*/
+        initGCM();
+        /**wing end test gcm*/
+
         UserEntity userEntity = App.getLoginedUser();
         if (userEntity != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -83,12 +244,13 @@ public class LoginActivity extends Activity {
             if (!TextUtils.isEmpty(tokenString)) {
                 App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));//init http header
             }
+
             finish();
             return;
         }
         setContentView(R.layout.activity_login);
 
-        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
+        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
 
         btnLogin = (Button) findViewById(R.id.login);
         tvSignUp = (LinearLayout) findViewById(R.id.ll_sign_up);
@@ -98,7 +260,7 @@ public class LoginActivity extends Activity {
         etAccount = (EditText) findViewById(R.id.et_account);
         etPassword = (EditText) findViewById(R.id.et_password);
 
-        ivRemove = (LinearLayout)findViewById(R.id.iv_move);
+        ivRemove = (LinearLayout) findViewById(R.id.iv_move);
 
         do_faile_login_tv = (TextView) findViewById(R.id.do_faile_login_tv);
         do_faile_login_linear = (LinearLayout) findViewById(R.id.do_faile_login_linear);
@@ -148,7 +310,7 @@ public class LoginActivity extends Activity {
                     params.put("condition", jsonParamsString);
                     String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
 
-                    new HttpTools(LoginActivity.this).get(url,null,new HttpCallback() {
+                    new HttpTools(LoginActivity.this).get(url, null, new HttpCallback() {
                         @Override
                         public void onStart() {
 
@@ -182,6 +344,7 @@ public class LoginActivity extends Activity {
                                     PreferencesUtil.saveValue(LoginActivity.this, "token", gson.toJson(tokenEntity));
 
                                     startActivity(intent);
+
                                     finish();
                                     progressDialog.dismiss();
                                     btnLogin.setClickable(true);
@@ -217,23 +380,13 @@ public class LoginActivity extends Activity {
 
                         }
                     });
-                }else if ((etAccount.getText().toString().length() == 0) && (etPassword.getText().toString().length() == 0)) {
+                } else if ((etAccount.getText().toString().length() == 0) && (etPassword.getText().toString().length() == 0)) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_enter_details), Toast.LENGTH_SHORT).show();
                 } else if (etAccount.getText().toString().length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
                 } else if (etPassword.getText().toString().length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
                 }
-
-
-
-
-
-
-
-
-
-
 
 
 //                if ((etAccount.getText().toString().length() != 0) && (etPassword.getText().toString().length() != 0)) {
