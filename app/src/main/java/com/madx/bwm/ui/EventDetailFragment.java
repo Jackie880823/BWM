@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -224,7 +225,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     } else if (R.id.ib_top_button_right == v.getId()) {
                         Intent intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
-                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
+                        getActivity().startActivityForResult(intent, 1);
                     }
                     return false;
                 }
