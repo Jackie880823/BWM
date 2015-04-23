@@ -7,11 +7,7 @@
 /fzAndroidMap
 /**/*.apk
 /**/*.iml
-/app/manifest-merger-debug-report.txt
-/app/manifest-merger-taobao-debug-report.txt
-/app/manifest-merger-baidu-debug-report.txt
-/app/manifest-merger-baidu-release-report.txt
-/app/manifest-merger-release-report.txt
+/**/*-report.txt
 
 # files for the dex VM
 *.dex
