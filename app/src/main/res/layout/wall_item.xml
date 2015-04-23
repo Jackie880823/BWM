@@ -80,6 +80,7 @@
             android:paddingRight="@dimen/default_content_padding"/>
 
         <RelativeLayout
+            android:id="@+id/ll_walls_image"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_200dp"
             android:layout_gravity="center_vertical"

@@ -29,6 +29,21 @@ import java.util.List;
 public class MainActivity extends BaseActivity {
 
     /**
+     * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
+     */
+    private final static String TAG = MainActivity.class.getSimpleName();
+
+    /**
+     * 标题栏左边控件点击事件消息
+     */
+    private final static int LEFT_CLICK_EVENT = 10;
+
+    /**
+     * 标题栏右边控件点击事件消息
+     */
+    private final static int RIGHT_CLICK_EVENT = 11;
+
+    /**
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
@@ -165,35 +180,10 @@ public class MainActivity extends BaseActivity {
         super.onPostResume();
     }
 
-    private final static int LEFT_CLICK_EVENT = 10;
-    private final static int RIGHT_CLICK_EVENT = 11;
-
     @Override
     protected void titleRightEvent() {
-
+        // 发送右边控件被点击的消息致handler
         handler.sendEmptyMessage(RIGHT_CLICK_EVENT);
-//        Fragment fragment = tabPagerAdapter.getItem(currentTabEnum.ordinal());
-//
-//        switch (currentTabEnum) {
-//            case wall:
-//                if (fragment.isAdded()) {
-//                    fragment.startActivity(new Intent(this, WallNewActivity.class));
-//                }
-//                break;
-//            case event:
-//                fragment.startActivityForResult(new Intent(getApplicationContext(), EventNewActivity.class), Constant.ACTION_EVENT_CREATE);
-//                break;
-//            case chat:
-////                fragment.startActivity(new Intent(getApplicationContext(), CreateGroupActivity.class));
-//                if (commandlistener != null) {
-//                    commandlistener.execute(rightButton);
-//                }
-//                break;
-//            case more:
-//                // TODO
-//                break;
-//        }
-
     }
 
     private TitleEventListenner mTitleEventListenner;

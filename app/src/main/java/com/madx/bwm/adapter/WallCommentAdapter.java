@@ -109,11 +109,9 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //            holder.tvTime.setText(wall.getTime());
             holder.tvUserName.setText(wall.getUser_given_name());
             if (TextUtils.isEmpty(wall.getFile_id())) {
-                holder.tvPhotoCount.setVisibility(View.GONE);
-                holder.imWallsImages.setVisibility(View.GONE);
+                holder.llWallsImage.setVisibility(View.GONE);
             } else {
-                holder.tvPhotoCount.setVisibility(View.VISIBLE);
-                holder.imWallsImages.setVisibility(View.VISIBLE);
+                holder.llWallsImage.setVisibility(View.VISIBLE);
 
                 VolleyUtil.initNetworkImageView(mContext, holder.imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, wall.getUser_id(), wall.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
@@ -298,6 +296,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         TextView tvContent;
         TextView tvDate;
         TextView tvUserName;
+        View llWallsImage;
         NetworkImageView imWallsImages;
         TextView tvPhotoCount;
         TextView tvAgreeCount;
@@ -314,6 +313,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
             tvContent = (TextView) itemView.findViewById(R.id.tv_wall_content);
             tvDate = (TextView) itemView.findViewById(R.id.push_date);
+            llWallsImage = itemView.findViewById(R.id.ll_walls_image);
             imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);
             tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
             tvAgreeCount = (TextView) itemView.findViewById(R.id.tv_wall_agree_count);
