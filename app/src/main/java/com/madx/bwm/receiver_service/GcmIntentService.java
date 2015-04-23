@@ -113,6 +113,7 @@ public class GcmIntentService extends IntentService {
         mBuilder.setTicker("测试通知来啦");
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         mBuilder.setContentIntent(contentIntent);
+        mBuilder.setAutoCancel(true);
         mNotificationManager.notify(BONDALERT, mBuilder.build());
     }
 }

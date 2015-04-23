@@ -1,11 +1,10 @@
 package com.madx.bwm.util;
 
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Camera;
@@ -14,13 +13,11 @@ import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Bitmap.Config;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.media.ThumbnailUtils;
-import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -249,8 +246,6 @@ public class BitmapUtils {
      * @return Bitmap
      * @throw
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    @SuppressLint("NewApi")
     public static Bitmap blurBitmap(Bitmap bitmap, float radius, Context context) {
 
         // Let's create an empty bitmap with the same size of the bitmap we want

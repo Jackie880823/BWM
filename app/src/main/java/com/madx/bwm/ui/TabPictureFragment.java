@@ -204,8 +204,6 @@ public class TabPictureFragment extends BaseFragment<MainActivity> implements Vi
             switch (requestCode) {
                 // 如果是直接从相册获取
                 case REQUEST_HEAD_PHOTO:
-
-                    //TODO
                     if (data != null) {
                         List<Uri> pickUries = new ArrayList();
                         if (SDKUtil.IS_JB) {

@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Movie;
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -58,12 +59,11 @@ public class GifView extends View {
         setViewAttributes(context, attrs, defStyle);
     }
 
-    @SuppressLint("NewApi")
     private void setViewAttributes(Context context, AttributeSet attrs,
                                    int defStyle) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            ViewCompat.setLayerType(this,View.LAYER_TYPE_SOFTWARE, null);
+//        }
         // 从描述文件中读出gif的值，创建出Movie实例
         final TypedArray array = context.obtainStyledAttributes(attrs,
                 R.styleable.GifView, defStyle, R.style.Widget_GifView);

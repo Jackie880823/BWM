@@ -1,6 +1,5 @@
 package com.madx.bwm.util;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -19,7 +18,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 
 import com.madx.bwm.http.PicturesCacheUtil;
 
@@ -459,7 +457,6 @@ public class LocalImageLoader {
      * @param isDelSrc
      * @return
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
     public final static String compressBitmap(Context context, String srcPath, int rqsW, int rqsH, boolean isDelSrc) {
         Bitmap bitmap ;
 //        try {
