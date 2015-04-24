@@ -48,6 +48,7 @@
     <string name="alert_comment_null">Comment can not be empty!</string>
     <string name="alert_comment_del">Delete this comment?</string>
     <string name="alert_wall_del">Delete this post?</string>
+    <string name="alert_wall_del_photo">Delete this photo?</string>
 
 
     <string name="text_word">Text</string>

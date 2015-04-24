@@ -45,6 +45,10 @@ import java.util.Map;
  */
 public class TabPictureFragment extends BaseFragment<MainActivity> implements View.OnClickListener {
 
+    /**
+     * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
+     */
+    private final static String TAG = TabPictureFragment.class.getSimpleName();
 
     private final static int REQUEST_HEAD_PHOTO = 1;
     private final static int REQUEST_HEAD_CAMERA = 2;
