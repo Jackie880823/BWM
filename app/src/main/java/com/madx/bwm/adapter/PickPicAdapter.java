@@ -1,6 +1,7 @@
 package com.madx.bwm.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
@@ -83,8 +84,9 @@ public class PickPicAdapter extends SimpleAdapter{
                         }
                     });
                 } else {
-                    mRemoveAlertDialog.show();
+                    Log.i(TAG, "mRemoveAlertDialog is init");
                 }
+                mRemoveAlertDialog.show();
             }
         });
 
