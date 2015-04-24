@@ -69,11 +69,9 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
         //            holder.tvTime.setText(ece.getTime());
         holder.tvUserName.setText(ece.getUser_given_name());
         if(TextUtils.isEmpty(ece.getFile_id())) {
-            holder.imWallsImages.setVisibility(View.GONE);
-            holder.tvPhotoCount.setVisibility(View.GONE);
+            holder.llWallsImage.setVisibility(View.GONE);
         } else {
-            holder.imWallsImages.setVisibility(View.VISIBLE);
-            holder.tvPhotoCount.setVisibility(View.VISIBLE);
+            holder.llWallsImage.setVisibility(View.VISIBLE);
 
             // 有图片显示图片总数
             int count = Integer.valueOf(ece.getPhoto_count());
@@ -165,6 +163,8 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
          */
         TextView tvUserName;
 
+        View llWallsImage;
+
         /**
          * 显示网络图片的视图控件
          */
@@ -200,6 +200,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
             tvContent = (TextView) itemView.findViewById(R.id.tv_wall_content);
             tvDate = (TextView) itemView.findViewById(R.id.push_date);
+            llWallsImage = itemView.findViewById(R.id.ll_walls_image);
             imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);
             tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
             tvAgreeCount = (TextView) itemView.findViewById(R.id.tv_wall_agree_count);

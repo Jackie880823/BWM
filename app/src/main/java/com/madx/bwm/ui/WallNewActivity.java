@@ -33,7 +33,6 @@ public class WallNewActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setVisibility(View.INVISIBLE);
-//        rightTextButton.setVisibility(View.VISIBLE);
     }
 
     @Override

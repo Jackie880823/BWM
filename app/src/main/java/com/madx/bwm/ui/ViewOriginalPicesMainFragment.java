@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,6 +26,11 @@ import java.util.List;
  * Created by wing on 15/3/23.
  */
 public class ViewOriginalPicesMainFragment extends BaseFragment {
+
+    /**
+     * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
+     */
+    private final static String TAG = ViewOriginalPicesMainFragment.class.getSimpleName();
 
     /**
      * 小图预览列表
@@ -95,8 +101,19 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
         viewPaperAdapter.setOnMyPageChangeListenner(new MyFragmentPagerAdapter.OnPageChangeListenner() {
             @Override
             public void onPageChange(int position) {
-                String text = (position + 1) + "/" + data.size();
-                tvIndexOfList.setText(text);
+                String text = null;
+                int count = data.size();
+                Log.i(TAG, "onPageChange& position = " + position + "; count = " + count);
+                if(count == 1){
+                    text = getActivity().getString(R.string.photo_position_no_arrow);
+                } else if(position <= 0) {
+                    text = getActivity().getString(R.string.photo_position_right_arrow);
+                } else if(position == count - 1) {
+                    text = getActivity().getString(R.string.photo_position_left_arrow);
+                } else {
+                    text = getActivity().getString(R.string.photo_position_double_arrow);
+                }
+                tvIndexOfList.setText(String.format(text, position + 1, data.size()));
             }
         });
         view_paper.setOffscreenPageLimit(1);
@@ -189,7 +206,13 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
             viewPaperAdapter.notifyDataSetChanged();
 
             tvIndexOfList.setVisibility(View.VISIBLE);
-            tvIndexOfList.setText((dataIndex + 1) + "/" + count);
+            String text = null;
+            if(count == 1){
+                text = getActivity().getString(R.string.photo_position_no_arrow);
+            } else {
+                text = getActivity().getString(R.string.photo_position_right_arrow);
+            }
+            tvIndexOfList.setText(String.format(text, dataIndex + 1, count));
         } else {
             //
             tvIndexOfList.setVisibility(View.GONE);

@@ -60,34 +60,53 @@ import java.util.Map;
  */
 public class WallNewFragment extends BaseFragment<WallNewActivity> implements View.OnClickListener, FeelingAdapter.ItemCheckListener {
 
-    private ImageView ivCursor;
-    private ImageView iv_feeling;
-    private ImageButton btn_feeling;
-    private ImageButton btn_notify;
+    /**
+     * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
+     */
+    private final static String     TAG                 = WallNewFragment.class.getSimpleName();
+
+    /**
+     * 输入文字的TAB
+     */
+    private final static int WALL_TAB_WORD = 0;
+    /**
+     * 插入图片的TAB
+     */
+    private final static int        WALL_TAB_PICTURE    = 1;
+
+    private final static int        GET_LOCATION        = 1;
+    private final static int        GET_MEMBERS         = 2;
+
+    private final static String     PATH_PREFIX         = "feeling";
+    private final static String     FEEL_ICON_NAME      = PATH_PREFIX + "/%s";
+
+    private ImageView       ivCursor;
+    private ImageView       iv_feeling;
+    private ImageButton     btn_feeling;
+    private ImageButton     btn_notify;
     //    private TextView btn_share_option;
-    private Button btn_share_option;
-    private LinearLayout btn_submit;
-    private LinearLayout btn_location;
-    private TextView location_desc;
-
-    private final static int GET_LOCATION = 1;
-    private final static int GET_MEMBERS = 2;
-    private List<String> fileNames = new ArrayList<>();
-    private final static String PATH_PREFIX = "feeling";
-    private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
+    private Button          btn_share_option;
+    private LinearLayout    btn_submit;
+    private LinearLayout    btn_location;
+    private TextView        location_desc;
 
 
-    public List<UserEntity> at_members_data = new ArrayList();
-    public List<GroupEntity> at_gourps_data = new ArrayList();
+    private List<String>        fileNames       = new ArrayList<>();
+
+    public List<UserEntity>     at_members_data = new ArrayList();
+    public List<GroupEntity>    at_gourps_data  = new ArrayList();
     private String text_content;
-    private List<Uri> pic_content;
     private String locationName;
+    private List<Uri> pic_content;
 
-    private double latitude;
-    private double longitude;
-    private Gson gson;
-    //    private ProgressBarCircularIndeterminate progressBar;
-    private RecyclerView feeling_icons;
+    private double          latitude;
+    private double          longitude;
+    private Gson            gson;
+
+    /**
+     * private ProgressBarCircularIndeterminate progressBar;
+     */
+    private RecyclerView    feeling_icons;
 
     PopupWindow popupwindow;
     private LinearLayoutManager llm;
@@ -168,10 +187,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
         switch(v.getId()) {
             case R.id.tv_tab_word:
-                changeTab(0);
+                changeTab(WALL_TAB_WORD);
                 break;
             case R.id.tv_tab_picture:
-                changeTab(1);
+                changeTab(WALL_TAB_PICTURE);
                 break;
             case R.id.btn_feeling:
                 showChooseFeeling();
@@ -390,7 +409,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         BaseFragment fragment = null;
-        if(tabIndex == 0) {
+        if(tabIndex == WALL_TAB_WORD) {
             fragment = fragment1;
 
             if(translateAnimation1 == null) {

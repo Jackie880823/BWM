@@ -608,6 +608,10 @@
     <string name="text_upcoming_event">Upcoming event: %s </string>
     <string name="text_photos">photos</string>
     <string name="text_photo">photo</string>
+    <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" ">]]></string>
+    <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
+    <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" ">]]></string>
+    <string name="photo_position_no_arrow">%1$d/%2$d</string>
 
     <!--end-->
 
