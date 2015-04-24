@@ -75,13 +75,14 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
 
             // 有图片显示图片总数
             int count = Integer.valueOf(ece.getPhoto_count());
-            String photoCountStr;
             if(count > 1) {
+                String photoCountStr;
                 photoCountStr = count + " " + mContext.getString(R.string.text_photos);
+                holder.tvPhotoCount.setText(photoCountStr);
+                holder.tvPhotoCount.setVisibility(View.VISIBLE);
             } else {
-                photoCountStr = count + " " + mContext.getString(R.string.text_photo);
+                holder.tvPhotoCount.setVisibility(View.GONE);
             }
-            holder.tvPhotoCount.setText(photoCountStr);
 
             VolleyUtil.initNetworkImageView(mContext, holder.imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, ece.getUser_id(), ece.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         }
