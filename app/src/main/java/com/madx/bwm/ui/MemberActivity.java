@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -30,24 +29,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by liangzemian on 15/4/12.
- */
+
 public class MemberActivity extends BaseActivity {
     ProgressDialog mProgressDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
     private MyDialog showSelectDialog;
 
-
     private int startIndex = 0;
-    private int offSet = 20;
+    private final static int offset = 20;
+    private int currentPage = 1;
     private boolean loading;
     private List<MemberEntity> data = new ArrayList<>();
     private MemberAdapter adapter;
     private RecyclerView rvList;
     private LinearLayoutManager llm;
-
 
     public int getLayout() {
         return R.layout.activity_news;
@@ -60,9 +56,7 @@ public class MemberActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-
         tvTitle.setText(R.string.text_member);
-
     }
 
     @Override
@@ -93,34 +87,36 @@ public class MemberActivity extends BaseActivity {
         llm = new LinearLayoutManager(this);
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
-        initAdapter();
+
+        initAdapter();//为空
 
         swipeRefreshLayout = getViewById(R.id.swipe_refresh_layout);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                isRefresh = true;
-                startIndex = 0;
+//                isRefresh = true;
+//                startIndex = 0;
                 requestData();
             }
 
         });
 
-        rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItem = ((LinearLayoutManager) llm).findLastVisibleItemPosition();
-                int totalItemCount = llm.getItemCount();
-                //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
-                // dy>0 表示向下滑动
-                if (!loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
-                    loading = true;
-                    requestData();//再请求数据
-                }
-            }
-        });
+//        rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                int lastVisibleItem = ((LinearLayoutManager) llm).findLastVisibleItemPosition();
+//                int totalItemCount = llm.getItemCount();
+//                //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
+//                // dy>0 表示向下滑动
+//                if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+//                    currentPage++;
+//                    loading = true;
+//                    requestData();//再请求数据
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -137,12 +133,11 @@ public class MemberActivity extends BaseActivity {
     @Override
     public void requestData() {
 
-        Map<String, String> params = new HashMap<>();
-        params.put("start", "" + startIndex);
-        params.put("limit", "" + offSet);
+//        Map<String, String> params = new HashMap<>();
+//        params.put("start", "" + startIndex);
+//        params.put("limit", "" + offset);
 
-
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_MEMEBER, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_MEMEBER, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -150,28 +145,18 @@ public class MemberActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+                finishReFresh();
             }
 
             @Override
             public void onResult(String string) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
+
                 data = gson.fromJson(string, new TypeToken<ArrayList<MemberEntity>>() {
                 }.getType());
-                if (data != null) {
-                    if (isRefresh) {
-                        startIndex = data.size();
-                        finishReFresh();
-                        initAdapter();
-                    } else {
-                        startIndex += data.size();
-                        adapter.add(data);
-                    }
-                } else {
-                    finishReFresh();
-                }
-                loading = false;
+
+                initAdapter();
             }
 
             @Override
@@ -181,7 +166,7 @@ public class MemberActivity extends BaseActivity {
                 if (isRefresh) {
                     finishReFresh();
                 }
-                loading = false;
+//                loading = false;
             }
 
             @Override
@@ -213,18 +198,8 @@ public class MemberActivity extends BaseActivity {
         });
         rvList.setAdapter(adapter);
     }
-//
-//    private void add(final MemberEntity member){
-//        Intent  intent = new Intent(MemberActivity.this, AddMemberWorkFlow.class);
-//        intent.putExtra("to",);
-//        intent.putExtra("from",MainActivity.getUser().getUser_id());
-//        startActivityForResult(intent,);
-//
-//
-//    }
 
     private final static int ADD_MEMBER = 10;
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -232,7 +207,9 @@ public class MemberActivity extends BaseActivity {
             case ADD_MEMBER:
                 if (resultCode == RESULT_OK) {
                     MessageUtil.showMessage(this,R.string.msg_action_successed);
-                    requestData();
+//                    startIndex = 0;
+//                    isRefresh = true;
+                    requestData();//这样直接请求???
                 } else {
                     MessageUtil.showMessage(this,R.string.msg_action_canceled);
                 }
@@ -241,54 +218,10 @@ public class MemberActivity extends BaseActivity {
     }
 
     private void doAdd(final MemberEntity member) {
-
         Intent intent = new Intent(this, AddMemberWorkFlow.class);
         intent.putExtra("from", MainActivity.getUser().getUser_id());
         intent.putExtra("to", member.getAction_user_id());
         startActivityForResult(intent, ADD_MEMBER);
-
-//        Map<String, String> map = new HashMap<String, String>();
-////        "user_id":"1",//user_id,
-////                "user_relationship_name":"Sister",// relationship name
-////                "member_id":"2"//member_id
-//
-//
-//        Log.i("","user_id========="+ MainActivity.getUser().getUser_id());
-//        map.put("user_id", MainActivity.getUser().getUser_id());
-//        map.put("user_relationship_name", member.getRelationship());
-//        map.put("member_id", member.getAction_user_id());
-//
-//        new HttpTools(this).post(Constant.API_BONDALERT_MEMEBER_RESEND,map,new HttpCallback() {
-//            @Override
-//            public void onStart() {
-//
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//
-//            }
-//
-//            @Override
-//            public void onResult(String string) {
-//                Log.d("", "response -> " + string);
-//            }
-//
-//            @Override
-//            public void onError(Exception error) {
-//                Log.e("", error.getMessage(), error);
-//            }
-//
-//            @Override
-//            public void onCancelled() {
-//
-//            }
-//
-//            @Override
-//            public void onLoading(long count, long current) {
-//
-//            }
-//        });
     }
 
     @Override
@@ -300,89 +233,39 @@ public class MemberActivity extends BaseActivity {
     private void showSelectDialog(final MemberEntity member) {
 
         LayoutInflater factory = LayoutInflater.from(this);
-        final View selectIntention = factory.inflate(R.layout.member_add, null);
+        final View selectIntention = factory.inflate(R.layout.dialog_bond_alert_member, null);
         showSelectDialog = new MyDialog(this, "Action", selectIntention);
         showSelectDialog.setCanceledOnTouchOutside(false);
+
         showSelectDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSelectDialog.dismiss();
             }
         });
+
         selectIntention.findViewById(R.id.subject_1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                wawitingResend(member);
                 doAdd(member);
                 showSelectDialog.dismiss();
             }
         });
-        selectIntention.findViewById(R.id.subject_2).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i("", "position=====" + member.getAction_user_id());
-                        wawitingRemove(member.getAction_user_id());
-                        showSelectDialog.dismiss();
-                    }
-                }
-        );
-        showSelectDialog.show();
-    }
 
-
-    private void wawitingResend(final MemberEntity member) {
-        Log.i("", "user_id=========" + MainActivity.getUser().getUser_id());
-
-        Map<String, String> map = new HashMap<String, String>();
-//        "user_id":"1",//user_id,
-//                "user_relationship_name":"Sister",// relationship name
-//                "member_id":"2"//member_id
-
-        map.put("user_id", MainActivity.getUser().getUser_id());
-        map.put("user_relationship_name", member.getRelationship());
-        map.put("member_id", member.getAction_user_id());
-
-        new HttpTools(this).post(Constant.API_BONDALERT_MEMEBER_RESEND, map, new HttpCallback() {
+        selectIntention.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-
-            @Override
-            public void onResult(String string) {
-                Log.d("", "response -> " + string);
-            }
-
-            @Override
-            public void onError(Exception error) {
-                Log.e("", error.getMessage(), error);
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
+            public void onClick(View v) {
+                awaitingRemove(member.getAction_user_id());
+                showSelectDialog.dismiss();
             }
         });
 
-
+        showSelectDialog.show();
     }
 
-    private void wawitingRemove(final String memberId) {
+    private void awaitingRemove(final String memberId) {
 
-//        Log.i("", "2position==============" + memberId);
         RequestInfo requestInfo = new RequestInfo();
-//        Log.i("", "3position==============" + MainActivity.getUser().getUser_id());
         requestInfo.url = Constant.API_BONDALERT_MEMEBER_REMOVE + MainActivity.getUser().getUser_id();
         Map<String, String> params = new HashMap<>();
         params.put("member_id", memberId);
@@ -400,7 +283,9 @@ public class MemberActivity extends BaseActivity {
 
             @Override
             public void onResult(String string) {
-                Log.i("response", "string------------------------------" + string);
+                //bad date???
+//                startIndex = 0;
+//                isRefresh = true;
                 requestData();
             }
 
@@ -419,9 +304,6 @@ public class MemberActivity extends BaseActivity {
 
             }
         });
-
-
     }
-
 
 }

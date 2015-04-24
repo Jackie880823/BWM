@@ -2,7 +2,6 @@ package com.madx.bwm.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +15,14 @@ import com.madx.bwm.widget.CircularNetworkImage;
 
 import java.util.List;
 
-/**
- * Created by liangzemian on 15/4/12.
- */
 public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
 
     private Context mContext;
     private List<MemberEntity> data;
     private int tag;
-    private String[] action ={"has added you","wanted to add you","waiting fo member confirmation"};
+    private String[] action ={"has added you","wanted to add you","waiting for member confirmation"};
     private String moduleAction;
     private String memberId;
-
-
-
 
     public MemberAdapter(Context context, List<MemberEntity> data) {
         mContext = context;
@@ -46,9 +39,8 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
 
     public void add(List<MemberEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
-
 
     @Override
     public void onBindViewHolder(VHItem holder, int position) {
@@ -59,21 +51,20 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         VolleyUtil.initNetworkImageView(mContext, holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         holder.owner_name.setText(memberEntity.getAction_username());
         holder.owner_content.setText(action[tag]);
-            if(tag==0){
-                holder.added.setVisibility(View.VISIBLE);
-                holder.add.setVisibility(View.GONE);
-                holder.awaiting.setVisibility(View.GONE);
-            }else if(tag==1){
-                holder.add.setVisibility(View.VISIBLE);
-                holder.added.setVisibility(View.GONE);
-                holder.awaiting.setVisibility(View.GONE);
-            }else if(tag==2){
-                holder.awaiting.setVisibility(View.VISIBLE);
-                holder.added.setVisibility(View.GONE);
-                holder.add.setVisibility(View.GONE);
-            }
-        Log.i("", "position================" + position);
 
+        if(tag==0){
+            holder.added.setVisibility(View.VISIBLE);
+            holder.add.setVisibility(View.GONE);
+            holder.awaiting.setVisibility(View.GONE);
+        }else if(tag==1){
+            holder.add.setVisibility(View.VISIBLE);
+            holder.added.setVisibility(View.GONE);
+            holder.awaiting.setVisibility(View.GONE);
+        }else if(tag==2){
+            holder.awaiting.setVisibility(View.VISIBLE);
+            holder.added.setVisibility(View.GONE);
+            holder.add.setVisibility(View.GONE);
+        }
 
     }
 
@@ -86,7 +77,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             case "autoAcp":
                 tag = 0;
                 break;
-            case "autoacp":
+            case "accept":
                 tag = 0;
                 break;
             case "updateRel":
@@ -101,9 +92,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         }
         return tag;
     }
-
-
-
 
     @Override
     public int getItemCount() {
@@ -130,20 +118,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             added = (TextView)itemView.findViewById(R.id.added);
             add = (TextView)itemView.findViewById(R.id.add);
             awaiting = (TextView)itemView.findViewById(R.id.awaiting);
-//            owner_content.setText(action[tag]);
-//            if(tag==0){
-//                added.setVisibility(View.VISIBLE);
-//                add.setVisibility(View.GONE);
-//                awaiting.setVisibility(View.GONE);
-//            }else if(tag==1){
-//                add.setVisibility(View.VISIBLE);
-//                added.setVisibility(View.GONE);
-//                awaiting.setVisibility(View.GONE);
-//            }else if(tag==2){
-//                awaiting.setVisibility(View.VISIBLE);
-//                added.setVisibility(View.GONE);
-//                add.setVisibility(View.GONE);
-//            }
 
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -154,7 +128,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                 }
             });
 
-
             awaiting.setOnClickListener(new View.OnClickListener() {
                 @Override
                     public void onClick(View v) {
@@ -163,8 +136,6 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
                     }
                 }
             });
-
-
         }
     }
     public ItemClickListener itemClickListener;
@@ -178,7 +149,5 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         void addClick(MemberEntity memberId, int position);
 
     }
-
-
 
 }
