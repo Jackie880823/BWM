@@ -322,7 +322,7 @@
                         android:id="@+id/btn_sign_out"
                         android:layout_width="@dimen/default_user_head_width_height"
                         android:layout_height="@dimen/default_user_head_width_height"
-                        android:background="@drawable/circular_bg_blue"
+                        android:background="@drawable/circular_bg_gray"
                         android:clickable="true">
 
                         <ImageView
