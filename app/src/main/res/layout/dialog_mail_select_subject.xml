@@ -3,57 +3,41 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
-
+    android:layout_height="match_parent">
         <TextView
             android:id="@+id/subject_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:text="@string/mail_subject_1"
             android:textSize="@dimen/text_medium_size"
-            android:background="@drawable/bg_list_item"
+            android:background="@drawable/bg_white_gray"
             android:textColor="@color/default_text_color_dark"
             android:paddingTop="@dimen/default_content_padding"
             android:paddingBottom="@dimen/default_content_padding"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            />
-
-
-        <View style="@style/split_line_default"/>
+            android:paddingLeft="@dimen/default_content_padding"/>
 
         <TextView
             android:id="@+id/subject_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:text="@string/mail_subject_2"
             android:background="@drawable/bg_white_gray"
             android:textSize="@dimen/text_medium_size"
             android:textColor="@color/default_text_color_dark"
             android:paddingTop="@dimen/default_content_padding"
             android:paddingBottom="@dimen/default_content_padding"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            />
+            android:paddingLeft="@dimen/default_content_padding"/>
 
-    <View style="@style/split_line_default"/>
-
-    <TextView
-        android:id="@+id/subject_3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:text="@string/mail_subject_3"
-        android:background="@drawable/bg_white_gray"
-        android:textSize="@dimen/text_medium_size"
-        android:textColor="@color/default_text_color_dark"
-        android:paddingTop="@dimen/default_content_padding"
-        android:paddingBottom="@dimen/default_content_padding"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        />
+        <TextView
+            android:id="@+id/subject_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/mail_subject_3"
+            android:background="@drawable/bg_white_gray"
+            android:textSize="@dimen/text_medium_size"
+            android:textColor="@color/default_text_color_dark"
+            android:paddingTop="@dimen/default_content_padding"
+            android:paddingBottom="@dimen/default_content_padding"
+            android:paddingLeft="@dimen/default_content_padding"/>
 
 </LinearLayout>
