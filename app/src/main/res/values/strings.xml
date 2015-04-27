@@ -48,6 +48,7 @@
     <string name="alert_comment_null">Comment can not be empty!</string>
     <string name="alert_comment_del">Delete this comment?</string>
     <string name="alert_wall_del">Delete this post?</string>
+    <string name="alert_wall_del_photo">Delete this photo?</string>
 
 
     <string name="text_word">Text</string>
@@ -607,7 +608,6 @@
     <string name="text_love_event">loved your %s event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
     <string name="text_photos">photos</string>
-    <string name="text_photo">photo</string>
     <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" ">]]></string>
     <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
     <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" ">]]></string>

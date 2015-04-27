@@ -117,13 +117,14 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 // 有图片显示图片总数
                 int count = Integer.valueOf(wall.getPhoto_count());
-                String photoCountStr;
                 if(count > 1) {
+                    String photoCountStr;
                     photoCountStr = count + " " + mContext.getString(R.string.text_photos);
+                    holder.tvPhotoCount.setText(photoCountStr);
+                    holder.tvPhotoCount.setVisibility(View.VISIBLE);
                 } else {
-                    photoCountStr = count + " " + mContext.getString(R.string.text_photo);
+                    holder.tvPhotoCount.setVisibility(View.GONE);
                 }
-                holder.tvPhotoCount.setText(photoCountStr);
             }
 
          /*is owner wall*/
