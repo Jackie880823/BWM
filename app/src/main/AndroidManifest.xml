@@ -85,10 +85,10 @@
             android:name=".ui.EventNewActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.WallCommentActivity"
+            android:name=".ui.wall.WallCommentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.WallNewActivity"
+            android:name=".ui.wall.WallNewActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity

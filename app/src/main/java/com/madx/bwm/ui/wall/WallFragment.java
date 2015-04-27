@@ -1,4 +1,4 @@
-package com.madx.bwm.ui;
+package com.madx.bwm.ui.wall;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,6 +24,9 @@ import com.madx.bwm.R;
 import com.madx.bwm.adapter.WallAdapter;
 import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.UrlUtil;
+import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.ui.ViewOriginalPicesActivity;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.MySwipeRefreshLayout;
@@ -36,9 +39,9 @@ import java.util.Map;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.madx.bwm.ui.WallFragment.OnFragmentInteractionListener} interface
+ * {@link WallFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link com.madx.bwm.ui.WallFragment#newInstance} factory method to
+ * Use the {@link WallFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class WallFragment extends BaseFragment<MainActivity> implements WallAdapter.ViewClickListener {

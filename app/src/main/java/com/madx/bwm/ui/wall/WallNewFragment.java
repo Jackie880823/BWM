@@ -1,4 +1,4 @@
-package com.madx.bwm.ui;
+package com.madx.bwm.ui.wall;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -35,6 +35,12 @@ import com.madx.bwm.R;
 import com.madx.bwm.adapter.FeelingAdapter;
 import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
+import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.ui.MapsActivity;
+import com.madx.bwm.ui.SelectPeopleActivity;
+import com.madx.bwm.ui.TabPictureFragment;
+import com.madx.bwm.ui.TabWordFragment;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MessageUtil;
@@ -53,9 +59,9 @@ import java.util.Map;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.madx.bwm.ui.WallNewFragment.OnFragmentInteractionListener} interface
+ * {@link WallNewFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link com.madx.bwm.ui.WallNewFragment#newInstance} factory method to
+ * Use the {@link WallNewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class WallNewFragment extends BaseFragment<WallNewActivity> implements View.OnClickListener, FeelingAdapter.ItemCheckListener {
