@@ -613,6 +613,13 @@
     <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" ">]]></string>
     <string name="photo_position_no_arrow">%1$d/%2$d</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="yesterday_ago">1 day ago</string>
+    <string name="just_now">Just now</string>
+    <string name="three_minite_ago">3 min ago</string>
+    <string name="three_hour_ago">3 hr ago</string>
+
     <!--end-->
 
 
