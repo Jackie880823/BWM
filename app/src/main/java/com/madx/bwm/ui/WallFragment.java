@@ -171,7 +171,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallAdap
                 //gsonb.registerTypeAdapter(Date.class, ds);
                 Gson gson = gsonb.create();
                 try {
-                    Log.d("", "2memberId============" + response);
                     data = gson.fromJson(response, new TypeToken<ArrayList<WallEntity>>() {
                     }.getType());
                     if (isRefresh) {
