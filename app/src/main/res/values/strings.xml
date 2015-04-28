@@ -53,6 +53,7 @@
 
     <string name="text_word">Text</string>
     <string name="text_picture">Picture</string>
+    <string name="text_photo">Photo</string>
     <string name="text_invited_members">Invited Members</string>
     <string name="text_all">All</string>
     <string name="text_going">Joined</string>
