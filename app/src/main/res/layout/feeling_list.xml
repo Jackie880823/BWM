@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/feeling_icons"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:background="@color/default_text_color_while"
+<android.support.v7.widget.RecyclerView android:id="@+id/feeling_icons"
+                                        xmlns:android="http://schemas.android.com/apk/res/android"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:paddingTop="@dimen/_20dp"
+                                        android:background="@color/default_text_color_while"
     >
 
 </android.support.v7.widget.RecyclerView>

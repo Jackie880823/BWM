@@ -53,6 +53,7 @@
 
     <string name="text_word">Text</string>
     <string name="text_picture">Picture</string>
+    <string name="text_photo">Photo</string>
     <string name="text_invited_members">Invited Members</string>
     <string name="text_all">All</string>
     <string name="text_going">Joined</string>
@@ -616,8 +617,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="yesterday_ago">1 day ago</string>
     <string name="just_now">Just now</string>
-    <string name="three_minite_ago">3 min ago</string>
-    <string name="three_hour_ago">3 hr ago</string>
+    <string name="some_minite_ago">%d min ago</string>
+    <string name="some_hour_ago">%d hr ago</string>
     <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
     <string name="hello_world">Hello world!</string>
 
