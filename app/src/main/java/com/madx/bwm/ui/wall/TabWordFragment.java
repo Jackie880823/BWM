@@ -1,9 +1,11 @@
-package com.madx.bwm.ui;
+package com.madx.bwm.ui.wall;
 
 import android.text.Editable;
 import android.widget.GridView;
 
 import com.madx.bwm.R;
+import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.widget.WallEditView;
 
 /**
