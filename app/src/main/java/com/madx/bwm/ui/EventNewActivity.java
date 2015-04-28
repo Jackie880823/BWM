@@ -11,6 +11,7 @@ import com.madx.bwm.R;
 public class EventNewActivity extends BaseActivity {
 
 
+
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
@@ -34,6 +35,18 @@ public class EventNewActivity extends BaseActivity {
         if(commandlistener!=null)
             commandlistener.execute(rightButton);
 //            commandlistener.execute(rightTextButton);
+
+    }
+    @Override
+    protected void titleLeftEvent() {
+        if(commandlistener!=null)
+            commandlistener.execute(leftButton);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        // TODO Auto-generated method stub
+        super.onWindowFocusChanged(hasFocus);
 
     }
 
