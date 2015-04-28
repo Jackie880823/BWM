@@ -43,18 +43,20 @@ public class MyDateUtils extends android.text.format.DateUtils {
             format_flags |= DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME;
         } else {
             // Otherwise, if the message is from today, show the time.
-            if(now.hour - then.hour <= 3){
+            int hour = now.hour  - then.hour;
+            if(hour < 1){
+                int minute = now.minute - then.minute;
                 // 3小时之内的更新
-                if(now.hour == then.hour && now.minute - then.minute <= 3) {
+                if(minute <= 1) {
                     // 3分钟之内的更新
                     return context.getString(R.string.just_now);
                 } else {
-                    // 3分钟之前
-                    return context.getString(R.string.three_minite_ago);
+                    // minute分钟之前
+                    return String.format(context.getString(R.string.some_minite_ago), minute);
                 }
             } else {
                 // 当天3小时之前的更新
-                return context.getString(R.string.three_hour_ago);
+                return String.format(context.getString(R.string.some_hour_ago), hour);
             }
 //            format_flags |= DateUtils.FORMAT_SHOW_TIME;
         }
