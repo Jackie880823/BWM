@@ -69,7 +69,6 @@
 
     <string name="text_comments">Comments</string>
 
-    <string name="text_wall_content_template">%1$s %2$s %3$s</string>
     <string name="text_wall_content_at_member_desc">\@%1$smembers</string>
     <string name="text_wall_content_at_group_desc">\@%1$sgroups</string>
     <string name="text_today">today</string>
@@ -619,6 +618,8 @@
     <string name="just_now">Just now</string>
     <string name="three_minite_ago">3 min ago</string>
     <string name="three_hour_ago">3 hr ago</string>
+    <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
+    <string name="hello_world">Hello world!</string>
 
     <!--end-->
 

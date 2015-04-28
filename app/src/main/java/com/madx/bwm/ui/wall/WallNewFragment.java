@@ -39,7 +39,6 @@ import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.MapsActivity;
 import com.madx.bwm.ui.SelectPeopleActivity;
-import com.madx.bwm.ui.TabPictureFragment;
 import com.madx.bwm.ui.TabWordFragment;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;

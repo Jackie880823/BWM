@@ -24,6 +24,7 @@ import com.madx.bwm.R;
 import com.madx.bwm.adapter.WallAdapter;
 import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.UrlUtil;
+import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.ViewOriginalPicesActivity;
@@ -44,7 +45,7 @@ import java.util.Map;
  * Use the {@link WallFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WallFragment extends BaseFragment<MainActivity> implements WallAdapter.ViewClickListener {
+public class WallFragment extends BaseFragment<MainActivity> implements ViewClickListener {
 
 
     private ProgressDialog mProgressDialog;
@@ -229,6 +230,10 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallAdap
         isRefresh = false;
     }
 
+    /**
+     *显示用户分享的图片
+     * @param content_id
+     */
     @Override
     public void showOriginalPic(String content_id) {
         Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
@@ -247,6 +252,36 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallAdap
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);
         startActivityForResult(intent, Constant.ACTION_COMMENT_WALL);
+    }
+
+    /**
+     * 显示被@的用户列表
+     *
+     * @param content_group_id
+     * @param group_id
+     */
+    @Override
+    public void showMembers(String content_group_id, String group_id) {
+        Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
+        intent.setAction(Constant.ACTION_SHOW_NOTIFY_USER);
+        intent.putExtra("content_group_id", content_group_id);
+        intent.putExtra("group_id", group_id);
+        startActivityForResult(intent, Constant.ACTION_COMMENT_MEMBERS);
+    }
+
+    /**
+     * 显示被@的群组列表
+     *
+     * @param content_group_id
+     * @param group_id
+     */
+    @Override
+    public void showGroups(String content_group_id, String group_id) {
+        Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
+        intent.setAction(Constant.ACTION_SHOW_NOTIFY_GROUP);
+        intent.putExtra("content_group_id", content_group_id);
+        intent.putExtra("group_id", group_id);
+        startActivityForResult(intent, Constant.ACTION_COMMENT_GROUPS);
     }
 
     MyDialog removeAlertDialog;

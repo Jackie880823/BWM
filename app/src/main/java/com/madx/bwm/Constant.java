@@ -15,11 +15,16 @@ public class Constant {
     public static final int ACTION_CREATE_WALL = 10;
     public static final int ACTION_UPDATE_WALL = 11;
     public static final int ACTION_COMMENT_WALL = 12;
+    public static final int ACTION_COMMENT_MEMBERS = 13;
+    public static final int ACTION_COMMENT_GROUPS = 14;
 
     public static final int ACTION_EVENT_CREATE = 20;
     public static final int ACTION_EVENT_UPDATE = 21;
     public static final int ACTION_EVENT_UPDATE_BIRTHDAY = 22;
     public static final int ACTION_EVENT_UPDATE_MEMBERS = 23;
+
+    public static final String ACTION_SHOW_NOTIFY_USER = "ACTION_SHOW_NOTIFY_USER";
+    public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
 
 
     /**
