@@ -2,7 +2,7 @@
 /**/*build/
 /local.properties
 /**/.DS_Store
-/.idea
+/**/.idea
 /MaterialDesignDemo
 /fzAndroidMap
 /**/*.apk
@@ -10,6 +10,7 @@
 /**/*-report.txt
 app/out.map
 
+*.idea
 # files for the dex VM
 *.dex
 # Java class files

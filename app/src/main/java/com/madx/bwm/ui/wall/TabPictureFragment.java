@@ -1,4 +1,4 @@
-package com.madx.bwm.ui;
+package com.madx.bwm.ui.wall;
 
 import android.annotation.TargetApi;
 import android.content.ClipData;
@@ -21,6 +21,8 @@ import android.widget.SimpleAdapter;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.PickPicAdapter;
 import com.madx.bwm.http.PicturesCacheUtil;
+import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.SDKUtil;
@@ -38,9 +40,9 @@ import java.util.Map;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.madx.bwm.ui.TabPictureFragment.OnFragmentInteractionListener} interface
+ * {@link TabPictureFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link com.madx.bwm.ui.TabPictureFragment#newInstance} factory method to
+ * Use the {@link TabPictureFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class TabPictureFragment extends BaseFragment<MainActivity> implements View.OnClickListener {
@@ -115,9 +117,9 @@ public class TabPictureFragment extends BaseFragment<MainActivity> implements Vi
         adapter.setSelectImageListener(new PickPicAdapter.SelectImageListener() {
             @Override
             public void onImageDelete(int index) {
-                if(uries!=null){
+                if(uris !=null){
                     try {
-                        uries.remove(index);
+                        uris.remove(index);
                     }catch (Exception e){}
                 }
             }
@@ -198,7 +200,7 @@ public class TabPictureFragment extends BaseFragment<MainActivity> implements Vi
         }
     }
 
-    List<Uri> uries = new ArrayList<>();
+    List<Uri> uris = new ArrayList<>();
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -224,8 +226,8 @@ public class TabPictureFragment extends BaseFragment<MainActivity> implements Vi
                         } else {
                             pickUries.add(data.getData());
                         }
-                        addDataAndNofify(getMiniThumbanilUri(pickUries));
-                        uries.addAll(pickUries);
+                        addDataAndNofify(getMiniThumbnailUri(pickUries));
+                        uris.addAll(pickUries);
                     }
                     break;
                 // 如果是调用相机拍照时
@@ -233,8 +235,8 @@ public class TabPictureFragment extends BaseFragment<MainActivity> implements Vi
 //                    if (data != null) {
                         Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(getActivity(), CACHE_PIC_NAME_TEMP + cache_count));
                         if (new File(uri.getPath()).exists()) {
-                            addDataAndNofify(getMiniThumbanilBitmap(uri));
-                            uries.add(uri);
+                            addDataAndNofify(getMiniThumbnailBitmap(uri));
+                            uris.add(uri);
                         }
 //                    }
 
@@ -386,14 +388,13 @@ public class TabPictureFragment extends BaseFragment<MainActivity> implements Vi
 
     }
 
-    private Bitmap getMiniThumbanilBitmap(Uri uri) {
-//        Bitmap bitmap;
-//        try {
-//            return getThumbnail(getActivity().getContentResolver(),uri.getPath());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return null;
+    /**
+     * 通过图片UR获取本地图片的略缩图
+     * @param uri   图片URI
+     * @return 返回所需要的图片
+     */
+    private Bitmap getMiniThumbnailBitmap(Uri uri) {
+
 
         Cursor c = getActivity().getContentResolver().query(uri, null, null, null, null);
 
@@ -414,17 +415,14 @@ public class TabPictureFragment extends BaseFragment<MainActivity> implements Vi
             c.close();
         }
 
-        Log.i("","base Degree=========="+LocalImageLoader.readPictureDegree(uri.getPath()));
+        Log.i(TAG,"base Degree=========="+LocalImageLoader.readPictureDegree(uri.getPath()));
 
         if (TextUtils.isEmpty(miniThumbanilUri)) {
             if (columnWidthHeight == 0) {
                 columnWidthHeight = gvPictures.getColumnWidth();
             }
-//            if(SDKUtil.IS_L){
-//                return ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(getActivity(), uri)),columnWidthHeight,columnWidthHeight);
-//            }else {
-                return LocalImageLoader.rotaingImageView(LocalImageLoader.readPictureDegree(uri.getPath()), ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(getActivity(), uri)), columnWidthHeight, columnWidthHeight));
-//            }
+            return LocalImageLoader.rotaingImageView(LocalImageLoader.readPictureDegree(uri.getPath()),
+                    ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(getActivity(), uri)), columnWidthHeight, columnWidthHeight));
         } else {
             return LocalImageLoader.loadBitmapFromFile(getActivity(), Uri.parse(miniThumbanilUri).getPath());
 
@@ -433,20 +431,20 @@ public class TabPictureFragment extends BaseFragment<MainActivity> implements Vi
 
     private int columnWidthHeight;
 
-    private List<Bitmap> getMiniThumbanilUri(List<Uri> uries) {
+    private List<Bitmap> getMiniThumbnailUri(List<Uri> uris) {
 
-        List<Bitmap> miniThumbanilUries = new ArrayList<>();
-        if (uries != null) {
-            for (int i = 0; i < uries.size(); i++) {
-                miniThumbanilUries.add(getMiniThumbanilBitmap(uries.get(i)));
+        List<Bitmap> miniThumbnailUris = new ArrayList<>();
+        if (uris != null) {
+            for (int i = 0; i < uris.size(); i++) {
+                miniThumbnailUris.add(getMiniThumbnailBitmap(uris.get(i)));
             }
         }
-        return miniThumbanilUries;
+        return miniThumbnailUris;
     }
 
 
     public List<Uri> getEditPic4Content() {
-        return uries;
+        return uris;
     }
 
 

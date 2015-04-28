@@ -52,10 +52,6 @@ public class PickPicAdapter extends SimpleAdapter{
 
         final View view = super.getView(position, convertView, parent);
 
-        Map<String ,Object> item = (Map<String, Object>) getItem(position);
-
-//        ((ImageView)view.findViewById(R.id.iv_pic)).setImageBitmap((Bitmap) item.get("pic_resId"));
-
         view.findViewById(R.id.pic_delete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
