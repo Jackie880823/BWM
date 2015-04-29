@@ -60,6 +60,7 @@
     <string name="text_not_going">Declined</string>
     <string name="text_add">Add</string>
     <string name="text_added">Added</string>
+    <string name="text_updated">Updated</string>
     <string name="text_awaiting">Awaiting</string>
     <string name="text_public">All Members</string>
     <string name="text_private">Private</string>

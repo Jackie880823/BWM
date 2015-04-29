@@ -20,7 +20,16 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
     private Context mContext;
     private List<MemberEntity> data;
     private int tag;
-    private String[] action ={"has added you","wanted to add you","waiting for member confirmation"};
+
+    //可以做为字符数组的下标
+    private final static int TAG_ADD = 0;
+    private final static int TAG_AWAITING = 1;
+    private final static int TAG_AUTO_ACCEPT = 2;
+    private final static int TAG_ADDED = 3;
+    private final static int TAG_UPDATED = 4;
+
+    //add，awaiting，auto-accept，added(同意)，updated(修改关系)。
+    private String[] action ={"request to add you as ", "awaiting member confirmation", "You have auto-accept as member", "accept you as member", "set you as "};
     private String moduleAction;
     private String memberId;
 
@@ -50,45 +59,108 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         memberId = memberEntity.getAction_user_id();
         VolleyUtil.initNetworkImageView(mContext, holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         holder.owner_name.setText(memberEntity.getAction_username());
-        holder.owner_content.setText(action[tag]);
+//        holder.owner_content.setText(action[tag]);
 
-        if(tag==0){
-            holder.added.setVisibility(View.VISIBLE);
-            holder.add.setVisibility(View.GONE);
-            holder.awaiting.setVisibility(View.GONE);
-        }else if(tag==1){
-            holder.add.setVisibility(View.VISIBLE);
-            holder.added.setVisibility(View.GONE);
-            holder.awaiting.setVisibility(View.GONE);
-        }else if(tag==2){
-            holder.awaiting.setVisibility(View.VISIBLE);
-            holder.added.setVisibility(View.GONE);
-            holder.add.setVisibility(View.GONE);
+//        if(tag==0){
+//            holder.added.setVisibility(View.VISIBLE);
+//            holder.add.setVisibility(View.GONE);
+//            holder.awaiting.setVisibility(View.GONE);
+//        }else if(tag==1){
+//            holder.add.setVisibility(View.VISIBLE);
+//            holder.added.setVisibility(View.GONE);
+//            holder.awaiting.setVisibility(View.GONE);
+//        }else if(tag==2){
+//            holder.awaiting.setVisibility(View.VISIBLE);
+//            holder.added.setVisibility(View.GONE);
+//            holder.add.setVisibility(View.GONE);
+//        }
+
+        switch (tag)
+        {
+            case TAG_ADD:
+            {
+                holder.add.setVisibility(View.VISIBLE);
+
+                holder.awaiting.setVisibility(View.GONE);
+                holder.added.setVisibility(View.GONE);
+                holder.updated.setVisibility(View.GONE);
+
+                holder.owner_content.setText(action[TAG_ADD] + memberEntity.getRelationship());
+            }
+            break;
+
+            case TAG_AWAITING:
+            {
+                holder.awaiting.setVisibility(View.VISIBLE);
+
+                holder.add.setVisibility(View.GONE);
+                holder.added.setVisibility(View.GONE);
+                holder.updated.setVisibility(View.GONE);
+
+                holder.owner_content.setText(action[TAG_AWAITING]);
+            }
+            break;
+
+            case TAG_AUTO_ACCEPT:
+            {
+                holder.added.setVisibility(View.VISIBLE);
+
+                holder.add.setVisibility(View.GONE);
+                holder.awaiting.setVisibility(View.GONE);
+                holder.updated.setVisibility(View.GONE);
+
+                holder.owner_content.setText(action[TAG_AUTO_ACCEPT]);
+            }
+            break;
+
+            case TAG_ADDED:
+            {
+                holder.added.setVisibility(View.VISIBLE);
+
+                holder.add.setVisibility(View.GONE);
+                holder.awaiting.setVisibility(View.GONE);
+                holder.updated.setVisibility(View.GONE);
+
+                holder.owner_content.setText(action[TAG_ADDED]);
+            }
+            break;
+
+            case TAG_UPDATED:
+            {
+                holder.updated.setVisibility(View.VISIBLE);
+
+                holder.add.setVisibility(View.GONE);
+                holder.awaiting.setVisibility(View.GONE);
+                holder.added.setVisibility(View.GONE);
+
+                holder.owner_content.setText(action[TAG_UPDATED] + memberEntity.getRelationship());
+            }
+            break;
+
+            default:
+                break;
         }
 
     }
 
     public int tag(String moduleAction){
-//        "has added you","waiting fo member confirmation","wanted to add you"
         switch (moduleAction) {
-            case "added":
-                tag = 0;
-                break;
-            case "autoAcp":
-                tag = 0;
-                break;
-            case "accept":
-                tag = 0;
-                break;
-            case "updateRel":
-                tag = 0;
-                break;
             case "add":
-                tag = 1;
+                tag = TAG_ADD;
                 break;
             case "awaiting":
-                tag = 2;
+                tag = TAG_AWAITING;
                 break;
+            case "autoAcp":
+                tag = TAG_AUTO_ACCEPT;
+                break;
+            case "accept":
+                tag = TAG_ADDED;
+                break;
+            case "updateRel":
+                tag = TAG_UPDATED;
+                break;
+
         }
         return tag;
     }
@@ -105,9 +177,10 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         private TextView owner_name;
         private TextView owner_content;
 
-        private TextView added;
         private TextView add;
         private TextView awaiting;
+        private TextView added;
+        private TextView updated;
 
         public VHItem(View itemView) {
             // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
@@ -115,9 +188,11 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
             owner_head= (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
             owner_name= (TextView) itemView.findViewById(R.id.owner_name);
             owner_content = (TextView)itemView.findViewById(R.id.owner_content);
-            added = (TextView)itemView.findViewById(R.id.added);
+
             add = (TextView)itemView.findViewById(R.id.add);
             awaiting = (TextView)itemView.findViewById(R.id.awaiting);
+            added = (TextView)itemView.findViewById(R.id.added);
+            updated = (TextView)itemView.findViewById(R.id.updated);
 
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
