@@ -1,4 +1,4 @@
-package com.madx.bwm.ui;
+package com.madx.bwm.ui.wall;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -35,6 +35,10 @@ import com.madx.bwm.R;
 import com.madx.bwm.adapter.FeelingAdapter;
 import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
+import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.ui.MapsActivity;
+import com.madx.bwm.ui.SelectPeopleActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MessageUtil;
@@ -53,9 +57,9 @@ import java.util.Map;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.madx.bwm.ui.WallNewFragment.OnFragmentInteractionListener} interface
+ * {@link WallNewFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link com.madx.bwm.ui.WallNewFragment#newInstance} factory method to
+ * Use the {@link WallNewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class WallNewFragment extends BaseFragment<WallNewActivity> implements View.OnClickListener, FeelingAdapter.ItemCheckListener {
@@ -63,7 +67,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
      */
-    private final static String     TAG                 = WallNewFragment.class.getSimpleName();
+    private final static String TAG = WallNewFragment.class.getSimpleName();
 
     /**
      * 输入文字的TAB
@@ -72,41 +76,41 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     /**
      * 插入图片的TAB
      */
-    private final static int        WALL_TAB_PICTURE    = 1;
+    private final static int WALL_TAB_PICTURE = 1;
 
-    private final static int        GET_LOCATION        = 1;
-    private final static int        GET_MEMBERS         = 2;
+    private final static int GET_LOCATION = 1;
+    private final static int GET_MEMBERS = 2;
 
-    private final static String     PATH_PREFIX         = "feeling";
-    private final static String     FEEL_ICON_NAME      = PATH_PREFIX + "/%s";
+    private final static String PATH_PREFIX = "feeling";
+    private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
 
-    private ImageView       ivCursor;
-    private ImageView       iv_feeling;
-    private ImageButton     btn_feeling;
-    private ImageButton     btn_notify;
+    private ImageView ivCursor;
+    private ImageView iv_feeling;
+    private ImageButton btn_feeling;
+    private ImageButton btn_notify;
     //    private TextView btn_share_option;
-    private Button          btn_share_option;
-    private LinearLayout    btn_submit;
-    private LinearLayout    btn_location;
-    private TextView        location_desc;
+    private Button btn_share_option;
+    private LinearLayout btn_submit;
+    private LinearLayout btn_location;
+    private TextView location_desc;
 
 
-    private List<String>        fileNames       = new ArrayList<>();
+    private List<String> fileNames = new ArrayList<>();
 
-    public List<UserEntity>     at_members_data = new ArrayList();
-    public List<GroupEntity>    at_gourps_data  = new ArrayList();
+    public List<UserEntity> at_members_data = new ArrayList();
+    public List<GroupEntity> at_gourps_data = new ArrayList();
     private String text_content;
     private String locationName;
     private List<Uri> pic_content;
 
-    private double          latitude;
-    private double          longitude;
-    private Gson            gson;
+    private double latitude;
+    private double longitude;
+    private Gson gson;
 
     /**
      * private ProgressBarCircularIndeterminate progressBar;
      */
-    private RecyclerView    feeling_icons;
+    private RecyclerView feeling_icons;
 
     PopupWindow popupwindow;
     private LinearLayoutManager llm;

@@ -18,6 +18,8 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MyFragmentPagerAdapter;
 import com.madx.bwm.entity.UserEntity;
+import com.madx.bwm.ui.wall.WallFragment;
+import com.madx.bwm.ui.wall.WallNewActivity;
 
 import java.util.ArrayList;
 import java.util.List;

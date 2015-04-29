@@ -51,10 +51,7 @@ public class PickPicAdapter extends SimpleAdapter{
     public View getView(final int position, View convertView, ViewGroup parent) {
 
         final View view = super.getView(position, convertView, parent);
-
-        Map<String ,Object> item = (Map<String, Object>) getItem(position);
-
-//        ((ImageView)view.findViewById(R.id.iv_pic)).setImageBitmap((Bitmap) item.get("pic_resId"));
+        Log.i(TAG, "getView position = " + position);
 
         view.findViewById(R.id.pic_delete).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,19 +59,7 @@ public class PickPicAdapter extends SimpleAdapter{
                 if(mRemoveAlertDialog == null){ //没有被实例化，先实例化
                     mRemoveAlertDialog = new MyDialog(view.getContext(), R.string.text_tips_title, R.string.alert_wall_del_photo);
 
-                    mRemoveAlertDialog.setButtonAccept(R.string.accept, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // 点击确认删除图片并关闭提示框
-                            mMata.remove(position);
-                            notifyDataSetChanged();
-                            if(mSelectImageListener != null) {
-                                mSelectImageListener.onImageDelete(position);
-                            }
-
-                            mRemoveAlertDialog.dismiss();
-                        }
-                    });
+                    mRemoveAlertDialog.setButtonAccept(R.string.accept, acceptClick);
 
                     mRemoveAlertDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
                         @Override
@@ -86,6 +71,8 @@ public class PickPicAdapter extends SimpleAdapter{
                 } else {
                     Log.i(TAG, "mRemoveAlertDialog is init");
                 }
+                acceptClick.setPosition(position);
+                Log.i(TAG, "getView onClick position = " + position);
                 mRemoveAlertDialog.show();
             }
         });
@@ -101,6 +88,38 @@ public class PickPicAdapter extends SimpleAdapter{
 
     public interface SelectImageListener{
         void onImageDelete(int index);
+    }
+
+    private AcceptClick acceptClick = new AcceptClick();
+
+    /**
+     * 弹出框确认按钮的点击监听
+     */
+    class AcceptClick implements View.OnClickListener{
+
+        private int position;
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        /**
+         * Called when a view has been clicked.
+         *
+         * @param v The view that was clicked.
+         */
+        @Override
+        public void onClick(View v) {
+            // 点击确认删除图片并关闭提示框
+            Log.i(TAG, "getView onClick Accept position = " + position);
+            mMata.remove(position);
+            notifyDataSetChanged();
+            if(mSelectImageListener != null) {
+                mSelectImageListener.onImageDelete(position);
+            }
+
+            mRemoveAlertDialog.dismiss();
+        }
     }
 
 }

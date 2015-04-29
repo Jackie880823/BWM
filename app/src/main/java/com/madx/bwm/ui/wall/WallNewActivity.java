@@ -1,10 +1,11 @@
-package com.madx.bwm.ui;
+package com.madx.bwm.ui.wall;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.madx.bwm.R;
+import com.madx.bwm.ui.BaseActivity;
 
 /**
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)

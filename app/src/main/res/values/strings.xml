@@ -13,7 +13,7 @@
     <string name="title_wall_comment">Wall Comments</string>
     <string name="title_event_new">New Event</string>
     <string name="title_event_edit">Event Edit</string>
-    <string name="title_wall_new">New Wall</string>
+    <string name="title_wall_new">Post</string>
     <string name="title_map_choose_location">Choose location</string>
     <string name="title_invited_status">Participants</string>
     <string name="title_birthday_alert">Birthday Alerts</string>
@@ -53,6 +53,7 @@
 
     <string name="text_word">Text</string>
     <string name="text_picture">Picture</string>
+    <string name="text_photo">Photo</string>
     <string name="text_invited_members">Invited Members</string>
     <string name="text_all">All</string>
     <string name="text_going">Joined</string>
@@ -70,7 +71,6 @@
 
     <string name="text_comments">Comments</string>
 
-    <string name="text_wall_content_template">%1$s %2$s %3$s</string>
     <string name="text_wall_content_at_member_desc">\@%1$smembers</string>
     <string name="text_wall_content_at_group_desc">\@%1$sgroups</string>
     <string name="text_today">today</string>
@@ -613,6 +613,15 @@
     <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
     <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" ">]]></string>
     <string name="photo_position_no_arrow">%1$d/%2$d</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="yesterday_ago">1 day ago</string>
+    <string name="just_now">Just now</string>
+    <string name="some_minite_ago">%d min ago</string>
+    <string name="some_hour_ago">%d hr ago</string>
+    <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
+    <string name="hello_world">Hello world!</string>
 
     <!--end-->
 
