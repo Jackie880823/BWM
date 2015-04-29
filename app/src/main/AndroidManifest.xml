@@ -251,6 +251,10 @@
         <activity
             android:name=".ui.PathRelationshipActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.wall.SelectMultiplePhotosActivity"
+            android:label="@string/title_activity_select_multiple_photos" >
+        </activity>
     </application>
 
 </manifest>
