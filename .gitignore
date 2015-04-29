@@ -3,7 +3,6 @@
 /local.properties
 /**/.DS_Store
 /.idea
-.idea/*
 /MaterialDesignDemo
 /fzAndroidMap
 /**/*.apk
