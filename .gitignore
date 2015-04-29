@@ -33,3 +33,4 @@ Thumbs.db
 *~
 *.swp
 .gitignore.swp
+**/*.DS_Store

@@ -2,14 +2,9 @@ package com.madx.bwm.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +43,8 @@ public class AlertEventAdapter extends RecyclerView.Adapter<AlertEventAdapter.VH
     @Override
     public void onBindViewHolder(VHItem holder, int position) {
         AlertEventEntity alertEventEntity = data.get(position);
-        holder.news_title.setText(alertEventEntity.getAction_username());
-        holder.news_content.setText(selectEvent(alertEventEntity.getModule_action(), alertEventEntity.getModule_name(), alertEventEntity.getPostowner_username()));
+        holder.news_title.setText(alertEventEntity.getModule_name());
+        holder.news_content.setText(selectEvent(alertEventEntity.getModule_action(), alertEventEntity.getAction_username(), alertEventEntity.getPostowner_username()));
         holder.news_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, alertEventEntity.getCreation_date()));
     }
 
@@ -100,9 +95,9 @@ public class AlertEventAdapter extends RecyclerView.Adapter<AlertEventAdapter.VH
             }
         }
         SpannableString msp = new SpannableString(whatEvent);
-        msp.setSpan(new AbsoluteSizeSpan(mContext.getResources().getDimensionPixelSize(R.dimen.text_medium_size)), firstPosition, lastPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        msp.setSpan(new ForegroundColorSpan(Color.parseColor("#00b7ff")), firstPosition, lastPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), firstPosition, lastPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        msp.setSpan(new AbsoluteSizeSpan(mContext.getResources().getDimensionPixelSize(R.dimen.text_medium_size)), firstPosition, lastPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        msp.setSpan(new ForegroundColorSpan(Color.parseColor("#00b7ff")), firstPosition, lastPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), firstPosition, lastPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return msp;
     }
 
