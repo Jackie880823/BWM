@@ -9,32 +9,20 @@
         android:id="@+id/message_icon_image"
         android:layout_width="@dimen/_50dp"
         android:layout_height="@dimen/_50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="@dimen/_6dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_6dp"
         android:src="@drawable/default_head_icon"
         app:border="false" />
-
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="@dimen/_46dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/message_icon_image"
-        android:gravity="center"
-        android:textColor="@color/default_text_color_dark"
-        android:layout_marginLeft="@dimen/_6dp"
-        android:text="即使但是时"
-        android:singleLine="true" />
     <RelativeLayout
         android:id="@+id/pic_linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/message_left"
+        android:background="@drawable/message_right"
         android:gravity="center"
-        android:layout_toRightOf="@+id/message_icon_image">
+        android:layout_toLeftOf="@+id/message_icon_image">
 
-        <pl.droidsonroids.gif.GifImageView
-            android:id="@+id/message_pic_gif_iv"
+        <ImageView
+            android:id="@+id/message_pic_png_iv"
             android:layout_width="@dimen/_150dp"
             android:layout_height="@dimen/_150dp"
             android:scaleType="fitXY"/>
@@ -50,9 +38,9 @@
         android:id="@+id/date_time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/pic_linear"
+        android:layout_alignRight="@+id/pic_linear"
         android:layout_below="@+id/pic_linear"
-        android:layout_marginLeft="@dimen/_16dp"
+        android:layout_marginRight="@dimen/_16dp"
         android:layout_marginTop="@dimen/_6dp"
         android:text="2015年05月24日"
         android:textColor="@color/default_text_color_light"

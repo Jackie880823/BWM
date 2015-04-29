@@ -33,10 +33,10 @@
         android:gravity="center"
         android:layout_toRightOf="@+id/message_icon_image">
 
-        <pl.droidsonroids.gif.GifImageView
-            android:id="@+id/message_pic_gif_iv"
-            android:layout_width="@dimen/_150dp"
-            android:layout_height="@dimen/_150dp"
+        <ImageView
+            android:id="@+id/message_pic_png_iv"
+            android:layout_width="@dimen/_100dp"
+            android:layout_height="@dimen/_100dp"
             android:scaleType="fitXY"/>
         <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
             android:id="@+id/message_progress_bar"

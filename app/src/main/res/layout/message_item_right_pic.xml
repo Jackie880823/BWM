@@ -23,13 +23,9 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/message_pic_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:maxWidth="@dimen/_150dp"
-            android:maxHeight="@dimen/_150dp"
-            android:minWidth="@dimen/_50dp"
-            android:minHeight="@dimen/_50dp"/>
+            android:layout_width="@dimen/_150dp"
+            android:layout_height="@dimen/_150dp"
+            android:scaleType="fitXY"/>
         <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
             android:id="@+id/message_progress_bar"
             android:layout_width="@dimen/_32dp"
