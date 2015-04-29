@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="left"
+    android:paddingTop="@dimen/default_view_margin"
+    android:paddingBottom="@dimen/default_view_margin">
+    <com.madx.bwm.widget.CircularNetworkImage
+        android:id="@+id/message_icon_image"
+        android:layout_width="@dimen/_50dp"
+        android:layout_height="@dimen/_50dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_6dp"
+        android:src="@drawable/default_head_icon"
+        app:border="false" />
+    <RelativeLayout
+        android:id="@+id/pic_linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/message_right"
+        android:gravity="center"
+        android:layout_toLeftOf="@+id/message_icon_image">
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/message_pic_gif_iv"
+            android:layout_width="@dimen/_150dp"
+            android:layout_height="@dimen/_150dp"
+            android:scaleType="fitXY"/>
+        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+            android:id="@+id/message_progress_bar"
+            android:layout_width="@dimen/_32dp"
+            android:layout_height="@dimen/_32dp"
+            android:layout_centerInParent="true"
+            android:background="#1E88E5" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/date_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/pic_linear"
+        android:layout_below="@+id/pic_linear"
+        android:layout_marginRight="@dimen/_16dp"
+        android:layout_marginTop="@dimen/_6dp"
+        android:text="2015年05月24日"
+        android:textColor="@color/default_text_color_light"
+        android:textSize="@dimen/_12dp" />
+
+</RelativeLayout>

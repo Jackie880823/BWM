@@ -100,7 +100,7 @@ public class Constant {
     /*christopher*/
     public static String API_MESSAGE_MAIN = API_SERVER+"/bondwithme/index.php/api/messages/%s";//主界面
 
-    public static String API_GET_MESSAGE = API_SERVER+"/bondwithme/index.php/api/posts";//获得群组消息也是获得个人消息
+    //public static String API_GET_MESSAGE = API_SERVER+"/bondwithme/index.php/api/posts";//获得群组消息也是获得个人消息
 
     public static String API_GET_EVERYONE = API_SERVER+"/bondwithme/index.php/api/everyone/%s";//获得好友列表(My Family界面的)
 
@@ -126,7 +126,7 @@ public class Constant {
 
     public static String API_MESSAGE_POST_TEXT = API_SERVER+"/bondwithme/index.php/api/posts";//聊天->文本内容
 
-    public static String API_MESSAGE_POST_PNG = API_SERVER+"/bondwithme/index.php/api/posts";//聊天->照片
+    //public static String API_MESSAGE_POST_PNG = API_SERVER+"/bondwithme/index.php/api/posts";//聊天->照片
 
     public static String API_GROUP_MEMBERS = API_SERVER+"/bondwithme/index.php/api/groupMember";//群组成员列表
 
@@ -148,7 +148,7 @@ public class Constant {
 
     public static String API_ADD_MEMBER_THROUGH_CONTACT = API_SERVER+"/bondwithme/index.php/api/addMemberViaContact";//添加好友从联系人那边
 
-    public static String API_POST_STICKER = API_SERVER+"/bondwithme/index.php/api/posts";//上传sticker
+    //public static String API_POST_STICKER = API_SERVER+"/bondwithme/index.php/api/posts";//上传sticker
 
     public static String API_MISS_MEMBER = API_SERVER+"/bondwithme/index.php/api/miss";//想念用户
 
