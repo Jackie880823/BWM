@@ -149,24 +149,31 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_alert_miss:
+                v.findViewById(R.id.miss_alert_num).setVisibility(View.GONE);
                 goMiss();
                 break;
             case R.id.btn_alert_bigday:
+                v.findViewById(R.id.bigday_alert_num).setVisibility(View.GONE);
                 goBigDay();
                 break;
             case R.id.btn_alert_wall:
+                v.findViewById(R.id.wall_alert_num).setVisibility(View.GONE);
                 goWallAlert();
                 break;
             case R.id.btn_alert_event:
+                v.findViewById(R.id.event_alert_num).setVisibility(View.GONE);
                 goEventAlert();
                 break;
             case R.id.btn_alert_member:
+                v.findViewById(R.id.member_alert_num).setVisibility(View.GONE);
                 goMember();
                 break;
             case R.id.btn_alert_news:
+                v.findViewById(R.id.news_alert_num).setVisibility(View.GONE);
                 goNews();
                 break;
             case R.id.btn_alert_recommend:
+                v.findViewById(R.id.recommend_alert_num).setVisibility(View.GONE);
                 goRecommendAlert();
                 break;
         }
