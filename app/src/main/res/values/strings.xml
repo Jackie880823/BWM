@@ -576,17 +576,21 @@
     <string name="text_lwait_for_respons">Awaiting member response.</string>
     <string name="text_input_personal_message">Input personal message</string>
     <string name="text_choose_contact_information">Please select at least a contact</string>
-    <string name="text_invited_event">invited you to %s event.</string>
-    <string name="text_responded_event">responded for %s event.</string>
-    <string name="text_commented_event">commented on %s event.</string>
-    <string name="text_also_commented_event">also commented on %s event.</string>
-    <string name="text_updated_event">updated %s event.</string>
-    <string name="text_cancelled_event">cancelled %s event.</string>
-    <string name="text_love_comment_event">loved your comment in %s event.</string>
-    <string name="text_love_event">loved your %s event.</string>
+
+
+
+    <string name="text_invited_event">%s invited you to event.</string>
+    <string name="text_responded_event">%s responded for event.</string>
+    <string name="text_commented_event">%s commented on event.</string>
+    <string name="text_also_commented_event">%s also commented on event.</string>
+    <string name="text_updated_event">%s updated event.</string>
+    <string name="text_cancelled_event">%s cancelled event.</string>
+    <string name="text_love_comment_event">%s loved your comment in event.</string>
+    <string name="text_love_event">%s loved your event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
-    <string name="write_create_group_name">Group Name Here</string>
-    <string name="select_photo_for_group">Click to select photo for Group</string>
+
+
+
     <string name="text_photos">photos</string>
     <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" ">]]></string>
     <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
