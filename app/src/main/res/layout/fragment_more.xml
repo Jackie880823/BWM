@@ -63,7 +63,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    app:layout_gravity="center_horizontal">
+                    >
 
                     <RelativeLayout
                         android:id="@+id/btn_me"
@@ -158,7 +158,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    app:layout_gravity="center_horizontal">
+                    >
 
                     <RelativeLayout
                         android:id="@+id/btn_setting"
@@ -256,7 +256,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    app:layout_gravity="center_horizontal">
+                    >
 
                     <RelativeLayout
                         android:id="@+id/btn_contact_us"
@@ -322,7 +322,7 @@
                         android:id="@+id/btn_sign_out"
                         android:layout_width="@dimen/default_user_head_width_height"
                         android:layout_height="@dimen/default_user_head_width_height"
-                        android:background="@drawable/circular_bg_blue"
+                        android:background="@drawable/circular_bg_gray"
                         android:clickable="true">
 
                         <ImageView

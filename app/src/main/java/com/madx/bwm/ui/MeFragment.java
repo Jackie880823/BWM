@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.widget.CircularNetworkImage;
 
 import java.io.IOException;

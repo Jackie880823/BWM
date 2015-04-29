@@ -4,7 +4,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.view.View;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB) public final class ViewHelper {
+public final class ViewHelper {
     private ViewHelper() {}
 
     public static float getAlpha(View view) {
@@ -175,6 +175,7 @@ import android.view.View;
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private static final class Honeycomb {
         static float getAlpha(View view) {
             return view.getAlpha();

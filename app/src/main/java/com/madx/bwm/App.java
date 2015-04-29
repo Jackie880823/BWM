@@ -32,6 +32,7 @@ public class App extends Application {
         super.onCreate();
         appContext = this;
         HttpTools.init(this);
+
     }
 
     public static Context getAppContext(){

@@ -1,10 +1,8 @@
 package com.madx.bwm.ui;
 
-import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -736,7 +734,6 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
 
     List<Uri> pickUries = new ArrayList();
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (ChatActivity.RESULT_OK == resultCode) {

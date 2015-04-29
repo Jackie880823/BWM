@@ -22,6 +22,7 @@ public class WallEntity {
     private String user_given_name;
     private String comment_count;
     private String love_count;
+    private String photo_count;
     private String post_date_info;
 
     private String user_id;
@@ -29,13 +30,17 @@ public class WallEntity {
     private String content_id;
     private String group_id;
     private String content_group_id;
+    public String getFile_id() {
+        return file_id;
+    }
     private String love_id;
+
     private String dofeel_code;
-
     private List<GroupEntity> tag_group;
+
+
+
     private List<UserEntity> tag_member;
-
-
 
     public String getContent_creation_date() {
         return content_creation_date;
@@ -51,10 +56,6 @@ public class WallEntity {
 
     public void setText_description(String text_description) {
         this.text_description = text_description;
-    }
-
-    public String getFile_id() {
-        return file_id;
     }
 
     public void setFile_id(String file_id) {
@@ -149,13 +150,15 @@ public class WallEntity {
         this.love_count = love_count;
     }
 
+    public void setPhoto_count(String photo_count){ this.photo_count = photo_count; }
+
+    public String getPhoto_count(){ return photo_count; }
+
     public String getPost_date_info() {
         return post_date_info;
     }
 
-    public void setPost_date_info(String post_date_info) {
-        this.post_date_info = post_date_info;
-    }
+    public void setPost_date_info(String post_date_info) { this.post_date_info = post_date_info; }
 
     public String getUser_id() {
         return user_id;

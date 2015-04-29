@@ -1,5 +1,6 @@
 package com.madx.bwm.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -36,6 +37,7 @@ public class EventDetailActivity extends BaseActivity {
 
         title_icon.setVisibility(View.VISIBLE);
         title_icon.setImageResource(R.drawable.arrow_down);
+        changeTitleColor(R.color.tab_color_press2);
 //        if (isCurrentUser()) {
 //            rightButton.setImageResource(R.drawable.btn_edit);
 //            rightButton.setVisibility(View.VISIBLE);
@@ -66,9 +68,12 @@ public class EventDetailActivity extends BaseActivity {
 
     private boolean isCurrentUser() {
 
-        if (MainActivity.getUser() == null)
-            return false;
-        return event.getGroup_owner_id().equals(MainActivity.getUser().getUser_id());
+        if(event!=null) {
+            if (MainActivity.getUser() == null)
+                return false;
+            return event.getGroup_owner_id().equals(MainActivity.getUser().getUser_id());
+        }
+        return false;
     }
 
     @Override
@@ -149,6 +154,7 @@ public class EventDetailActivity extends BaseActivity {
             @Override
             public void onResult(String response) {
                 event = new Gson().fromJson(response, EventEntity.class);
+
                 if (isCurrentUser()) {
                     rightButton.setImageResource(R.drawable.btn_edit);
                     rightButton.setVisibility(View.VISIBLE);
@@ -186,4 +192,16 @@ public class EventDetailActivity extends BaseActivity {
     }
 
     public boolean getDataDone;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        if(requestCode == 1 ){
+            if(resultCode == 1){
+                setResult(1);
+                finish();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

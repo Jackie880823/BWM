@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 
+import com.madx.bwm.R;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,10 +36,29 @@ public class MyDateUtils extends android.text.format.DateUtils {
             format_flags |= DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME;
         } else if (then.yearDay != now.yearDay) {
             // If it is from a different day than today, show only the date.
+            if(now.yearDay - then.yearDay == 1) {
+                // 一天前的更新
+                return context.getString(R.string.yesterday_ago);
+            }
             format_flags |= DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME;
         } else {
             // Otherwise, if the message is from today, show the time.
-            format_flags |= DateUtils.FORMAT_SHOW_TIME;
+            int hour = now.hour  - then.hour;
+            if(hour < 1){
+                int minute = now.minute - then.minute;
+                // 3小时之内的更新
+                if(minute <= 1) {
+                    // 3分钟之内的更新
+                    return context.getString(R.string.just_now);
+                } else {
+                    // minute分钟之前
+                    return String.format(context.getString(R.string.some_minite_ago), minute);
+                }
+            } else {
+                // 当天3小时之前的更新
+                return String.format(context.getString(R.string.some_hour_ago), hour);
+            }
+//            format_flags |= DateUtils.FORMAT_SHOW_TIME;
         }
         // If the caller has asked for full details, make sure to show the date
         // and time no matter what we've determined above (but still make showing

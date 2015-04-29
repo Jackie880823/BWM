@@ -1,6 +1,5 @@
 package com.madx.bwm.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -86,7 +85,6 @@ public class WallEditView extends EditText implements TextWatcher {
     private Paint.FontMetrics fm;
 
 
-    @SuppressLint("NewApi")
     public WallEditView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 

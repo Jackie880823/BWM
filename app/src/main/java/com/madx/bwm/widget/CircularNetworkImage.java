@@ -1,6 +1,5 @@
 package com.madx.bwm.widget;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -12,6 +11,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -68,10 +68,9 @@ public class CircularNetworkImage extends NetworkImageView {
         this.invalidate();
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void addShadow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            setLayerType(LAYER_TYPE_SOFTWARE, paintBorder);
+            ViewCompat.setLayerType(this,LAYER_TYPE_SOFTWARE, paintBorder);
         }
         paintBorder.setShadowLayer(4.0f, 0.0f, 2.0f, Color.BLACK);
     }

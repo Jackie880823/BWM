@@ -1,12 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_text_color_while"
     android:orientation="vertical"
     android:padding="@dimen/default_content_padding"
-    tools:context="com.madx.bwm.ui.TabPictureFragment">
+    tools:context="com.madx.bwm.ui.wall.TabPictureFragment">
 
     <com.madx.bwm.widget.CustomGridView
         android:id="@+id/gv_pictures"
@@ -23,32 +22,60 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_border_light">
 
-        <TextView
-            android:id="@+id/btn_to_photo"
-            style="@style/text_dark_default"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/ll_to_photo"
+            android:layout_width="@dimen/_0dp"
             android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:background="@null"
             android:gravity="center"
-            android:padding="@dimen/default_content_padding"
-            android:text="@string/text_album" />
+            android:padding="@dimen/default_content_padding">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/_5dp"
+                android:background="@null"
+                android:src="@drawable/message_album" />
+
+            <TextView
+                style="@style/text_dark_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/_5dp"
+                android:text="@string/text_album" />
+        </LinearLayout>
+
 
         <View
             style="@style/split_line_default"
             android:layout_width="@dimen/default_line_height"
             android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/btn_to_camera"
-            style="@style/text_dark_default"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/ll_to_camera"
+            android:layout_width="@dimen/_0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@null"
             android:gravity="center"
-            android:padding="@dimen/default_content_padding"
-            android:text="@string/text_camera" />
+            android:padding="@dimen/default_content_padding">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/_5dp"
+                android:background="@null"
+                android:src="@drawable/message_camera" />
+
+            <TextView
+                style="@style/text_dark_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/_5dp"
+                android:background="@null"
+                android:text="@string/text_camera" />
+        </LinearLayout>
 
     </LinearLayout>
 

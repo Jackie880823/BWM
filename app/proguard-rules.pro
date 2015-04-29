@@ -81,25 +81,27 @@
  public static <fields>;
 }
 
+-dontwarn android.support.**
 -keep class android.support.v4.app.** { *; }
 -keep interface android.support.v4.app.** { *; }
+-keep class android.support.v7.app.** { *; }
+-keep interface android.support.v7.app.** { *; }
 # The support library contains references to newer platform versions.
 # Don't warn about those in case this app is linking against an older
 # platform version. We know about them, and they are safe.
 
--dontwarn android.support.**
 
-#-dontwarn java.beans.**
-#-dontwarn java.awt.**
-#-dontwarn javax.swing.**
-#-keep class java.beans.** { *;}
-#-keep class java.awt.** { *;}
-#-keep class javax.swing.** { *;}
+
+-dontwarn java.beans.**
+-dontwarn java.awt.**
+-dontwarn javax.swing.**
+-keep class java.beans.** { *;}
+-keep class java.awt.** { *;}
+-keep class javax.swing.** { *;}
 
 #pinyin4j
 -dontwarn net.soureceforge.pinyin4j.**
 -dontwarn demo.**
--libraryjars libs/pinyin4j-2.5.0.jar
 -keep class net.sourceforge.pinyin4j.** { *;}
 -keep class demo.** { *;}
 
@@ -109,13 +111,13 @@
 -keep class com.google.gson.examples.android.model.** { *; }
 
 ##volley
-#-keep class com.android.volley.** {*;}
-#-keep class com.android.volley.toolbox.** {*;}
-#-keep class com.android.volley.Response$* { *; }
-#-keep class com.android.volley.Request$* { *; }
-#-keep class com.android.volley.RequestQueue$* { *; }
-#-keep class com.android.volley.toolbox.HurlStack$* { *; }
-#-keep class com.android.volley.toolbox.ImageLoader$* { *; }
+-keep class com.android.volley.** {*;}
+-keep class com.android.volley.toolbox.** {*;}
+-keep class com.android.volley.Response$* { *; }
+-keep class com.android.volley.Request$* { *; }
+-keep class com.android.volley.RequestQueue$* { *; }
+-keep class com.android.volley.toolbox.HurlStack$* { *; }
+-keep class com.android.volley.toolbox.ImageLoader$* { *; }
 
 #apache http
 -dontwarn org.apache.http.entity.mime.**
