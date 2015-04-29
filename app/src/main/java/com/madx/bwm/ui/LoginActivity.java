@@ -161,6 +161,7 @@ public class LoginActivity extends Activity {
         params.put("deviceUuid",AppInfoUtil.getDeviceUUID(this));
         params.put("devicePlatform","android");
         params.put("lang",Locale.getDefault().getCountry());
+        params.put("appType","native");
         requestInfo.params = params;
         new HttpTools(LoginActivity.this).post(requestInfo,new HttpCallback() {
             @Override

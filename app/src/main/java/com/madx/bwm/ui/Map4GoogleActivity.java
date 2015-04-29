@@ -25,7 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.madx.bwm.R;
 import com.madx.bwm.util.LocationUtil;
 
-public class MapsActivity extends BaseActivity {
+public class Map4GoogleActivity extends BaseActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager lm = null;
@@ -88,7 +88,7 @@ public class MapsActivity extends BaseActivity {
 
     @Override
     public int getLayout() {
-        return R.layout.fragment_map_choose_location;
+        return R.layout.fragment_map_choose_location_google;
     }
 
     @Override

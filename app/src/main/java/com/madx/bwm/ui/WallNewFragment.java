@@ -534,7 +534,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goLocationSetting() {
-        Intent intent = new Intent(getActivity(), MapsActivity.class);
+        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
         //        intent.putExtra("has_location", position_name.getText().toString());
         if(!TextUtils.isEmpty(location_desc.getText())) {
             intent.putExtra("location_name", location_desc.getText().toString());

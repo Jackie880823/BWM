@@ -380,7 +380,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     }
 
     private void goLocationSetting() {
-        Intent intent = new Intent(getActivity(), MapsActivity.class);
+        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
 //        intent.putExtra("has_location", position_name.getText().toString());
         intent.putExtra("location_name", position_name.getText().toString());
         intent.putExtra("latitude", latitude);

@@ -1,8 +1,12 @@
+<!--
+    包含google所有api的key,配置
+-->
 <resources>
 
     <!--map -->
-    <string name="google_maps_key_instructions" templateMergeStrategy="replace"><!--
-
+    <string name="google_maps_key_instructions" templateMergeStrategy="replace">
+        E9:81:9A:EF:5D:21:4C:E9:E6:87:31:2B:7C:B5:D9:A0:6D:36:54:8B;com.madx.bwm
+        <!--
     TODO: Before you run your application, you need a Google Maps API key.
 
     To get one, follow this link, follow the directions and press "Create" at the end:
