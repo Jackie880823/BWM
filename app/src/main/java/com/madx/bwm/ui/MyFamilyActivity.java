@@ -164,7 +164,7 @@ public class MyFamilyActivity extends BaseActivity {
 
                         if ((position > 0) && (position < searchGroupList.size() + 1)) {
                             //Group,跳转到对话界面
-                            Intent intent = new Intent(MyFamilyActivity.this, ChatActivity.class);
+                            Intent intent = new Intent(MyFamilyActivity.this, MessageChatActivity.class);
                             intent.putExtra("type",1);
                             intent.putExtra("groupEntity", searchGroupList.get(position-1));
                             startActivity(intent);
@@ -213,7 +213,7 @@ public class MyFamilyActivity extends BaseActivity {
 
                         if ((position > 0) && (position < groupList.size() + 1)) {
                             //Group,跳转到对话界面
-                            Intent intent = new Intent(MyFamilyActivity.this, ChatActivity.class);
+                            Intent intent = new Intent(MyFamilyActivity.this, MessageChatActivity.class);
                             intent.putExtra("type",1);
                             intent.putExtra("groupEntity", groupList.get(position-1));
                             startActivity(intent);

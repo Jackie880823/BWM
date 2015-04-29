@@ -164,7 +164,7 @@ public class StickerFragment extends BaseFragment {
         params.put("sticker_name", stickerName+"");
         params.put("sticker_type", type);
 
-        new HttpTools(getActivity()).post(Constant.API_POST_STICKER, params, new HttpCallback() {
+        new HttpTools(getActivity()).post(Constant.API_MESSAGE_POST_TEXT, params, new HttpCallback() {
             @Override
             public void onStart() {
 

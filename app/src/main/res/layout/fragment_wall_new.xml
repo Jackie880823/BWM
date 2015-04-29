@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_view_margin"
-                    android:text="@string/text_picture"
+                    android:text="@string/text_photo"
                     android:textColor="@color/default_text_color_dark" />
 
             </LinearLayout>

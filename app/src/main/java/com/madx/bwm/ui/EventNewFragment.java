@@ -25,10 +25,13 @@ import com.madx.bwm.entity.EventEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
+import com.madx.bwm.util.SharedPreferencesUtils;
 import com.madx.bwm.widget.DatePicker;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.TimePicker;
 
+import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -44,8 +47,8 @@ import java.util.List;
  */
 public class EventNewFragment extends BaseFragment<EventNewActivity> implements View.OnClickListener {
 
-
     private MembersGridAdapter adapter;
+    private MyDialog saveAlertDialog;
     private EventEntity mEevent = new EventEntity();
     private GridView gvFriends;
     private TextView event_title;
@@ -59,11 +62,18 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private double longitude = -1000;
     Gson gson = new Gson();
 
+    private String title;
+    private String content;
+    private String lacation;
+    private Long date;
+
     public List<UserEntity> members_data = new ArrayList();
     private final static String USER_HEAD = "user_head";
     private final static String USER_NAME = "user_name";
+
     private ProgressBarCircularIndeterminate progressBar;
     Calendar mCalendar;
+    Calendar calendar;
 
     public static EventNewFragment newInstance(String... params) {
 
@@ -93,7 +103,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         progressBar = getViewById(R.id.progressBar);
 
         gvFriends = getViewById(R.id.gv_all_friends);
-
         changeData();
 
 
@@ -115,21 +124,51 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 return false;
             }
         });
+        //invited members点击事件
         getViewById(R.id.rl_add_members).setOnClickListener(this);
         position_choose.setOnClickListener(this);
         item_date.setOnClickListener(this);
 
 
-        //实现特定事件
+        //点击事件
         getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
-                submit();
+                if (v.getId() == getParentActivity().leftButton.getId()) {
+                    showSaveAlert();
+//                    getParentActivity().finish();
+                } else if (v.getId() == getParentActivity().rightButton.getId()) {
+                    reomveSP();
+                    submit();
+//                    changeData();
+                }
                 return false;
             }
         });
+        bindData2View();
 
+    }
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser) {
+//            //相当于Fragment的onResume
+//            cleanText();
+//        } else {
+//            //相当于Fragment的onPause
+//        }
+//    }
 
+    private void bindData2View() {
+//        Log.i("bindData2View====================================="," ");
+        title = SharedPreferencesUtils.getParam(getParentActivity(), "title", "").toString();
+        content = SharedPreferencesUtils.getParam(getParentActivity(),"content","").toString();
+        lacation = SharedPreferencesUtils.getParam(getParentActivity(),"location","").toString();
+        date = (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
+
+        setText();
+        latitude = TextUtils.isEmpty(mEevent.getLoc_latitude()) ? -1000 : Double.valueOf(mEevent.getLoc_latitude());
+        longitude = TextUtils.isEmpty(mEevent.getLoc_longitude()) ? -1000 : Double.valueOf(mEevent.getLoc_longitude());
     }
 
     private void submit() {
@@ -137,14 +176,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         if(progressBar.getVisibility()==View.VISIBLE){
             return;
         }
-
-
         if (validateForm()) {
+            setText();
             progressBar.setVisibility(View.VISIBLE);
-
             RequestInfo requestInfo = new RequestInfo();
             requestInfo.url = Constant.API_EVENT_CREATE;
-
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_type", "post");
             params.put("first_post", "1");
@@ -164,7 +200,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("text_description", event_desc.getText().toString());
             params.put("user_id", MainActivity.getUser().getUser_id());
             params.put("event_member", gson.toJson(setGetMembersIds(members_data)));
-
             requestInfo.params = params;
 
             new HttpTools(getActivity()).post(requestInfo,new HttpCallback() {
@@ -205,6 +240,41 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
     }
 
+    private void setText(){
+        if(!TextUtils.isEmpty(title)){
+            event_title.setText(title);
+
+        }
+        if(!TextUtils.isEmpty(content)){
+            event_desc.setText(content);
+
+        }
+        if(!TextUtils.isEmpty(lacation)){
+            position_name.setText(lacation);
+
+        }
+        if(date!=null && date!=0L){
+            date_desc.setText(MyDateUtils.getLocalDateStringFromLocal(getParentActivity(),date));
+            mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
+
+        }
+
+    }
+    private void cleanText(){
+        event_title.setText("");
+        event_desc.setText("");
+        position_name.setText("");
+        date_desc.setText("");
+    }
+
+    private void reomveSP(){
+        File file = new File("/data/data/"+getParentActivity().getPackageName().toString()+"/shared_prefs","EventNew_date.xml");
+        if (file.exists()){
+            file.delete();
+//            Toast.makeText(getParentActivity(), "删除成功", Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void requestData() {
 
@@ -229,17 +299,70 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
     }
 
+    private void showSaveAlert() {
+        if (saveAlertDialog == null) {
+            saveAlertDialog = new MyDialog(getActivity(), getString(R.string.text_tips_title), getString(R.string.msg_ask_save));
+            saveAlertDialog.setButtonAccept(getString(R.string.accept), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    saveAlertDialog.dismiss();
+//                    Long tiem = mCalendar.getTimeInMillis();
+                    if(!TextUtils.isEmpty(event_title.getText().toString().trim())){
+                        SharedPreferencesUtils.setParam(getParentActivity(), "title", event_title.getText().toString());
+//                        Log.i("title=============",event_title.getText().toString());
+                    }
+                    if(!TextUtils.isEmpty(event_desc.getText().toString().trim())){
+                        SharedPreferencesUtils.setParam(getParentActivity(), "content", event_desc.getText().toString());
+//                        Log.i("content=============",event_desc.getText().toString());
+                    }
+                    if(!TextUtils.isEmpty(position_name.getText().toString().trim())){
+                        SharedPreferencesUtils.setParam(getParentActivity(), "location", position_name.getText().toString());
+//                        Log.i("location=============",position_name.getText().toString());
+                    }
+                    getParentActivity().finish();
+                }
+            });
+            saveAlertDialog.setButtonCancel(getString(R.string.cancel), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    saveAlertDialog.dismiss();
+                    getParentActivity().finish();
+                }
+            });
+        }
+        if (!saveAlertDialog.isShowing()) {
+            saveAlertDialog.show();
+        }
+    }
+
+
     private void showDateTimePicker() {
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View dateTimePicker = factory.inflate(R.layout.dialog_date_time_picker, null);
         final DatePicker datePicker = (DatePicker) dateTimePicker.findViewById(R.id.datePicker);
         final TimePicker timePicker = (TimePicker) dateTimePicker.findViewById(R.id.timePicker);
 
+        calendar = Calendar.getInstance();
+//        MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis())
+        //如果有时间缓存
+//        Long ltime =  (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
+        if(date != null && date != 0L){
+            Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
+            calendar.setTimeInMillis(ts.getTime());
+            datePicker.setCalendar(calendar);
+            timePicker.setCalendar(calendar);
+            mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
+//            Log.i("ltime=======================",ltime.toString());
+        }
+        //日历dialog
         pickDateTimeDialog = new MyDialog(getParentActivity(), getString(R.string.title_pick_date_time), dateTimePicker);
         pickDateTimeDialog.setButtonAccept(getString(R.string.accept), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickDateTimeDialog.dismiss();
+                if(datePicker != null && timePicker != null){
+
+                }
                 mCalendar = Calendar.getInstance();
                 mCalendar.set(Calendar.YEAR, datePicker.getYear());
                 mCalendar.set(Calendar.MONTH, datePicker.getMonth());
@@ -251,10 +374,14 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     MessageUtil.showMessage(getActivity(),R.string.msg_date_not_befort_now);
                     return;
                 }
-
+                //把时间储存到缓存
+                if(mCalendar!=null){
+                    SharedPreferencesUtils.setParam(getParentActivity(), "date", mCalendar.getTimeInMillis());
+                }
+                //将日历的时间转化成字符串
                 String dateDesc = MyDateUtils.getLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
                 mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
-
+                //将日历的时间显示出来
                 date_desc.setText(dateDesc);
             }
         });
@@ -318,6 +445,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
     }
 
+    //判断输入的内容是否为空
     private boolean validateForm() {
         if (TextUtils.isEmpty(event_title.getText().toString().trim())) {
             MessageUtil.showMessage(getParentActivity(), R.string.alert_text_title_null);
@@ -352,6 +480,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         return true;
     }
 
+    //刷新数据
     private void changeData() {
         if (members_data == null) {
             members_data = new ArrayList<>();

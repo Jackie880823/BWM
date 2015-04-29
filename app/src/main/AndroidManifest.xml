@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.madx.bwm">
+    package="com.madx.bwm" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -35,13 +35,14 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <!-- GCM -->
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
     <permission
         android:name="com.madx.bwm.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.madx.bwm.permission.C2D_MESSAGE" />
     <!-- if we wants to keep the device from sleeping. -->
-     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- christopher -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -67,6 +68,7 @@
             android:process=":remote" >
         </service>
 
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -77,26 +79,31 @@
         <!-- gcm receiver -->
         <receiver
             android:name=".receiver_service.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.madx.bwm" />
             </intent-filter>
-
         </receiver>
-        <service android:name="com.madx.bwm.receiver_service.GcmIntentService" android:enabled="true"/>
+
+        <service
+            android:name=".receiver_service.GcmIntentService"
+            android:enabled="true" />
 
         <activity
             android:name=".ui.LoginActivity"
             android:configChanges="orientation|screenSize"
+
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
         <activity
             android:name=".ui.MainActivity"
@@ -112,10 +119,14 @@
             android:name=".ui.EventNewActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.WallCommentActivity"
+            android:name=".ui.wall.WallCommentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.WallNewActivity"
+            android:name=".ui.wall.WallNewActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.wall.WallMembersOrGroupsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -138,6 +149,7 @@
         <activity
             android:name=".ui.ViewOriginalPicesActivity"
             android:noHistory="true"
+
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
         <activity
@@ -186,95 +198,100 @@
         <!-- christopher -->
         <activity
             android:name=".ui.MyFamilyActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.CreateGroupActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CreateGroupDialogActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".ui.ChatActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.GroupSettingActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.GroupNameSettingActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SignUpPhoneActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ForgetPasswordActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ResetPasswordActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SignUpUsernameActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.InformationPhoneActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.InformationUsernameActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CountryCodeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.PersonalPictureActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SelectPeopleActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.FamilyProfileActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MyViewProfileActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified"></activity>
+            android:windowSoftInputMode="adjustUnspecified" />
         <activity
             android:name=".ui.MeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SignUpPhonePasswordActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SignUpUsernameVerifyPhoneActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.FamilyViewProfileActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AddNewMembersActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ViaContactMainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ViaIdNameActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ProfileResetPasswordActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".ui.RelationshipActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.TermsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AlbumGalleryActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.PathRelationshipActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
+    <activity
+        android:name=".ui.MessageChatActivity"
+        android:windowSoftInputMode = "adjustPan|stateHidden"
+        android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

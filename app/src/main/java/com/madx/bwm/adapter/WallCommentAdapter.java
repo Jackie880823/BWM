@@ -22,6 +22,7 @@ import com.madx.bwm.R;
 import com.madx.bwm.entity.WallCommentEntity;
 import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.widget.CircularNetworkImage;
@@ -46,7 +47,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public void addData(List<WallCommentEntity> newdData) {
         data.addAll(newdData);
-//        notifyItemInserted(0);
+        //        notifyItemInserted(0);
         notifyDataSetChanged();
     }
 
@@ -54,12 +55,12 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         //或者无头部时
-        if (viewType == TYPE_ITEM) {
+        if(viewType == TYPE_ITEM) {
             // 加载Item的布局.布局中用到的真正的CardView.
             View view = LayoutInflater.from(mContext).inflate(R.layout.wall_comment_item, parent, false);
             // ViewHolder参数一定要是Item的Root节点.
             return new VHItem(view);
-        } else if (viewType == TYPE_HEADER) {
+        } else if(viewType == TYPE_HEADER) {
             View view = LayoutInflater.from(mContext).inflate(R.layout.wall_item, parent, false);
             return new VHHeader(view);
         }
@@ -71,44 +72,51 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int i) {
 
-        if (viewHolder instanceof VHItem) {
+        if(viewHolder instanceof VHItem) {
             VHItem item = (VHItem) viewHolder;
             WallCommentEntity comment = data.get(i - 1);
-//            VolleyUtil.initNetworkImageView(mContext, item.civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, comment.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            //            VolleyUtil.initNetworkImageView(mContext, item.civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, comment.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             item.tv_comment_owner_name.setText(comment.getUser_given_name());
             item.tv_comment_content.setText(comment.getComment_content());
             item.tv_agree_count.setText((TextUtils.isEmpty(comment.getLove_count()) ? "0" : comment.getLove_count()));
             item.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, comment.getComment_creation_date()));
 
-            if (MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
+            if(MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
                 item.btn_comment_del.setVisibility(View.VISIBLE);
             } else {
                 item.btn_comment_del.setVisibility(View.GONE);
             }
 
-            if (TextUtils.isEmpty(comment.getLove_id())) {
+            if(TextUtils.isEmpty(comment.getLove_id())) {
                 item.iv_agree.setImageResource(R.drawable.agree_normal);
             } else {
                 item.iv_agree.setImageResource(R.drawable.agree_press);
             }
-        } else if (viewHolder instanceof VHHeader) {
+        } else if(viewHolder instanceof VHHeader) {
 
             VHHeader holder = (VHHeader) viewHolder;
             VolleyUtil.initNetworkImageView(mContext, holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wall.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
-//        if (TextUtils.isEmpty(ece.getText_description())) {
-//            holder.tvContent.setVisibility(View.GONE);
-//        } else {
-            String atMemberDesc = wall.getTag_member().size()==0?"":String.format(mContext.getString(R.string.text_wall_content_at_member_desc),(wall.getTag_member().size()));
-            String atGroupDesc = wall.getTag_group().size()==0?"":String.format(mContext.getString(R.string.text_wall_content_at_group_desc),(wall.getTag_group().size()));
-            String wallContent = String.format(mContext.getString(R.string.text_wall_content_template),TextUtils.isEmpty(wall.getText_description())?"":wall.getText_description(),atGroupDesc,atMemberDesc);
-            holder.tvContent.setText(wallContent);
-//        }
+            String atDescription = TextUtils.isEmpty(wall.getText_description()) ? "" : wall.getText_description();
+
+            if (wall.getTag_member().size() == 0) {
+                holder.tvMember.setVisibility(View.GONE);
+            } else {
+                holder.tvMember.setVisibility(View.VISIBLE);
+                holder.tvMember.setText(String.format(mContext.getString(R.string.text_wall_content_at_member_desc), (wall.getTag_member().size())));
+            }
+            if (wall.getTag_group().size() == 0){
+                holder.tvGroup.setVisibility(View.GONE);
+            } else {
+                holder.tvGroup.setText(String.format(mContext.getString(R.string.text_wall_content_at_group_desc), (wall.getTag_group().size())));
+            }
+
+            holder.tvContent.setText(atDescription);
 
             holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, wall.getContent_creation_date()));
-//            holder.tvTime.setText(wall.getTime());
+            //            holder.tvTime.setText(wall.getTime());
             holder.tvUserName.setText(wall.getUser_given_name());
-            if (TextUtils.isEmpty(wall.getFile_id())) {
+            if(TextUtils.isEmpty(wall.getFile_id())) {
                 holder.llWallsImage.setVisibility(View.GONE);
             } else {
                 holder.llWallsImage.setVisibility(View.VISIBLE);
@@ -117,30 +125,31 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 // 有图片显示图片总数
                 int count = Integer.valueOf(wall.getPhoto_count());
-                String photoCountStr;
                 if(count > 1) {
+                    String photoCountStr;
                     photoCountStr = count + " " + mContext.getString(R.string.text_photos);
+                    holder.tvPhotoCount.setText(photoCountStr);
+                    holder.tvPhotoCount.setVisibility(View.VISIBLE);
                 } else {
-                    photoCountStr = count + " " + mContext.getString(R.string.text_photo);
+                    holder.tvPhotoCount.setVisibility(View.GONE);
                 }
-                holder.tvPhotoCount.setText(photoCountStr);
             }
 
          /*is owner wall*/
-//        if (!TextUtils.isEmpty(wall.getUser_id())&&wall.getUser_id().equals("49")) {
-//            holder.ibDelete.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.ibDelete.setVisibility(View.GONE);
-//        }
+            //        if (!TextUtils.isEmpty(wall.getUser_id())&&wall.getUser_id().equals("49")) {
+            //            holder.ibDelete.setVisibility(View.VISIBLE);
+            //        } else {
+            //            holder.ibDelete.setVisibility(View.GONE);
+            //        }
 
             try {
-                if (wall.getDofeel_code() != null) {
+                if(wall.getDofeel_code() != null) {
                     StringBuilder b = new StringBuilder(wall.getDofeel_code());
                     int charIndex = wall.getDofeel_code().lastIndexOf("_");
                     b.replace(charIndex, charIndex + 1, "/");
 
                     InputStream is = mContext.getAssets().open(b.toString());
-                    if (is != null) {
+                    if(is != null) {
                         holder.iv_mood.setImageBitmap(BitmapFactory.decodeStream(is));
                     } else {
                         holder.iv_mood.setVisibility(View.GONE);
@@ -148,30 +157,30 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 } else {
                     holder.iv_mood.setVisibility(View.GONE);
                 }
-            } catch (Exception e) {
+            } catch(Exception e) {
                 e.printStackTrace();
                 holder.iv_mood.setVisibility(View.GONE);
             }
 
         /*location*/
-//        if (TextUtils.isEmpty(wall.getLoc_name())) {
-//            holder.at.setVisibility(View.GONE);
-//        } else {
-//            holder.at.setVisibility(View.VISIBLE);
-//            holder.tvLocation.setText(wall.getLoc_name());
-//        }
+            //        if (TextUtils.isEmpty(wall.getLoc_name())) {
+            //            holder.at.setVisibility(View.GONE);
+            //        } else {
+            //            holder.at.setVisibility(View.VISIBLE);
+            //            holder.tvLocation.setText(wall.getLoc_name());
+            //        }
 
             holder.tvAgreeCount.setText(wall.getLove_count());
             holder.tvCommentCount.setText(wall.getComment_count());
 
 
-            if (MainActivity.getUser().getUser_id().equals(wall.getUser_id())) {
+            if(MainActivity.getUser().getUser_id().equals(wall.getUser_id())) {
                 holder.btn_del.setVisibility(View.VISIBLE);
             } else {
                 holder.btn_del.setVisibility(View.GONE);
             }
 
-            if (TextUtils.isEmpty(wall.getLove_id())) {
+            if(TextUtils.isEmpty(wall.getLove_id())) {
                 holder.ibAgree.setImageResource(R.drawable.love_normal);
             } else {
                 holder.ibAgree.setImageResource(R.drawable.love_press);
@@ -195,7 +204,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public VHItem(View itemView) {
             super(itemView);
-//            civ_comment_owner_head = (CircularNetworkImage) itemView.findViewById(R.id.civ_comment_owner_head);
+            //            civ_comment_owner_head = (CircularNetworkImage) itemView.findViewById(R.id.civ_comment_owner_head);
             tv_comment_content = (TextView) itemView.findViewById(R.id.tv_comment_content);
             tv_comment_owner_name = (TextView) itemView.findViewById(R.id.tv_comment_owner_name);
             comment_date = (TextView) itemView.findViewById(R.id.comment_date);
@@ -212,11 +221,11 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public void onClick(View v) {
             int position = getAdapterPosition() - 1;
             WallCommentEntity commentEntity = data.get(position);
-            switch (v.getId()) {
+            switch(v.getId()) {
                 case R.id.iv_agree:
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());
-                    if (TextUtils.isEmpty(commentEntity.getLove_id())) {
+                    if(TextUtils.isEmpty(commentEntity.getLove_id())) {
                         iv_agree.setImageResource(R.drawable.agree_press);
                         commentEntity.setLove_id(MainActivity.getUser().getUser_id());
                         tv_agree_count.setText(count + 1 + "");
@@ -226,7 +235,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         tv_agree_count.setText(count - 1 + "");
                     }
                     //判断是否已经有进行中的判断
-                    if (!runningList.contains(position)) {
+                    if(!runningList.contains(position)) {
                         runningList.add(position);
                         check(position);
                     }
@@ -234,8 +243,8 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 case R.id.btn_comment_del:
                     WallCommentEntity comment = data.get(position);
                     //自己发的或event creator 可以删除
-                    if (mCommentActionListener != null) {
-                        if (MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
+                    if(mCommentActionListener != null) {
+                        if(MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
                             mCommentActionListener.doDelete(comment.getComment_id());
                         }
                     }
@@ -254,8 +263,8 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 long startTime = System.currentTimeMillis();//点击时间
                 long nowTime = System.currentTimeMillis();
                 //缓冲时间为1000
-                while (nowTime - startTime < 1000) {
-                    if (newClick) {
+                while(nowTime - startTime < 1000) {
+                    if(newClick) {
                         startTime = System.currentTimeMillis();
                         newClick = false;
                     }
@@ -263,11 +272,11 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
                 try {
                     runningList.remove(position);
-                } catch (Exception e) {
+                } catch(Exception e) {
                 }
                 final WallCommentEntity commentEntity = data.get(position);
-                if (mCommentActionListener != null) {
-                    if (TextUtils.isEmpty(commentEntity.getLove_id())) {
+                if(mCommentActionListener != null) {
+                    if(TextUtils.isEmpty(commentEntity.getLove_id())) {
                         mCommentActionListener.doLove(commentEntity, false);
                     } else {
                         mCommentActionListener.doLove(commentEntity, true);
@@ -294,12 +303,38 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     class VHHeader extends RecyclerView.ViewHolder implements View.OnClickListener {
         CircularNetworkImage nivHead;
         TextView tvContent;
+        /**
+         * @总人数显示
+         */
+        TextView tvMember;
+        /**
+         * @总分组显示
+         */
+        TextView tvGroup;
+        /**
+         * 时间
+         */
         TextView tvDate;
+        /**
+         * 用户名
+         */
         TextView tvUserName;
         View llWallsImage;
+        /**
+         * 分享的网络图片显示控件
+         */
         NetworkImageView imWallsImages;
+        /**
+         * 图片数量统计显示
+         */
         TextView tvPhotoCount;
+        /**
+         *
+         */
         TextView tvAgreeCount;
+        /**
+         * 评论总数显示
+         */
         TextView tvCommentCount;
         ImageButton ibAgree;
         ImageButton ibComment;
@@ -312,6 +347,8 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             nivHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
             tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
             tvContent = (TextView) itemView.findViewById(R.id.tv_wall_content);
+            tvMember = (TextView) itemView.findViewById(R.id.tv_wall_member);
+            tvGroup = (TextView) itemView.findViewById(R.id.tv_wall_group);
             tvDate = (TextView) itemView.findViewById(R.id.push_date);
             llWallsImage = itemView.findViewById(R.id.ll_walls_image);
             imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);
@@ -324,20 +361,22 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             iv_mood = (ImageView) itemView.findViewById(R.id.iv_mood);
 
             ibAgree.setOnClickListener(this);
-//            ibComment.setOnClickListener(this);
+            //            ibComment.setOnClickListener(this);
             btn_del.setOnClickListener(this);
             imWallsImages.setOnClickListener(this);
+            tvMember.setOnClickListener(this);
+            tvGroup.setOnClickListener(this);
         }
 
         boolean loving = false;
 
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
+            switch(v.getId()) {
                 case R.id.iv_love:
                     newClick = true;
                     int count = Integer.valueOf(tvAgreeCount.getText().toString());
-                    if (TextUtils.isEmpty(wall.getLove_id())) {
+                    if(TextUtils.isEmpty(wall.getLove_id())) {
                         tvAgreeCount.setText(count + 1 + "");
                         ibAgree.setImageResource(R.drawable.love_press);
                         wall.setLove_id(MainActivity.getUser().getUser_id());
@@ -357,13 +396,23 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                     break;
                 case R.id.iv_walls_images:
-                    if (mViewClickListener != null) {
+                    if(mViewClickListener != null) {
                         mViewClickListener.showOriginalPic(wall.getContent_id());
                     }
                     break;
                 case R.id.btn_del:
-                    if (mViewClickListener != null) {
+                    if(mViewClickListener != null) {
                         mViewClickListener.remove(wall.getContent_group_id());
+                    }
+                    break;
+                case R.id.tv_wall_member:
+                    if(mViewClickListener != null){
+                        mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
+                    }
+                    break;
+                case R.id.tv_wall_group:
+                    if(mViewClickListener != null) {
+                        mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
                     }
                     break;
             }
@@ -375,7 +424,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private void check() {
 
             // 判断传进来的Context对象是否为Activity
-            if(mContext instanceof Activity){
+            if(mContext instanceof Activity) {
                 Log.i("WallCommentAdapter", "onResult setResult");
                 // 数据有修改设置result 为 Activity.RESULT_OK
                 ((Activity) mContext).setResult(Activity.RESULT_OK);
@@ -393,10 +442,10 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     try {
                         loving = false;
-                    } catch (Exception e) {
+                    } catch(Exception e) {
                     }
 
-                    if (TextUtils.isEmpty(wall.getLove_id())) {
+                    if(TextUtils.isEmpty(wall.getLove_id())) {
                         doLove(wall, false);
                     } else {
                         doLove(wall, true);
@@ -449,28 +498,22 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-        @Override
-        public int getItemViewType(int position) {
-            if (isPositionHeader(position))
-                return TYPE_HEADER;
+    @Override
+    public int getItemViewType(int position) {
+        if(isPositionHeader(position))
+            return TYPE_HEADER;
 
-            return TYPE_ITEM;
-        }
-
-        private boolean isPositionHeader(int position) {
-            return position == 0;
-        }
-
-        public ViewClickListener mViewClickListener;
-
-        public void setPicClickListener(ViewClickListener viewClickListener) {
-            mViewClickListener = viewClickListener;
-        }
-
-        public interface ViewClickListener {
-            public void showOriginalPic(final String content_id);
-
-            public void remove(final String content_group_id);
-        }
-
+        return TYPE_ITEM;
     }
+
+    private boolean isPositionHeader(int position) {
+        return position == 0;
+    }
+
+    public ViewClickListener mViewClickListener;
+
+    public void setPicClickListener(ViewClickListener viewClickListener) {
+        mViewClickListener = viewClickListener;
+    }
+
+}

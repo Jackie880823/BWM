@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -84,6 +83,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private RecyclerView rvList;
     private EventEntity event;
     private EditText et_comment;
+    //发送按钮
     private LinearLayout btn_submit;
     //    private TextView btn_submit;
     int colorIntentSelected;
