@@ -30,7 +30,6 @@ import com.madx.bwm.widget.DatePicker;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.TimePicker;
 
-import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,7 +63,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private String title;
     private String content;
-    private String lacation;
+    private String location;
     private Long date;
 
     public List<UserEntity> members_data = new ArrayList();
@@ -163,7 +162,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //        Log.i("bindData2View====================================="," ");
         title = SharedPreferencesUtils.getParam(getParentActivity(), "title", "").toString();
         content = SharedPreferencesUtils.getParam(getParentActivity(),"content","").toString();
-        lacation = SharedPreferencesUtils.getParam(getParentActivity(),"location","").toString();
+        location = SharedPreferencesUtils.getParam(getParentActivity(),"location","").toString();
         date = (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
 
         setText();
@@ -249,8 +248,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             event_desc.setText(content);
 
         }
-        if(!TextUtils.isEmpty(lacation)){
-            position_name.setText(lacation);
+        if(!TextUtils.isEmpty(location)){
+            position_name.setText(location);
 
         }
         if(date!=null && date!=0L){
@@ -268,11 +267,17 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void reomveSP(){
-        File file = new File("/data/data/"+getParentActivity().getPackageName().toString()+"/shared_prefs","EventNew_date.xml");
-        if (file.exists()){
-            file.delete();
-//            Toast.makeText(getParentActivity(), "删除成功", Toast.LENGTH_LONG).show();
-        }
+//        File file = new File("/data/data/"+getParentActivity().getPackageName().toString()+"/shared_prefs","EventNew_date.xml");
+//        if (file.exists()){
+//            file.delete();
+////            Toast.makeText(getParentActivity(), "删除成功", Toast.LENGTH_LONG).show();
+//        }
+        SharedPreferencesUtils.removeParam(getParentActivity(),"title","");
+        SharedPreferencesUtils.removeParam(getParentActivity(),"content","");
+        SharedPreferencesUtils.removeParam(getParentActivity(),"location","");
+        SharedPreferencesUtils.removeParam(getParentActivity(),"date",0L);
+
+
     }
 
     @Override
