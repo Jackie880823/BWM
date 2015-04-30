@@ -90,7 +90,8 @@ public class Constant {
     public static String API_CONTACT_US = API_SERVER+"/bondwithme/index.php/api/contactUs";
     public static String API_SETTING_CONFIG = API_SERVER+"/bondwithme/index.php/api/setting/%s";
     public static String API_SHARE2FRIEND = API_SERVER+"/bondwithme/index.php/api/shareToFriend";
-    public static String API_BONDALERT_LIST = API_SERVER+"/bondwithme/index.php/api/bondAlertList";
+//    public static String API_BONDALERT_LIST = API_SERVER+"/bondwithme/index.php/api/bondAlertList";
+    public static String API_BONDALERT_LIST = API_SERVER+"/bondwithme/index.php/api/bondAlertList/%S/module/miss";
     public static String API_BONDALERT_NEWS = API_SERVER+"/bondwithme/index.php/api/bondAlertList/%s/module/other";
     public static String API_BONDALERT_EVENT = API_SERVER+"/bondwithme/index.php/api/bondAlertList/%S/module/event";
     public static String API_BONDALERT_RECOMMEND = API_SERVER+"/bondwithme/index.php/api/recommendMember/%s";
