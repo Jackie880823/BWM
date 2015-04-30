@@ -18,7 +18,6 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MissAdapter;
 import com.madx.bwm.entity.MissEntity;
-import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.MessageUtil;
 
 import java.util.ArrayList;
@@ -132,17 +131,12 @@ public class MissListActivity extends BaseActivity {
     public void requestData() {
 
 
-        Map<String, String> condition = new HashMap<>();
-        condition.put("user_id",MainActivity.getUser().getUser_id()+"");
-        condition.put("module","miss");
 
         Map<String, String> params = new HashMap<>();
-        params.put("condition", UrlUtil.mapToJsonstring(condition));
         params.put("start", ""+startIndex);
         params.put("limit",""+offSet);
 
-
-        new HttpTools(this).get(Constant.API_BONDALERT_LIST,params,new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_LIST, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
             @Override
             public void onStart() {
 
