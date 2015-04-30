@@ -28,12 +28,13 @@ android {
         debug {
             // No debug config
         }
-        release {
-            storeFile file("/Users/wing/Desktop/bwm.key")
-            storePassword KEYSTORE_PASSWORD
-            keyAlias "cn"
-            keyPassword KEY_PASSWORD
-        }
+//        release {
+//            storeFile file("/Users/wing/Desktop/bwm.key")
+//            storePassword KEYSTORE_PASSWORD
+//            keyAlias "cn"
+//            keyPassword KEY_PASSWORD
+//        }
+//
     }
     buildTypes {
 //        debug {
