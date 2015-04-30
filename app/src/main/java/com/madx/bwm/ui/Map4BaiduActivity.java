@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,12 +21,18 @@ import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.madx.bwm.R;
+import com.madx.bwm.util.MessageUtil;
 
 public class Map4BaiduActivity extends BaseActivity {
 
@@ -40,6 +49,7 @@ public class Map4BaiduActivity extends BaseActivity {
     /**记录当前位置*/
     private double mCurrentLantitude;
     private double mCurrentLongitude;
+    private GeoCoder mGeoCoder;
 
     @Override
     protected void initBottomBar() {
@@ -135,45 +145,74 @@ public class Map4BaiduActivity extends BaseActivity {
         mBaiduMap.setOnMapLongClickListener(new BaiduMap.OnMapLongClickListener() {
             public void onMapLongClick(LatLng point) {
                 MyLocationData.Builder dbl = new MyLocationData.Builder();
+                dbl.latitude(point.latitude);
+                dbl.longitude(point.longitude);
                 MyLocationData data = dbl.build();
-                point.toString();
-//                location.getAddrStr();
-                addMarker(point);
+
+//                MessageUtil.showMessage(Map4BaiduActivity.this, location.getAddrStr());
+
+                getLocationAddress(point);
+
             }
         });
     }
 
-    private void addMarker(LatLng latLng){
+    private void addMarker(LatLng latLng,String title){
         mBaiduMap.clear();
         BitmapDescriptor bd = BitmapDescriptorFactory
                 .fromResource(R.drawable.icon_map_target);
-        OverlayOptions ooA = new MarkerOptions().position(latLng).icon(bd);
+        OverlayOptions ooA = new MarkerOptions().position(latLng).icon(bd).title(title);
         mBaiduMap.addOverlay(ooA);
+
     }
 
+    private void getLocationAddress(final LatLng mLatLng){
+        //实例化一个地理编码查询对象
+        GeoCoder geoCoder = GeoCoder.newInstance();
+        //设置反地理编码位置坐标
+        ReverseGeoCodeOption op = new ReverseGeoCodeOption();
+        op.location(mLatLng);
+        //发起反地理编码请求(经纬度->地址信息)
+        geoCoder.reverseGeoCode(op);
+        geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
 
-//    private void getLocationAddress(){
-//        //实例化一个地理编码查询对象
-//        GeoCoder geoCoder = GeoCoder.newInstance();
-//        //设置反地理编码位置坐标
-//        ReverseGeoCodeOption op = new ReverseGeoCodeOption();
-//        op.location(latLng);
-//        //发起反地理编码请求(经纬度->地址信息)
-//        geoCoder.reverseGeoCode(op);
-//        geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
-//
-//            @Override
-//            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
-//                //获取点击的坐标地址
-//                address = arg0.getAddress();
-//                System.out.println("address="+address);
-//            }
-//
-//            @Override
-//            public void onGetGeoCodeResult(GeoCodeResult arg0) {
-//            }
-//        });
-//    }
+            // 反地理编码查询结果回调函数
+            @Override
+            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
+                Message message = mHandler.obtainMessage();
+                message.what = ADD_MARKER;
+                message.obj = arg0.getAddress();
+                Bundle bundle = new Bundle();
+                bundle.putDouble("latitude",mLatLng.latitude);
+                bundle.putDouble("longitude",mLatLng.longitude);
+                message.setData(bundle);
+                mHandler.sendMessage(message);
+            }
+            // 地理编码查询结果回调函数
+            @Override
+            public void onGetGeoCodeResult(GeoCodeResult arg0) {
+
+            }
+        });
+    }
+
+    private final static int ADD_MARKER = 10;
+    Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case ADD_MARKER:
+                    if(msg.obj!=null) {
+                        Bundle bundle = msg.getData();
+                        addMarker(new LatLng(bundle.getDouble("latitude",0),bundle.getDouble("longitude",0)), msg.obj.toString());
+                        MessageUtil.showMessage(Map4BaiduActivity.this, msg.obj.toString());
+                    }
+                    break;
+            }
+            return false;
+        }
+    });
+
 
     @Override
     public void requestData() {
@@ -400,6 +439,8 @@ public class Map4BaiduActivity extends BaseActivity {
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
             }
+
+            MessageUtil.showMessage(Map4BaiduActivity.this,location.getAddrStr());
 
         }
 
