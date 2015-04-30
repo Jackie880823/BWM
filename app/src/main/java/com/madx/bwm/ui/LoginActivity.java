@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -176,7 +175,7 @@ public class LoginActivity extends Activity {
 
             @Override
             public void onResult(String response) {
-                Log.i("","responseresponse====="+response);
+
             }
 
             @Override

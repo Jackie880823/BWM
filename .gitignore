@@ -10,7 +10,7 @@
 /**/*-report.txt
 app/out.map
 
-#*.idea
+*.idea
 # files for the dex VM
 *.dex
 # Java class files

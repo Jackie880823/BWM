@@ -13,10 +13,14 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.madx.bwm.R;
@@ -126,7 +130,50 @@ public class Map4BaiduActivity extends BaseActivity {
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
+
+
+        mBaiduMap.setOnMapLongClickListener(new BaiduMap.OnMapLongClickListener() {
+            public void onMapLongClick(LatLng point) {
+                MyLocationData.Builder dbl = new MyLocationData.Builder();
+                MyLocationData data = dbl.build();
+                point.toString();
+//                location.getAddrStr();
+                addMarker(point);
+            }
+        });
     }
+
+    private void addMarker(LatLng latLng){
+        mBaiduMap.clear();
+        BitmapDescriptor bd = BitmapDescriptorFactory
+                .fromResource(R.drawable.icon_map_target);
+        OverlayOptions ooA = new MarkerOptions().position(latLng).icon(bd);
+        mBaiduMap.addOverlay(ooA);
+    }
+
+
+//    private void getLocationAddress(){
+//        //实例化一个地理编码查询对象
+//        GeoCoder geoCoder = GeoCoder.newInstance();
+//        //设置反地理编码位置坐标
+//        ReverseGeoCodeOption op = new ReverseGeoCodeOption();
+//        op.location(latLng);
+//        //发起反地理编码请求(经纬度->地址信息)
+//        geoCoder.reverseGeoCode(op);
+//        geoCoder.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+//
+//            @Override
+//            public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
+//                //获取点击的坐标地址
+//                address = arg0.getAddress();
+//                System.out.println("address="+address);
+//            }
+//
+//            @Override
+//            public void onGetGeoCodeResult(GeoCodeResult arg0) {
+//            }
+//        });
+//    }
 
     @Override
     public void requestData() {
@@ -353,6 +400,7 @@ public class Map4BaiduActivity extends BaseActivity {
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
             }
+
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
