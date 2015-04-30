@@ -15,20 +15,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.ext.HttpCallback;
-import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.action.MessageAction;
 import com.madx.bwm.adapter.MessageViewPagerAdapter;
 import com.madx.bwm.entity.MsgEntity;
 import com.madx.bwm.util.FileUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -193,7 +186,7 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
         params.put("sticker_group_path", stickerFileName);
         params.put("sticker_name", stickerName);
         params.put("sticker_type", type);
-        messageChatActivity.messageAction.sendChatMessage(params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
+        messageChatActivity.messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
 
     }
 
