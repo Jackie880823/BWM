@@ -11,10 +11,12 @@ import com.madx.bwm.R;
 public class EventNewActivity extends BaseActivity {
 
 
+
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setImageResource(R.drawable.btn_done);
+        changeTitleColor(R.color.tab_color_press2);
 //        rightTextButton.setVisibility(View.VISIBLE);
     }
 
@@ -34,6 +36,18 @@ public class EventNewActivity extends BaseActivity {
         if(commandlistener!=null)
             commandlistener.execute(rightButton);
 //            commandlistener.execute(rightTextButton);
+
+    }
+    @Override
+    protected void titleLeftEvent() {
+        if(commandlistener!=null)
+            commandlistener.execute(leftButton);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        // TODO Auto-generated method stub
+        super.onWindowFocusChanged(hasFocus);
 
     }
 

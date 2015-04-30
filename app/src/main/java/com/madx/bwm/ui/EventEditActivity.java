@@ -18,6 +18,7 @@ public class EventEditActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setImageResource(R.drawable.btn_done);
+        changeTitleColor(R.color.tab_color_press2);
 //        rightButton.setVisibility(View.GONE);
 //        rightTextButton.setVisibility(View.VISIBLE);
 //        rightTextButton.setText(R.string.text_save);

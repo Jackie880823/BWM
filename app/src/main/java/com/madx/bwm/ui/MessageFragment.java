@@ -223,7 +223,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(getActivity(), ChatActivity.class);
+                            Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                             intent.putExtra("type", 1);
                             intent.putExtra("groupEntity", groupEntityList.get(position));
                             view.findViewById(R.id.tv_num).setVisibility(View.GONE);//服务器会消除。本地直接直接消除。

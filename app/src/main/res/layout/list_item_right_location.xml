@@ -5,7 +5,6 @@
     android:id="@+id/right_rl"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="left"
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 

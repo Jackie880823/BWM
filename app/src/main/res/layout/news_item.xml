@@ -28,7 +28,6 @@
         <TextView
             android:id="@+id/news_date"
             style="@style/text_light_default"
-            android:layout_marginTop="@dimen/default_view_margin"
              />
 
     </LinearLayout>

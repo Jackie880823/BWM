@@ -29,6 +29,7 @@ import com.madx.bwm.entity.PhotoEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.widget.CircularNetworkImage;
 
 import org.json.JSONException;
@@ -146,7 +147,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             @Override
             public void onClick(View v) {
                 if (data != null && data.size()>0) {
-                    Intent intent2 = new Intent(getActivity(), ChatActivity.class);
+                    Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
                     intent2.putExtra("type", 0);
                     intent2.putExtra("userEntity", userEntity);
                     startActivity(intent2);

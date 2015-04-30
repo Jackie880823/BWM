@@ -88,7 +88,7 @@ public class MemberActivity extends BaseActivity {
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
 
-        initAdapter();//为空
+        initAdapter();//为空 为什么要做这步？？？
 
         swipeRefreshLayout = getViewById(R.id.swipe_refresh_layout);
 
