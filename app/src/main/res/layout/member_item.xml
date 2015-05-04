@@ -52,22 +52,15 @@
                             android:layout_alignParentRight="true"
                             android:orientation="vertical">
                                 <TextView
-                                    android:id="@+id/added"
-                                    android:layout_height="wrap_content"
-                                    android:layout_width="wrap_content"
-                                    android:visibility="gone"
-                                    android:textSize="@dimen/text_medium_size"
-                                    android:textColor="@color/default_text_color_dark"
-                                    android:text="@string/text_added"/>
-                                <TextView
                                     android:id="@+id/add"
                                     style="@style/text_button_default"
-                                    android:visibility="visible"
+                                    android:visibility="gone"
                                     android:gravity="center"
                                     android:text="@string/text_add"
                                     android:background="@drawable/btn_member_add_bg"
                                     android:textColor="@color/default_text_color_while"
                                     android:textSize="@dimen/text_medium_size" />
+
                                 <TextView
                                     android:id="@+id/awaiting"
                                     style="@style/text_button_default"
@@ -78,6 +71,25 @@
                                     android:textColor="@color/default_text_color_while"
                                     android:textSize="@dimen/text_medium_size"
                                     android:text="@string/text_awaiting"/>
+
+                                <TextView
+                                    android:id="@+id/added"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:visibility="gone"
+                                    android:textSize="@dimen/text_medium_size"
+                                    android:textColor="@color/default_text_color_dark"
+                                    android:text="@string/text_added"/>
+
+                                <TextView
+                                    android:id="@+id/updated"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="wrap_content"
+                                    android:visibility="gone"
+                                    android:textSize="@dimen/text_medium_size"
+                                    android:textColor="@color/default_text_color_dark"
+                                    android:text="@string/text_updated"/>
+
                         </RelativeLayout>
                 </RelativeLayout>
         </RelativeLayout>

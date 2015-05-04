@@ -2,11 +2,11 @@
 <resources>
 
     <string name="app_name">BWM</string>
-    <string name="title_tab_wall">Wall</string>
-    <string name="title_tab_event">Event</string>
-    <string name="title_tab_chat">Message</string>
-    <string name="title_tab_more">More</string>
-    <string name="action_settings">Settings</string>
+    <string name="title_tab_wall">日记</string>
+    <string name="title_tab_event">事件</string>
+    <string name="title_tab_chat">对话</string>
+    <string name="title_tab_more">更多</string>
+    <string name="action_settings">设置</string>
     <string name="msg_google_service_not_found">No valid Google Play Services APK found</string>
 
     <string name="title_event_detail">Detail</string>
@@ -61,7 +61,6 @@
     <string name="text_not_going">Declined</string>
     <string name="text_add">Add</string>
     <string name="text_added">Added</string>
-    <string name="text_updated">Updated</string>
     <string name="text_awaiting">Awaiting</string>
     <string name="text_public">All Members</string>
     <string name="text_private">Private</string>
@@ -599,18 +598,15 @@
     <string name="text_choose_contact_information">Please select at least a contact</string>
 
 
-    <string name="text_invited_event">%s invited you to event.</string>
-    <string name="text_responded_event">%s responded for event.</string>
-    <string name="text_commented_event">%s commented on event.</string>
-    <string name="text_also_commented_event">%s also commented on event.</string>
-    <string name="text_updated_event">%s updated event.</string>
-    <string name="text_cancelled_event">%s cancelled event.</string>
-    <string name="text_love_comment_event">%s loved your comment in event.</string>
-    <string name="text_love_event">%s loved your event.</string>
+    <string name="text_invited_event">invited you to %s event.</string>
+    <string name="text_responded_event">responded for %s event.</string>
+    <string name="text_commented_event">commented on %s event.</string>
+    <string name="text_also_commented_event">also commented on %s event.</string>
+    <string name="text_updated_event">updated %s event.</string>
+    <string name="text_cancelled_event">cancelled %s event.</string>
+    <string name="text_love_comment_event">loved your comment in %s event.</string>
+    <string name="text_love_event">loved your %s event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
-
-
-
     <string name="text_photos">photos</string>
     <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" ">]]></string>
     <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
@@ -625,8 +621,6 @@
     <string name="some_hour_ago">%d hr ago</string>
     <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_activity_select_multiple_photos">SelectMultiplePhotosActivity</string>
-    <string name="title_select_photos">Select Photos</string>
 
     <!--end-->
 

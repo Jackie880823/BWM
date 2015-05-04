@@ -3,6 +3,7 @@ package com.madx.bwm.util;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -17,7 +18,11 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.madx.bwm.http.PicturesCacheUtil;
 
@@ -31,6 +36,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class LocalImageLoader {
+
+	private static final String TAG = LocalImageLoader.class.getSimpleName();
+
     /**max upload file size*/
     private static final int maxSize = 200;
 	private LocalImageLoader() {
@@ -650,5 +658,47 @@ public class LocalImageLoader {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
                 bitmap.getHeight(), matrix, true);
+	}
+
+
+	/**
+	 * 通过图片UR获取本地图片的略缩图
+	 * @param uri   图片URI
+	 * @return 返回所需要的图片
+	 */
+	public static Bitmap getMiniThumbnailBitmap(Context context, Uri uri, int columnWidthHeight) {
+
+
+		Cursor c = context.getContentResolver().query(uri, null, null, null, null);
+
+		Log.i(TAG, "uri: " + uri);
+
+		String miniThumbanilUri = null;
+		if (c != null) {
+			c.moveToFirst();
+			Cursor cursor = MediaStore.Images.Thumbnails.queryMiniThumbnail(
+					context.getContentResolver(), c.getLong(c.getColumnIndex(MediaStore.Images.Thumbnails._ID)),
+					MediaStore.Images.Thumbnails.MINI_KIND,
+					null);
+			if (cursor != null && cursor.getCount() > 0) {
+				cursor.moveToFirst();//**EDIT**
+				miniThumbanilUri = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
+
+				cursor.close();
+			}
+
+			c.close();
+		}
+
+		Log.i(TAG, "base Degree==========" + LocalImageLoader.readPictureDegree(uri.getPath()));
+
+		if (TextUtils.isEmpty(miniThumbanilUri)) {
+
+			return LocalImageLoader.rotaingImageView(LocalImageLoader.readPictureDegree(uri.getPath()),
+					ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(context, uri)), columnWidthHeight, columnWidthHeight));
+		} else {
+			return LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbanilUri).getPath());
+
+		}
 	}
 }
