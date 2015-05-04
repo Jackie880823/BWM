@@ -233,7 +233,10 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
             }
         });
-
+        if (itemClickListener != null ) {
+//            Log.i("itemClickListener=======================2", "");
+            itemClickListener.topItemClick(data,birthdayEvents);
+        }
 
     }
 
@@ -311,6 +314,17 @@ public class EventFragment extends BaseFragment<MainActivity> {
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
+    }
+    public ItemClickListener itemClickListener;
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public interface ItemClickListener {
+        void topItemClick(List<EventEntity> data, List<BirthdayEntity> birthdayEvents);
+
+
     }
 
 }
