@@ -69,9 +69,11 @@ public class SelectPhotosActivity extends BaseActivity {
      */
     @Override
     protected void titleRightEvent() {
-        Intent intent = new Intent();
-        intent.putParcelableArrayListExtra(IMAGES_STR, (ArrayList<? extends Parcelable>) mSelectedImages);
-        setResult(RESULT_OK, intent);
+        if(mSelectedImages != null && mSelectedImages.size() > 0) {
+            Intent intent = new Intent();
+            intent.putParcelableArrayListExtra(IMAGES_STR, (ArrayList<? extends Parcelable>) mSelectedImages);
+            setResult(RESULT_OK, intent);
+        }
         finish();
     }
 

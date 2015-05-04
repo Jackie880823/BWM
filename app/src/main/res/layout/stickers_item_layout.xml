@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/stick_item_relative"
+    >
+
+    <ImageView
+        android:id="@+id/stick_item_imageView"
+        android:layout_width="@dimen/_40dp"
+        android:layout_height="@dimen/_40dp"
+        android:layout_margin="@dimen/_5dp"
+        android:layout_centerInParent="true" />
+</RelativeLayout>

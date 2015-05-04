@@ -559,7 +559,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         params.put("page", "1");
         params.put("start", "0");
         params.put("view_user", MainActivity.getUser().getUser_id());
-        String url = UrlUtil.generateUrl(Constant.API_GET_MESSAGE, params);
+        String url = UrlUtil.generateUrl(Constant.API_MESSAGE_POST_TEXT, params);
 
         new HttpTools(ChatActivity.this).get(url, null, new HttpCallback() {
             @Override
@@ -646,7 +646,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         params.put("group_id", groupId);
         params.put("page", "1");
         params.put("start", startIndex + "");
-        String url = UrlUtil.generateUrl(Constant.API_GET_MESSAGE, params);
+        String url = UrlUtil.generateUrl(Constant.API_MESSAGE_POST_TEXT, params);
 
         new HttpTools(ChatActivity.this).get(url, null, new HttpCallback() {
             @Override
@@ -842,7 +842,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         params.put("file", file);
         params.put("photo_fullsize", "1");
 
-        new HttpTools(ChatActivity.this).upload(Constant.API_MESSAGE_POST_PNG, params, new HttpCallback() {
+        new HttpTools(ChatActivity.this).upload(Constant.API_MESSAGE_POST_TEXT, params, new HttpCallback() {
             @Override
             public void onStart() {
                 Log.i("", "11response==========");
@@ -1331,7 +1331,7 @@ public class ChatActivity extends BaseActivity implements View.OnClickListener{
         params.put("page", "1");
         params.put("start", "0");
         params.put("view_user", MainActivity.getUser().getUser_id());
-        String url = UrlUtil.generateUrl(Constant.API_GET_MESSAGE, params);
+        String url = UrlUtil.generateUrl(Constant.API_MESSAGE_POST_TEXT, params);
 
 
         new HttpTools(ChatActivity.this).get(url, null, new HttpCallback() {

@@ -29,8 +29,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
-import com.madx.bwm.adapter.MessageGroupAdapter;
 import com.madx.bwm.adapter.MessageGridViewAdapter;
+import com.madx.bwm.adapter.MessageGroupAdapter;
 import com.madx.bwm.adapter.MessageViewPagerAdapter;
 import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
@@ -96,7 +96,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> {
                 public void onItemClick(AdapterView<?> arg0, View arg1,
                                         int arg2, long arg3) {
                     arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);
-                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                     intent.putExtra("type", 0);
                     intent.putExtra("userEntity", userEntityList.get(index * 8 + arg2));
                     startActivity(intent);
@@ -202,7 +202,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                 intent.putExtra("type", 1);
                 intent.putExtra("groupEntity", messageGroupAdapter.getmGroupList().get(position));
                 view.findViewById(R.id.tv_num).setVisibility(View.GONE);//服务器会消除。本地直接直接消除。
