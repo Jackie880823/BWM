@@ -24,6 +24,16 @@ public class SelectPhotosActivity extends BaseActivity {
         public void onChange(List<Uri> imagerUris) {
             mSelectedImages = imagerUris;
         }
+
+        @Override
+        public void onDrawerOpened() {
+            leftButton.setImageResource(R.drawable.back_normal);
+        }
+
+        @Override
+        public void onDrawerClose() {
+            leftButton.setImageResource(R.drawable.text_title_seletor);
+        }
     };
 
     /**
@@ -38,7 +48,7 @@ public class SelectPhotosActivity extends BaseActivity {
         super.initTitleBar();
         rightButton.setImageResource(R.drawable.btn_done);
         titleBar.setBackgroundColor(getResources().getColor(R.color.default_text_color_red));
-//        leftButton.setImageResource(R.drawable.text_title_seletor);
+        leftButton.setImageResource(R.drawable.text_title_seletor);
     }
 
     /**
@@ -51,12 +61,7 @@ public class SelectPhotosActivity extends BaseActivity {
 
     @Override
     protected void titleLeftEvent() {
-//        boolean statu = fragment.changeDrawer();
-//        if(statu) {
-//            leftButton.setImageResource(R.drawable.back_normal);
-//        } else {
-//            leftButton.setImageResource(R.drawable.text_title_seletor);
-//        }
+        fragment.changeDrawer();
     }
 
     /**

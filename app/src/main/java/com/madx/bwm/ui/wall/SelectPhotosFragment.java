@@ -16,12 +16,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CursorAdapter;
-import android.widget.GridView;
 import android.widget.ListView;
 
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.LocalImagesAdapter;
 import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.widget.CustomGridView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +43,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     /**
      * 显示图片的目录控件
      */
-    private GridView mGvShowPhotos;
+    private CustomGridView mGvShowPhotos;
     private DrawerLayout mDrawerLayout;
     private HashMap<String, ArrayList<Uri>> mImageUris = new HashMap<>();
     /**
@@ -101,6 +101,28 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         imagecursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy).loadInBackground();
         getLoaderManager().initLoader(loaderCounter++, null, this);
 
+        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                selectImageUirChangeListener.onDrawerOpened();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                selectImageUirChangeListener.onDrawerClose();
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @SuppressLint("ResourceAsColor")
             @Override
@@ -114,14 +136,15 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CheckBox check = (CheckBox) view.findViewById(R.id.select_image_right);
+                Log.i(TAG, "onItemClick " + check.isChecked());
                 if(check.isChecked()) {
                     check.setChecked(false);
                     mSelecedImageUris.remove(mImageUriList.get(position));
                 } else {
-                    if(mSelecedImageUris.size() < 10) {
+//                    if(mSelecedImageUris.size() < 10) {
                         check.setChecked(true);
                         mSelecedImageUris.add(mImageUriList.get(position));
-                    }
+//                    }
                 }
 
                 if(selectImageUirChangeListener != null) {
@@ -205,6 +228,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
                 mGvShowPhotos.setAdapter(localImagesAdapter);
                 localImagesAdapter.setColumnWidthHeight(mGvShowPhotos.getColumnWidth());
             } else {
+                localImagesAdapter.setColumnWidthHeight(mGvShowPhotos.getColumnWidth());
                 localImagesAdapter.notifyDataSetChanged();
             }
         } else {
@@ -286,6 +310,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
     public interface SelectImageUirChangeListener {
         public void onChange(List<Uri> imagerUris);
+        public void onDrawerOpened();
+        public void onDrawerClose();
     }
 
 }

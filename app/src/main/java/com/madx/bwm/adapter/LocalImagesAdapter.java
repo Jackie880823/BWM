@@ -112,9 +112,6 @@ public class LocalImagesAdapter extends BaseAdapter {
             convertView.setTag(holder);
         }
         holder = (HolderView) convertView.getTag();
-        if(columnWidthHeight == 0) {
-            columnWidthHeight = parent.getHeight();
-        }
         holder.iv.setImageBitmap(LocalImageLoader.getMiniThumbnailBitmap(mContext, mDatas.get(position), columnWidthHeight));
 
         if(mSelectImages != null && mSelectImages.contains(mDatas.get(position))) {

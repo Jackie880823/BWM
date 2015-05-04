@@ -11,14 +11,14 @@
 
 
 
-        <GridView
+        <com.madx.bwm.widget.CustomGridView
             android:id="@+id/gv_select_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:horizontalSpacing="2dp"
             android:numColumns="3"
-            android:stretchMode="columnWidth"
-            android:gravity="center"
-            android:scrollbars="none"/>
+            android:scrollbars="none"
+            android:verticalSpacing="2dp"/>
 
         <!-- The navigation drawer -->
         <ListView
