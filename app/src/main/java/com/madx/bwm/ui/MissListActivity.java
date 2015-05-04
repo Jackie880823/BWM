@@ -6,9 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
@@ -18,7 +21,11 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MissAdapter;
 import com.madx.bwm.entity.MissEntity;
+import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.MessageUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -198,6 +205,7 @@ public class MissListActivity extends BaseActivity {
         adapter.setItemClickListener(new MissAdapter.ItemClickListener() {
             @Override
             public void topItemClick(String member_id) {
+                updateMiss(member_id);
                 Intent intent = new Intent(MissListActivity.this, FamilyProfileActivity.class);
                 intent.putExtra("member_id", member_id);
                 startActivity(intent);
@@ -212,5 +220,59 @@ public class MissListActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+
+    public void updateMiss(String member_id)
+    {
+        RequestInfo requestInfo = new RequestInfo();
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("member_id", member_id);
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+        requestInfo.url = String.format(Constant.API_UPDATE_MISS, MainActivity.getUser().getUser_id());
+
+        new HttpTools(this).put(requestInfo, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String string) {
+                //服务器不管成功与否都返回200  没法判断准确情况
+                Log.d("", "update----" + string);
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("200".equals(jsonObject.getString("response_status_code")))
+                    {
+                        Toast.makeText(MissListActivity.this, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    MessageUtil.showMessage(MissListActivity.this, R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(MissListActivity.this, R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 }
