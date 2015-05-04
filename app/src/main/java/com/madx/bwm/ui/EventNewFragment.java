@@ -74,6 +74,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     Calendar mCalendar;
     Calendar calendar;
 
+    String members;
+    String Spmemeber_date;
+
     public static EventNewFragment newInstance(String... params) {
 
         return createInstance(new EventNewFragment());
@@ -164,6 +167,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         content = SharedPreferencesUtils.getParam(getParentActivity(),"content","").toString();
         location = SharedPreferencesUtils.getParam(getParentActivity(),"location","").toString();
         date = (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
+        Spmemeber_date = SharedPreferencesUtils.getParam(getParentActivity(),"members_data","").toString();
 
         setText();
         latitude = TextUtils.isEmpty(mEevent.getLoc_latitude()) ? -1000 : Double.valueOf(mEevent.getLoc_latitude());
@@ -257,6 +261,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
 
         }
+        if(!TextUtils.isEmpty(Spmemeber_date)){
+//            members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+            members_data = gson.fromJson(Spmemeber_date, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+//             = Spmemeber_date;
+            changeData();
+        }
 
     }
     private void cleanText(){
@@ -276,7 +286,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         SharedPreferencesUtils.removeParam(getParentActivity(),"content","");
         SharedPreferencesUtils.removeParam(getParentActivity(),"location","");
         SharedPreferencesUtils.removeParam(getParentActivity(),"date",0L);
-
+        SharedPreferencesUtils.removeParam(getParentActivity(),"members_data","");
 
     }
 
