@@ -17,6 +17,8 @@ import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MyFragmentPagerAdapter;
+import com.madx.bwm.entity.BirthdayEntity;
+import com.madx.bwm.entity.EventEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.ui.wall.WallNewActivity;
@@ -57,6 +59,11 @@ public class MainActivity extends BaseActivity {
     private RelativeLayout ivTab3;
     private RelativeLayout ivTab4;
     List<Fragment> fragments;
+
+    EventFragment eventFragment;
+    EventStartupFragment eventStartupFragment;
+    private boolean iseventdate;
+
 
     //以下为暂定全局变量
     private static boolean hasUpdate;
@@ -220,7 +227,14 @@ public class MainActivity extends BaseActivity {
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
         fragments.add(WallFragment.newInstance());
-        fragments.add(EventFragment.newInstance());
+        eventFragment = EventFragment.newInstance();
+        eventStartupFragment = EventStartupFragment.newInstance();
+        if(!isEventFragmentDate()){
+            fragments.add(eventFragment);
+        }
+        else {
+            fragments.add(eventStartupFragment);
+        }
 //        fragments.add(MessageFragment.newInstance());
         fragments.add(MessageMainFragment.newInstance());
         fragments.add(MoreFragment.newInstance());
@@ -239,6 +253,23 @@ public class MainActivity extends BaseActivity {
 
         leaveGroup = getIntent().getStringExtra("leaveGroup");
 
+    }
+
+    private boolean isEventFragmentDate(){
+
+        eventFragment.setItemClickListener(new EventFragment.ItemClickListener() {
+            @Override
+            public void topItemClick(List<EventEntity> data, List<BirthdayEntity> birthdayEvents) {
+                if(data.size()>=0 && birthdayEvents.size()>=0){
+//                    Log.i("eventfragmentdate======================", "");
+                    iseventdate = true;
+                }else {
+                    iseventdate = false;
+                }
+
+            }
+        });
+        return iseventdate;
     }
 
     String leaveGroup;
