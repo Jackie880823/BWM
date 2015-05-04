@@ -22,11 +22,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.StringRequest;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,6 +34,7 @@ import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
+import com.madx.bwm.util.SharedPreferencesUtils;
 import com.madx.bwm.widget.CircularNetworkImage;
 
 import org.json.JSONException;
@@ -110,6 +108,7 @@ public class SelectPeopleActivity extends BaseActivity {
         Gson gson = new Gson();
 
         intent.putExtra("members_data", gson.toJson(inList));
+        SharedPreferencesUtils.setParam(getApplication(), "members_data", gson.toJson(inList));
 
         setResult(RESULT_OK, intent);
 

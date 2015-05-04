@@ -10,5 +10,5 @@
         android:layout_width="@dimen/_40dp"
         android:layout_height="@dimen/_40dp"
         android:layout_margin="@dimen/_5dp"
-        android:background="@drawable/shishi6" />
+        android:layout_centerInParent="true" />
 </RelativeLayout>
