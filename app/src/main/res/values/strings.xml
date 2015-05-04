@@ -7,6 +7,7 @@
     <string name="title_tab_chat">Message</string>
     <string name="title_tab_more">More</string>
     <string name="action_settings">Settings</string>
+
     <string name="msg_google_service_not_found">No valid Google Play Services APK found</string>
 
     <string name="title_event_detail">Detail</string>
@@ -37,19 +38,16 @@
     <string name="msg_date_not_befort_now">Date must be later than now</string>
     <string name="text_tips_title">Action</string>
     <string name="text_more">More</string>
-
     <string name="alert_text_title_null">Title cannot be empty</string>
     <string name="alert_text_desc_null">Content cannot be empty</string>
     <string name="alert_text_location_null">Location cannot be empty</string>
     <string name="alert_text_date_null">Please choose an event date</string>
-
     <string name="title_message_myfamily">My Family</string>
     <string name="title_message_creategroup">Create Group</string>
     <string name="alert_comment_null">Comment can not be empty!</string>
     <string name="alert_comment_del">Delete this comment?</string>
     <string name="alert_wall_del">Delete this post?</string>
     <string name="alert_wall_del_photo">Delete this photo?</string>
-
 
     <string name="text_word">Text</string>
     <string name="text_picture">Picture</string>
@@ -68,26 +66,23 @@
     <string name="text_like_desc">Like</string>
     <string name="text_ask_delete">Confirm remove member?</string>
     <string name="text_add_members_successed">Add members successfully</string>
-
     <string name="text_comments">Comments</string>
 
     <string name="text_wall_content_at_member_desc">\@%1$smembers</string>
     <string name="text_wall_content_at_group_desc">\@%1$sgroups</string>
     <string name="text_today">today</string>
 
-    <string name="msg_no_map_app">Please install Google Map to proceed</string>
+    <string name="msg_no_map_app">No Map app founded</string>
 
 
     <!-- xxhdip 取google免费最大图片 -->
     <string name="google_map_pic_size">640x640</string>
 
-
-    <!--<string name="text_location">地理位置</string>-->
-    <!--<string name="text_tag">do what</string>-->
-    <!--<string name="text_face">图标</string>-->
+    <!-- <string name="text_location">地理位置</string> -->
+    <!-- <string name="text_tag">do what</string> -->
+    <!-- <string name="text_face">图标</string> -->
     <string name="text_send">Send</string>
     <string name="text_map">Map</string>
-
     <string name="title_pick_date_time">Event date &amp; time</string>
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>
@@ -97,7 +92,6 @@
     <!-- date time picker -->
     <string name="np_number_picker_increment_button">Increment</string>
     <string name="np_number_picker_decrement_button">Decrement</string>
-
 
     <!-- about -->
     <string name="text_about_title">About Us</string>
@@ -126,37 +120,33 @@
     <string name="text_recommend">Recommended</string>
     <string name="text_big_day">Big Day</string>
     <string name="title_bond_alert">Bond Alert</string>
-
     <string name="hint_mail">Your email</string>
     <string name="hint_subject">Select a subject</string>
     <string name="hint_mail_content">Text here</string>
     <string name="hint_search_name">Search by name</string>
     <string name="alert_text_mail_info_not_complete">Please fill up all the fields</string>
-    <!--<array name="mail_subjects" >-->
-        <!--<item>General Inquiry</item>-->
-        <!--<item>Suggestion &amp; Feedback</item>-->
-        <!--<item>Report a Problem</item>-->
-    <!--</array>-->
+    <!-- <array name="mail_subjects" > -->
+    <!-- <item>General Inquiry</item> -->
+    <!-- <item>Suggestion &amp; Feedback</item> -->
+    <!-- <item>Report a Problem</item> -->
+    <!-- </array> -->
     <string name="mail_subject_1">General Inquiry</string>
     <string name="mail_subject_2">Suggestion &amp; Feedback</string>
     <string name="mail_subject_3">Report a Problem</string>
-
-    <string name="text_sending">\t Sending &#8230;</string>
-    <string name="text_waiting">\t Waiting &#8230;</string>
-    <string name="text_uploading">\t Uploading &#8230;</string>
-    <string name="text_loading">\t Loading &#8230;</string>
+    <string name="text_sending">\t Sending …</string>
+    <string name="text_waiting">\t Waiting …</string>
+    <string name="text_uploading">\t Uploading …</string>
+    <string name="text_loading">\t Loading …</string>
     <string name="text_search_contact">Search name here</string>
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">No contact selected</string>
     <string name="text_item_resend">Resend</string>
     <string name="text_item_remove">Remove</string>
-
     <string name="text_setting_1_title">Birthday Alert Reminder</string>
     <string name="text_setting_1_1">1 Day earlier</string>
     <string name="text_setting_1_2">3 Days earlier</string>
     <string name="text_setting_1_3">1 Week earlier</string>
     <string name="text_setting_1_4">1 Month earlier</string>
-
     <string name="text_setting_2_title">Auto-Accept</string>
     <string name="text_setting_2_1">All relationship</string>
     <string name="text_setting_2_2">Parent relationship</string>
@@ -164,8 +154,6 @@
     <string name="text_setting_2_4">Sibling relationship</string>
     <string name="text_setting_2_5">Children relationship</string>
     <string name="text_setting_2_6">Others relationship</string>
-
-
 
     <!-- chirstopher -->
     <string-array name="CountryCodes">
@@ -377,8 +365,6 @@
         <item>263,ZW</item>
     </string-array>
 
-
-
     <!-- Login 界面 -->
     <string name="text_sign_up">SIGN UP</string>
     <string name="text_login_warning">Ignore country code if signing in via Username</string>
@@ -419,8 +405,8 @@
     <string name="text_download">Downloading...</string>
     <string name="text_awaiting_for_approval">Awaiting for approval from member.</string>
 
-    <!--xml-->
-    <!--xml-->
+    <!-- xml -->
+    <!-- xml -->
 
     <string name="text_via_contact">via Contact</string>
     <string name="text_ID_name">via BondWithMe ID / Account</string>
@@ -487,19 +473,17 @@
     <string name="text_path_relationship"><![CDATA[Path & Relationship]]></string>
     <string name="text_send_message">Send Message</string>
 
-    <!--xml-->
-    <!--xml-->
+    <!-- xml -->
+    <!-- xml -->
 
 
-    <!--begin-->
-    <!--Bond Alert 界面 -->
+    <!-- begin -->
+    <!-- Bond Alert 界面 -->
     <string name="text_wall_posted_to_wall">posted to wall</string>
     <string name="text_wall_tagged_you_in_post">tagged you in a post</string>
     <string name="text_wall_commented_on_your_post">commented on your post</string>
     <string name="text_wall_loved_your_comment">love your comment</string>
     <string name="text_wall_loved_your_post">love your post</string>
-
-
     <string name="title_add_new_members">Add New Members</string>
     <string name="title_album_gallery">Album gallery</string>
     <string name="title_country_code">Country Code</string>
@@ -511,8 +495,6 @@
     <string name="title_me">Me</string>
     <string name="title_my_profile">My Profile</string>
     <string name="title_path_relationship">Path &amp; Relationship</string>
-
-
     <string name="text_no_album_gallery">No album gallery</string>
     <string name="text_success">Action successful</string>
     <string name="text_error">Action failed</string>
@@ -565,7 +547,6 @@
     <string name="text_input_name_gender">Please input your name and gender.</string>
     <string name="text_fail_update_information">Fail to update your information. try again.</string>
     <string name="text_success_update_information">Successfully updated your information.</string>
-
     <string name="text_update_proPicFail">Action failed</string>
     <string name="text_updateProPicSuccess">Action Successful</string>
     <string name="text_wrong_data">Birthday must greater than today</string>
@@ -599,6 +580,7 @@
     <string name="text_choose_contact_information">Please select at least a contact</string>
 
 
+
     <string name="text_invited_event">%s invited you to event.</string>
     <string name="text_responded_event">%s responded for event.</string>
     <string name="text_commented_event">%s commented on event.</string>
@@ -618,7 +600,6 @@
     <string name="photo_position_no_arrow">%1$d/%2$d</string>
 
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="yesterday_ago">1 day ago</string>
     <string name="just_now">Just now</string>
     <string name="some_minite_ago">%d min ago</string>
@@ -628,7 +609,8 @@
     <string name="title_activity_select_multiple_photos">SelectMultiplePhotosActivity</string>
     <string name="title_select_photos">Select Photos</string>
 
-    <!--end-->
+    <!-- end -->
 
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

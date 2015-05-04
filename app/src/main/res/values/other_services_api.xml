@@ -1,0 +1,14 @@
+
+<!--
+    除google外的所有api的key,配置
+-->
+<resources>
+
+    <!--map -->
+
+    <string name="baidu_maps_key" templateMergeStrategy="preserve">zi6XivPq4UbRqyw6cdG0E6y4</string>
+    <string name="baidu_maps_key_debug" templateMergeStrategy="preserve">kGa48ap6I8sm4oQwnQAs3NUM</string>
+
+
+    <!-- push -->
+</resources>

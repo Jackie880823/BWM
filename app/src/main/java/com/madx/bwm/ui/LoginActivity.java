@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -161,6 +160,7 @@ public class LoginActivity extends Activity {
         params.put("deviceUuid",AppInfoUtil.getDeviceUUID(this));
         params.put("devicePlatform","android");
         params.put("lang",Locale.getDefault().getCountry());
+        params.put("appType","native");
         requestInfo.params = params;
         new HttpTools(LoginActivity.this).post(requestInfo,new HttpCallback() {
             @Override
@@ -175,7 +175,7 @@ public class LoginActivity extends Activity {
 
             @Override
             public void onResult(String response) {
-                Log.i("","responseresponse====="+response);
+
             }
 
             @Override

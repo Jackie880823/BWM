@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.support.v4.content.IntentCompat;
 
 import com.android.volley.ext.tools.HttpTools;
+import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
 import com.madx.bwm.entity.AppTokenEntity;
 import com.madx.bwm.entity.UserEntity;
@@ -32,7 +33,8 @@ public class App extends Application {
         super.onCreate();
         appContext = this;
         HttpTools.init(this);
-
+        /**baidu map*/
+        SDKInitializer.initialize(getApplicationContext());
     }
 
     public static Context getAppContext(){

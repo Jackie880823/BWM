@@ -601,7 +601,7 @@ public class GroupSettingActivity extends BaseActivity {
         tvMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(GroupSettingActivity.this, ChatActivity.class);
+                Intent intent2 = new Intent(GroupSettingActivity.this, MessageChatActivity.class);
                 intent2.putExtra("userEntity", userList.get(position));
                 intent2.putExtra("type", 0);
                 startActivity(intent2);
@@ -764,7 +764,7 @@ public class GroupSettingActivity extends BaseActivity {
         tvMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(GroupSettingActivity.this, ChatActivity.class);
+                Intent intent2 = new Intent(GroupSettingActivity.this, MessageChatActivity.class);
                 intent2.putExtra("userEntity", userList.get(position));
                 intent2.putExtra("type", 0);
                 startActivity(intent2);
