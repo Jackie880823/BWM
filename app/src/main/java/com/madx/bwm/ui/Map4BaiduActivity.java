@@ -1,6 +1,8 @@
 package com.madx.bwm.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -8,8 +10,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -18,6 +30,7 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -26,15 +39,23 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
+import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
+import com.baidu.mapapi.search.sug.SuggestionResult;
+import com.baidu.mapapi.search.sug.SuggestionSearch;
+import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.madx.bwm.R;
-import com.madx.bwm.util.MessageUtil;
 
-public class Map4BaiduActivity extends BaseActivity {
+public class Map4BaiduActivity extends BaseActivity implements
+        OnGetPoiSearchResultListener, OnGetSuggestionResultListener {
 
     private MapView mMapView; // Might be null if Google Play services APK is not available.
     private LocationManager lm = null;
@@ -46,10 +67,14 @@ public class Map4BaiduActivity extends BaseActivity {
     private BaiduMap mBaiduMap;
     public MyLocationListener myListener = new MyLocationListener();
     boolean isFirstLoc = true;// 是否首次定位
-    /**记录当前位置*/
+    /**
+     * 记录当前位置
+     */
     private double mCurrentLantitude;
     private double mCurrentLongitude;
     private GeoCoder mGeoCoder;
+    private InfoWindow markerInfoWindow;
+    private SearchView search_view;
 
     @Override
     protected void initBottomBar() {
@@ -65,6 +90,9 @@ public class Map4BaiduActivity extends BaseActivity {
     protected void onDestroy() {
         // 退出时销毁定位
         mLocClient.stop();
+
+
+        mSuggestionSearch.destroy();
         // 关闭定位图层
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
@@ -88,8 +116,8 @@ public class Map4BaiduActivity extends BaseActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        if(event.getKeyCode()==KeyEvent.KEYCODE_BACK) {
-            if(event.getAction()==KeyEvent.ACTION_DOWN) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 setResult();
             }
         }
@@ -99,8 +127,8 @@ public class Map4BaiduActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-//        setResult();
-//        finish();
+        setResult();
+        finish();
     }
 
     private void setResult() {
@@ -129,6 +157,9 @@ public class Map4BaiduActivity extends BaseActivity {
 
         mMapView = (MapView) findViewById(R.id.map);
         mBaiduMap = mMapView.getMap();
+        //定义缩放比例
+        MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(16);
+        mBaiduMap.setMapStatus(msu);
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
         // 定位初始化
@@ -144,29 +175,105 @@ public class Map4BaiduActivity extends BaseActivity {
 
         mBaiduMap.setOnMapLongClickListener(new BaiduMap.OnMapLongClickListener() {
             public void onMapLongClick(LatLng point) {
-                MyLocationData.Builder dbl = new MyLocationData.Builder();
-                dbl.latitude(point.latitude);
-                dbl.longitude(point.longitude);
-                MyLocationData data = dbl.build();
-
-//                MessageUtil.showMessage(Map4BaiduActivity.this, location.getAddrStr());
+//                MyLocationData.Builder dbl = new MyLocationData.Builder();
+//                dbl.latitude(point.latitude);
+//                dbl.longitude(point.longitude);
+//                MyLocationData data = dbl.build();
 
                 getLocationAddress(point);
 
             }
         });
+
+
+
+        search_view = getViewById(R.id.search_view);
+        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String queryText) {
+                if (search_view != null) {
+                    // 得到输入管理对象
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
+                        imm.hideSoftInputFromWindow(search_view.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
+                    }
+                    search_view.clearFocus(); // 不获取焦点
+                }
+                return true;
+
+            }
+
+            @Override
+            public boolean onQueryTextChange(String queryText) {
+//                String selection = ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY + " LIKE '%" + queryText + "%' " + " OR "
+//                        + ContactsContract.RawContacts.SORT_KEY_PRIMARY + " LIKE '%" + queryText + "%' ";
+//                cursor = ContactUtil.getContacts(TellAFriendsActivity.this, null, selection, null, null);
+//                adapter.swapCursor(cursor);
+
+                //TODO
+                mSuggestionSearch = SuggestionSearch.newInstance();
+                mSuggestionSearch.setOnGetSuggestionResultListener(Map4BaiduActivity.this);
+                if (!TextUtils.isEmpty(queryText)) {
+                    /**
+                     * 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
+                     */
+                    mSuggestionSearch
+                            .requestSuggestion((new SuggestionSearchOption())
+                                    .keyword(queryText).city(city));
+                }
+                return true;
+            }
+        });
+
+        findViewById(R.id.my_location).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                center2myLoc();
+            }
+        });
+    }
+    private SuggestionSearch mSuggestionSearch = null;
+    private String city = "";
+
+    private void addMarker(LatLng latLng, String title) {
+        if (marker == null) {
+            BitmapDescriptor bd = BitmapDescriptorFactory
+                    .fromResource(R.drawable.icon_map_target);
+            OverlayOptions ooA = new MarkerOptions().position(latLng).icon(bd).title(title);
+            marker = (Marker) mBaiduMap.addOverlay(ooA);
+        }
+
+        if (marker != null) {
+            marker.setTitle(title);
+            marker.setPosition(latLng);
+            markerInfoWindow = addInfoWindow(latLng, title);
+        }
+
     }
 
-    private void addMarker(LatLng latLng,String title){
-        mBaiduMap.clear();
-        BitmapDescriptor bd = BitmapDescriptorFactory
-                .fromResource(R.drawable.icon_map_target);
-        OverlayOptions ooA = new MarkerOptions().position(latLng).icon(bd).title(title);
-        mBaiduMap.addOverlay(ooA);
+    int indexCount;
 
+    private InfoWindow addInfoWindow(LatLng latLng, String text) {
+
+        if (mBaiduMap != null && mBaiduMap.getProjection() != null) {
+            TextView textView = new TextView(this);
+            textView.setText(text);
+            textView.setBackgroundResource(R.drawable.popup);
+            textView.setGravity(Gravity.CENTER);
+
+            Point p = mBaiduMap.getProjection().toScreenLocation(latLng);
+            p.y -= 47;
+            LatLng llInfo = mBaiduMap.getProjection().fromScreenLocation(p);
+            InfoWindow infoWindow = new InfoWindow(textView, llInfo, indexCount++);
+            mBaiduMap.showInfoWindow(infoWindow);
+
+            return infoWindow;
+        }
+        return null;
     }
 
-    private void getLocationAddress(final LatLng mLatLng){
+    private void getLocationAddress(final LatLng mLatLng) {
         //实例化一个地理编码查询对象
         GeoCoder geoCoder = GeoCoder.newInstance();
         //设置反地理编码位置坐标
@@ -183,11 +290,12 @@ public class Map4BaiduActivity extends BaseActivity {
                 message.what = ADD_MARKER;
                 message.obj = arg0.getAddress();
                 Bundle bundle = new Bundle();
-                bundle.putDouble("latitude",mLatLng.latitude);
-                bundle.putDouble("longitude",mLatLng.longitude);
+                bundle.putDouble("latitude", mLatLng.latitude);
+                bundle.putDouble("longitude", mLatLng.longitude);
                 message.setData(bundle);
                 mHandler.sendMessage(message);
             }
+
             // 地理编码查询结果回调函数
             @Override
             public void onGetGeoCodeResult(GeoCodeResult arg0) {
@@ -200,12 +308,11 @@ public class Map4BaiduActivity extends BaseActivity {
     Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case ADD_MARKER:
-                    if(msg.obj!=null) {
+                    if (msg.obj != null) {
                         Bundle bundle = msg.getData();
-                        addMarker(new LatLng(bundle.getDouble("latitude",0),bundle.getDouble("longitude",0)), msg.obj.toString());
-                        MessageUtil.showMessage(Map4BaiduActivity.this, msg.obj.toString());
+                        addMarker(new LatLng(bundle.getDouble("latitude", 0), bundle.getDouble("longitude", 0)), msg.obj.toString());
                     }
                     break;
             }
@@ -232,10 +339,121 @@ public class Map4BaiduActivity extends BaseActivity {
     }
 
 
-
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public void onGetPoiResult(PoiResult result) {
+        //TODO
+        //POI搜索结果（范围检索、城市POI检索、周边检索）
+        if (result == null
+                || result.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {
+            return;
+        }
+
+//        if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+//            mBaiduMap.clear();
+//            PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
+//            mBaiduMap.setOnMarkerClickListener(overlay);
+//            overlay.setData(result);
+//            overlay.addToMap();
+//            overlay.zoomToSpan();
+//            return;
+//        }
+//        if (result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {
+//
+//            // 当输入关键字在本市没有找到，但在其他城市找到时，返回包含该关键字信息的城市列表
+//            String strInfo = "在";
+//            for (CityInfo cityInfo : result.getSuggestCityList()) {
+//                strInfo += cityInfo.city;
+//                strInfo += ",";
+//            }
+//            strInfo += "找到结果";
+//            Toast.makeText(PoiSearchDemo.this, strInfo, Toast.LENGTH_LONG)
+//                    .show();
+//        }
+    }
+
+    PopupWindow popupwindow;
+    private LinearLayoutManager llm;
+    public void initmPopupWindowView() {
+        // // 获取自定义布局文件pop.xml的视图
+        View customView = getLayoutInflater().inflate(R.layout.feeling_list, null, false);
+        // 创建PopupWindow实例,200,150分别是宽度和高度
+        popupwindow = new PopupWindow(customView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        // 设置动画效果 [R.style.AnimationFade 是自己事先定义好的]
+
+        popupwindow.setAnimationStyle(R.style.PopupAnimation);
+        // 自定义view添加触摸事件
+        customView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //                if (popupwindow != null && popupwindow.isShowing()) {
+                //                    popupwindow.dismiss();
+                //                    popupwindow = null;
+                //                }
+
+                return false;
+            }
+        });
+
+//        search_view.setSuggestionsAdapter();
+
+//        RecyclerView feeling_icons = (RecyclerView) customView.findViewById(R.id.feeling_icons);
+//        llm = new LinearLayoutManager(this);
+//        feeling_icons.setLayoutManager(llm);
+//
+//        feelingAdapter = new FeelingAdapter(getActivity(), filePaths);
+//        feelingAdapter.setCheckIndex(checkItemIndex);
+//        feeling_icons.setAdapter(feelingAdapter);
+//
+//        feelingAdapter.setItemCheckListener(this);
+
+    }
+
+    public void onGetPoiDetailResult(PoiDetailResult result) {
+        //TODO
+        if (result.error != SearchResult.ERRORNO.NO_ERROR) {
+            Toast.makeText(this, "抱歉，未找到结果", Toast.LENGTH_SHORT)
+                    .show();
+        } else {
+            Toast.makeText(this, result.getName() + ": " + result.getAddress(), Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    @Override
+    public void onGetSuggestionResult(SuggestionResult res) {
+        //TODO 刷新建议列表
+        if (res == null || res.getAllSuggestions() == null) {
+            return;
+        }
+//        if(){
+//            search_view.setSuggestionsAdapter();
+//        }
+//        for (SuggestionResult.SuggestionInfo info : res.getAllSuggestions()) {
+//            if (info.key != null){}
+////                sugAdapter.add(info.key);
+//        }
+//        sugAdapter.notifyDataSetChanged();
+    }
+
+    private void array2CursorAdapter(){
+        String[] columnNames = {"_id","text"};
+//        MatrixCursor cursor = new MatrixCursor(columnNames);
+//        String[] array = getResources().getStringArray(R.array.allStrings); //if strings are in resources
+//        String[] temp = new String[2];
+//        int id = 0;
+//        for(String item : array){
+//            temp[0] = Integer.toString(id++);
+//            temp[1] = item;
+//            cursor.addRow(temp);
+//        }
+//        String[] from = {"text"};
+//        int[] to = {R.id.name_entry};
+//        busStopCursorAdapter = new SimpleCursorAdapter(this, R.layout.map_search_address_item, cursor, from, to, );
     }
 
 
@@ -408,12 +626,7 @@ public class Map4BaiduActivity extends BaseActivity {
 //        setUpMapIfNeeded(true, latitude, longitude);
 //    }
 //
-//    private void addMarker(LatLng latLng) {
-//        mMapView.clear();
-//        marker = mMapView.addMarker(new MarkerOptions().position(latLng));
-//        new Thread(new GetAddressRunnable(latLng.latitude, latLng.longitude)).start();
-//    }
-//
+
     /**
      * 定位SDK监听函数
      */
@@ -432,15 +645,17 @@ public class Map4BaiduActivity extends BaseActivity {
             mBaiduMap.setMyLocationData(locData);
             mCurrentLantitude = location.getLatitude();
             mCurrentLongitude = location.getLongitude();
+            LatLng ll = new LatLng(location.getLatitude(),
+                    location.getLongitude());
             if (isFirstLoc) {
                 isFirstLoc = false;
-                LatLng ll = new LatLng(location.getLatitude(),
-                        location.getLongitude());
-                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-                mBaiduMap.animateMapStatus(u);
+                center2myLoc();
+//                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+//                mBaiduMap.animateMapStatus(u);
+
             }
 
-            MessageUtil.showMessage(Map4BaiduActivity.this,location.getAddrStr());
+            city = location.getCity()==null?"":location.getCity()   ;
 
         }
 
@@ -452,8 +667,7 @@ public class Map4BaiduActivity extends BaseActivity {
      * 地图移动到我的位置,此处可以重新发定位请求，然后定位；
      * 直接拿最近一次经纬度，如果长时间没有定位成功，可能会显示效果不好
      */
-    private void center2myLoc()
-    {
+    private void center2myLoc() {
         LatLng ll = new LatLng(mCurrentLantitude, mCurrentLongitude);
         MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
         mBaiduMap.animateMapStatus(u);

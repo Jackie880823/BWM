@@ -8,6 +8,7 @@ public class Constant {
     /**
      * for app
      */
+
     public static final String PREFERRENCE_NAME = "bwm_preferences";
     public static final String GCM_PREF_REG_ID = "registration_id";
     public static final String GCM_PREF_APP_VERSION = "appVersion";

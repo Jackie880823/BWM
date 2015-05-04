@@ -1,20 +1,67 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <include
-        android:id="@+id/fragment_main_top"
-        layout="@layout/title_view"
+    android:id="@+id/fragment_main_top"
+    layout="@layout/title_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true" />
+
+
+    <!--<android.support.v7.widget.SearchView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/search_view"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:queryHint="@string/hint_search_name"-->
+    <!--android:layout_below="@+id/fragment_main_top"-->
+    <!--android:iconifiedByDefault="false"-->
+    <!--/>-->
+
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
+        android:id="@+id/bbbar"
+        android:layout_below="@+id/fragment_main_top"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding"
+        android:orientation="horizontal">
 
+        <!--
+        iconifiedByDefault="false" //false:searchview初始即是展开的，true:searchview初始即是关闭的,仅显示一个放大镜
 
+        queryHint="@string/title_search_hint" :默认显示的提示文字
+
+           以上属性都可以在代码中通过方法：setIconifiedByDefault()和setQueryHint()直接设置
+
+        -->
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/my_location"
+            android:iconifiedByDefault="true"
+            android:inputType="textFilter"
+            android:queryHint="@string/hint_search_name" />
+
+        <Button
+            android:id="@+id/my_location"
+            android:layout_width="@dimen/default_small_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:background="@drawable/ic_launcher"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
 
 
     <com.baidu.mapapi.map.MapView
-        android:layout_below="@+id/fragment_main_top"
+        android:layout_below="@+id/bbbar"
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
