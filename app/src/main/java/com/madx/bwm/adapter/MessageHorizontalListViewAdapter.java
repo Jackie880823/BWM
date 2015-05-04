@@ -35,6 +35,15 @@ public class MessageHorizontalListViewAdapter extends BaseAdapter {
         this.mContext = mContext;
     }
 
+    public void addData(List<String> stickerList){
+        for(String string:stickerList){
+            if(!list.contains(string)){
+                list.add(string);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return list.size();
