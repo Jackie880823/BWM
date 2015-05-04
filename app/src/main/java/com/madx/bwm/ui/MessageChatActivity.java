@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -74,7 +75,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
      * 文本输入框
      */
     private EditText etChat;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    public SwipeRefreshLayout swipeRefreshLayout;
     private TextView cameraTextView;//相机
     private TextView albumTextView;//相册
     private TextView locationTextView;//地图
@@ -83,6 +84,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private TextView sendTextView;//发送按钮
     private LinearLayout expandFunctionLinear;//加号
     private LinearLayout stickerLinear;//表情库
+
+    public LinearLayout empty_message;
+    private MessageHorizontalListViewAdapter horizontalListViewAdapter;
 
     List<String> stickerNameList = new ArrayList<>();
     private HorizontalListView horizontalListView;
@@ -144,7 +148,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case GET_LATEST_MESSAGE:
                     progressDialog.dismiss();
                     List<MsgEntity> msgList = (List<MsgEntity>) msg.obj;
-                    if (null != msgList) {
+                    if (null == msgList || msgList.size() == 0) {
+                        empty_message.setVisibility(View.VISIBLE);
+                        swipeRefreshLayout.setVisibility(View.GONE);
+                    } else {
+                        empty_message.setVisibility(View.GONE);
+                        swipeRefreshLayout.setVisibility(View.VISIBLE);
                         messageChatAdapter.addData(msgList);
                     }
                     break;
@@ -211,7 +220,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     break;
             }
         }
@@ -292,7 +300,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 Context.INPUT_METHOD_SERVICE);
         llm = new LinearLayoutManager(MessageChatActivity.this);
         recyclerView.setLayoutManager(llm);
-        messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView);
+        messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
     }
@@ -312,7 +320,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         contactTextView = getViewById(R.id.contact_tv);
         horizontalListView = getViewById(R.id.sticker_listView);
         sendTextView = getViewById(R.id.btn_send);
+        empty_message = getViewById(R.id.no_message_data_linear);
+
         initViewPager();
+        new StickerAsyncTask().execute();
+
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -355,12 +368,26 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         }
     }
 
+    class StickerAsyncTask extends AsyncTask<Void,Integer,Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            addStickerList();
+            addImageList();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            horizontalListViewAdapter.addData(sticker_List_Id);
+            setTabSelection(0);
+        }
+    }
     private void initViewPager() {
-        addStickerList();
-        addImageList();
-        final MessageHorizontalListViewAdapter horizontalListViewAdapter = new MessageHorizontalListViewAdapter(sticker_List_Id, mContext);
+        horizontalListViewAdapter = new MessageHorizontalListViewAdapter(sticker_List_Id, mContext);
         horizontalListView.setAdapter(horizontalListViewAdapter);
-        setTabSelection(0);
+
         horizontalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -375,12 +402,17 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         String selectStickerName = stickerNameList.get(index);
         // 开启一个Fragment事务
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
-        if (fragment != null) {
-            transaction.remove(fragment);
-        }
         fragment = new MessageStickerFragment(selectStickerName, MessageChatActivity.this, groupId);
-        transaction.add(R.id.message_frame, fragment).commit();
+        transaction.replace(R.id.message_frame, fragment);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.addToBackStack(null);
+        transaction.commit();
+        // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
+//        if (fragment != null) {
+//            transaction.remove(fragment);
+//        }
+//        fragment = new MessageStickerFragment(selectStickerName, MessageChatActivity.this, groupId);
+//        transaction.add(R.id.message_frame, fragment).commit();
     }
 
     @Override
@@ -396,23 +428,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (stickerLinear.getVisibility() == View.VISIBLE) {
-                                    stickerLinear.setVisibility(View.GONE);
-                                    stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
-                                }
-                                expandFunctionLinear.setVisibility(View.VISIBLE);
-                                expandFunctionButton.setImageResource(R.drawable.chat_plus_press);
-                                recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+                                showExpandFunctionView();
                             }
                         }, 50);
                     } else {
-                        if (stickerLinear.getVisibility() == View.VISIBLE) {
-                            stickerLinear.setVisibility(View.GONE);
-                            stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
-                        }
-                        expandFunctionLinear.setVisibility(View.VISIBLE);
-                        expandFunctionButton.setImageResource(R.drawable.chat_plus_press);
-                        recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+                        showExpandFunctionView();
                     }
                 }
 
@@ -421,28 +441,17 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 if (stickerLinear.getVisibility() == View.VISIBLE) {
                     hideAllViewState();
                 } else {
+
                     if (imm.isActive()) {
                         imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
-                                    expandFunctionLinear.setVisibility(View.GONE);
-                                    expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
-                                }
-                                stickerLinear.setVisibility(View.VISIBLE);
-                                stickerImageButton.setImageResource(R.drawable.chat_expression_press);
-                                recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+                                showStickerView();
                             }
                         }, 50);
                     } else {
-                        if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
-                            expandFunctionLinear.setVisibility(View.GONE);
-                            expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
-                        }
-                        stickerLinear.setVisibility(View.VISIBLE);
-                        stickerImageButton.setImageResource(R.drawable.chat_expression_press);
-                        recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+                        showStickerView();
                     }
                 }
                 break;
@@ -469,6 +478,26 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 sendTextMessage();
                 break;
         }
+    }
+
+    private void showExpandFunctionView() {
+        if (stickerLinear.getVisibility() == View.VISIBLE) {
+            stickerLinear.setVisibility(View.GONE);
+            stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
+        }
+        expandFunctionLinear.setVisibility(View.VISIBLE);
+        expandFunctionButton.setImageResource(R.drawable.chat_plus_press);
+        recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+    }
+
+    private void showStickerView() {
+        if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
+            expandFunctionLinear.setVisibility(View.GONE);
+            expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
+        }
+        stickerLinear.setVisibility(View.VISIBLE);
+        stickerImageButton.setImageResource(R.drawable.chat_expression_press);
+        recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
     }
 
     private void hideAllViewState() {
@@ -523,7 +552,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             params.put("text_description", content);
             params.put("group_ind_type", "");
             params.put("content_group_public", "0");
-            messageAction.sendChatMessage(params, Constant.API_MESSAGE_POST_TEXT, SEND_TEXT_MESSAGE);
+            messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, SEND_TEXT_MESSAGE);
         }
     }
 
@@ -661,7 +690,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         params.put("multiple", "0");
         params.put("file", file);
         params.put("photo_fullsize", "1");
-        messageAction.uploadFileMessage(params, Constant.API_MESSAGE_POST_TEXT, SEND_PIC_MESSAGE);
+        messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_MESSAGE_POST_TEXT, SEND_PIC_MESSAGE);
     }
 
     /**
@@ -676,7 +705,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         params.put("start", startIndex + "");
         params.put("view_user", MainActivity.getUser().getUser_id());
         String url = UrlUtil.generateUrl(Constant.API_MESSAGE_POST_TEXT, params);
-        messageAction.getChatMessage(null, url, msgIndex);
+        messageAction.doRequest(MessageAction.REQUEST_GET, null, url, msgIndex);
     }
 
     @Override

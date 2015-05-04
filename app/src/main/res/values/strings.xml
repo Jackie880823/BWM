@@ -606,6 +606,8 @@
     <string name="some_hour_ago">%d hr ago</string>
     <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_select_multiple_photos">SelectMultiplePhotosActivity</string>
+    <string name="title_select_photos">Select Photos</string>
 
     <!-- end -->
 

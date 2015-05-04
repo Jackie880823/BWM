@@ -3,6 +3,7 @@ package com.madx.bwm.ui;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,20 +16,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.ext.HttpCallback;
-import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.action.MessageAction;
 import com.madx.bwm.adapter.MessageViewPagerAdapter;
 import com.madx.bwm.entity.MsgEntity;
 import com.madx.bwm.util.FileUtil;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.madx.bwm.widget.NoScrollGridView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,7 +33,7 @@ import java.util.List;
 public class MessageStickerFragment extends BaseFragment<MainActivity> {
     private String selectStickerName;
     private Context mContext;
-    private MessageViewPagerAdapter adapter;
+    private StickerViewPagerAdapter adapter;
     private ViewPager mPager;
     private int count;
     private int index = 0;
@@ -75,16 +70,46 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
         mPager = getViewById(R.id.viewpager);
         mNumLayout = getViewById(R.id.fragment_sticker_linear);
         if (null != selectStickerName && selectStickerName.indexOf(File.separator) != -1) {
-            stickerFileName = selectStickerName.substring(selectStickerName.lastIndexOf(File.separator)+1);
+            stickerFileName = selectStickerName.substring(selectStickerName.lastIndexOf(File.separator) + 1);
         }
         stickerPathList = getBitmapPathList();
         count = (stickerPathList.size() % SHOW_NUM) == 0 ? (stickerPathList.size() / SHOW_NUM) : (stickerPathList.size() / SHOW_NUM + 1);
-        List<GridView> mLists = init(stickerPathList);
-        adapter = new MessageViewPagerAdapter(mContext, mLists);
+        List<NoScrollGridView> mLists = init(stickerPathList);
+        adapter = new StickerViewPagerAdapter(mLists);
         mPager.setAdapter(adapter);
         setPage();
     }
 
+    class StickerViewPagerAdapter extends PagerAdapter {
+        private List<NoScrollGridView> mLists;
+
+        public StickerViewPagerAdapter(List<NoScrollGridView> array) {
+            this.mLists = array;
+        }
+
+        @Override
+        public int getCount() {
+            return mLists.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+
+            return arg0 == arg1;
+        }
+
+        @Override
+        public Object instantiateItem(View arg0, int arg1) {
+            ((ViewPager) arg0).addView(mLists.get(arg1));
+            return mLists.get(arg1);
+        }
+
+        @Override
+        public void destroyItem(View arg0, int arg1, Object arg2) {
+            ((ViewPager) arg0).removeView((View) arg2);
+        }
+
+    }
 
     private void setPage() {
         for (int i = 0; i < count; i++) {
@@ -96,7 +121,6 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
             }
             LinearLayout.LayoutParams mLayoutParams = new LinearLayout.LayoutParams(20, 20);
             mLayoutParams.leftMargin = 10;
-            mLayoutParams.topMargin = 10;
             mNumLayout.addView(tv, mLayoutParams);
         }
 
@@ -144,12 +168,12 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
         return filePaths;
     }
 
-    private List<GridView> init(List<String> pathList) {
+    private List<NoScrollGridView> init(List<String> pathList) {
 
-        List<GridView> mLists = new ArrayList<>();
-        GridView gv;
+        List<NoScrollGridView> mLists = new ArrayList<>();
+        NoScrollGridView gv;
         for (int i = 0; i < count; i++) {
-            gv = new GridView(mContext);
+            gv = new NoScrollGridView(mContext);
             gv.setAdapter(new StickerGridViewAdapter(mContext, pathList, i));
             gv.setGravity(Gravity.CENTER);
             gv.setClickable(true);
@@ -193,7 +217,7 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
         params.put("sticker_group_path", stickerFileName);
         params.put("sticker_name", stickerName);
         params.put("sticker_type", type);
-        messageChatActivity.messageAction.sendChatMessage(params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
+        messageChatActivity.messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
 
     }
 

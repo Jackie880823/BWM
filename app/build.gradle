@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 def releaseTime() {
-    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("GMT+8"))
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }
 
 android {
@@ -28,12 +28,13 @@ android {
         debug {
             // No debug config
         }
-        release {
-            storeFile file("/Users/wing/Desktop/bwm.key")
-            storePassword KEYSTORE_PASSWORD
-            keyAlias "cn"
-            keyPassword KEY_PASSWORD
-        }
+//        release {
+//            storeFile file("/Users/wing/Desktop/bwm.key")
+//            storePassword KEYSTORE_PASSWORD
+//            keyAlias "cn"
+//            keyPassword KEY_PASSWORD
+//        }
+//
     }
     buildTypes {
 //        debug {
