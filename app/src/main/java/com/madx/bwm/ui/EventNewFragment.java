@@ -411,7 +411,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void goLocationSetting() {
-        Intent intent = new Intent(getActivity(), MapsActivity.class);
+        //TODO 判断是用百度还是google
+//        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
+        Intent intent = new Intent(getActivity(), Map4BaiduActivity.class);
         //        intent.putExtra("has_location", position_name.getText().toString());
         if (!TextUtils.isEmpty(position_name.getText())) {
             intent.putExtra("location_name", position_name.getText().toString());

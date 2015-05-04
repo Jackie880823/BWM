@@ -37,7 +37,7 @@ import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
-import com.madx.bwm.ui.MapsActivity;
+import com.madx.bwm.ui.Map4BaiduActivity;
 import com.madx.bwm.ui.SelectPeopleActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
@@ -538,7 +538,8 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goLocationSetting() {
-        Intent intent = new Intent(getActivity(), MapsActivity.class);
+        Intent intent = new Intent(getActivity(), Map4BaiduActivity.class);
+//        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
         //        intent.putExtra("has_location", position_name.getText().toString());
         if(!TextUtils.isEmpty(location_desc.getText())) {
             intent.putExtra("location_name", location_desc.getText().toString());
@@ -554,6 +555,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         intent.putExtra("type", 0);
         startActivityForResult(intent, GET_MEMBERS);
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
