@@ -56,7 +56,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      * 目录列表
      */
     private String[] buckets;
-    private Cursor imagecursor;
+    private int curLoaderPosition = 0;
+    private Cursor imageCursor;
     private int loaderCounter = 1;
 
     private int residue;
@@ -101,7 +102,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         String[] columns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
 
         String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC";
-        imagecursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy).loadInBackground();
+        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy).loadInBackground();
         getLoaderManager().initLoader(loaderCounter++, null, this);
 
         mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -130,8 +131,14 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             @SuppressLint("ResourceAsColor")
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 关闭目录选择列表
                 mDrawerLayout.closeDrawer(mDrawerList);
-                loadLocalImageOrder(position);
+
+                if(curLoaderPosition != position){
+                    curLoaderPosition = position;
+                    // 加载选中目录下的图片
+                    loadLocalImageOrder(curLoaderPosition);
+                }
             }
         });
 
@@ -140,6 +147,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CheckBox check = (CheckBox) view.findViewById(R.id.select_image_right);
                 Log.i(TAG, "onItemClick " + check.isChecked());
+
                 Uri itemUri = mImageUriList.get(position);
                 if(check.isChecked()) {
                     check.setChecked(false);
@@ -199,15 +207,15 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      * This will load all Images on the phone.
      */
     private void loadPhoneImages() {
-        for(int i = 0; i < imagecursor.getCount(); i++) {
-            imagecursor.moveToPosition(i);
-            int index = imagecursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
-            int bucketColumnIndex = imagecursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-            String bucket = imagecursor.getString(bucketColumnIndex);
-            addToImageMap(bucket, Uri.parse("content://media/external/images/media/" + imagecursor.getInt(index)));
+        for(int i = 0; i < imageCursor.getCount(); i++) {
+            imageCursor.moveToPosition(i);
+            int index = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+            int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+            String bucket = imageCursor.getString(bucketColumnIndex);
+            addToImageMap(bucket, Uri.parse("content://media/external/images/media/" + imageCursor.getInt(index)));
 
         }
-        imagecursor.close();
+        imageCursor.close();
         buckets = setToOrderedStringArray(mImageUris.keySet());
         Log.d(TAG, "loadImages(), buckets.length: " + buckets.length);
     }
@@ -240,6 +248,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             } else {
                 localImagesAdapter.notifyDataSetChanged();
             }
+
+            mDrawerList.setSelection(index);
         } else {
             Log.i(TAG, "index out of buckets");
         }
@@ -295,7 +305,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         initBucketsAdapter();
         if(buckets.length > 0) {
             // 查找到了图片显示列表第一项的图片
-            loadLocalImageOrder(0);
+            loadLocalImageOrder(curLoaderPosition);
         }
     }
 
