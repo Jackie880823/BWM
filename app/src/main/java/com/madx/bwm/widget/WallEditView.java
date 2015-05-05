@@ -236,7 +236,7 @@ public class WallEditView extends EditText implements TextWatcher {
         tv.setTextSize(16);
         Log.i("","size==="+getResources().getDimensionPixelSize(R.dimen.text_small_size));
 //        tv.setTextSize(getResources().getDimensionPixelSize(R.dimen.text_small_size));
-//        clickableSpan(tv, App.getAppContext(),qqq);
+//        clickableSpan(tv, App.getContextInstance(),qqq);
         return tv;
     }
 
