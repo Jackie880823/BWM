@@ -51,11 +51,11 @@ public class ForgetPasswordActivity extends BaseActivity {
     Button btnNext;//跳转到下个界面设置新密码
 
     TextView tvContact;//点击后显示contact界面
-    LinearLayout llContact;//隐藏的弹窗
+    RelativeLayout llContact;//隐藏的弹窗
     String phoneString = "86700781"; //联系电话
     Button btnCall;//打电话
     Button btnCancle;//点击后隐藏contact界面
-    LinearLayout llBottom;//
+    RelativeLayout llBottom;//
 
     UserEntity userEntity = new UserEntity();
 
@@ -117,6 +117,7 @@ public class ForgetPasswordActivity extends BaseActivity {
 
     @Override
     public void initView() {
+//        setListenerToRootView();
 
         etUsername = getViewById(R.id.et_username);
 
@@ -129,6 +130,30 @@ public class ForgetPasswordActivity extends BaseActivity {
         tvPhone = getViewById(R.id.tv_phone_number);
 
         etVerifyCode = getViewById(R.id.et_verification);//输入验证码
+
+//        etVerifyCode.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//            }
+//        });
+
+//        etVerifyCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus == true)
+//                {
+//                    btnNext.setVisibility(View.GONE);
+//                }
+//                else
+//                {
+//                    btnNext.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
+
+
         btnRequest = getViewById(R.id.btn_send);//请求验证码
 
         btnNext = getViewById(R.id.btn_next);
@@ -151,6 +176,7 @@ public class ForgetPasswordActivity extends BaseActivity {
                 startActivityForResult(intent, 1);
             }
         });
+
 
         //申请验证码,username or code+phone
         btnRequest.setOnClickListener(new View.OnClickListener() {
@@ -300,16 +326,16 @@ public class ForgetPasswordActivity extends BaseActivity {
             }
         });
 
-        //打电话
-        btnCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction("android.intent.action.CALL");
-                intent.setData(Uri.parse("tel:" + phoneString));
-                startActivity(intent);
-            }
-        });
+//        //打电话
+//        btnCall.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent();
+//                intent.setAction("android.intent.action.CALL");
+//                intent.setData(Uri.parse("tel:" + phoneString));
+//                startActivity(intent);
+//            }
+//        });
     }
 
     //跳转到国家区号选择界面结束后调用
@@ -423,5 +449,46 @@ public class ForgetPasswordActivity extends BaseActivity {
             return   false;
         }
     }
+
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//
+//
+//        // Checks whether a hardware keyboard is available
+//        if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_YES) {
+//            Toast.makeText(this, "keyboard visible", Toast.LENGTH_SHORT).show();
+
+//
+//        } else if (newConfig.keyboardHidden == Configuration.KEYBOARDHIDDEN_NO) {
+//            btnNext.setVisibility(View.VISIBLE);
+//            Toast.makeText(this, "keyboard hidden", Toast.LENGTH_SHORT).show();
+//        }
+//    }
+
+//    boolean isOpened = false;
+//
+//    public void setListenerToRootView(){
+//        final View activityRootView = getWindow().getDecorView().findViewById(R.id.ll_content);
+//        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//
+//                int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
+//                if (heightDiff > 100 ) { // 99% of the time the height diff will be due to a keyboard.
+//                    Toast.makeText(getApplicationContext(), "Gotcha!!! softKeyboardup", Toast.LENGTH_SHORT).show();
+//                    if(isOpened == false){
+//                        btnNext.setVisibility(View.VISIBLE);
+//                        //Do two things, make the view top visible and the editText smaller
+//                    }
+//                    isOpened = true;
+//                }else if(isOpened == true){
+//                    Toast.makeText(getApplicationContext(), "softkeyborad Down!!!", Toast.LENGTH_SHORT).show();
+//                    btnNext.setVisibility(View.INVISIBLE);
+//                    isOpened = false;
+//                }
+//            }
+//        });
+//    }
 
 }

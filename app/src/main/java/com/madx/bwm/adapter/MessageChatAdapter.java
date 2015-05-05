@@ -52,6 +52,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     private List<MsgEntity> myList;
     private Context context;
     private RecyclerView recyclerView;
+    private MessageChatActivity messageChatActivity;
     private static final int FROM_ME_TYPE_TEXT = 1;
     private static final int FROM_ME_TYPE_PIC = 2;
     private static final int FROM_ME_TYPE_LOC = 3;
@@ -64,15 +65,22 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     private static final int FROM_OTHER_TYPE_GIF = 9;
     private static final int FROM_OTHER_TYPE_PNG = 10;
 
-    public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView) {
+    public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView,MessageChatActivity messageChatActivity) {
         this.context = context;
         this.myList = myList;
         this.recyclerView = recyclerView;
+        this.messageChatActivity=messageChatActivity;
     }
 
     public void addHistoryData(List<MsgEntity> list) {
+        List<MsgEntity> msgList=new ArrayList<>();
+        for(MsgEntity msgEntity:list){
+           if(!myList.contains(msgEntity)){
+               msgList.add(msgEntity);
+           }
+        }
         int listSize = list.size();
-        myList.addAll(0, list);
+        myList.addAll(0, msgList);
         notifyDataSetChanged();
         recyclerView.scrollToPosition(listSize);
     }
@@ -87,18 +95,15 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         if(null==list){
             return;
         }
-        for(MsgEntity msgEntity: list){
-            if(!myList.contains(msgEntity)){
-                myList.add(msgEntity);
-            }
-        }
-//        myList.clear();
-//        myList.addAll(list);
+        myList.clear();
+        myList.addAll(list);
         notifyDataSetChanged();
         recyclerView.scrollToPosition(getItemCount() - 1);
     }
 
     public void addMsgEntity(MsgEntity msgEntity) {
+        messageChatActivity.empty_message.setVisibility(View.GONE);
+        messageChatActivity.swipeRefreshLayout.setVisibility(View.VISIBLE);
         int listSize = myList.size();
         myList.add(msgEntity);
         notifyDataSetChanged();
