@@ -690,7 +690,7 @@ public class LocalImageLoader {
 			c.close();
 		}
 
-		Log.i(TAG, "base Degree==========" + LocalImageLoader.readPictureDegree(uri.getPath()));
+		Log.i(TAG, "miniThumbanilUri: " + miniThumbanilUri);
 
 		if (TextUtils.isEmpty(miniThumbanilUri)) {
 
@@ -698,7 +698,6 @@ public class LocalImageLoader {
 					ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(context, uri)), columnWidthHeight, columnWidthHeight));
 		} else {
 			return LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbanilUri).getPath());
-
 		}
 	}
 }

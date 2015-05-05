@@ -21,6 +21,7 @@ import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.widget.CustomGridView;
 
 import java.io.File;
@@ -46,6 +47,12 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      * 临时文件用户裁剪
      */
     public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp_";
+
+    public final static String RESIDUE = "residue";
+    /**
+     * 限制最多可选图片张数
+     */
+    public final static int MAX_SELECT = 10;
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
      */
@@ -159,11 +166,17 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
     @Override
     public void onClick(View v) {
+        int residue = MAX_SELECT - datas.size();
+        if(residue <= 0) {
+            MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), MAX_SELECT));
+            return;
+        }
         switch(v.getId()) {
             case R.id.ll_to_photo:
                 Intent intent = new Intent(getParentActivity(), SelectPhotosActivity.class);
-//                Intent intent = new Intent(Intent.ACTION_PICK, null);
+                //                Intent intent = new Intent(Intent.ACTION_PICK, null);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.putExtra(RESIDUE, residue);
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, REQUEST_HEAD_PHOTO);
                 break;
@@ -284,12 +297,12 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      */
     //	byte[] personHeadImage;
     private void addDataAndNofify(List<Bitmap> uries) {
-        if(uries != null) {
-            for(int i = 0; i < uries.size(); i++) {
+        if(uries != null && uries.size() > 0) {
+            int count = uries.size();
+            for(int i = 0; i < count; i++) {
                 Map<String, Bitmap> map = new HashMap<>();
                 map.put("pic_resId", uries.get(i));
                 datas.add(map);
-
             }
             adapter.notifyDataSetChanged();
         }
@@ -305,23 +318,23 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                 case REQUEST_HEAD_PHOTO:
                     if(data != null) {
                         List<Uri> pickUries = new ArrayList();
-//                        if(SDKUtil.IS_JB) {
-//                            ClipData clipData = data.getClipData();
-//                            if(clipData != null) {
-//                                int size = clipData.getItemCount();
-//                                for(int i = 0; i < size; i++) {
-//                                    Uri uri = clipData.getItemAt(i).getUri();
-//                                    pickUries.add(uri);
-//                                    Log.i(TAG, "uri: " + uri.toString());
-//                                }
-//                            } else {
-//                                Log.i(TAG, "uri: " + data.getData().toString());
-//                                pickUries.add(data.getData());
-//                            }
-//                        } else {
-//                            Log.i(TAG, "uri: " + data.getData().toString());
-//                            pickUries.add(data.getData());
-//                        }
+                        //                        if(SDKUtil.IS_JB) {
+                        //                            ClipData clipData = data.getClipData();
+                        //                            if(clipData != null) {
+                        //                                int size = clipData.getItemCount();
+                        //                                for(int i = 0; i < size; i++) {
+                        //                                    Uri uri = clipData.getItemAt(i).getUri();
+                        //                                    pickUries.add(uri);
+                        //                                    Log.i(TAG, "uri: " + uri.toString());
+                        //                                }
+                        //                            } else {
+                        //                                Log.i(TAG, "uri: " + data.getData().toString());
+                        //                                pickUries.add(data.getData());
+                        //                            }
+                        //                        } else {
+                        //                            Log.i(TAG, "uri: " + data.getData().toString());
+                        //                            pickUries.add(data.getData());
+                        //                        }
                         pickUries = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
                         addDataAndNofify(getMiniThumbnailUri(pickUries));
                         uris.addAll(pickUries);
@@ -329,6 +342,11 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                     break;
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
+                    int residue = MAX_SELECT - datas.size();
+                    if(residue <= 0) {
+                        MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), MAX_SELECT));
+                        return;
+                    }
                     //                    if (data != null) {
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(getActivity(), CACHE_PIC_NAME_TEMP + cache_count));
                     if(new File(uri.getPath()).exists()) {
@@ -389,7 +407,13 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
         List<Bitmap> miniThumbnailUris = new ArrayList<>();
         if(uris != null) {
-            for(int i = 0; i < uris.size(); i++) {
+            // 已经有图片和将要加载的图片的总和不能大于最大的限定数
+            if(datas.size() >= MAX_SELECT) {
+                // 已经达到最大选择图片数无需再加载
+                return null;
+            }
+            int count = uris.size() + datas.size() > MAX_SELECT ? MAX_SELECT - datas.size() : uris.size();
+            for(int i = 0; i < count; i++) {
                 if(columnWidthHeight == 0) {
                     columnWidthHeight = gvPictures.getColumnWidth();
                 }

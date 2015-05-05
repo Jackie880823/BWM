@@ -17,12 +17,16 @@ public class SelectPhotosActivity extends BaseActivity {
     public static final String IMAGES_STR = "images";
 
     private SelectPhotosFragment fragment;
-    private List<Uri> mSelectedImages;
+    private List<Uri> mSelectedImages = new ArrayList();
 
     private SelectPhotosFragment.SelectImageUirChangeListener listener = new SelectPhotosFragment.SelectImageUirChangeListener() {
         @Override
-        public void onChange(List<Uri> imagerUris) {
-            mSelectedImages = imagerUris;
+        public void onChange(Uri imageUri, boolean isAdd) {
+            if(isAdd) {
+                mSelectedImages.add(imageUri);
+            } else if(mSelectedImages.contains(imageUri)){
+                mSelectedImages.remove(imageUri);
+            }
         }
 
         @Override
@@ -85,7 +89,7 @@ public class SelectPhotosActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        fragment.setSelectImageUirChangeListener(listener);
+        fragment.setSelectImageUirListener(listener);
     }
 
     @Override
