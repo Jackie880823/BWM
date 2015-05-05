@@ -137,7 +137,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             @Override
             public boolean execute(View v) {
                 if (v.getId() == getParentActivity().leftButton.getId()) {
-                    showSaveAlert();
+                    if(isEventDate()){
+                        showSaveAlert();
+                    }else {
+                        getParentActivity().finish();
+                    }
 //                    getParentActivity().finish();
                 } else if (v.getId() == getParentActivity().rightButton.getId()) {
                     reomveSP();
@@ -149,6 +153,32 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         });
         bindData2View();
 
+    }
+    private boolean isEventDate(){
+        if (!TextUtils.isEmpty(event_title.getText().toString().trim())) {
+//             Log.i("event_title=====================",event_title.getText().toString().trim());
+            return true;
+        }
+        if (!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
+//             Log.i("Spmemeber_date=====================",event_desc.getText().toString().trim());
+            return true;
+        }
+        if (!TextUtils.isEmpty(position_name.getText().toString().trim())) {
+//             Log.i("Spmemeber_date=====================",position_name.getText().toString().trim());
+            return true;
+        }
+        if (!TextUtils.isEmpty(date_desc.getText().toString().trim())) {
+//             Log.i("Spmemeber_date=====================",date_desc.getText().toString().trim());
+            return true;
+        }
+        String tempdate = Spmemeber_date.trim();
+        String string = tempdate.replaceAll("\\[([^\\]]*)\\]", "$1");
+        if(!TextUtils.isEmpty(string.trim())){
+//            System.out.println(string+"==========================");
+//            Log.i("Spmemeber_date=====================",Spmemeber_date.trim());
+            return true;
+        }
+        return false;
     }
 //    @Override
 //    public void setUserVisibleHint(boolean isVisibleToUser) {
