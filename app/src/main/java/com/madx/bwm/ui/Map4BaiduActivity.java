@@ -10,14 +10,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.overlayutil.PoiOverlay;
+import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -46,13 +49,20 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
+import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiDetailSearchOption;
 import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.madx.bwm.R;
+import com.madx.bwm.adapter.SuggestAddressAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Map4BaiduActivity extends BaseActivity implements
         OnGetPoiSearchResultListener, OnGetSuggestionResultListener {
@@ -75,6 +85,11 @@ public class Map4BaiduActivity extends BaseActivity implements
     private GeoCoder mGeoCoder;
     private InfoWindow markerInfoWindow;
     private SearchView search_view;
+    private CursorAdapter sugAdapter;
+    private List<SuggestionResult.SuggestionInfo> suggestions;
+    private SuggestAddressAdapter suggestionAdapter;
+    private RecyclerView address_suggest_list;
+    private PoiSearch mPoiSearch;
 
     @Override
     protected void initBottomBar() {
@@ -88,11 +103,11 @@ public class Map4BaiduActivity extends BaseActivity implements
 
     @Override
     protected void onDestroy() {
+
+        mPoiSearch.destroy();
+        mSuggestionSearch.destroy();
         // 退出时销毁定位
         mLocClient.stop();
-
-
-        mSuggestionSearch.destroy();
         // 关闭定位图层
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
@@ -171,7 +186,7 @@ public class Map4BaiduActivity extends BaseActivity implements
         option.setScanSpan(1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
-
+        address_suggest_list = getViewById(R.id.address_suggest_list);
 
         mBaiduMap.setOnMapLongClickListener(new BaiduMap.OnMapLongClickListener() {
             public void onMapLongClick(LatLng point) {
@@ -186,19 +201,12 @@ public class Map4BaiduActivity extends BaseActivity implements
         });
 
 
-
         search_view = getViewById(R.id.search_view);
         search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String queryText) {
                 if (search_view != null) {
-                    // 得到输入管理对象
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    if (imm != null) {
-                        // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
-                        imm.hideSoftInputFromWindow(search_view.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
-                    }
-                    search_view.clearFocus(); // 不获取焦点
+                    searchByAddress(search_view.getQuery().toString());
                 }
                 return true;
 
@@ -206,18 +214,9 @@ public class Map4BaiduActivity extends BaseActivity implements
 
             @Override
             public boolean onQueryTextChange(String queryText) {
-//                String selection = ContactsContract.RawContacts.DISPLAY_NAME_PRIMARY + " LIKE '%" + queryText + "%' " + " OR "
-//                        + ContactsContract.RawContacts.SORT_KEY_PRIMARY + " LIKE '%" + queryText + "%' ";
-//                cursor = ContactUtil.getContacts(TellAFriendsActivity.this, null, selection, null, null);
-//                adapter.swapCursor(cursor);
 
-                //TODO
-                mSuggestionSearch = SuggestionSearch.newInstance();
-                mSuggestionSearch.setOnGetSuggestionResultListener(Map4BaiduActivity.this);
                 if (!TextUtils.isEmpty(queryText)) {
-                    /**
-                     * 使用建议搜索服务获取建议列表，结果在onSuggestionResult()中更新
-                     */
+                    Log.i("", "result.city=======" + city);
                     mSuggestionSearch
                             .requestSuggestion((new SuggestionSearchOption())
                                     .keyword(queryText).city(city));
@@ -226,6 +225,19 @@ public class Map4BaiduActivity extends BaseActivity implements
             }
         });
 
+        search_view.setOnCloseListener(new SearchView.OnCloseListener() {
+
+            @Override
+            public boolean onClose() {
+                return true;
+            }
+        });
+
+        mSuggestionSearch = SuggestionSearch.newInstance();
+        mSuggestionSearch.setOnGetSuggestionResultListener(Map4BaiduActivity.this);
+        mPoiSearch = PoiSearch.newInstance();
+        mPoiSearch.setOnGetPoiSearchResultListener(Map4BaiduActivity.this);
+
         findViewById(R.id.my_location).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,6 +245,7 @@ public class Map4BaiduActivity extends BaseActivity implements
             }
         });
     }
+
     private SuggestionSearch mSuggestionSearch = null;
     private String city = "";
 
@@ -352,17 +365,30 @@ public class Map4BaiduActivity extends BaseActivity implements
             return;
         }
 
-//        if (result.error == SearchResult.ERRORNO.NO_ERROR) {
-//            mBaiduMap.clear();
-//            PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
-//            mBaiduMap.setOnMarkerClickListener(overlay);
-//            overlay.setData(result);
-//            overlay.addToMap();
-//            overlay.zoomToSpan();
-//            return;
-//        }
-//        if (result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {
+//        new OverlayManager(mBaiduMap);
 //
+//        // 在地图上显示PoiOverlay（将搜索到的兴趣点标注在地图上）
+//        mMapView.addOverlay(poioverlay);
+//
+//
+//        if(result.getNumPois() > 0) {
+//            // 设置其中一个搜索结果所在地理坐标为地图的中心
+//            MKPoiInfo poiInfo = result.getPoi(0);
+//            mapController.setCenter(poiInfo.pt);
+//        }
+        Log.i("","result.error======="+result.error);
+        Log.i("","result.error======="+city);
+        if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+            mBaiduMap.clear();
+            PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
+            mBaiduMap.setOnMarkerClickListener(overlay);
+            overlay.setData(result);
+            overlay.addToMap();
+            overlay.zoomToSpan();
+            return;
+        }
+        if (result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {
+
 //            // 当输入关键字在本市没有找到，但在其他城市找到时，返回包含该关键字信息的城市列表
 //            String strInfo = "在";
 //            for (CityInfo cityInfo : result.getSuggestCityList()) {
@@ -370,48 +396,21 @@ public class Map4BaiduActivity extends BaseActivity implements
 //                strInfo += ",";
 //            }
 //            strInfo += "找到结果";
-//            Toast.makeText(PoiSearchDemo.this, strInfo, Toast.LENGTH_LONG)
+//            Toast.makeText(Map4BaiduActivity.this, strInfo, Toast.LENGTH_LONG)
 //                    .show();
-//        }
+
+            mBaiduMap.clear();
+            PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
+            mBaiduMap.setOnMarkerClickListener(overlay);
+            overlay.setData(result);
+            overlay.addToMap();
+            overlay.zoomToSpan();
+        }
     }
 
     PopupWindow popupwindow;
     private LinearLayoutManager llm;
-    public void initmPopupWindowView() {
-        // // 获取自定义布局文件pop.xml的视图
-        View customView = getLayoutInflater().inflate(R.layout.feeling_list, null, false);
-        // 创建PopupWindow实例,200,150分别是宽度和高度
-        popupwindow = new PopupWindow(customView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        // 设置动画效果 [R.style.AnimationFade 是自己事先定义好的]
 
-        popupwindow.setAnimationStyle(R.style.PopupAnimation);
-        // 自定义view添加触摸事件
-        customView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                //                if (popupwindow != null && popupwindow.isShowing()) {
-                //                    popupwindow.dismiss();
-                //                    popupwindow = null;
-                //                }
-
-                return false;
-            }
-        });
-
-//        search_view.setSuggestionsAdapter();
-
-//        RecyclerView feeling_icons = (RecyclerView) customView.findViewById(R.id.feeling_icons);
-//        llm = new LinearLayoutManager(this);
-//        feeling_icons.setLayoutManager(llm);
-//
-//        feelingAdapter = new FeelingAdapter(getActivity(), filePaths);
-//        feelingAdapter.setCheckIndex(checkItemIndex);
-//        feeling_icons.setAdapter(feelingAdapter);
-//
-//        feelingAdapter.setItemCheckListener(this);
-
-    }
 
     public void onGetPoiDetailResult(PoiDetailResult result) {
         //TODO
@@ -426,35 +425,56 @@ public class Map4BaiduActivity extends BaseActivity implements
 
     @Override
     public void onGetSuggestionResult(SuggestionResult res) {
-        //TODO 刷新建议列表
         if (res == null || res.getAllSuggestions() == null) {
             return;
         }
-//        if(){
-//            search_view.setSuggestionsAdapter();
+        suggestions = res.getAllSuggestions();
+        address_suggest_list.setVisibility(View.VISIBLE);
+        address_suggest_list.bringToFront();
+        llm = new LinearLayoutManager(this);
+        address_suggest_list.setLayoutManager(llm);
+        if (suggestions == null) {
+            suggestions = new ArrayList<>();
+        }
+//        if(suggestionAdapter==null) {
+            suggestionAdapter = new SuggestAddressAdapter(this, suggestions);
+            address_suggest_list.setAdapter(suggestionAdapter);
+
+            suggestionAdapter.setItemCheckListener(new SuggestAddressAdapter.ItemCheckListener() {
+                @Override
+                public void onItemCheckedChange(final SuggestionResult.SuggestionInfo suggestionInfo) {
+
+                    searchByAddress(suggestionInfo.key,suggestionInfo.city);
+
+                }
+            });
+
+//        }else{
+//            suggestionAdapter.notifyDataSetChanged();
 //        }
-//        for (SuggestionResult.SuggestionInfo info : res.getAllSuggestions()) {
-//            if (info.key != null){}
-////                sugAdapter.add(info.key);
-//        }
-//        sugAdapter.notifyDataSetChanged();
+//        initmPopupWindowView();
     }
 
-    private void array2CursorAdapter(){
-        String[] columnNames = {"_id","text"};
-//        MatrixCursor cursor = new MatrixCursor(columnNames);
-//        String[] array = getResources().getStringArray(R.array.allStrings); //if strings are in resources
-//        String[] temp = new String[2];
-//        int id = 0;
-//        for(String item : array){
-//            temp[0] = Integer.toString(id++);
-//            temp[1] = item;
-//            cursor.addRow(temp);
-//        }
-//        String[] from = {"text"};
-//        int[] to = {R.id.name_entry};
-//        busStopCursorAdapter = new SimpleCursorAdapter(this, R.layout.map_search_address_item, cursor, from, to, );
+    private int load_Index = 0;
+    private void searchByAddress(String address){
+        searchByAddress(address,city);
     }
+
+    private void searchByAddress(String address,String city){
+        // 得到输入管理对象
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
+            imm.hideSoftInputFromWindow(search_view.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
+        }
+        search_view.clearFocus(); // 不获取焦点
+        address_suggest_list.setVisibility(View.GONE);
+        mPoiSearch.searchInCity((new PoiCitySearchOption())
+                .city(city)
+                .keyword(address)
+                .pageNum(load_Index));
+    }
+
 
 
 //    /**
@@ -655,7 +675,7 @@ public class Map4BaiduActivity extends BaseActivity implements
 
             }
 
-            city = location.getCity()==null?"":location.getCity()   ;
+            city = location.getCity() == null ? "" : location.getCity();
 
         }
 
@@ -671,6 +691,25 @@ public class Map4BaiduActivity extends BaseActivity implements
         LatLng ll = new LatLng(mCurrentLantitude, mCurrentLongitude);
         MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
         mBaiduMap.animateMapStatus(u);
+    }
+
+
+    private class MyPoiOverlay extends PoiOverlay {
+
+        public MyPoiOverlay(BaiduMap baiduMap) {
+            super(baiduMap);
+        }
+
+        @Override
+        public boolean onPoiClick(int index) {
+            super.onPoiClick(index);
+            PoiInfo poi = getPoiResult().getAllPoi().get(index);
+            // if (poi.hasCaterDetails) {
+            mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())
+                    .poiUid(poi.uid));
+            // }
+            return true;
+        }
     }
 
 }

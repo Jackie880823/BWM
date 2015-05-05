@@ -4,11 +4,11 @@
     android:layout_height="match_parent">
 
     <include
-    android:id="@+id/fragment_main_top"
-    layout="@layout/title_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentTop="true" />
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
 
     <!--<android.support.v7.widget.SearchView-->
@@ -31,14 +31,6 @@
         android:paddingRight="@dimen/default_content_padding"
         android:orientation="horizontal">
 
-        <!--
-        iconifiedByDefault="false" //false:searchview初始即是展开的，true:searchview初始即是关闭的,仅显示一个放大镜
-
-        queryHint="@string/title_search_hint" :默认显示的提示文字
-
-           以上属性都可以在代码中通过方法：setIconifiedByDefault()和setQueryHint()直接设置
-
-        -->
 
         <android.support.v7.widget.SearchView
             android:id="@+id/search_view"
@@ -57,7 +49,19 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true" />
 
+
     </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/address_suggest_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bbbar"
+        android:background="@color/default_text_color_while"
+        android:visibility="gone"
+        >
+
+    </android.support.v7.widget.RecyclerView>
 
 
     <com.baidu.mapapi.map.MapView
