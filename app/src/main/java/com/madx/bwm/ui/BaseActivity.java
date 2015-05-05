@@ -50,7 +50,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //打开Activity隐藏软键盘；
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         setContentView(getLayout());
         fragment = getFragment();
