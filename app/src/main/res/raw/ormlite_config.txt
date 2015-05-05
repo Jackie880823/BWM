@@ -1,0 +1,23 @@
+#
+# generated on 2015/05/05 04:58:11
+#
+# --table-start--
+dataClass=com.madx.bwm.entity.OrmEntityDemo
+tableName=orm_entity_demos
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=securityKey
+# --field-end--
+# --field-start--
+fieldName=type
+# --field-end--
+# --field-start--
+fieldName=registerDate
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

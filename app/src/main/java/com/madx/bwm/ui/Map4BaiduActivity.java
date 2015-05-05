@@ -674,7 +674,6 @@ public class Map4BaiduActivity extends BaseActivity implements
 //                mBaiduMap.animateMapStatus(u);
 
             }
-
             city = location.getCity() == null ? "" : location.getCity();
 
         }
