@@ -75,7 +75,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     Calendar calendar;
 
     String members;
-    String Spmemeber_date;
+    private String Spmemeber_date;
 
     public static EventNewFragment newInstance(String... params) {
 
@@ -334,12 +334,16 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                         SharedPreferencesUtils.setParam(getParentActivity(), "location", position_name.getText().toString());
 //                        Log.i("location=============",position_name.getText().toString());
                     }
+                    if(!TextUtils.isEmpty(Spmemeber_date.trim())){
+                        SharedPreferencesUtils.setParam(getParentActivity(), "members_data", Spmemeber_date);
+                    }
                     getParentActivity().finish();
                 }
             });
             saveAlertDialog.setButtonCancel(getString(R.string.cancel), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    reomveSP();
                     saveAlertDialog.dismiss();
                     getParentActivity().finish();
                 }
@@ -451,7 +455,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     }
                     break;
                 case GET_MEMBERS:
+                    //获取SelectPeopleActivity回调的参数
                     String members = data.getStringExtra("members_data");
+                    Spmemeber_date = members;
+
                     members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                     }.getType());
                     changeData();
