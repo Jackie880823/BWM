@@ -155,6 +155,8 @@
     <string name="text_setting_2_5">Children relationship</string>
     <string name="text_setting_2_6">Others relationship</string>
 
+    <string name="text_my_location">My Location</string>
+
     <!-- chirstopher -->
     <string-array name="CountryCodes">
         <item>93,AF</item>

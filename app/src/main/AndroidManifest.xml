@@ -62,6 +62,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="@string/baidu_maps_key_debug" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
