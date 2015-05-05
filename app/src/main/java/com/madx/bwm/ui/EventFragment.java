@@ -143,6 +143,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     swipeRefreshLayout.setRefreshing(true);
                     isRefresh = true;
                     startIndex = 0;
+                    eventStart.setVisibility(View.GONE);
                     requestData();
                     break;
             }
@@ -151,6 +152,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
     @Override
     public void requestData() {
+        Log.i("requestData","===========================");
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "1");
@@ -247,6 +249,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
     }
 
     private void loadMoreEvent() {
+        Log.i("loadMoreEvent","===========================");
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "0");
