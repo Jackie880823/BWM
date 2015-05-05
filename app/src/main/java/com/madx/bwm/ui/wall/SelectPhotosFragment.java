@@ -21,12 +21,12 @@ import android.widget.ListView;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.LocalImagesAdapter;
 import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.widget.CustomGridView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -58,6 +58,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     private String[] buckets;
     private Cursor imagecursor;
     private int loaderCounter = 1;
+
+    private int residue;
     /**
      * 本地图片显示adapter
      */
@@ -91,6 +93,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
     @Override
     public void initView() {
+        residue = getParentActivity().getIntent().getIntExtra(TabPictureFragment.RESIDUE, TabPictureFragment.MAX_SELECT);
         mDrawerList = getViewById(R.id.lv_images_titles);
         mGvShowPhotos = getViewById(R.id.gv_select_photo);
         mDrawerLayout = getViewById(R.id.drawer_layout);
@@ -109,12 +112,12 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                selectImageUirChangeListener.onDrawerOpened();
+                selectImageUirListener.onDrawerOpened();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                selectImageUirChangeListener.onDrawerClose();
+                selectImageUirListener.onDrawerClose();
             }
 
             @Override
@@ -127,8 +130,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             @SuppressLint("ResourceAsColor")
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                loadLocalImageOrder(position);
                 mDrawerLayout.closeDrawer(mDrawerList);
+                loadLocalImageOrder(position);
             }
         });
 
@@ -137,19 +140,26 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CheckBox check = (CheckBox) view.findViewById(R.id.select_image_right);
                 Log.i(TAG, "onItemClick " + check.isChecked());
+                Uri itemUri = mImageUriList.get(position);
                 if(check.isChecked()) {
                     check.setChecked(false);
-                    mSelecedImageUris.remove(mImageUriList.get(position));
+                    mSelecedImageUris.remove(itemUri);
+                    //
+                    if(selectImageUirListener != null) {
+                        selectImageUirListener.onChange(itemUri, false);
+                    }
                 } else {
-//                    if(mSelecedImageUris.size() < 10) {
+                    if(mSelecedImageUris.size() < residue) {
                         check.setChecked(true);
-                        mSelecedImageUris.add(mImageUriList.get(position));
-//                    }
+                        mSelecedImageUris.add(itemUri);
+                        if(selectImageUirListener != null) {
+                            selectImageUirListener.onChange(itemUri, true);
+                        }
+                    } else {
+                        MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
+                    }
                 }
 
-                if(selectImageUirChangeListener != null) {
-                    selectImageUirChangeListener.onChange(mSelecedImageUris);
-                }
             }
         });
     }
@@ -228,7 +238,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
                 mGvShowPhotos.setAdapter(localImagesAdapter);
                 localImagesAdapter.setColumnWidthHeight(mGvShowPhotos.getColumnWidth());
             } else {
-                localImagesAdapter.setColumnWidthHeight(mGvShowPhotos.getColumnWidth());
                 localImagesAdapter.notifyDataSetChanged();
             }
         } else {
@@ -302,15 +311,17 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
     }
 
-    private SelectImageUirChangeListener selectImageUirChangeListener;
+    private SelectImageUirChangeListener selectImageUirListener;
 
-    public void setSelectImageUirChangeListener(SelectImageUirChangeListener selectImageUirChangeListener) {
-        this.selectImageUirChangeListener = selectImageUirChangeListener;
+    public void setSelectImageUirListener(SelectImageUirChangeListener selectImageUirListener) {
+        this.selectImageUirListener = selectImageUirListener;
     }
 
     public interface SelectImageUirChangeListener {
-        public void onChange(List<Uri> imagerUris);
+        public void onChange(Uri imageUri, boolean isAdd);
+
         public void onDrawerOpened();
+
         public void onDrawerClose();
     }
 
