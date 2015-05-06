@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -69,6 +72,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
     private EventAdapter adapter;
     public List<EventEntity> data = new ArrayList<EventEntity>();
     public List<BirthdayEntity> birthdayEvents = new ArrayList<BirthdayEntity>();
+    private FrameLayout eventStart;
 
     private MySwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
@@ -86,6 +90,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
         mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
         mProgressDialog.show();
         rvList = getViewById(R.id.rv_event_list);
+        eventStart = getViewById(R.id.eventStart);
 
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
@@ -138,6 +143,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     swipeRefreshLayout.setRefreshing(true);
                     isRefresh = true;
                     startIndex = 0;
+                    eventStart.setVisibility(View.GONE);
                     requestData();
                     break;
             }
@@ -146,6 +152,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
     @Override
     public void requestData() {
+        Log.i("requestData","===========================");
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "1");
@@ -185,6 +192,10 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     }.getType());
                     currentPage = 1;
                     startIndex = data.size();
+                    Log.i("startIndex=======================1", startIndex+"");
+                    if(startIndex<=0){
+                        eventStart.setVisibility(View.VISIBLE);
+                    }
                     finishReFresh();
                     adapter = new EventAdapter(getParentActivity(), data, birthdayEvents);
                     adapter.setItemClickListener(new EventAdapter.ItemClickListener() {
@@ -233,14 +244,12 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
             }
         });
-        if (itemClickListener != null ) {
-//            Log.i("itemClickListener=======================2", "");
-            itemClickListener.topItemClick(data,birthdayEvents);
-        }
+
 
     }
 
     private void loadMoreEvent() {
+        Log.i("loadMoreEvent","===========================");
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "0");
@@ -279,6 +288,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 //                    }.getType());
 
                     startIndex += data.size();
+
                     adapter.add(data);
                     loading = false;
 //                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
@@ -322,7 +332,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
     }
 
     public interface ItemClickListener {
-        void topItemClick(List<EventEntity> data, List<BirthdayEntity> birthdayEvents);
+        void topItemClick(int startIndex);
 
 
     }

@@ -3,13 +3,14 @@ package com.madx.bwm;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.IntentCompat;
 
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.madx.bwm.db.SQLiteHelperOrm;
 import com.madx.bwm.entity.AppTokenEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.LoginActivity;
@@ -26,7 +27,8 @@ import java.util.Map;
 public class App extends Application {
 
     private static UserEntity user;
-    private static Context appContext;
+    private static App appContext;
+    private SQLiteHelperOrm databaseHelper = null;
 
     @Override
     public void onCreate() {
@@ -37,7 +39,7 @@ public class App extends Application {
         SDKInitializer.initialize(getApplicationContext());
     }
 
-    public static Context getAppContext(){
+    public static App getContextInstance(){
         return appContext;
     }
 
@@ -105,6 +107,14 @@ public class App extends Application {
             FileUtil.clearCache(context);
             context.finish();
         }
+    }
+
+    public SQLiteHelperOrm getDBHelper() {
+        if (databaseHelper == null) {
+            databaseHelper = OpenHelperManager.getHelper(this,
+                    SQLiteHelperOrm.class);
+        }
+        return databaseHelper;
     }
 
 }

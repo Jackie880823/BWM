@@ -7,6 +7,9 @@ import java.io.Serializable;
  */
 public class UserEntity implements Serializable {
 
+/**这个是示例字段，示例关系依赖*/
+//    @DatabaseField(foreign = true, foreignAutoRefresh = true,columnName="device_id")
+//    private OrmEntityDemo ormEntity;
 
     private String user_id;
     private String user_given_name;
