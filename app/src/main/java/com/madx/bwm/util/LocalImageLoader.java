@@ -654,6 +654,10 @@ public class LocalImageLoader {
 	 * @return Bitmap
 	 */
 	public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
+		if(bitmap == null) {
+			return null;
+		}
+
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
@@ -668,11 +672,10 @@ public class LocalImageLoader {
 	 */
 	public static Bitmap getMiniThumbnailBitmap(Context context, Uri uri, int columnWidthHeight) {
 
-		Uri paraUri = uri;
+		String path = FileUtil.getRealPathFromURI(context, uri);
+		Cursor c = context.getContentResolver().query(uri, null, null, null, null);
 
-		Cursor c = context.getContentResolver().query(paraUri, null, null, null, null);
-
-		Log.i(TAG, "uri: " + paraUri);
+		Log.i(TAG, "getMiniThumbnailBitmap& path: " + path);
 
 
 		String miniThumbanilUri = null;
@@ -693,17 +696,24 @@ public class LocalImageLoader {
 		Bitmap thumbnail;
 		if(!TextUtils.isEmpty(miniThumbanilUri)) {
 			//系统存有此图的略缩图
-			paraUri = Uri.parse(miniThumbanilUri);
-			thumbnail = BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(context, paraUri));
+			Log.i(TAG, "getMiniThumbnailBitmap& miniThumbanilUri: " + miniThumbanilUri);
+//			thumbnail = BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(context, paraUri));
+			thumbnail = LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbanilUri).getPath());
 		} else {
 			// 原图
-			Bitmap sourceBitmap = BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(context, paraUri));
+//			Bitmap sourceBitmap = LocalImageLoader.loadBitmapFromFile(context, path);
+			Bitmap sourceBitmap = BitmapFactory.decodeFile(path);
 			// 略缩图
 			thumbnail = ThumbnailUtils.extractThumbnail(sourceBitmap, columnWidthHeight, columnWidthHeight);
 		}
 
+		if(thumbnail == null){
+			Log.i(TAG, "getMiniThumbnailBitmap& thumbnail is null. uri: " + path);
+			return null;
+		}
+
 		// 转回角度
-		int rotation = readPictureDegree(FileUtil.getRealPathFromURI(context, uri));
+		int rotation = readPictureDegree(path);
 		return LocalImageLoader.rotaingImageView(rotation, thumbnail);
 
 	}

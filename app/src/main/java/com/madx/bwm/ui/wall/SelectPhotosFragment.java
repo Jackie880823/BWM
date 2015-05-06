@@ -101,7 +101,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
         String[] columns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
 
-        String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC";
+        String orderBy = MediaStore.Images.Media.DATE_TAKEN + " ASC";
         imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy).loadInBackground();
         getLoaderManager().initLoader(loaderCounter++, null, this);
 
@@ -328,11 +328,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     }
 
     public interface SelectImageUirChangeListener {
-        public void onChange(Uri imageUri, boolean isAdd);
+        void onChange(Uri imageUri, boolean isAdd);
 
-        public void onDrawerOpened();
+        void onDrawerOpened();
 
-        public void onDrawerClose();
+        void onDrawerClose();
     }
 
 }
