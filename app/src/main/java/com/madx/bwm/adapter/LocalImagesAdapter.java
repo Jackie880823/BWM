@@ -115,7 +115,7 @@ public class LocalImagesAdapter extends BaseAdapter {
         } else {
             holder = (HolderView) convertView.getTag();
         }
-//        holder.iv.setImageBitmap(LocalImageLoader.getMiniThumbnailBitmap(mContext, mDatas.get(position), columnWidthHeight));
+        holder.iv.setImageResource(R.drawable.network_image_default);
         loadLocalBitmap(holder.iv, position);
 
         if(mSelectImages != null && mSelectImages.contains(mDatas.get(position))) {
