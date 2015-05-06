@@ -5,7 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 import com.madx.bwm.App;
+import com.madx.bwm.R;
+import com.madx.bwm.entity.OrmEntityDemo;
 
 public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 
@@ -15,34 +18,32 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 	public SQLiteHelperOrm(Context context) {
 //		super(context, App.DB_NAME, null,
 //		App.DB_VERSION,R.raw.ormlite_config);
-//		super(context, DB_NAME, null,
-//                DB_VERSION, R.raw.ormlite_config);
-        super(context, DB_NAME, null,
-                DB_VERSION);
+		super(context, DB_NAME, null,
+                DB_VERSION, R.raw.ormlite_config);
 
 	}
 
 	public SQLiteHelperOrm() {
-//		super(App.getAppContext(), DB_NAME, null,
+//		super(App.getContextInstance(), DB_NAME, null,
 //		App.DB_VERSION,R.raw.ormlite_config);
-//		super(App.getAppContext(), DB_NAME, null,
-//                DB_VERSION, R.raw.ormlite_config);
-        super(App.getAppContext(), DB_NAME, null,
-                DB_VERSION);
+		super(App.getContextInstance(), DB_NAME, null,
+                DB_VERSION, R.raw.ormlite_config);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
-//		try {
-//			TableUtils.createTable(connectionSource, BindedDevice.class);
-//		} catch (java.sql.SQLException e) {
-//			e.printStackTrace();
-//		}
+		//TODO
+		try {
+			TableUtils.createTable(connectionSource, OrmEntityDemo.class);
+		} catch (java.sql.SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
 			int arg2, int arg3) {
+		//TODO
 		// try {
 		// TableUtils.dropTable(connectionSource, POUser.class, true);
 		// onCreate(db, connectionSource);

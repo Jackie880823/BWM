@@ -75,7 +75,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     Calendar calendar;
 
     String members;
-    String Spmemeber_date;
+    private String Spmemeber_date;
 
     public static EventNewFragment newInstance(String... params) {
 
@@ -137,7 +137,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             @Override
             public boolean execute(View v) {
                 if (v.getId() == getParentActivity().leftButton.getId()) {
-                    showSaveAlert();
+                    if(isEventDate()){
+                        showSaveAlert();
+                    }else {
+                        getParentActivity().finish();
+                    }
 //                    getParentActivity().finish();
                 } else if (v.getId() == getParentActivity().rightButton.getId()) {
                     reomveSP();
@@ -149,6 +153,32 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         });
         bindData2View();
 
+    }
+    private boolean isEventDate(){
+        if (!TextUtils.isEmpty(event_title.getText().toString().trim())) {
+//             Log.i("event_title=====================",event_title.getText().toString().trim());
+            return true;
+        }
+        if (!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
+//             Log.i("Spmemeber_date=====================",event_desc.getText().toString().trim());
+            return true;
+        }
+        if (!TextUtils.isEmpty(position_name.getText().toString().trim())) {
+//             Log.i("Spmemeber_date=====================",position_name.getText().toString().trim());
+            return true;
+        }
+        if (!TextUtils.isEmpty(date_desc.getText().toString().trim())) {
+//             Log.i("Spmemeber_date=====================",date_desc.getText().toString().trim());
+            return true;
+        }
+        String tempdate = Spmemeber_date.trim();
+        String string = tempdate.replaceAll("\\[([^\\]]*)\\]", "$1");
+        if(!TextUtils.isEmpty(string.trim())){
+//            System.out.println(string+"==========================");
+//            Log.i("Spmemeber_date=====================",Spmemeber_date.trim());
+            return true;
+        }
+        return false;
     }
 //    @Override
 //    public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -334,12 +364,16 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                         SharedPreferencesUtils.setParam(getParentActivity(), "location", position_name.getText().toString());
 //                        Log.i("location=============",position_name.getText().toString());
                     }
+                    if(!TextUtils.isEmpty(Spmemeber_date.trim())){
+                        SharedPreferencesUtils.setParam(getParentActivity(), "members_data", Spmemeber_date);
+                    }
                     getParentActivity().finish();
                 }
             });
             saveAlertDialog.setButtonCancel(getString(R.string.cancel), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    reomveSP();
                     saveAlertDialog.dismiss();
                     getParentActivity().finish();
                 }
@@ -451,7 +485,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     }
                     break;
                 case GET_MEMBERS:
+                    //获取SelectPeopleActivity回调的参数
                     String members = data.getStringExtra("members_data");
+                    Spmemeber_date = members;
+
                     members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                     }.getType());
                     changeData();

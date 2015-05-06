@@ -2,6 +2,7 @@ package com.madx.bwm.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.madx.bwm.R;
-import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.AsyncLoadBitmapTask;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class LocalImagesAdapter extends BaseAdapter {
      */
     private List<Uri> mDatas;
     /**
-     *已经选中的图片
+     * 已经选中的图片
      */
     private List<Uri> mSelectImages;
 
@@ -77,9 +78,10 @@ public class LocalImagesAdapter extends BaseAdapter {
 
     /**
      * 设置选中图片列表用于判断显示选择框的选中状态
+     *
      * @param selectedImages
      */
-    public void setSelectedImages(List<Uri> selectedImages){
+    public void setSelectedImages(List<Uri> selectedImages) {
         mSelectImages = selectedImages;
     }
 
@@ -110,9 +112,11 @@ public class LocalImagesAdapter extends BaseAdapter {
             holder.iv = (ImageView) convertView.findViewById(R.id.iv_pic);
             holder.check = (CheckBox) convertView.findViewById(R.id.select_image_right);
             convertView.setTag(holder);
+        } else {
+            holder = (HolderView) convertView.getTag();
         }
-        holder = (HolderView) convertView.getTag();
-        holder.iv.setImageBitmap(LocalImageLoader.getMiniThumbnailBitmap(mContext, mDatas.get(position), columnWidthHeight));
+        holder.iv.setImageResource(R.drawable.network_image_default);
+        loadLocalBitmap(holder.iv, position);
 
         if(mSelectImages != null && mSelectImages.contains(mDatas.get(position))) {
             // 当前图片已被选中
@@ -123,8 +127,61 @@ public class LocalImagesAdapter extends BaseAdapter {
         return convertView;
     }
 
+    /**
+     * 通过Uir列中positio项的uri异步获取缩略图，并加载传入的imageVie中
+     * @param imageView
+     *          －  显示图片的ImageVie视图
+     * @param position
+     */
+    private synchronized void loadLocalBitmap(ImageView imageView, int position) {
+        if(position < mDatas.size()) {
+            Uri uri = mDatas.get(position);
+            if(cancelPotentialWork(uri, imageView)) {
+                AsyncLoadBitmapTask task = new AsyncLoadBitmapTask(mContext, imageView, columnWidthHeight);
+                imageView.setTag(task);
+                task.execute(uri);
+            }
+        }
+    }
+
+    /**
+     * 比较是否在加载同一个Uri,不同取消并取消上一次的加载
+     * @param uri
+     *          - 将要加载的uri
+     * @param imageView
+     *          - 显示图片的视图
+     * @return
+     *          - false: 取消加载; true: 取消了加载
+     */
+    private boolean cancelPotentialWork(Uri uri, ImageView imageView){
+        AsyncLoadBitmapTask task = getLoadBitmapTask(imageView);
+        if(task != null){
+            if(task.getUri() == null || !task.getUri().equals(uri)) {
+                task.cancel(true);
+                Log.i(TAG, "cancelPotentialWork& task cancel; uri: " + uri);
+            } else {
+                Log.i(TAG, "cancelPotentialWork& task nothing; uri: " + uri);
+                return false;
+            }
+        } else {
+            Log.i(TAG, "cancelPotentialWork& task not process; uri: " + uri);
+        }
+        return true;
+    }
+
+    private AsyncLoadBitmapTask getLoadBitmapTask(ImageView imageView) {
+        if(imageView != null) {
+            Object tag = imageView.getTag();
+            if(tag instanceof AsyncLoadBitmapTask) {
+                return (AsyncLoadBitmapTask)tag;
+            }
+        }
+        return null;
+    }
+
     class HolderView {
         ImageView iv;
         CheckBox check;
     }
+
 }

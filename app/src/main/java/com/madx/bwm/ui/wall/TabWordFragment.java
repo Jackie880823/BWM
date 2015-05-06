@@ -16,7 +16,7 @@ import com.madx.bwm.widget.WallEditView;
  * Use the {@link com.madx.bwm.ui.TabWordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabWordFragment extends BaseFragment<MainActivity> {
+public class TabWordFragment extends BaseFragment<WallNewActivity> {
 
     public static TabWordFragment newInstance(String... params) {
 

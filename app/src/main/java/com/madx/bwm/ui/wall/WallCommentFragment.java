@@ -187,7 +187,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         String url = UrlUtil.generateUrl(Constant.API_WALL_COMMENT_LIST, params);
 
-        new HttpTools(App.getAppContext()).get(url, params, new HttpCallback() {
+        new HttpTools(App.getContextInstance()).get(url, params, new HttpCallback() {
             @Override
             public void onStart() {
 
