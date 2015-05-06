@@ -86,7 +86,8 @@ public class FileUtil {
             result = cursor.getString(idx);
             cursor.close();
         }
-        return result;
+
+        return String.format(result, "utf-8");
     }
 
     /***
