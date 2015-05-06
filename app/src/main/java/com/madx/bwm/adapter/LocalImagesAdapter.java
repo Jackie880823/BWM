@@ -2,6 +2,7 @@ package com.madx.bwm.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,7 +134,7 @@ public class LocalImagesAdapter extends BaseAdapter {
      *          －  显示图片的ImageVie视图
      * @param position
      */
-    private synchronized void loadLocalBitmap(ImageView imageView, int position) {
+    private void loadLocalBitmap(ImageView imageView, int position) {
         if(position < mDatas.size()) {
             Uri uri = mDatas.get(position);
             if(cancelPotentialWork(uri, imageView)) {
@@ -155,18 +156,32 @@ public class LocalImagesAdapter extends BaseAdapter {
      */
     private boolean cancelPotentialWork(Uri uri, ImageView imageView){
         AsyncLoadBitmapTask task = getLoadBitmapTask(imageView);
+        boolean result = true;
         if(task != null){
-            if(task.getUri() == null || !task.getUri().equals(uri)) {
-                task.cancel(true);
-                Log.i(TAG, "cancelPotentialWork& task cancel; uri: " + uri);
-            } else {
-                Log.i(TAG, "cancelPotentialWork& task nothing; uri: " + uri);
-                return false;
+            AsyncTask.Status status = task.getStatus();
+            switch(status) {
+                case PENDING:
+                    result = true;
+                    break;
+                case RUNNING:
+                    if(task.getUri() == null || !task.getUri().equals(uri)) {
+                        task.cancel(true);
+                        Log.i(TAG, "cancelPotentialWork& task cancel; uri: " + uri);
+                        result = true;
+                    } else {
+                        Log.i(TAG, "cancelPotentialWork& task nothing; uri: " + uri);
+                        result = false;
+                    }
+                    break;
+                case FINISHED:
+                    result = true;
+                    break;
             }
         } else {
             Log.i(TAG, "cancelPotentialWork& task not process; uri: " + uri);
+            result = true;
         }
-        return true;
+        return result;
     }
 
     private AsyncLoadBitmapTask getLoadBitmapTask(ImageView imageView) {
