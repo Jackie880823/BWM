@@ -44,6 +44,25 @@ public class MessageGroupAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void AddGroupEntityData(List<GroupEntity> userEntityList) {
+        if (null != userEntityList && userEntityList.size() > 0) {
+            for (GroupEntity userEntity : userEntityList) {
+                if (!mGroupList.contains(userEntity)) {
+                    mGroupList.add(userEntity);
+                }
+            }
+            notifyDataSetChanged();
+        }
+    }
+
+    public void NewGroupEntityData(List<GroupEntity> userEntityList) {
+        if (null != userEntityList && userEntityList.size() > 0) {
+            mGroupList.clear();
+            mGroupList.addAll(userEntityList);
+            notifyDataSetChanged();
+        }
+    }
+
     @Override
     public int getCount() {
         return mGroupList.size();
@@ -63,53 +82,6 @@ public class MessageGroupAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder viewHolder;
-
-
-//            /*又试viewHolder出现问题。*/
-//        if (convertView == null) {
-//            convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
-//
-//            viewHolder = new ViewHolder();
-//
-//            viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.message_listview_image);
-//
-//
-//            viewHolder.image = new CircularNetworkImage[8];
-//
-//            viewHolder.image[0] = (CircularNetworkImage) convertView.findViewById(R.id.image1);
-//            viewHolder.image[1] = (CircularNetworkImage) convertView.findViewById(R.id.image2);
-//            viewHolder.image[2] = (CircularNetworkImage) convertView.findViewById(R.id.image3);
-//            viewHolder.image[3] = (CircularNetworkImage) convertView.findViewById(R.id.image4);
-//            viewHolder.image[4] = (CircularNetworkImage) convertView.findViewById(R.id.image5);
-//            viewHolder.image[5] = (CircularNetworkImage) convertView.findViewById(R.id.image6);
-//            viewHolder.image[6] = (CircularNetworkImage) convertView.findViewById(R.id.image7);
-//            viewHolder.image[7] = (CircularNetworkImage) convertView.findViewById(R.id.image8);
-//
-//            viewHolder.groupName = (TextView) convertView.findViewById(R.id.groupName);
-//            viewHolder.msg = (TextView) convertView.findViewById(R.id.groupMessage);
-//            viewHolder.time = (TextView) convertView.findViewById(R.id.groupTime);
-//
-//            convertView.setTag(viewHolder);
-//        } else {
-//            viewHolder = (ViewHolder) convertView.getTag();
-//        }
-//
-//        GroupEntity groupEntity = mGroupList.get(position);
-//
-//        List<UserEntity> mMemberList = mGroupList.get(position).getMember();
-//
-//        VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//
-//        int count = mMemberList.size() < 8 ? mMemberList.size() : 8;
-//
-//        for (int i = 0; i < count; i++) {
-//            VolleyUtil.initNetworkImageView(mContext, viewHolder.image[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile_s, mMemberList.get(i).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//        }
-//
-//        viewHolder.groupName.setText(groupEntity.getGroup_name());
-//        viewHolder.time.setText(groupEntity.getGroup_active_date());
-//        viewHolder.msg.setText("还没有数据啊啊啊！！！");
-
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.message_listview_item, null);

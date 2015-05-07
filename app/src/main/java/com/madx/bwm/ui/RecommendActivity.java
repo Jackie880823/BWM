@@ -28,7 +28,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
@@ -46,7 +45,7 @@ public class RecommendActivity extends BaseActivity {
     private RecommendAdapter adapter;
     private RecyclerView rvList;
     private LinearLayoutManager llm;
-
+    
 
     public int getLayout() {
         return R.layout.activity_news;
@@ -105,20 +104,20 @@ public class RecommendActivity extends BaseActivity {
 
         });
 
-        rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItem = ((LinearLayoutManager) llm).findLastVisibleItemPosition();
-                int totalItemCount = llm.getItemCount();
-                //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
-                // dy>0 表示向下滑动
-                if (!loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
-                    loading = true;
-                    requestData();//再请求数据
-                }
-            }
-        });
+//        rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                int lastVisibleItem = ((LinearLayoutManager) llm).findLastVisibleItemPosition();
+//                int totalItemCount = llm.getItemCount();
+//                //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
+//                // dy>0 表示向下滑动
+//                if (!loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+//                    loading = true;
+//                    requestData();//再请求数据
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -132,16 +131,22 @@ public class RecommendActivity extends BaseActivity {
         mProgressDialog.dismiss();
     }
 
+    void sdf()
+    {
+        findViewById(R.id.iv_move);
+
+    }
+
     @Override
     public void requestData() {
 
 
-        Map<String, String> params = new HashMap<>();
-        params.put("start", "" + startIndex);
-        params.put("limit", "" + offSet);
+//        Map<String, String> params = new HashMap<>();
+//        params.put("start", "" + startIndex);
+//        params.put("limit", "" + offSet);
 
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_RECOMMEND, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_RECOMMEND, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -150,27 +155,32 @@ public class RecommendActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 mProgressDialog.dismiss();
+                if (isRefresh) {
+                    finishReFresh();
+                }
             }
 
             @Override
             public void onResult(String string) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-                data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {
-                }.getType());
-                if (data != null) {
-                    if (isRefresh) {
-                        startIndex = data.size();
-                        finishReFresh();
-                        initAdapter();
-                    } else {
-                        startIndex += data.size();
-                        adapter.add(data);
-                    }
-                } else {
-                    finishReFresh();
-                }
-                loading = false;
+                data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {}.getType());
+//                if (data != null) {
+//                    if (isRefresh) {
+//                        startIndex = data.size();
+//                        finishReFresh();
+//                        initAdapter();
+//                    } else {
+//                        startIndex += data.size();
+//                        adapter.add(data);
+//                    }
+//                } else {
+//                    finishReFresh();
+//                }
+//                loading =
+
+                finishReFresh();
+                initAdapter();
             }
 
             @Override
