@@ -3,11 +3,11 @@ package com.madx.bwm.ui.wall;
 import android.text.Editable;
 
 import com.madx.bwm.R;
+import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.widget.WallEditView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +21,8 @@ import java.util.List;
 public class TabWordFragment extends BaseFragment<WallNewActivity> {
 
     private final static String TAG = TabPictureFragment.class.getSimpleName();
-    private List<UserEntity> members ;
+    private List<UserEntity> mMembers;
+    private List<GroupEntity> mGroups;
 
     public static TabWordFragment newInstance(String... params) {
 
@@ -62,7 +63,29 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s, int change) {
+                switch(change) {
+                    case CHANGE_MODE_DLETE_AT_ALL:
+                        if(mMembers != null) {
+                            mMembers.clear();
+                        }
+                        if(mGroups != null) {
+                            mGroups.clear();
+                        }
+                        break;
+
+                    case CHANGE_MODE_DLETE_AT_GROUPS:
+                        if(mGroups != null) {
+                            mGroups.clear();
+                        }
+                        break;
+
+                    case CHANGE_MODE_DLETE_AT_MEMBER:
+                        if(mMembers != null) {
+                            mMembers.clear();
+                        }
+                        break;
+                }
 
             }
         });
@@ -73,16 +96,25 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
         return getViewById(R.id.wall_text_content);
     }
 
-    public void changeAtDesc(List<UserEntity> members) {
-        this.members = members;
+    public void changeAtDesc(List<UserEntity> members, List<GroupEntity> groups) {
+        this.mMembers = members;
+        this.mGroups = groups;
 
         WallEditView editText = getEditText4Content();
+        String memberText;
+        String groupText;
         if(members != null && members.size() > 0) {
-            String text = String.format(getParentActivity().getString(R.string.tag_members), members.size());
-            editText.addAtDesc(text);
+            memberText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), members.size());
         } else {
-            editText.addAtDesc("");
+            memberText = "";
         }
+        if(groups != null && groups.size() > 0) {
+            groupText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), groups.size());
+        } else {
+            groupText = "";
+        }
+
+        editText.addAtDesc(memberText, groupText);
 
     }
 

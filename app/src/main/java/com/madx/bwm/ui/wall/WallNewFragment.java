@@ -98,7 +98,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private List<String> fileNames = new ArrayList<>();
 
     public List<UserEntity> at_members_data = new ArrayList();
-    public List<GroupEntity> at_gourps_data = new ArrayList();
+    public List<GroupEntity> at_groups_data = new ArrayList();
     private String text_content;
     private String locationName;
     private List<Uri> pic_content;
@@ -299,8 +299,8 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         } else {
             params.put("upload_photo", "1");
         }
-        params.put("tag_group", null);
-        //        params.put("tag_group", gson.toJson(setGetMembersIds(at_gourps_data)));
+//        params.put("tag_group", null);
+        params.put("tag_group", gson.toJson(setGetGroupIds(at_groups_data)));
         params.put("tag_member", gson.toJson(setGetMembersIds(at_members_data)));
 
         RequestInfo requestInfo = new RequestInfo();
@@ -552,6 +552,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private void goChooseMembers() {
         Intent intent = new Intent(getActivity(), SelectPeopleActivity.class);
         intent.putExtra("members_data", gson.toJson(at_members_data));
+        intent.putExtra("groups_data", gson.toJson(at_groups_data));
         intent.putExtra("type", 0);
         startActivityForResult(intent, GET_MEMBERS);
     }
@@ -575,6 +576,8 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                 case GET_MEMBERS:
                     String members = data.getStringExtra("members_data");
                     at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                    String groups = data.getStringExtra("groups_data");
+                    at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {}.getType());
                     changeAtDesc();
                     break;
             }
@@ -583,7 +586,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     void changeAtDesc() {
         if(fragment1 != null) {
-            fragment1.changeAtDesc(at_members_data);
+            fragment1.changeAtDesc(at_members_data, at_groups_data);
         }
     }
 
@@ -643,6 +646,16 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             int count = users.size();
             for(int i = 0; i < count; i++) {
                 ids.add(users.get(i).getUser_id());
+            }
+        }
+        return ids;
+    }
+    private List<String> setGetGroupIds(List<GroupEntity> groups) {
+        List<String> ids = new ArrayList<>();
+        if(groups != null) {
+            int count = groups.size();
+            for(int i = 0; i < count; i++) {
+                ids.add(groups.get(i).getGroup_id());
             }
         }
         return ids;
