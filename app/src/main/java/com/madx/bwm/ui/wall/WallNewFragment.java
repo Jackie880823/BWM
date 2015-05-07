@@ -582,9 +582,8 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     void changeAtDesc() {
-        if(fragment1 != null && at_members_data != null && at_members_data.size() > 0) {
-            WallEditView editText = fragment1.getEditText4Content();
-            editText.addAtDesc("@ " + at_members_data.size() + "members");
+        if(fragment1 != null) {
+            fragment1.changeAtDesc(at_members_data);
         }
     }
 

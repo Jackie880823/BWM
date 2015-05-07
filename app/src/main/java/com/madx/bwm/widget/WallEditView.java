@@ -174,7 +174,9 @@ public class WallEditView extends EditText implements TextWatcher {
                     end = m.end();
                     sb.replace(start, end, desc);
                 }
-            }catch (Exception e){}
+            }catch (Exception e){
+               e.printStackTrace();
+            }
         } else {
             sb.append(desc);
             start = sb.length() - desc.length();
@@ -182,10 +184,16 @@ public class WallEditView extends EditText implements TextWatcher {
                 start = 0;
             end = sb.length();
         }
-        is = getImageSpanForText(desc);
-        sb.setSpan(is, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        this.setText(sb);
-        hasAt = true;
+
+        if(TextUtils.isEmpty(desc)){
+            hasAt = false;
+            setText(sb);
+        } else {
+            is = getImageSpanForText(desc);
+            sb.setSpan(is, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            this.setText(sb);
+            hasAt = true;
+        }
         oldText = desc;
     }
 

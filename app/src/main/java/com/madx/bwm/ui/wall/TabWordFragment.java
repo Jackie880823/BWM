@@ -1,12 +1,14 @@
 package com.madx.bwm.ui.wall;
 
 import android.text.Editable;
-import android.widget.GridView;
 
 import com.madx.bwm.R;
+import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.BaseFragment;
-import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.widget.WallEditView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -17,6 +19,9 @@ import com.madx.bwm.widget.WallEditView;
  * create an instance of this fragment.
  */
 public class TabWordFragment extends BaseFragment<WallNewActivity> {
+
+    private final static String TAG = TabPictureFragment.class.getSimpleName();
+    private List<UserEntity> members ;
 
     public static TabWordFragment newInstance(String... params) {
 
@@ -40,8 +45,6 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
     public void setLayoutId() {
         this.layoutId = R.layout.fragment_tab_word;
     }
-
-    private GridView gvFriends;
 
     @Override
     public void initView() {
@@ -68,6 +71,19 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
 
     public WallEditView getEditText4Content(){
         return getViewById(R.id.wall_text_content);
+    }
+
+    public void changeAtDesc(List<UserEntity> members) {
+        this.members = members;
+
+        WallEditView editText = getEditText4Content();
+        if(members != null && members.size() > 0) {
+            String text = String.format(getParentActivity().getString(R.string.tag_members), members.size());
+            editText.addAtDesc(text);
+        } else {
+            editText.addAtDesc("");
+        }
+
     }
 
     @Override
