@@ -261,7 +261,7 @@
         <activity
             android:name=".ui.MyViewProfileActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified" />
+            android:windowSoftInputMode = "adjustPan|stateHidden" />
         <activity
             android:name=".ui.MeActivity"
             android:screenOrientation="portrait" />
