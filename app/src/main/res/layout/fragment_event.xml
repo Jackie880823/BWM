@@ -4,6 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+<FrameLayout
+    android:id="@+id/eventStart"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="invisible">
+    <LinearLayout
+        android:id="@+id/test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/Post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/_60dp"
+            android:paddingLeft="@dimen/_40dp"
+            android:text="Post and "
+            android:textSize="30dp"/>
+        <TextView
+            android:id="@+id/now"
+            android:layout_alignBottom="@+id/Post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_40dp"
+            android:text="Event now"
+            android:textSize="30dp"/>
+        <ImageView
+            android:layout_alignBottom="@+id/now"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/_20dp"
+            android:src="@drawable/event_startup"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="172dp">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow_pointer"/>
+    </LinearLayout>
+    </FrameLayout>
     <com.madx.bwm.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"

@@ -114,7 +114,7 @@ public class Map4GoogleActivity extends BaseActivity {
 //        mMapCtrl.animateTo(cityLocPoint);
 //        mMapCtrl.setZoom(12);
 //        FzLocationManager.init(FzMapActivity.this.getApplicationContext() , FzMapActivity.this);
-//        fzLocation = FzLocationManager.getInstance();
+//        fzLocation = FzLocationManager.getContextInstance();
 
 
         myLocationListener = new MyLocationListener();

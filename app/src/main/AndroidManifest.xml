@@ -58,10 +58,17 @@
         android:theme="@style/AppTheme">
 
 
+        <!-- 友盟统计 -->
+        <!--<meta-data-->
+            <!--android:name="UMENG_CHANNEL"-->
+            <!--android:value="${UMENG_CHANNEL_VALUE}" />-->
+
+
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="@string/baidu_maps_key_debug" />
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -127,6 +134,10 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.wall.WallMembersOrGroupsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.wall.SelectPhotosActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity

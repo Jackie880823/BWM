@@ -335,7 +335,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                     if (!TextUtils.isEmpty(userEntity.getUser_emoticon()))
                     {
                         try {
-                            InputStream is = App.getAppContext().getAssets().open(userEntity.getUser_emoticon()+".png");
+                            InputStream is = App.getContextInstance().getAssets().open(userEntity.getUser_emoticon()+".png");
                             Bitmap bitmap= BitmapFactory.decodeStream(is);
                             ivBottomLeft.setImageBitmap(bitmap);
 
@@ -394,7 +394,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //                    if (!TextUtils.isEmpty(userEntity.getUser_emoticon()))
 //                    {
 //                        try {
-//                            InputStream is = App.getAppContext().getAssets().open(userEntity.getUser_emoticon()+".png");
+//                            InputStream is = App.getContextInstance().getAssets().open(userEntity.getUser_emoticon()+".png");
 //                            Bitmap bitmap= BitmapFactory.decodeStream(is);
 //                            ivBottomLeft.setImageBitmap(bitmap);
 //

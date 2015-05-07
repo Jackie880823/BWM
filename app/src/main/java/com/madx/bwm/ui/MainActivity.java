@@ -17,8 +17,6 @@ import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MyFragmentPagerAdapter;
-import com.madx.bwm.entity.BirthdayEntity;
-import com.madx.bwm.entity.EventEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.ui.wall.WallNewActivity;
@@ -185,11 +183,6 @@ public class MainActivity extends BaseActivity {
     });
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-    }
-
-    @Override
     protected void titleRightEvent() {
         // 发送右边控件被点击的消息致handler
         handler.sendEmptyMessage(RIGHT_CLICK_EVENT);
@@ -227,14 +220,19 @@ public class MainActivity extends BaseActivity {
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
         fragments.add(WallFragment.newInstance());
-        eventFragment = EventFragment.newInstance();
-        eventStartupFragment = EventStartupFragment.newInstance();
-        if(!isEventFragmentDate()){
-            fragments.add(eventFragment);
-        }
-        else {
-            fragments.add(eventStartupFragment);
-        }
+        fragments.add(EventFragment.newInstance());
+//        eventFragment = EventFragment.newInstance();
+//        eventStartupFragment = EventStartupFragment.newInstance();
+//        fragments.add(eventFragment);
+//        if(isEventFragmentDate()){
+//            Log.i("isEventFragmentDate==================","true");
+//
+//        }
+//        else {
+//            Log.i("isEventFragmentDate==================","false");
+////            fragments.remove(eventFragment);
+////            fragments.add(1,eventStartupFragment);
+//        }
 //        fragments.add(MessageFragment.newInstance());
         fragments.add(MessageMainFragment.newInstance());
         fragments.add(MoreFragment.newInstance());
@@ -257,18 +255,20 @@ public class MainActivity extends BaseActivity {
 
     private boolean isEventFragmentDate(){
 
-        eventFragment.setItemClickListener(new EventFragment.ItemClickListener() {
-            @Override
-            public void topItemClick(List<EventEntity> data, List<BirthdayEntity> birthdayEvents) {
-                if(data.size()>=0 && birthdayEvents.size()>=0){
-//                    Log.i("eventfragmentdate======================", "");
-                    iseventdate = true;
-                }else {
-                    iseventdate = false;
-                }
-
-            }
-        });
+//        eventFragment.setItemClickListener(new EventFragment.ItemClickListener() {
+//            @Override
+//            public void topItemClick(int startIndex) {
+//                if(startIndex>0){
+//                    Log.i("startIndex======================3", startIndex+"");
+//                    iseventdate = true;
+//                }else
+//                {
+//                    Log.i("startIndex======================4", startIndex+"");
+//                    iseventdate = false;
+//                }
+//
+//            }
+//        });
         return iseventdate;
     }
 

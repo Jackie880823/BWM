@@ -1,6 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
     >
 
@@ -26,7 +26,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/tab_icon_word" />
+                    android:src="@drawable/tab_icon_word"/>
 
                 <TextView
                     style="@style/text_title_default"
@@ -34,14 +34,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_view_margin"
                     android:text="@string/text_word"
-                    android:textColor="@color/default_text_color_dark" />
+                    android:textColor="@color/default_text_color_dark"/>
 
             </LinearLayout>
 
             <View
                 style="@style/split_line_default"
                 android:layout_width="1dp"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
 
             <LinearLayout
                 android:id="@+id/tv_tab_picture"
@@ -54,7 +54,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/tab_icon_pic" />
+                    android:src="@drawable/tab_icon_pic"/>
 
                 <TextView
                     style="@style/text_title_default"
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_view_margin"
                     android:text="@string/text_photo"
-                    android:textColor="@color/default_text_color_dark" />
+                    android:textColor="@color/default_text_color_dark"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -72,6 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_below="@id/linearLayout1"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:weightSum="2">
 
             <ImageView
@@ -80,13 +82,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="matrix"
-                android:src="@color/default_text_color_green" />
+                android:src="@color/default_text_color_green"/>
         </LinearLayout>
 
         <View
             android:id="@+id/tab_header_split_line"
             style="@style/split_line_default"
-            android:layout_below="@+id/tab_cursor" />
+            android:layout_below="@+id/tab_cursor"/>
 
         <FrameLayout
             android:id="@+id/wall_new_container"
@@ -94,7 +96,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/opera_infos"
             android:layout_below="@+id/tab_header_split_line"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <LinearLayout
             android:id="@+id/opera_infos"
@@ -127,14 +129,14 @@
                     android:layout_width="@dimen/default_small_button_width_height"
                     android:layout_height="@dimen/default_small_button_width_height"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/location" />
+                    android:src="@drawable/location"/>
 
                 <TextView
                     android:id="@+id/location_desc"
                     style="@style/text_dark_default"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/default_view_margin"
-                    android:hint="Check in a location" />
+                    android:hint="Check in a location"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -142,7 +144,7 @@
         <View
             android:id="@+id/line"
             style="@style/split_line_default"
-            android:layout_above="@+id/option_bar" />
+            android:layout_above="@+id/option_bar"/>
 
 
         <RelativeLayout
@@ -166,7 +168,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
-                android:background="@drawable/btn_feeling" />
+                android:background="@drawable/btn_feeling"/>
 
             <ImageButton
                 android:id="@+id/btn_notify"
@@ -175,7 +177,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/default_view_margin"
                 android:layout_toRightOf="@+id/btn_feeling"
-                android:background="@drawable/btn_notify" />
+                android:background="@drawable/btn_notify"/>
 
             <!--<TextView-->
             <!--android:id="@+id/btn_share_option"-->
@@ -196,9 +198,9 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/default_view_margin"
                 android:layout_toRightOf="@+id/btn_notify"
+                android:background="@drawable/post_rang_all"
                 android:text="@string/text_all"
-                android:textColor="@android:color/white"
-                android:background="@drawable/post_rang_all"/>
+                android:textColor="@android:color/white"/>
 
 
             <LinearLayout
@@ -215,7 +217,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:src="@drawable/send_normal" />
+                    android:src="@drawable/send_normal"/>
 
             </LinearLayout>
 

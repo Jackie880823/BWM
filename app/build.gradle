@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 def releaseTime() {
-    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("GMT+8"))
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }
 
 android {
@@ -13,7 +13,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 1   //TODO
-        versionName "0.05" //TODO
+        versionName "0.06" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -98,6 +98,25 @@ android {
 
 
 }
+
+//task buildCustomer << {
+//    android.applicationVariants.all { variant ->
+//        variant.productFlavors.each { flavor ->
+////            if (variant.buildType.name.equals('release')) {
+//                javaexec {
+////                    println "Triggering customer build for flavor " + flavor.name
+////                    classpath += files("libs/my-jarfile.jar")
+//                    main = "com.madx.bwm.db.DatabaseConfigUtil"
+////                    args flavor.name, variant.versionName
+//                }
+////                println "Done building customer for flavor " + flavor.name
+////            }
+//        }
+//    }
+//}
+////Make preBuild depend on our task
+//preBuild.dependsOn buildCustomer
+
 repositories {
     jcenter()
     mavenCentral()
@@ -117,11 +136,12 @@ dependencies {
         // since httpclient is included in the android SDK.
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
-
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.+'
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.android.support:support-annotations:22.0.0'
     compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
+    compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'com.j256.ormlite:ormlite-core:4.48'
 }

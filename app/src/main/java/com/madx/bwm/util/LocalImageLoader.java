@@ -3,6 +3,7 @@ package com.madx.bwm.util;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -17,7 +18,11 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.madx.bwm.http.PicturesCacheUtil;
 
@@ -31,6 +36,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class LocalImageLoader {
+
+	private static final String TAG = LocalImageLoader.class.getSimpleName();
+
     /**max upload file size*/
     private static final int maxSize = 200;
 	private LocalImageLoader() {
@@ -606,23 +614,23 @@ public class LocalImageLoader {
 
 		try {
 			ExifInterface exifInterface = new ExifInterface(path);
-			int orientation = exifInterface.getAttributeInt(
-					ExifInterface.TAG_ORIENTATION,
-					ExifInterface.ORIENTATION_NORMAL);
-			switch (orientation) {
-			case ExifInterface.ORIENTATION_ROTATE_90:
-				degree = 90;
-				break;
-			case ExifInterface.ORIENTATION_ROTATE_180:
-				degree = 180;
-				break;
-			case ExifInterface.ORIENTATION_ROTATE_270:
-				degree = 270;
-				break;
+			int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+			Log.i(TAG, "getRealPathFromURI& orientation ＝ " + orientation);
+			switch(orientation) {
+				case ExifInterface.ORIENTATION_ROTATE_90:
+					degree = 90;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_180:
+					degree = 180;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_270:
+					degree = 270;
+					break;
 			}
-		} catch (IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
+		Log.i(TAG, "readPictureDegree& path: " + path + "; degree = " + degree);
 		return degree;
 	}
 
@@ -646,9 +654,73 @@ public class LocalImageLoader {
 	 * @return Bitmap
 	 */
 	public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
+		if(bitmap == null) {
+			return null;
+		}
+
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
                 bitmap.getHeight(), matrix, true);
+	}
+
+
+	/**
+	 * 通过图片UR获取本地图片的略缩图
+	 * @param uri   图片URI
+	 * @return 返回所需要的图片
+	 */
+	public static Bitmap getMiniThumbnailBitmap(Context context, Uri uri, int columnWidthHeight) {
+
+		String path = FileUtil.getRealPathFromURI(context, uri);
+		Cursor c = context.getContentResolver().query(uri, null, null, null, null);
+
+		Log.i(TAG, "getMiniThumbnailBitmap& path: " + path + "; uri: " + uri);
+
+
+		String miniThumbanilUri = null;
+		if (c != null) {
+			c.moveToFirst();
+			Cursor cursor = MediaStore.Images.Thumbnails.queryMiniThumbnail(context.getContentResolver(), c.getLong(c.getColumnIndex(MediaStore.Images.Thumbnails._ID)), MediaStore.Images.Thumbnails.MINI_KIND, null);
+			if (cursor != null && cursor.getCount() > 0) {
+				cursor.moveToFirst();//**EDIT**
+				miniThumbanilUri = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
+
+				cursor.close();
+			}
+
+			c.close();
+		}
+
+		// 略缩图
+		Bitmap thumbnail = null;
+		if(!TextUtils.isEmpty(miniThumbanilUri)) {
+			//系统存有此图的略缩图
+			Log.i(TAG, "getMiniThumbnailBitmap& miniThumbanilUri: " + miniThumbanilUri + " for uri: " + uri);
+//			thumbnail = BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(context, paraUri));
+			thumbnail = LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbanilUri).getPath());
+		}
+		if(thumbnail == null){
+			// 原图
+//			Bitmap sourceBitmap = LocalImageLoader.loadBitmapFromFile(context, path);
+			Bitmap sourceBitmap = BitmapFactory.decodeFile(path);
+			if(sourceBitmap == null) {
+				Log.i(TAG, "getMiniThumbnailBitmap& sourceBitmap is null");
+			}
+			// 略缩图
+			thumbnail = ThumbnailUtils.extractThumbnail(sourceBitmap, columnWidthHeight, columnWidthHeight);
+		}
+
+		if(thumbnail == null){
+			Log.i(TAG, "getMiniThumbnailBitmap& thumbnail is null. path: " + path);
+			return null;
+		} else {
+			Log.i(TAG, "getMiniThumbnailBitmap& thumbnail not null. path: " + path);
+		}
+
+		// 转回角度
+		int rotation = readPictureDegree(path);
+		return LocalImageLoader.rotaingImageView(rotation, thumbnail);
+
 	}
 }
