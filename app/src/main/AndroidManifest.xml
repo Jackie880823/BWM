@@ -209,6 +209,7 @@
         <!-- christopher -->
         <activity
             android:name=".ui.MyFamilyActivity"
+            android:windowSoftInputMode = "adjustPan|stateHidden"
             android:screenOrientation="portrait" />
 
         <activity
