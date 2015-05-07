@@ -3,8 +3,14 @@ package com.madx.bwm.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = WallCommentAdapter.class.getSimpleName();
+
     private Context mContext;
     private List<WallCommentEntity> data;
     private WallEntity wall;
@@ -98,20 +106,60 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             VolleyUtil.initNetworkImageView(mContext, holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wall.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
             String atDescription = TextUtils.isEmpty(wall.getText_description()) ? "" : wall.getText_description();
-
-            if (wall.getTag_member().size() == 0) {
-                holder.tvMember.setVisibility(View.GONE);
-            } else {
-                holder.tvMember.setVisibility(View.VISIBLE);
-                holder.tvMember.setText(String.format(mContext.getString(R.string.text_wall_content_at_member_desc), (wall.getTag_member().size())));
-            }
-            if (wall.getTag_group().size() == 0){
-                holder.tvGroup.setVisibility(View.GONE);
-            } else {
-                holder.tvGroup.setText(String.format(mContext.getString(R.string.text_wall_content_at_group_desc), (wall.getTag_group().size())));
-            }
-
             holder.tvContent.setText(atDescription);
+            // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
+            holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+            if (wall.getTag_member().size() > 0) {
+                String strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
+                // 文字特殊效果设置
+                SpannableString ssMember = new SpannableString(strMember);
+
+                // 给文字添加点击响应，跳转至显示被@的用户
+                ssMember.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        if(mViewClickListener != null) {
+                            Log.i(TAG, "onClick& mViewClickListener not null showMembers");
+                            mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
+                        } else {
+                            Log.i(TAG, "onClick& mViewClickListener do nothing");
+                        }
+                    }
+                }, 0, strMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                //设置文字的前景色为蓝色
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
+                ssMember.setSpan(colorSpan, 0, strMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                holder.tvContent.append(ssMember);
+            }
+            if (wall.getTag_group().size() > 0){
+                String strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), wall.getTag_group().size());
+                // 文字特殊效果设置
+                SpannableString ssGroup = new SpannableString(strGroup);
+
+                // 给文字添加点击响应，跳转至显示被@的群组
+                ssGroup.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        if(mViewClickListener != null) {
+                            Log.i(TAG, "onClick& mViewClickListener not null showGroups");
+                            mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
+                        } else {
+                            Log.i(TAG, "onClick& mViewClickListener do nothing");
+                        }
+                    }
+                }, 0, strGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                //设置文字的前景色为蓝色
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
+                ssGroup.setSpan(colorSpan, 0, ssGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if(wall.getTag_member().size() > 0) {
+                    // 同时@了用户和群组，用户和群组之间用&分开
+                    holder.tvContent.append(" & ");
+                }
+                holder.tvContent.append(ssGroup);
+            }
 
             holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, wall.getContent_creation_date()));
             //            holder.tvTime.setText(wall.getTime());
@@ -304,14 +352,6 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         CircularNetworkImage nivHead;
         TextView tvContent;
         /**
-         * @总人数显示
-         */
-        TextView tvMember;
-        /**
-         * @总分组显示
-         */
-        TextView tvGroup;
-        /**
          * 时间
          */
         TextView tvDate;
@@ -347,8 +387,6 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             nivHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
             tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
             tvContent = (TextView) itemView.findViewById(R.id.tv_wall_content);
-            tvMember = (TextView) itemView.findViewById(R.id.tv_wall_member);
-            tvGroup = (TextView) itemView.findViewById(R.id.tv_wall_group);
             tvDate = (TextView) itemView.findViewById(R.id.push_date);
             llWallsImage = itemView.findViewById(R.id.ll_walls_image);
             imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);
@@ -364,8 +402,6 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             //            ibComment.setOnClickListener(this);
             btn_del.setOnClickListener(this);
             imWallsImages.setOnClickListener(this);
-            tvMember.setOnClickListener(this);
-            tvGroup.setOnClickListener(this);
         }
 
         boolean loving = false;
@@ -403,16 +439,6 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 case R.id.btn_del:
                     if(mViewClickListener != null) {
                         mViewClickListener.remove(wall.getContent_group_id());
-                    }
-                    break;
-                case R.id.tv_wall_member:
-                    if(mViewClickListener != null){
-                        mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
-                    }
-                    break;
-                case R.id.tv_wall_group:
-                    if(mViewClickListener != null) {
-                        mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
                     }
                     break;
             }

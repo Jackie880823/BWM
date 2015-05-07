@@ -82,8 +82,8 @@ public class WallGroupAdapter extends RecyclerView.Adapter<WallGroupAdapter.MGIt
     @Override
     public void onBindViewHolder(MGItem holder, int position) {
         GroupEntity entity = mData.get(position);
-        VolleyUtil.initNetworkImageView(mContext, holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-        holder.name.setText(entity.getUser_given_name());
+        VolleyUtil.initNetworkImageView(mContext, holder.nivHead, String.format(Constant.API_GET_GROUP_PHOTO, entity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        holder.name.setText(entity.getGroup_name());
     }
 
     /**

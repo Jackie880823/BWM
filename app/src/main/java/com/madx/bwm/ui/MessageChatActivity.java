@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -88,9 +89,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public LinearLayout empty_message;
     private MessageHorizontalListViewAdapter horizontalListViewAdapter;
 
-    List<String> stickerNameList = new ArrayList<>();
+    private List<String> stickerNameList;
     private HorizontalListView horizontalListView;
-    private List<String> sticker_List_Id = new ArrayList<>();
+    private List<String> sticker_List_Id;
     private MessageStickerFragment fragment = null;
 
     private List<MsgEntity> msgList;
@@ -164,9 +165,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     }
                     break;
                 case GET_HISTORY_MESSAGE:
-                    swipeRefreshLayout.setRefreshing(false);
-                    indexPage++;
                     List<MsgEntity> msgHistoryList = (List<MsgEntity>) msg.obj;
+                    swipeRefreshLayout.setRefreshing(false);
+                    if (null != msgHistoryList || msgHistoryList.size() == 0) {
+                        break;
+                    }
+                    indexPage++;
                     if (null != msgHistoryList) {
                         messageChatAdapter.addHistoryData(msgHistoryList);
                     }
@@ -287,10 +291,14 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         msgList = new ArrayList<>();
         if (userOrGroupType == 0) {
             userEntity = (UserEntity) getIntent().getExtras().getSerializable("userEntity");
-            groupId = userEntity.getGroup_id();
+            if (userEntity != null) {
+                groupId = userEntity.getGroup_id();
+            }
         } else if (userOrGroupType == 1) {
             groupEntity = (GroupEntity) getIntent().getExtras().getSerializable("groupEntity");
-            groupId = groupEntity.getGroup_id();
+            if (groupEntity != null) {
+                groupId = groupEntity.getGroup_id();
+            }
         } else {
             finish();
         }
@@ -323,7 +331,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         empty_message = getViewById(R.id.no_message_data_linear);
 
         initViewPager();
-        new StickerAsyncTask().execute();
+        //new StickerAsyncTask().execute();
 
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -368,26 +376,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         }
     }
 
-    class StickerAsyncTask extends AsyncTask<Void,Integer,Void>{
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            addStickerList();
-            addImageList();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            horizontalListViewAdapter.addData(sticker_List_Id);
-            setTabSelection(0);
-        }
-    }
     private void initViewPager() {
+        stickerNameList = MessageListFragment.STICKER_NAME_LIST;
+        sticker_List_Id = MessageListFragment.FIRST_STICKER_LIST;
         horizontalListViewAdapter = new MessageHorizontalListViewAdapter(sticker_List_Id, mContext);
         horizontalListView.setAdapter(horizontalListViewAdapter);
-
+        setTabSelection(0);
         horizontalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -399,20 +393,21 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     }
 
     private void setTabSelection(int index) {
+        if (isFinishing()) {
+            return;
+        }
         String selectStickerName = stickerNameList.get(index);
         // 开启一个Fragment事务
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        fragment = new MessageStickerFragment(selectStickerName, MessageChatActivity.this, groupId);
+        fragment = new MessageStickerFragment();//selectStickerName, MessageChatActivity.this, groupId);
+        Bundle bundle = new Bundle();
+        bundle.putString("selectStickerName", selectStickerName);
+        bundle.putString("groupId", groupId);
+        fragment.setArguments(bundle);
         transaction.replace(R.id.message_frame, fragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.addToBackStack(null);
-        transaction.commit();
-        // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
-//        if (fragment != null) {
-//            transaction.remove(fragment);
-//        }
-//        fragment = new MessageStickerFragment(selectStickerName, MessageChatActivity.this, groupId);
-//        transaction.add(R.id.message_frame, fragment).commit();
+        transaction.commitAllowingStateLoss();
     }
 
     @Override
