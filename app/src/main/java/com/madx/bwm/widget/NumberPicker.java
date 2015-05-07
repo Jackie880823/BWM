@@ -965,7 +965,7 @@ public class NumberPicker extends LinearLayout {
 	/*
 	 * @Override protected boolean dispatchHoverEvent(MotionEvent event) { if
 	 * (!mHasSelectorWheel) { return super.dispatchHoverEvent(event); } if
-	 * (AccessibilityManager.getInstance(mContext).isEnabled()) { final int
+	 * (AccessibilityManager.getContextInstance(mContext).isEnabled()) { final int
 	 * eventY = (int) event.getY(); final int hoveredVirtualViewId; if (eventY <
 	 * mTopSelectionDividerTop) { hoveredVirtualViewId =
 	 * AccessibilityNodeProviderImpl.VIRTUAL_VIEW_ID_DECREMENT; } else if

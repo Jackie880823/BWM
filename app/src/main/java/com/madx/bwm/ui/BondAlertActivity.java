@@ -1,7 +1,9 @@
 package com.madx.bwm.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.madx.bwm.R;
@@ -33,7 +35,9 @@ public class BondAlertActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override
@@ -54,5 +58,15 @@ public class BondAlertActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+        return super.dispatchKeyEvent(event);
     }
 }

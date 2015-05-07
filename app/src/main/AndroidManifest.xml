@@ -58,6 +58,12 @@
         android:theme="@style/AppTheme">
 
 
+        <!-- 友盟统计 -->
+        <!--<meta-data-->
+            <!--android:name="UMENG_CHANNEL"-->
+            <!--android:value="${UMENG_CHANNEL_VALUE}" />-->
+
+
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -203,6 +209,7 @@
         <!-- christopher -->
         <activity
             android:name=".ui.MyFamilyActivity"
+            android:windowSoftInputMode = "adjustPan|stateHidden"
             android:screenOrientation="portrait" />
 
         <activity
@@ -254,7 +261,7 @@
         <activity
             android:name=".ui.MyViewProfileActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified" />
+            android:windowSoftInputMode = "adjustPan|stateHidden" />
         <activity
             android:name=".ui.MeActivity"
             android:screenOrientation="portrait" />

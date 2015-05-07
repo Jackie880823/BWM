@@ -183,11 +183,6 @@ public class MainActivity extends BaseActivity {
     });
 
     @Override
-    protected void onPostResume() {
-        super.onPostResume();
-    }
-
-    @Override
     protected void titleRightEvent() {
         // 发送右边控件被点击的消息致handler
         handler.sendEmptyMessage(RIGHT_CLICK_EVENT);
@@ -239,7 +234,7 @@ public class MainActivity extends BaseActivity {
 ////            fragments.add(1,eventStartupFragment);
 //        }
 //        fragments.add(MessageFragment.newInstance());
-        fragments.add(MessageMainFragment.newInstance());
+        fragments.add(MessageListFragment.newInstance());
         fragments.add(MoreFragment.newInstance());
 
 

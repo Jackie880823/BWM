@@ -97,7 +97,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
         initAdapter();
-
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -133,6 +132,25 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
 
 //        isRefresh = true;
 //        swipeRefreshLayout.setRefreshing(true);
+
+//        try {
+//            Dao<OrmEntityDemo,Integer> demoDao = App.getContextInstance().getDBHelper().getDao(OrmEntityDemo.class);
+//            int i = 0;
+//            for(;i<20;i++) {
+//                OrmEntityDemo ormEntityDemo = new OrmEntityDemo();
+//                ormEntityDemo.setRegisterDate(System.currentTimeMillis());
+//                ormEntityDemo.setSecurityKey("abc" + i);
+//                demoDao.create(ormEntityDemo);
+//            }
+//
+//            List<OrmEntityDemo> ormEntityDemos = demoDao.queryForAll();
+//            for(OrmEntityDemo demo :ormEntityDemos){
+//                Log.i("", "demo==========" + demo.getSecurityKey());
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
 
     }

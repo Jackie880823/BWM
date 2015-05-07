@@ -114,7 +114,7 @@ public class FamilyViewProfileActivity extends BaseActivity {
 //        {
 //            Timestamp ts;
 //            ts = Timestamp.valueOf(tvBirthday.getText().toString() + " 00:00:00");
-//            Calendar mCalendar = Calendar.getInstance(TimeZone.getDefault());
+//            Calendar mCalendar = Calendar.getContextInstance(TimeZone.getDefault());
 //            mCalendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
 //            int age = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date())) - Integer.parseInt(new SimpleDateFormat("yyy").format(mCalendar.getTime()));
 //            tvAge.setText(String.valueOf(age));

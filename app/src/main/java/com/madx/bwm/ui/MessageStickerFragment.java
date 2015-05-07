@@ -1,5 +1,6 @@
 package com.madx.bwm.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -47,10 +48,16 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
     private List<String> stickerPathList;
     private String stickerFileName;
 
-    public MessageStickerFragment(String selectStickerName, MessageChatActivity messageChatActivity, String groupId) {
-        this.selectStickerName = selectStickerName;
-        this.messageChatActivity = messageChatActivity;
-        this.groupId = groupId;
+//    public MessageStickerFragment(String selectStickerName, MessageChatActivity messageChatActivity, String groupId) {
+//        this.selectStickerName = selectStickerName;
+//        this.messageChatActivity = messageChatActivity;
+//        this.groupId = groupId;
+//    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        messageChatActivity=(MessageChatActivity)activity;
     }
 
     @Override
@@ -66,6 +73,9 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
 
     @Override
     public void initView() {
+        Bundle bundle=getArguments();
+        selectStickerName=bundle.getString("selectStickerName");
+        groupId=bundle.getString("groupId");
         mContext = getActivity();
         mPager = getViewById(R.id.viewpager);
         mNumLayout = getViewById(R.id.fragment_sticker_linear);

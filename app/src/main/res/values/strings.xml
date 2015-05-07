@@ -614,5 +614,6 @@
     <!-- end -->
 
     <string name="select_too_many">"have select photos count is %d"</string>
+    <string name="text_nearest">nearest</string>
 
 </resources>

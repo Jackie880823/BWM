@@ -198,7 +198,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     private void goBondAlert() {
 
         Intent intent = new Intent(getActivity(), BondAlertActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 0);
 
 //        FragmentManager fm = getChildFragmentManager();
 //        FragmentTransaction ft = fm.beginTransaction();
@@ -233,5 +233,17 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
             myDialog.dismiss();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == getActivity().RESULT_OK) {
+            switch (requestCode) {
+                case 0:
+                    requestData();
+                break;
+            }
+        }
+
     }
 }
