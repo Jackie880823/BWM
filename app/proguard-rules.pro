@@ -110,7 +110,7 @@
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.examples.android.model.** { *; }
 
-##volley
+#volley
 -keep class com.android.volley.** {*;}
 -keep class com.android.volley.toolbox.** {*;}
 -keep class com.android.volley.Response$* { *; }
@@ -124,3 +124,7 @@
 -dontwarn org.apache.http.**
 -keep class org.apache.http.** { *; }
 -keep class org.apache.http.entity.mime.** { *;}
+
+#jiguang
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }

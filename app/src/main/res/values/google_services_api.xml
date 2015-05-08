@@ -6,6 +6,7 @@
     <!--map -->
     <string name="google_maps_key_instructions" templateMergeStrategy="replace">
         E9:81:9A:EF:5D:21:4C:E9:E6:87:31:2B:7C:B5:D9:A0:6D:36:54:8B;com.madx.bwm
+
         <!--
     TODO: Before you run your application, you need a Google Maps API key.
 
@@ -20,9 +21,15 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
     string in this file.
     --></string>
 
-    <string name="google_maps_key" templateMergeStrategy="preserve">AIzaSyAESJa-udw5Jd_KQGmjq51gZ1uvSUcYvOs</string>
+    <!--<string name="google_maps_key" templateMergeStrategy="preserve">AIzaSyBoOD7rYF6b7GsO-5-LSrYYd2SBCVfhIDA</string>-->
+    <!-- release by wing -->
+    <!--<string name="google_maps_key" templateMergeStrategy="preserve">AIzaSyDxlAh1QC6o-roRxwCQzABSOdmUswOG-x4</string>-->
+    <!-- test by wing -->
+    <string name="google_maps_key" templateMergeStrategy="preserve">AIzaSyCi08-e4WIkFj9sRdgSBSBa2d5dQy2dVQ4</string>
 
 
     <!-- GCM -->
+    <!--<string name="gcm_sender_id" templateMergeStrategy="preserve">559996630584</string>-->
+    <!-- test -->
     <string name="gcm_sender_id" templateMergeStrategy="preserve">883424271065</string>
 </resources>
