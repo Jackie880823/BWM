@@ -236,9 +236,14 @@ public class MyViewProfileActivity extends BaseActivity {
         }
         //etRegion.setText(MainActivity.getUser().getUser_location_name());
         etRegion.setKeyListener(null);
-        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_emoticon())) {
+        String dofeel_code = MainActivity.getUser().getDofeel_code();
+        if (!TextUtils.isEmpty(dofeel_code)) {
             try {
-                InputStream is = MyViewProfileActivity.this.getAssets().open(MainActivity.getUser().getUser_emoticon() + ".png");
+                String filePath = "";
+                if (dofeel_code.indexOf("_") != -1) {
+                    filePath = dofeel_code.replaceAll("_", File.separator);
+                }
+                InputStream is = MyViewProfileActivity.this.getAssets().open(filePath);
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
                 ivBottomLeft.setImageBitmap(bitmap);
 

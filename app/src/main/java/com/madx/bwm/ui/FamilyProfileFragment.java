@@ -35,6 +35,7 @@ import com.madx.bwm.widget.CircularNetworkImage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -80,14 +81,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         super();
         // Required empty public constructor
     }
-
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_event, container, false);
-//    }
 
     @Override
     public void setLayoutId() {
@@ -135,7 +128,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         llViewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data != null && data.size()>0) {
+                if (data != null && data.size() > 0) {
                     Intent intent1 = new Intent(getActivity(), FamilyViewProfileActivity.class);
                     intent1.putExtra("userEntity", userEntity);
                     startActivity(intent1);
@@ -146,7 +139,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data != null && data.size()>0) {
+                if (data != null && data.size() > 0) {
                     Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
                     intent2.putExtra("type", 0);
                     intent2.putExtra("userEntity", userEntity);
@@ -208,59 +201,18 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                         }
                     });
                 }
-
-
-
-
-
-//                if ((data != null) && (data.size() > 0)) {
-//                    StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_MISS_MEMBER, new Response.Listener<String>() {
-//
-//                        GsonBuilder gsonb = new GsonBuilder();
-//
-//                        Gson gson = gsonb.create();
-//
-//                        @Override
-//                        public void onResponse(String response) {
-//                            try {
-//                                JSONObject jsonObject = new JSONObject(response);
-//
-//                                Toast.makeText(getActivity(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            error.printStackTrace();
-//                            Toast.makeText(getActivity(), getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }) {
-//                        @Override
-//                        protected Map<String, String> getParams() throws AuthFailureError {
-//                            HashMap<String, String> params = new HashMap<String, String>();
-//                            params.put("from_user_id", MainActivity.getUser().getUser_id());
-//                            params.put("to_user_id", memberId);
-//                            params.put("to_user_fullname", userEntity.getUser_given_name());
-//                            return params;
-//                        }
-//                    };
-//                    VolleyUtil.addRequest2Queue(getActivity(), stringRequestPost, "");
-//                }
             }
         });
 
         rlPathRelationship.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data != null && data.size()>0) {
+                if (data != null && data.size() > 0) {
                     Intent intent = new Intent(getActivity(), PathRelationshipActivity.class);
                     intent.putExtra("member_id", memberId);
                     intent.putExtra("relationship", userEntity.getTree_type_name());
-                    intent.putExtra("fam_nickname",userEntity.getFam_nickname());
-                    intent.putExtra("member_status",userEntity.getUser_status());
+                    intent.putExtra("fam_nickname", userEntity.getFam_nickname());
+                    intent.putExtra("member_status", userEntity.getUser_status());
                     startActivityForResult(intent, 0);
                 }
             }
@@ -269,7 +221,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlAlbumGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data != null && data.size()>0) {
+                if (data != null && data.size() > 0) {
                     Intent intent = new Intent(getActivity(), AlbumGalleryActivity.class);
                     intent.putExtra("member_id", memberId);
                     startActivity(intent);
@@ -280,7 +232,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlWallPosting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data != null && data.size()>0) {
+                if (data != null && data.size() > 0) {
                     FragmentManager fm = getParentActivity().getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     Fragment f = WallFragment.newInstance(memberId);
@@ -321,22 +273,25 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
 
-                data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                }.getType());
 
-                if( (data != null) && (data.size()>0) )
-                {
+                if ((data != null) && (data.size() > 0)) {
                     userEntity = data.get(0);
 
                     VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
                     tvName1.setText(userEntity.getUser_given_name());
                     getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
                     tvId1.setText("ID:" + userEntity.getDis_bondwithme_id());
-
-                    if (!TextUtils.isEmpty(userEntity.getUser_emoticon()))
-                    {
+                    String dofeel_code = userEntity.getDofeel_code();
+                    if (!TextUtils.isEmpty(dofeel_code)) {
                         try {
-                            InputStream is = App.getContextInstance().getAssets().open(userEntity.getUser_emoticon()+".png");
-                            Bitmap bitmap= BitmapFactory.decodeStream(is);
+                            String filePath = "";
+                            if (dofeel_code.indexOf("_") != -1) {
+                                filePath = dofeel_code.replaceAll("_", File.separator);
+                            }
+                            InputStream is = App.getContextInstance().getAssets().open(filePath);
+                            Bitmap bitmap = BitmapFactory.decodeStream(is);
                             ivBottomLeft.setImageBitmap(bitmap);
 
                         } catch (IOException e) {
@@ -362,11 +317,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
             }
         });
-
-
-
-
-
 
 
 //        StringRequest srMemberProfile = new StringRequest(url, new Response.Listener<String>() {
@@ -419,11 +369,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode)
-        {
+        switch (requestCode) {
             case 0:
-                if (resultCode == getActivity().RESULT_OK)
-                {
+                if (resultCode == getActivity().RESULT_OK) {
                     requestData();
                 }
         }
