@@ -602,7 +602,7 @@
     <string name="photo_position_no_arrow">%1$d/%2$d</string>
 
 <!-- TODO: Remove or change this placeholder text -->
-    <string name="yesterday_ago">1 day ago</string>
+    <string name="yesterday_ago">Yesterday&#160;</string>
     <string name="just_now">Just now</string>
     <string name="some_minite_ago">%d min ago</string>
     <string name="some_hour_ago">%d hr ago</string>

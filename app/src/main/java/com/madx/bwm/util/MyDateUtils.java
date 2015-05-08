@@ -38,25 +38,21 @@ public class MyDateUtils extends android.text.format.DateUtils {
             // If it is from a different day than today, show only the date.
             if(now.yearDay - then.yearDay == 1) {
                 // 一天前的更新
-                return context.getString(R.string.yesterday_ago);
+                format_flags |= DateUtils.FORMAT_SHOW_TIME;
+                String result = context.getString(R.string.yesterday_ago) + DateUtils.formatDateTime(context, when, format_flags);
+                return result;
             }
             format_flags |= DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME;
         } else {
             // Otherwise, if the message is from today, show the time.
             int hour = now.hour  - then.hour;
-            if(hour < 1){
-                int minute = now.minute - then.minute;
-                // 3小时之内的更新
-                if(minute <= 1) {
-                    // 3分钟之内的更新
-                    return context.getString(R.string.just_now);
-                } else {
-                    // minute分钟之前
-                    return String.format(context.getString(R.string.some_minite_ago), minute);
-                }
+            int minute = now.minute - then.minute;
+            if(hour < 1 && minute <= 1){
+                // 1分之内的更新
+                return context.getString(R.string.just_now);
             } else {
-                // 当天3小时之前的更新
-                return String.format(context.getString(R.string.some_hour_ago), hour);
+                // 当天1分钟之后的更新
+                format_flags |= DateUtils.FORMAT_SHOW_TIME;
             }
 //            format_flags |= DateUtils.FORMAT_SHOW_TIME;
         }

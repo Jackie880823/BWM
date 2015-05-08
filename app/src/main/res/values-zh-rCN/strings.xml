@@ -615,7 +615,7 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="yesterday_ago">1 day ago</string>
+    <string name="yesterday_ago">Yesterday&#160;</string>
     <string name="just_now">Just now</string>
     <string name="some_minite_ago">%d min ago</string>
     <string name="some_hour_ago">%d hr ago</string>
