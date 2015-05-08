@@ -1,6 +1,8 @@
 package com.madx.bwm.ui.wall;
 
+import android.graphics.Rect;
 import android.text.Editable;
+import android.util.Log;
 
 import com.madx.bwm.R;
 import com.madx.bwm.entity.GroupEntity;
@@ -88,6 +90,11 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
                 }
 
             }
+
+            @Override
+            public void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+                changeAtDesc(mMembers, mGroups);
+            }
         });
 
     }
@@ -97,20 +104,24 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
     }
 
     public void changeAtDesc(List<UserEntity> members, List<GroupEntity> groups) {
-        this.mMembers = members;
-        this.mGroups = groups;
+        mMembers = members;
+        mGroups = groups;
 
         WallEditView editText = getEditText4Content();
         String memberText;
         String groupText;
-        if(members != null && members.size() > 0) {
-            memberText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), members.size());
+        if(members != null && mMembers.size() > 0) {
+            memberText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), mMembers.size());
+            Log.i(TAG, "changeAtDesc& member of at description is " + memberText);
         } else {
+            Log.i(TAG, "changeAtDesc& no member of at description");
             memberText = "";
         }
-        if(groups != null && groups.size() > 0) {
-            groupText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), groups.size());
+        if(groups != null && mGroups.size() > 0) {
+            groupText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), mGroups.size());
+            Log.i(TAG, "changeAtDesc& group of at description is " + groupText);
         } else {
+            Log.i(TAG, "changeAtDesc& no group of at description");
             groupText = "";
         }
 

@@ -27,6 +27,7 @@ public class EventEntity implements Serializable {
     private String content_creation_timestamp  ;
     /**intent*/
     private String group_member_response  ;
+    private String group_new_post;
     private List<String> event_member;
 
 
@@ -182,5 +183,13 @@ public class EventEntity implements Serializable {
 
     public void setGroup_member_response(String group_member_response) {
         this.group_member_response = group_member_response;
+    }
+
+    public String getGroup_new_post() {
+        return group_new_post;
+    }
+
+    public void setgetGroup_new_post(String group_new_post) {
+        this.group_new_post = group_new_post;
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -59,6 +60,9 @@ public class WallEditView extends EditText implements TextWatcher {
     public static final int TEXT_ALIGN_CENTER_HORIZONTAL = 0x00001000;
     public static final int TEXT_ALIGN_TOP = 0x00010000;
     public static final int TEXT_ALIGN_BOTTOM = 0x00100000;
+
+    private String oldMemberText;
+    private String oldGroupText;
 
     /**
      * 文本中轴线X坐标
@@ -126,6 +130,8 @@ public class WallEditView extends EditText implements TextWatcher {
         void onTextChanged(CharSequence s, int start, int before, int count);
 
         void afterTextChanged(Editable s, int change);
+
+        void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect);
     }
 
     @Override
@@ -148,27 +154,38 @@ public class WallEditView extends EditText implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
         int change = TextChangeListener.CHANGE_MODE_NORMAL;
-        if(oldMemberText != null) {
+        Log.i(TAG, "afterTextChanged& oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
+        if(!TextUtils.isEmpty(oldMemberText)) {
             SpannableStringBuilder sb = new SpannableStringBuilder(s);
             Pattern p = Pattern.compile(oldMemberText);
             Matcher m = p.matcher(sb.toString());
             if (!m.find() || (m.end() == 0)) {
                 hasAtMember = false;
                 change |= TextChangeListener.CHANGE_MODE_DLETE_AT_MEMBER;
+                oldMemberText = "";
             }
         }
-        if(oldGroupText != null) {
+        if(!TextUtils.isEmpty(oldGroupText)) {
             SpannableStringBuilder sb = new SpannableStringBuilder(s);
             Pattern p = Pattern.compile(oldGroupText);
             Matcher m = p.matcher(sb.toString());
             if (!m.find() || (m.end() == 0)) {
                 hasAtGroup = false;
                 change |= TextChangeListener.CHANGE_MODE_DLETE_AT_GROUPS;
+                oldGroupText = "";
             }
         }
         Log.i(TAG, "afterTextChanged& change" + change);
         if (textChangeListener != null) {
             textChangeListener.afterTextChanged(s, change);
+        }
+    }
+
+    @Override
+    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(focused, direction, previouslyFocusedRect);
+        if(textChangeListener != null) {
+//            textChangeListener.onFocusChanged(focused, direction, previouslyFocusedRect);
         }
     }
 
@@ -180,6 +197,7 @@ public class WallEditView extends EditText implements TextWatcher {
         // at group transform about group text
         hasAtGroup = setDescSpan(groupText, oldGroupText, hasAtGroup);
         oldGroupText = groupText;
+        Log.i(TAG, "addAtDesc");
     }
 
     private SpannableStringBuilder getSpanBuilder(SpannableStringBuilder sb, String str){
@@ -207,37 +225,37 @@ public class WallEditView extends EditText implements TextWatcher {
         getSpanBuilder(sb, oldMemberText);
         getSpanBuilder(sb, oldGroupText);
 
-        int start = 0;
-        int end = 0;
-
-        if (hasAt) {
-            try {
-                Pattern p = Pattern.compile(oldDesc);
-                Matcher m = p.matcher(sb.toString());
-                if (m.find()) {
-                    start = m.start();
-                    end = m.end();
-                    sb.replace(start, end, desc);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        } else {
-            sb.append(desc);
-            start = sb.length() - desc.length();
-            if (start < 0) {
-                start = 0;
-            }
-            end = sb.length();
-        }
-
-        Log.i(TAG, "addAtDesc: start = " + start + "; end = " + end);
 
         if(TextUtils.isEmpty(desc)){
             hasAt = false;
             setText(sb);
         } else {
+
+            int start = 0;
+            int end = 0;
+
+            if(hasAt) {
+                try {
+                    Pattern p = Pattern.compile(oldDesc);
+                    Matcher m = p.matcher(sb.toString());
+                    if(m.find()) {
+                        start = m.start();
+                        end = m.end();
+                        sb.replace(start, end, desc);
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                sb.append(desc);
+                start = sb.length() - desc.length();
+                if(start < 0) {
+                    start = 0;
+                }
+                end = sb.length();
+            }
             ImageSpan is = getImageSpanForText(desc);
+            Log.i(TAG, "addAtDesc& start = " + start + "; end = " + end);
             sb.setSpan(is, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             this.setText(sb);
             hasAt = true;
@@ -252,9 +270,6 @@ public class WallEditView extends EditText implements TextWatcher {
         }
         return text;
     }
-
-    private String oldMemberText;
-    private String oldGroupText;
 
     /**
      * yes or no at member, at anyone value is true;
