@@ -236,9 +236,14 @@ public class MyViewProfileActivity extends BaseActivity {
         }
         //etRegion.setText(MainActivity.getUser().getUser_location_name());
         etRegion.setKeyListener(null);
-        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_emoticon())) {
+        String dofeel_code = MainActivity.getUser().getDofeel_code();
+        if (!TextUtils.isEmpty(dofeel_code)) {
             try {
-                InputStream is = MyViewProfileActivity.this.getAssets().open(MainActivity.getUser().getUser_emoticon() + ".png");
+                String filePath = "";
+                if (dofeel_code.indexOf("_") != -1) {
+                    filePath = dofeel_code.replaceAll("_", File.separator);
+                }
+                InputStream is = MyViewProfileActivity.this.getAssets().open(filePath);
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
                 ivBottomLeft.setImageBitmap(bitmap);
 
@@ -270,20 +275,6 @@ public class MyViewProfileActivity extends BaseActivity {
                 showCameraAlbum();
             }
         });
-
-//        ivBottomLeft.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-
-//        rlAge.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showDateTimePicker();
-//            }
-//        });
 
         rlBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -388,77 +379,6 @@ public class MyViewProfileActivity extends BaseActivity {
             }
         });
 
-
-//        HashMap<String, String> jsonParams = new HashMap<String, String>();
-//        jsonParams.put("user_surname", etLastName.getText().toString());
-//        jsonParams.put("user_given_name", etFirstName.getText().toString());
-//        jsonParams.put("user_gender", userGender);
-//        jsonParams.put("user_dob", tvBirthday.getText().toString());
-//        jsonParams.put("user_location_name", etRegion.getText().toString());
-//        final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-//
-//        StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
-//
-//            GsonBuilder gsonb = new GsonBuilder();
-//
-//            Gson gson = gsonb.create();
-//
-//            @Override
-//            public void onResponse(String response) {
-//
-//                if(!TextUtils.isEmpty(response)){
-//                    if(response.contains("changedFlag")){
-////                            Toast.makeText(MyViewProfileActivity.this, "You didn't change information.", Toast.LENGTH_SHORT).show();
-//                    }else if(response.contains("response_status")){
-//                        /**
-//                         * begin QK
-//                         */
-//                        Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_fail_update_information), Toast.LENGTH_SHORT).show();
-//                    }else{
-//                        Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_success_update_information), Toast.LENGTH_SHORT).show();
-//                        /**
-//                         * end
-//                         */
-//                        isUploadNameSuccess = true;
-//
-//                        App.changeLoginedUser(gson.fromJson(response, UserEntity.class));
-//                        List userList = new ArrayList<UserEntity>();
-//                        userList.add(gson.fromJson(response, UserEntity.class));
-//
-//                        PreferencesUtil.saveValue(MyViewProfileActivity.this, "user", gson.toJson(gson.fromJson(response, UserEntity.class)));
-//
-//
-//                        if (!isUploadImage)
-//                        {
-//                            Intent intent = new Intent();
-//                            intent.putExtra("name", etFirstName.getText().toString());
-//                            setResult(RESULT_OK, intent);
-//                            finish();
-//                        }
-//
-//                    }
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//                error.printStackTrace();
-//
-//                Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//
-//            }
-//        }) {
-//
-//            @Override
-//            public byte[] getBody() throws AuthFailureError {
-//                return jsonParamsString.getBytes();
-//            }
-//
-//        };
-//
-//        VolleyUtil.addRequest2Queue(MyViewProfileActivity.this, srRemoveMember, "");
     }
 
     private void showSelectDialog() {
@@ -726,17 +646,16 @@ public class MyViewProfileActivity extends BaseActivity {
         new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, new HttpCallback() {
             @Override
             public void onStart() {
-                Log.i("", "11response==========");
+
             }
 
             @Override
             public void onFinish() {
-                Log.i("", "222response==========");
+
             }
 
             @Override
             public void onResult(String response) {
-                Log.i("", "333response==========" + response);
                 try {
                     String responseStatus;
                     JSONObject jsonObject = new JSONObject(response);

@@ -54,6 +54,7 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
 
         WallEditView text_content = getViewById(R.id.wall_text_content);
         text_content.setTextChangeListener(new WallEditView.TextChangeListener() {
+            int lastChange = CHANGE_MODE_NORMAL;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -67,6 +68,13 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
             @Override
             public void afterTextChanged(Editable s, int change) {
                 switch(change) {
+                    case CHANGE_MODE_NORMAL:
+                        if(lastChange == CHANGE_MODE_BLACK_CHANGE){
+                            lastChange = change;
+                            changeAtDesc(mMembers, mGroups);
+                            return;
+                        }
+                        break;
                     case CHANGE_MODE_DLETE_AT_ALL:
                         if(mMembers != null) {
                             mMembers.clear();
@@ -88,12 +96,7 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
                         }
                         break;
                 }
-
-            }
-
-            @Override
-            public void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-                changeAtDesc(mMembers, mGroups);
+                lastChange = change;
             }
         });
 

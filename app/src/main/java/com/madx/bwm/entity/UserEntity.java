@@ -7,7 +7,9 @@ import java.io.Serializable;
  */
 public class UserEntity implements Serializable {
 
-/**这个是示例字段，示例关系依赖*/
+    /**
+     * 这个是示例字段，示例关系依赖
+     */
 //    @DatabaseField(foreign = true, foreignAutoRefresh = true,columnName="device_id")
 //    private OrmEntityDemo ormEntity;
 
@@ -39,7 +41,9 @@ public class UserEntity implements Serializable {
     private String user_password;
     private String owner_user_id;
     private String user_creation_date;
-    /** 0 not friend, 1 friend*/
+    /**
+     * 0 not friend, 1 friend
+     */
     private String friend;
 
     private String fam_nickname;
@@ -77,9 +81,16 @@ public class UserEntity implements Serializable {
     }
 
     private String added_flag;
-
+    private String dofeel_code;
     /*Update Profile Details */
 
+    public String getDofeel_code() {
+        return dofeel_code;
+    }
+
+    public void setDofeel_code(String dofeel_code) {
+        this.dofeel_code = dofeel_code;
+    }
 
     private String dis_bondwithme_id;
 
@@ -146,8 +157,6 @@ public class UserEntity implements Serializable {
     public void setGroup_id(String group_id) {
         this.group_id = group_id;
     }
-
-
 
 
     public String getFam_nickname() {

@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -125,13 +124,13 @@ public class WallEditView extends EditText implements TextWatcher {
         public static final int CHANGE_MODE_DLETE_AT_MEMBER = 1;
         public static final int CHANGE_MODE_DLETE_AT_GROUPS = 2;
         public static final int CHANGE_MODE_DLETE_AT_ALL = 3;
+        public static final int CHANGE_MODE_BLACK_CHANGE = 4;
         void beforeTextChanged(CharSequence s, int start, int count, int after);
 
         void onTextChanged(CharSequence s, int start, int before, int count);
 
         void afterTextChanged(Editable s, int change);
 
-        void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect);
     }
 
     @Override
@@ -153,26 +152,33 @@ public class WallEditView extends EditText implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
+
         int change = TextChangeListener.CHANGE_MODE_NORMAL;
-        Log.i(TAG, "afterTextChanged& oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
-        if(!TextUtils.isEmpty(oldMemberText)) {
-            SpannableStringBuilder sb = new SpannableStringBuilder(s);
-            Pattern p = Pattern.compile(oldMemberText);
-            Matcher m = p.matcher(sb.toString());
-            if (!m.find() || (m.end() == 0)) {
-                hasAtMember = false;
-                change |= TextChangeListener.CHANGE_MODE_DLETE_AT_MEMBER;
-                oldMemberText = "";
+        if(!isShown()) {
+            Log.w(TAG, "afterTextChanged& this view not show");
+            change = TextChangeListener.CHANGE_MODE_BLACK_CHANGE;
+        } else {
+            Log.i(TAG, "afterTextChanged& oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
+
+            if(!TextUtils.isEmpty(oldMemberText)) {
+                SpannableStringBuilder sb = new SpannableStringBuilder(s);
+                Pattern p = Pattern.compile(oldMemberText);
+                Matcher m = p.matcher(sb.toString());
+                if (!m.find() || (m.end() == 0)) {
+                    hasAtMember = false;
+                    change |= TextChangeListener.CHANGE_MODE_DLETE_AT_MEMBER;
+                    oldMemberText = "";
+                }
             }
-        }
-        if(!TextUtils.isEmpty(oldGroupText)) {
-            SpannableStringBuilder sb = new SpannableStringBuilder(s);
-            Pattern p = Pattern.compile(oldGroupText);
-            Matcher m = p.matcher(sb.toString());
-            if (!m.find() || (m.end() == 0)) {
-                hasAtGroup = false;
-                change |= TextChangeListener.CHANGE_MODE_DLETE_AT_GROUPS;
-                oldGroupText = "";
+            if(!TextUtils.isEmpty(oldGroupText)) {
+                SpannableStringBuilder sb = new SpannableStringBuilder(s);
+                Pattern p = Pattern.compile(oldGroupText);
+                Matcher m = p.matcher(sb.toString());
+                if (!m.find() || (m.end() == 0)) {
+                    hasAtGroup = false;
+                    change |= TextChangeListener.CHANGE_MODE_DLETE_AT_GROUPS;
+                    oldGroupText = "";
+                }
             }
         }
         Log.i(TAG, "afterTextChanged& change" + change);
@@ -181,15 +187,15 @@ public class WallEditView extends EditText implements TextWatcher {
         }
     }
 
-    @Override
-    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        if(textChangeListener != null) {
-//            textChangeListener.onFocusChanged(focused, direction, previouslyFocusedRect);
-        }
-    }
-
     public void addAtDesc(String memberText, String groupText) {
+        if(!isShown()) {
+            Log.w(TAG, "addAtDesc& this view not show");
+            if (textChangeListener != null) {
+                textChangeListener.afterTextChanged(getText(), TextChangeListener.CHANGE_MODE_BLACK_CHANGE);
+            }
+            return;
+        }
+
         // at member transform about member text
         hasAtMember = setDescSpan(memberText, oldMemberText, hasAtMember);
         oldMemberText = memberText;
@@ -218,7 +224,6 @@ public class WallEditView extends EditText implements TextWatcher {
     }
 
     private boolean setDescSpan(String desc, String oldDesc, boolean hasAt) {
-
         Editable editable = getText();
 
         SpannableStringBuilder sb = new SpannableStringBuilder(editable.toString());

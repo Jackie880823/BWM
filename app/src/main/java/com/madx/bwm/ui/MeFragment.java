@@ -19,6 +19,7 @@ import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.widget.CircularNetworkImage;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -72,15 +73,16 @@ public class MeFragment extends BaseFragment<MeActivity> {
         tvName1.setText(MainActivity.getUser().getUser_given_name());
 //        tvTitle.setText(MainActivity.getUser().getUser_given_name());
         tvId1.setText("ID:" + MainActivity.getUser().getDis_bondwithme_id());
-
-        if (!TextUtils.isEmpty((MainActivity.getUser().getUser_emoticon()))) {
+        String dofeel_code = MainActivity.getUser().getDofeel_code();
+        if (!TextUtils.isEmpty((dofeel_code))) {
             try {
-                InputStream is = getActivity().getAssets().open(MainActivity.getUser().getUser_emoticon() + ".png");
+                String filePath = "";
+                if (dofeel_code.indexOf("_") != -1) {
+                    filePath = dofeel_code.replaceAll("_", File.separator);
+                }
+                InputStream is = getActivity().getAssets().open(filePath);
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
                 ivBottomLeft.setImageBitmap(bitmap);
-
-//                    Drawable da = Drawable.createFromStream(is, null);
-//                    ivBottomLeft.setImageDrawable(da);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -126,7 +128,9 @@ public class MeFragment extends BaseFragment<MeActivity> {
     }
 
 
-    /** christopher begin */
+    /**
+     * christopher begin
+     */
     //TODO
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
