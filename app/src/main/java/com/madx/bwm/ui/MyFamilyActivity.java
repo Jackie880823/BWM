@@ -62,7 +62,8 @@ public class MyFamilyActivity extends BaseActivity {
     List<GroupEntity> groupList = new ArrayList<>();//群组
 
     List<UserEntity> searchUserList = new ArrayList<>();//好友
-    List<GroupEntity> searchGroupList = new ArrayList<>();;//群组
+    List<GroupEntity> searchGroupList = new ArrayList<>();
+    ;//群组
     EditText etSearch;//搜索
     Boolean isSearch = false;
 
@@ -123,7 +124,7 @@ public class MyFamilyActivity extends BaseActivity {
 
         ProgressBar = getViewById(R.id.gv_progress_bar);
 
-        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_download));
+        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_download));
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -152,97 +153,72 @@ public class MyFamilyActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (isSearch)
-                {
-                    if (position == 0)
-                    {
+                if (isSearch) {
+                    if (position == 0) {
                         //下载PDF,并查看
                         getUrl();
-                    }
-                    else
-                    {
+                    } else {
 
                         if ((position > 0) && (position < searchGroupList.size() + 1)) {
                             //Group,跳转到对话界面
                             Intent intent = new Intent(MyFamilyActivity.this, MessageChatActivity.class);
-                            intent.putExtra("type",1);
-                            intent.putExtra("groupEntity", searchGroupList.get(position-1));
+                            intent.putExtra("type", 1);
+                            intent.putExtra("groupEntity", searchGroupList.get(position - 1));
                             startActivity(intent);
-                        }
-                        else
-                        {
+                        } else {
                             //
-                            if ("0".equals(searchUserList.get(position - searchGroupList.size() - 1).getFam_accept_flag()))
-                            {
+                            if ("0".equals(searchUserList.get(position - searchGroupList.size() - 1).getFam_accept_flag())) {
                                 //不是好友,提示等待接收
                                 MessageUtil.showMessage(MyFamilyActivity.this, getResources().getString(R.string.text_awaiting_for_approval), 3000);
                                 return;
-                            }
-                            else
-                            {
+                            } else {
                                 //member, 跳转到个人资料页面需要
                                 //put请求消除爱心
-                                if ("".equals(searchUserList.get(position - searchGroupList.size() - 1).getMiss()))
-                                {
+                                if ("".equals(searchUserList.get(position - searchGroupList.size() - 1).getMiss())) {
                                     updateMiss(searchUserList.get(position - searchGroupList.size() - 1).getUser_id());
                                     view.findViewById(R.id.myfamily_image_right).setVisibility(View.GONE);
                                     searchUserList.get(position - searchGroupList.size() - 1).setMiss(null);
-                                }
-                                else
-                                {
+                                } else {
 
                                 }
 
                                 Intent intent = new Intent(MyFamilyActivity.this, FamilyProfileActivity.class);
-                                intent.putExtra("member_id",searchUserList.get(position - searchGroupList.size() - 1).getUser_id());
+                                intent.putExtra("member_id", searchUserList.get(position - searchGroupList.size() - 1).getUser_id());
                                 startActivity(intent);
                             }
                         }
                     }
-                }
-                else
-                {
-                    if (position == 0)
-                    {
+                } else {
+                    if (position == 0) {
                         //下载PDF,并查看
                         progressDialog.show();
                         getUrl();
-                    }
-                    else
-                    {
+                    } else {
 
                         if ((position > 0) && (position < groupList.size() + 1)) {
                             //Group,跳转到对话界面
                             Intent intent = new Intent(MyFamilyActivity.this, MessageChatActivity.class);
-                            intent.putExtra("type",1);
-                            intent.putExtra("groupEntity", groupList.get(position-1));
+                            intent.putExtra("type", 1);
+                            intent.putExtra("groupEntity", groupList.get(position - 1));
                             startActivity(intent);
-                        }
-                        else
-                        {
+                        } else {
                             //
-                            if ("0".equals(userList.get(position - groupList.size() - 1).getFam_accept_flag()))
-                            {
+                            if ("0".equals(userList.get(position - groupList.size() - 1).getFam_accept_flag())) {
                                 //不是好友,提示等待接收
                                 MessageUtil.showMessage(MyFamilyActivity.this, getResources().getString(R.string.text_awaiting_for_approval), 3000);
                                 return;
-                            }
-                            else
-                            {
-                                if ("".equals(userList.get(position - groupList.size() - 1).getMiss()))
-                                {
+                            } else {
+                                if ("".equals(userList.get(position - groupList.size() - 1).getMiss())) {
                                     updateMiss(userList.get(position - groupList.size() - 1).getUser_id());
                                     view.findViewById(R.id.myfamily_image_right).setVisibility(View.GONE);
                                     userList.get(position - groupList.size() - 1).setMiss(null);
-                                }
-                                else
-                                {
+                                } else {
 
                                 }
                                 //member, 跳转到个人资料页面需要
                                 //put请求消除爱心
                                 Intent intent = new Intent(MyFamilyActivity.this, FamilyProfileActivity.class);
-                                intent.putExtra("member_id",userList.get(position - groupList.size() - 1).getUser_id());
+                                intent.putExtra("member_id", userList.get(position - groupList.size() - 1).getUser_id());
                                 startActivity(intent);
                             }
                         }
@@ -275,28 +251,22 @@ public class MyFamilyActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
 
 
-                if (TextUtils.isEmpty(etSearch.getText()))
-                {
+                if (TextUtils.isEmpty(etSearch.getText())) {
                     MyFamilyAdapter myFamilyAdapter1 = new MyFamilyAdapter(MyFamilyActivity.this, R.layout.gridview_item_for_myfamily, userList, groupList);
                     mGridView.setAdapter(myFamilyAdapter1);
                     isSearch = false;
-                }
-                else
-                {
+                } else {
                     searchGroupList.clear();
                     searchUserList.clear();
 
                     for (int i = 0; i < groupList.size(); i++) {
-                        if (groupList.get(i).getGroup_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase()))
-                        {
+                        if (groupList.get(i).getGroup_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase())) {
                             searchGroupList.add(groupList.get(i));
                         }
                     }
 
-                    for(int j = 0; j < userList.size(); j++)
-                    {
-                        if (userList.get(j).getUser_given_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase()))
-                        {
+                    for (int j = 0; j < userList.size(); j++) {
+                        if (userList.get(j).getUser_given_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase())) {
                             searchUserList.add(userList.get(j));
                         }
                     }
@@ -310,7 +280,6 @@ public class MyFamilyActivity extends BaseActivity {
             }
         });
     }
-
 
 
     @Override
@@ -343,14 +312,15 @@ public class MyFamilyActivity extends BaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
 
-                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {}.getType());
-                    groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {}.getType());
+                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {
+                    }.getType());
+                    groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {
+                    }.getType());
                     finishReFresh();
                     MyFamilyAdapter myFamilyAdapter = new MyFamilyAdapter(MyFamilyActivity.this, R.layout.gridview_item_for_myfamily, userList, groupList);
                     mGridView.setAdapter(myFamilyAdapter);
                     ProgressBar.setVisibility(View.GONE);
-                } catch (JSONException e)
-                {
+                } catch (JSONException e) {
                     MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
                     if (isRefresh) {
                         finishReFresh();
@@ -377,42 +347,6 @@ public class MyFamilyActivity extends BaseActivity {
 
             }
         });
-
-
-
-//        StringRequest stringRequest = new StringRequest(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//
-//                GsonBuilder gsonb = new GsonBuilder();
-//
-//                Gson gson = gsonb.create();
-//
-//                try {
-//                    JSONObject jsonObject = new JSONObject(response);
-//
-//                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {}.getType());
-//                    groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {}.getType());
-//
-//                    MyFamilyAdapter myFamilyAdapter = new MyFamilyAdapter(MyFamilyActivity.this, R.layout.gridview_item_for_myfamily, userList, groupList);
-//                    mGridView.setAdapter(myFamilyAdapter);
-//                    ProgressBar.setVisibility(View.GONE);
-//                } catch (JSONException e)
-//                {
-//                    ProgressBar.setVisibility(View.GONE);
-//                    e.printStackTrace();
-//                }
-//
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                ProgressBar.setVisibility(View.GONE);
-//                Log.i("", "error=====" + error.getMessage());
-//            }
-//        });
-//        VolleyUtil.addRequest2Queue(this.getApplicationContext(), stringRequest, "");
     }
 
     @Override
@@ -420,11 +354,10 @@ public class MyFamilyActivity extends BaseActivity {
 
     }
 
-    public class MyFamilyAdapter extends ArrayAdapter
-    {
+    public class MyFamilyAdapter extends ArrayAdapter {
         private int resourceId;
         private Context mContext;
-        List<UserEntity> mUserList ;
+        List<UserEntity> mUserList;
         List<GroupEntity> mGroupList;
 
         public MyFamilyAdapter(Context context, int gridViewResourceId, List<UserEntity> userList, List<GroupEntity> groupList) {
@@ -438,82 +371,25 @@ public class MyFamilyActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return ( mUserList.size() + mGroupList.size() + 1 );
+            return (mUserList.size() + mGroupList.size() + 1);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
             ViewHolder viewHolder;
-
-//            if(convertView == null)
-//            {
-//                convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
-//
-//                viewHolder = new ViewHolder();
-//
-//                viewHolder.imageMain = (CircularNetworkImage)convertView.findViewById(R.id.myfamily_image_main);
-//                viewHolder.imageLeft = (ImageView)convertView.findViewById(R.id.myfamily_image_left);
-//                viewHolder.imageRight = (ImageView)convertView.findViewById(R.id.myfamily_image_right);
-//                viewHolder.textName = (TextView)convertView.findViewById(R.id.myfamily_name);
-//
-//                convertView.setTag(viewHolder);
-//            }
-//            else
-//            {
-//                viewHolder = (ViewHolder)convertView.getTag();
-//            }
-//
-//            if (position == 0)
-//            {
-//                viewHolder.textName.setText("Family Tree");
-//                viewHolder.imageMain.setDefaultImageResId(R.drawable.family_tree);
-//                viewHolder.imageMain.setImageResource(R.drawable.family_tree);
-//            }
-//            else {
-//                if ((position > 0) && (position < mGroupList.size() + 1)) {
-//                    GroupEntity groupEntity = mGroupList.get(position - 1);
-//                    viewHolder.textName.setText(groupEntity.getGroup_name());
-//                    VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,  groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//                } else {
-//                    UserEntity userEntity = mUserList.get(position - mGroupList.size() - 1);
-//                    viewHolder.textName.setText(userEntity.getUser_given_name());
-//
-//                    VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//
-//                    InputStream is = null;
-//                    try {
-//                        is = mContext.getAssets().open(userEntity.getUser_emoticon()+".png");
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    Drawable da = Drawable.createFromStream(is, null);
-//
-//                    viewHolder.imageLeft.setImageDrawable(da);
-//
-//                }
-//            }
-
-
             convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
-
             viewHolder = new ViewHolder();
-
-            viewHolder.imageMain = (CircularNetworkImage)convertView.findViewById(R.id.myfamily_image_main);
-            viewHolder.textName = (TextView)convertView.findViewById(R.id.myfamily_name);
-
-            if (position == 0)
-            {
+            viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.myfamily_image_main);
+            viewHolder.textName = (TextView) convertView.findViewById(R.id.myfamily_name);
+            if (position == 0) {
                 viewHolder.textName.setText(getResources().getString(R.string.text_family_tree));
                 viewHolder.imageMain.setDefaultImageResId(R.drawable.family_tree);
                 viewHolder.imageMain.setImageResource(R.drawable.family_tree);
-            }
-            else {
+            } else {
                 if ((position > 0) && (position < mGroupList.size() + 1)) {
                     GroupEntity groupEntity = mGroupList.get(position - 1);
                     viewHolder.textName.setText(groupEntity.getGroup_name());
-                    VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,  groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                    VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
                 } else {
                     UserEntity userEntity = mUserList.get(position - mGroupList.size() - 1);
 
@@ -521,31 +397,31 @@ public class MyFamilyActivity extends BaseActivity {
                     VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
                     //右上角指示是否为好友
-                    if ("0".equals(userEntity.getFam_accept_flag()))
-                    {
-                        viewHolder.imageTop = (ImageView)convertView.findViewById(R.id.myfamily_image_top);
+                    if ("0".equals(userEntity.getFam_accept_flag())) {
+                        viewHolder.imageTop = (ImageView) convertView.findViewById(R.id.myfamily_image_top);
                         viewHolder.imageTop.setVisibility(View.VISIBLE);
                     }
 
                     //右下角miss,滚动后会重新构建出来
-                    if ("".equals(userEntity.getMiss()))
-                    {
-                        viewHolder.imageRight = (ImageView)convertView.findViewById(R.id.myfamily_image_right);
+                    if ("".equals(userEntity.getMiss())) {
+                        viewHolder.imageRight = (ImageView) convertView.findViewById(R.id.myfamily_image_right);
                         viewHolder.imageRight.setVisibility(View.VISIBLE);
-                    }
-                    else
-                    {
-                        viewHolder.imageRight = (ImageView)convertView.findViewById(R.id.myfamily_image_right);
+                    } else {
+                        viewHolder.imageRight = (ImageView) convertView.findViewById(R.id.myfamily_image_right);
                         viewHolder.imageRight.setVisibility(View.GONE);
                     }
 
                     //左下角心情图标
-                    if (!TextUtils.isEmpty(userEntity.getUser_emoticon()))
-                    {
-                        viewHolder.imageLeft = (ImageView)convertView.findViewById(R.id.myfamily_image_left);
+                    String dofeel_code = userEntity.getDofeel_code();
+                    if (!TextUtils.isEmpty(dofeel_code)) {
+                        viewHolder.imageLeft = (ImageView) convertView.findViewById(R.id.myfamily_image_left);
 
                         try {
-                            InputStream is = mContext.getAssets().open(userEntity.getUser_emoticon()+".png");
+                            String filePath = "";
+                            if (dofeel_code.indexOf("_") != -1) {
+                                filePath = dofeel_code.replaceAll("_", File.separator);
+                            }
+                            InputStream is = mContext.getAssets().open(filePath);
                             Drawable da = Drawable.createFromStream(is, null);
                             viewHolder.imageLeft.setImageDrawable(da);
                         } catch (IOException e) {
@@ -560,8 +436,7 @@ public class MyFamilyActivity extends BaseActivity {
         }
 
 
-        class ViewHolder
-        {
+        class ViewHolder {
             CircularNetworkImage imageMain;
             ImageView imageLeft;
             ImageView imageRight;
@@ -571,8 +446,7 @@ public class MyFamilyActivity extends BaseActivity {
     }
 
 
-    private void showSelectDialog()
-    {
+    private void showSelectDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
 
@@ -601,9 +475,7 @@ public class MyFamilyActivity extends BaseActivity {
     }
 
 
-
-    private void getUrl()
-    {
+    private void getUrl() {
 
 
         if (!NetworkUtil.isNetworkConnected(MyFamilyActivity.this)) {
@@ -613,7 +485,7 @@ public class MyFamilyActivity extends BaseActivity {
 
         progressDialog.show();
 
-        new HttpTools(this).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()),null, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -628,16 +500,12 @@ public class MyFamilyActivity extends BaseActivity {
             public void onResult(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    if ("Success".equals(jsonObject.getString("response_status")))
-                    {
+                    if ("Success".equals(jsonObject.getString("response_status"))) {
                         urlString = jsonObject.getString("filePath");
-                        if (!TextUtils.isEmpty(urlString))
-                        {
+                        if (!TextUtils.isEmpty(urlString)) {
                             getPdf();
                         }
-                    }
-                    else
-                    {
+                    } else {
                         MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
                         progressDialog.dismiss();
                     }
@@ -665,51 +533,14 @@ public class MyFamilyActivity extends BaseActivity {
             }
         });
 
-//
-//        StringRequest srUrl = new StringRequest(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                try {
-//                    JSONObject jsonObject = new JSONObject(response);
-//                    if ("Success".equals(jsonObject.getString("response_status")))
-//                    {
-//                        urlString = jsonObject.getString("filePath");
-//                        /**
-//                         * begin QK
-//                         */
-////                        Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_success_get_pdf), Toast.LENGTH_SHORT).show();
-//                        if (!TextUtils.isEmpty(urlString))
-//                        {
-//                            getPdf();
-//                        }
-//                    }
-//                    else
-//                    {
-////                        Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_fail_get_pdf), Toast.LENGTH_SHORT).show();
-//                        /**
-//                         * end
-//                         */
-//                        progressDialog.dismiss();
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                progressDialog.dismiss();
-//            }
-//        });
-//        VolleyUtil.addRequest2Queue(MyFamilyActivity.this, srUrl, "");
     }
 
-    private final static String CACHE_FILE_NAME="/cache_%s.pdf";
-    String urlString ;
+    private final static String CACHE_FILE_NAME = "/cache_%s.pdf";
+    String urlString;
 
-    public void getPdf(){
+    public void getPdf() {
 
-        final String target = FileUtil.getCacheFilePath(this)+String.format(CACHE_FILE_NAME,""+System.currentTimeMillis());
+        final String target = FileUtil.getCacheFilePath(this) + String.format(CACHE_FILE_NAME, "" + System.currentTimeMillis());
 
         new HttpTools(this).download(urlString, target, true, new HttpCallback() {
             @Override
@@ -734,8 +565,7 @@ public class MyFamilyActivity extends BaseActivity {
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     try {
                         startActivity(intent);
-                    }
-                    catch (ActivityNotFoundException e) {
+                    } catch (ActivityNotFoundException e) {
                         MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
                         System.out.println("打开失败");
                     }
@@ -759,69 +589,9 @@ public class MyFamilyActivity extends BaseActivity {
 
             }
         });
-//
-//        try {
-//            URL url = new URL(urlString);
-//            HttpURLConnection connection = (HttpURLConnection)
-//                    url.openConnection();
-//            connection.setRequestMethod("GET");
-//            connection.setDoInput(true);
-//            connection.setDoOutput(true);
-//            connection.setUseCaches(false);
-//            connection.setConnectTimeout(5000);
-//            connection.setReadTimeout(5000);
-//            //实现连接
-//            connection.connect();
-//
-//            System.out.println("connection.getResponseCode()="+connection.getResponseCode());
-//            if (connection.getResponseCode() == 200) {
-//                InputStream is = connection.getInputStream();
-//                //以下为下载操作
-//                byte[] arr = new byte[1];
-//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//                BufferedOutputStream bos = new BufferedOutputStream(baos);
-//                int n = is.read(arr);
-//                while (n > 0) {
-//                    bos.write(arr);
-//                    n = is.read(arr);
-//                }
-//                bos.close();
-//                String path = Environment.getExternalStorageDirectory()
-//                        + "/download/";
-//                String[] name = urlString.split("/");
-//                path = path + name[name.length - 1];
-//                System.out.println("name="+name);
-//                System.out.println("path="+path);
-//                File file = new File(path);
-//                FileOutputStream fos = new FileOutputStream(file);
-//                fos.write(baos.toByteArray());
-//                fos.close();
-//                //关闭网络连接
-//                connection.disconnect();
-//                System.out.println("下载完成");
-//                if (file.exists()) {
-//                    System.out.println("打开");
-//                    Uri path1 = Uri.fromFile(file);
-//                    Intent intent = new Intent(Intent.ACTION_VIEW);
-//                    intent.setDataAndType(path1, "application/pdf");
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//
-//                    try {
-//                        startActivity(intent);
-//                    }
-//                    catch (ActivityNotFoundException e) {
-//                        System.out.println("打开失败");
-//                    }
-//                }
-//            }
-//        } catch (IOException e) {
-//            // TODO: handle exception
-//            System.out.println(e.getMessage());
-//        }
     }
 
-    public void updateMiss(String member_id)
-    {
+    public void updateMiss(String member_id) {
         RequestInfo requestInfo = new RequestInfo();
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("member_id", member_id);
@@ -841,11 +611,10 @@ public class MyFamilyActivity extends BaseActivity {
 
             @Override
             public void onResult(String string) {
-                Log.d("","update----" + string);
+                Log.d("", "update----" + string);
                 try {
                     JSONObject jsonObject = new JSONObject(string);
-                    if ("200".equals(jsonObject.getString("response_status_code")))
-                    {
+                    if ("200".equals(jsonObject.getString("response_status_code"))) {
                         Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
