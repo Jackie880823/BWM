@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -587,6 +588,8 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     void changeAtDesc() {
         if(fragment1 != null) {
             fragment1.changeAtDesc(at_members_data, at_groups_data);
+        } else {
+            Log.w(TAG, "changeAtDesc fragment1 is null, can't change at description");
         }
     }
 
