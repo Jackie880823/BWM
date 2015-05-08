@@ -615,5 +615,7 @@
 
     <string name="select_too_many">"have select photos count is %d"</string>
     <string name="text_nearest">nearest</string>
+    <string name="start_a_now">Start a new</string>
+    <string name="post_now">Post now</string>
 
 </resources>
