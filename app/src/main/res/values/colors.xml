@@ -56,7 +56,7 @@
     <color name="et_sign_up_phone">#878787</color>
     <color name="bold_text_color_red">#d32b23</color>
     <color name="default_text_color_blue">#0087FF</color>
-
+    <color name="bg_forget_password">#cc363636</color>
     <color name="default_sticker">#feb400</color><!--  65% -->
 
 

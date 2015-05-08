@@ -219,6 +219,7 @@
         <!-- christopher -->
         <activity
             android:name=".ui.MyFamilyActivity"
+            android:windowSoftInputMode = "adjustPan|stateHidden"
             android:screenOrientation="portrait" />
 
         <activity
@@ -270,7 +271,7 @@
         <activity
             android:name=".ui.MyViewProfileActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified" />
+            android:windowSoftInputMode = "adjustPan|stateHidden" />
         <activity
             android:name=".ui.MeActivity"
             android:screenOrientation="portrait" />

@@ -106,6 +106,18 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
 
     @Override
     public void requestData() {
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getNum();
+    }
+
+    public void getNum()
+    {
         new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_MODULES_COUNT,MainActivity.getUser().getUser_id()), null, new HttpCallback() {
             @Override
             public void onStart() {
@@ -142,7 +154,6 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
 
             }
         });
-
     }
 
     @Override
@@ -214,5 +225,8 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         Intent intent = new Intent(getActivity(), NewsActivity.class);
         startActivity(intent);
     }
+
+
+
 
 }

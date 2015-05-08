@@ -43,8 +43,7 @@ import java.util.regex.Pattern;
  */
 public class WallEditView extends EditText implements TextWatcher {
 
-
-//    private String atStringDesc = "@ %s members";
+    private static final String TAG = WallEditView.class.getSimpleName();
 
     /**
      * 控件画笔
@@ -60,6 +59,9 @@ public class WallEditView extends EditText implements TextWatcher {
     public static final int TEXT_ALIGN_CENTER_HORIZONTAL = 0x00001000;
     public static final int TEXT_ALIGN_TOP = 0x00010000;
     public static final int TEXT_ALIGN_BOTTOM = 0x00100000;
+
+    private String oldMemberText;
+    private String oldGroupText;
 
     /**
      * 文本中轴线X坐标
@@ -118,11 +120,17 @@ public class WallEditView extends EditText implements TextWatcher {
     }
 
     public interface TextChangeListener {
+        public static final int CHANGE_MODE_NORMAL = 0;
+        public static final int CHANGE_MODE_DLETE_AT_MEMBER = 1;
+        public static final int CHANGE_MODE_DLETE_AT_GROUPS = 2;
+        public static final int CHANGE_MODE_DLETE_AT_ALL = 3;
+        public static final int CHANGE_MODE_BLACK_CHANGE = 4;
         void beforeTextChanged(CharSequence s, int start, int count, int after);
 
         void onTextChanged(CharSequence s, int start, int before, int count);
 
-        void afterTextChanged(Editable s);
+        void afterTextChanged(Editable s, int change);
+
     }
 
     @Override
@@ -132,8 +140,6 @@ public class WallEditView extends EditText implements TextWatcher {
             textChangeListener.beforeTextChanged(s, start, count, after);
         }
     }
-
-    boolean hasAt;
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -146,65 +152,143 @@ public class WallEditView extends EditText implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
+
+        int change = TextChangeListener.CHANGE_MODE_NORMAL;
+        if(!isShown()) {
+            Log.w(TAG, "afterTextChanged& this view not show");
+            change = TextChangeListener.CHANGE_MODE_BLACK_CHANGE;
+        } else {
+            Log.i(TAG, "afterTextChanged& oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
+
+            if(!TextUtils.isEmpty(oldMemberText)) {
+                SpannableStringBuilder sb = new SpannableStringBuilder(s);
+                Pattern p = Pattern.compile(oldMemberText);
+                Matcher m = p.matcher(sb.toString());
+                if (!m.find() || (m.end() == 0)) {
+                    hasAtMember = false;
+                    change |= TextChangeListener.CHANGE_MODE_DLETE_AT_MEMBER;
+                    oldMemberText = "";
+                }
+            }
+            if(!TextUtils.isEmpty(oldGroupText)) {
+                SpannableStringBuilder sb = new SpannableStringBuilder(s);
+                Pattern p = Pattern.compile(oldGroupText);
+                Matcher m = p.matcher(sb.toString());
+                if (!m.find() || (m.end() == 0)) {
+                    hasAtGroup = false;
+                    change |= TextChangeListener.CHANGE_MODE_DLETE_AT_GROUPS;
+                    oldGroupText = "";
+                }
+            }
+        }
+        Log.i(TAG, "afterTextChanged& change" + change);
         if (textChangeListener != null) {
-            textChangeListener.afterTextChanged(s);
+            textChangeListener.afterTextChanged(s, change);
         }
     }
 
-    private SpannableStringBuilder sb;
-    private ImageSpan is;
-    TextView tv;
-    BitmapDrawable bd;
+    public void addAtDesc(String memberText, String groupText) {
+        if(!isShown()) {
+            Log.w(TAG, "addAtDesc& this view not show");
+            if (textChangeListener != null) {
+                textChangeListener.afterTextChanged(getText(), TextChangeListener.CHANGE_MODE_BLACK_CHANGE);
+            }
+            return;
+        }
 
-    public void addAtDesc(String desc) {
+        // at member transform about member text
+        hasAtMember = setDescSpan(memberText, oldMemberText, hasAtMember);
+        oldMemberText = memberText;
 
+        // at group transform about group text
+        hasAtGroup = setDescSpan(groupText, oldGroupText, hasAtGroup);
+        oldGroupText = groupText;
+        Log.i(TAG, "addAtDesc");
+    }
+
+    private SpannableStringBuilder getSpanBuilder(SpannableStringBuilder sb, String str){
+        if(!TextUtils.isEmpty(str)) {
+            Pattern p = Pattern.compile(str);
+            Matcher m = p.matcher(sb.toString());
+            int start;
+            int end;
+            if(m.find()) {
+                start = m.start();
+                end = m.end();
+                sb.replace(start, end, str);
+                ImageSpan is = getImageSpanForText(str);
+                sb.setSpan(is, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return sb;
+    }
+
+    private boolean setDescSpan(String desc, String oldDesc, boolean hasAt) {
         Editable editable = getText();
 
         SpannableStringBuilder sb = new SpannableStringBuilder(editable.toString());
+        getSpanBuilder(sb, oldMemberText);
+        getSpanBuilder(sb, oldGroupText);
 
-        int start = 0;
-        int end = 0;
 
-        if (hasAt) {
-            try {
-                Pattern p = Pattern.compile(oldText);
-                Matcher m = p.matcher(sb.toString());
-                if (m.find()) {
-                    start = m.start();
-                    end = m.end();
-                    sb.replace(start, end, desc);
-                }
-            }catch (Exception e){}
+        if(TextUtils.isEmpty(desc)){
+            hasAt = false;
+            setText(sb);
         } else {
-            sb.append(desc);
-            start = sb.length() - desc.length();
-            if (start < 0)
-                start = 0;
-            end = sb.length();
+
+            int start = 0;
+            int end = 0;
+
+            if(hasAt) {
+                try {
+                    Pattern p = Pattern.compile(oldDesc);
+                    Matcher m = p.matcher(sb.toString());
+                    if(m.find()) {
+                        start = m.start();
+                        end = m.end();
+                        sb.replace(start, end, desc);
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                sb.append(desc);
+                start = sb.length() - desc.length();
+                if(start < 0) {
+                    start = 0;
+                }
+                end = sb.length();
+            }
+            ImageSpan is = getImageSpanForText(desc);
+            Log.i(TAG, "addAtDesc& start = " + start + "; end = " + end);
+            sb.setSpan(is, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            this.setText(sb);
+            hasAt = true;
         }
-        is = getImageSpanForText(desc);
-        sb.setSpan(is, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        this.setText(sb);
-        hasAt = true;
-        oldText = desc;
+        return  hasAt;
     }
 
     public String getRelText() {
         String text = getText().toString();
-        if(!TextUtils.isEmpty(oldText)) {
-            text = text.replace(oldText, "");
+        if(!TextUtils.isEmpty(oldMemberText)) {
+            text = text.replace(oldMemberText, "");
         }
         return text;
     }
 
-    private String oldText;
+    /**
+     * yes or no at member, at anyone value is true;
+     */
+    private boolean hasAtMember = false;
+
+    private boolean hasAtGroup = false;
 
     private ImageSpan getImageSpanForText(String desc) {
-        tv = createContactTextView(desc);
+        TextView tv = createContactTextView(desc);
         tv.setTextColor(getResources().getColor(R.color.tab_color_press4));
-        bd = convertViewToDrawable(tv);
+        BitmapDrawable bd = convertViewToDrawable(tv);
         bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
-        is = new ImageSpan(bd);
+        ImageSpan is = new ImageSpan(bd);
         return is;
     }
 

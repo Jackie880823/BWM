@@ -24,6 +24,7 @@ import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.widget.CustomGridView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,7 +52,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      */
     ArrayList<Uri> mImageUriList = new ArrayList();
 
-    ArrayList<Uri> mSelecedImageUris = new ArrayList();
+    /**
+     *已经选择的图Ur列表
+     */
+    ArrayList<Uri> mSelectedImageUris = new ArrayList();
     /**
      * 目录列表
      */
@@ -76,11 +80,13 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      * @param keySet
      * @return
      */
-    private static String[] setToOrderedStringArray(Set<String> keySet) {
-        int i = 0;
+    private static String[] setToOrderedStringArray(Set<String> keySet, String first) {
+        int i = 1;
         ArrayList<String> keys = new ArrayList<>(keySet);
         Collections.sort(keys);
         String[] out = new String[keys.size()];
+        out[0] = first;
+        keys.remove(first);
         for(String key : keys) {
             out[i++] = key;
         }
@@ -101,7 +107,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
         String[] columns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
 
-        String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC";
+        String orderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
         imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy).loadInBackground();
         getLoaderManager().initLoader(loaderCounter++, null, this);
 
@@ -151,15 +157,15 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
                 Uri itemUri = mImageUriList.get(position);
                 if(check.isChecked()) {
                     check.setChecked(false);
-                    mSelecedImageUris.remove(itemUri);
+                    mSelectedImageUris.remove(itemUri);
                     //
                     if(selectImageUirListener != null) {
                         selectImageUirListener.onChange(itemUri, false);
                     }
                 } else {
-                    if(mSelecedImageUris.size() < residue) {
+                    if(mSelectedImageUris.size() < residue) {
                         check.setChecked(true);
-                        mSelecedImageUris.add(itemUri);
+                        mSelectedImageUris.add(itemUri);
                         if(selectImageUirListener != null) {
                             selectImageUirListener.onChange(itemUri, true);
                         }
@@ -194,6 +200,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      * @param uri
      */
     private void addToImageMap(String bucket, Uri uri) {
+        ArrayList<Uri> nearest = mImageUris.get(getParentActivity().getString(R.string.text_nearest));
+        if(nearest.size() < 30) {
+            nearest.add(uri);
+        }
+
         if(mImageUris.containsKey(bucket)) {
             mImageUris.get(bucket).add(uri);
         } else {
@@ -207,16 +218,23 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      * This will load all Images on the phone.
      */
     private void loadPhoneImages() {
+        String bucketsFirst = getParentActivity().getString(R.string.text_nearest);
+        ArrayList<Uri> nearest = new ArrayList<>();
+        mImageUris.put(bucketsFirst, nearest);
         for(int i = 0; i < imageCursor.getCount(); i++) {
             imageCursor.moveToPosition(i);
-            int index = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+            int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
             int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-            String bucket = imageCursor.getString(bucketColumnIndex);
-            addToImageMap(bucket, Uri.parse("content://media/external/images/media/" + imageCursor.getInt(index)));
+            int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+            File imageFile = new File(imageCursor.getString(pathColumnIndex));
+            if(imageFile != null && imageFile.canRead()) {
+                String bucket = imageCursor.getString(bucketColumnIndex);
+                addToImageMap(bucket, Uri.parse("content://media/external/images/media/" + imageCursor.getInt(uriColumnIndex)));
+            }
 
         }
         imageCursor.close();
-        buckets = setToOrderedStringArray(mImageUris.keySet());
+        buckets = setToOrderedStringArray(mImageUris.keySet(), bucketsFirst);
         Log.d(TAG, "loadImages(), buckets.length: " + buckets.length);
     }
 
@@ -242,7 +260,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             Log.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
             if(localImagesAdapter == null) {
                 localImagesAdapter = new LocalImagesAdapter(getActivity(), mImageUriList);
-                localImagesAdapter.setSelectedImages(mSelecedImageUris);
+                localImagesAdapter.setSelectedImages(mSelectedImageUris);
                 mGvShowPhotos.setAdapter(localImagesAdapter);
                 localImagesAdapter.setColumnWidthHeight(mGvShowPhotos.getColumnWidth());
             } else {
@@ -328,11 +346,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     }
 
     public interface SelectImageUirChangeListener {
-        public void onChange(Uri imageUri, boolean isAdd);
+        void onChange(Uri imageUri, boolean isAdd);
 
-        public void onDrawerOpened();
+        void onDrawerOpened();
 
-        public void onDrawerClose();
+        void onDrawerClose();
     }
 
 }

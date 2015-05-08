@@ -70,7 +70,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private TextView tvId2;
     private TextView etFirstName;
     private TextView etLastName;
-//    private TextView tvAge;
+    //    private TextView tvAge;
 //    private RelativeLayout rlAge;
     private TextView tvBirthday;
     private RelativeLayout rlBirthday;
@@ -78,8 +78,6 @@ public class MyViewProfileActivity extends BaseActivity {
     private RelativeLayout rlGender;
     private TextView etEmail;
     private TextView etRegion;
-
-
 
 
     private Dialog showSelectDialog;
@@ -160,7 +158,7 @@ public class MyViewProfileActivity extends BaseActivity {
         /**
          * begin QK
          */
-        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
+        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         /**
          * end
          */
@@ -185,7 +183,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
         VolleyUtil.initNetworkImageView(MyViewProfileActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
-        Log.d("","就问你我们一不一样"+String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()));
+        Log.d("", "就问你我们一不一样" + String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()));
 
         tvName1.setText(MainActivity.getUser().getUser_given_name());
         etFirstName.setText(MainActivity.getUser().getUser_given_name());
@@ -208,21 +206,14 @@ public class MyViewProfileActivity extends BaseActivity {
 //        }
 
 
-
-
-        if ("F".equals(MainActivity.getUser().getUser_gender()))
-        {
+        if ("F".equals(MainActivity.getUser().getUser_gender())) {
             /**
              * begin QK
              */
             tvGender.setText(getResources().getString(R.string.text_female));
-        }
-        else if ("M".equals(MainActivity.getUser().getUser_gender()))
-        {
+        } else if ("M".equals(MainActivity.getUser().getUser_gender())) {
             tvGender.setText(getResources().getString(R.string.text_male));
-        }
-        else
-        {
+        } else {
             tvGender.setText(getResources().getString(R.string.text_null));
             /**
              * end
@@ -230,13 +221,30 @@ public class MyViewProfileActivity extends BaseActivity {
         }
 
         etEmail.setText(MainActivity.getUser().getUser_email());
-        etRegion.setText(MainActivity.getUser().getUser_location_name());
-
-        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_emoticon()))
-        {
+        String[] countryArray = getResources().getStringArray(R.array.country_code);
+        String userCountryCode = MainActivity.getUser().getUser_country_code().trim();
+        if (countryArray != null) {
+            for (String string : countryArray) {
+                if (string.indexOf(" ") != -1) {
+                    String countryCode = string.substring(string.lastIndexOf(" ") + 1).trim();
+                    String countryName = string.substring(0, string.lastIndexOf(" ")).trim();
+                    if (null != countryCode && countryCode.equals(userCountryCode)) {
+                        etRegion.setText(countryName);
+                    }
+                }
+            }
+        }
+        //etRegion.setText(MainActivity.getUser().getUser_location_name());
+        etRegion.setKeyListener(null);
+        String dofeel_code = MainActivity.getUser().getDofeel_code();
+        if (!TextUtils.isEmpty(dofeel_code)) {
             try {
-                InputStream is = MyViewProfileActivity.this.getAssets().open(MainActivity.getUser().getUser_emoticon()+".png");
-                Bitmap bitmap= BitmapFactory.decodeStream(is);
+                String filePath = "";
+                if (dofeel_code.indexOf("_") != -1) {
+                    filePath = dofeel_code.replaceAll("_", File.separator);
+                }
+                InputStream is = MyViewProfileActivity.this.getAssets().open(filePath);
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
                 ivBottomLeft.setImageBitmap(bitmap);
 
 //                    Drawable da = Drawable.createFromStream(is, null);
@@ -268,20 +276,6 @@ public class MyViewProfileActivity extends BaseActivity {
             }
         });
 
-//        ivBottomLeft.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-
-//        rlAge.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showDateTimePicker();
-//            }
-//        });
-
         rlBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -300,29 +294,18 @@ public class MyViewProfileActivity extends BaseActivity {
 
     }
 
-    public void updateProfile()
-    {
+    public void updateProfile() {
 
-        if (TextUtils.isEmpty(etLastName.getText()) || TextUtils.isEmpty(etFirstName.getText()) || TextUtils.isEmpty(tvGender.getText()))
-        {
-            /**
-             * begin QK
-             */
+        if (TextUtils.isEmpty(etLastName.getText()) || TextUtils.isEmpty(etFirstName.getText()) || TextUtils.isEmpty(tvGender.getText())) {
             Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_input_name_gender), Toast.LENGTH_SHORT).show();
-            /**
-             * end
-             */
             return;
         }
 
         isUploadName = true;
 
-        if ("Male".equals(tvGender.getText().toString()))
-        {
+        if ("Male".equals(tvGender.getText().toString())) {
             userGender = "M";
-        }
-        else
-        {
+        } else {
             userGender = "F";
         }
 
@@ -334,10 +317,12 @@ public class MyViewProfileActivity extends BaseActivity {
         jsonParams.put("user_given_name", etFirstName.getText().toString());
         jsonParams.put("user_gender", userGender);
         jsonParams.put("user_dob", tvBirthday.getText().toString());
+        jsonParams.put("user_email", etEmail.getText().toString());
         jsonParams.put("user_location_name", etRegion.getText().toString());
+
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-        requestInfo.url =String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id());
+        requestInfo.url = String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id());
         requestInfo.jsonParam = jsonParamsString;
 
         new HttpTools(MyViewProfileActivity.this).put(requestInfo, new HttpCallback() {
@@ -357,19 +342,18 @@ public class MyViewProfileActivity extends BaseActivity {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
 
-                if(!TextUtils.isEmpty(response)){
-                    if(response.contains("changedFlag")){
-                    }else if(response.contains("response_status")){
+                if (!TextUtils.isEmpty(response)) {
+                    if (response.contains("changedFlag")) {
+                    } else if (response.contains("response_status")) {
                         Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_fail_update_information), Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_success_update_information), Toast.LENGTH_SHORT).show();
                         isUploadNameSuccess = true;
                         App.changeLoginedUser(gson.fromJson(response, UserEntity.class));
                         List userList = new ArrayList<UserEntity>();
                         userList.add(gson.fromJson(response, UserEntity.class));
                         PreferencesUtil.saveValue(MyViewProfileActivity.this, "user", gson.toJson(gson.fromJson(response, UserEntity.class)));
-                        if (!isUploadImage)
-                        {
+                        if (!isUploadImage) {
                             Intent intent = new Intent();
                             intent.putExtra("name", etFirstName.getText().toString());
                             setResult(RESULT_OK, intent);
@@ -395,92 +379,9 @@ public class MyViewProfileActivity extends BaseActivity {
             }
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
-//        HashMap<String, String> jsonParams = new HashMap<String, String>();
-//        jsonParams.put("user_surname", etLastName.getText().toString());
-//        jsonParams.put("user_given_name", etFirstName.getText().toString());
-//        jsonParams.put("user_gender", userGender);
-//        jsonParams.put("user_dob", tvBirthday.getText().toString());
-//        jsonParams.put("user_location_name", etRegion.getText().toString());
-//        final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-//
-//        StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
-//
-//            GsonBuilder gsonb = new GsonBuilder();
-//
-//            Gson gson = gsonb.create();
-//
-//            @Override
-//            public void onResponse(String response) {
-//
-//                if(!TextUtils.isEmpty(response)){
-//                    if(response.contains("changedFlag")){
-////                            Toast.makeText(MyViewProfileActivity.this, "You didn't change information.", Toast.LENGTH_SHORT).show();
-//                    }else if(response.contains("response_status")){
-//                        /**
-//                         * begin QK
-//                         */
-//                        Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_fail_update_information), Toast.LENGTH_SHORT).show();
-//                    }else{
-//                        Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_success_update_information), Toast.LENGTH_SHORT).show();
-//                        /**
-//                         * end
-//                         */
-//                        isUploadNameSuccess = true;
-//
-//                        App.changeLoginedUser(gson.fromJson(response, UserEntity.class));
-//                        List userList = new ArrayList<UserEntity>();
-//                        userList.add(gson.fromJson(response, UserEntity.class));
-//
-//                        PreferencesUtil.saveValue(MyViewProfileActivity.this, "user", gson.toJson(gson.fromJson(response, UserEntity.class)));
-//
-//
-//                        if (!isUploadImage)
-//                        {
-//                            Intent intent = new Intent();
-//                            intent.putExtra("name", etFirstName.getText().toString());
-//                            setResult(RESULT_OK, intent);
-//                            finish();
-//                        }
-//
-//                    }
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//                error.printStackTrace();
-//
-//                Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//
-//            }
-//        }) {
-//
-//            @Override
-//            public byte[] getBody() throws AuthFailureError {
-//                return jsonParamsString.getBytes();
-//            }
-//
-//        };
-//
-//        VolleyUtil.addRequest2Queue(MyViewProfileActivity.this, srRemoveMember, "");
     }
 
-    private void showSelectDialog()
-    {
+    private void showSelectDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_male_female, null);
 
@@ -508,8 +409,7 @@ public class MyViewProfileActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
-    private void showCameraAlbum()
-    {
+    private void showCameraAlbum() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_camera_album, null);
 
@@ -718,8 +618,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
     private void uploadImage() {
 
-        if (mCropImagedUri == null)
-        {
+        if (mCropImagedUri == null) {
             return;
         }
 
@@ -747,17 +646,16 @@ public class MyViewProfileActivity extends BaseActivity {
         new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, new HttpCallback() {
             @Override
             public void onStart() {
-                Log.i("", "11response==========");
+
             }
 
             @Override
             public void onFinish() {
-                Log.i("", "222response==========");
+
             }
 
             @Override
             public void onResult(String response) {
-                Log.i("", "333response==========" + response);
                 try {
                     String responseStatus;
                     JSONObject jsonObject = new JSONObject(response);
@@ -809,28 +707,21 @@ public class MyViewProfileActivity extends BaseActivity {
         final DatePicker datePicker = (DatePicker) dateTimePicker.findViewById(R.id.datePicker);
         Timestamp ts;
 
-        if (strData == null)
-        {
-            if (TextUtils.isEmpty(tvBirthday.getText().toString()))
-            {
+        if (strData == null) {
+            if (TextUtils.isEmpty(tvBirthday.getText().toString())) {
                 ts = new Timestamp(System.currentTimeMillis());
-            }
-            else
-            {
+            } else {
                 ts = Timestamp.valueOf(tvBirthday.getText().toString() + " 00:00:00");
             }
 
-        }
-        else
-        {
-             ts = Timestamp.valueOf(strData);
+        } else {
+            ts = Timestamp.valueOf(strData);
         }
 
 
         Calendar mCalendar = Calendar.getInstance(TimeZone.getDefault());
         mCalendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
         datePicker.setCalendar(mCalendar);
-
 
 
         pickDateTimeDialog = new MyDialog(this, null, dateTimePicker);
@@ -844,15 +735,13 @@ public class MyViewProfileActivity extends BaseActivity {
                 mCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDay());
 
 
-
-                if(!MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())){
-                    MessageUtil.showMessage(MyViewProfileActivity.this,R.string.text_wrong_data);
+                if (!MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
+                    MessageUtil.showMessage(MyViewProfileActivity.this, R.string.text_wrong_data);
                     return;
                 }
 
 
-
-                String dateDesc = MyDateUtils.getLocalDateStringFromLocal(MyViewProfileActivity.this,mCalendar.getTimeInMillis());
+                String dateDesc = MyDateUtils.getLocalDateStringFromLocal(MyViewProfileActivity.this, mCalendar.getTimeInMillis());
                 strData = MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis());
                 SimpleDateFormat defaultDateFormat = new SimpleDateFormat("yyy-MM-dd");
                 tvBirthday.setText(defaultDateFormat.format(mCalendar.getTime()));
@@ -873,7 +762,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if(progressDialog!=null){
+        if (progressDialog != null) {
             progressDialog.dismiss();
         }
         super.onDestroy();

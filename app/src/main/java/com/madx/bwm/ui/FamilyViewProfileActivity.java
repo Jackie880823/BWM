@@ -17,6 +17,7 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -109,17 +110,6 @@ public class FamilyViewProfileActivity extends BaseActivity {
         tvLastName.setText(userEntity.getUser_surname());
 //        tvAge.setText(userEntity.getUser_dob());
         tvBirthday.setText(userEntity.getUser_dob());
-
-//        if (!TextUtils.isEmpty(userEntity.getUser_dob()))
-//        {
-//            Timestamp ts;
-//            ts = Timestamp.valueOf(tvBirthday.getText().toString() + " 00:00:00");
-//            Calendar mCalendar = Calendar.getContextInstance(TimeZone.getDefault());
-//            mCalendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
-//            int age = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date())) - Integer.parseInt(new SimpleDateFormat("yyy").format(mCalendar.getTime()));
-//            tvAge.setText(String.valueOf(age));
-//        }
-
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -157,11 +147,15 @@ public class FamilyViewProfileActivity extends BaseActivity {
 
         tvEmail.setText(userEntity.getUser_email());
         tvRegion.setText(userEntity.getUser_location_name());
-
-        if (!TextUtils.isEmpty(userEntity.getUser_emoticon()))
+        String dofeel_code = userEntity.getDofeel_code();
+        if (!TextUtils.isEmpty(dofeel_code))
         {
             try {
-                InputStream is = FamilyViewProfileActivity.this.getAssets().open(userEntity.getUser_emoticon()+".png");
+                String filePath = "";
+                if (dofeel_code.indexOf("_") != -1) {
+                    filePath = dofeel_code.replaceAll("_", File.separator);
+                }
+                InputStream is = FamilyViewProfileActivity.this.getAssets().open(filePath);
                 Bitmap bitmap= BitmapFactory.decodeStream(is);
                 ivBottomLeft.setImageBitmap(bitmap);
             } catch (IOException e) {
