@@ -128,7 +128,7 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
             groupText = "";
         }
 
-        editText.addAtDesc(memberText, groupText);
+        editText.addAtDesc(memberText, groupText, isVisible());
 
     }
 
