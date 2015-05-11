@@ -46,6 +46,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import cn.jpush.android.api.JPushInterface;
+
 public class LoginActivity extends Activity {
 
     private Button btnLogin;//登陆按钮
@@ -78,65 +80,49 @@ public class LoginActivity extends Activity {
 
     ProgressDialog progressDialog;
 
-    /**
-     * wing begin test gcm
-     */
-    GoogleCloudMessaging gcm;
     String regid;
+    private boolean isGCM;
+
     private void initGCM() {
-        // Check device for Play Services APK. If check succeeds, proceed with
-        //  GCM registration.
-//        finishByNoPlayService();
         if (SystemUtil.checkPlayServices(this)) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            regid = AppInfoUtil.getRegistrationId(this);
+            /**GCM推送*/
+            regid = AppInfoUtil.getGCMRegistrationId(this);
 
             if (regid.isEmpty()) {
-
+                isGCM = true;
                 registerInBackground();
             }
         } else {
-            MessageUtil.showMessage(this,R.string.msg_google_service_not_found);
+            regid = AppInfoUtil.getJpushRegistrationId(this);
+            if (regid.isEmpty()) {
+                isGCM = false;
+                registerInBackground();
+            }
+            /**极光推送*/
+            JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+            JPushInterface.init(this);
+//        JPushInterface.stopPush(getApplicationContext());
+//        JPushInterface.resumePush(getApplicationContext());
         }
+
     }
+
     /**
      * Registers the application with GCM servers asynchronously.
-     * <p>
+     * <p/>
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
     private void registerInBackground() {
-        new AsyncTask<Void,Void,String>() {
+        new AsyncTask<Void, Void, String>() {
 
             @Override
             protected String doInBackground(Void... params) {
-                String msg = "";
-                try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(LoginActivity.this);
-                    }
-                    regid = gcm.register(getString(R.string.gcm_sender_id));
-                    msg = "Device registered, registration ID=" + regid;
-
-                    // You should send the registration ID to your server over HTTP,
-                    // so it can use GCM/HTTP or CCS to send messages to your app.
-                    // The request to your server should be authenticated if your app
-                    // is using accounts.
-                    sendRegistrationIdToBackend(regid);
-
-                    // For this demo: we don't need to send it because the device
-                    // will send upstream messages to a server that echo back the
-                    // message using the 'from' address in the message.
-
-                    // Persist the registration ID - no need to register again.
-                    AppInfoUtil.storeRegistrationId(LoginActivity.this, regid);
-                } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
-                    // If there is an error, don't just keep trying to register.
-                    // Require the user to click a button again, or perform
-                    // exponential back-off.
+                if (isGCM) {
+                    return doRegistration2GCM();
+                } else {
+                    return doRegistration2Jpush();
                 }
-                return msg;
             }
 
             @Override
@@ -145,24 +131,66 @@ public class LoginActivity extends Activity {
 
         }.execute(null, null, null);
     }
+
+    private String doRegistration2Jpush() {
+        String msg = "";
+        regid = JPushInterface.getRegistrationID(this);
+        msg = "Device registered, registration ID=" + regid;
+        sendRegistrationIdToBackend(regid, "jpush");
+        AppInfoUtil.storeRegistrationId(LoginActivity.this, regid,false);
+        return msg;
+    }
+
+    private String doRegistration2GCM() {
+        String msg = "";
+        try {
+            GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(LoginActivity.this);
+            regid = gcm.register(getString(R.string.gcm_sender_id));
+            msg = "Device registered, registration ID=" + regid;
+
+            // You should send the registration ID to your server over HTTP,
+            // so it can use GCM/HTTP or CCS to send messages to your app.
+            // The request to your server should be authenticated if your app
+            // is using accounts.
+            sendRegistrationIdToBackend(regid, "gcm");
+
+
+            // For this demo: we don't need to send it because the device
+            // will send upstream messages to a server that echo back the
+            // message using the 'from' address in the message.
+
+            // Persist the registration ID - no need to register again.
+            AppInfoUtil.storeRegistrationId(LoginActivity.this, regid,true);
+
+
+        } catch (IOException ex) {
+            msg = "Error :" + ex.getMessage();
+            // If there is an error, don't just keep trying to register.
+            // Require the user to click a button again, or perform
+            // exponential back-off.
+        }
+        return msg;
+    }
+
     /**
      * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
      * or CCS to send messages to your app. Not needed for this demo since the
      * device sends upstream messages to a server that echoes back the message
      * using the 'from' address in the message.
      */
-    private void sendRegistrationIdToBackend(String regid) {
-        // Your implementation here.TODO
+    private void sendRegistrationIdToBackend(String regid, String service) {
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = Constant.API_REGIST_PUSH;
-        Map<String,String> params = new HashMap<>();
-        params.put("pushToken",regid);
-        params.put("deviceUuid",AppInfoUtil.getDeviceUUID(this));
-        params.put("devicePlatform","android");
-        params.put("lang",Locale.getDefault().getCountry());
-        params.put("appType","native");
+        Map<String, String> params = new HashMap<>();
+        params.put("pushToken", regid);
+        params.put("deviceUuid", AppInfoUtil.getDeviceUUID(this));
+        params.put("devicePlatform", "android");
+        params.put("lang", Locale.getDefault().getCountry());
+        params.put("appType", "native");
+        params.put("pushService", service);
+        params.put("appID", AppInfoUtil.getAppPackageName(this));
         requestInfo.params = params;
-        new HttpTools(LoginActivity.this).post(requestInfo,new HttpCallback() {
+        new HttpTools(LoginActivity.this).post(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -201,13 +229,13 @@ public class LoginActivity extends Activity {
 //        finishByNoPlayService();
     }
 
-    private void finishByNoPlayService(){
-        if(!SystemUtil.checkPlayServices(this)){
+    private void finishByNoPlayService() {
+        if (!SystemUtil.checkPlayServices(this)) {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
                     try {
-                        Thread.sleep(2*1000);
+                        Thread.sleep(2 * 1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -223,7 +251,9 @@ public class LoginActivity extends Activity {
 
     }
 
-    /**wing end test gcm*/
+    /**
+     * wing end test gcm
+     */
 
 
     @Override
@@ -303,7 +333,7 @@ public class LoginActivity extends Activity {
                     jsonParams.put("user_password", MD5(etPassword.getText().toString()));
                     jsonParams.put("user_uuid", Settings.Secure.getString(LoginActivity.this.getContentResolver(),
                             Settings.Secure.ANDROID_ID));
-                    jsonParams.put("user_app_version", "1.8.0");
+                    jsonParams.put("user_app_version", AppInfoUtil.getAppVersionName(LoginActivity.this));
                     jsonParams.put("user_app_os", "android");
                     String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                     HashMap<String, String> params = new HashMap<String, String>();

@@ -1,12 +1,16 @@
 package com.madx.bwm.ui.wall;
 
+import android.graphics.Rect;
 import android.text.Editable;
-import android.widget.GridView;
+import android.util.Log;
 
 import com.madx.bwm.R;
+import com.madx.bwm.entity.GroupEntity;
+import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.BaseFragment;
-import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.widget.WallEditView;
+
+import java.util.List;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -17,6 +21,10 @@ import com.madx.bwm.widget.WallEditView;
  * create an instance of this fragment.
  */
 public class TabWordFragment extends BaseFragment<WallNewActivity> {
+
+    private final static String TAG = TabPictureFragment.class.getSimpleName();
+    private List<UserEntity> mMembers;
+    private List<GroupEntity> mGroups;
 
     public static TabWordFragment newInstance(String... params) {
 
@@ -41,13 +49,12 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
         this.layoutId = R.layout.fragment_tab_word;
     }
 
-    private GridView gvFriends;
-
     @Override
     public void initView() {
 
         WallEditView text_content = getViewById(R.id.wall_text_content);
         text_content.setTextChangeListener(new WallEditView.TextChangeListener() {
+            int lastChange = CHANGE_MODE_NORMAL;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -59,8 +66,37 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s, int change) {
+                switch(change) {
+                    case CHANGE_MODE_NORMAL:
+                        if(lastChange == CHANGE_MODE_BLACK_CHANGE){
+                            lastChange = change;
+                            changeAtDesc(mMembers, mGroups);
+                            return;
+                        }
+                        break;
+                    case CHANGE_MODE_DLETE_AT_ALL:
+                        if(mMembers != null) {
+                            mMembers.clear();
+                        }
+                        if(mGroups != null) {
+                            mGroups.clear();
+                        }
+                        break;
 
+                    case CHANGE_MODE_DLETE_AT_GROUPS:
+                        if(mGroups != null) {
+                            mGroups.clear();
+                        }
+                        break;
+
+                    case CHANGE_MODE_DLETE_AT_MEMBER:
+                        if(mMembers != null) {
+                            mMembers.clear();
+                        }
+                        break;
+                }
+                lastChange = change;
             }
         });
 
@@ -68,6 +104,32 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
 
     public WallEditView getEditText4Content(){
         return getViewById(R.id.wall_text_content);
+    }
+
+    public void changeAtDesc(List<UserEntity> members, List<GroupEntity> groups) {
+        mMembers = members;
+        mGroups = groups;
+
+        WallEditView editText = getEditText4Content();
+        String memberText;
+        String groupText;
+        if(members != null && mMembers.size() > 0) {
+            memberText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), mMembers.size());
+            Log.i(TAG, "changeAtDesc& member of at description is " + memberText);
+        } else {
+            Log.i(TAG, "changeAtDesc& no member of at description");
+            memberText = "";
+        }
+        if(groups != null && mGroups.size() > 0) {
+            groupText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), mGroups.size());
+            Log.i(TAG, "changeAtDesc& group of at description is " + groupText);
+        } else {
+            Log.i(TAG, "changeAtDesc& no group of at description");
+            groupText = "";
+        }
+
+        editText.addAtDesc(memberText, groupText, isVisible());
+
     }
 
     @Override

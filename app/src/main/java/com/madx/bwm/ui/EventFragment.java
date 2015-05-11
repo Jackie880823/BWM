@@ -146,6 +146,10 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     eventStart.setVisibility(View.GONE);
                     requestData();
                     break;
+//                case 3:
+//                    requestData();
+//                    break;
+
             }
         }
     }
@@ -209,10 +213,13 @@ public class EventFragment extends BaseFragment<MainActivity> {
                         @Override
                         public void contentItemClick(EventEntity eventEntity) {
                             //item的点击事件跳转到EventDetailActivity
+//                            requestData();
+//                            adapter.notifyDataSetChanged();
                             Intent intent = new Intent(getActivity(), EventDetailActivity.class);
 //                            intent.putExtra("event", eventEntity);
                             intent.putExtra("group_id", eventEntity.getGroup_id());
                             startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
+//                            requestData();
                         }
                     });
                     rvList.setAdapter(adapter);

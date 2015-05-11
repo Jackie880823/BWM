@@ -225,6 +225,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     } else if (R.id.ib_top_button_right == v.getId()) {
                         Intent intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
+//                        Log.i("Detail_button_rt====================", "");
                         getActivity().startActivityForResult(intent, 1);
                     }
                     return false;
@@ -861,6 +862,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         });
 
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

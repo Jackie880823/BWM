@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -71,6 +72,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
         this.layoutId = R.layout.fragment_wall;
     }
 
+    private FrameLayout flWallStartUp;
     private RecyclerView rvList;
     private WallAdapter adapter;
     private MySwipeRefreshLayout swipeRefreshLayout;
@@ -91,6 +93,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
         if (getArguments() != null) {
             member_id = getArguments().getString(ARG_PARAM_PREFIX + 0);
         }
+
+        flWallStartUp = getViewById(R.id.wall_start_up);
 
         rvList = getViewById(R.id.rv_wall_list);
         llm = new LinearLayoutManager(getParentActivity());
@@ -203,6 +207,11 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
                     } else {
                         startIndex += data.size();
                         adapter.add(data);
+                    }
+                    if(data.size() <= 0) {
+                        flWallStartUp.setVisibility(View.VISIBLE);
+                    } else {
+                        flWallStartUp.setVisibility(View.GONE);
                     }
                     loading = false;
                 } catch (Exception e) {

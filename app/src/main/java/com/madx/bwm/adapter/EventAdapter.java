@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.madx.bwm.R;
@@ -22,8 +23,11 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context mContext;
     private List<EventEntity> data;
     private List<BirthdayEntity> birthdayEvents;
+    //是否有生日item
     private boolean hasTop;
+    //生日item的条目
     private int otherItemCount;
+    //生日item显示的文字
     private String defaultTitle;
 
     public EventAdapter(Context context, List<EventEntity> data, List<BirthdayEntity> birthdayEvents) {
@@ -51,11 +55,11 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         //或者无头部时
         if (viewType == TYPE_ITEM || !hasTop) {
             // 加载Item的布局.布局中用到的真正的CardView.
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);//一般event的cardview item
             // ViewHolder参数一定要是Item的Root节点.
             return new VHItem(view);
         } else if (viewType == TYPE_HEADER) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_top, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_top, parent, false);//生日cardview item
             return new VHHeader(view);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
@@ -67,6 +71,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof VHItem || !hasTop) {
             VHItem item = (VHItem) holder;
+            //一般event item的位置要减去生日item的条目
             EventEntity ee = data.get(position - otherItemCount);
             item.tvTitle.setText(ee.getGroup_name());
             if ("2".equals(ee.getGroup_event_status())) {
@@ -76,6 +81,10 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.tvUserName.setTypeface(null, Typeface.BOLD);
                 item.icon_release_date.setVisibility(View.GONE);
                 item.tvReleaseDate.setVisibility(View.GONE);
+                if("0".equals(ee.getGroup_new_post())){
+                    //去除背景和颜色
+                    item.item_event.setBackgroundResource(0);
+                }
             }else{
 
                 item.item_unenable.setVisibility(View.GONE);
@@ -85,6 +94,9 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.icon_release_date.setVisibility(View.VISIBLE);
                 item.tvReleaseDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
                 item.tvReleaseDate.setVisibility(View.VISIBLE);
+                if("0".equals(ee.getGroup_new_post())){
+                    item.item_event.setBackgroundResource(0);
+                }
             }
         } else if (holder instanceof VHHeader) {
             VHHeader item = (VHHeader) holder;
@@ -103,6 +115,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.left_daty_count.setText(be.getDay_count() + "");
                 item.tv_date_desc.setVisibility(View.VISIBLE);
             }
+
 
         }
     }
@@ -130,9 +143,10 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView tvReleaseDate;
         TextView item_unenable;
         ImageView icon_release_date;
+        RelativeLayout item_event;
 
 
-        public VHItem(View itemView) {
+        public VHItem(final View itemView) {
             // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_event_title);
@@ -141,6 +155,11 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             tvReleaseDate = (TextView) itemView.findViewById(R.id.tv_release_date);
             item_unenable = (TextView) itemView.findViewById(R.id.item_unenable);
             icon_release_date = (ImageView) itemView.findViewById(R.id.icon_release_date);
+            item_event = (RelativeLayout) itemView.findViewById(R.id.item_event);
+//
+//            if(){
+//
+//            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -148,7 +167,10 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     if(itemClickListener!=null) {
 //                        /**取消的event不可点击*/
 //                        if(!"2".equals(data.get(getAdapterPosition()).getGroup_event_status())) {
-                            itemClickListener.contentItemClick(data.get(getAdapterPosition() - otherItemCount));
+                            itemClickListener.contentItemClick(data.get(getAdapterPosition() - otherItemCount));//回调方法
+                            //清除点击item的背景和颜色
+                            item_event.setBackgroundResource(0);
+//                            Log.i("item_click=======================","");
 //                        }
                     }
                 }
