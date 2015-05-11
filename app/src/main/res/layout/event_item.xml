@@ -8,15 +8,22 @@
     card_view:cardPreventCornerOverlap="false"
     style="@style/CardViewClickStyle"
     >
-<!-- style="@style/CardViewClickStyle"-->
+    <!-- style="@style/CardViewClickStyle"-->
+    <FrameLayout
+        android:id="@+id/event_start"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/event_ui_new"
+        android:visibility="gone"
+        android:padding="@dimen/default_content_padding">
+    </FrameLayout>
     <RelativeLayout
         android:id="@+id/item_event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/default_content_padding"
-        android:background="@drawable/event_ui_new"
         >
-<!--android:background="@drawable/event_ui_new"-->
+        <!--android:background="@drawable/event_ui_new"-->
         <ImageView
             android:id="@+id/item_arrow"
             android:layout_width="25dp"
@@ -70,10 +77,11 @@
 
 
         </LinearLayout>
-        
+
 
 
     </RelativeLayout>
+
 
     <TextView
         android:id="@+id/item_unenable"
