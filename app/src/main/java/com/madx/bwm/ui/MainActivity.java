@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initBottomBar() {
         bottom = (LinearLayout) findViewById(R.id.bottom);
-        ivTab0= (RelativeLayout) findViewById(R.id.iv_tab_icon0);
+        ivTab0 = (RelativeLayout) findViewById(R.id.iv_tab_icon0);
         ivTab1 = (RelativeLayout) findViewById(R.id.iv_tab_icon1);
         ivTab2 = (RelativeLayout) findViewById(R.id.iv_tab_icon2);
         ivTab3 = (RelativeLayout) findViewById(R.id.iv_tab_icon3);
@@ -297,7 +297,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private boolean isEventFragmentDate(){
+    private boolean isEventFragmentDate() {
 
 //        eventFragment.setItemClickListener(new EventFragment.ItemClickListener() {
 //            @Override
@@ -323,7 +323,7 @@ public class MainActivity extends BaseActivity {
         super.initTitleBar();
         if ("leaveGroup".equals(leaveGroup)) {
             mViewPager.setCurrentItem(2);
-        }else {
+        } else {
             changeTab(TabEnum.family);//默认第一个
         }
     }
@@ -438,7 +438,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public enum TabEnum {
-        family,wall, event, chat, more;
+        family, wall, event, chat, more;
     }
 
     SnackBar snackBar;
