@@ -66,8 +66,10 @@ bintray {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:21.+'
     compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.android.support:support-v4:22.1.1'
+    compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.android.support:cardview-v7:+'
 }
 
 install {
@@ -122,9 +124,4 @@ artifacts {
 
 task findConventions << {
     println project.getConvention()
-}
-
-dependencies{
-    compile 'com.android.support:recyclerview-v7:+'
-    compile 'com.android.support:cardview-v7:+'
 }
