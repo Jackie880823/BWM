@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -55,7 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class MyFamilyActivity extends BaseActivity {
+public class MyFamilyFragment extends BaseFragment<MainActivity> {
 
 
     List<UserEntity> userList = new ArrayList<>();//好友
@@ -80,36 +79,25 @@ public class MyFamilyActivity extends BaseActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
 
-    @Override
-    public int getLayout() {
-        return R.layout.activity_my_family;
+    public static MyFamilyFragment newInstance(String... params) {
+        return createInstance(new MyFamilyFragment(), params);
     }
 
     @Override
-    protected void initBottomBar() {
-
+    public void setLayoutId() {
+        this.layoutId = R.layout.activity_my_family;
     }
 
-    @Override
-    protected void setTitle() {
-        tvTitle.setText(R.string.title_message_myfamily);
-    }
+//    @Override
+//    protected void setTitle() {
+//        tvTitle.setText(R.string.title_message_myfamily);
+//    }
 
-    @Override
-    protected void titleRightEvent() {
-        showSelectDialog();
-    }
-
-    @Override
-    protected Fragment getFragment() {
-        return null;
-    }
-
-    @Override
-    protected void initTitleBar() {
-        super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
-    }
+//    @Override
+//    protected void initTitleBar() {
+//        super.initTitleBar();
+//        getParentActivity().changeTitleColor(R.color.tab_color_press3);
+//    }
 
     @Override
     public void initView() {
@@ -124,17 +112,23 @@ public class MyFamilyActivity extends BaseActivity {
 
         ProgressBar = getViewById(R.id.gv_progress_bar);
 
-        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_download));
-
+        progressDialog = new ProgressDialog(getActivity(), getResources().getString(R.string.text_download));
+        getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
+            @Override
+            public boolean execute(View v) {
+                showSelectDialog();
+                return false;
+            }
+        });
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
-                if (!NetworkUtil.isNetworkConnected(MyFamilyActivity.this)) {
+                if (!NetworkUtil.isNetworkConnected(getActivity())) {
                     /**
                      * begin QK
                      */
-                    Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
                     finishReFresh();
                     /**
                      * end
@@ -161,7 +155,7 @@ public class MyFamilyActivity extends BaseActivity {
 
                         if ((position > 0) && (position < searchGroupList.size() + 1)) {
                             //Group,跳转到对话界面
-                            Intent intent = new Intent(MyFamilyActivity.this, MessageChatActivity.class);
+                            Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                             intent.putExtra("type", 1);
                             intent.putExtra("groupEntity", searchGroupList.get(position - 1));
                             startActivity(intent);
@@ -169,7 +163,7 @@ public class MyFamilyActivity extends BaseActivity {
                             //
                             if ("0".equals(searchUserList.get(position - searchGroupList.size() - 1).getFam_accept_flag())) {
                                 //不是好友,提示等待接收
-                                MessageUtil.showMessage(MyFamilyActivity.this, getResources().getString(R.string.text_awaiting_for_approval), 3000);
+                                MessageUtil.showMessage(getActivity(), getResources().getString(R.string.text_awaiting_for_approval), 3000);
                                 return;
                             } else {
                                 //member, 跳转到个人资料页面需要
@@ -182,7 +176,7 @@ public class MyFamilyActivity extends BaseActivity {
 
                                 }
 
-                                Intent intent = new Intent(MyFamilyActivity.this, FamilyProfileActivity.class);
+                                Intent intent = new Intent(getActivity(), FamilyProfileActivity.class);
                                 intent.putExtra("member_id", searchUserList.get(position - searchGroupList.size() - 1).getUser_id());
                                 startActivity(intent);
                             }
@@ -197,7 +191,7 @@ public class MyFamilyActivity extends BaseActivity {
 
                         if ((position > 0) && (position < groupList.size() + 1)) {
                             //Group,跳转到对话界面
-                            Intent intent = new Intent(MyFamilyActivity.this, MessageChatActivity.class);
+                            Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                             intent.putExtra("type", 1);
                             intent.putExtra("groupEntity", groupList.get(position - 1));
                             startActivity(intent);
@@ -205,7 +199,7 @@ public class MyFamilyActivity extends BaseActivity {
                             //
                             if ("0".equals(userList.get(position - groupList.size() - 1).getFam_accept_flag())) {
                                 //不是好友,提示等待接收
-                                MessageUtil.showMessage(MyFamilyActivity.this, getResources().getString(R.string.text_awaiting_for_approval), 3000);
+                                MessageUtil.showMessage(getActivity(), getResources().getString(R.string.text_awaiting_for_approval), 3000);
                                 return;
                             } else {
                                 if ("".equals(userList.get(position - groupList.size() - 1).getMiss())) {
@@ -217,7 +211,7 @@ public class MyFamilyActivity extends BaseActivity {
                                 }
                                 //member, 跳转到个人资料页面需要
                                 //put请求消除爱心
-                                Intent intent = new Intent(MyFamilyActivity.this, FamilyProfileActivity.class);
+                                Intent intent = new Intent(getActivity(), FamilyProfileActivity.class);
                                 intent.putExtra("member_id", userList.get(position - groupList.size() - 1).getUser_id());
                                 startActivity(intent);
                             }
@@ -252,7 +246,7 @@ public class MyFamilyActivity extends BaseActivity {
 
 
                 if (TextUtils.isEmpty(etSearch.getText())) {
-                    MyFamilyAdapter myFamilyAdapter1 = new MyFamilyAdapter(MyFamilyActivity.this, R.layout.gridview_item_for_myfamily, userList, groupList);
+                    MyFamilyAdapter myFamilyAdapter1 = new MyFamilyAdapter(getActivity(), R.layout.gridview_item_for_myfamily, userList, groupList);
                     mGridView.setAdapter(myFamilyAdapter1);
                     isSearch = false;
                 } else {
@@ -271,7 +265,7 @@ public class MyFamilyActivity extends BaseActivity {
                         }
                     }
 
-                    MyFamilyAdapter myFamilyAdapter2 = new MyFamilyAdapter(MyFamilyActivity.this, R.layout.gridview_item_for_myfamily, searchUserList, searchGroupList);
+                    MyFamilyAdapter myFamilyAdapter2 = new MyFamilyAdapter(getActivity(), R.layout.gridview_item_for_myfamily, searchUserList, searchGroupList);
                     mGridView.setAdapter(myFamilyAdapter2);
                     isSearch = true;
                 }
@@ -285,14 +279,14 @@ public class MyFamilyActivity extends BaseActivity {
     @Override
     public void requestData() {
 
-        if (!NetworkUtil.isNetworkConnected(this)) {
-            Toast.makeText(this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+        if (!NetworkUtil.isNetworkConnected(getActivity())) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             finishReFresh();
             return;
         }
 
 
-        new HttpTools(this).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -317,11 +311,11 @@ public class MyFamilyActivity extends BaseActivity {
                     groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {
                     }.getType());
                     finishReFresh();
-                    MyFamilyAdapter myFamilyAdapter = new MyFamilyAdapter(MyFamilyActivity.this, R.layout.gridview_item_for_myfamily, userList, groupList);
+                    MyFamilyAdapter myFamilyAdapter = new MyFamilyAdapter(getActivity(), R.layout.gridview_item_for_myfamily, userList, groupList);
                     mGridView.setAdapter(myFamilyAdapter);
                     ProgressBar.setVisibility(View.GONE);
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     if (isRefresh) {
                         finishReFresh();
                     }
@@ -331,7 +325,7 @@ public class MyFamilyActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }
@@ -347,11 +341,6 @@ public class MyFamilyActivity extends BaseActivity {
 
             }
         });
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     public class MyFamilyAdapter extends ArrayAdapter {
@@ -447,10 +436,10 @@ public class MyFamilyActivity extends BaseActivity {
 
 
     private void showSelectDialog() {
-        LayoutInflater factory = LayoutInflater.from(this);
+        LayoutInflater factory = LayoutInflater.from(getActivity());
         final View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
 
-        showSelectDialog = new MyDialog(this, null, selectIntention);
+        showSelectDialog = new MyDialog(getActivity(), null, selectIntention);
 
         TextView tvAddNewMember = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         TextView tvCreateNewGroup = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
@@ -459,7 +448,7 @@ public class MyFamilyActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 //TODO
-                startActivity(new Intent(MyFamilyActivity.this, AddNewMembersActivity.class));
+                startActivity(new Intent(getActivity(), AddNewMembersActivity.class));
                 showSelectDialog.dismiss();
             }
         });
@@ -467,7 +456,7 @@ public class MyFamilyActivity extends BaseActivity {
         tvCreateNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MyFamilyActivity.this, CreateGroupActivity.class));
+                startActivity(new Intent(getActivity(), CreateGroupActivity.class));
                 showSelectDialog.dismiss();
             }
         });
@@ -478,14 +467,14 @@ public class MyFamilyActivity extends BaseActivity {
     private void getUrl() {
 
 
-        if (!NetworkUtil.isNetworkConnected(MyFamilyActivity.this)) {
-            Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+        if (!NetworkUtil.isNetworkConnected(getActivity())) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             return;
         }
 
         progressDialog.show();
 
-        new HttpTools(this).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -506,11 +495,11 @@ public class MyFamilyActivity extends BaseActivity {
                             getPdf();
                         }
                     } else {
-                        MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                         progressDialog.dismiss();
                     }
                 } catch (Exception e) {
-                    MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     progressDialog.dismiss();
                     e.printStackTrace();
                 }
@@ -518,7 +507,7 @@ public class MyFamilyActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                 progressDialog.dismiss();
             }
 
@@ -540,9 +529,9 @@ public class MyFamilyActivity extends BaseActivity {
 
     public void getPdf() {
 
-        final String target = FileUtil.getCacheFilePath(this) + String.format(CACHE_FILE_NAME, "" + System.currentTimeMillis());
+        final String target = FileUtil.getCacheFilePath(getActivity()) + String.format(CACHE_FILE_NAME, "" + System.currentTimeMillis());
 
-        new HttpTools(this).download(urlString, target, true, new HttpCallback() {
+        new HttpTools(getActivity()).download(urlString, target, true, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -566,7 +555,7 @@ public class MyFamilyActivity extends BaseActivity {
                     try {
                         startActivity(intent);
                     } catch (ActivityNotFoundException e) {
-                        MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                         System.out.println("打开失败");
                     }
                 }
@@ -576,7 +565,7 @@ public class MyFamilyActivity extends BaseActivity {
             @Override
             public void onError(Exception e) {
                 progressDialog.dismiss();
-                MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
 
             @Override
@@ -598,7 +587,7 @@ public class MyFamilyActivity extends BaseActivity {
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_UPDATE_MISS, MainActivity.getUser().getUser_id());
 
-        new HttpTools(this).put(requestInfo, new HttpCallback() {
+        new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -615,10 +604,10 @@ public class MyFamilyActivity extends BaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(string);
                     if ("200".equals(jsonObject.getString("response_status_code"))) {
-                        Toast.makeText(MyFamilyActivity.this, getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     e.printStackTrace();
                 }
 
@@ -626,7 +615,7 @@ public class MyFamilyActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(MyFamilyActivity.this, R.string.msg_action_failed);
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
 
             @Override
