@@ -5,7 +5,6 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,9 +33,9 @@ import com.madx.bwm.R;
 import com.madx.bwm.action.MessageAction;
 import com.madx.bwm.adapter.MessageChatAdapter;
 import com.madx.bwm.adapter.MessageHorizontalListViewAdapter;
-import com.madx.bwm.entity.GroupEntity;
+import com.madx.bwm.entity.GroupMessageEntity;
 import com.madx.bwm.entity.MsgEntity;
-import com.madx.bwm.entity.UserEntity;
+import com.madx.bwm.entity.PrivateMessageEntity;
 import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.FileUtil;
@@ -98,8 +97,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     private String groupId;//API的一个参数
     private int userOrGroupType = -1;//0为私聊，1为群聊
-    private UserEntity userEntity;//是私聊信息
-    private GroupEntity groupEntity;//群聊信息
+    private PrivateMessageEntity userEntity;//是私聊信息
+    private GroupMessageEntity groupEntity;//群聊信息
     /**
      * 放置表情图标库的默认文件夹名称
      */
@@ -290,12 +289,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         progressDialog.show();
         msgList = new ArrayList<>();
         if (userOrGroupType == 0) {
-            userEntity = (UserEntity) getIntent().getExtras().getSerializable("userEntity");
+            userEntity = (PrivateMessageEntity) getIntent().getExtras().getSerializable("userEntity");
             if (userEntity != null) {
                 groupId = userEntity.getGroup_id();
             }
         } else if (userOrGroupType == 1) {
-            groupEntity = (GroupEntity) getIntent().getExtras().getSerializable("groupEntity");
+            groupEntity = (GroupMessageEntity) getIntent().getExtras().getSerializable("groupEntity");
             if (groupEntity != null) {
                 groupId = groupEntity.getGroup_id();
             }
@@ -377,8 +376,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     }
 
     private void initViewPager() {
-        stickerNameList = MessageListFragment.STICKER_NAME_LIST;
-        sticker_List_Id = MessageListFragment.FIRST_STICKER_LIST;
+        stickerNameList = MemberMessageFragment.STICKER_NAME_LIST;
+        sticker_List_Id = MemberMessageFragment.FIRST_STICKER_LIST;
         horizontalListViewAdapter = new MessageHorizontalListViewAdapter(sticker_List_Id, mContext);
         horizontalListView.setAdapter(horizontalListViewAdapter);
         setTabSelection(0);

@@ -97,6 +97,7 @@ public class CountryCodeActivity extends BaseActivity {
                 if (TextUtils.isEmpty(etSearch.getText()))
                 {
                     isSearch = false;
+                    letterListView.setAdapter(ataaa);
                 }
                 else
                 {
