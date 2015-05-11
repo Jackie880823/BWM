@@ -187,5 +187,5 @@ public class Constant {
     public static String Sticker_Png = ".png";
     public static String Sticker_Gif = ".gif";
 
-
+    public static String API_GET_CHAT_MESSAGE_LIST = API_SERVER+"/bondwithme/index.php/api/messages/%s/type/%s";//获取消息成员列表
 }

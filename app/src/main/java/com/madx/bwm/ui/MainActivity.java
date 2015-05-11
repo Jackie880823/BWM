@@ -234,7 +234,7 @@ public class MainActivity extends BaseActivity {
 ////            fragments.add(1,eventStartupFragment);
 //        }
 //        fragments.add(MessageFragment.newInstance());
-        fragments.add(MessageListFragment.newInstance());
+        fragments.add(MessageMainFragment.newInstance());
         fragments.add(MoreFragment.newInstance());
 
 
