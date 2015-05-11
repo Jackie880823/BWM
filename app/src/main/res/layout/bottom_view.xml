@@ -3,7 +3,42 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:weightSum="4">
+    android:weightSum="5">
+
+    <RelativeLayout
+        android:id="@+id/iv_tab_icon0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/tab_selector"
+        android:clickable="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp">
+
+            <ImageView
+
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/tab_wall"
+
+                />
+
+            <TextView
+                android:layout_gravity="center_horizontal"
+                style="@style/text_default"
+                android:text="@string/title_tab_my_family" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/iv_tab_icon1"
@@ -31,9 +66,10 @@
 
                 />
 
-            <TextView android:layout_gravity="center_horizontal" style="@style/text_default"
-                android:text="@string/title_tab_wall"
-                />
+            <TextView
+                android:layout_gravity="center_horizontal"
+                style="@style/text_default"
+                android:text="@string/title_tab_wall" />
 
         </LinearLayout>
 
@@ -69,8 +105,7 @@
 
                 style="@style/text_default"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/title_tab_event"
-                />
+                android:text="@string/title_tab_event" />
 
         </LinearLayout>
 

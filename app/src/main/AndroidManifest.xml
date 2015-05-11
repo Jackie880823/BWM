@@ -124,6 +124,7 @@
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
         <activity
             android:name=".ui.MainActivity"
+            android:windowSoftInputMode = "adjustPan|stateHidden"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
@@ -217,10 +218,6 @@
             android:screenOrientation="portrait" />
 
         <!-- christopher -->
-        <activity
-            android:name=".ui.MyFamilyActivity"
-            android:windowSoftInputMode = "adjustPan|stateHidden"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.CreateGroupActivity"
@@ -229,9 +226,6 @@
             android:name=".ui.CreateGroupDialogActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name=".ui.ChatActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.GroupSettingActivity"
             android:screenOrientation="portrait" />

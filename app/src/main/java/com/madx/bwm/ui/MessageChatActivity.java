@@ -33,6 +33,7 @@ import com.madx.bwm.R;
 import com.madx.bwm.action.MessageAction;
 import com.madx.bwm.adapter.MessageChatAdapter;
 import com.madx.bwm.adapter.MessageHorizontalListViewAdapter;
+import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.GroupMessageEntity;
 import com.madx.bwm.entity.MsgEntity;
 import com.madx.bwm.entity.PrivateMessageEntity;
@@ -97,8 +98,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     private String groupId;//API的一个参数
     private int userOrGroupType = -1;//0为私聊，1为群聊
-    private PrivateMessageEntity userEntity;//是私聊信息
-    private GroupMessageEntity groupEntity;//群聊信息
+   // private PrivateMessageEntity userEntity;//是私聊信息
+   // private GroupMessageEntity groupEntity;//群聊信息
     /**
      * 放置表情图标库的默认文件夹名称
      */
@@ -113,7 +114,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private Intent intent;
 
     private int indexPage = 1;
-
+    private String titleName = "";
     private Uri mCropImagedUri;//裁剪后的Uri
     private String imagePath;
     private Uri uri;//原图uri
@@ -240,13 +241,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     @Override
     protected void setTitle() {
-        if (userOrGroupType == 0) {
-            tvTitle.setText(userEntity.getUser_given_name());
-        } else if (userOrGroupType == 1) {
-            tvTitle.setText(groupEntity.getGroup_name());
-        } else {
-            tvTitle.setText("error");
-        }
+        tvTitle.setText(titleName);
     }
 
     @Override
@@ -266,11 +261,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         Intent intent;
         if (userOrGroupType == 0) {
             intent = new Intent(mContext, FamilyProfileActivity.class);
-            intent.putExtra("member_id", userEntity.getUser_id());//传进来的,他人个人信息
+            intent.putExtra("member_id", groupId);//传进来的,他人个人信息
             startActivity(intent);
         } else if (userOrGroupType == 1) {
             intent = new Intent(mContext, GroupSettingActivity.class);
-            intent.putExtra("groupEntity", groupEntity);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra("groupName", titleName);
             startActivityForResult(intent, REQUEST_GET_GROUP_NAME);
         }
     }
@@ -288,19 +284,29 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         progressDialog.show();
         msgList = new ArrayList<>();
-        if (userOrGroupType == 0) {
-            userEntity = (PrivateMessageEntity) getIntent().getExtras().getSerializable("userEntity");
-            if (userEntity != null) {
-                groupId = userEntity.getGroup_id();
-            }
-        } else if (userOrGroupType == 1) {
-            groupEntity = (GroupMessageEntity) getIntent().getExtras().getSerializable("groupEntity");
-            if (groupEntity != null) {
-                groupId = groupEntity.getGroup_id();
-            }
-        } else {
-            finish();
-        }
+//        if (userOrGroupType == 0) {
+//            titleName
+//            tvTitle.setText(userEntity.getUser_given_name());
+//        } else if (userOrGroupType == 1) {
+//            tvTitle.setText(groupEntity.getGroup_name());
+//        } else {
+//            tvTitle.setText("error");
+//        }
+        groupId=getIntent().getStringExtra("groupId");
+        titleName=getIntent().getStringExtra("titleName");
+//        if (userOrGroupType == 0) {
+//            userEntity = (PrivateMessageEntity) getIntent().getExtras().getSerializable("userEntity");
+//            if (userEntity != null) {
+//                groupId = userEntity.getGroup_id();
+//            }
+//        } else if (userOrGroupType == 1) {
+//            groupEntity = (GroupMessageEntity) getIntent().getExtras().getSerializable("groupEntity");
+//            if (groupEntity != null) {
+//                groupId = groupEntity.getGroup_id();
+//            }
+//        } else {
+//            finish();
+//        }
         setView();
         setAllListener();
         imm = (InputMethodManager) getSystemService(
@@ -376,8 +382,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     }
 
     private void initViewPager() {
-        stickerNameList = MemberMessageFragment.STICKER_NAME_LIST;
-        sticker_List_Id = MemberMessageFragment.FIRST_STICKER_LIST;
+        stickerNameList = MainActivity.STICKER_NAME_LIST;
+        sticker_List_Id = MainActivity.FIRST_STICKER_LIST;
         horizontalListViewAdapter = new MessageHorizontalListViewAdapter(sticker_List_Id, mContext);
         horizontalListView.setAdapter(horizontalListViewAdapter);
         setTabSelection(0);
@@ -566,7 +572,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (ChatActivity.RESULT_OK == resultCode) {
+        if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 // 如果是直接从相册获取
                 case REQUEST_HEAD_PHOTO:

@@ -61,8 +61,7 @@ public class MyFamilyFragment extends BaseFragment<MainActivity> {
     List<GroupEntity> groupList = new ArrayList<>();//群组
 
     List<UserEntity> searchUserList = new ArrayList<>();//好友
-    List<GroupEntity> searchGroupList = new ArrayList<>();
-    ;//群组
+    List<GroupEntity> searchGroupList = new ArrayList<>();//群组
     EditText etSearch;//搜索
     Boolean isSearch = false;
 
@@ -157,7 +156,9 @@ public class MyFamilyFragment extends BaseFragment<MainActivity> {
                             //Group,跳转到对话界面
                             Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                             intent.putExtra("type", 1);
-                            intent.putExtra("groupEntity", searchGroupList.get(position - 1));
+                            //intent.putExtra("groupEntity", searchGroupList.get(position - 1));
+                            intent.putExtra("groupId", searchGroupList.get(position - 1).getGroup_id());
+                            intent.putExtra("titleName", searchGroupList.get(position - 1).getGroup_name());
                             startActivity(intent);
                         } else {
                             //
@@ -193,7 +194,9 @@ public class MyFamilyFragment extends BaseFragment<MainActivity> {
                             //Group,跳转到对话界面
                             Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                             intent.putExtra("type", 1);
-                            intent.putExtra("groupEntity", groupList.get(position - 1));
+                            //intent.putExtra("groupEntity", groupList.get(position - 1));
+                            intent.putExtra("groupId", groupList.get(position - 1).getGroup_id());
+                            intent.putExtra("titleName", groupList.get(position - 1).getGroup_name());
                             startActivity(intent);
                         } else {
                             //

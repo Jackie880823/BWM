@@ -188,7 +188,9 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
     public void goChat(UserEntity user) {
         operaUserId = user.getUser_id();
         Intent intent = new Intent(getActivity(), MessageChatActivity.class);
-        intent.putExtra("userEntity", user);
+        //intent.putExtra("userEntity", user);
+        intent.putExtra("groupId", user.getGroup_id());
+        intent.putExtra("titleName", user.getUser_given_name());
         intent.putExtra("type", 0);
         getActivity().startActivity(intent);
     }
