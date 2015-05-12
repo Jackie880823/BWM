@@ -10,8 +10,10 @@ public class Constant {
      */
 
     public static final String PREFERRENCE_NAME = "bwm_preferences";
-    public static final String GCM_PREF_REG_ID = "registration_id";
-    public static final String GCM_PREF_APP_VERSION = "appVersion";
+    public static final String GCM_PREF_REG_ID = "gcm_registration_id";
+    public static final String GCM_PREF_APP_VERSION = "gcm_appVersion";
+    public static final String JPUSH_PREF_REG_ID = "jpush_registration_id";
+    public static final String JPUSH_PREF_APP_VERSION = "jpush_appVersion";
 
     public static final int ACTION_CREATE_WALL = 10;
     public static final int ACTION_UPDATE_WALL = 11;
@@ -185,5 +187,5 @@ public class Constant {
     public static String Sticker_Png = ".png";
     public static String Sticker_Gif = ".gif";
 
-
+    public static String API_GET_CHAT_MESSAGE_LIST = API_SERVER+"/bondwithme/index.php/api/messages/%s/type/%s";//获取消息成员列表
 }

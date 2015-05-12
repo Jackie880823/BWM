@@ -1,7 +1,6 @@
 package com.madx.bwm.util;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -20,13 +19,14 @@ public class SystemUtil {
     public static boolean checkPlayServices(Activity context) {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
         if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, context,
-                       PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Log.i("AppInfoUtil", "This device is not supported.");
-                context.finish();
-            }
+            /**提示安装google 服务*/
+//            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+//                GooglePlayServicesUtil.getErrorDialog(resultCode, context,
+//                       PLAY_SERVICES_RESOLUTION_REQUEST).show();
+//            } else {
+//                Log.i("AppInfoUtil", "This device is not supported.");
+//                context.finish();
+//            }
             return false;
         }
         return true;

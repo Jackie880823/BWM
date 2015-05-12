@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -267,6 +268,24 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             ibComment = (ImageButton) itemView.findViewById(R.id.iv_comment);
             btn_del = (ImageButton) itemView.findViewById(R.id.btn_del);
             iv_mood = (ImageView) itemView.findViewById(R.id.iv_mood);
+
+            tvContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    // 字符显示超过8行，只显示到第九行
+                    if(tvContent.getLineCount() > 8) {
+                        // 字符总长度
+                        int length = tvContent.getText().length();
+                        // 第九行只显示十个字符
+                        int lineEndIndex = tvContent.getLayout().getLineEnd(7) + 10;
+                        if(length > lineEndIndex) {
+                            // 截取到第九行文字的第7个字符，其余字符用...替代
+                            String text = tvContent.getText().toString().substring(0, lineEndIndex - 3) + "...";
+                            tvContent.setText(text);
+                        }
+                    }
+                }
+            });
 
             ibAgree.setOnClickListener(this);
             //            ibComment.setOnClickListener(this);

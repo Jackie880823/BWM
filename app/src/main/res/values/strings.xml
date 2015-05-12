@@ -617,5 +617,9 @@
     <string name="text_nearest">nearest</string>
     <string name="start_a_now">Start a new</string>
     <string name="post_now">Post now</string>
+    <string name="text_message_chat_post_text">posted sticker</string>
+    <string name="text_message_chat_post_photo">posted photo</string>
+    <string name="text_message_chat_post_location">posted location</string>
+    <string name="title_tab_my_family">My Family</string>
 
 </resources>

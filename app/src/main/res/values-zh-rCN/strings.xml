@@ -621,6 +621,7 @@
     <string name="some_hour_ago">%d hr ago</string>
     <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_tab_my_family">My Family</string>
 
     <!--end-->
 

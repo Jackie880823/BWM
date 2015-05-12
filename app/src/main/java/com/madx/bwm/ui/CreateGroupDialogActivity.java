@@ -365,7 +365,9 @@ public class CreateGroupDialogActivity extends Activity {
                         groupEntity.setGroup_name(etGroupName.getText().toString());
                         Intent intent = new Intent(CreateGroupDialogActivity.this, MessageChatActivity.class);
                         intent.putExtra("type", 1);
-                        intent.putExtra("groupEntity",groupEntity);
+                        intent.putExtra("groupId", groupEntity.getGroup_id());
+                        intent.putExtra("titleName", groupEntity.getGroup_name());
+                        //intent.putExtra("groupEntity",groupEntity);
                         startActivity(intent);//创建完群组直接跳转到聊天界面，那么前面的CreateGroupActivity和CreateGroupDialogActivity界面如何处理???
                         CreateGroupActivity.instance.finish();
                         progressDialog.dismiss();

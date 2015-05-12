@@ -37,9 +37,10 @@ public class App extends Application {
         HttpTools.init(this);
         /**baidu map*/
         SDKInitializer.initialize(getApplicationContext());
+
     }
 
-    public static App getContextInstance(){
+    public static App getContextInstance() {
         return appContext;
     }
 
@@ -50,10 +51,10 @@ public class App extends Application {
         }
     }
 
-    public static void changeLoginedUser(UserEntity user,AppTokenEntity tokenEntity) {
+    public static void changeLoginedUser(UserEntity user, AppTokenEntity tokenEntity) {
         if (appContext != null) {
 
-            initToken(user.getUser_login_id(),tokenEntity);
+            initToken(user.getUser_login_id(), tokenEntity);
 
             changeLoginedUser(user);
 
@@ -61,8 +62,8 @@ public class App extends Application {
         }
     }
 
-    public static void initToken(String user_login_id,AppTokenEntity tokenEntity){
-        if(tokenEntity!=null) {
+    public static void initToken(String user_login_id, AppTokenEntity tokenEntity) {
+        if (tokenEntity != null) {
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Charset", "UTF-8");
             headers.put("X_BWM_TOKEN ", tokenEntity.getUser_token());
@@ -98,6 +99,11 @@ public class App extends Application {
             ComponentName cn = intent.getComponent();
             Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
             context.startActivity(mainIntent);
+            /**销毁推送id*/
+            PreferencesUtil.saveValue(context, Constant.GCM_PREF_REG_ID, "");
+            PreferencesUtil.saveValue(context, Constant.GCM_PREF_APP_VERSION, "");
+            PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_REG_ID, "");
+            PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_APP_VERSION, "");
         }
         context.finish();
     }
