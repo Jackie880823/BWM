@@ -23,15 +23,16 @@
             android:paddingTop="6dp">
 
             <ImageView
-
+                android:id="@+id/iv_tab_icon0_iv"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/tab_wall"
+                android:src="@drawable/tab_family"
 
                 />
 
             <TextView
+                android:id="@+id/iv_tab_icon0_tv"
                 android:layout_gravity="center_horizontal"
                 style="@style/text_default"
                 android:text="@string/title_tab_my_family" />
@@ -58,7 +59,7 @@
             android:paddingTop="6dp">
 
             <ImageView
-
+                android:id="@+id/iv_tab_icon1_iv"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_horizontal"
@@ -67,6 +68,7 @@
                 />
 
             <TextView
+                android:id="@+id/iv_tab_icon1_tv"
                 android:layout_gravity="center_horizontal"
                 style="@style/text_default"
                 android:text="@string/title_tab_wall" />
@@ -93,7 +95,7 @@
             android:paddingTop="6dp">
 
             <ImageView
-
+                android:id="@+id/iv_tab_icon2_iv"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_horizontal"
@@ -102,7 +104,7 @@
                 />
 
             <TextView
-
+                android:id="@+id/iv_tab_icon2_tv"
                 style="@style/text_default"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/title_tab_event" />
@@ -129,7 +131,7 @@
             android:paddingTop="6dp">
 
             <ImageView
-
+                android:id="@+id/iv_tab_icon3_iv"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_horizontal"
@@ -139,6 +141,7 @@
 
 
             <TextView
+                android:id="@+id/iv_tab_icon3_tv"
                 style="@style/text_default"
                 android:text="@string/title_tab_chat"
                 android:layout_gravity="center_horizontal"
@@ -167,7 +170,7 @@
             android:paddingTop="6dp">
 
             <ImageView
-
+                android:id="@+id/iv_tab_icon4_iv"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center_horizontal"
@@ -176,6 +179,7 @@
                 />
 
             <TextView
+                android:id="@+id/iv_tab_icon4_tv"
                 style="@style/text_default"
                 android:text="@string/title_tab_more"
                 android:layout_gravity="center_horizontal" />
