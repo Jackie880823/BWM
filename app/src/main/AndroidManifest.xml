@@ -118,12 +118,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.EventDetailActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.BirthdayActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.EventNewActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.wall.WallCommentActivity"
@@ -153,6 +155,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.EventEditActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.InvitedEditActivity"
