@@ -103,7 +103,8 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.tvUserName.setText(ee.getUser_given_name());
                 item.tvUserName.setTypeface(null, Typeface.NORMAL);
                 item.icon_release_date.setVisibility(View.VISIBLE);
-                item.tvReleaseDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
+//                item.tvReleaseDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
+                item.tvReleaseDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
                 item.tvReleaseDate.setVisibility(View.VISIBLE);
                 if(!"0".equals(ee.getGroup_new_post())){
                     this.position = position;

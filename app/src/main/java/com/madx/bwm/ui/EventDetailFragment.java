@@ -286,14 +286,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         if (getParentActivity().getEventEntity() != null) {
             event = getParentActivity().getEventEntity();
-            push_date.setText(MyDateUtils.getLocalDateStringFromUTC(getActivity(), event.getGroup_creation_date()));
+            push_date.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), event.getGroup_creation_date()));
             owner_name.setText(event.getUser_given_name());
             VolleyUtil.initNetworkImageView(getActivity(), owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, event.getGroup_owner_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             event_title.setText(event.getGroup_name());//暂用Group_name
 
             event_desc.setText(event.getText_description());
 
-            event_date.setText(MyDateUtils.getLocalDateStringFromUTC(getActivity(), event.getGroup_event_date()));
+            event_date.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), event.getGroup_event_date()));
             location_desc.setText(event.getLoc_name());
 
             if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
