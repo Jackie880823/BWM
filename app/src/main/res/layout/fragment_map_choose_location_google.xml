@@ -1,8 +1,8 @@
-    <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <include
         android:id="@+id/fragment_main_top"
         layout="@layout/title_view"
@@ -10,11 +10,53 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <fragment
-        android:layout_below="@+id/fragment_main_top"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/bbbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" android:id="@+id/map" tools:context=".ui.ChooseMapFragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment" >
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_main_top"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding">
+
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/my_location"
+            android:iconifiedByDefault="true"
+            android:inputType="textFilter"
+            android:queryHint="@string/hint_search_name" />
+
+        <Button
+            android:id="@+id/my_location"
+            android:layout_width="@dimen/default_small_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_launcher" />
+
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/address_suggest_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bbbar"
+        android:background="@color/default_text_color_while"
+        android:visibility="gone">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/bbbar"
+        tools:context=".ui.ChooseMapFragment">
 
     </fragment>
 

@@ -3,6 +3,7 @@ package com.madx.bwm.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,13 +20,14 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.madx.bwm.R;
 import com.madx.bwm.util.LocationUtil;
 
-public class Map4GoogleActivity extends BaseActivity {
+public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLocationButtonClickListener{
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager lm = null;
@@ -104,17 +106,6 @@ public class Map4GoogleActivity extends BaseActivity {
 //        mapView.setBuiltInZoomControls(true);
 //        mapView.setClickable(true);
 //        initPopView();
-//        mMapCtrl = mapView.getController();
-//        myLocationOverlay = new MyItemizedOverlay(myLocationDrawable,this, mapView, popView, mMapCtrl);
-//        mLongPressOverlay = new MyItemizedOverlay(mylongPressDrawable,this, mapView, popView, mMapCtrl);
-//        mapOverlays = mapView.getOverlays();
-//        mapOverlays.add(new LongPressOverlay(this, mapView, mHandler, mMapCtrl));
-//        //以北京市中心为中心
-//        GeoPoint cityLocPoint = new GeoPoint(39909230, 116397428);
-//        mMapCtrl.animateTo(cityLocPoint);
-//        mMapCtrl.setZoom(12);
-//        FzLocationManager.init(FzMapActivity.this.getApplicationContext() , FzMapActivity.this);
-//        fzLocation = FzLocationManager.getContextInstance();
 
 
         myLocationListener = new MyLocationListener();
@@ -125,6 +116,8 @@ public class Map4GoogleActivity extends BaseActivity {
         } else {
             setUpMapIfNeededNoLocation();
         }
+
+        Geocoder geocoder = new Geocoder(this   );
     }
 
     @Override
@@ -267,11 +260,18 @@ public class Map4GoogleActivity extends BaseActivity {
                     break;
                 case MSG_VIEW_ADDRESSNAME:
                     //获取到地址后显示在泡泡上
-                    marker.setTitle((String) msg.obj);
+                    marker.setSnippet((String) msg.obj);
+//                    marker.setTitle((String) msg.obj);
                     break;
             }
         }
     };
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+
+        return false;
+    }
 
     /**
      * 用线程异步获取
@@ -302,8 +302,6 @@ public class Map4GoogleActivity extends BaseActivity {
         }
     }
 
-    ;
-
     private void setUpMapIfNeededNoLocation() {
         setUpMapIfNeeded(false, 0, 0);
     }
@@ -314,7 +312,11 @@ public class Map4GoogleActivity extends BaseActivity {
 
     private void addMarker(LatLng latLng) {
         mMap.clear();
-        marker = mMap.addMarker(new MarkerOptions().position(latLng));
+        marker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target)));
+//        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target));
+        marker.setTitle(getString(R.string.text_destination));
+        marker.setSnippet("");
+        marker.setDraggable(true);
         new Thread(new GetAddressRunnable(latLng.latitude, latLng.longitude)).start();
     }
 
@@ -341,6 +343,19 @@ public class Map4GoogleActivity extends BaseActivity {
         public void onProviderDisabled(String provider) {
 
         }
+
+    }
+
+    private void initPopView(){
+//        View popView;
+//        if(null == popView){m
+//            popView = getLayoutInflater().inflate(R.layout.overlay_popup, null);
+//            map.addView(popView, new MapView.LayoutParams(
+//                    MapView.LayoutParams.WRAP_CONTENT,
+//                    MapView.LayoutParams.WRAP_CONTENT, null,
+//                    MapView.LayoutParams.BOTTOM_CENTER));
+//            popView.setVisibility(View.GONE);
+//        }
 
     }
 

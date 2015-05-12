@@ -83,6 +83,7 @@
     <!-- <string name="text_face">图标</string> -->
     <string name="text_send">Send</string>
     <string name="text_map">Map</string>
+    <string name="text_destination">目的地</string>
     <string name="title_pick_date_time">Event date &amp; time</string>
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>
