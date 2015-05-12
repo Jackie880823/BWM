@@ -121,7 +121,9 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
                 arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);
                 Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                 intent.putExtra("type", 0);
-                intent.putExtra("userEntity", privateAdapter.getmUserEntityList().get(arg2));
+                intent.putExtra("groupId", privateAdapter.getmUserEntityList().get(arg2).getGroup_id());
+                intent.putExtra("titleName", privateAdapter.getmUserEntityList().get(arg2).getUser_given_name());
+               // intent.putExtra("userEntity", privateAdapter.getmUserEntityList().get(arg2));
                 startActivity(intent);
             }
         });
@@ -151,43 +153,8 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
                 }
             }
         });
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                addStickerList();
-                addImageList();
-            }
-        });
-        thread.start();
+
         getData();
-    }
-
-    static List<String> STICKER_NAME_LIST = new ArrayList<>();
-    static List<String> FIRST_STICKER_LIST = new ArrayList<>();
-
-    private void addStickerList() {
-        try {
-            List<String> pathList = FileUtil.getAllFilePathsFromAssets(getActivity(), MessageChatActivity.STICKERS_NAME);
-            if (null != pathList) {
-                for (String string : pathList) {
-                    STICKER_NAME_LIST.add(MessageChatActivity.STICKERS_NAME + File.separator + string);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addImageList() {
-        if (STICKER_NAME_LIST != null && STICKER_NAME_LIST.size() > 0) {
-            for (String string : STICKER_NAME_LIST) {
-                List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(getActivity(), string);
-                if (null != stickerAllNameList) {
-                    String iconPath = string + File.separator + stickerAllNameList.get(0);
-                    FIRST_STICKER_LIST.add(iconPath);
-                }
-            }
-        }
     }
 
     private void userFinishReFresh() {
