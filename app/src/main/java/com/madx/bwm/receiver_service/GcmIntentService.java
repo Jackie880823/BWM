@@ -8,6 +8,8 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.madx.bwm.util.NotificationUtil;
 
+import org.json.JSONException;
+
 public class GcmIntentService extends IntentService {
     private final static String TAG = "GcmIntentService";
     public GcmIntentService() {
@@ -50,7 +52,11 @@ public class GcmIntentService extends IntentService {
 //                }
 //                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                NotificationUtil.sendNotification(this, extras);
+                try {
+                    NotificationUtil.sendNotification(this, extras);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Log.i(TAG, "Received: " + extras.toString());
             }
         }
