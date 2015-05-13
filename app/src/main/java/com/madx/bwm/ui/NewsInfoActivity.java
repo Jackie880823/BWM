@@ -8,20 +8,10 @@ import android.webkit.WebView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.widgets.ProgressDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.madx.bwm.Constant;
 import com.madx.bwm.R;
-import com.madx.bwm.entity.AlertWallEntity;
-import com.madx.bwm.util.MessageUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class NewsInfoActivity extends BaseActivity {
 
@@ -92,6 +82,7 @@ public class NewsInfoActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(string);
                     String content = jsonObject.optString("content", "");
                     webView.loadDataWithBaseURL(null, content, "text/html", "utf-8", null);
+                    webView.getSettings().setJavaScriptEnabled(true);//修复url不能跳转bug,add by wing
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
