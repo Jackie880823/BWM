@@ -32,10 +32,10 @@ import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.NetworkUtil;
-import com.madx.bwm.util.UIUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.FullyLinearLayoutManager;
 import com.madx.bwm.widget.MyDialog;
+import com.madx.bwm.widget.SendCommentView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,6 +89,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     int colorIntentSelected;
     private ProgressBarCircularIndeterminate progressBar;
 
+    private SendCommentView sendCommentView;
+
     public static EventDetailFragment newInstance(String... params) {
 //        event = eventEntity;
         return createInstance(new EventDetailFragment(), params);
@@ -114,6 +116,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void initView() {
 
+        sendCommentView = getViewById(R.id.comment_send);
+//        sendCommentView.findViewById(R.);
         rvList = getViewById(R.id.rv_event_comment_list);
         final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
 //        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
@@ -125,19 +129,19 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             progressBar = getViewById(R.id.progressBar);
 
 
-            et_comment = getViewById(R.id.et_comment);
-            btn_submit = getViewById(R.id.btn_submit);
+//            et_comment = getViewById(R.id.et_comment);
+//            btn_submit = getViewById(R.id.btn_submit);
 
-            btn_submit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (TextUtils.isEmpty(et_comment.getText())) {
-                        MessageUtil.showMessage(getActivity(), R.string.alert_comment_null);
-                    } else {
-                        sendComment();
-                    }
-                }
-            });
+//            btn_submit.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (TextUtils.isEmpty(et_comment.getText())) {
+//                        MessageUtil.showMessage(getActivity(), R.string.alert_comment_null);
+//                    } else {
+//                        sendComment();
+//                    }
+//                }
+//            });
 
             push_date = getViewById(R.id.push_date);
             owner_name = getViewById(R.id.owner_name);
@@ -389,7 +393,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("content_group_id", event.getContent_group_id());
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
             params.put("content_type", "comment");
-            params.put("comment_content", et_comment.getText().toString());
+//            params.put("comment_content", et_comment.getText().toString());
             params.put("sticker_group_path", "");
             params.put("sticker_name", "");
             params.put("sticker_type", "");
@@ -411,14 +415,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     isRefresh = true;
                     requestComment();
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                    et_comment.setText("");
-                    UIUtil.hideKeyboard(getActivity(), et_comment);
+//                    et_comment.setText("");
+//                    UIUtil.hideKeyboard(getActivity(), et_comment);
                     progressBar.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    UIUtil.hideKeyboard(getActivity(), et_comment);
+//                    UIUtil.hideKeyboard(getActivity(), et_comment);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     progressBar.setVisibility(View.GONE);
                 }
@@ -765,7 +769,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 params.put("content_group_id", event.getContent_group_id());
                 params.put("comment_owner_id", MainActivity.getUser().getUser_id());
                 params.put("content_type", "comment");
-                params.put("comment_content", et_comment.getText().toString());
+//                params.put("comment_content", et_comment.getText().toString());
                 params.put("sticker_group_path", "");
                 params.put("sticker_name", "");
                 params.put("sticker_type", "");

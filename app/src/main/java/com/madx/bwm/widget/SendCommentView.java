@@ -12,7 +12,10 @@ import com.madx.bwm.R;
 /**
  * Created by liangzemian on 15/5/11.
  */
-public class SendCommentView extends FrameLayout {
+public class SendCommentView extends FrameLayout{
+    /**
+     * extends FrameLayout
+     */
     private LinearLayout ll1;//加号
     private LinearLayout ll2;//表情库
 
@@ -36,10 +39,16 @@ public class SendCommentView extends FrameLayout {
     LinearLayout llVideo;
     LinearLayout llContact;
 
+    Context context;
+
     public SendCommentView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
         //将自定义的控件布局渲染成view
         View view = View.inflate(context, R.layout.send_comment,this);
 
+
     }
+
+
 }

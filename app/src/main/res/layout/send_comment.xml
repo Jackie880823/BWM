@@ -58,6 +58,19 @@
             android:textSize="@dimen/text_medium_size" />
     </LinearLayout>
 
+    <!--<LinearLayout-->
+        <!--android:id="@+id/ll_2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/_240dp"-->
+        <!--android:visibility="gone"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<FrameLayout-->
+            <!--android:id="@+id/sticker_comment_fragment"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
+    <!--</LinearLayout>-->
+
     <LinearLayout
         android:id="@+id/ll_1"
         android:layout_width="match_parent"
