@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,6 +21,7 @@ import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.gc.materialdesign.views.ScrollView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -29,9 +32,11 @@ import com.madx.bwm.entity.EventCommentEntity;
 import com.madx.bwm.entity.EventEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.interfaces.StickerViewClickListener;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.NetworkUtil;
+import com.madx.bwm.util.UIUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.FullyLinearLayoutManager;
 import com.madx.bwm.widget.MyDialog;
@@ -53,7 +58,8 @@ import java.util.Locale;
  * Use the {@link com.madx.bwm.ui.EventDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventDetailFragment extends BaseFragment<EventDetailActivity> implements View.OnClickListener {
+public class EventDetailFragment extends BaseFragment<EventDetailActivity> implements View.OnClickListener , StickerViewClickListener {
+
 
     private List<EventCommentEntity> data = new ArrayList<EventCommentEntity>();
     private TextView push_date;
@@ -90,6 +96,18 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private ProgressBarCircularIndeterminate progressBar;
 
     private SendCommentView sendCommentView;
+    private ScrollView Socontent;
+    private LinearLayout expandFunctionLinear;//加号
+    private LinearLayout stickerLinear;//表情库
+    private EditText etChat;
+    /**
+     * 扩展功能按钮
+     */
+    private ImageButton expandFunctionButton;
+    /**
+     * 表情按钮
+     */
+    private ImageButton stickerImageButton;
 
     public static EventDetailFragment newInstance(String... params) {
 //        event = eventEntity;
@@ -117,7 +135,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     public void initView() {
 
         sendCommentView = getViewById(R.id.comment_send);
-//        sendCommentView.findViewById(R.);
+
         rvList = getViewById(R.id.rv_event_comment_list);
         final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
 //        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
@@ -142,7 +160,12 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                    }
 //                }
 //            });
-
+            etChat = getViewById(R.id.et_chat);
+            expandFunctionButton = getViewById(R.id.cb_1);
+            stickerImageButton = getViewById(R.id.cb_2);
+            expandFunctionLinear = getViewById(R.id.ll_1);
+            stickerLinear = getViewById(R.id.ll_2);
+//            Socontent = getViewById(R.id.content);
             push_date = getViewById(R.id.push_date);
             owner_name = getViewById(R.id.owner_name);
             owner_head = getViewById(R.id.owner_head);
@@ -185,6 +208,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             option_no_going.setOnClickListener(this);
             option_maybe.setOnClickListener(this);
             option_going.setOnClickListener(this);
+//            Socontent.setOnTouchListener(this);
 
 
 //        ((ScrollView)getViewById(R.id.content)).On
@@ -236,7 +260,23 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 }
             });
         }
+        initViewPager();
 
+    }
+
+    private void initViewPager() {
+
+//        if (isFinishing()) {
+//            return;
+//        }
+        // 开启一个Fragment事务
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
+        mainFragment.setPicClickListener(this);
+        transaction.replace(R.id.sticker_event_fragment, mainFragment);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.addToBackStack(null);
+        transaction.commitAllowingStateLoss();
     }
 
     private void initAdapter() {
@@ -640,6 +680,48 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     private ResponseStatus currentStatus;
+
+    @Override
+    public void showComments(String type, String folderName, String filName) {
+//        MsgEntity msgEntity = new MsgEntity();
+//        msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+//        msgEntity.setSticker_type(type);
+//        msgEntity.setSticker_group_path(fileName);
+//        msgEntity.setSticker_name(Sticker_name);
+//        msgEntity.setIsNate("true");
+//        messageChatAdapter.addMsgEntity(msgEntity);
+//        HashMap<String, String> params = new HashMap<String, String>();
+//        params.put("content_creator_id", MainActivity.getUser().getUser_id());
+//        params.put("group_id", groupId);
+//        params.put("content_type", "post");
+//        params.put("sticker_group_path", fileName);
+//        params.put("sticker_name", Sticker_name);
+//        params.put("sticker_type", type);
+//        messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
+    }
+
+    private void hideAllViewState() {
+        UIUtil.hideKeyboard(getParentActivity(), etChat);
+        expandFunctionLinear.setVisibility(View.GONE);
+        stickerLinear.setVisibility(View.GONE);
+        expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
+        stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
+    }
+
+//    @Override
+//    public boolean onTouch(View v, MotionEvent event) {
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                switch (v.getId()) {
+//                    case R.id.content:
+//                        hideAllViewState();
+//                        break;
+//
+//                }
+//
+//        }
+//        return false;
+//    }
 
     enum ResponseStatus {
         go("1"), maybe("3"), not_go("2");

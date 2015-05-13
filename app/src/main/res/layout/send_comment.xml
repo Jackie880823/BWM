@@ -246,178 +246,192 @@
     <LinearLayout
         android:id="@+id/ll_2"
         android:layout_width="match_parent"
-        android:layout_height="248dp"
+        android:layout_height="@dimen/_240dp"
         android:visibility="gone"
         android:orientation="vertical">
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
+
+        <FrameLayout
+            android:id="@+id/sticker_event_fragment"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#ffffff">
-        </android.support.v4.view.ViewPager>
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/default_sticker"
-            android:scrollbars="none">
-            <LinearLayout
-                android:id="@+id/ll_sticker"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:id="@+id/ib_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/shishi1"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:button="@null"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ib_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/shishi2"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:button="@null"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ib_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/shishi3"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:button="@null"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ib_4"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/shishi4"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:button="@null"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ib_5"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/shishi5"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:button="@null"/>
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/ib_6"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/shishi6"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:button="@null"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ib_7"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/shishi7"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:button="@null"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ib_8"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/shishi8"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:button="@null"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ib_9"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/shishi9"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:button="@null"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ib_10"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-
-                        android:layout_width="60dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/shishi10"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter"
-                        android:button="@null"/>
-                </LinearLayout>
-            </LinearLayout>
-        </HorizontalScrollView>
+            android:layout_height="match_parent" />
     </LinearLayout>
+
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/ll_2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="248dp"-->
+        <!--android:visibility="gone"-->
+        <!--android:orientation="vertical">-->
+        <!--<android.support.v4.view.ViewPager-->
+            <!--android:id="@+id/viewpager"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:background="#ffffff">-->
+        <!--</android.support.v4.view.ViewPager>-->
+
+        <!--<HorizontalScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:background="@color/default_sticker"-->
+            <!--android:scrollbars="none">-->
+            <!--<LinearLayout-->
+                <!--android:id="@+id/ll_sticker"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:orientation="horizontal">-->
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/ib_1"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+                    <!--<ImageView-->
+                        <!--android:layout_width="60dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shishi1"-->
+                        <!--android:background="@null"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:button="@null"/>-->
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/ib_2"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+                    <!--<ImageView-->
+
+                        <!--android:layout_width="60dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shishi2"-->
+                        <!--android:background="@null"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:button="@null"/>-->
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/ib_3"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+                    <!--<ImageView-->
+
+                        <!--android:layout_width="60dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shishi3"-->
+                        <!--android:background="@null"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:button="@null"/>-->
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/ib_4"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+                    <!--<ImageView-->
+
+                        <!--android:layout_width="60dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shishi4"-->
+                        <!--android:background="@null"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:button="@null"/>-->
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/ib_5"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+                    <!--<ImageView-->
+
+                        <!--android:layout_width="60dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shishi5"-->
+                        <!--android:background="@null"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:button="@null"/>-->
+                <!--</LinearLayout>-->
+
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/ib_6"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+                    <!--<ImageView-->
+
+                        <!--android:layout_width="60dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shishi6"-->
+                        <!--android:background="@null"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:button="@null"/>-->
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/ib_7"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+                    <!--<ImageView-->
+
+                        <!--android:layout_width="60dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shishi7"-->
+                        <!--android:background="@null"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:button="@null"/>-->
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/ib_8"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+                    <!--<ImageView-->
+
+                        <!--android:layout_width="60dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shishi8"-->
+                        <!--android:background="@null"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:button="@null"/>-->
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/ib_9"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+                    <!--<ImageView-->
+
+                        <!--android:layout_width="60dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shishi9"-->
+                        <!--android:background="@null"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:button="@null"/>-->
+                <!--</LinearLayout>-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/ib_10"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent">-->
+                    <!--<ImageView-->
+
+                        <!--android:layout_width="60dp"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:src="@drawable/shishi10"-->
+                        <!--android:background="@null"-->
+                        <!--android:padding="5dp"-->
+                        <!--android:scaleType="fitCenter"-->
+                        <!--android:button="@null"/>-->
+                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
+        <!--</HorizontalScrollView>-->
+    <!--</LinearLayout>-->
 
 </LinearLayout>
