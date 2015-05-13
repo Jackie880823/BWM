@@ -1,6 +1,5 @@
 package com.madx.bwm.ui.wall;
 
-import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -308,7 +306,6 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(getActivity().RESULT_OK == resultCode) {
