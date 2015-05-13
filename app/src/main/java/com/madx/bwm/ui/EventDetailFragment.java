@@ -8,12 +8,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -21,7 +23,6 @@ import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.gc.materialdesign.views.ScrollView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -165,7 +166,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             stickerImageButton = getViewById(R.id.cb_2);
             expandFunctionLinear = getViewById(R.id.ll_1);
             stickerLinear = getViewById(R.id.ll_2);
-//            Socontent = getViewById(R.id.content);
+            Socontent = getViewById(R.id.content);
             push_date = getViewById(R.id.push_date);
             owner_name = getViewById(R.id.owner_name);
             owner_head = getViewById(R.id.owner_head);
@@ -208,7 +209,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             option_no_going.setOnClickListener(this);
             option_maybe.setOnClickListener(this);
             option_going.setOnClickListener(this);
-//            Socontent.setOnTouchListener(this);
+            Socontent.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+//                    Log.i("content========","onTouch");
+                    hideAllViewState();
+                    return false;
+                }
+            });
+
 
 
 //        ((ScrollView)getViewById(R.id.content)).On
@@ -699,7 +708,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //        params.put("sticker_type", type);
 //        messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
     }
-
+    //
     private void hideAllViewState() {
         UIUtil.hideKeyboard(getParentActivity(), etChat);
         expandFunctionLinear.setVisibility(View.GONE);
@@ -707,21 +716,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
         stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
     }
-
-//    @Override
-//    public boolean onTouch(View v, MotionEvent event) {
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                switch (v.getId()) {
-//                    case R.id.content:
-//                        hideAllViewState();
-//                        break;
-//
-//                }
-//
-//        }
-//        return false;
-//    }
 
     enum ResponseStatus {
         go("1"), maybe("3"), not_go("2");
@@ -788,6 +782,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     doChangeResponse(ResponseStatus.not_go);
                 }
                 break;
+//            case R.id.content:
+//                hideAllViewState();
+//                break;
         }
     }
 
