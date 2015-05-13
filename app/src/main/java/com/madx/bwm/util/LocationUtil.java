@@ -13,20 +13,28 @@ import java.util.Locale;
  */
 public class LocationUtil {
 
+    private static Geocoder geoCoder;
+
+    private static Geocoder getGeocoder(Context context) {
+        if (geoCoder == null) {
+            geoCoder = new Geocoder(context,
+                    Locale.getDefault());
+        }
+        return geoCoder;
+    }
 
     /**
      * 通过经纬度获取地址
      *
      * @return
      */
-    public static String getLocationAddress(Context context,double latitude, double longitude) {
+    public static String getLocationAddress(Context context, double latitude, double longitude) {
         String add = "";
-        Geocoder geoCoder = new Geocoder(context,
-                Locale.getDefault());
+        Geocoder geoCoder = getGeocoder(context);
         try {
             List<Address> addresses = geoCoder.getFromLocation(
                     latitude, longitude, 1);
-            if(addresses!=null&&addresses.size()>0) {
+            if (addresses != null && addresses.size() > 0) {
                 Address address = addresses.get(0);
                 int maxLine = address.getMaxAddressLineIndex();
                 if (maxLine >= 2) {
