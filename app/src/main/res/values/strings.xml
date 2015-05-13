@@ -617,5 +617,15 @@
     <string name="text_nearest">nearest</string>
     <string name="start_a_now">Start a new</string>
     <string name="post_now">Post now</string>
+    <string name="text_auto_accept">Auto-Accept</string>
+    <string name="text_birthday_alert_reminder">Birthday Alert Reminder</string>
+    <string name="text_group_privacy">Group Chat\'s Privacy</string>
+    <string name="title_activity_auto_accept">AutoAcceptActivity</string>
+    <string name="title_activity_birthday_alert">BirthdayAlertActivity</string>
+    <string name="title_activity_group_privacy">GroupPrivacyActivity</string>
+
+    <string name="text_to_other">Recommend me to \'other\' member</string>
+    <string name="text_to_me">Recommend \'Member\' to me</string>
+    <string name="text_group_chat">Require confirmation to add me to Group Chat</string>
 
 </resources>
