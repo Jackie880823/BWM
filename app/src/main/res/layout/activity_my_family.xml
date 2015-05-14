@@ -18,7 +18,7 @@
         android:singleLine="true"
         android:background="@drawable/et_oval_white"
         android:drawablePadding="@dimen/default_view_margin"
-        android:drawableLeft="@drawable/search" />
+        android:drawableRight="@drawable/search" />
 </LinearLayout>
     <LinearLayout
         android:id="@+id/my_family_linear"

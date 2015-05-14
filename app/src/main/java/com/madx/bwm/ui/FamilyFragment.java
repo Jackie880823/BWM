@@ -14,8 +14,10 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -169,6 +171,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         });
         message_member_tv.setOnClickListener(this);
         message_group_tv.setOnClickListener(this);
+
         etSearch.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -290,6 +293,17 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 requestData();
             }
         });
+        userGridView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                if (imm.isActive()) {
+                    imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
+                }
+                return false;
+            }
+        });
         userGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -343,6 +357,17 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 intent.putExtra("groupId", groupAdapter.getGroupList().get(arg2).getGroup_id());
                 intent.putExtra("titleName", groupAdapter.getGroupList().get(arg2).getGroup_name());
                 startActivity(intent);
+            }
+        });
+        groupListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                if (imm.isActive()) {
+                    imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
+                }
+                return false;
             }
         });
         groupListView.setOnScrollListener(new AbsListView.OnScrollListener() {
