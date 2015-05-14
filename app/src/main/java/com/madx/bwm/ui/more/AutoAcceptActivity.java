@@ -123,6 +123,7 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
             auto_acp_prt.setChecked(true);
             auto_acp_sps.setChecked(true);
             auto_acp_sib.setChecked(true);
+            checkCount=5;
             return;
         }else{
             auto_acp_all.setChecked(false);
