@@ -203,8 +203,10 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
                                     int arg2, long arg3) {
                 arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);
                 Intent intent = new Intent(getActivity(), MessageChatActivity.class);
+                intent.putExtra("groupId", privateAdapter.getmUserEntityList().get(arg2).getGroup_id());
+                intent.putExtra("titleName", privateAdapter.getmUserEntityList().get(arg2).getUser_given_name());
                 intent.putExtra("type", 0);
-                intent.putExtra("userEntity", privateAdapter.getmUserEntityList().get(arg2));
+                //intent.putExtra("userEntity", privateAdapter.getmUserEntityList().get(arg2));
                 startActivity(intent);
             }
         });
@@ -268,7 +270,9 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
                                     int arg2, long arg3) {
                 Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                 intent.putExtra("type", 1);
-                intent.putExtra("groupEntity", messageGroupAdapter.getmGroupList().get(arg2));
+                intent.putExtra("groupId", messageGroupAdapter.getmGroupList().get(arg2).getGroup_id());
+                intent.putExtra("titleName", messageGroupAdapter.getmGroupList().get(arg2).getGroup_name());
+               // intent.putExtra("groupEntity", messageGroupAdapter.getmGroupList().get(arg2));
                 arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);//服务器会消除。本地直接直接消除。
                 startActivity(intent);
             }

@@ -44,8 +44,8 @@
     <string name="alert_text_date_null">Please choose an event date</string>
     <string name="title_message_myfamily">My Family</string>
     <string name="title_message_creategroup">Create Group</string>
-    <string name="alert_comment_null">Are you sure you want to delete this comment?</string>
-    <string name="alert_comment_del">Delete this comment?</string>
+    <string name="alert_comment_null">Comment can not be empty!</string>
+    <string name="alert_comment_del">Are you sure you want to delete this comment?</string>
     <string name="alert_wall_del">Delete this post?</string>
     <string name="alert_wall_del_photo">Delete this photo?</string>
 
@@ -83,6 +83,7 @@
     <!-- <string name="text_face">图标</string> -->
     <string name="text_send">Send</string>
     <string name="text_map">Map</string>
+    <string name="text_destination">目的地</string>
     <string name="title_pick_date_time">Event date &amp; time</string>
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>
@@ -617,6 +618,7 @@
     <string name="text_nearest">nearest</string>
     <string name="start_a_now">Start a new</string>
     <string name="post_now">Post now</string>
+
     <string name="text_auto_accept">Auto-Accept</string>
     <string name="text_birthday_alert_reminder">Birthday Alert Reminder</string>
     <string name="text_group_privacy">Group Chat\'s Privacy</string>
@@ -627,5 +629,11 @@
     <string name="text_to_other">Recommend me to \'other\' member</string>
     <string name="text_to_me">Recommend \'Member\' to me</string>
     <string name="text_group_chat">Require confirmation to add me to Group Chat</string>
+
+    <string name="text_message_chat_post_text">posted sticker</string>
+    <string name="text_message_chat_post_photo">posted photo</string>
+    <string name="text_message_chat_post_location">posted location</string>
+    <string name="title_tab_my_family">My Family</string>
+
 
 </resources>

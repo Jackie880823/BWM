@@ -225,7 +225,9 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                             intent.putExtra("type", 1);
-                            intent.putExtra("groupEntity", groupEntityList.get(position));
+                            intent.putExtra("groupId", groupEntityList.get(position).getGroup_id());
+                            intent.putExtra("titleName", groupEntityList.get(position).getGroup_name());
+                            //intent.putExtra("groupEntity", groupEntityList.get(position));
                             view.findViewById(R.id.tv_num).setVisibility(View.GONE);//服务器会消除。本地直接直接消除。
                             startActivity(intent);
                         }

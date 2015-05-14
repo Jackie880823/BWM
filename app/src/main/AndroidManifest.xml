@@ -123,16 +123,19 @@
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
         <activity
             android:name=".ui.MainActivity"
+            android:windowSoftInputMode = "adjustPan|stateHidden"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.EventDetailActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.BirthdayActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.EventNewActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.wall.WallCommentActivity"
@@ -162,6 +165,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.EventEditActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.InvitedEditActivity"
@@ -173,7 +177,8 @@
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ui.BondAlertActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ui.ContactUsActivity"
             android:screenOrientation="portrait" />
@@ -188,37 +193,50 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MissListActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.NewsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.RecommendActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.AlertEventActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.AlertWallActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.NewsInfoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.AddMemberWorkFlow"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.BigDayActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.MemberActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
 
         <!-- christopher -->
-        <activity
-            android:name=".ui.MyFamilyActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+
         <activity
             android:name=".ui.CreateGroupActivity"
             android:screenOrientation="portrait" />
@@ -226,9 +244,6 @@
             android:name=".ui.CreateGroupDialogActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name=".ui.ChatActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.GroupSettingActivity"
             android:screenOrientation="portrait" />
@@ -306,10 +321,12 @@
         <activity
             android:name=".ui.PathRelationshipActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.MessageChatActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+
+    <activity
+        android:name=".ui.MessageChatActivity"
+        android:windowSoftInputMode = "adjustPan|stateHidden"
+        android:launchMode="singleTop"
+        android:screenOrientation="portrait"/>
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
@@ -384,13 +401,6 @@
         </receiver>
 
         <!-- Required  . Enable it you can get statistics data with channel -->
-        <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="developer-default" />
-        <!-- TODO -->
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="@string/jiguang_api_key" /> <!-- </>值来自开发者平台取得的AppKey -->
         <activity android:name=".ui.more.MoreSettingActivity" >
         </activity>
         <activity
@@ -405,6 +415,8 @@
             android:name=".ui.more.GroupPrivacyActivity"
             android:label="@string/title_activity_group_privacy" >
         </activity>
+        <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
+        <meta-data android:name="JPUSH_APPKEY" android:value="@string/jiguang_api_key" /> <!--  </>值来自开发者平台取得的AppKey-->
     </application>
 
 </manifest>

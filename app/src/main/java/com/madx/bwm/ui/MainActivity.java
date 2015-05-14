@@ -1,6 +1,7 @@
 package com.madx.bwm.ui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,8 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.gc.materialdesign.widgets.SnackBar;
 import com.madx.bwm.App;
@@ -20,7 +23,9 @@ import com.madx.bwm.adapter.MyFragmentPagerAdapter;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.ui.wall.WallNewActivity;
+import com.madx.bwm.util.FileUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,11 +56,21 @@ public class MainActivity extends BaseActivity {
     ViewPager mViewPager;
     private MyFragmentPagerAdapter tabPagerAdapter;
 
-
+    private RelativeLayout ivTab0;
     private RelativeLayout ivTab1;
     private RelativeLayout ivTab2;
     private RelativeLayout ivTab3;
     private RelativeLayout ivTab4;
+    private ImageView tabIv0;
+    private ImageView tabIv1;
+    private ImageView tabIv2;
+    private ImageView tabIv3;
+    private ImageView tabIv4;
+    private TextView tabTv0;
+    private TextView tabTv1;
+    private TextView tabTv2;
+    private TextView tabTv3;
+    private TextView tabTv4;
     List<Fragment> fragments;
 
     EventFragment eventFragment;
@@ -66,6 +81,7 @@ public class MainActivity extends BaseActivity {
     //以下为暂定全局变量
     private static boolean hasUpdate;
     private static MainActivity mainActivityInstance;
+    private String leaveGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,11 +129,22 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initBottomBar() {
         bottom = (LinearLayout) findViewById(R.id.bottom);
-
+        ivTab0 = (RelativeLayout) findViewById(R.id.iv_tab_icon0);
         ivTab1 = (RelativeLayout) findViewById(R.id.iv_tab_icon1);
         ivTab2 = (RelativeLayout) findViewById(R.id.iv_tab_icon2);
         ivTab3 = (RelativeLayout) findViewById(R.id.iv_tab_icon3);
         ivTab4 = (RelativeLayout) findViewById(R.id.iv_tab_icon4);
+        tabIv0 = (ImageView) findViewById(R.id.iv_tab_icon0_iv);
+        tabIv1 = (ImageView) findViewById(R.id.iv_tab_icon1_iv);
+        tabIv2 = (ImageView) findViewById(R.id.iv_tab_icon2_iv);
+        tabIv3 = (ImageView) findViewById(R.id.iv_tab_icon3_iv);
+        tabIv4 = (ImageView) findViewById(R.id.iv_tab_icon4_iv);
+        tabTv0 = (TextView) findViewById(R.id.iv_tab_icon0_tv);
+        tabTv1 = (TextView) findViewById(R.id.iv_tab_icon1_tv);
+        tabTv2 = (TextView) findViewById(R.id.iv_tab_icon2_tv);
+        tabTv3 = (TextView) findViewById(R.id.iv_tab_icon3_tv);
+        tabTv4 = (TextView) findViewById(R.id.iv_tab_icon4_tv);
+        ivTab0.setOnClickListener(this);
         ivTab1.setOnClickListener(this);
         ivTab2.setOnClickListener(this);
         ivTab3.setOnClickListener(this);
@@ -155,6 +182,12 @@ public class MainActivity extends BaseActivity {
                                 commandlistener.execute(rightButton);
                             }
                             break;
+                        case family:
+//                          fragment.startActivity(new Intent(getApplicationContext(), CreateGroupActivity.class));
+                            if (commandlistener != null) {
+                                commandlistener.execute(rightButton);
+                            }
+                            break;
                         case more:
                             // TODO
                             break;
@@ -169,7 +202,8 @@ public class MainActivity extends BaseActivity {
                             // TODO
                             break;
                         case chat:
-                            startActivity(new Intent(MainActivity.this, MyFamilyActivity.class));
+                            mViewPager.setCurrentItem(0);
+                            //startActivity(new Intent(MainActivity.this, MainActivity.class));
                             break;
                         case more:
                             // TODO
@@ -219,6 +253,7 @@ public class MainActivity extends BaseActivity {
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
+        fragments.add(MyFamilyFragment.newInstance());
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
 //        eventFragment = EventFragment.newInstance();
@@ -234,7 +269,7 @@ public class MainActivity extends BaseActivity {
 ////            fragments.add(1,eventStartupFragment);
 //        }
 //        fragments.add(MessageFragment.newInstance());
-        fragments.add(MessageListFragment.newInstance());
+        fragments.add(MessageMainFragment.newInstance());
         fragments.add(MoreFragment.newInstance());
 
 
@@ -250,10 +285,44 @@ public class MainActivity extends BaseActivity {
         mViewPager.setOffscreenPageLimit(0);
 
         leaveGroup = getIntent().getStringExtra("leaveGroup");
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                addStickerList();
+                addImageList();
+            }
+        }).start();
     }
 
-    private boolean isEventFragmentDate(){
+    static List<String> STICKER_NAME_LIST = new ArrayList<>();
+    static List<String> FIRST_STICKER_LIST = new ArrayList<>();
+
+    private void addStickerList() {
+        try {
+            List<String> pathList = FileUtil.getAllFilePathsFromAssets(this, MessageChatActivity.STICKERS_NAME);
+            if (null != pathList) {
+                for (String string : pathList) {
+                    STICKER_NAME_LIST.add(MessageChatActivity.STICKERS_NAME + File.separator + string);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addImageList() {
+        if (STICKER_NAME_LIST != null && STICKER_NAME_LIST.size() > 0) {
+            for (String string : STICKER_NAME_LIST) {
+                List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(this, string);
+                if (null != stickerAllNameList) {
+                    String iconPath = string + File.separator + stickerAllNameList.get(0);
+                    FIRST_STICKER_LIST.add(iconPath);
+                }
+            }
+        }
+    }
+
+    private boolean isEventFragmentDate() {
 
 //        eventFragment.setItemClickListener(new EventFragment.ItemClickListener() {
 //            @Override
@@ -272,15 +341,13 @@ public class MainActivity extends BaseActivity {
         return iseventdate;
     }
 
-    String leaveGroup;
-
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
         if ("leaveGroup".equals(leaveGroup)) {
             mViewPager.setCurrentItem(2);
-        }else {
-            changeTab(TabEnum.wall);//默认第一个
+        } else {
+            changeTab(TabEnum.family);//默认第一个
         }
     }
 
@@ -290,7 +357,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    private TabEnum currentTabEnum = TabEnum.wall;
+    private TabEnum currentTabEnum = TabEnum.family;
 
     private void changeTitle(int title) {
         if (tvTitle != null) {
@@ -298,48 +365,92 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private void setDrawable() {
+        tabIv0.setImageResource(R.drawable.tab_family);
+        tabIv1.setImageResource(R.drawable.tab_wall);
+        tabIv2.setImageResource(R.drawable.tab_event);
+        tabIv3.setImageResource(R.drawable.tab_message);
+        tabIv4.setImageResource(R.drawable.tab_more);
+        tabTv0.setTextColor(Color.GRAY);
+        tabTv1.setTextColor(Color.GRAY);
+        tabTv2.setTextColor(Color.GRAY);
+        tabTv3.setTextColor(Color.GRAY);
+        tabTv4.setTextColor(Color.GRAY);
+
+    }
+
     protected void changeTab(TabEnum tabEnum) {
         switch (tabEnum) {
             case wall:
-                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
+                setDrawable();
+                //ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
                 changeTitleColor(R.color.tab_color_press1);
                 changeTitle(R.string.title_tab_wall);
-                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                 leftButton.setVisibility(View.INVISIBLE);
                 rightButton.setVisibility(View.VISIBLE);
+                tabIv1.setImageResource(R.drawable.tab_wall_select);
+                tabTv1.setTextColor(Color.BLACK);
                 break;
             case event:
-                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_press2));
+                setDrawable();
+                //ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_press2));
                 changeTitleColor(R.color.tab_color_press2);
                 changeTitle(R.string.title_tab_event);
-                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                 leftButton.setVisibility(View.INVISIBLE);
                 rightButton.setVisibility(View.VISIBLE);
+                tabIv2.setImageResource(R.drawable.tab_event_select);
+                tabTv2.setTextColor(Color.BLACK);
                 break;
             case chat:
-                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_press3));
+                setDrawable();
+                //ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_press3));
                 changeTitleColor(R.color.tab_color_press3);
                 changeTitle(R.string.title_tab_chat);
-                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                 leftButton.setVisibility(View.VISIBLE);
                 leftButton.setImageResource(R.drawable.btn_family);
                 rightButton.setVisibility(View.VISIBLE);
+                tabIv3.setImageResource(R.drawable.tab_message_select);
+                tabTv3.setTextColor(Color.BLACK);
                 break;
             case more:
-                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
+                setDrawable();
+                //ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
                 changeTitleColor(R.color.tab_color_press4);
                 changeTitle(R.string.title_tab_more);
-                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                 leftButton.setVisibility(View.INVISIBLE);
                 rightButton.setVisibility(View.INVISIBLE);
+                tabIv4.setImageResource(R.drawable.tab_more_select);
+                tabTv4.setTextColor(Color.BLACK);
+                break;
+            case family:
+                setDrawable();
+                //ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
+                changeTitleColor(R.color.tab_color_press4);
+                changeTitle(R.string.title_tab_my_family);
+//                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+//                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+                leftButton.setVisibility(View.INVISIBLE);
+                rightButton.setVisibility(View.VISIBLE);
+                tabIv0.setImageResource(R.drawable.tab_family_select);
+                tabTv0.setTextColor(Color.BLACK);
                 break;
         }
         tvTitle.setSelected(true);
@@ -352,6 +463,9 @@ public class MainActivity extends BaseActivity {
         TabEnum tab = null;
 
         switch (v.getId()) {
+            case R.id.iv_tab_icon0:
+                tab = TabEnum.family;
+                break;
             case R.id.iv_tab_icon1:
                 tab = TabEnum.wall;
                 break;
@@ -376,7 +490,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public enum TabEnum {
-        wall, event, chat, more;
+        family, wall, event, chat, more;
     }
 
     SnackBar snackBar;

@@ -289,7 +289,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
         }
         if(date!=null && date!=0L){
-            date_desc.setText(MyDateUtils.getLocalDateStringFromLocal(getParentActivity(),date));
+            date_desc.setText(MyDateUtils.getEventLocalDateStringFromLocal(getParentActivity(),date));
             mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
 
         }
@@ -430,7 +430,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     SharedPreferencesUtils.setParam(getParentActivity(), "date", mCalendar.getTimeInMillis());
                 }
                 //将日历的时间转化成字符串
-                String dateDesc = MyDateUtils.getLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
+                String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
                 mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
                 //将日历的时间显示出来
                 date_desc.setText(dateDesc);
@@ -448,8 +448,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private void goLocationSetting() {
         //TODO 判断是用百度还是google
-        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
-//        Intent intent = new Intent(getActivity(), Map4BaiduActivity.class);
+//        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
+        Intent intent = new Intent(getActivity(), Map4BaiduActivity.class);
+
         //        intent.putExtra("has_location", position_name.getText().toString());
         if (!TextUtils.isEmpty(position_name.getText())) {
             intent.putExtra("location_name", position_name.getText().toString());

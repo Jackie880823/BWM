@@ -219,7 +219,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     }
 
     private void goFamily() {
-        Intent intent = new Intent(getActivity(), MyFamilyActivity.class);
+        Intent intent = new Intent(getActivity(), MyFamilyFragment.class);
         startActivity(intent);
     }
 

@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -167,6 +166,7 @@ public class Map4BaiduActivity extends BaseActivity implements
 //        return  ChooseMapFragment.newInstance();
     }
 
+    boolean hasSetLocation;
     @Override
     public void initView() {
 
@@ -184,6 +184,7 @@ public class Map4BaiduActivity extends BaseActivity implements
         option.setOpenGps(true);// 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
         option.setScanSpan(1000);
+
         mLocClient.setLocOption(option);
         mLocClient.start();
         address_suggest_list = getViewById(R.id.address_suggest_list);
@@ -200,6 +201,13 @@ public class Map4BaiduActivity extends BaseActivity implements
             }
         });
 
+        Intent intent = getIntent();
+        if (!TextUtils.isEmpty(intent.getStringExtra("location_name"))) {
+            hasSetLocation = true;
+            LatLng latLng = new LatLng(intent.getDoubleExtra("latitude", 0), intent.getDoubleExtra("longitude", 0));
+            addMarker(latLng,intent.getStringExtra("location_name"));
+            center2myLoc(latLng);
+        }
 
         search_view = getViewById(R.id.search_view);
         search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -216,7 +224,6 @@ public class Map4BaiduActivity extends BaseActivity implements
             public boolean onQueryTextChange(String queryText) {
 
                 if (!TextUtils.isEmpty(queryText)) {
-                    Log.i("", "result.city=======" + city);
                     mSuggestionSearch
                             .requestSuggestion((new SuggestionSearchOption())
                                     .keyword(queryText).city(city));
@@ -376,8 +383,6 @@ public class Map4BaiduActivity extends BaseActivity implements
 //            MKPoiInfo poiInfo = result.getPoi(0);
 //            mapController.setCenter(poiInfo.pt);
 //        }
-        Log.i("","result.error======="+result.error);
-        Log.i("","result.error======="+city);
         if (result.error == SearchResult.ERRORNO.NO_ERROR) {
             mBaiduMap.clear();
             PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
@@ -667,11 +672,9 @@ public class Map4BaiduActivity extends BaseActivity implements
             mCurrentLongitude = location.getLongitude();
             LatLng ll = new LatLng(location.getLatitude(),
                     location.getLongitude());
-            if (isFirstLoc) {
+            if (isFirstLoc&&!hasSetLocation) {
                 isFirstLoc = false;
                 center2myLoc();
-//                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-//                mBaiduMap.animateMapStatus(u);
 
             }
             city = location.getCity() == null ? "" : location.getCity();
@@ -688,6 +691,16 @@ public class Map4BaiduActivity extends BaseActivity implements
      */
     private void center2myLoc() {
         LatLng ll = new LatLng(mCurrentLantitude, mCurrentLongitude);
+        MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+        mBaiduMap.animateMapStatus(u);
+    }
+
+    /**
+     * 移动到目标为中心的地点
+     * @param latLng
+     */
+    private void center2myLoc(LatLng latLng) {
+        LatLng ll = new LatLng(latLng.latitude, latLng.longitude);
         MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
         mBaiduMap.animateMapStatus(u);
     }

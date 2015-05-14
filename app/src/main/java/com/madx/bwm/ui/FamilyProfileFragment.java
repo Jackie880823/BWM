@@ -142,7 +142,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 if (data != null && data.size() > 0) {
                     Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
                     intent2.putExtra("type", 0);
-                    intent2.putExtra("userEntity", userEntity);
+                    intent2.putExtra("groupId", userEntity.getGroup_id());
+                    intent2.putExtra("titleName", userEntity.getUser_given_name());
+                    //intent2.putExtra("userEntity", userEntity);
                     startActivity(intent2);
                 }
             }

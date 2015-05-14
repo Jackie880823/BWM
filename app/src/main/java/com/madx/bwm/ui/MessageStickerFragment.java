@@ -1,6 +1,5 @@
 package com.madx.bwm.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,22 +12,17 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.madx.bwm.Constant;
 import com.madx.bwm.R;
-import com.madx.bwm.action.MessageAction;
-import com.madx.bwm.adapter.MessageViewPagerAdapter;
-import com.madx.bwm.entity.MsgEntity;
+import com.madx.bwm.interfaces.StickerViewClickListener;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.widget.NoScrollGridView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MessageStickerFragment extends BaseFragment<MainActivity> {
@@ -41,24 +35,10 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
     private LinearLayout mNumLayout;
     public static final String SHOW_KIND = "B";
     public static final int SHOW_NUM = 6;
-    private TextView tv;
-    private String groupId;
     private String type;
-    private MessageChatActivity messageChatActivity;
     private List<String> stickerPathList;
     private String stickerFileName;
 
-//    public MessageStickerFragment(String selectStickerName, MessageChatActivity messageChatActivity, String groupId) {
-//        this.selectStickerName = selectStickerName;
-//        this.messageChatActivity = messageChatActivity;
-//        this.groupId = groupId;
-//    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        messageChatActivity=(MessageChatActivity)activity;
-    }
 
     @Override
     public void setLayoutId() {
@@ -73,9 +53,8 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
 
     @Override
     public void initView() {
-        Bundle bundle=getArguments();
-        selectStickerName=bundle.getString("selectStickerName");
-        groupId=bundle.getString("groupId");
+        Bundle bundle = getArguments();
+        selectStickerName = bundle.getString("selectStickerName");
         mContext = getActivity();
         mPager = getViewById(R.id.viewpager);
         mNumLayout = getViewById(R.id.fragment_sticker_linear);
@@ -202,14 +181,9 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
                     if (fileName.indexOf("_") != -1) {
                         Sticker_name = fileName.substring(fileName.lastIndexOf(File.separator) + 1, fileName.lastIndexOf("_"));
                     }
-                    MsgEntity msgEntity = new MsgEntity();
-                    msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-                    msgEntity.setSticker_type(type);
-                    msgEntity.setSticker_group_path(stickerFileName);
-                    msgEntity.setSticker_name(Sticker_name);
-                    msgEntity.setIsNate("true");
-                    messageChatActivity.messageChatAdapter.addMsgEntity(msgEntity);
-                    postSticker(Sticker_name);
+                    if (mViewClickListener != null) {
+                        mViewClickListener.showComments(type, stickerFileName, Sticker_name);
+                    }
                 }
             });
             mLists.add(gv);
@@ -217,18 +191,10 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
         return mLists;
     }
 
-    //上传sticker 成功后再下载
-    void postSticker(String stickerName) {
+    public StickerViewClickListener mViewClickListener;
 
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("content_creator_id", MainActivity.getUser().getUser_id());
-        params.put("group_id", groupId);
-        params.put("content_type", "post");
-        params.put("sticker_group_path", stickerFileName);
-        params.put("sticker_name", stickerName);
-        params.put("sticker_type", type);
-        messageChatActivity.messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
-
+    public void setPicClickListener(StickerViewClickListener viewClickListener) {
+        mViewClickListener = viewClickListener;
     }
 
     class StickerGridViewAdapter extends BaseAdapter {

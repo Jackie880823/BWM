@@ -1,7 +1,9 @@
 package com.madx.bwm.ui;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +25,7 @@ import com.madx.bwm.adapter.MissAdapter;
 import com.madx.bwm.entity.MissEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.MessageUtil;
+import com.madx.bwm.util.SDKUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -140,7 +143,7 @@ public class MissListActivity extends BaseActivity {
 
 
         Map<String, String> params = new HashMap<>();
-        params.put("start", ""+startIndex);
+        params.put("start", "" + startIndex);
         params.put("limit",""+offSet);
 
         new HttpTools(this).get(String.format(Constant.API_BONDALERT_LIST, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
@@ -160,7 +163,7 @@ public class MissListActivity extends BaseActivity {
                 Gson gson = gsonb.create();
                 data = gson.fromJson(string, new TypeToken<ArrayList<MissEntity>>() {
                 }.getType());
-                if(data!=null) {
+                if (data != null) {
                     if (isRefresh) {
                         startIndex = data.size();
                         finishReFresh();
@@ -169,14 +172,16 @@ public class MissListActivity extends BaseActivity {
                         startIndex += data.size();
                         adapter.add(data);
                     }
-                }else{finishReFresh();}
+                } else {
+                    finishReFresh();
+                }
                 loading = false;
             }
 
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(MissListActivity.this,R.string.msg_action_failed);
+                MessageUtil.showMessage(MissListActivity.this, R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }
@@ -274,5 +279,21 @@ public class MissListActivity extends BaseActivity {
 
             }
         });
+    }
+
+    /**
+     * add by wing
+     * @param intent
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (SDKUtil.IS_HONEYCOMB){
+            recreate();
+        }else{
+            finish();
+            startActivity(intent);
+        }
     }
 }
