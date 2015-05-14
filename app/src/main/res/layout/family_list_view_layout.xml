@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/my_family_linear"
+        android:orientation="vertical">
+
+        <com.madx.bwm.widget.MySwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <GridView
+                android:id="@+id/family_grid_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="3" />
+        </com.madx.bwm.widget.MySwipeRefreshLayout>
+    </LinearLayout>
+
+
+    <ImageButton
+        android:id="@+id/ib_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_8dp"
+        android:layout_marginBottom="@dimen/_8dp"
+        android:src="@drawable/top"
+        android:visibility="gone"
+        android:background="@null" />
+</RelativeLayout>
