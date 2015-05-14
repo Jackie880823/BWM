@@ -279,7 +279,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         params.put("text_description", text_content);
         params.put("loc_latitude", latitudeDesc);
         params.put("loc_longitude", longitudeDesc);
-        params.put("locationName", locationDesc);
+        params.put("loc_name", locationDesc);
         params.put("loc_caption", "");
         params.put("sticker_group_path", "");
 
