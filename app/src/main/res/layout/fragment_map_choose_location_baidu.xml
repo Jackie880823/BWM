@@ -11,17 +11,6 @@
         android:layout_alignParentTop="true" />
 
 
-    <!--<android.support.v7.widget.SearchView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:id="@+id/search_view"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:queryHint="@string/hint_search_name"-->
-    <!--android:layout_below="@+id/fragment_main_top"-->
-    <!--android:iconifiedByDefault="false"-->
-    <!--/>-->
-
-
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

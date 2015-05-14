@@ -9,6 +9,8 @@ import android.util.Log;
 import com.madx.bwm.ui.MissListActivity;
 import com.madx.bwm.util.NotificationUtil;
 
+import org.json.JSONException;
+
 import cn.jpush.android.api.JPushInterface;
 
 /**
@@ -34,12 +36,17 @@ public class JiGuanBroadcastReceiver extends BroadcastReceiver {
 
         } else if (JPushInterface.ACTION_MESSAGE_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息: " + bundle.getString(JPushInterface.EXTRA_MESSAGE));
+                Log.d(TAG, "[MyReceiver] 接收到推送下来的自定义消息2: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
             processCustomMessage(context, bundle);
 
         } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知");
             int notifactionId = bundle.getInt(JPushInterface.EXTRA_NOTIFICATION_ID);
             Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID: " + notifactionId);
+//            String ssss = bundle.getString(JPushInterface.EXTRA_EXTRA);
+//            Log.d(TAG, "[MyReceiver] 接收到推送下来的通知的ID2: " + ssss);
+//
+//            processCustomMessage(context, bundle);
 
         } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户点击打开了通知");
@@ -48,8 +55,10 @@ public class JiGuanBroadcastReceiver extends BroadcastReceiver {
             Intent i = new Intent(context, MissListActivity.class);
             i.putExtras(bundle);
             //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(i);
+
+
 
         } else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent.getAction())) {
             Log.d(TAG, "[MyReceiver] 用户收到到RICH PUSH CALLBACK: " + bundle.getString(JPushInterface.EXTRA_EXTRA));
@@ -80,6 +89,10 @@ public class JiGuanBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void processCustomMessage(Context context, Bundle bundle) {
-        NotificationUtil.sendNotification(context, bundle);
+        try {
+            NotificationUtil.sendNotification(context, bundle,false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

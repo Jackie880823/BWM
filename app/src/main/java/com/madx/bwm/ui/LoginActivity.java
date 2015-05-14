@@ -99,7 +99,7 @@ public class LoginActivity extends Activity {
                 registerInBackground();
             }
             /**极光推送*/
-            JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+//            JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
             JPushInterface.init(this);
 //        JPushInterface.stopPush(getApplicationContext());
 //        JPushInterface.resumePush(getApplicationContext());
