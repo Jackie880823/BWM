@@ -322,10 +322,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                int startIndex = indexPage * INITIAL_LIMIT - 1;
-                if (startIndex < 0) {
-                    startIndex = 0;
-                }
+                int startIndex = indexPage * INITIAL_LIMIT;
                 getMsg(INITIAL_LIMIT, startIndex, GET_HISTORY_MESSAGE);
             }
 
