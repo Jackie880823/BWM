@@ -112,7 +112,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             holder.tvContent.setText(atDescription);
             // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
             holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
-            if (wall.getTag_member().size() > 0) {
+            if(wall.getTag_member().size() > 0) {
                 String strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
                 // 文字特殊效果设置
                 SpannableString ssMember = new SpannableString(strMember);
@@ -136,7 +136,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 holder.tvContent.append(ssMember);
             }
-            if (wall.getTag_group().size() > 0){
+            if(wall.getTag_group().size() > 0) {
                 String strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), wall.getTag_group().size());
                 // 文字特殊效果设置
                 SpannableString ssGroup = new SpannableString(strGroup);
@@ -241,6 +241,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 holder.llLocation.setVisibility(View.GONE);
             } else {
                 holder.llLocation.setVisibility(View.VISIBLE);
+                holder.tvLocation.setText(wall.getLoc_name());
             }
         }
     }
@@ -468,13 +469,15 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         private void gotoLocationSetting(WallEntity wall) {
-            Intent intent = new Intent(mContext, Map4BaiduActivity.class);
-            //        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
-            //        intent.putExtra("has_location", position_name.getText().toString());
-            intent.putExtra("location_name", wall.getLoc_name());
-            intent.putExtra("latitude", Double.valueOf(wall.getLoc_latitude()));
-            intent.putExtra("longitude", Double.valueOf(wall.getLoc_longitude()));
-            mContext.startActivity(intent);
+            if(!TextUtils.isEmpty(wall.getLoc_name())) {
+                Intent intent = new Intent(mContext, Map4BaiduActivity.class);
+                //        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
+                //        intent.putExtra("has_location", position_name.getText().toString());
+                intent.putExtra("location_name", wall.getLoc_name());
+                intent.putExtra("latitude", Double.valueOf(wall.getLoc_latitude()));
+                intent.putExtra("longitude", Double.valueOf(wall.getLoc_longitude()));
+                mContext.startActivity(intent);
+            }
         }
 
         boolean newClick;
