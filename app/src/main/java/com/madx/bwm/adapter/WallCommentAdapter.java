@@ -2,6 +2,7 @@ package com.madx.bwm.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -30,6 +32,7 @@ import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.ui.Map4BaiduActivity;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.widget.CircularNetworkImage;
 
@@ -233,6 +236,12 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else {
                 holder.ibAgree.setImageResource(R.drawable.love_press);
             }
+
+            if(TextUtils.isEmpty(wall.getLoc_name())) {
+                holder.llLocation.setVisibility(View.GONE);
+            } else {
+                holder.llLocation.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -380,6 +389,10 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ImageButton ibComment;
         ImageButton btn_del;
         ImageView iv_mood;
+        // location tag
+        LinearLayout llLocation;
+        ImageView ivLocation;
+        TextView tvLocation;
 
         public VHHeader(View itemView) {
             // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
@@ -397,6 +410,12 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ibComment = (ImageButton) itemView.findViewById(R.id.iv_comment);
             btn_del = (ImageButton) itemView.findViewById(R.id.btn_del);
             iv_mood = (ImageView) itemView.findViewById(R.id.iv_mood);
+            llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
+            ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
+            tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
+
+            ivLocation.setOnClickListener(this);
+            tvLocation.setOnClickListener(this);
 
             ibAgree.setOnClickListener(this);
             //            ibComment.setOnClickListener(this);
@@ -441,7 +460,21 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         mViewClickListener.remove(wall.getContent_group_id());
                     }
                     break;
+                case R.id.iv_location:
+                case R.id.tv_location:
+                    gotoLocationSetting(wall);
+                    break;
             }
+        }
+
+        private void gotoLocationSetting(WallEntity wall) {
+            Intent intent = new Intent(mContext, Map4BaiduActivity.class);
+            //        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
+            //        intent.putExtra("has_location", position_name.getText().toString());
+            intent.putExtra("location_name", wall.getLoc_name());
+            intent.putExtra("latitude", Double.valueOf(wall.getLoc_latitude()));
+            intent.putExtra("longitude", Double.valueOf(wall.getLoc_longitude()));
+            mContext.startActivity(intent);
         }
 
         boolean newClick;
