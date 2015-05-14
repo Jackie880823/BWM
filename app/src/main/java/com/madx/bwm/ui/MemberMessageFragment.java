@@ -22,7 +22,6 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MessagePrivateListAdapter;
 import com.madx.bwm.entity.PrivateMessageEntity;
-import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MslToast;
 import com.madx.bwm.util.NetworkUtil;
@@ -31,7 +30,6 @@ import com.madx.bwm.widget.MySwipeRefreshLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +46,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
     private Context mContext;
     private List<PrivateMessageEntity> userEntityList;
     private boolean isUserRefresh = false;
-    private int startIndex = 0;
+    private int startIndex = 1;
     private boolean isPullData = false;
 
 
@@ -107,9 +105,9 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
                     userRefreshLayout.setRefreshing(false);
                     return;
                 }
-                startIndex = 0;
+                startIndex = 1;
                 isUserRefresh = true;
-                getData();
+                getData(0);
             }
 
         });
@@ -123,7 +121,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
                 intent.putExtra("type", 0);
                 intent.putExtra("groupId", privateAdapter.getmUserEntityList().get(arg2).getGroup_id());
                 intent.putExtra("titleName", privateAdapter.getmUserEntityList().get(arg2).getUser_given_name());
-               // intent.putExtra("userEntity", privateAdapter.getmUserEntityList().get(arg2));
+                // intent.putExtra("userEntity", privateAdapter.getmUserEntityList().get(arg2));
                 startActivity(intent);
             }
         });
@@ -141,7 +139,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (privateAdapter.getCount() > 0 && (userListView.getLastVisiblePosition() > (privateAdapter.getCount() - 5)) && !isPullData) {
-                    getData();
+                    getData(startIndex);
                     isPullData = true;
                 }
                 if (userListView.getFirstVisiblePosition() == 0) {
@@ -154,7 +152,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
             }
         });
 
-        getData();
+        getData(0);
     }
 
     private void userFinishReFresh() {
@@ -164,7 +162,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
         }
     }
 
-    private void getData() {
+    private void getData(int beginIndex) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
             MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
             userFinishReFresh();
@@ -173,7 +171,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
         final RequestInfo requestInfo = new RequestInfo();
         HashMap<String, String> params = new HashMap<>();
         params.put("limit", "20");
-        int start = startIndex * 20 - 1 < 0 ? 0 : startIndex * 20 - 1;
+        int start = beginIndex * 20;
         params.put("start", start + "");
         requestInfo.params = params;
         requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "member");

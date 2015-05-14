@@ -12,6 +12,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.ui.more.MoreSettingActivity;
 import com.madx.bwm.widget.MyDialog;
 
 import org.json.JSONException;
@@ -213,12 +214,12 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     }
 
     private void goSetting() {
-        Intent intent = new Intent(getActivity(), SettingActivity.class);
+        Intent intent = new Intent(getActivity(), MoreSettingActivity.class);
         startActivity(intent);
     }
 
     private void goFamily() {
-        Intent intent = new Intent(getActivity(), MyFamilyFragment.class);
+        Intent intent = new Intent(getActivity(), FamilyFragment.class);
         startActivity(intent);
     }
 
