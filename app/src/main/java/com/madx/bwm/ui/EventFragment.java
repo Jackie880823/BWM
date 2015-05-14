@@ -196,7 +196,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     }.getType());
                     currentPage = 1;
                     startIndex = data.size();
-                    Log.i("startIndex=======================1", startIndex+"");
+//                    Log.i("startIndex=======================1", startIndex+"");
                     if(startIndex<=0){
                         eventStart.setVisibility(View.VISIBLE);
                     }

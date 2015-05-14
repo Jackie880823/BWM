@@ -19,7 +19,7 @@
     <color name="default_unenable_item_bg">#a6C7C7C7</color><!--  65% -->
 
 
-    <color name="tab_color_normal">#545454</color>
+    <color name="tab_color_normal">#EBEBF4</color>
     <color name="tab_color_press1">#a8e300</color>
     <color name="tab_color_press2">#8d42eb</color>
     <color name="tab_color_press3">#feb400</color>

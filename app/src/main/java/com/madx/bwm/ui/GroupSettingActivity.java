@@ -55,7 +55,7 @@ public class GroupSettingActivity extends BaseActivity {
 
     private Button btnLeaveGroup;
 
-    private GroupEntity groupEntity = new GroupEntity();//传进来的
+    //private GroupEntity groupEntity = new GroupEntity();//传进来的
 
     private List<UserEntity> userList;
 
@@ -134,10 +134,9 @@ public class GroupSettingActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
-        groupEntity = (GroupEntity) getIntent().getExtras().getSerializable("groupEntity");
-        groupId = groupEntity.getGroup_id();
-
+        //groupEntity = (GroupEntity) getIntent().getExtras().getSerializable("groupEntity");
+        groupId = getIntent().getStringExtra("groupId");
+        groupName=getIntent().getStringExtra("groupName");
         llSetting = getViewById(R.id.ll_setting);
 
         cniMain = getViewById(R.id.cni_main);
@@ -148,9 +147,9 @@ public class GroupSettingActivity extends BaseActivity {
 
         btnLeaveGroup = getViewById(R.id.btn_leave_group);
 
-        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO,  groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-        tvName.setText(groupEntity.getGroup_name());
-        groupName = groupEntity.getGroup_name();
+        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO,  groupId), R.drawable.network_image_default, R.drawable.network_image_default);
+        tvName.setText(groupName);
+        //groupName = groupEntity.getGroup_name();
 
         getMembersList();
 
@@ -164,7 +163,7 @@ public class GroupSettingActivity extends BaseActivity {
 
                 PhotoEntity peData = new PhotoEntity();
 
-                peData.setUser_id(groupEntity.getGroup_id());
+                peData.setUser_id(groupId);
                 peData.setFile_id("group_profile");
                 peData.setPhoto_caption("photo_profile");
                 peData.setPhoto_multipe("false");
@@ -283,7 +282,7 @@ public class GroupSettingActivity extends BaseActivity {
     public void getMembersList()
     {
         HashMap<String, String> jsonParams = new HashMap<String, String>();
-        jsonParams.put("group_id", groupEntity.getGroup_id());
+        jsonParams.put("group_id", groupId);
         jsonParams.put("viewer_id", MainActivity.getUser().getUser_id());
         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
         HashMap<String, String> params = new HashMap<String, String>();
@@ -602,7 +601,9 @@ public class GroupSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent2 = new Intent(GroupSettingActivity.this, MessageChatActivity.class);
-                intent2.putExtra("userEntity", userList.get(position));
+                //intent2.putExtra("userEntity", userList.get(position));
+                intent2.putExtra("groupId", userList.get(position).getGroup_id());
+                intent2.putExtra("titleName", userList.get(position).getUser_given_name());
                 intent2.putExtra("type", 0);
                 startActivity(intent2);
                 showAdminDialog1.dismiss();
@@ -765,8 +766,10 @@ public class GroupSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent2 = new Intent(GroupSettingActivity.this, MessageChatActivity.class);
-                intent2.putExtra("userEntity", userList.get(position));
+                //intent2.putExtra("userEntity", userList.get(position));
                 intent2.putExtra("type", 0);
+                intent2.putExtra("groupId", userList.get(position).getGroup_id());
+                intent2.putExtra("titleName", userList.get(position).getUser_given_name());
                 startActivity(intent2);
                 showNonAdminDialog1.dismiss();
             }

@@ -70,7 +70,9 @@ public class MessageTopFragment extends BaseFragment implements MessageMemberAda
     public void memberClick(UserEntity entity) {
         Intent intent = new Intent(getActivity(), MessageChatActivity.class);
         intent.putExtra("type", 0);
-        intent.putExtra("userEntity", entity);
+        //intent.putExtra("userEntity", entity);
+        intent.putExtra("groupId", entity.getGroup_id());
+        intent.putExtra("titleName", entity.getUser_given_name());
 //        view.findViewById(R.id.tv_num).setVisibility(View.GONE);
         startActivity(intent);
     }

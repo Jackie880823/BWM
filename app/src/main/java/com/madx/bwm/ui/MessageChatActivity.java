@@ -5,9 +5,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -22,7 +20,6 @@ import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -33,18 +30,15 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.action.MessageAction;
 import com.madx.bwm.adapter.MessageChatAdapter;
-import com.madx.bwm.adapter.MessageHorizontalListViewAdapter;
-import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.MsgEntity;
-import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.http.UrlUtil;
+import com.madx.bwm.interfaces.StickerViewClickListener;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MyTextUtil;
 import com.madx.bwm.util.SDKUtil;
 import com.madx.bwm.util.UIUtil;
-import com.madx.bwm.widget.HorizontalListView;
 
 import org.json.JSONObject;
 
@@ -57,7 +51,7 @@ import java.util.Map;
 /**
  * Created by quankun on 15/4/24.
  */
-public class MessageChatActivity extends BaseActivity implements View.OnTouchListener {
+public class MessageChatActivity extends BaseActivity implements View.OnTouchListener, StickerViewClickListener {
     private Context mContext;
     private ProgressDialog progressDialog;
     /**
@@ -87,19 +81,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private LinearLayout stickerLinear;//表情库
 
     public LinearLayout empty_message;
-    private MessageHorizontalListViewAdapter horizontalListViewAdapter;
-
-    private List<String> stickerNameList;
-    private HorizontalListView horizontalListView;
-    private List<String> sticker_List_Id;
-    private MessageStickerFragment fragment = null;
 
     private List<MsgEntity> msgList;
 
     private String groupId;//API的一个参数
     private int userOrGroupType = -1;//0为私聊，1为群聊
-    private UserEntity userEntity;//是私聊信息
-    private GroupEntity groupEntity;//群聊信息
     /**
      * 放置表情图标库的默认文件夹名称
      */
@@ -114,9 +100,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private Intent intent;
 
     private int indexPage = 1;
-
-    private Uri mCropImagedUri;//裁剪后的Uri
-    private String imagePath;
+    private String titleName = "";
     private Uri uri;//原图uri
     /**
      * 头像缓存文件名称
@@ -241,13 +225,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     @Override
     protected void setTitle() {
-        if (userOrGroupType == 0) {
-            tvTitle.setText(userEntity.getUser_given_name());
-        } else if (userOrGroupType == 1) {
-            tvTitle.setText(groupEntity.getGroup_name());
-        } else {
-            tvTitle.setText("error");
-        }
+        tvTitle.setText(titleName);
     }
 
     @Override
@@ -267,11 +245,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         Intent intent;
         if (userOrGroupType == 0) {
             intent = new Intent(mContext, FamilyProfileActivity.class);
-            intent.putExtra("member_id", userEntity.getUser_id());//传进来的,他人个人信息
+            intent.putExtra("member_id", groupId);//传进来的,他人个人信息
             startActivity(intent);
         } else if (userOrGroupType == 1) {
             intent = new Intent(mContext, GroupSettingActivity.class);
-            intent.putExtra("groupEntity", groupEntity);
+            intent.putExtra("groupId", groupId);
+            intent.putExtra("groupName", titleName);
             startActivityForResult(intent, REQUEST_GET_GROUP_NAME);
         }
     }
@@ -289,19 +268,29 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         progressDialog.show();
         msgList = new ArrayList<>();
-        if (userOrGroupType == 0) {
-            userEntity = (UserEntity) getIntent().getExtras().getSerializable("userEntity");
-            if (userEntity != null) {
-                groupId = userEntity.getGroup_id();
-            }
-        } else if (userOrGroupType == 1) {
-            groupEntity = (GroupEntity) getIntent().getExtras().getSerializable("groupEntity");
-            if (groupEntity != null) {
-                groupId = groupEntity.getGroup_id();
-            }
-        } else {
-            finish();
-        }
+//        if (userOrGroupType == 0) {
+//            titleName
+//            tvTitle.setText(userEntity.getUser_given_name());
+//        } else if (userOrGroupType == 1) {
+//            tvTitle.setText(groupEntity.getGroup_name());
+//        } else {
+//            tvTitle.setText("error");
+//        }
+        groupId = getIntent().getStringExtra("groupId");
+        titleName = getIntent().getStringExtra("titleName");
+//        if (userOrGroupType == 0) {
+//            userEntity = (PrivateMessageEntity) getIntent().getExtras().getSerializable("userEntity");
+//            if (userEntity != null) {
+//                groupId = userEntity.getGroup_id();
+//            }
+//        } else if (userOrGroupType == 1) {
+//            groupEntity = (GroupMessageEntity) getIntent().getExtras().getSerializable("groupEntity");
+//            if (groupEntity != null) {
+//                groupId = groupEntity.getGroup_id();
+//            }
+//        } else {
+//            finish();
+//        }
         setView();
         setAllListener();
         imm = (InputMethodManager) getSystemService(
@@ -326,14 +315,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         locationTextView = getViewById(R.id.location_tv);
         videoTextView = getViewById(R.id.video_tv);
         contactTextView = getViewById(R.id.contact_tv);
-        horizontalListView = getViewById(R.id.sticker_listView);
         sendTextView = getViewById(R.id.btn_send);
         empty_message = getViewById(R.id.no_message_data_linear);
 
         initViewPager();
-        //new StickerAsyncTask().execute();
-
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -347,64 +332,16 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         });
     }
 
-    private void finishReFresh() {
-        swipeRefreshLayout.setRefreshing(false);
-    }
-
-    private void addStickerList() {
-        try {
-            List<String> pathList = FileUtil.getAllFilePathsFromAssets(mContext, STICKERS_NAME);
-            if (null != pathList) {
-                for (String string : pathList) {
-                    stickerNameList.add(STICKERS_NAME + File.separator + string);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addImageList() {
-        if (stickerNameList != null && stickerNameList.size() > 0) {
-            for (String string : stickerNameList) {
-                List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(mContext, string);
-                if (null != stickerAllNameList) {
-                    String iconPath = string + File.separator + stickerAllNameList.get(0);
-                    sticker_List_Id.add(iconPath);
-                }
-            }
-        }
-    }
-
     private void initViewPager() {
-        stickerNameList = MessageListFragment.STICKER_NAME_LIST;
-        sticker_List_Id = MessageListFragment.FIRST_STICKER_LIST;
-        horizontalListViewAdapter = new MessageHorizontalListViewAdapter(sticker_List_Id, mContext);
-        horizontalListView.setAdapter(horizontalListViewAdapter);
-        setTabSelection(0);
-        horizontalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                setTabSelection(position);
-                horizontalListViewAdapter.setChoosePosition(position);
-                horizontalListViewAdapter.notifyDataSetChanged();
-            }
-        });
-    }
 
-    private void setTabSelection(int index) {
         if (isFinishing()) {
             return;
         }
-        String selectStickerName = stickerNameList.get(index);
         // 开启一个Fragment事务
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        fragment = new MessageStickerFragment();//selectStickerName, MessageChatActivity.this, groupId);
-        Bundle bundle = new Bundle();
-        bundle.putString("selectStickerName", selectStickerName);
-        bundle.putString("groupId", groupId);
-        fragment.setArguments(bundle);
-        transaction.replace(R.id.message_frame, fragment);
+        StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
+        mainFragment.setPicClickListener(this);
+        transaction.replace(R.id.sticker_message_fragment, mainFragment);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.addToBackStack(null);
         transaction.commitAllowingStateLoss();
@@ -567,7 +504,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (ChatActivity.RESULT_OK == resultCode) {
+        if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 // 如果是直接从相册获取
                 case REQUEST_HEAD_PHOTO:
@@ -711,5 +648,40 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void showComments(String type, String fileName, String Sticker_name) {
+        MsgEntity msgEntity = new MsgEntity();
+        msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+        msgEntity.setSticker_type(type);
+        msgEntity.setSticker_group_path(fileName);
+        msgEntity.setSticker_name(Sticker_name);
+        msgEntity.setIsNate("true");
+        messageChatAdapter.addMsgEntity(msgEntity);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("content_creator_id", MainActivity.getUser().getUser_id());
+        params.put("group_id", groupId);
+        params.put("content_type", "post");
+        params.put("sticker_group_path", fileName);
+        params.put("sticker_name", Sticker_name);
+        params.put("sticker_type", type);
+        messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
+    }
+
+    /**
+     * add by wing
+     * @param intent
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (SDKUtil.IS_HONEYCOMB){
+            recreate();
+        }else{
+            finish();
+            startActivity(intent);
+        }
     }
 }

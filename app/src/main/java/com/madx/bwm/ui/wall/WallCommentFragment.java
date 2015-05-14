@@ -2,6 +2,8 @@ package com.madx.bwm.ui.wall;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -23,13 +25,16 @@ import com.madx.bwm.adapter.WallCommentAdapter;
 import com.madx.bwm.entity.WallCommentEntity;
 import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.UrlUtil;
+import com.madx.bwm.interfaces.StickerViewClickListener;
 import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.ui.StickerMainFragment;
 import com.madx.bwm.ui.ViewOriginalPicesActivity;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.UIUtil;
 import com.madx.bwm.widget.MyDialog;
+import com.madx.bwm.widget.SendComment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +49,18 @@ import java.util.Map;
  * Use the {@link WallCommentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements View.OnClickListener, ViewClickListener {
+public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements View.OnClickListener, ViewClickListener, StickerViewClickListener {
+    private final static String TAG = WallCommentFragment.class.getSimpleName();
+
+    /**
+     * 临时文件用户裁剪
+     */
+    public final static String CACHE_PIC_NAME_TEMP = "comment_cache_temp_";
+
+    private final static int REQUEST_HEAD_PHOTO = 1;
+    private final static int REQUEST_HEAD_CAMERA = 2;
+
+    private int cache_count = 0;
 
     private ProgressDialog mProgressDialog;
     private String content_group_id;
@@ -57,6 +73,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private final static int offset = 20;
     private boolean loading;
     private RecyclerView rvList;
+    private SendComment sendComment;
 
     private WallCommentAdapter adapter;
 
@@ -83,7 +100,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     @Override
     public void initView() {
-        if (mProgressDialog == null) {
+        if(mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getParentActivity(), R.string.text_loading);
         }
 
@@ -91,15 +108,54 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         try {
             content_group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
             group_id = getArguments().getString(ARG_PARAM_PREFIX + "2");
-        } catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
         }
 
         rvList = getViewById(R.id.rv_wall_comment_list);
         final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
-//        rvList.setHasFixedSize(true);
-//        initAdapter();
+        //        rvList.setHasFixedSize(true);
+        //        initAdapter();
+
+        sendComment = getViewById(R.id.send_comment);
+        sendComment.initViewPager(getParentActivity());
+        sendComment.setListener(new SendComment.ChildViewClickListener() {
+            @Override
+            public void onStickerItemClick(String type, String folderName, String filName) {
+
+            }
+
+            @Override
+            public void onClickAlbum() {
+
+            }
+
+            @Override
+            public void onClickCamera() {
+
+            }
+
+            @Override
+            public void onClickLocation() {
+
+            }
+
+            @Override
+            public void onClickVideo() {
+
+            }
+
+            @Override
+            public void onClickContact() {
+
+            }
+
+            @Override
+            public void onSendCommentClick(EditText et) {
+                sendComment(et);
+            }
+        });
 
         getViewById(R.id.btn_submit).setOnClickListener(this);
         et_comment = getViewById(R.id.et_comment);
@@ -113,7 +169,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
                     currentPage++;
                     loading = true;
                     getComments();//再请求数据
@@ -124,6 +180,57 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     }
 
+    private void initViewPager() {
+
+        //        if (isFinishing()) {
+        //            return;
+        //        }
+        // 开启一个Fragment事务
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
+        mainFragment.setPicClickListener(this);
+        transaction.replace(R.id.sticker_event_fragment, mainFragment);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.addToBackStack(null);
+        transaction.commitAllowingStateLoss();
+    }
+
+    /**
+     * Receive the result from a previous call to
+     * {@link #startActivityForResult(Intent, int)}.  This follows the
+     * related Activity API as described there in
+     * {@link Activity#onActivityResult(int, int, Intent)}.
+     *
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode  The integer result code returned by the child activity
+     *                    through its setResult().
+     * @param data        An Intent, which can return result data to the caller
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(getActivity().RESULT_OK == resultCode) {
+
+            switch(requestCode) {
+                // 如果是直接从相册获取
+                case REQUEST_HEAD_PHOTO:
+                    if(data != null) {
+                        List<Uri> pickUries = new ArrayList();
+                        pickUries = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
+                    }
+                    break;
+                // 如果是调用相机拍照时
+                case REQUEST_HEAD_CAMERA:
+
+                    break;
+                default:
+                    break;
+
+            }
+        }
+    }
 
     @Override
     public void requestData() {
@@ -134,7 +241,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         new HttpTools(getActivity()).get(Constant.API_WALL_DETAIL, pparams, new HttpCallback() {
             @Override
             public void onStart() {
-                if (mProgressDialog != null) {
+                if(mProgressDialog != null) {
                     mProgressDialog.setTitle(R.string.text_loading);
                     mProgressDialog.show();
                 }
@@ -144,7 +251,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             public void onFinish() {
                 getComments();
                 mProgressDialog.dismiss();
-                if(wall==null){
+                if(wall == null) {
                     getParentActivity().finish();
                 }
             }
@@ -206,23 +313,22 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 //给GsonBuilder方法单独指定Date类型的反序列化方法
                 //gsonb.registerTypeAdapter(Date.class, ds);
                 Gson gson = gsonb.create();
-                data = gson.fromJson(response, new TypeToken<ArrayList<WallCommentEntity>>() {
-                }.getType());
+                data = gson.fromJson(response, new TypeToken<ArrayList<WallCommentEntity>>() {}.getType());
 
-                if (isRefresh) {
+                if(isRefresh) {
                     isRefresh = false;
                     currentPage = 1;//还原为第一页
                     initAdapter();
                 } else {
                     startIndex += data.size();
-                    if (adapter == null) {
+                    if(adapter == null) {
                         initAdapter();
                         adapter.notifyDataSetChanged();
                     } else {
                         adapter.addData(data);
                     }
                 }
-                wall.setComment_count(adapter.getItemCount()-1+"");
+                wall.setComment_count(adapter.getItemCount() - 1 + "");
                 loading = false;
             }
 
@@ -260,28 +366,28 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             }
         });
         rvList.setAdapter(adapter);
-//        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
-//        animator.setAddDuration(2000);
-//        animator.setRemoveDuration(1000);
+        //        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
+        //        animator.setAddDuration(2000);
+        //        animator.setRemoveDuration(1000);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        switch(v.getId()) {
             case R.id.btn_submit:
-                if (!TextUtils.isEmpty(et_comment.getText())) {
-//                    MessageUtil.showMessage(getActivity(), R.string.alert_comment_null);
-//                } else {
-                    sendComment();
+                if(!TextUtils.isEmpty(et_comment.getText())) {
+                    //                    MessageUtil.showMessage(getActivity(), R.string.alert_comment_null);
+                    //                } else {
+                    sendComment(et_comment);
                 }
                 break;
         }
     }
 
-    private void sendComment() {
+    private void sendComment(EditText et) {
 
-        String commentText =et_comment.getText().toString();
-        et_comment.setText(null);
+        String commentText = et.getText().toString();
+        et.setText(null);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("content_group_id", content_group_id);
         params.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -416,14 +522,14 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 removeAlertDialog.dismiss();
             }
         });
-        if (!removeAlertDialog.isShowing()) {
+        if(!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
     }
 
     @Override
     public void onDestroy() {
-        if (mProgressDialog != null)
+        if(mProgressDialog != null)
             mProgressDialog.dismiss();
         super.onDestroy();
     }
@@ -504,7 +610,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 removeAlertDialog.dismiss();
             }
         });
-        if (!removeAlertDialog.isShowing()) {
+        if(!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
 
@@ -538,5 +644,15 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);
         startActivityForResult(intent, Constant.ACTION_COMMENT_GROUPS);
+    }
+
+    /**
+     * @param type       sticker的后缀类型(.gif)
+     * @param folderName 放置sticker的文件夹名称
+     * @param filName    sticker的文件名
+     */
+    @Override
+    public void showComments(String type, String folderName, String filName) {
+
     }
 }
