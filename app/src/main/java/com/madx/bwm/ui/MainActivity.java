@@ -253,7 +253,7 @@ public class MainActivity extends BaseActivity {
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
-        fragments.add(MyFamilyFragment.newInstance());
+        fragments.add(FamilyFragment.newInstance());
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
 //        eventFragment = EventFragment.newInstance();

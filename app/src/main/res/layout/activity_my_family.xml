@@ -1,89 +1,89 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/default_content_bg"
     tools:context="com.example.christepherzhang.myapplication.MyFamilyActivity">
-<!--
-    <include
-        android:id="@+id/fragment_main_top"
-        layout="@layout/title_view"
+<LinearLayout
+    android:id="@+id/search_linear"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <EditText
+        android:id="@+id/et_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
--->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-            <!--<ScrollView-->
-                <!--android:id="@+id/sv"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent">-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                            <LinearLayout
-                                android:id="@+id/ll_search"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center">
-                                    <EditText
-                                        android:id="@+id/et_search"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_margin="@dimen/default_content_padding"
-                                        android:padding="@dimen/default_content_padding"
-                                        android:singleLine="true"
-                                        android:background="@drawable/et_oval_white"
-                                        android:drawablePadding="@dimen/default_view_margin"
-                                        android:drawableLeft="@drawable/search"/>
-                                    <!--<ImageButton-->
-                                        <!--android:layout_width="0dp"-->
-                                        <!--android:layout_height="match_parent"-->
-                                        <!--android:layout_weight="1"-->
-                                        <!--android:background="@color/default_content_bg"-->
-                                        <!--android:src="@drawable/search"/>-->
-                            </LinearLayout>
-
-                        <android.support.v4.widget.SwipeRefreshLayout
-                            android:id="@+id/swipe_refresh_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-                            <GridView
-                                android:id="@+id/myfamily_gridView"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:numColumns="3"
-                                android:stretchMode="columnWidth"
-                                android:gravity="center"/>
-                        </android.support.v4.widget.SwipeRefreshLayout>
-                    </LinearLayout>
-
-
-            <!--</ScrollView>-->
-            <ImageButton
-                android:id="@+id/ib_top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:background="@null"
-                android:src="@drawable/top"/>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center">
-                <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
-                    android:id="@+id/gv_progress_bar"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="#1E88E5" />
-            </RelativeLayout>
-
-    </FrameLayout>
+        android:layout_margin="@dimen/default_content_padding"
+        android:padding="@dimen/default_content_padding"
+        android:singleLine="true"
+        android:background="@drawable/et_oval_white"
+        android:drawablePadding="@dimen/default_view_margin"
+        android:drawableLeft="@drawable/search" />
 </LinearLayout>
+    <LinearLayout
+        android:id="@+id/my_family_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:paddingTop="@dimen/_15dp"
+        android:layout_below="@+id/search_linear">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30dp"
+            android:background="@drawable/message_list_text_shape"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/_20dp"
+            android:layout_marginRight="@dimen/_20dp"
+            android:layout_marginBottom="@dimen/_10dp">
+
+            <TextView
+                android:id="@+id/message_member_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="MEMBER"
+                android:gravity="center"
+                android:textSize="@dimen/_18dp"
+                android:background="@drawable/message_member_selected_shap"
+                android:layout_marginTop="@dimen/_1dp"
+                android:layout_marginBottom="@dimen/_1dp"
+                android:layout_marginLeft="@dimen/_1dp"
+                android:textColor="#fff" />
+
+            <TextView
+                android:id="@+id/message_group_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="@dimen/_18dp"
+                android:layout_marginTop="@dimen/_1dp"
+                android:layout_marginBottom="@dimen/_1dp"
+                android:layout_marginRight="@dimen/_1dp"
+                android:background="@drawable/message_group_normal_shap"
+                android:gravity="center"
+                android:text="GROUP" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:background="#CCC" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/my_family_linear"
+        android:orientation="vertical">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/family_list_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white" />
+
+    </LinearLayout>
+
+</RelativeLayout>
