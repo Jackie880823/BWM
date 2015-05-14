@@ -44,7 +44,7 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
     private Context mContext;
     private List<GroupMessageEntity> userEntityList;
     private boolean isGroupRefresh = false;
-    private int startIndex = 0;
+    private int startIndex = 1;
     private boolean isPullData = false;
 
     public static GroupMessageFragment newInstance(String... params) {
@@ -100,9 +100,9 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
                     groupRefreshLayout.setRefreshing(false);
                     return;
                 }
-                startIndex = 0;
+                startIndex = 1;
                 isGroupRefresh = true;
-                getData();
+                getData(0);
             }
 
         });
@@ -132,7 +132,7 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (messageGroupAdapter.getCount() > 0 && (groupListView.getLastVisiblePosition() > (messageGroupAdapter.getCount() - 5)) && !isPullData) {
-                    getData();
+                    getData(startIndex);
                     isPullData = true;
                 }
                 if (groupListView.getFirstVisiblePosition() == 0) {
@@ -147,7 +147,7 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getData();
+                getData(0);
             }
         }, 1500);
     }
@@ -159,7 +159,7 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
         }
     }
 
-    private void getData() {
+    private void getData(int beginIndex) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
             MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
             groupFinishReFresh();
@@ -169,7 +169,7 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
         final RequestInfo requestInfo = new RequestInfo();
         HashMap<String, String> params = new HashMap<>();
         params.put("limit", "20");
-        int start = startIndex * 20 - 1 < 0 ? 0 : startIndex * 20 - 1;
+        int start = beginIndex * 20;
         params.put("start", start + "");
         requestInfo.params = params;
         requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "group");
