@@ -179,7 +179,8 @@
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ui.BondAlertActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ui.ContactUsActivity"
             android:screenOrientation="portrait" />
@@ -194,31 +195,47 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MissListActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.NewsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.RecommendActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.AlertEventActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.AlertWallActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.NewsInfoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.AddMemberWorkFlow"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.BigDayActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
         <activity
             android:name=".ui.MemberActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            />
 
         <!-- christopher -->
 
@@ -310,6 +327,7 @@
     <activity
         android:name=".ui.MessageChatActivity"
         android:windowSoftInputMode = "adjustPan|stateHidden"
+        android:launchMode="singleTop"
         android:screenOrientation="portrait"/>
 
         <!-- 极光推送 -->
@@ -387,7 +405,6 @@
 
         <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
-        <!--TODO-->
         <meta-data android:name="JPUSH_APPKEY" android:value="@string/jiguang_api_key" /> <!--  </>值来自开发者平台取得的AppKey-->
     </application>
 
