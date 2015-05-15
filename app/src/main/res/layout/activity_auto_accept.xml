@@ -1,0 +1,172 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_text_color_while"
+    tools:context="com.madx.bwm.ui.more.AutoAcceptActivity">
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_main_top"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/default_view_margin">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding">
+
+                <TextView
+                    style="@style/text_title_default"
+                    android:layout_centerVertical="true"
+
+                    android:text="@string/text_setting_2_1"
+                    android:textColor="@color/default_text_color_dark" />
+
+                <com.gc.materialdesign.views.CheckBox
+                    android:id="@+id/auto_acp_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/tab_color_press4" />
+
+            </RelativeLayout>
+
+            <View style="@style/split_line_default" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding">
+
+                <TextView
+                    style="@style/text_title_default"
+                    android:layout_centerVertical="true"
+
+                    android:text="@string/text_setting_2_2"
+                    android:textColor="@color/default_text_color_dark" />
+
+                <com.gc.materialdesign.views.CheckBox
+                    android:id="@+id/auto_acp_chd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/tab_color_press4" />
+
+            </RelativeLayout>
+
+            <View style="@style/split_line_default" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding">
+
+                <TextView
+                    style="@style/text_title_default"
+                    android:layout_centerVertical="true"
+
+                    android:text="@string/text_setting_2_3"
+                    android:textColor="@color/default_text_color_dark" />
+
+                <com.gc.materialdesign.views.CheckBox
+                    android:id="@+id/auto_acp_oth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/tab_color_press4" />
+
+            </RelativeLayout>
+
+            <View style="@style/split_line_default" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding">
+
+                <TextView
+                    style="@style/text_title_default"
+                    android:layout_centerVertical="true"
+
+                    android:text="@string/text_setting_2_4"
+                    android:textColor="@color/default_text_color_dark" />
+
+                <com.gc.materialdesign.views.CheckBox
+                    android:id="@+id/auto_acp_prt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/tab_color_press4" />
+
+            </RelativeLayout>
+
+            <View style="@style/split_line_default" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding">
+
+                <TextView
+                    style="@style/text_title_default"
+                    android:layout_centerVertical="true"
+                    android:text="@string/text_setting_2_5"
+                    android:textColor="@color/default_text_color_dark" />
+
+                <com.gc.materialdesign.views.CheckBox
+                    android:id="@+id/auto_acp_sib"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/tab_color_press4" />
+
+            </RelativeLayout>
+
+            <View style="@style/split_line_default" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:layout_marginRight="@dimen/default_content_padding">
+
+                <TextView
+                    style="@style/text_title_default"
+                    android:layout_centerVertical="true"
+                    android:text="@string/text_setting_2_6"
+                    android:textColor="@color/default_text_color_dark"
+                    />
+
+                <com.gc.materialdesign.views.CheckBox
+                    android:id="@+id/auto_acp_sps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/tab_color_press4" />
+
+            </RelativeLayout>
+
+         <View style="@style/split_line_default" />
+    </LinearLayout>
+</RelativeLayout>

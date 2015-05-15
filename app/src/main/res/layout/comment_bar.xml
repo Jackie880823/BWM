@@ -7,6 +7,10 @@
     android:orientation="vertical">
 
     <View style="@style/split_line_default" />
+    <com.madx.bwm.widget.SendComment
+        android:id="@+id/send_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,6 +18,7 @@
         android:background="#ffffff"
         android:orientation="horizontal"
         android:gravity="center"
+        android:visibility="gone"
         android:paddingTop="@dimen/default_view_margin"
         android:paddingBottom="@dimen/default_view_margin">
 
