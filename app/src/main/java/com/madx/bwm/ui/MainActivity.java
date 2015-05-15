@@ -1,6 +1,8 @@
 package com.madx.bwm.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.ui.wall.WallNewActivity;
 import com.madx.bwm.util.FileUtil;
+import com.madx.bwm.util.SharedPreferencesUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -82,6 +85,9 @@ public class MainActivity extends BaseActivity {
     private static boolean hasUpdate;
     private static MainActivity mainActivityInstance;
     private String leaveGroup;
+    private static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
+    private static final String SAVE_FILE_NAME = "leaveTab";
+    private int leavePagerIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +118,15 @@ public class MainActivity extends BaseActivity {
                 f.getRetainInstance();
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences sp = getSharedPreferences(SAVE_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt(LAST_LEAVE_INDEX, mViewPager.getCurrentItem());
+        editor.commit();
     }
 
     public static UserEntity getUser() {
@@ -284,7 +299,13 @@ public class MainActivity extends BaseActivity {
 
         mViewPager.setOffscreenPageLimit(0);
 
+        SharedPreferences sp = getSharedPreferences(SAVE_FILE_NAME, Context.MODE_PRIVATE);
+        leavePagerIndex = sp.getInt(LAST_LEAVE_INDEX, 0);
+
         leaveGroup = getIntent().getStringExtra("leaveGroup");
+        if ("leaveGroup".equals(leaveGroup)) {
+            leavePagerIndex = 3;
+        }
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -344,11 +365,34 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        if ("leaveGroup".equals(leaveGroup)) {
-            mViewPager.setCurrentItem(2);
-        } else {
-            changeTab(TabEnum.family);//默认第一个
+        TabEnum tab ;
+        switch (leavePagerIndex) {
+            case 0:
+                tab = TabEnum.family;
+                break;
+            case 1:
+                tab = TabEnum.wall;
+                break;
+            case 2:
+                tab = TabEnum.event;
+                break;
+            case 3:
+                tab = TabEnum.chat;
+                break;
+            case 4:
+                tab = TabEnum.more;
+                break;
+            default:
+                tab = TabEnum.family;
+                break;
         }
+        changeTab(tab);//默认第一个
+        mViewPager.setCurrentItem(leavePagerIndex);
+//        if ("leaveGroup".equals(leaveGroup)) {
+//            mViewPager.setCurrentItem(3);
+//        } else {
+//            changeTab(TabEnum.family);//默认第一个
+//        }
     }
 
     @Override
