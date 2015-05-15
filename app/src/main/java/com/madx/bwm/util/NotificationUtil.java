@@ -104,9 +104,7 @@ public class NotificationUtil {
     public static void sendNotification(Context context, Bundle msg,boolean isGCM) throws JSONException {
 
         PendingIntent contentIntent = getFowwordIntent(context, msg,isGCM);
-        if (contentIntent == null) {
-            return;
-        }
+
         String title = null;
         String message = null;
         if(isGCM){
@@ -128,7 +126,9 @@ public class NotificationUtil {
         }
         mBuilder.setTicker(msg.getString(JPushInterface.EXTRA_TITLE));
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
-        mBuilder.setContentIntent(contentIntent);
+        if (contentIntent != null) {
+         mBuilder.setContentIntent(contentIntent);
+        }
         mBuilder.setAutoCancel(true);
         getNotivficationManager(context).notify(msgType.ordinal(), mBuilder.build());
     }
@@ -164,6 +164,9 @@ public class NotificationUtil {
             msgCount = jsonObjectExtras.getInt("count");
             msgType = MessageType.getMessageTypeByName(type);
         }
+        if(msgType==null){
+            return null;
+        }
         PendingIntent contentIntent = null;
         Intent intent = null;
         switch (msgType){
@@ -181,7 +184,6 @@ public class NotificationUtil {
                 intent.putExtra("type", jsonObjectExtras.getString("group_type"));
                 intent.putExtra("groupId", jsonObjectExtras.getString("group_id"));
                 intent.putExtra("titleName", jsonObjectExtras.getString("group_name"));
-
                 break;
             case BONDALERT_MISS:
                 intent = new Intent(context, MissListActivity.class);
@@ -227,6 +229,8 @@ public class NotificationUtil {
 //                    new Intent(context, RecommendActivity.class), 0);
 //        }
         if(intent!=null) {
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
         return contentIntent;

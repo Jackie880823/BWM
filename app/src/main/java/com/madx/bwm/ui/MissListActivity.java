@@ -1,9 +1,7 @@
 package com.madx.bwm.ui;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +23,6 @@ import com.madx.bwm.adapter.MissAdapter;
 import com.madx.bwm.entity.MissEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.MessageUtil;
-import com.madx.bwm.util.SDKUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -283,17 +280,12 @@ public class MissListActivity extends BaseActivity {
 
     /**
      * add by wing
+     *
      * @param intent
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if (SDKUtil.IS_HONEYCOMB){
-            recreate();
-        }else{
-            finish();
-            startActivity(intent);
-        }
+        finish();
+        startActivity(intent);
     }
 }
