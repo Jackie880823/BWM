@@ -668,17 +668,14 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     /**
      * add by wing
+     *
      * @param intent
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (SDKUtil.IS_HONEYCOMB){
-            recreate();
-        }else{
-            finish();
-            startActivity(intent);
-        }
+        finish();
+        startActivity(intent);
     }
 }
