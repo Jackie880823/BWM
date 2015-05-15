@@ -138,6 +138,8 @@ public class Constant {
 
     public static String API_MESSAGE_POST_TEXT = API_SERVER+"/bondwithme/index.php/api/posts";//聊天->文本内容
 
+    public static String API_COMMENT_POST_TEXT = API_SERVER+"/bondwithme/index.php/api/uploadCommentPhoto";//评论发送图片
+
     //public static String API_MESSAGE_POST_PNG = API_SERVER+"/bondwithme/index.php/api/posts";//聊天->照片
 
     public static String API_GROUP_MEMBERS = API_SERVER+"/bondwithme/index.php/api/groupMember";//群组成员列表
