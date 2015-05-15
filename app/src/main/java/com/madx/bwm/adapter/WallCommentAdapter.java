@@ -3,8 +3,10 @@ package com.madx.bwm.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -33,13 +35,20 @@ import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.Map4BaiduActivity;
+import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.util.MyDateUtils;
+import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = WallCommentAdapter.class.getSimpleName();
@@ -103,6 +112,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else {
                 item.iv_agree.setImageResource(R.drawable.agree_press);
             }
+            setCommentPic(item.iv_comment_pic, item.niv_comment_pic, comment);
         } else if(viewHolder instanceof VHHeader) {
 
             VHHeader holder = (VHHeader) viewHolder;
@@ -243,7 +253,119 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 holder.llLocation.setVisibility(View.VISIBLE);
                 holder.tvLocation.setText(wall.getLoc_name());
             }
+
         }
+    }
+
+    private void setCommentPic(GifImageView iv, NetworkImageView niv, WallCommentEntity comment) {
+        Log.i(TAG, "setCommentPic& file_id: " + comment.getFile_id() + "; StickerName is " + comment.getSticker_name());
+        if(!TextUtils.isEmpty(comment.getFile_id())) {
+            niv.setVisibility(View.VISIBLE);
+            iv.setVisibility(View.GONE);
+            VolleyUtil.initNetworkImageView(mContext, niv, String.format(Constant.API_GET_COMMENT_PIC, Constant.Module_preview_m, comment.getUser_id(), comment.getFile_id()),
+                    R.drawable.network_image_default, R.drawable.network_image_default);
+        } else if(!TextUtils.isEmpty(comment.getSticker_group_path())) {
+            iv.setVisibility(View.VISIBLE);
+            niv.setVisibility(View.GONE);
+            if(Constant.Sticker_Gif.equals(comment.getSticker_type())) {
+                String stickerGroupPath = comment.getSticker_group_path();
+                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
+                    stickerGroupPath = stickerGroupPath.replace("/", "");
+                }
+                try {
+                    String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.gif";
+                    GifDrawable gifDrawable = new GifDrawable(mContext.getAssets(), gifFilePath);
+                    if(gifDrawable != null) {
+                        iv.setImageDrawable(gifDrawable);
+                        //                    if ("true".equals(comment.getIsNate())) {
+                        //                        holder.progressBar.setVisibility(View.VISIBLE);
+                        //                    } else {
+                        //                        holder.progressBar.setVisibility(View.GONE);
+                        //                    }
+                    } else {
+                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, comment.getSticker_type());
+                        downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
+                    }
+                } catch(IOException e) {
+                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, comment.getSticker_type());
+                    downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
+                    e.printStackTrace();
+                }
+            } else if(Constant.Sticker_Png.equals(comment.getSticker_type())) {
+                String stickerGroupPath = comment.getSticker_group_path();
+                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
+                    stickerGroupPath = stickerGroupPath.replace("/", "");
+                }
+
+                try {
+                    String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.png";
+                    InputStream is = mContext.getAssets().open(pngFileName);
+                    if(is != null) {
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        iv.setImageBitmap(bitmap);
+                    } else {
+                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+                        downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
+                    }
+                } catch(IOException e) {
+                    //本地没有png的时候，从服务器下载
+                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+                    downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * 此方法用来异步加载图片
+     *
+     * @param path
+     */
+    private void downloadAsyncTask(final GifImageView gifImageView, final String path, final String type, final int defaultResource) {
+        new AsyncTask<String, Void, byte[]>() {
+
+            @Override
+            protected byte[] doInBackground(String... params) {
+                return NetworkUtil.getImageByte(path);
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(byte[] resultByte) {
+                super.onPostExecute(resultByte);
+                try {
+                    if(null != resultByte) {
+                        if(Constant.Sticker_Png.equals(type)) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(resultByte, 0, resultByte.length);
+                            if (bitmap != null && gifImageView != null) {
+                                gifImageView.setImageBitmap(bitmap);
+                            } else {
+                                gifImageView.setImageResource(defaultResource);
+                            }
+                        } else if(Constant.Sticker_Gif.equals(type)) {
+                            GifDrawable gifDrawable = new GifDrawable(resultByte);
+                            if(gifDrawable != null && gifImageView != null) {
+                                gifImageView.setImageDrawable(gifDrawable);
+                            } else {
+                                gifImageView.setImageResource(defaultResource);
+                            }
+                        }
+                    } else {
+                        gifImageView.setImageResource(defaultResource);
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }.execute(new String[]{});
+
     }
 
     public int getItemCount() {
@@ -259,6 +381,8 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ImageButton iv_agree;
         ImageButton btn_comment_del;
         TextView comment_date;
+        GifImageView iv_comment_pic;
+        NetworkImageView niv_comment_pic;
 
         public VHItem(View itemView) {
             super(itemView);
@@ -269,9 +393,10 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);
             iv_agree = (ImageButton) itemView.findViewById(R.id.iv_agree);
             btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
+            iv_comment_pic = (GifImageView) itemView.findViewById(R.id.iv_comment_pic);
+            niv_comment_pic = (NetworkImageView) itemView.findViewById(R.id.niv_comment_pic);
             iv_agree.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
-
 
         }
 

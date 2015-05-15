@@ -170,6 +170,10 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 UIUtil.showKeyboard(getContext(), etChat);
                 break;
             case R.id.camera_tv://打开相机
+                if(listener != null) {
+                    listener.onClickCamera();
+                }
+
                 if(mActivity != null) {
                     cache_count++;
                     Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -185,6 +189,10 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 }
                 break;
             case R.id.album_tv://打开本地相册
+                if(listener != null) {
+                    listener.onClickAlbum();
+                }
+
                 if(mActivity != null) {
                     Intent intent = new Intent(mActivity, SelectPhotosActivity.class);
                     //                Intent intent = new Intent(Intent.ACTION_PICK, null);
@@ -194,12 +202,25 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 }
                 break;
             case R.id.location_tv://打开地图
+                if(listener != null) {
+                    listener.onClickLocation();
+                }
                 break;
             case R.id.video_tv://视频功能
+                if(listener != null) {
+                    listener.onClickVideo();
+                }
                 break;
             case R.id.contact_tv://打开名片
+                if(listener != null) {
+                    listener.onClickContact();
+                }
                 break;
             case R.id.tv_send:
+                if(listener != null) {
+                    listener.onSendCommentClick(etChat);
+                }
+
                 hideAllViewState();
                 cvLayout.setVisibility(View.GONE);
                 if(commentListener != null) {
@@ -286,7 +307,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 case REQUEST_HEAD_PHOTO:
                     if(data != null) {
                         Uri uri = data.getData();
-                        Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 60);
+                        Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 80);
                         setSendBitmap(bitmap);
                         if(commentListener != null) {
                             commentListener.onReciveBitmapUri(uri);
@@ -300,7 +321,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, CACHE_PIC_NAME_TEMP + cache_count));
                     Log.i(TAG, "onActivityResult& uri: " + uri.getPath());
                     if(new File(uri.getPath()).exists()) {
-                        Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 60);
+                        Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 80);
                         setSendBitmap(bitmap);
                         if(commentListener != null) {
                             commentListener.onReciveBitmapUri(uri);
@@ -336,7 +357,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 e.printStackTrace();
             }
         } else if(Constant.Sticker_Png.equals(type)) {
-            ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path), 200, 200);
+            ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path), 80, 80);
         }
         if(commentListener != null) {
             commentListener.onStickerItemClick(type, folderName, filName);
