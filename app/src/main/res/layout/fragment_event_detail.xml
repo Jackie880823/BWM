@@ -212,13 +212,18 @@
             </LinearLayout>
 
         </ScrollView>
+    <com.madx.bwm.widget.SendComment
+        android:id="@+id/send_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 
-        <com.madx.bwm.widget.SendCommentView
-            android:id="@+id/comment_send"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-        </com.madx.bwm.widget.SendCommentView>
+        <!--<com.madx.bwm.widget.SendCommentView-->
+            <!--android:id="@+id/comment_send"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true">-->
+        <!--</com.madx.bwm.widget.SendCommentView>-->
 
 
     <!--<include layout="@layout/comment_bar" />-->
