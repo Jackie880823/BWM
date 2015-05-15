@@ -235,4 +235,9 @@ public class NotificationUtil {
         }
         return contentIntent;
     }
+
+    public static void clearNotification(Context context){
+        getNotivficationManager(context).cancelAll();
+        JPushInterface.clearAllNotifications(context);
+    }
 }
