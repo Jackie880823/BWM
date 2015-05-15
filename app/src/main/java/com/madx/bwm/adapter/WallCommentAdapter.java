@@ -2,8 +2,11 @@ package com.madx.bwm.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -30,13 +34,21 @@ import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.ui.Map4BaiduActivity;
+import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.util.MyDateUtils;
+import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = WallCommentAdapter.class.getSimpleName();
@@ -100,6 +112,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else {
                 item.iv_agree.setImageResource(R.drawable.agree_press);
             }
+            setCommentPic(item.iv_comment_pic, item.niv_comment_pic, comment);
         } else if(viewHolder instanceof VHHeader) {
 
             VHHeader holder = (VHHeader) viewHolder;
@@ -109,7 +122,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             holder.tvContent.setText(atDescription);
             // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
             holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
-            if (wall.getTag_member().size() > 0) {
+            if(wall.getTag_member().size() > 0) {
                 String strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
                 // 文字特殊效果设置
                 SpannableString ssMember = new SpannableString(strMember);
@@ -133,7 +146,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 holder.tvContent.append(ssMember);
             }
-            if (wall.getTag_group().size() > 0){
+            if(wall.getTag_group().size() > 0) {
                 String strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), wall.getTag_group().size());
                 // 文字特殊效果设置
                 SpannableString ssGroup = new SpannableString(strGroup);
@@ -233,7 +246,126 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             } else {
                 holder.ibAgree.setImageResource(R.drawable.love_press);
             }
+
+            if(TextUtils.isEmpty(wall.getLoc_name())) {
+                holder.llLocation.setVisibility(View.GONE);
+            } else {
+                holder.llLocation.setVisibility(View.VISIBLE);
+                holder.tvLocation.setText(wall.getLoc_name());
+            }
+
         }
+    }
+
+    private void setCommentPic(GifImageView iv, NetworkImageView niv, WallCommentEntity comment) {
+        Log.i(TAG, "setCommentPic& file_id: " + comment.getFile_id() + "; StickerName is " + comment.getSticker_name());
+        if(!TextUtils.isEmpty(comment.getFile_id())) {
+            niv.setVisibility(View.VISIBLE);
+            iv.setVisibility(View.GONE);
+            VolleyUtil.initNetworkImageView(mContext, niv, String.format(Constant.API_GET_COMMENT_PIC, Constant.Module_preview_m, comment.getUser_id(), comment.getFile_id()),
+                    R.drawable.network_image_default, R.drawable.network_image_default);
+        } else if(!TextUtils.isEmpty(comment.getSticker_group_path())) {
+            iv.setVisibility(View.VISIBLE);
+            niv.setVisibility(View.GONE);
+            if(Constant.Sticker_Gif.equals(comment.getSticker_type())) {
+                String stickerGroupPath = comment.getSticker_group_path();
+                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
+                    stickerGroupPath = stickerGroupPath.replace("/", "");
+                }
+                try {
+                    String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.gif";
+                    GifDrawable gifDrawable = new GifDrawable(mContext.getAssets(), gifFilePath);
+                    if(gifDrawable != null) {
+                        iv.setImageDrawable(gifDrawable);
+                        //                    if ("true".equals(comment.getIsNate())) {
+                        //                        holder.progressBar.setVisibility(View.VISIBLE);
+                        //                    } else {
+                        //                        holder.progressBar.setVisibility(View.GONE);
+                        //                    }
+                    } else {
+                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, comment.getSticker_type());
+                        downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
+                    }
+                } catch(IOException e) {
+                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, comment.getSticker_type());
+                    downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
+                    e.printStackTrace();
+                }
+            } else if(Constant.Sticker_Png.equals(comment.getSticker_type())) {
+                String stickerGroupPath = comment.getSticker_group_path();
+                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
+                    stickerGroupPath = stickerGroupPath.replace("/", "");
+                }
+
+                try {
+                    String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.png";
+                    InputStream is = mContext.getAssets().open(pngFileName);
+                    if(is != null) {
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        iv.setImageBitmap(bitmap);
+                    } else {
+                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+                        downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
+                    }
+                } catch(IOException e) {
+                    //本地没有png的时候，从服务器下载
+                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+                    downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * 此方法用来异步加载图片
+     *
+     * @param path
+     */
+    private void downloadAsyncTask(final GifImageView gifImageView, final String path, final String type, final int defaultResource) {
+        new AsyncTask<String, Void, byte[]>() {
+
+            @Override
+            protected byte[] doInBackground(String... params) {
+                return NetworkUtil.getImageByte(path);
+            }
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(byte[] resultByte) {
+                super.onPostExecute(resultByte);
+                try {
+                    if(null != resultByte) {
+                        if(Constant.Sticker_Png.equals(type)) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(resultByte, 0, resultByte.length);
+                            if (bitmap != null && gifImageView != null) {
+                                gifImageView.setImageBitmap(bitmap);
+                            } else {
+                                gifImageView.setImageResource(defaultResource);
+                            }
+                        } else if(Constant.Sticker_Gif.equals(type)) {
+                            GifDrawable gifDrawable = new GifDrawable(resultByte);
+                            if(gifDrawable != null && gifImageView != null) {
+                                gifImageView.setImageDrawable(gifDrawable);
+                            } else {
+                                gifImageView.setImageResource(defaultResource);
+                            }
+                        }
+                    } else {
+                        gifImageView.setImageResource(defaultResource);
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }.execute(new String[]{});
+
     }
 
     public int getItemCount() {
@@ -249,6 +381,8 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ImageButton iv_agree;
         ImageButton btn_comment_del;
         TextView comment_date;
+        GifImageView iv_comment_pic;
+        NetworkImageView niv_comment_pic;
 
         public VHItem(View itemView) {
             super(itemView);
@@ -259,9 +393,10 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);
             iv_agree = (ImageButton) itemView.findViewById(R.id.iv_agree);
             btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
+            iv_comment_pic = (GifImageView) itemView.findViewById(R.id.iv_comment_pic);
+            niv_comment_pic = (NetworkImageView) itemView.findViewById(R.id.niv_comment_pic);
             iv_agree.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
-
 
         }
 
@@ -380,6 +515,10 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ImageButton ibComment;
         ImageButton btn_del;
         ImageView iv_mood;
+        // location tag
+        LinearLayout llLocation;
+        ImageView ivLocation;
+        TextView tvLocation;
 
         public VHHeader(View itemView) {
             // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
@@ -397,6 +536,12 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ibComment = (ImageButton) itemView.findViewById(R.id.iv_comment);
             btn_del = (ImageButton) itemView.findViewById(R.id.btn_del);
             iv_mood = (ImageView) itemView.findViewById(R.id.iv_mood);
+            llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
+            ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
+            tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
+
+            ivLocation.setOnClickListener(this);
+            tvLocation.setOnClickListener(this);
 
             ibAgree.setOnClickListener(this);
             //            ibComment.setOnClickListener(this);
@@ -441,6 +586,22 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         mViewClickListener.remove(wall.getContent_group_id());
                     }
                     break;
+                case R.id.iv_location:
+                case R.id.tv_location:
+                    gotoLocationSetting(wall);
+                    break;
+            }
+        }
+
+        private void gotoLocationSetting(WallEntity wall) {
+            if(!TextUtils.isEmpty(wall.getLoc_name())) {
+                Intent intent = new Intent(mContext, Map4BaiduActivity.class);
+                //        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
+                //        intent.putExtra("has_location", position_name.getText().toString());
+                intent.putExtra("location_name", wall.getLoc_name());
+                intent.putExtra("latitude", Double.valueOf(wall.getLoc_latitude()));
+                intent.putExtra("longitude", Double.valueOf(wall.getLoc_longitude()));
+                mContext.startActivity(intent);
             }
         }
 

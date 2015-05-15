@@ -2,6 +2,7 @@ package com.madx.bwm.ui.more;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -131,26 +132,31 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
 
         if("1".equals(acceptConfig.get("auto_acp_chd"))){
             auto_acp_chd.setChecked(true);
+            checkCount++;
         }else{
             auto_acp_chd.setChecked(false);
         }
         if("1".equals(acceptConfig.get("auto_acp_sib"))){
             auto_acp_sib.setChecked(true);
+            checkCount++;
         }else{
             auto_acp_sib.setChecked(false);
         }
         if("1".equals(acceptConfig.get("auto_acp_oth"))){
             auto_acp_oth.setChecked(true);
+            checkCount++;
         }else{
             auto_acp_oth.setChecked(false);
         }
         if("1".equals(acceptConfig.get("auto_acp_prt"))){
             auto_acp_prt.setChecked(true);
+            checkCount++;
         }else{
             auto_acp_prt.setChecked(false);
         }
         if("1".equals(acceptConfig.get("auto_acp_sps"))){
             auto_acp_sps.setChecked(true);
+            checkCount++;
         }else{
             auto_acp_sps.setChecked(false);
         }
@@ -274,6 +280,8 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
 //            autoCheck = true;
             auto_acp_all.setChecked(false);
         }
+
+        Log.d("", "ccccccccc---->" + checkCount);
     }
 
     @Override

@@ -57,7 +57,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     public void initView() {
         getViewById(R.id.btn_bond_alert).setOnClickListener(this);
         getViewById(R.id.btn_me).setOnClickListener(this);
-        getViewById(R.id.btn_family).setOnClickListener(this);
+//        getViewById(R.id.btn_family).setOnClickListener(this);
         getViewById(R.id.btn_share).setOnClickListener(this);
         getViewById(R.id.btn_setting).setOnClickListener(this);
 //        getViewById(R.id.btn_sticker_store).setOnClickListener(this);
@@ -130,9 +130,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
             case R.id.btn_me:
                 goMe();
                 break;
-            case R.id.btn_family:
-                goFamily();
-                break;
+//            case R.id.btn_family:
+//                goFamily();
+//                break;
             case R.id.btn_share:
                 shareApp();
                 break;

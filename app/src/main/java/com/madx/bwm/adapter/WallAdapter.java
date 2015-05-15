@@ -1,6 +1,7 @@
 package com.madx.bwm.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -29,6 +31,7 @@ import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.ui.Map4BaiduActivity;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.widget.CircularNetworkImage;
 
@@ -71,7 +74,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
         holder.tvContent.setText(atDescription);
         // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
         holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
-        if (wall.getTag_member().size() > 0) {
+        if(wall.getTag_member().size() > 0) {
             String strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
             // 文字特殊效果设置
             SpannableString ssMember = new SpannableString(strMember);
@@ -94,7 +97,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             ssMember.setSpan(colorSpan, 0, ssMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.tvContent.append(ssMember);
         }
-        if (wall.getTag_group().size() > 0){
+        if(wall.getTag_group().size() > 0) {
             String strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), wall.getTag_group().size());
             // 文字特殊效果设置
             SpannableString ssGroup = new SpannableString(strGroup);
@@ -195,6 +198,36 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             holder.ibAgree.setImageResource(R.drawable.love_press);
         }
 
+        String locationName = wall.getLoc_name();
+        if(!TextUtils.isEmpty(locationName)) {
+            holder.llLocation.setVisibility(View.VISIBLE);
+            holder.tvLocation.setText(locationName);
+            holder.tvLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoLocationSetting(wall);
+                }
+            });
+            holder.ivLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoLocationSetting(wall);
+                }
+            });
+        } else {
+            holder.llLocation.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void gotoLocationSetting(WallEntity wall) {
+        Intent intent = new Intent(mContext, Map4BaiduActivity.class);
+        //        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
+        //        intent.putExtra("has_location", position_name.getText().toString());
+        intent.putExtra("location_name", wall.getLoc_name());
+        intent.putExtra("latitude", Double.valueOf(wall.getLoc_latitude()));
+        intent.putExtra("longitude", Double.valueOf(wall.getLoc_longitude()));
+        mContext.startActivity(intent);
     }
 
 
@@ -251,6 +284,10 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
         ImageButton ibComment;
         ImageButton btn_del;
         ImageView iv_mood;
+        // location tag
+        LinearLayout llLocation;
+        ImageView ivLocation;
+        TextView tvLocation;
 
         public VHItem(View itemView) {
             // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
@@ -268,6 +305,9 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             ibComment = (ImageButton) itemView.findViewById(R.id.iv_comment);
             btn_del = (ImageButton) itemView.findViewById(R.id.btn_del);
             iv_mood = (ImageView) itemView.findViewById(R.id.iv_mood);
+            llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
+            ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
+            tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
 
             tvContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
