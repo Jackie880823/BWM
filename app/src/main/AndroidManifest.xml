@@ -324,7 +324,7 @@
 
     <activity
         android:name=".ui.MessageChatActivity"
-        android:windowSoftInputMode = "adjustPan|stateHidden"
+        android:windowSoftInputMode = "adjustResize|stateHidden"
         android:launchMode="singleTop"
         android:screenOrientation="portrait"/>
 

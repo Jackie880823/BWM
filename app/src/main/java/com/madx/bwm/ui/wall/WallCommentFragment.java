@@ -3,10 +3,9 @@ package com.madx.bwm.ui.wall;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.FragmentTransaction;
+import android.os.AsyncTask;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -25,17 +24,18 @@ import com.madx.bwm.adapter.WallCommentAdapter;
 import com.madx.bwm.entity.WallCommentEntity;
 import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.interfaces.StickerViewClickListener;
 import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
-import com.madx.bwm.ui.StickerMainFragment;
 import com.madx.bwm.ui.ViewOriginalPicesActivity;
+import com.madx.bwm.util.FileUtil;
+import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.UIUtil;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.SendComment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,16 +49,9 @@ import java.util.Map;
  * Use the {@link WallCommentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements View.OnClickListener, ViewClickListener, StickerViewClickListener {
+public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements ViewClickListener {
     private final static String TAG = WallCommentFragment.class.getSimpleName();
 
-    /**
-     * 临时文件用户裁剪
-     */
-    public final static String CACHE_PIC_NAME_TEMP = "comment_cache_temp_";
-
-    private final static int REQUEST_HEAD_PHOTO = 1;
-    private final static int REQUEST_HEAD_CAMERA = 2;
 
     private int cache_count = 0;
 
@@ -66,20 +59,24 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private String content_group_id;
     private String user_id;
     private String group_id;
-    private EditText et_comment;
     private boolean isRefresh;
     private int startIndex = 0;
     private int currentPage = 1;
     private final static int offset = 20;
     private boolean loading;
     private RecyclerView rvList;
-    private SendComment sendComment;
+    private SendComment sendCommentView;
+
+    private Uri mUri;
 
     private WallCommentAdapter adapter;
 
     public List<WallCommentEntity> data = new ArrayList<WallCommentEntity>();
 
     private WallEntity wall;
+    private String stickerType = "";
+    private String stickerName = "";
+    private String stickerGroupPath = "";
 
     public static WallCommentFragment newInstance(String... params) {
         return createInstance(new WallCommentFragment(), params);
@@ -118,48 +115,39 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         //        rvList.setHasFixedSize(true);
         //        initAdapter();
 
-        sendComment = getViewById(R.id.send_comment);
-        sendComment.initViewPager(getParentActivity());
-        sendComment.setListener(new SendComment.ChildViewClickListener() {
+        sendCommentView = getViewById(R.id.send_comment);
+        sendCommentView.initViewPager(getParentActivity(), this);
+        sendCommentView.setCommentListenr(new SendComment.CommentListener() {
             @Override
             public void onStickerItemClick(String type, String folderName, String filName) {
-
+                stickerType = type;
+                stickerGroupPath = folderName;
+                stickerName = filName;
             }
 
+            /**
+             * 得到图片uri
+             *
+             * @param uri
+             */
             @Override
-            public void onClickAlbum() {
-
-            }
-
-            @Override
-            public void onClickCamera() {
-
-            }
-
-            @Override
-            public void onClickLocation() {
-
-            }
-
-            @Override
-            public void onClickVideo() {
-
-            }
-
-            @Override
-            public void onClickContact() {
-
+            public void onReciveBitmapUri(Uri uri) {
+                mUri = uri;
             }
 
             @Override
             public void onSendCommentClick(EditText et) {
                 sendComment(et);
             }
+
+            @Override
+            public void onRemoveClick() {
+                stickerType = "";
+                stickerGroupPath = "";
+                stickerName = "";
+                mUri = null;
+            }
         });
-
-        getViewById(R.id.btn_submit).setOnClickListener(this);
-        et_comment = getViewById(R.id.et_comment);
-
 
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -180,21 +168,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     }
 
-    private void initViewPager() {
-
-        //        if (isFinishing()) {
-        //            return;
-        //        }
-        // 开启一个Fragment事务
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
-        mainFragment.setPicClickListener(this);
-        transaction.replace(R.id.sticker_event_fragment, mainFragment);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.addToBackStack(null);
-        transaction.commitAllowingStateLoss();
-    }
-
     /**
      * Receive the result from a previous call to
      * {@link #startActivityForResult(Intent, int)}.  This follows the
@@ -211,34 +184,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(getActivity().RESULT_OK == resultCode) {
-
-            switch(requestCode) {
-                // 如果是直接从相册获取
-                case REQUEST_HEAD_PHOTO:
-                    if(data != null) {
-                        List<Uri> pickUries = new ArrayList();
-                        pickUries = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
-                    }
-                    break;
-                // 如果是调用相机拍照时
-                case REQUEST_HEAD_CAMERA:
-
-                    break;
-                default:
-                    break;
-
-            }
-        }
+        Log.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
+        sendCommentView.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void requestData() {
-        HashMap<String, String> pparams = new HashMap<String, String>();
-        pparams.put("content_group_id", content_group_id);
-        pparams.put("user_id", MainActivity.getUser().getUser_id());
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("content_group_id", content_group_id);
+        params.put("user_id", MainActivity.getUser().getUser_id());
 
-        new HttpTools(getActivity()).get(Constant.API_WALL_DETAIL, pparams, new HttpCallback() {
+        new HttpTools(getActivity()).get(Constant.API_WALL_DETAIL, params, new HttpCallback() {
             @Override
             public void onStart() {
                 if(mProgressDialog != null) {
@@ -371,20 +327,12 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         //        animator.setRemoveDuration(1000);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.btn_submit:
-                if(!TextUtils.isEmpty(et_comment.getText())) {
-                    //                    MessageUtil.showMessage(getActivity(), R.string.alert_comment_null);
-                    //                } else {
-                    sendComment(et_comment);
-                }
-                break;
-        }
-    }
+    private void sendComment(final EditText et) {
 
-    private void sendComment(EditText et) {
+
+        if(mUri != null) { // 传输图片
+            new CompressBitmapTask().execute(mUri);
+        }
 
         String commentText = et.getText().toString();
         et.setText(null);
@@ -393,9 +341,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         params.put("comment_owner_id", MainActivity.getUser().getUser_id());
         params.put("content_type", "comment");
         params.put("comment_content", commentText);
-        params.put("sticker_group_path", "");
-        params.put("sticker_name", "");
-        params.put("sticker_type", "post");
+        params.put("sticker_group_path", stickerGroupPath);
+        params.put("sticker_name", stickerName);
+        params.put("sticker_type", stickerType);
 
         new HttpTools(getActivity()).post(Constant.API_WALL_COMMENT_TEXT_POST, params, new HttpCallback() {
             @Override
@@ -412,14 +360,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 startIndex = 0;
                 isRefresh = true;
                 getComments();
-                et_comment.setText("");
+                et.setText("");
+                stickerName = "";
+                stickerType = "";
+                stickerGroupPath = "";
                 getParentActivity().setResult(Activity.RESULT_OK);
-                UIUtil.hideKeyboard(getActivity(), et_comment);
+                UIUtil.hideKeyboard(getActivity(), et);
             }
 
             @Override
             public void onError(Exception e) {
-                UIUtil.hideKeyboard(getActivity(), et_comment);
+                UIUtil.hideKeyboard(getActivity(), et);
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
 
             }
@@ -435,6 +386,70 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             }
         });
 
+    }
+
+    class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
+
+        @Override
+        protected String doInBackground(Uri... params) {
+            if(params == null) {
+                return null;
+            }
+            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
+        }
+
+        @Override
+        protected void onPostExecute(String path) {
+            submitPic(path);
+        }
+
+        private void submitPic(String path) {
+            File f = new File(path);
+            if(!f.exists()) {
+                return;
+            }
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("content_group_id", content_group_id);
+            params.put("comment_owner_id", MainActivity.getUser().getUser_id());
+            params.put("content_type", "comment");
+            params.put("file", f);
+            params.put("photo_fullsize", "1");
+
+
+            new HttpTools(getActivity()).upload(Constant.API_WALL_COMMENT_PIC_POST, params, new HttpCallback() {
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onFinish() {
+                }
+
+                @Override
+                public void onResult(String string) {
+                    startIndex = 0;
+                    isRefresh = true;
+                    mUri = null;
+                    getComments();
+                    getParentActivity().setResult(Activity.RESULT_OK);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onCancelled() {
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+        }
     }
 
     private void doLoveComment(final WallCommentEntity commentEntity, final boolean love) {
@@ -646,13 +661,4 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         startActivityForResult(intent, Constant.ACTION_COMMENT_GROUPS);
     }
 
-    /**
-     * @param type       sticker的后缀类型(.gif)
-     * @param folderName 放置sticker的文件夹名称
-     * @param filName    sticker的文件名
-     */
-    @Override
-    public void showComments(String type, String folderName, String filName) {
-
-    }
 }
