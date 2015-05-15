@@ -4,6 +4,24 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv_send_comment_images"
+        style="@style/CardViewDefault"
+        android:layout_width="@dimen/_100dp"
+        android:layout_height="@dimen/_100dp"
+        android:layout_marginLeft="@dimen/_5dp"
+        android:layout_marginRight="@dimen/_5dp"
+        android:visibility="gone">
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            layout="@layout/picture_item_for_gridview"
+            />
+
+    </android.support.v7.widget.CardView>
+
+
     <LinearLayout
         android:id="@+id/ll_chat"
         android:layout_width="match_parent"
@@ -107,6 +125,7 @@
                 android:drawablePadding="@dimen/_10dp"
                 android:drawableTop="@drawable/message_location"
                 android:gravity="center"
+                android:visibility="invisible"
                 android:text="@string/text_location"
                 android:textColor="@color/default_text_color_dark"
                 android:textSize="@dimen/text_medium_size"/>
@@ -121,6 +140,7 @@
                 android:drawableTop="@drawable/message_video"
                 android:gravity="center"
                 android:text="@string/text_video"
+                android:visibility="invisible"
                 android:textColor="@color/default_text_color_dark"
                 android:textSize="@dimen/text_medium_size"/>
 
@@ -130,6 +150,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="invisible"
             android:layout_marginTop="@dimen/_10dp">
 
             <TextView
