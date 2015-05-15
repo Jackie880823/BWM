@@ -43,6 +43,7 @@ public class Constant {
     public static String API_WALL_TEXT_POST = API_SERVER+"/bondwithme/index.php/api/posts";
     public static String API_WALL_PIC_POST = API_SERVER+"/bondwithme/index.php/api/uploadPhoto";
     public static String API_WALL_COMMENT_TEXT_POST = API_SERVER+"/bondwithme/index.php/api/posts";
+    public static String API_WALL_COMMENT_PIC_POST = API_SERVER+"/bondwithme/index.php/api/uploadCommentPhoto";
     public static String API_WALL_COMMENT_LIST = API_SERVER+"/bondwithme/index.php/api/comment";
     public static String API_WALL_COMMENT_LOVE = API_SERVER+"/bondwithme/index.php/api/love_comment";
     public static String API_WALL_COMMENT_DELETE = API_SERVER+"/bondwithme/index.php/api/comment/%s";
