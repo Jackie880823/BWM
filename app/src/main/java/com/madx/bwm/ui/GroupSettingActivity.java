@@ -432,11 +432,13 @@ public class GroupSettingActivity extends BaseActivity {
             {
                 viewHolder.tvName.setText(userEntity.getUser_given_name());
                 viewHolder.tvAdmin.setVisibility(View.VISIBLE);
+                viewHolder.ivWaitting.setVisibility(View.GONE);
                 groupOwnerId = userEntity.getGroup_owner_id();
                 if (MainActivity.getUser().getUser_id().equals(userEntity.getGroup_owner_id()))
                 {
                     isAdmin = true;
                     rightButton.setVisibility(View.VISIBLE);
+
                 }
                 else
                 {
