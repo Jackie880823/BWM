@@ -76,6 +76,7 @@ public class Constant {
 
     /*获取图片,三个参数1.module,2.user_id,3.fileId*/
     public static String API_GET_PIC = API_SERVER+"/bondwithme/index.php/api/%s/%s/fid/%s"+"/"+System.currentTimeMillis();
+    public static String API_GET_COMMENT_PIC = API_SERVER+"/bondwithme/index.php/api/%s/%s/fid/%s";
     public static String API_GET_PHOTO = API_SERVER+"/bondwithme/index.php/api/%s/%s/fid/profile";
 
     /**for pic*/
