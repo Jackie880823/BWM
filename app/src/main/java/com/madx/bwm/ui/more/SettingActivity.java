@@ -1,8 +1,7 @@
-package com.madx.bwm.ui;
+package com.madx.bwm.ui.more;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -12,6 +11,8 @@ import com.gc.materialdesign.widgets.ProgressDialog;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.http.UrlUtil;
+import com.madx.bwm.ui.BaseActivity;
+import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.util.MessageUtil;
 
 import org.json.JSONException;
@@ -132,19 +133,6 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
         super.onDestroy();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-//            case R.id.subject_1:
-//                subject_text = getString(R.string.mail_subject_1);
-//                showSelectDialog.dismiss();
-//                break;
-            default:
-                super.onClick(v);
-                break;
-        }
-    }
-
     private void updateConfig(){
 
         mProgressDialog.show();
@@ -171,7 +159,7 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
         RequestInfo requestInfo = new RequestInfo();
 //        requestInfo.params = params;
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
-        requestInfo.url = String.format(Constant.API_SETTING_CONFIG,MainActivity.getUser().getUser_id());
+        requestInfo.url = String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id());
 
         new HttpTools(this).put(requestInfo,new HttpCallback() {
             @Override
