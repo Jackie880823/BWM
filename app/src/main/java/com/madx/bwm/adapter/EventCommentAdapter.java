@@ -105,22 +105,22 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
         //notifyItemInserted(myList.size());
     }
 
-//    @Override
-//    public int getItemViewType(int position) {
-//        EventCommentEntity myEevent = data.get(position);
-//        int type = 0;
-//        if(myEevent.getComment_content().toString().trim()!=""){
-//            type = TEXT;
-//        }else if(Constant.Sticker_Gif.equals(myEevent.getSticker_type())){
-//            type =  GIF;
-//        }
-//        else if(Constant.Sticker_Png.equals(myEevent.getSticker_type())) {
-//            type = PNG;
-//        }
-////        Log.i("type==========",type+"");
-//        return type;
-//
-//    }
+    @Override
+    public int getItemViewType(int position) {
+        EventCommentEntity myEevent = data.get(position);
+        int type = 0;
+        if(myEevent.getComment_content().toString().trim()!="" &&  myEevent.getSticker_group_path().trim() == ""){
+            type = TEXT;
+        }else if(Constant.Sticker_Gif.equals(myEevent.getSticker_type())){
+            type =  GIF;
+        }
+        else if(Constant.Sticker_Png.equals(myEevent.getSticker_type())) {
+            type = PNG;
+        }
+//        Log.i("type==========",type+"");
+        return type;
+
+    }
 
     private void updateItem(EventCommentEntity q, int pos) {
         data.remove(pos);
@@ -142,30 +142,30 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // 加载Item的布局.布局中用到的真正的CardView.
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_item, parent, false);
-//        View view = null ;
-//        switch (viewType){
-//            case TEXT:
-//                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_item, parent, false);
+//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_item, parent, false);
+        View view = null ;
+        switch (viewType){
+            case TEXT:
+                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_item, parent, false);
 //                Log.i("TEXT==========","");
-//                break;
-//            case PIC:
-//                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
+                break;
+            case PIC:
+                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
 //                Log.i("PIC==========","");
-//                break;
-//            case LOC:
-//                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
+                break;
+            case LOC:
+                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
 //                Log.i("LOG==========","");
-//                break;
-//            case GIF:
-//                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_gif, parent, false);
+                break;
+            case GIF:
+                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_gif, parent, false);
 //                Log.i("GIF==========","");
-//                break;
-//            case PNG:
-//                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_png, parent, false);
+                break;
+            case PNG:
+                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_png, parent, false);
 //                Log.i("PNG==========","");
-//                break;
-//        }
+                break;
+        }
         // ViewHolder参数一定要是Item的Root节点.
         return new ViewHolder(view);
 
@@ -186,85 +186,93 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 //            Log.i("ece.getSticker_group_path()",ece.getSticker_group_path()+"");
             if(!TextUtils.isEmpty(ece.getComment_content().trim())){//如果文字不为空
                 Log.i("文字=====", position + "");
-//                holder.tv_comment_content.setVisibility(View.);
+//                Log.i("文字=====", position + "");
                 holder.tv_comment_content.setText(ece.getComment_content());
-                holder.progressBar.setVisibility(View.GONE);
-//                holder.message_pic_png_iv.setVisibility(View.GONE);
-//                holder.gifImageView.setVisibility(View.GONE);
 
             }
             if(!TextUtils.isEmpty(ece.getSticker_group_path().trim())){
-
-                if(Constant.Sticker_Gif.equals(ece.getSticker_type())){
-                    holder.progressBar.setVisibility(View.GONE);
-                    holder.tv_comment_content.setVisibility(View.GONE);
-//                    holder.gifImageView.setVisibility(View.INVISIBLE);
-//                    holder.tv_comment_content.setVisibility(View.GONE);
-                    String stickerGroupPath = ece.getSticker_group_path();//获取图片地址
-                    if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1){
-                        stickerGroupPath = stickerGroupPath.replace("/", "");
-                    }
-                    try {
-                        String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + ece.getSticker_name() + "_B.gif";
-                        GifDrawable gifDrawable = new GifDrawable(mContext.getAssets(), gifFilePath);
-                        if (gifDrawable != null) {
-                            Log.i("gifFilePath=====", gifFilePath);
+                switch (ece.getSticker_type().trim()){
+                    case ".gif" :
+                        Log.i("gif=====",position+"");
+                        holder.progressBar.setVisibility(View.GONE);
+//                        holder.tv_comment_content.setVisibility(View.GONE);
+                        String stickerGroupPathGig = ece.getSticker_group_path();//获取图片地址
+                        if(null != stickerGroupPathGig && stickerGroupPathGig.indexOf("/") != -1){
+                            stickerGroupPathGig = stickerGroupPathGig.replace("/", "");
+                        }
+                        try {
+                            String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPathGig + File.separator + ece.getSticker_name() + "_B.gif";
+                            GifDrawable gifDrawable = new GifDrawable(mContext.getAssets(), gifFilePath);
+                            if (gifDrawable != null) {
+//                            Log.i("gifFilePath=====", gifFilePath);
 //                            Log.i("显示GIF======",gifFilePath);
-                            holder.gifImageView.setImageDrawable(gifDrawable);
-                            holder.gifImageView.setVisibility(View.VISIBLE);
+                                holder.gifImageView.setImageDrawable(gifDrawable);
+                                holder.gifImageView.setVisibility(View.VISIBLE);
 //                    if ("true".equals(msgEntity.getIsNate())) {
 //                        holder.progressBar.setVisibility(View.VISIBLE);
 //                    } else {
 //                        holder.progressBar.setVisibility(View.GONE);
 //                    }
-                        } else {
+                            } else {
+                                String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
+                                        ece.getSticker_name(), stickerGroupPathGig, ece.getSticker_type());
+                                downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
+                            }
+                        } catch (IOException e) {
                             String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
-                                    ece.getSticker_name(), stickerGroupPath, ece.getSticker_type());
+                                    ece.getSticker_name(), stickerGroupPathGig, ece.getSticker_type());
                             downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
-                                ece.getSticker_name(), stickerGroupPath, ece.getSticker_type());
-                        downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
-                        e.printStackTrace();
-                    }
-                }if(Constant.Sticker_Png.equals(ece.getSticker_type())){//PNG
-                    holder.tv_comment_content.setVisibility(View.GONE);
-                    holder.gifImageView.setVisibility(View.GONE);
-                    holder.pngImageView.setImageResource(R.drawable.network_image_default);
-                    holder.progressBar.setVisibility(View.GONE);
-//                    holder.tv_comment_content.setVisibility(View.GONE);
-                    if(ece.getUri() != null){
-                        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                    bitmapOptions.inSampleSize = 4;
-                    Bitmap bitmap = LocalImageLoader.rotaingImageView(LocalImageLoader.readPictureDegree(ece.getUri().getPath()),
-                            ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(mContext, ece.getUri())), 200, 200));
-                    holder.pngImageView.setImageBitmap(bitmap);
-                    }else {
-                        String stickerGroupPath = ece.getSticker_group_path();
-                    if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
-                        stickerGroupPath = stickerGroupPath.replace("/", "");
-                    }
+                        break;
 
-                    try {
-                        String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + ece.getSticker_name() + "_B.png";
-                        InputStream is = mContext.getAssets().open(pngFileName);
-                        if (is != null) {
-                            holder.pngImageView.setVisibility(View.VISIBLE);
-                            Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+                    case ".png" :
+                        Log.i("png=====", position+"");
+                        holder.progressBar.setVisibility(View.GONE);
+//                        holder.tv_comment_content.setVisibility(View.GONE);
+                        holder.pngImageView.setImageResource(R.drawable.network_image_default);
+                        if(ece.getUri() != null){
+                            BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+                            bitmapOptions.inSampleSize = 4;
+                            Bitmap bitmap = LocalImageLoader.rotaingImageView(LocalImageLoader.readPictureDegree(ece.getUri().getPath()),
+                                    ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(mContext, ece.getUri())), 200, 200));
                             holder.pngImageView.setImageBitmap(bitmap);
-                        } else {
-                            String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-                            downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+                        }else {
+                            String stickerGroupPathPng = ece.getSticker_group_path();
+                            if (null != stickerGroupPathPng && stickerGroupPathPng.indexOf("/") != -1) {
+                                stickerGroupPathPng = stickerGroupPathPng.replace("/", "");
+                            }
+
+                            try {
+                                String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPathPng + File.separator + ece.getSticker_name() + "_B.png";
+                                InputStream is = mContext.getAssets().open(pngFileName);
+                                if (is != null) {
+                                    holder.pngImageView.setVisibility(View.VISIBLE);
+                                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                                    holder.pngImageView.setImageBitmap(bitmap);
+                                } else {
+                                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPathPng, Constant.Sticker_Png);
+                                    downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+                                }
+                            } catch (IOException e) {
+                                //本地没有png的时候，从服务器下载
+                                String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPathPng, Constant.Sticker_Png);
+                                downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+                                e.printStackTrace();
+                            }
                         }
-                    } catch (IOException e) {
-                        //本地没有png的时候，从服务器下载
-                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-                        downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
-                        e.printStackTrace();
-                    }
-                    }
+                        break;
                 }
+
+//                if(Constant.Sticker_Gif.equals(ece.getSticker_type().trim())){
+//
+//                }else {
+//                if(Constant.Sticker_Png.equals(ece.getSticker_type().trim())){//PNG
+//
+//
+//                    }
+//                }
             }
 
         } else {

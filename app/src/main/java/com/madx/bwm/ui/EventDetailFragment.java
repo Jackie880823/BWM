@@ -94,9 +94,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private TextView maybe_count;
     private TextView not_going_count;
 
-    private String Metype;
-    private String MefolderName;
-    private String MefilName;
+//    private String Metype;
+//    private String MefolderName;
+//    private String MefilName;
     private boolean isStickerItemClick = false;
 
     private boolean isRefresh;
@@ -166,6 +166,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     Intent intent;
     private Context mContext;
     private Uri uri;//原图uri
+
+    EventCommentEntity  commentEntity = new EventCommentEntity();
 
     public static EventDetailFragment newInstance(String... params) {
 //        event = eventEntity;
@@ -265,6 +267,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             }
         }
     };
+
     @Override
     public void onDestroy() {
         event = null;
@@ -275,7 +278,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     public void setLayoutId() {
         this.layoutId = R.layout.fragment_event_detail;
     }
-
 
     @Override
     public void initView() {
@@ -375,12 +377,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public void onStickerItemClick(String type, String folderName, String filName) {
                     isStickerItemClick = true;
-                    Metype = type;
-                    MefolderName = folderName;
-                    MefilName = filName;
-                    Log.i("Metype=======",Metype);
-                    Log.i("MefolderName======",MefolderName);
-                    Log.i("MefilName========",MefilName);
+                    Log.i("isStickerItemClick====","true");
+
+                    commentEntity.setSticker_type(type);
+                    commentEntity.setSticker_group_path(folderName);
+                    commentEntity.setSticker_name(filName);
+
+                    Log.i("Metype=======", commentEntity.getSticker_type());
+                    Log.i("MefolderName======", commentEntity.getSticker_group_path());
+                    Log.i("MefilName========", commentEntity.getSticker_name());
 //                    EventCommentEntity msgEntity = new EventCommentEntity();
 //                    msgEntity.setUser_given_name(MainActivity.getUser().getUser_id());
 //                    msgEntity.setUser_id(MainActivity.getUser().getUser_id());
@@ -457,9 +462,17 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onSendCommentClick(EditText et) {
 //                    if(!isStickerItemClick){
                         sendComment();
-                    MefilName = "";
-                    MefolderName = "";
-                    Metype = "";
+
+
+
+//                    Log.i("Metype=======", commentEntity.getSticker_type());
+//                    Log.i("MefolderName======", commentEntity.getSticker_group_path());
+//                    Log.i("MefilName========", commentEntity.getSticker_name());
+//                    Log.i("isStickerItemClick====","false");
+
+
+                    isStickerItemClick = false;
+
 //                        Log.i("发送文字======","");
 //                    }
 //                    if(isStickerItemClick){
@@ -474,11 +487,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onRemoveClick() {
-                    Metype = "";
-                    MefolderName = "";
-                    MefilName = "";
+                    isStickerItemClick = false;
+                    commentEntity.setSticker_type("");
+                    commentEntity.setSticker_group_path("");
+                    commentEntity.setSticker_name("");
+
                 }
             });
+
+
 //            sendComment.setListener(new SendComment.ChildViewClickListener() {
 //                //发送表,问题：发送的时候显示在末尾，刷新以后显示在头。
 //                @Override
@@ -821,15 +838,25 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         if (NetworkUtil.isNetworkConnected(getActivity())) {
             progressBar.setVisibility(View.VISIBLE);
-            isStickerItemClick = false;
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_group_id", event.getContent_group_id());
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
             params.put("content_type", "comment");
-            params.put("comment_content",etChat.getText().toString().trim());
-            params.put("sticker_group_path", MefolderName);
-            params.put("sticker_name", MefilName);
-            params.put("sticker_type", Metype);
+            params.put("comment_content", etChat.getText().toString().trim());
+            if(isStickerItemClick){
+                Log.i("isStickerItemClick=====","true");
+                params.put("sticker_group_path", commentEntity.getSticker_group_path());
+                params.put("sticker_name", commentEntity.getSticker_name());
+                params.put("sticker_type", commentEntity.getSticker_type());
+
+            }else{
+                Log.i("isStickerItemClick=====","false");
+                params.put("sticker_group_path", "");
+                params.put("sticker_name", "");
+                params.put("sticker_type", "");
+            }
+
+
 
             new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
                 @Override
@@ -846,6 +873,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onResult(String response) {
                     startIndex = 0;
                     isRefresh = true;
+                    commentEntity.setSticker_type("");
+                    commentEntity.setSticker_group_path("");
+                    commentEntity.setSticker_name("");
                     requestComment();
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     etChat.setText("");
@@ -885,9 +915,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
             params.put("content_type", "comment");
             params.put("comment_content","");
-            params.put("sticker_group_path", MefolderName);
-            params.put("sticker_name", MefilName);
-            params.put("sticker_type", Metype);
+            params.put("sticker_group_path", commentEntity.getSticker_group_path());
+            params.put("sticker_name", commentEntity.getSticker_name());
+            params.put("sticker_type", commentEntity.getSticker_type());
 
              new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
 
@@ -903,13 +933,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                             @Override
                             public void onResult(String response) {
-                                Metype = "";
-                                MefolderName = "";
-                                MefilName = "";
                                 startIndex = 0;
                                 isRefresh = true;
                                 MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                                requestComment();
+//                                requestComment();
                                 etChat.setText("");
                                 UIUtil.hideKeyboard(getActivity(), etChat);
                                 progressBar.setVisibility(View.GONE);
@@ -951,7 +978,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             jsonParams.put("user_id", MainActivity.getUser().getUser_id());
             jsonParams.put("group_id", event.getGroup_id());
             jsonParams.put("content_group_id", event.getContent_group_id());
-            String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+            String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);//转化换成json
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("condition", jsonParamsString);
