@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
@@ -36,6 +35,7 @@ import com.madx.bwm.util.UIUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import pl.droidsonroids.gif.GifDrawable;
 
@@ -346,8 +346,10 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
         if(listener != null) {
             listener.onStickerItemClick(type, folderName, filName);
         }
-        String path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.gif";
+        Log.i(TAG, "showComments& type: " + type);
+        String path = null;
         if(Constant.Sticker_Gif.equals(type)) {
+            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.gif";
             try {
                 GifDrawable gifDrawable = new GifDrawable(mActivity.getAssets(), path);
                 if(gifDrawable != null) {
@@ -357,8 +359,18 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 e.printStackTrace();
             }
         } else if(Constant.Sticker_Png.equals(type)) {
-            ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path), 80, 80);
-        }
+            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.png";
+            try {
+                InputStream is = mActivity.getAssets().open(path);
+                if(is != null) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    setSendBitmap(bitmap);
+                setSendBitmap(bitmap);
+                }
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        } Log.i(TAG, "showComments& path: " + path);
         if(commentListener != null) {
             commentListener.onStickerItemClick(type, folderName, filName);
         }
