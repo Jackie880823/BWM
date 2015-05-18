@@ -39,10 +39,12 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.Map4BaiduActivity;
+import com.madx.bwm.ui.Map4GoogleActivity;
 import com.madx.bwm.ui.SelectPeopleActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MessageUtil;
+import com.madx.bwm.util.SystemUtil;
 import com.madx.bwm.util.animation.ViewHelper;
 import com.madx.bwm.widget.WallEditView;
 
@@ -231,10 +233,6 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     boolean hasTextContent;
     ProgressDialog progressDialog;
 
-    String locationDesc;
-    String latitudeDesc;
-    String longitudeDesc;
-
     private void submitWall() {
         hasTextContent = false;
         hasPicContent = false;
@@ -261,7 +259,11 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             return;
         }
 
-        if(!TextUtils.isEmpty(location_desc.getText())) {
+        String locationDesc = location_desc.getText().toString();
+        String latitudeDesc;
+        String longitudeDesc;
+
+        if(!TextUtils.isEmpty(locationDesc)) {
             locationDesc = location_desc.getText().toString();
             latitudeDesc = "" + latitude;
             longitudeDesc = "" + longitude;
@@ -279,7 +281,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         params.put("text_description", text_content);
         params.put("loc_latitude", latitudeDesc);
         params.put("loc_longitude", longitudeDesc);
-        params.put("locationName", location_desc.getText().toString());
+        params.put("loc_name", locationDesc);
         params.put("loc_caption", "");
         params.put("sticker_group_path", "");
 
@@ -300,7 +302,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         } else {
             params.put("upload_photo", "1");
         }
-//        params.put("tag_group", null);
+
         params.put("tag_group", gson.toJson(setGetGroupIds(at_groups_data)));
         params.put("tag_member", gson.toJson(setGetMembersIds(at_members_data)));
 
@@ -539,8 +541,13 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goLocationSetting() {
-        Intent intent = new Intent(getActivity(), Map4BaiduActivity.class);
-//        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
+        Intent intent;
+        //判断是用百度还是google
+        if (SystemUtil.checkPlayServices(getActivity())) {
+            intent = new Intent(getActivity(), Map4GoogleActivity.class);
+        }else {
+            intent = new Intent(getActivity(), Map4BaiduActivity.class);
+        }
         //        intent.putExtra("has_location", position_name.getText().toString());
         if(!TextUtils.isEmpty(location_desc.getText())) {
             intent.putExtra("location_name", location_desc.getText().toString());
@@ -567,6 +574,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     if(data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
                         locationName = data.getStringExtra("location_name");
+                        Log.i(TAG, "onActivityResult: location" + locationName);
                         if(!TextUtils.isEmpty(locationName)) {
                             location_desc.setText(locationName);
                             latitude = data.getDoubleExtra("latitude", 0);

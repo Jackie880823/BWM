@@ -16,6 +16,7 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.LoginActivity;
 import com.madx.bwm.util.AppInfoUtil;
 import com.madx.bwm.util.FileUtil;
+import com.madx.bwm.util.NotificationUtil;
 import com.madx.bwm.util.PreferencesUtil;
 
 import java.util.HashMap;
@@ -104,8 +105,9 @@ public class App extends Application {
             PreferencesUtil.saveValue(context, Constant.GCM_PREF_APP_VERSION, "");
             PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_REG_ID, "");
             PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_APP_VERSION, "");
+            NotificationUtil.clearNotification(context);
+            context.finish();
         }
-        context.finish();
     }
 
     public static void exit(Activity context) {

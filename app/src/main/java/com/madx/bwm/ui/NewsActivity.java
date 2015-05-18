@@ -1,5 +1,6 @@
 package com.madx.bwm.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -130,11 +131,11 @@ public class NewsActivity extends BaseActivity {
     public void requestData() {
 
         Map<String, String> params = new HashMap<>();
-        params.put("start", ""+startIndex);
+        params.put("start", "" + startIndex);
         params.put("limit",""+offSet);
 
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_NEWS,MainActivity.getUser().getUser_id()),params,new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_NEWS, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -151,7 +152,7 @@ public class NewsActivity extends BaseActivity {
                 Gson gson = gsonb.create();
                 data = gson.fromJson(string, new TypeToken<ArrayList<NewsEntity>>() {
                 }.getType());
-                if(data!=null) {
+                if (data != null) {
                     if (isRefresh) {
                         startIndex = data.size();
                         finishReFresh();
@@ -160,14 +161,16 @@ public class NewsActivity extends BaseActivity {
                         startIndex += data.size();
                         adapter.add(data);
                     }
-                }else{finishReFresh();}
+                } else {
+                    finishReFresh();
+                }
                 loading = false;
             }
 
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(NewsActivity.this,R.string.msg_action_failed);
+                MessageUtil.showMessage(NewsActivity.this, R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }
@@ -196,5 +199,16 @@ public class NewsActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
     }
 }

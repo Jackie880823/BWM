@@ -26,6 +26,8 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
     <!--<string name="google_maps_key" templateMergeStrategy="preserve">AIzaSyDxlAh1QC6o-roRxwCQzABSOdmUswOG-x4</string>-->
     <!-- test by wing -->
     <string name="google_maps_key" templateMergeStrategy="preserve">AIzaSyCi08-e4WIkFj9sRdgSBSBa2d5dQy2dVQ4</string>
+    <!--用于搜索-->
+    <string name="google_maps_place_key" templateMergeStrategy="preserve">AIzaSyDT_b4XSfwPPIuTTugObeZFi2Wo9M1UBVM</string>
 
 
     <!-- GCM -->

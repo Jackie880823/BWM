@@ -151,7 +151,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case GET_HISTORY_MESSAGE:
                     List<MsgEntity> msgHistoryList = (List<MsgEntity>) msg.obj;
                     swipeRefreshLayout.setRefreshing(false);
-                    if (null != msgHistoryList || msgHistoryList.size() == 0) {
+                    if (null == msgHistoryList || msgHistoryList.size() == 0) {
                         break;
                     }
                     indexPage++;
@@ -322,10 +322,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                int startIndex = indexPage * INITIAL_LIMIT - 1;
-                if (startIndex < 0) {
-                    startIndex = 0;
-                }
+                int startIndex = indexPage * INITIAL_LIMIT;
                 getMsg(INITIAL_LIMIT, startIndex, GET_HISTORY_MESSAGE);
             }
 
@@ -669,4 +666,16 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
     }
 
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        finish();
+        startActivity(intent);
+    }
 }

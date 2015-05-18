@@ -205,7 +205,7 @@ public class Map4BaiduActivity extends BaseActivity implements
         if (!TextUtils.isEmpty(intent.getStringExtra("location_name"))) {
             hasSetLocation = true;
             LatLng latLng = new LatLng(intent.getDoubleExtra("latitude", 0), intent.getDoubleExtra("longitude", 0));
-            addMarker(latLng,intent.getStringExtra("location_name"));
+            addTarget(latLng, intent.getStringExtra("location_name"));
             center2myLoc(latLng);
         }
 
@@ -256,7 +256,7 @@ public class Map4BaiduActivity extends BaseActivity implements
     private SuggestionSearch mSuggestionSearch = null;
     private String city = "";
 
-    private void addMarker(LatLng latLng, String title) {
+    private void addTarget(LatLng latLng, String title) {
         if (marker == null) {
             BitmapDescriptor bd = BitmapDescriptorFactory
                     .fromResource(R.drawable.icon_map_target);
@@ -332,7 +332,7 @@ public class Map4BaiduActivity extends BaseActivity implements
                 case ADD_MARKER:
                     if (msg.obj != null) {
                         Bundle bundle = msg.getData();
-                        addMarker(new LatLng(bundle.getDouble("latitude", 0), bundle.getDouble("longitude", 0)), msg.obj.toString());
+                        addTarget(new LatLng(bundle.getDouble("latitude", 0), bundle.getDouble("longitude", 0)), msg.obj.toString());
                     }
                     break;
             }
@@ -490,7 +490,7 @@ public class Map4BaiduActivity extends BaseActivity implements
 //     */
 //    private void setUpMap(double latitude, double longitude) {
 //        LatLng latLng = new LatLng(latitude, longitude);
-//        addMarker(latLng);
+//        addTarget(latLng);
 //        new Thread(new GetAddressRunnable(latLng.latitude, latLng.longitude)).start();
 //
 //        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng
@@ -574,7 +574,7 @@ public class Map4BaiduActivity extends BaseActivity implements
 //                        toLocation = false;
 //                        latLng.describeContents();
 //                        new Location(latLng.toString());
-//                        addMarker(latLng);
+//                        addTarget(latLng);
 //                        new Thread(new GetAddressRunnable(latLng.latitude, latLng.longitude)).start();
 //                    }
 //                });
@@ -715,11 +715,13 @@ public class Map4BaiduActivity extends BaseActivity implements
         @Override
         public boolean onPoiClick(int index) {
             super.onPoiClick(index);
-            PoiInfo poi = getPoiResult().getAllPoi().get(index);
-            // if (poi.hasCaterDetails) {
-            mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())
-                    .poiUid(poi.uid));
-            // }
+            try {
+                PoiInfo poi = getPoiResult().getAllPoi().get(index);
+                // if (poi.hasCaterDetails) {
+                mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())
+                        .poiUid(poi.uid));
+                // }
+            }catch (Exception e){}
             return true;
         }
     }

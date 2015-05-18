@@ -164,7 +164,8 @@ public class RecommendActivity extends BaseActivity {
             public void onResult(String string) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-                data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {}.getType());
+                data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {
+                }.getType());
 //                if (data != null) {
 //                    if (isRefresh) {
 //                        startIndex = data.size();
@@ -284,5 +285,16 @@ public class RecommendActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
     }
 }

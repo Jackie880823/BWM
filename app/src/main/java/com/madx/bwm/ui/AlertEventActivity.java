@@ -1,5 +1,6 @@
 package com.madx.bwm.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -131,11 +132,11 @@ public class AlertEventActivity extends BaseActivity {
     public void requestData() {
 
         Map<String, String> params = new HashMap<>();
-        params.put("start", ""+startIndex);
+        params.put("start", "" + startIndex);
         params.put("limit",""+ offset);
 
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_EVENT,MainActivity.getUser().getUser_id()),params,new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_EVENT, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -152,7 +153,7 @@ public class AlertEventActivity extends BaseActivity {
                 Gson gson = gsonb.create();
                 data = gson.fromJson(string, new TypeToken<ArrayList<AlertEventEntity>>() {
                 }.getType());
-                if(data!=null) {
+                if (data != null) {
                     if (isRefresh) {
                         startIndex = data.size();
                         currentPage = 1;//还原为第一页
@@ -162,14 +163,16 @@ public class AlertEventActivity extends BaseActivity {
                         startIndex += data.size();
                         adapter.add(data);
                     }
-                }else{finishReFresh();}
+                } else {
+                    finishReFresh();
+                }
                 loading = false;
             }
 
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(AlertEventActivity.this,R.string.msg_action_failed);
+                MessageUtil.showMessage(AlertEventActivity.this, R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }
@@ -198,5 +201,16 @@ public class AlertEventActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
     }
 }

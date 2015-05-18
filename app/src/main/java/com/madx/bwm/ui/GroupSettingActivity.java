@@ -3,7 +3,6 @@ package com.madx.bwm.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
@@ -15,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +28,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
-import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.PhotoEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
@@ -425,6 +424,7 @@ public class GroupSettingActivity extends BaseActivity {
             viewHolder.cniMain = (CircularNetworkImage) convertView.findViewById(R.id.cni_main);
             viewHolder.tvName = (TextView)convertView.findViewById(R.id.tv_name);
             viewHolder.tvAdmin = (TextView)convertView.findViewById(R.id.tv_admin);
+            viewHolder.ivWaitting = (ImageView)convertView.findViewById(R.id.iv_waitting);
 
             VolleyUtil.initNetworkImageView(mContext, viewHolder.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
@@ -432,11 +432,13 @@ public class GroupSettingActivity extends BaseActivity {
             {
                 viewHolder.tvName.setText(userEntity.getUser_given_name());
                 viewHolder.tvAdmin.setVisibility(View.VISIBLE);
+                viewHolder.ivWaitting.setVisibility(View.GONE);
                 groupOwnerId = userEntity.getGroup_owner_id();
                 if (MainActivity.getUser().getUser_id().equals(userEntity.getGroup_owner_id()))
                 {
                     isAdmin = true;
                     rightButton.setVisibility(View.VISIBLE);
+
                 }
                 else
                 {
@@ -448,6 +450,15 @@ public class GroupSettingActivity extends BaseActivity {
                 viewHolder.tvName.setText(userEntity.getUser_given_name());
             }
 
+            if ("1".equals(userEntity.getJoin_group()))
+            {
+                viewHolder.ivWaitting.setImageResource(R.drawable.existing_user);
+            }
+            else
+            {
+                viewHolder.ivWaitting.setImageResource(R.drawable.pending_user);
+            }
+
             return convertView;
 
         }
@@ -457,6 +468,8 @@ public class GroupSettingActivity extends BaseActivity {
             CircularNetworkImage cniMain;
             TextView tvName;
             TextView tvAdmin;
+
+            ImageView ivWaitting;
         }
     }
 

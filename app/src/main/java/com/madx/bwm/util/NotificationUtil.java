@@ -101,77 +101,101 @@ public class NotificationUtil {
     /**
      * @param msg
      */
-    public static void sendNotification(Context context, Bundle msg) throws JSONException {
+    public static void sendNotification(Context context, Bundle msg,boolean isGCM) throws JSONException {
 
-        PendingIntent contentIntent = getFowwordIntent(context, msg);
-        if (contentIntent == null) {
-            return;
+        PendingIntent contentIntent = getFowwordIntent(context, msg,isGCM);
+
+        String title = null;
+        String message = null;
+        if(isGCM){
+            title = msg.getString("title");
+            message = msg.getString("message");
+        }else{
+            title = msg.getString(JPushInterface.EXTRA_TITLE);
+            message = msg.getString(JPushInterface.EXTRA_MESSAGE);
         }
-
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.tab_message)
-                        .setContentTitle(msg.getString(JPushInterface.EXTRA_TITLE))
-                        .setContentText(msg.getString(JPushInterface.EXTRA_MESSAGE));
+                        .setContentTitle(title)
+                        .setContentText(message);
         mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
-//        mBuilder.setNumber(12);
+        if(msgCount>1) {
+            mBuilder.setNumber(msgCount);
+        }
         mBuilder.setTicker(msg.getString(JPushInterface.EXTRA_TITLE));
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
-        mBuilder.setContentIntent(contentIntent);
+        if (contentIntent != null) {
+         mBuilder.setContentIntent(contentIntent);
+        }
         mBuilder.setAutoCancel(true);
         getNotivficationManager(context).notify(msgType.ordinal(), mBuilder.build());
     }
 
 
     static MessageType msgType ;
-    private static PendingIntent getFowwordIntent(Context context, Bundle msg) throws JSONException {
+    static int msgCount;
+    private static PendingIntent getFowwordIntent(Context context, Bundle msg,boolean isGCM) throws JSONException {
         if (msg == null) {
             return null;
         }
-//        String msgString = msg.getString(JPushInterface.EXTRA_MESSAGE);
-        String msgString = msg.getString(JPushInterface.EXTRA_EXTRA);
-        JSONObject jsonObject = null;
-        jsonObject = new JSONObject(msgString);
-        String type = jsonObject.getString("module");
-        PendingIntent contentIntent = null;
-        msgType = MessageType.getMessageTypeByName(type);
+        JSONObject jsonObjectExtras = null;
+        String msgString = null;
 
+        if(isGCM){
+//            JSONObject json = new JSONObject();
+//            Set<String> keys = msg.keySet();
+//            for (String key : keys) {
+//                try {
+//                    // json.put(key, bundle.get(key)); see edit below
+//                    json.put(key, JSONObject.wrap(msg.get(key)));
+//                } catch(JSONException e) {
+//                    //Handle exception here
+//                }
+//            }
+            msgString = msg.getString("extras");
+        }else {
+            msgString = msg.getString(JPushInterface.EXTRA_EXTRA);
+        }
+        if(msgString!=null) {
+            jsonObjectExtras = new JSONObject(msgString);
+            String type = jsonObjectExtras.getString("module");
+            msgCount = jsonObjectExtras.getInt("count");
+            msgType = MessageType.getMessageTypeByName(type);
+        }
+        if(msgType==null){
+            return null;
+        }
+        PendingIntent contentIntent = null;
+        Intent intent = null;
         switch (msgType){
             case BONDALERT_WALL:
-                contentIntent = PendingIntent.getActivity(context, 0,
-                        new Intent(context, AlertWallActivity.class), 0);
+                intent = new Intent(context, AlertWallActivity.class);
                 break;
             case BONDALERT_EVENT:
-                contentIntent = PendingIntent.getActivity(context, 0,
-                        new Intent(context, AlertEventActivity.class), 0);
+                intent = new Intent(context, AlertEventActivity.class);
                 break;
             case BONDALERT_MEMBER:
-                contentIntent = PendingIntent.getActivity(context, 0,
-                        new Intent(context, MemberActivity.class), 0);
+                intent = new Intent(context, MemberActivity.class);
                 break;
             case BONDALERT_MESSAGE:
-                Intent intent = new Intent(context, MessageChatActivity.class);
-                intent.putExtra("type", msg.getString("group_type"));
-                intent.putExtra("groupId", msg.getString("group_id"));
-                intent.putExtra("titleName", msg.getString("group_name"));
-                contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
+                intent = new Intent(context, MessageChatActivity.class);
+                intent.putExtra("type", jsonObjectExtras.getString("group_type"));
+                intent.putExtra("groupId", jsonObjectExtras.getString("group_id"));
+                intent.putExtra("titleName", jsonObjectExtras.getString("group_name"));
                 break;
             case BONDALERT_MISS:
-                contentIntent = PendingIntent.getActivity(context, 0,
-                        new Intent(context, MissListActivity.class), 0);
+                intent = new Intent(context, MissListActivity.class);
                 break;
             case BONDALERT_BIGDAY:
-                contentIntent = PendingIntent.getActivity(context, 0,
-                        new Intent(context, BigDayActivity.class), 0);
+                intent = new Intent(context, BigDayActivity.class);
                 break;
             case BONDALERT_NEWS:
-                contentIntent = PendingIntent.getActivity(context, 0,
-                        new Intent(context, NewsActivity.class), 0);
+                intent = new Intent(context, NewsActivity.class);
                 break;
             case BONDALERT_RECOMMENDED:
-                contentIntent = PendingIntent.getActivity(context, 0,
-                        new Intent(context, RecommendActivity.class), 0);
+                intent = new Intent(context, RecommendActivity.class);
                 break;
 
         }
@@ -187,9 +211,9 @@ public class NotificationUtil {
 //                    new Intent(context, MemberActivity.class), 0);
 //        } else if (MessageType.BONDALERT_MESSAGE.getTypeName().equals(type)) {
 //            Intent intent = new Intent(context, MessageChatActivity.class);
-//           jsonObjecttent.putExtra("type", msg.getString("group_type"));
-//            injsonObjectt.putExtra("groupId", msg.getString("group_id"));
-//            intejsonObjectputExtra("titleName", msg.getString("group_name"));
+//           jsonObjecttent.putExtra("type", jsonObjectExtras.getString("group_type"));
+//            injsonObjectt.putExtra("groupId", jsonObjectExtras.getString("group_id"));
+//            intejsonObjectputExtra("titleName", jsonObjectExtras.getString("group_name"));
 //            contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
 //        } else if (MessageType.BONDALERT_MISS.getTypeName().equals(type)) {
 //            contentIntent = PendingIntent.getActivity(context, 0,
@@ -204,6 +228,16 @@ public class NotificationUtil {
 //            contentIntent = PendingIntent.getActivity(context, 0,
 //                    new Intent(context, RecommendActivity.class), 0);
 //        }
+        if(intent!=null) {
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         return contentIntent;
+    }
+
+    public static void clearNotification(Context context){
+        getNotivficationManager(context).cancelAll();
+        JPushInterface.clearAllNotifications(context);
     }
 }

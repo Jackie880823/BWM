@@ -12,6 +12,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.ui.more.MoreSettingActivity;
 import com.madx.bwm.widget.MyDialog;
 
 import org.json.JSONException;
@@ -56,7 +57,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     public void initView() {
         getViewById(R.id.btn_bond_alert).setOnClickListener(this);
         getViewById(R.id.btn_me).setOnClickListener(this);
-        getViewById(R.id.btn_family).setOnClickListener(this);
+//        getViewById(R.id.btn_family).setOnClickListener(this);
         getViewById(R.id.btn_share).setOnClickListener(this);
         getViewById(R.id.btn_setting).setOnClickListener(this);
 //        getViewById(R.id.btn_sticker_store).setOnClickListener(this);
@@ -129,9 +130,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
             case R.id.btn_me:
                 goMe();
                 break;
-            case R.id.btn_family:
-                goFamily();
-                break;
+//            case R.id.btn_family:
+//                goFamily();
+//                break;
             case R.id.btn_share:
                 shareApp();
                 break;
@@ -213,12 +214,12 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     }
 
     private void goSetting() {
-        Intent intent = new Intent(getActivity(), SettingActivity.class);
+        Intent intent = new Intent(getActivity(), MoreSettingActivity.class);
         startActivity(intent);
     }
 
     private void goFamily() {
-        Intent intent = new Intent(getActivity(), MyFamilyFragment.class);
+        Intent intent = new Intent(getActivity(), FamilyFragment.class);
         startActivity(intent);
     }
 
