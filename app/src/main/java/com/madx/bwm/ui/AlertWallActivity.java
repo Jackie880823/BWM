@@ -1,5 +1,6 @@
 package com.madx.bwm.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,13 +16,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
-import com.madx.bwm.adapter.AlertEventAdapter;
 import com.madx.bwm.adapter.AlertWallAdapter;
-import com.madx.bwm.adapter.MissAdapter;
-import com.madx.bwm.entity.AlertEventEntity;
 import com.madx.bwm.entity.AlertWallEntity;
-import com.madx.bwm.entity.MissEntity;
-import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.MessageUtil;
 
 import java.util.ArrayList;
@@ -203,5 +199,16 @@ public class AlertWallActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
     }
 }

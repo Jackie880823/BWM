@@ -306,4 +306,15 @@ public class MemberActivity extends BaseActivity {
         });
     }
 
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
+    }
+
 }

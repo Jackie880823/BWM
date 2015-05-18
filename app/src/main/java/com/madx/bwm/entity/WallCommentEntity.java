@@ -6,6 +6,10 @@ package com.madx.bwm.entity;
 public class WallCommentEntity {
 
 
+    private String content_group_id;
+    private String comment_owner_id;
+    private String group_id;
+    private String content_id;
     private String group_name;
     private String love_count;
     private String user_id;
@@ -20,8 +24,42 @@ public class WallCommentEntity {
     private String comment_id;
     private String comment_content;
     private String comment_creation_date;
+    private String sticker_id;
+    private String sticker_group_path;
+    private String sticker_name;
+    private String sticker_type;
 
+    public String getContent_group_id() {
+        return content_group_id;
+    }
 
+    public void setContent_group_id(String content_group_id) {
+        this.content_group_id = content_group_id;
+    }
+
+    public String getComment_owner_id() {
+        return comment_owner_id;
+    }
+
+    public void setComment_owner_id(String comment_owner_id) {
+        this.comment_owner_id = comment_owner_id;
+    }
+
+    public String getGroup_id() {
+        return group_id;
+    }
+
+    public void setGroup_id(String group_id) {
+        this.group_id = group_id;
+    }
+
+    public String getContent_id() {
+        return content_id;
+    }
+
+    public void setContent_id(String content_id) {
+        this.content_id = content_id;
+    }
 
     public String getGroup_name() {
         return group_name;
@@ -135,5 +173,37 @@ public class WallCommentEntity {
 
     public void setComment_creation_date(String comment_creation_date) {
         this.comment_creation_date = comment_creation_date;
+    }
+
+    public String getSticker_id() {
+        return sticker_id;
+    }
+
+    public void setSticker_id(String sticker_id) {
+        this.sticker_id = sticker_id;
+    }
+
+    public String getSticker_group_path() {
+        return sticker_group_path;
+    }
+
+    public void setSticker_group_path(String sticker_group_path) {
+        this.sticker_group_path = sticker_group_path;
+    }
+
+    public String getSticker_name() {
+        return sticker_name;
+    }
+
+    public void setSticker_name(String sticker_name) {
+        this.sticker_name = sticker_name;
+    }
+
+    public String getSticker_type() {
+        return sticker_type;
+    }
+
+    public void setSticker_type(String sticker_type) {
+        this.sticker_type = sticker_type;
     }
 }

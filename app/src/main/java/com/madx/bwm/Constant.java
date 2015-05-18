@@ -43,6 +43,7 @@ public class Constant {
     public static String API_WALL_TEXT_POST = API_SERVER+"/bondwithme/index.php/api/posts";
     public static String API_WALL_PIC_POST = API_SERVER+"/bondwithme/index.php/api/uploadPhoto";
     public static String API_WALL_COMMENT_TEXT_POST = API_SERVER+"/bondwithme/index.php/api/posts";
+    public static String API_WALL_COMMENT_PIC_POST = API_SERVER+"/bondwithme/index.php/api/uploadCommentPhoto";
     public static String API_WALL_COMMENT_LIST = API_SERVER+"/bondwithme/index.php/api/comment";
     public static String API_WALL_COMMENT_LOVE = API_SERVER+"/bondwithme/index.php/api/love_comment";
     public static String API_WALL_COMMENT_DELETE = API_SERVER+"/bondwithme/index.php/api/comment/%s";
@@ -75,6 +76,7 @@ public class Constant {
 
     /*获取图片,三个参数1.module,2.user_id,3.fileId*/
     public static String API_GET_PIC = API_SERVER+"/bondwithme/index.php/api/%s/%s/fid/%s"+"/"+System.currentTimeMillis();
+    public static String API_GET_COMMENT_PIC = API_SERVER+"/bondwithme/index.php/api/%s/%s/fid/%s";
     public static String API_GET_PHOTO = API_SERVER+"/bondwithme/index.php/api/%s/%s/fid/profile";
 
     /**for pic*/
@@ -106,6 +108,9 @@ public class Constant {
     public static String API_BONDALERT_ALL_COUNT = API_SERVER+"/bondwithme/index.php/api/getNTotalBondAlert/%s";
     public static String API_BONDALERT_MODULES_COUNT = API_SERVER+"/bondwithme/index.php/api/getTotalAlertByModule/%s";
     public static String API_BONDALERT_NEWS_ITEM = API_SERVER+"/bondwithme/index.php/api/getOtherBondAlert/%s";//获取alert news详情
+    public static String API_BONDALERT_GROUP = API_SERVER+"/bondwithme/index.php/api/bondAlertList/%s/module/group";
+    public static String API_BONDALERT_GROUP_CONFIRM = API_SERVER+"/bondwithme/index.php/api/confirmJoinGroup/%s";
+    public static String API_BONDALERT_GROUP_REJECT = API_SERVER+"/bondwithme/index.php/api/rejectJoinGroup/%s";
 
 
 
@@ -137,6 +142,8 @@ public class Constant {
     public static String API_MEMBER_PROFILE_DETAIL = API_SERVER+"/bondwithme/index.php/api/memberDetail";//好友详细资料
 
     public static String API_MESSAGE_POST_TEXT = API_SERVER+"/bondwithme/index.php/api/posts";//聊天->文本内容
+
+    public static String API_COMMENT_POST_TEXT = API_SERVER+"/bondwithme/index.php/api/uploadCommentPhoto";//评论发送图片
 
     //public static String API_MESSAGE_POST_PNG = API_SERVER+"/bondwithme/index.php/api/posts";//聊天->照片
 

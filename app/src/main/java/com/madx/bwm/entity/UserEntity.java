@@ -71,6 +71,15 @@ public class UserEntity implements Serializable {
     private String memberAcceptFlag;//member accept user flag
     private String userAcceptFlag;//user accept member flag
 
+    private String join_group;
+
+    public String getJoin_group() {
+        return join_group;
+    }
+
+    public void setJoin_group(String join_group) {
+        this.join_group = join_group;
+    }
 
     public String getAdded_flag() {
         return added_flag;

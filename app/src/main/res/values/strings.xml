@@ -97,7 +97,7 @@
     <!-- about -->
     <string name="text_about_title">About Us</string>
     <string name="text_about_terms">Terms</string>
-    <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
+    <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you  and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
     <string name="text_bond_alert">Bond Alert</string>
@@ -119,6 +119,7 @@
     <string name="text_miss_you">miss you</string>
     <string name="text_member">Member</string>
     <string name="text_recommend">Recommended</string>
+    <string name="text_alert_group">Group</string>
     <string name="text_big_day">Big Day</string>
     <string name="title_bond_alert">Bond Alert</string>
     <string name="hint_mail">Your email</string>
@@ -602,6 +603,17 @@
     <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" ">]]></string>
     <string name="photo_position_no_arrow">%1$d/%2$d</string>
 
+    <!--Alert Group-->
+    <string name="text_pending">requested you to join the group</string>
+    <string name="text_add_group">added you to group</string>
+    <string name="text_reject_has">has</string>
+    <string name="text_reject_dec">declined</string>
+    <string name="text_reject_invite">your invite to</string>
+    <string name="text_reject_group">group</string>
+    <string name="text_dialog_title">Action</string>
+    <string name="text_item_accept">Accept</string>
+    <string name="text_item_decline">Decline</string>
+
 <!-- TODO: Remove or change this placeholder text -->
     <string name="yesterday_ago">Yesterday&#160;</string>
     <string name="just_now">Just now</string>
@@ -618,9 +630,22 @@
     <string name="text_nearest">nearest</string>
     <string name="start_a_now">Start a new</string>
     <string name="post_now">Post now</string>
+
+    <string name="text_auto_accept">Auto-Accept</string>
+    <string name="text_birthday_alert_reminder">Birthday Alert Reminder</string>
+    <string name="text_group_privacy">Privacy</string>
+    <string name="title_activity_auto_accept">AutoAcceptActivity</string>
+    <string name="title_activity_birthday_alert">BirthdayAlertActivity</string>
+    <string name="title_activity_group_privacy">GroupPrivacyActivity</string>
+
+    <string name="text_to_other">Recommend me to \'other\' member</string>
+    <string name="text_to_me">Recommend \'Member\' to me</string>
+    <string name="text_group_chat">Require confirmation to add me to Group Chat</string>
+
     <string name="text_message_chat_post_text">posted sticker</string>
     <string name="text_message_chat_post_photo">posted photo</string>
     <string name="text_message_chat_post_location">posted location</string>
     <string name="title_tab_my_family">My Family</string>
+
 
 </resources>

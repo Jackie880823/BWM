@@ -17,12 +17,9 @@ import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.BigDayAdapter;
-import com.madx.bwm.adapter.NewsAdapter;
 import com.madx.bwm.entity.BigDayEntity;
-import com.madx.bwm.entity.NewsEntity;
 import com.madx.bwm.util.MessageUtil;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -135,11 +132,11 @@ public class BigDayActivity extends BaseActivity{
     public void requestData() {
 
         Map<String, String> params = new HashMap<>();
-        params.put("start", ""+startIndex);
+        params.put("start", "" + startIndex);
         params.put("limit",""+offSet);
 
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_DIG_DAY,MainActivity.getUser().getUser_id()),params,new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_DIG_DAY, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -156,7 +153,7 @@ public class BigDayActivity extends BaseActivity{
                 Gson gson = gsonb.create();
                 data = gson.fromJson(string, new TypeToken<ArrayList<BigDayEntity>>() {
                 }.getType());
-                if(data!=null) {
+                if (data != null) {
                     if (isRefresh) {
                         startIndex = data.size();
                         finishReFresh();
@@ -165,7 +162,9 @@ public class BigDayActivity extends BaseActivity{
                         startIndex += data.size();
                         adapter.add(data);
                     }
-                }else{finishReFresh();}
+                } else {
+                    finishReFresh();
+                }
                 loading = false;
             }
 
@@ -195,7 +194,7 @@ public class BigDayActivity extends BaseActivity{
 
     private void initAdapter() {
         adapter = new BigDayAdapter(this, data );
-        adapter.setItemClickListener(new BigDayAdapter.ItemClickListener(){
+        adapter.setItemClickListener(new BigDayAdapter.ItemClickListener() {
             @Override
             public void topItemClick(String member_id) {
                 Intent intent = new Intent(BigDayActivity.this, FamilyProfileActivity.class);
@@ -209,5 +208,16 @@ public class BigDayActivity extends BaseActivity{
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
     }
 }

@@ -87,42 +87,34 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                <!--<LinearLayout-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:gravity="center_horizontal"-->
+                    <!--android:orientation="vertical">-->
 
-                    <RelativeLayout
-                        android:id="@+id/btn_family"
-                        android:layout_width="@dimen/default_user_head_width_height"
-                        android:layout_height="@dimen/default_user_head_width_height"
-                        android:background="@drawable/circular_bg_blue"
-                        android:clickable="true">
+                    <!--<RelativeLayout-->
+                        <!--android:id="@+id/btn_family"-->
+                        <!--android:layout_width="@dimen/default_user_head_width_height"-->
+                        <!--android:layout_height="@dimen/default_user_head_width_height"-->
+                        <!--android:background="@drawable/circular_bg_blue"-->
+                        <!--android:clickable="true">-->
 
-                        <ImageView
-                            android:layout_width="@dimen/default_small_button_width_height"
-                            android:layout_height="@dimen/default_small_button_width_height"
-                            android:layout_centerInParent="true"
-                            android:src="@drawable/more_family" />
-                    </RelativeLayout>
+                        <!--<ImageView-->
+                            <!--android:layout_width="@dimen/default_small_button_width_height"-->
+                            <!--android:layout_height="@dimen/default_small_button_width_height"-->
+                            <!--android:layout_centerInParent="true"-->
+                            <!--android:src="@drawable/more_family" />-->
+                    <!--</RelativeLayout>-->
 
-                    <TextView
-                        style="@style/text_dark_default"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/default_view_margin"
-                        android:text="@string/text_my_family" />
+                    <!--<TextView-->
+                        <!--style="@style/text_dark_default"-->
+                        <!--android:layout_gravity="center_horizontal"-->
+                        <!--android:layout_marginTop="@dimen/default_view_margin"-->
+                        <!--android:text="@string/text_my_family" />-->
 
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:orientation="horizontal">
-
+                <!--</LinearLayout>-->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -151,6 +143,15 @@
                         android:text="@string/text_tell_friend" />
 
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:orientation="horizontal">
+
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -240,15 +241,6 @@
                         <!--android:text="@string/text_sticker_store" />-->
 
                 <!--</LinearLayout>-->
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:orientation="horizontal">
-
-
                 <LinearLayout
 
                     android:layout_width="0dp"
@@ -279,6 +271,16 @@
                         android:text="@string/text_contact_us" />
 
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:orientation="horizontal">
+
+
 
                 <LinearLayout
 
@@ -339,6 +341,38 @@
                         android:text="@string/text_sign_out" />
 
                 </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:visibility="invisible"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+
+                        android:layout_width="@dimen/default_user_head_width_height"
+                        android:layout_height="@dimen/default_user_head_width_height"
+                        android:background="@drawable/circular_bg_gray"
+                        android:clickable="true">
+
+                        <ImageView
+                            android:layout_width="@dimen/default_small_button_width_height"
+                            android:layout_height="@dimen/default_small_button_width_height"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/more_sign_out" />
+                    </RelativeLayout>
+
+                    <TextView
+                        style="@style/text_dark_default"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/default_view_margin"
+                        android:text="@string/text_sign_out" />
+
+                </LinearLayout>
+
 
             </LinearLayout>
 

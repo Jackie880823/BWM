@@ -24,6 +24,7 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
+import com.madx.bwm.util.SystemUtil;
 import com.madx.bwm.widget.DatePicker;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.MyGridViewForScroolView;
@@ -380,8 +381,13 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     }
 
     private void goLocationSetting() {
-//        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
-        Intent intent = new Intent(getActivity(), Map4BaiduActivity.class);
+        Intent intent;
+        //判断是用百度还是google
+        if (SystemUtil.checkPlayServices(getActivity())) {
+            intent = new Intent(getActivity(), Map4GoogleActivity.class);
+        }else {
+            intent = new Intent(getActivity(), Map4BaiduActivity.class);
+        }
 
 //        intent.putExtra("has_location", position_name.getText().toString());
         intent.putExtra("location_name", position_name.getText().toString());

@@ -140,7 +140,7 @@ public class MissListActivity extends BaseActivity {
 
 
         Map<String, String> params = new HashMap<>();
-        params.put("start", ""+startIndex);
+        params.put("start", "" + startIndex);
         params.put("limit",""+offSet);
 
         new HttpTools(this).get(String.format(Constant.API_BONDALERT_LIST, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
@@ -160,7 +160,7 @@ public class MissListActivity extends BaseActivity {
                 Gson gson = gsonb.create();
                 data = gson.fromJson(string, new TypeToken<ArrayList<MissEntity>>() {
                 }.getType());
-                if(data!=null) {
+                if (data != null) {
                     if (isRefresh) {
                         startIndex = data.size();
                         finishReFresh();
@@ -169,14 +169,16 @@ public class MissListActivity extends BaseActivity {
                         startIndex += data.size();
                         adapter.add(data);
                     }
-                }else{finishReFresh();}
+                } else {
+                    finishReFresh();
+                }
                 loading = false;
             }
 
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(MissListActivity.this,R.string.msg_action_failed);
+                MessageUtil.showMessage(MissListActivity.this, R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }
@@ -274,5 +276,16 @@ public class MissListActivity extends BaseActivity {
 
             }
         });
+    }
+
+    /**
+     * add by wing
+     *
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        finish();
+        startActivity(intent);
     }
 }
