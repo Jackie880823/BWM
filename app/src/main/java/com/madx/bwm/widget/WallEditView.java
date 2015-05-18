@@ -187,10 +187,7 @@ public class WallEditView extends EditText implements TextWatcher {
         }
     }
 
-    private boolean isVisible;
-
     public void addAtDesc(String memberText, String groupText, boolean isVisible) {
-        this.isVisible = isVisible;
         if(!isVisible) {
             Log.w(TAG, "addAtDesc& this view not show");
             if(textChangeListener != null) {
@@ -285,9 +282,12 @@ public class WallEditView extends EditText implements TextWatcher {
 
     public String getRelText() {
         String text = getText().toString();
-        if(!TextUtils.isEmpty(oldMemberText)) {
-            text = text.replace(oldMemberText, "");
-        }
+//        if(!TextUtils.isEmpty(oldMemberText)) {
+//            text = text.replace(oldMemberText, "");
+//        }
+//        if(!TextUtils.isEmpty(oldGroupText)) {
+//            text = text.replace(oldGroupText, "");
+//        }
         return text;
     }
 
