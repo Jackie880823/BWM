@@ -208,6 +208,9 @@
             android:name=".ui.AlertWallActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.AlertGroupActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.NewsInfoActivity"
             android:screenOrientation="portrait" />
         <activity
