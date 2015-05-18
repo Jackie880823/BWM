@@ -108,6 +108,9 @@ public class Constant {
     public static String API_BONDALERT_ALL_COUNT = API_SERVER+"/bondwithme/index.php/api/getNTotalBondAlert/%s";
     public static String API_BONDALERT_MODULES_COUNT = API_SERVER+"/bondwithme/index.php/api/getTotalAlertByModule/%s";
     public static String API_BONDALERT_NEWS_ITEM = API_SERVER+"/bondwithme/index.php/api/getOtherBondAlert/%s";//获取alert news详情
+    public static String API_BONDALERT_GROUP = API_SERVER+"/bondwithme/index.php/api/bondAlertList/%s/module/group";
+    public static String API_BONDALERT_GROUP_CONFIRM = API_SERVER+"/bondwithme/index.php/api/confirmJoinGroup/%s";
+    public static String API_BONDALERT_GROUP_REJECT = API_SERVER+"/bondwithme/index.php/api/rejectJoinGroup/%s";
 
 
 
@@ -139,6 +142,8 @@ public class Constant {
     public static String API_MEMBER_PROFILE_DETAIL = API_SERVER+"/bondwithme/index.php/api/memberDetail";//好友详细资料
 
     public static String API_MESSAGE_POST_TEXT = API_SERVER+"/bondwithme/index.php/api/posts";//聊天->文本内容
+
+    public static String API_COMMENT_POST_TEXT = API_SERVER+"/bondwithme/index.php/api/uploadCommentPhoto";//评论发送图片
 
     //public static String API_MESSAGE_POST_PNG = API_SERVER+"/bondwithme/index.php/api/posts";//聊天->照片
 

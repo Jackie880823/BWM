@@ -17,7 +17,7 @@
             android:id="@+id/civ_comment_owner_head"
             android:layout_width="60dp"
             android:layout_height="60dp"
-             />
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,13 +56,6 @@
                 android:id="@+id/message_pic_gif_iv"
                 android:layout_width="@dimen/_150dp"
                 android:layout_height="@dimen/_150dp"
-                android:visibility="gone"
-                android:scaleType="fitXY"/>
-            <ImageView
-                android:id="@+id/message_pic_png_iv"
-                android:layout_width="@dimen/_150dp"
-                android:layout_height="@dimen/_150dp"
-                android:visibility="gone"
                 android:scaleType="fitXY"/>
             <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
                 android:id="@+id/message_progress_bar"
@@ -80,6 +73,7 @@
                     android:id="@+id/comment_date"
                     style="@style/text_light_default"
                     android:layout_alignParentBottom="true" />
+
 
                 <TextView
                     android:id="@+id/tv_like_desc"
