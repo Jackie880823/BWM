@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -39,6 +40,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
     private static final String TAG = WallAdapter.class.getSimpleName();
@@ -74,8 +77,12 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
         holder.tvContent.setText(atDescription);
         // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
         holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+        String text = holder.tvContent.getText().toString();
+        SpannableStringBuilder ssb = new SpannableStringBuilder(text);
+        String strMember = null;
         if(wall.getTag_member().size() > 0) {
-            String strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
+            strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
+
             // 文字特殊效果设置
             SpannableString ssMember = new SpannableString(strMember);
 
@@ -91,13 +98,16 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                     }
                 }
             }, 0, strMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
             // 设置文字的前景色为蓝色
             ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
             ssMember.setSpan(colorSpan, 0, ssMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            holder.tvContent.append(ssMember);
+
+            setSpecialText(ssb, strMember, ssMember);
         }
         if(wall.getTag_group().size() > 0) {
+            if(!TextUtils.isEmpty(strMember)) {
+                ssb.append(mContext.getString(R.string.text_and));
+            }
             String strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), wall.getTag_group().size());
             // 文字特殊效果设置
             SpannableString ssGroup = new SpannableString(strGroup);
@@ -123,8 +133,9 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                 // 同时@了用户和群组，用户和群组之间用&分开
                 holder.tvContent.append(" & ");
             }
-            holder.tvContent.append(ssGroup);
+            setSpecialText(ssb, strGroup, ssGroup);
         }
+        holder.tvContent.setText(ssb);
 
         holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, wall.getContent_creation_date()));
         //            holder.tvTime.setText(wall.getTime());
@@ -218,6 +229,30 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             holder.llLocation.setVisibility(View.GONE);
         }
 
+    }
+
+    /**
+     * 设置字符特殊效果
+     *
+     * @param ssb
+     * @param strAt
+     * @param ssAt
+     */
+    private void setSpecialText(SpannableStringBuilder ssb, String strAt, SpannableString ssAt) {
+        try {
+            Pattern p = Pattern.compile(strAt);
+            Matcher m = p.matcher(ssb.toString());
+            if(m.find()) {
+                int start = m.start();
+                int end = m.end();
+                ssb.replace(start, end, ssAt);
+            } else {
+                ssb.append(ssAt);
+            }
+        } catch(Exception e) {
+            ssb.append(ssAt);
+            e.printStackTrace();
+        }
     }
 
     private void gotoLocationSetting(WallEntity wall) {

@@ -26,6 +26,7 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.SharedPreferencesUtils;
+import com.madx.bwm.util.SystemUtil;
 import com.madx.bwm.widget.DatePicker;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.TimePicker;
@@ -446,9 +447,13 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void goLocationSetting() {
-        //TODO 判断是用百度还是google
-//        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
-        Intent intent = new Intent(getActivity(), Map4BaiduActivity.class);
+        Intent intent;
+        //判断是用百度还是google
+        if (SystemUtil.checkPlayServices(getActivity())) {
+            intent = new Intent(getActivity(), Map4GoogleActivity.class);
+        }else {
+            intent = new Intent(getActivity(), Map4BaiduActivity.class);
+        }
 
         //        intent.putExtra("has_location", position_name.getText().toString());
         if (!TextUtils.isEmpty(position_name.getText())) {

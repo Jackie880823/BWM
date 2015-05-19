@@ -377,11 +377,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     stickerEntity.setSticker_type(type);
                     stickerEntity.setSticker_group_path(folderName);
                     stickerEntity.setSticker_name(filName);
-
                 }
 
                 @Override
-                public void onReciveBitmapUri(Uri uri) {
+                public void onReceiveBitmapUri(Uri uri) {
                     mUri = uri;
                     hideAllViewState();
                     if(mUri != null) {
@@ -394,7 +393,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onSendCommentClick(EditText et) {
                     sendComment();
                     isStickerItemClick = false;
-
                 }
 
                 @Override
@@ -403,7 +401,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     stickerEntity.setSticker_type("");
                     stickerEntity.setSticker_group_path("");
                     stickerEntity.setSticker_name("");
-
                 }
             });
 

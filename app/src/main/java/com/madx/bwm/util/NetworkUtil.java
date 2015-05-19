@@ -142,4 +142,14 @@ public class NetworkUtil {
 		return baos.toByteArray();
 
 	}
+
+	/**
+	 * 网络类型枚举类
+	 *
+	 */
+	public enum NetType {
+
+		WIFI,CMNET,CMWAP,NONENET;
+
+	}
 }

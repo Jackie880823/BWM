@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -156,7 +155,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
     @Override
     public void requestData() {
-        Log.i("requestData","===========================");
+//        Log.i("requestData","===========================");
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "1");
@@ -256,7 +255,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
     }
 
     private void loadMoreEvent() {
-        Log.i("loadMoreEvent","===========================");
+//        Log.i("loadMoreEvent","===========================");
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "0");

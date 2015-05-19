@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -46,6 +47,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -122,8 +125,12 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             holder.tvContent.setText(atDescription);
             // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
             holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+
+            String text = holder.tvContent.getText().toString();
+            SpannableStringBuilder ssb = new SpannableStringBuilder(text);
+            String strMember = null;
             if(wall.getTag_member().size() > 0) {
-                String strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
+                strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
                 // 文字特殊效果设置
                 SpannableString ssMember = new SpannableString(strMember);
 
@@ -143,10 +150,12 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 //设置文字的前景色为蓝色
                 ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
                 ssMember.setSpan(colorSpan, 0, strMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                holder.tvContent.append(ssMember);
+                setSpecialText(ssb, strMember, ssMember);
             }
             if(wall.getTag_group().size() > 0) {
+                if(!TextUtils.isEmpty(strMember)) {
+                    ssb.append(mContext.getString(R.string.text_and));
+                }
                 String strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), wall.getTag_group().size());
                 // 文字特殊效果设置
                 SpannableString ssGroup = new SpannableString(strGroup);
@@ -171,8 +180,9 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     // 同时@了用户和群组，用户和群组之间用&分开
                     holder.tvContent.append(" & ");
                 }
-                holder.tvContent.append(ssGroup);
+                setSpecialText(ssb, strGroup, ssGroup);
             }
+            holder.tvContent.setText(ssb);
 
             holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, wall.getContent_creation_date()));
             //            holder.tvTime.setText(wall.getTime());
@@ -257,13 +267,35 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    /**
+     * 设置字符特殊效果
+     *
+     * @param ssb
+     * @param strAt
+     * @param ssAt
+     */
+    private void setSpecialText(SpannableStringBuilder ssb, String strAt, SpannableString ssAt) {
+        try {
+            Pattern p = Pattern.compile(strAt);
+            Matcher m = p.matcher(ssb.toString());
+            if(m.find()) {
+                int start = m.start();
+                int end = m.end();
+                ssb.replace(start, end, ssAt);
+            } else {
+                ssb.append(ssAt);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setCommentPic(GifImageView iv, NetworkImageView niv, WallCommentEntity comment) {
         Log.i(TAG, "setCommentPic& file_id: " + comment.getFile_id() + "; StickerName is " + comment.getSticker_name());
         if(!TextUtils.isEmpty(comment.getFile_id())) {
             niv.setVisibility(View.VISIBLE);
             iv.setVisibility(View.GONE);
-            VolleyUtil.initNetworkImageView(mContext, niv, String.format(Constant.API_GET_COMMENT_PIC, Constant.Module_preview_m, comment.getUser_id(), comment.getFile_id()),
-                    R.drawable.network_image_default, R.drawable.network_image_default);
+            VolleyUtil.initNetworkImageView(mContext, niv, String.format(Constant.API_GET_COMMENT_PIC, Constant.Module_preview_m, comment.getUser_id(), comment.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         } else if(!TextUtils.isEmpty(comment.getSticker_group_path())) {
             iv.setVisibility(View.VISIBLE);
             niv.setVisibility(View.GONE);
@@ -342,7 +374,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     if(null != resultByte) {
                         if(Constant.Sticker_Png.equals(type)) {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(resultByte, 0, resultByte.length);
-                            if (bitmap != null && gifImageView != null) {
+                            if(bitmap != null && gifImageView != null) {
                                 gifImageView.setImageBitmap(bitmap);
                             } else {
                                 gifImageView.setImageResource(defaultResource);
