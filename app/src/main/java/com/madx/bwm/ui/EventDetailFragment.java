@@ -449,7 +449,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 }
 
                 @Override
-                public void onReciveBitmapUri(Uri uri) {
+                public void onReceiveBitmapUri(Uri uri) {
 
                 }
 
