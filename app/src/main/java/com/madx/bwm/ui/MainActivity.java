@@ -26,7 +26,6 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.ui.wall.WallNewActivity;
 import com.madx.bwm.util.FileUtil;
-import com.madx.bwm.util.SharedPreferencesUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -485,7 +484,7 @@ public class MainActivity extends BaseActivity {
             case family:
                 setDrawable();
                 //ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
-                changeTitleColor(R.color.tab_color_press4);
+                changeTitleColor(R.color.tab_color_press1);
                 changeTitle(R.string.title_tab_my_family);
 //                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
 //                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
