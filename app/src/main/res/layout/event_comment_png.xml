@@ -51,13 +51,16 @@
 
             <TextView
                 android:id="@+id/tv_comment_content"
-                style="@style/text_dark_default" />
+                style="@style/text_dark_default"
+                android:visibility="gone"/>
 
             <ImageView
-                android:id="@+id/message_pic_png_iv"
+                android:id="@+id/message_png_iv"
                 android:layout_width="@dimen/_150dp"
                 android:layout_height="@dimen/_150dp"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitXY"
+                android:visibility="gone"/>
+
             <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
                 android:id="@+id/message_progress_bar"
                 android:layout_width="@dimen/_32dp"

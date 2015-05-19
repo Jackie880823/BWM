@@ -21,7 +21,7 @@ import org.json.JSONObject;
  * Activities that contain this fragment must implement the
  * {@link com.madx.bwm.ui.BondAlertFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link com.madx.bwm.ui.BondAlertFragment#newInstance} factory method to
+ * Use the {@link BondAlertFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class BondAlertFragment extends BaseFragment<BondAlertActivity> implements View.OnClickListener {
@@ -35,6 +35,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     private TextView news_alert_num;
     private TextView member_alert_num;
     private TextView recommend_alert_num;
+    private TextView group_alert_num;
 
     public static BondAlertFragment newInstance(String... params) {
         return createInstance(new BondAlertFragment(), params);
@@ -69,6 +70,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         getViewById(R.id.btn_alert_member).setOnClickListener(this);
         getViewById(R.id.btn_alert_news).setOnClickListener(this);
         getViewById(R.id.btn_alert_recommend).setOnClickListener(this);
+        getViewById(R.id.btn_alert_group).setOnClickListener(this);
 
         wall_alert_num = getViewById(R.id.wall_alert_num);
         event_alert_num = getViewById(R.id.event_alert_num);
@@ -77,6 +79,8 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         news_alert_num = getViewById(R.id.news_alert_num);
         member_alert_num = getViewById(R.id.member_alert_num);
         recommend_alert_num = getViewById(R.id.recommend_alert_num);
+        group_alert_num = getViewById(R.id.group_alert_num);
+
     }
 
     private void bondDatas(JSONObject jsonObject) throws JSONException {
@@ -87,6 +91,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         checkDataAndBond2View(news_alert_num,jsonObject.getString("news"));
         checkDataAndBond2View(member_alert_num,jsonObject.getString("member"));
         checkDataAndBond2View(recommend_alert_num,jsonObject.getString("recommended"));
+
     }
 
     private void checkDataAndBond2View(TextView view, String countString){
@@ -187,6 +192,10 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
                 v.findViewById(R.id.recommend_alert_num).setVisibility(View.GONE);
                 goRecommendAlert();
                 break;
+            case R.id.btn_alert_group:
+                v.findViewById(R.id.group_alert_num).setVisibility(View.GONE);
+                goGroupAlert();
+                break;
         }
     }
 
@@ -223,6 +232,11 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
 
     private void goNews() {
         Intent intent = new Intent(getActivity(), NewsActivity.class);
+        startActivity(intent);
+    }
+
+    private void goGroupAlert(){
+        Intent intent = new Intent(getActivity(), AlertGroupActivity.class);
         startActivity(intent);
     }
 

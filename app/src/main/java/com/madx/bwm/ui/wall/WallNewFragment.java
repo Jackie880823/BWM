@@ -37,12 +37,14 @@ import com.madx.bwm.adapter.FeelingAdapter;
 import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.ui.InviteMemberActivity;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.Map4BaiduActivity;
-import com.madx.bwm.ui.SelectPeopleActivity;
+import com.madx.bwm.ui.Map4GoogleActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MessageUtil;
+import com.madx.bwm.util.SystemUtil;
 import com.madx.bwm.util.animation.ViewHelper;
 import com.madx.bwm.widget.WallEditView;
 
@@ -539,8 +541,13 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goLocationSetting() {
-        Intent intent = new Intent(getActivity(), Map4BaiduActivity.class);
-//        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
+        Intent intent;
+        //判断是用百度还是google
+        if (SystemUtil.checkPlayServices(getActivity())) {
+            intent = new Intent(getActivity(), Map4GoogleActivity.class);
+        }else {
+            intent = new Intent(getActivity(), Map4BaiduActivity.class);
+        }
         //        intent.putExtra("has_location", position_name.getText().toString());
         if(!TextUtils.isEmpty(location_desc.getText())) {
             intent.putExtra("location_name", location_desc.getText().toString());
@@ -551,7 +558,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goChooseMembers() {
-        Intent intent = new Intent(getActivity(), SelectPeopleActivity.class);
+        Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
         intent.putExtra("members_data", gson.toJson(at_members_data));
         intent.putExtra("groups_data", gson.toJson(at_groups_data));
         intent.putExtra("type", 0);
