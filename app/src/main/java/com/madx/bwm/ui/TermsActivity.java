@@ -47,7 +47,7 @@ public class TermsActivity extends BaseActivity {
     public void initView() {
         webView = getViewById(R.id.webView);
         webView.loadUrl("http://bondwithme.com/bonding-terms.htm");
-
+        webView.getSettings().setJavaScriptEnabled(true);//修复url不能跳转bug,add by wing
 
 //        webView.getSettings().setJavaScriptEnabled(true);
 //        webView.setWebChromeClient(new WebChromeClient());

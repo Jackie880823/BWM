@@ -58,6 +58,7 @@ public class Constant {
     public static String API_EVENT_CREATE = API_SERVER+"/bondwithme/index.php/api/event";
     public static String API_EVENT_UPDATE = API_SERVER+"/bondwithme/index.php/api/event/";
     public static String API_EVENT_POST_COMMENT = API_SERVER+"/bondwithme/index.php/api/posts";
+    public static String API_EVENT_COMMENT_PIC_POST = API_SERVER+"/bondwithme/index.php/api/uploadCommentPhoto";
     public static String API_GET_EVENT_DETAIL = API_SERVER+"/bondwithme/index.php/api/event";
 
 
@@ -108,6 +109,9 @@ public class Constant {
     public static String API_BONDALERT_ALL_COUNT = API_SERVER+"/bondwithme/index.php/api/getNTotalBondAlert/%s";
     public static String API_BONDALERT_MODULES_COUNT = API_SERVER+"/bondwithme/index.php/api/getTotalAlertByModule/%s";
     public static String API_BONDALERT_NEWS_ITEM = API_SERVER+"/bondwithme/index.php/api/getOtherBondAlert/%s";//获取alert news详情
+    public static String API_BONDALERT_GROUP = API_SERVER+"/bondwithme/index.php/api/bondAlertList/%s/module/group";
+    public static String API_BONDALERT_GROUP_CONFIRM = API_SERVER+"/bondwithme/index.php/api/confirmJoinGroup/%s";
+    public static String API_BONDALERT_GROUP_REJECT = API_SERVER+"/bondwithme/index.php/api/rejectJoinGroup/%s";
 
 
 

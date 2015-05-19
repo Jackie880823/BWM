@@ -1,5 +1,5 @@
 #
-# generated on 2015/05/05 04:58:11
+# generated on 2015/05/18 04:48:25
 #
 # --table-start--
 dataClass=com.madx.bwm.entity.OrmEntityDemo

@@ -13,29 +13,61 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.madx.bwm.R;
+import com.madx.bwm.adapter.PlaceAutocompleteAdapter;
+import com.madx.bwm.db.PlacesDisplayTask;
 import com.madx.bwm.util.LocationUtil;
 
-public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLocationButtonClickListener{
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Locale;
+
+public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLocationButtonClickListener, GoogleApiClient.OnConnectionFailedListener,GoogleMap.OnMarkerClickListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager lm = null;
-    private Location myLocation;
     private MyLocationListener myLocationListener = null;
     private static final int INTERVAL_TIME = 2000;
     private Marker marker;
     private boolean toLocation = true;
+    //    private SearchView search_view;
+    private AutoCompleteTextView mAutocompleteView;
+    private LatLng myLocation;
+
+
+    protected GoogleApiClient mGoogleApiClient;
+
+    private PlaceAutocompleteAdapter mAdapter;
+    private Button btn_search;
+//    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
+//            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
 
     @Override
     protected void initBottomBar() {
@@ -63,8 +95,8 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        if(event.getKeyCode()==KeyEvent.KEYCODE_BACK) {
-            if(event.getAction()==KeyEvent.ACTION_DOWN) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 setResult();
             }
         }
@@ -99,14 +131,12 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 //        return  ChooseMapFragment.newInstance();
     }
 
+    Geocoder geocoder;
+    boolean gpsIsEnabled;
 
     @Override
     public void initView() {
-//        mapView = (MapView) findViewById(R.id.map_view);
-//        mapView.setBuiltInZoomControls(true);
-//        mapView.setClickable(true);
-//        initPopView();
-
+        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         myLocationListener = new MyLocationListener();
         Intent intent = getIntent();
@@ -117,7 +147,164 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
             setUpMapIfNeededNoLocation();
         }
 
-        Geocoder geocoder = new Geocoder(this   );
+        geocoder = new Geocoder(this, Locale.getDefault());
+        mAutocompleteView = getViewById(R.id.autocomplete_places);
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, 0 /* clientId */, this)
+                .addApi(Places.GEO_DATA_API)
+                .build();
+        // Register a listener that receives callbacks when a suggestion has been selected
+        mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
+        mAdapter = new PlaceAutocompleteAdapter(Map4GoogleActivity.this, android.R.layout.simple_list_item_1,
+                mGoogleApiClient, null, null);
+        mAutocompleteView.setAdapter(mAdapter);
+
+
+        btn_search = getViewById(R.id.btn_search);
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                try {
+//                    searchByAddress(mAutocompleteView.getText().toString());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+                ArrayList<PlaceAutocompleteAdapter.PlaceAutocomplete> results = mAdapter.getmResultList();
+                if(results!=null) {
+                    firstResult = true;
+                    for (PlaceAutocompleteAdapter.PlaceAutocomplete place : results) {
+                        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                                .getPlaceById(mGoogleApiClient, place.placeId.toString());
+                        placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+                    }
+                }
+//                getAutocomplete(mAutocompleteView.getText().toString());
+            }
+        });
+//        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String queryText) {
+//
+//                // 得到输入管理对象
+//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                if (imm != null) {
+//                    // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
+//                    imm.hideSoftInputFromWindow(search_view.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
+//                }
+//                search_view.clearFocus(); // 不获取焦点
+//                mAutocompleteView.setVisibility(View.VISIBLE);
+//
+//                if (search_view != null) {
+//                    if (!TextUtils.isEmpty(queryText)) {
+//                        try {
+//                            searchByAddress(search_view.getQuery().toString());
+//
+//
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//                return true;
+//
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String queryText) {
+//
+//                if (!TextUtils.isEmpty(queryText)) {
+////                    mSuggestionSearch
+////                            .requestSuggestion((new SuggestionSearchOption())
+////                                    .keyword(queryText).city(city));
+//                }
+//                return true;
+//            }
+//        });
+    }
+
+    private static final int MAX_SEARCH_RESULT = 10;
+    private int PROXIMITY_RADIUS = 5000;
+
+    private void searchByAddress(String searchText) throws IOException {
+
+
+        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlacesUrl.append("location=" + myLocation.latitude + "," + myLocation.longitude);
+        googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
+        googlePlacesUrl.append("&input=" + searchText);
+        googlePlacesUrl.append("&sensor=true");
+//        googlePlacesUrl.append("&key=" + "AIzaSyDT_b4XSfwPPIuTTugObeZFi2Wo9M1UBVM");
+        googlePlacesUrl.append("&key=" + getString(R.string.google_maps_place_key));
+
+//        GooglePlacesReadTask googlePlacesReadTask = new GooglePlacesReadTask();
+//        Object[] toPass = new Object[2];
+//        toPass[0] = mMap;
+//        toPass[1] = googlePlacesUrl.toString();
+//        googlePlacesReadTask.execute(toPass);
+
+        new HttpTools(this).get(googlePlacesUrl.toString(), null, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                PlacesDisplayTask placesDisplayTask = new PlacesDisplayTask();
+                Object[] toPass = new Object[2];
+                toPass[0] = mMap;
+                toPass[1] = response;
+                placesDisplayTask.execute(toPass);
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
+
+//        List<Address> addresses = geocoder.getFromLocationName(searchText, MAX_SEARCH_RESULT);
+//        if (addresses.size() > 0) {
+//
+//            LatLng firstLatLng = null;
+//            for (Address address : addresses) {
+//                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+//                if (firstLatLng == null) {
+//                    firstLatLng = latLng;
+//                }
+//                int maxLine = address.getMaxAddressLineIndex();
+//                String addressString;
+//                if (maxLine >= 2) {
+//                    addressString = address.getAddressLine(1) + address.getAddressLine(2);
+//                } else {
+//                    addressString = address.getAddressLine(1);
+//                }
+//                addMarker(latLng, address.getAdminArea(), addressString);
+//                Log.i("", "address====" + address.toString());
+//            }
+//
+//
+//            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(firstLatLng
+//                    , 14);
+//
+//            mMap.animateCamera(cameraUpdate);
+//        }
     }
 
     @Override
@@ -144,19 +331,18 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
      */
     private void setUpMap(double latitude, double longitude) {
         LatLng latLng = new LatLng(latitude, longitude);
-        addMarker(latLng);
+//        addMarker(latLng);
+        center2Location(latLng);
         new Thread(new GetAddressRunnable(latLng.latitude, latLng.longitude)).start();
 
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng
-                , 16);
+//        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng
+//                , 14);
 //                , getResources().getInteger(R.integer.map_zoom_initial));
-        mMap.animateCamera(cameraUpdate);
+//        mMap.animateCamera(cameraUpdate);
     }
 
     private String getBestProvider(Context context) {
         Criteria criteria = getCriteria();
-
-        lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         // 这里可能返回 null, 地理位置信息服务未开启
         return lm.getBestProvider(criteria, true);
     }
@@ -204,38 +390,47 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+            mMap.setOnMarkerClickListener(this);
             if (mMap != null) {
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 mMap.setMyLocationEnabled(true);
 
                 if (!hasLocation) {
                     if (!TextUtils.isEmpty(getBestProvider(this))) {
-                        myLocation = getLastKnowLocation(this);
-                        if (myLocation == null) {
+                        Location location = getLastKnowLocation(this);
+                        if (location == null) {
                             lm.requestLocationUpdates(INTERVAL_TIME, 0, getCriteria(), myLocationListener, null);
                         } else {
-                            setUpMap(myLocation.getLatitude(), myLocation.getLongitude());
+//                            setUpMap(myLocation.getLatitude(), myLocation.getLongitude());
+                            setMyLocation(location.getLatitude(), location.getLongitude());
+                            center2Location(myLocation);
                         }
                     }
                 } else {
-                    setUpMap(latitude, longitude);
+                    setMyLocation(latitude, longitude);
+                    center2Location(myLocation);
+                    addTarget(myLocation);
+//                    setUpMap(latitude, longitude);
                 }
-
 
                 mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                     @Override
                     public void onMapLongClick(LatLng latLng) {
                         toLocation = false;
-                        latLng.describeContents();
-                        new Location(latLng.toString());
-                        addMarker(latLng);
-                        new Thread(new GetAddressRunnable(latLng.latitude, latLng.longitude)).start();
+//                        addTarget(latLng);
+                        addMarker(latLng, "", LocationUtil.getLocationAddress(Map4GoogleActivity.this, latLng.latitude, latLng.longitude));
                     }
                 });
             }
 
 
         }
+    }
+
+    private void center2Location(LatLng location) {
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(location
+                , 14);
+        mMap.animateCamera(cameraUpdate);
     }
 
     private String POSITION_GETTING = "地址正在加载...";
@@ -260,8 +455,11 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                     break;
                 case MSG_VIEW_ADDRESSNAME:
                     //获取到地址后显示在泡泡上
-                    marker.setSnippet((String) msg.obj);
-//                    marker.setTitle((String) msg.obj);
+                    if (marker != null) {
+                        marker.setSnippet((String) msg.obj);
+                        marker.setTitle((String) msg.obj);
+                        marker.showInfoWindow();
+                    }
                     break;
             }
         }
@@ -272,6 +470,34 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
         return false;
     }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e("", "onConnectionFailed: ConnectionResult.getErrorCode() = "
+                + connectionResult.getErrorCode());
+
+        // TODO(Developer): Check error code and notify the user of error state and resolution.
+        Toast.makeText(this,
+                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    private Marker tempMarker;
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        try {
+            if (this.tempMarker != null&&marker!=tempMarker) {
+                tempMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
+            }
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target));
+            this.marker = marker;
+            tempMarker = marker;
+        }catch (Exception e){
+
+        }
+        return false;
+    }
+
 
     /**
      * 用线程异步获取
@@ -288,11 +514,20 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         @Override
         public void run() {
             String addressName = "";
-            while (true) {
-                addressName = LocationUtil.getLocationAddress(getApplicationContext(),latitude, longitude);
+            long beginTime = System.currentTimeMillis();
+            long lastTime = System.currentTimeMillis();
+            //wait 10 second
+            while (true && lastTime - beginTime < 10 * 1000) {
+                addressName = LocationUtil.getLocationAddress(getApplicationContext(), latitude, longitude);
                 if (!"".equals(addressName)) {
                     break;
                 }
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                lastTime = System.currentTimeMillis();
             }
 
             Message msg = new Message();
@@ -310,21 +545,51 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         setUpMapIfNeeded(true, latitude, longitude);
     }
 
-    private void addMarker(LatLng latLng) {
-        mMap.clear();
-        marker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target)));
+    /**
+     * 添加目标
+     *
+     * @param latLng
+     */
+    private void addTarget(LatLng latLng) {
+//        mMap.clear();
+        if (marker != null) {
+            marker.remove();
+        }
+        if (this.tempMarker != null) {
+            tempMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
+        }
+        marker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+//        marker = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target)));
 //        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target));
-        marker.setTitle(getString(R.string.text_destination));
+        marker.setTitle("");
+//        marker.setTitle(getString(R.string.text_destination));
         marker.setSnippet("");
         marker.setDraggable(true);
         new Thread(new GetAddressRunnable(latLng.latitude, latLng.longitude)).start();
     }
 
+    private Marker addMarker(LatLng latLng, String title, String snippet) {
+        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
+        marker.setTitle(title);
+        marker.setSnippet(snippet);
+        marker.showInfoWindow();
+        return marker;
+    }
+
+    private void setMyLocation(double latitude, double longitude) {
+        myLocation = new LatLng(latitude, longitude);
+        if (mAdapter != null) {
+            mAdapter.setBounds(new LatLngBounds(myLocation, myLocation));
+        }
+    }
+
     public class MyLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
-            if(toLocation) {
+            if (toLocation) {
                 toLocation = false;
+                setMyLocation(location.getLatitude(), location.getLongitude());
                 setUpMap(location.getLatitude(), location.getLongitude());
             }
         }
@@ -346,18 +611,131 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
     }
 
-    private void initPopView(){
-//        View popView;
-//        if(null == popView){m
-//            popView = getLayoutInflater().inflate(R.layout.overlay_popup, null);
-//            map.addView(popView, new MapView.LayoutParams(
-//                    MapView.LayoutParams.WRAP_CONTENT,
-//                    MapView.LayoutParams.WRAP_CONTENT, null,
-//                    MapView.LayoutParams.BOTTOM_CENTER));
-//            popView.setVisibility(View.GONE);
+    /**
+     *  An AsyncTask class for accessing the GeoCoding Web Service
+     */
+//    private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
+//
+//        @Override
+//        protected List<Address> doInBackground(String... locationName) {
+//            // Creating an instance of Geocoder class
+//            Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
+//
+//            List<Address> addresses = null;
+//
+//            try {
+//                // Getting a maximum of 3 Address that matches the input text
+//                addresses = geocoder.getFromLocationName(locationName[0], MAX_SEARCH_RESULT);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            return addresses;
 //        }
+//
+//        @Override
+//        protected void onPostExecute(List<Address> addresses) {
+//
+//            if (addresses == null || addresses.size() == 0) {
+//                Toast.makeText(getBaseContext(), "No Location found", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            mMap.clear();
+//            addTarget(myLocation);
+//
+////            LatLng firstLatLng = null;
+//            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//            for (Address address : addresses) {
+//                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+////                if (firstLatLng == null) {
+////                    firstLatLng = latLng;
+////                    center2Location(firstLatLng);
+////                }
+//                int maxLine = address.getMaxAddressLineIndex();
+//                String addressString;
+//                if (maxLine >= 2) {
+//                    addressString = address.getAddressLine(1) + address.getAddressLine(2);
+//                } else {
+//                    addressString = address.getAddressLine(1);
+//                }
+//                Marker marker = addMarker(latLng, addressString, addressString);
+//                builder.include(marker.getPosition());
+//            }
+//            LatLngBounds bounds = builder.build();
+//            int padding = 10; // offset from edges of the map in pixels
+//            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+//            mMap.animateCamera(cu);
+//
+//        }
+//    }
 
-    }
+    /**
+     * Listener that handles selections from suggestions from the AutoCompleteTextView that
+     * displays Place suggestions.
+     * Gets the place id of the selected item and issues a request to the Places Geo Data API
+     * to retrieve more details about the place.
+     *
+     * @see com.google.android.gms.location.places.GeoDataApi#getPlaceById(com.google.android.gms.common.api.GoogleApiClient,
+     * String...)
+     */
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            /*
+             Retrieve the place ID of the selected item from the Adapter.
+             The adapter stores each Place suggestion in a PlaceAutocomplete object from which we
+             read the place ID.
+              */
+            final PlaceAutocompleteAdapter.PlaceAutocomplete item = mAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
 
+            /*
+             Issue a request to the Places Geo Data API to retrieve a Place object with additional
+              details about the place.
+              */
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+
+        }
+    };
+
+
+    private boolean firstResult;
+    /**
+     * Callback for results from a Places Geo Data API query that shows the first place result in
+     * the details view on screen.
+     */
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                // Request did not complete successfully
+                Log.e("", "Place query did not complete. Error: " + places.getStatus().toString());
+                places.release();
+                return;
+            }
+            // Get the Place object from the buffer.
+            final Place place = places.get(0);
+
+            // Format details of the place for display and show it in a TextView.
+
+            addMarker(place.getLatLng(), place.getName().toString(), place.getAddress().toString());
+            if(firstResult) {
+                firstResult = false;
+                center2Location(place.getLatLng());
+            }
+
+            places.release();
+
+            // 得到输入管理对象
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
+                imm.hideSoftInputFromWindow(mAutocompleteView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
+            }
+        }
+    };
 
 }

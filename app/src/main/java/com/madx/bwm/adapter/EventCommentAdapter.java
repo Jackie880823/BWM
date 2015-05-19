@@ -47,8 +47,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
     private static final int TEXT = 1;
     private static final int GIF = 2;
     private static final int PIC = 3;
-    private static final int LOC = 4;
-    private static final int PNG = 5;
+    private static final int PNG = 4;
 
     public EventCommentAdapter(Context context, List<EventCommentEntity> data,RecyclerView recyclerView) {
         mContext = context;
@@ -98,26 +97,35 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 //        messageChatActivity.empty_message.setVisibility(View.GONE);
         //显示聊天布局下拉刷新控件
 //        messageChatActivity.swipeRefreshLayout.setVisibility(View.VISIBLE);
+        Log.i("添加item======","");
         int listSize = data.size();
-        data.add(0,msgEntity);
+        data.add(0, msgEntity);
+
 //        notifyDataSetChanged();
         recyclerView.scrollToPosition(getItemCount() - 1);
-        //notifyItemInserted(myList.size());
     }
 
     @Override
     public int getItemViewType(int position) {
         EventCommentEntity myEevent = data.get(position);
+        Log.i("getItemViewType: ", "position: " + position);
         int type = 0;
-        if(myEevent.getComment_content().toString().trim()!="" &&  myEevent.getSticker_group_path().trim() == ""){
+        if(!TextUtils.isEmpty(myEevent.getComment_content().trim()) && TextUtils.isEmpty(myEevent.getSticker_group_path().trim())){
+            Log.i("getItemViewType 文字====",myEevent.getComment_content().toString());
             type = TEXT;
         }else if(Constant.Sticker_Gif.equals(myEevent.getSticker_type())){
-            type =  GIF;
+            type = GIF;
         }
         else if(Constant.Sticker_Png.equals(myEevent.getSticker_type())) {
+            Log.i("getItemViewType 本地图片===",myEevent.getSticker_type());
             type = PNG;
+        }else if(myEevent.getFile_id()!= null ){
+            Log.i("getItemViewType 网络图片===",myEevent.getFile_id());
+            type = PIC;
         }
-//        Log.i("type==========",type+"");
+//        else{
+//            Log.i("getItemViewType file_id",myEevent.getFile_id()+"");
+//        }
         return type;
 
     }
@@ -146,25 +154,27 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
         View view = null ;
         switch (viewType){
             case TEXT:
-                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_item, parent, false);
+                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_item, parent, false);
 //                Log.i("TEXT==========","");
                 break;
             case PIC:
-                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
+                Log.i("网络图片===","");
+                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
+//                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_png, parent, false);
 //                Log.i("PIC==========","");
                 break;
-            case LOC:
-                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
-//                Log.i("LOG==========","");
-                break;
             case GIF:
-                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_gif, parent, false);
+                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_gif, parent, false);
 //                Log.i("GIF==========","");
                 break;
             case PNG:
-                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_png, parent, false);
+                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_png, parent, false);
 //                Log.i("PNG==========","");
                 break;
+            default:
+                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
+                break;
+
         }
         // ViewHolder参数一定要是Item的Root节点.
         return new ViewHolder(view);
@@ -181,20 +191,20 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
         holder.tv_agree_count.setText((TextUtils.isEmpty(ece.getLove_count()) ? "0" : ece.getLove_count()));
         holder.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, ece.getComment_creation_date()));
 
-        if (MainActivity.getUser().getUser_id().equals(ece.getUser_id())) {//如果是自己发送到评论，则显示删除按钮，否则隐藏
-            holder.btn_comment_del.setVisibility(View.VISIBLE);
+
 //            Log.i("ece.getSticker_group_path()",ece.getSticker_group_path()+"");
             if(!TextUtils.isEmpty(ece.getComment_content().trim())){//如果文字不为空
                 Log.i("文字=====", position + "");
-//                Log.i("文字=====", position + "");
+                holder.tv_comment_content.setVisibility(View.VISIBLE);
                 holder.tv_comment_content.setText(ece.getComment_content());
 
             }
             if(!TextUtils.isEmpty(ece.getSticker_group_path().trim())){
                 switch (ece.getSticker_type().trim()){
                     case ".gif" :
-                        Log.i("gif=====",position+"");
+                        Log.i("gifImageView=====",ece.getSticker_group_path());
                         holder.progressBar.setVisibility(View.GONE);
+                        holder.gifImageView.setVisibility(View.VISIBLE);
 //                        holder.tv_comment_content.setVisibility(View.GONE);
                         String stickerGroupPathGig = ece.getSticker_group_path();//获取图片地址
                         if(null != stickerGroupPathGig && stickerGroupPathGig.indexOf("/") != -1){
@@ -228,10 +238,12 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 
 
                     case ".png" :
-                        Log.i("png=====", position+"");
+//                        Log.i("png=====", position+"");
+                        Log.i("pngImageView=====",ece.getSticker_group_path());
                         holder.progressBar.setVisibility(View.GONE);
+                        holder.pngImageView.setVisibility(View.VISIBLE);
 //                        holder.tv_comment_content.setVisibility(View.GONE);
-                        holder.pngImageView.setImageResource(R.drawable.network_image_default);
+                        holder.pngImageView.setImageResource(R.drawable.network_image_default);//设置默认到显示的图片
                         if(ece.getUri() != null){
                             BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                             bitmapOptions.inSampleSize = 4;
@@ -274,6 +286,17 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 //                    }
 //                }
             }
+        if (ece.getFile_id() !=null ){//如果有图片id
+//                holder.progressBar.setVisibility(View.GONE);
+            Log.i("getFile_id===",ece.getFile_id());
+            holder.progressBar.setVisibility(View.GONE);
+            holder.networkImageView.setVisibility(View.VISIBLE);
+            Log.i("显示网络大图", ece.getFile_id());
+            VolleyUtil.initNetworkImageView(mContext, holder.networkImageView, String.format(Constant.API_GET_PIC, "post_preview_m", ece.getUser_id(), ece.getFile_id()),
+                        R.drawable.network_image_default, R.drawable.network_image_default);
+            }
+        if (MainActivity.getUser().getUser_id().equals(ece.getUser_id())) {//如果是自己发送到评论，则显示删除按钮，否则隐藏
+            holder.btn_comment_del.setVisibility(View.VISIBLE);
 
         } else {
             holder.btn_comment_del.setVisibility(View.GONE);
@@ -552,19 +575,20 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
         TextView tv_agree_count;
         ImageButton iv_agree;
         ImageButton btn_comment_del;
-        ImageView message_pic_png_iv;
         TextView comment_date;
         NetworkImageView networkImageView;
         GifImageView gifImageView;
-        ProgressBarCircularIndeterminate progressBar;
         ImageView pngImageView;
+        ProgressBarCircularIndeterminate progressBar;
+
 
         public ViewHolder(View itemView) {
             // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
             super(itemView);
-            message_pic_png_iv = (ImageView) itemView.findViewById(R.id.message_pic_png_iv);
             gifImageView = (GifImageView) itemView.findViewById(R.id.message_pic_gif_iv);
             networkImageView = (NetworkImageView) itemView.findViewById(R.id.message_pic_iv);
+            pngImageView = (ImageView) itemView.findViewById(R.id.message_png_iv);
+
             civ_comment_owner_head = (CircularNetworkImage) itemView.findViewById(R.id.civ_comment_owner_head);
             tv_comment_content = (TextView) itemView.findViewById(R.id.tv_comment_content);
             tv_comment_owner_name = (TextView) itemView.findViewById(R.id.tv_comment_owner_name);
@@ -572,7 +596,6 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
             tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);
             iv_agree = (ImageButton) itemView.findViewById(R.id.iv_agree);
             btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
-            pngImageView = (ImageView) itemView.findViewById(R.id.message_pic_png_iv);
             progressBar = (ProgressBarCircularIndeterminate) itemView.findViewById(R.id.message_progress_bar);
             iv_agree.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);

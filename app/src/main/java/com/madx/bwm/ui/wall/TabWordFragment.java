@@ -1,7 +1,7 @@
 package com.madx.bwm.ui.wall;
 
-import android.graphics.Rect;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.madx.bwm.R;
@@ -36,13 +36,13 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
         // Required empty public constructor
     }
 
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_event, container, false);
-//    }
+    //
+    //    @Override
+    //    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    //                             Bundle savedInstanceState) {
+    //        // Inflate the layout for this fragment
+    //        return inflater.inflate(R.layout.fragment_event, container, false);
+    //    }
 
     @Override
     public void setLayoutId() {
@@ -55,6 +55,7 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
         WallEditView text_content = getViewById(R.id.wall_text_content);
         text_content.setTextChangeListener(new WallEditView.TextChangeListener() {
             int lastChange = CHANGE_MODE_NORMAL;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -69,7 +70,7 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
             public void afterTextChanged(Editable s, int change) {
                 switch(change) {
                     case CHANGE_MODE_NORMAL:
-                        if(lastChange == CHANGE_MODE_BLACK_CHANGE){
+                        if(lastChange == CHANGE_MODE_BLACK_CHANGE) {
                             lastChange = change;
                             changeAtDesc(mMembers, mGroups);
                             return;
@@ -102,7 +103,7 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
 
     }
 
-    public WallEditView getEditText4Content(){
+    public WallEditView getEditText4Content() {
         return getViewById(R.id.wall_text_content);
     }
 
@@ -114,14 +115,18 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
         String memberText;
         String groupText;
         if(members != null && mMembers.size() > 0) {
-            memberText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), mMembers.size());
+            memberText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc) + " ", mMembers.size());
             Log.i(TAG, "changeAtDesc& member of at description is " + memberText);
         } else {
             Log.i(TAG, "changeAtDesc& no member of at description");
             memberText = "";
         }
         if(groups != null && mGroups.size() > 0) {
-            groupText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), mGroups.size());
+            if(TextUtils.isEmpty(memberText)) {
+                groupText = String.format(getParentActivity().getString(R.string.text_wall_content_at_group_desc) + " ", mGroups.size());
+            } else {
+                groupText = String.format("& " + getParentActivity().getString(R.string.text_wall_content_at_group_desc) + " ", mGroups.size());
+            }
             Log.i(TAG, "changeAtDesc& group of at description is " + groupText);
         } else {
             Log.i(TAG, "changeAtDesc& no group of at description");

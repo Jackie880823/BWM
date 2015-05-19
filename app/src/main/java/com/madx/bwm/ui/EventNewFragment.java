@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,7 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.SharedPreferencesUtils;
+import com.madx.bwm.util.SystemUtil;
 import com.madx.bwm.widget.DatePicker;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.TimePicker;
@@ -250,7 +250,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 @Override
                 public void onResult(String response) {
                     getParentActivity().setResult(Activity.RESULT_OK);
-                    Log.i("new_button_rt====================", "");
+//                    Log.i("new_button_rt====================", "");
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     getParentActivity().finish();
                 }
@@ -447,9 +447,13 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void goLocationSetting() {
-        //TODO 判断是用百度还是google
-//        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
-        Intent intent = new Intent(getActivity(), Map4BaiduActivity.class);
+        Intent intent;
+        //判断是用百度还是google
+        if (SystemUtil.checkPlayServices(getActivity())) {
+            intent = new Intent(getActivity(), Map4GoogleActivity.class);
+        }else {
+            intent = new Intent(getActivity(), Map4BaiduActivity.class);
+        }
 
         //        intent.putExtra("has_location", position_name.getText().toString());
         if (!TextUtils.isEmpty(position_name.getText())) {

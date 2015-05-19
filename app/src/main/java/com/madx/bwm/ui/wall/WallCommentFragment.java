@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,11 +54,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private final static String TAG = WallCommentFragment.class.getSimpleName();
 
 
-    private int cache_count = 0;
 
     private ProgressDialog mProgressDialog;
     private String content_group_id;
-    private String user_id;
     private String group_id;
     private boolean isRefresh;
     private int startIndex = 0;
@@ -65,13 +64,12 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private final static int offset = 20;
     private boolean loading;
     private RecyclerView rvList;
+    private ProgressBarCircularIndeterminate progressBar;
     private SendComment sendCommentView;
-
-    private Uri mUri;
 
     private WallCommentAdapter adapter;
 
-    public List<WallCommentEntity> data = new ArrayList<WallCommentEntity>();
+    public List<WallCommentEntity> data = new ArrayList();
 
     private WallEntity wall;
     private String stickerType = "";
@@ -109,9 +107,12 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             e.printStackTrace();
         }
 
+        // initView
+        progressBar = getViewById(R.id.progressBar);
         rvList = getViewById(R.id.rv_wall_comment_list);
         final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
+        rvList.requestFocus();
         //        rvList.setHasFixedSize(true);
         //        initAdapter();
 
@@ -131,8 +132,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
              * @param uri
              */
             @Override
-            public void onReciveBitmapUri(Uri uri) {
-                mUri = uri;
+            public void onReceiveBitmapUri(Uri uri) {
+                if(uri != null) { // 传输图片
+                    new CompressBitmapTask().execute(uri);
+                }
             }
 
             @Override
@@ -145,7 +148,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 stickerType = "";
                 stickerGroupPath = "";
                 stickerName = "";
-                mUri = null;
             }
         });
 
@@ -153,7 +155,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItem = ((LinearLayoutManager) llm).findLastVisibleItemPosition();
+                int lastVisibleItem =  llm.findLastVisibleItemPosition();
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
@@ -190,7 +192,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     @Override
     public void requestData() {
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("content_group_id", content_group_id);
         params.put("user_id", MainActivity.getUser().getUser_id());
 
@@ -253,7 +255,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         new HttpTools(App.getContextInstance()).get(url, params, new HttpCallback() {
             @Override
             public void onStart() {
-
+                progressBar.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -285,6 +287,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     }
                 }
                 wall.setComment_count(adapter.getItemCount() - 1 + "");
+                progressBar.setVisibility(View.GONE);
                 loading = false;
             }
 
@@ -328,15 +331,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void sendComment(final EditText et) {
-
-
-        if(mUri != null) { // 传输图片
-            new CompressBitmapTask().execute(mUri);
-        }
-
         String commentText = et.getText().toString();
         et.setText(null);
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("content_group_id", content_group_id);
         params.put("comment_owner_id", MainActivity.getUser().getUser_id());
         params.put("content_type", "comment");
@@ -430,7 +427,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 public void onResult(String string) {
                     startIndex = 0;
                     isRefresh = true;
-                    mUri = null;
                     getComments();
                     getParentActivity().setResult(Activity.RESULT_OK);
                 }
@@ -454,7 +450,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void doLoveComment(final WallCommentEntity commentEntity, final boolean love) {
         Log.i("WallCommentFragment", "doLoveComment& love = " + love);
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("comment_id", commentEntity.getComment_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
         params.put("user_id", "" + MainActivity.getUser().getUser_id());
