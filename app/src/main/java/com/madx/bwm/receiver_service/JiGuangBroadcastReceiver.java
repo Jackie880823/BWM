@@ -17,7 +17,7 @@ import cn.jpush.android.api.JPushInterface;
  * 极光推送接收器
  * Created by wing on 15/4/22.
  */
-public class JiGuanBroadcastReceiver extends BroadcastReceiver {
+public class JiGuangBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "JPush";
     public static final String MESSAGE_RECEIVED_ACTION = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
     public static final String KEY_TITLE = "title";

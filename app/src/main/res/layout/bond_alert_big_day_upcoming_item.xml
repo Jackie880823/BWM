@@ -4,10 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
         <LinearLayout
+            android:id="@+id/ll_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/default_content_bg"
-            android:padding="@dimen/default_content_padding">
+            android:visibility="gone"
+            android:padding="@dimen/default_view_margin">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -16,4 +18,56 @@
                     android:textStyle="bold"/>
         </LinearLayout>
         <View style="@style/split_line_default" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white_gray"
+            android:padding="@dimen/default_view_margin">
+            <com.madx.bwm.widget.CircularNetworkImage
+                android:id="@+id/owner_head"
+                android:layout_width="@dimen/default_user_head_width_height"
+                android:layout_height="@dimen/default_user_head_width_height"
+                android:layout_centerVertical="true"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/owner_head"
+                android:layout_toLeftOf="@id/iv_right"
+                android:layout_marginRight="@dimen/default_view_margin"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/user_name"
+                    style="@style/text_dark_default"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:layout_centerVertical="true"
+                    android:text=""/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:layout_centerVertical="true">
+                        <TextView
+                            android:id="@+id/day_time"
+                            style="@style/text_dark_default"
+                            android:text=""
+                            android:layout_alignParentLeft="true"
+                            />
+
+                        <TextView
+                            android:id="@+id/day_left"
+                            style="@style/text_dark_default"
+                            android:text=""
+                            android:layout_alignParentRight="true"
+                            android:textColor="@color/bold_text_color_red"
+                            />
+
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View style="@style/split_line_default" />
+
 </LinearLayout>

@@ -51,12 +51,20 @@
 
             <TextView
                 android:id="@+id/tv_comment_content"
-                style="@style/text_dark_default" />
-            <ImageView
-                android:id="@+id/message_pic_png_iv"
-                android:layout_width="@dimen/_100dp"
-                android:layout_height="@dimen/_100dp"
-                android:scaleType="fitXY"/>
+                style="@style/text_dark_default"
+                android:visibility="gone"/>
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/message_pic_iv"
+                android:layout_width="@dimen/_150dp"
+                android:layout_height="@dimen/_150dp"
+                android:scaleType="fitXY"
+                android:visibility="gone"/>
+            <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+                android:id="@+id/message_progress_bar"
+                android:layout_width="@dimen/_32dp"
+                android:layout_height="@dimen/_32dp"
+                android:layout_centerInParent="true"
+                android:background="#1E88E5" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -15,7 +15,6 @@ public class WallNewActivity extends BaseActivity {
 
     @Override
     protected void initBottomBar() {
-
     }
 
     @Override

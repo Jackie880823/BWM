@@ -74,6 +74,6 @@ public class OrmEntityDemo implements Serializable {
     public OrmEntityDemo() {
         // ORMLite needs a no-arg constructor
     }
-	
+
 
 }

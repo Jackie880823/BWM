@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
@@ -31,16 +30,16 @@ import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.ui.StickerMainFragment;
 import com.madx.bwm.ui.wall.SelectPhotosActivity;
-import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.UIUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import pl.droidsonroids.gif.GifDrawable;
 
 /**
- * Created by zhuweiping on 5/13/15.
+ * Created by Jackie Zhu on 5/13/15.
  */
 public class SendComment extends FrameLayout implements View.OnClickListener, StickerViewClickListener {
 
@@ -307,10 +306,9 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 case REQUEST_HEAD_PHOTO:
                     if(data != null) {
                         Uri uri = data.getData();
-                        Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 80);
-                        setSendBitmap(bitmap);
                         if(commentListener != null) {
-                            commentListener.onReciveBitmapUri(uri);
+                            commentListener.onReceiveBitmapUri(uri);
+                            hideAllViewState();
                         }
                     } else {
 
@@ -321,10 +319,9 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, CACHE_PIC_NAME_TEMP + cache_count));
                     Log.i(TAG, "onActivityResult& uri: " + uri.getPath());
                     if(new File(uri.getPath()).exists()) {
-                        Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 80);
-                        setSendBitmap(bitmap);
                         if(commentListener != null) {
-                            commentListener.onReciveBitmapUri(uri);
+                            commentListener.onReceiveBitmapUri(uri);
+                            hideAllViewState();
                         }
                     }
                     break;
@@ -346,8 +343,10 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
         if(listener != null) {
             listener.onStickerItemClick(type, folderName, filName);
         }
-        String path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.gif";
+        Log.i(TAG, "showComments& type: " + type);
+        String path = null;
         if(Constant.Sticker_Gif.equals(type)) {
+            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.gif";
             try {
                 GifDrawable gifDrawable = new GifDrawable(mActivity.getAssets(), path);
                 if(gifDrawable != null) {
@@ -357,8 +356,18 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 e.printStackTrace();
             }
         } else if(Constant.Sticker_Png.equals(type)) {
-            ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path), 80, 80);
-        }
+            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.png";
+            try {
+                InputStream is = mActivity.getAssets().open(path);
+                if(is != null) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    setSendBitmap(bitmap);
+                setSendBitmap(bitmap);
+                }
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        } Log.i(TAG, "showComments& path: " + path);
         if(commentListener != null) {
             commentListener.onStickerItemClick(type, folderName, filName);
         }
@@ -439,7 +448,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
          *
          * @param uri
          */
-        void onReciveBitmapUri(Uri uri);
+        void onReceiveBitmapUri(Uri uri);
 
         /**
          * 发送评论
