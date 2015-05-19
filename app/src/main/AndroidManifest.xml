@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.madx.bwm" >
+    package="com.madx.bwm">
 
     <!-- com.madx.bwm -->
 
@@ -67,7 +67,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
 
         <!-- 友盟统计 -->
         <!-- <meta-data -->
@@ -83,8 +83,7 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" >
-        </service>
+            android:process=":remote"></service>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -96,7 +95,7 @@
         <!-- gcm receiver -->
         <receiver
             android:name=".receiver_service.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
@@ -112,7 +111,7 @@
             android:name=".ui.LoginActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -123,7 +122,7 @@
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
         <activity
             android:name=".ui.MainActivity"
-            android:windowSoftInputMode = "adjustPan|stateHidden"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
@@ -177,8 +176,7 @@
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ui.BondAlertActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ContactUsActivity"
             android:screenOrientation="portrait" />
@@ -194,49 +192,41 @@
         <activity
             android:name=".ui.MissListActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.NewsActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.RecommendActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.AlertEventActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.AlertWallActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.AlertGroupActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.NewsInfoActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.AddMemberWorkFlow"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.BigDayActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
         <activity
             android:name=".ui.MemberActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
-            />
+            android:launchMode="singleTop" />
 
         <!-- christopher -->
 
@@ -325,18 +315,18 @@
             android:name=".ui.PathRelationshipActivity"
             android:screenOrientation="portrait" />
 
-    <activity
-        android:name=".ui.MessageChatActivity"
-        android:windowSoftInputMode = "adjustResize|stateHidden"
-        android:launchMode="singleTop"
-        android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.MessageChatActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
@@ -348,14 +338,13 @@
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
 
         <!-- Required SDK 核心功能 -->
         <service
             android:name="cn.jpush.android.service.PushService"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTER" />
                 <action android:name="cn.jpush.android.intent.REPORT" />
@@ -367,9 +356,10 @@
         <!-- Required SDK核心功能 -->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
-            android:enabled="true" >
-            <intent-filter android:priority="1000" >
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" /> <!-- Required  显示通知栏 -->
+            android:enabled="true">
+            <intent-filter android:priority="1000">
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
+                <!-- Required  显示通知栏 -->
                 <category android:name="com.madx.bwm" />
             </intent-filter>
             <intent-filter>
@@ -390,36 +380,48 @@
         <!-- 极光自定义的广播接收器 -->
         <receiver
             android:name=".receiver_service.JiGuanBroadcastReceiver"
-            android:enabled="true" >
+            android:enabled="true">
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!-- Required  用户注册SDK的intent -->
+                <action android:name="cn.jpush.android.intent.REGISTRATION" />
+                <!-- Required  用户注册SDK的intent -->
                 <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
-                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> <!-- Required  用户接收SDK消息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> <!-- Required  用户接收SDK通知栏信息的intent -->
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> <!-- Required  用户打开自定义通知栏的intent -->
-                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" /> <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
-                <action android:name="cn.jpush.android.intent.CONNECTION" /> <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+                <!-- Required  用户接收SDK消息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+                <!-- Required  用户接收SDK通知栏信息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+                <!-- Required  用户打开自定义通知栏的intent -->
+                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" />
+                <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
+                <action android:name="cn.jpush.android.intent.CONNECTION" />
+                <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <category android:name="com.madx.bwm" />
             </intent-filter>
         </receiver>
 
         <!-- Required  . Enable it you can get statistics data with channel -->
-        <activity android:name=".ui.more.MoreSettingActivity" >
-        </activity>
+        <activity android:name=".ui.more.MoreSettingActivity"></activity>
         <activity
             android:name=".ui.more.AutoAcceptActivity"
-            android:label="@string/title_activity_auto_accept" >
-        </activity>
+            android:label="@string/title_activity_auto_accept"></activity>
         <activity
             android:name=".ui.more.BirthdayAlertActivity"
-            android:label="@string/title_activity_birthday_alert" >
-        </activity>
+            android:label="@string/title_activity_birthday_alert"></activity>
         <activity
             android:name=".ui.more.GroupPrivacyActivity"
-            android:label="@string/title_activity_group_privacy" >
-        </activity>
-        <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
-        <meta-data android:name="JPUSH_APPKEY" android:value="@string/jiguang_api_key" /> <!--  </>值来自开发者平台取得的AppKey-->
+            android:label="@string/title_activity_group_privacy"></activity>
+
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="@string/jiguang_api_key" />
+        <!--  </>值来自开发者平台取得的AppKey-->
+        <activity
+            android:name=".ui.InviteMemberActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
