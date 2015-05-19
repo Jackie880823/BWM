@@ -11,13 +11,16 @@ import android.widget.TextView;
 
 import com.madx.bwm.R;
 import com.madx.bwm.interfaces.IViewCommon;
+import com.madx.bwm.interfaces.NetChangeObserver;
+import com.madx.bwm.receiver_service.NetWorkStateReceiver;
+import com.madx.bwm.util.NetworkUtil;
 
 /**
  * activity基类
  *
  * @author wing
  */
-public abstract class BaseActivity extends BaseFragmentActivity implements IViewCommon {
+public abstract class BaseActivity extends BaseFragmentActivity implements IViewCommon,NetChangeObserver {
 
     protected ImageButton leftButton;            //头部栏的左边的按钮
     protected TextView tvTitle;                          //头部栏的标题
@@ -27,6 +30,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //    protected TextView rightTextButton;
 
     Fragment fragment;
+    private View msg_bar;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -50,8 +54,8 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         super.onCreate(savedInstanceState);
         // 打开Activity隐藏软键盘；
         // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
         setContentView(getLayout());
+        NetWorkStateReceiver.registerNetStateObserver(this);
         fragment = getFragment();
         if (fragment != null) {
             if (savedInstanceState == null) {
@@ -60,10 +64,18 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
                         .commit();
             }
         }
+        msg_bar = getViewById(R.id.msg_bar);
+        if(NetworkUtil.isNetworkConnected(this)){
+            msgBarChangeByStatus(View.GONE);
+        }else{
+            msgBarChangeByStatus(View.VISIBLE);
+        }
         initBottomBar();//要先初始
         initView();
         requestData();
         initTitleBar();
+
+
 
     }
 
@@ -154,6 +166,25 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         }
     }
 
+    @Override
+    public void OnConnect(int netType) {
+        msgBarChangeByStatus(View.GONE);
+    }
 
+    private void msgBarChangeByStatus(int status){
+        if(msg_bar!=null) {
+            msg_bar.setVisibility(status);
+        }
+    }
 
+    @Override
+    public void OnDisConnect() {
+        msgBarChangeByStatus(View.VISIBLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NetWorkStateReceiver.unRegisterNetStateObserver(this);
+    }
 }
