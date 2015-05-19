@@ -1,15 +1,10 @@
 package com.madx.bwm.ui;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -39,7 +34,6 @@ import com.madx.bwm.action.MessageAction;
 import com.madx.bwm.adapter.EventCommentAdapter;
 import com.madx.bwm.entity.EventCommentEntity;
 import com.madx.bwm.entity.EventEntity;
-import com.madx.bwm.entity.MsgEntity;
 import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
@@ -48,7 +42,6 @@ import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.NetworkUtil;
-import com.madx.bwm.util.SDKUtil;
 import com.madx.bwm.util.UIUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.FullyLinearLayoutManager;
@@ -75,6 +68,7 @@ import java.util.Map;
  */
 public class EventDetailFragment extends BaseFragment<EventDetailActivity> implements View.OnClickListener {
 
+    private final static String TAG = EventDetailFragment.class.getSimpleName();
 
     private List<EventCommentEntity> data = new ArrayList<EventCommentEntity>();
     private TextView push_date;
@@ -166,8 +160,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     Intent intent;
     private Context mContext;
     private Uri uri;//原图uri
+    private Uri mUri;
 
-    EventCommentEntity  commentEntity = new EventCommentEntity();
+    EventCommentEntity  stickerEntity = new EventCommentEntity();
 
     public static EventDetailFragment newInstance(String... params) {
 //        event = eventEntity;
@@ -179,94 +174,94 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case GET_LATEST_MESSAGE:
-//                    progressDialog.dismiss();
-                    List<MsgEntity> msgList = (List<MsgEntity>) msg.obj;
-                    if (null == msgList || msgList.size() == 0) {
-//                        empty_message.setVisibility(View.VISIBLE);
-//                        swipeRefreshLayout.setVisibility(View.GONE);
-                    } else {
-//                        empty_message.setVisibility(View.GONE);
-//                        swipeRefreshLayout.setVisibility(View.VISIBLE);
-//                        messageChatAdapter.addData(msgList);
-                    }
-                    break;
-                case GET_SEND_OVER_MESSAGE:
-                    List<EventCommentEntity> msgSendList = (List<EventCommentEntity>) msg.obj;
-                    if (null != msgSendList) {
-                        adapter.addSendData(msgSendList);
-                    }
-                    break;
-                case GET_HISTORY_MESSAGE:
-                    List<EventCommentEntity> msgHistoryList = (List<EventCommentEntity>) msg.obj;
-//                    swipeRefreshLayout.setRefreshing(false);
-                    if (null != msgHistoryList || msgHistoryList.size() == 0) {
-                        break;
-                    }
-                    indexPage++;
-                    if (null != msgHistoryList) {
-                        adapter.addHistoryData(msgHistoryList);
-                    }
-                    break;
-                case SEN_MESSAGE_FORM_ALBUM:
-                    //上传相册图片
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (pickUries != null) {
-                                for (Uri uri : pickUries) {
-                                    uploadImage(uri);
-                                }
-                            }
-                        }
-                    }).start();
-                    break;
-                case SEN_MESSAGE_FORM_CAMERA:
-//                    上传相机拍照图片
-                    EventCommentEntity msgEntity = new EventCommentEntity();
-                    msgEntity.setSticker_type(".png");
-                    msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-                    msgEntity.setUri(uri);
-                    adapter.addMsgEntity(msgEntity);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            uploadImage(uri);
-                        }
-                    }).start();
-
-                    break;
-                case SEND_PIC_MESSAGE:
-                    JSONObject jsonObject = (JSONObject) msg.obj;
-                    if (null == jsonObject) {
-                        break;
-                    }
-                    try {
-                        String postType = jsonObject.optString("postType");
-                        if ("postPhoto".equals(postType) || "postSticker".equals(postType)) {
-//                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                case SEND_TEXT_MESSAGE:
-                    JSONObject textJsonObject = (JSONObject) msg.obj;
-                    try {
-                        if ("postText".equals(textJsonObject.getString("postType"))) {
-//                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    break;
-            }
-        }
-    };
+//    Handler handler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            switch (msg.what) {
+//                case GET_LATEST_MESSAGE:
+////                    progressDialog.dismiss();
+//                    List<MsgEntity> msgList = (List<MsgEntity>) msg.obj;
+//                    if (null == msgList || msgList.size() == 0) {
+////                        empty_message.setVisibility(View.VISIBLE);
+////                        swipeRefreshLayout.setVisibility(View.GONE);
+//                    } else {
+////                        empty_message.setVisibility(View.GONE);
+////                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+////                        messageChatAdapter.addData(msgList);
+//                    }
+//                    break;
+//                case GET_SEND_OVER_MESSAGE:
+//                    List<EventCommentEntity> msgSendList = (List<EventCommentEntity>) msg.obj;
+//                    if (null != msgSendList) {
+//                        adapter.addSendData(msgSendList);
+//                    }
+//                    break;
+//                case GET_HISTORY_MESSAGE:
+//                    List<EventCommentEntity> msgHistoryList = (List<EventCommentEntity>) msg.obj;
+////                    swipeRefreshLayout.setRefreshing(false);
+//                    if (null != msgHistoryList || msgHistoryList.size() == 0) {
+//                        break;
+//                    }
+//                    indexPage++;
+//                    if (null != msgHistoryList) {
+//                        adapter.addHistoryData(msgHistoryList);
+//                    }
+//                    break;
+//                case SEN_MESSAGE_FORM_ALBUM:
+//                    //上传相册图片
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if (pickUries != null) {
+//                                for (Uri uri : pickUries) {
+//                                    uploadImage(uri);
+//                                }
+//                            }
+//                        }
+//                    }).start();
+//                    break;
+//                case SEN_MESSAGE_FORM_CAMERA:
+////                    上传相机拍照图片
+//                    EventCommentEntity msgEntity = new EventCommentEntity();
+//                    msgEntity.setSticker_type(".png");
+//                    msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+//                    msgEntity.setUri(uri);
+//                    adapter.addMsgEntity(msgEntity);
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            uploadImage(uri);
+//                        }
+//                    }).start();
+//
+//                    break;
+//                case SEND_PIC_MESSAGE:
+//                    JSONObject jsonObject = (JSONObject) msg.obj;
+//                    if (null == jsonObject) {
+//                        break;
+//                    }
+//                    try {
+//                        String postType = jsonObject.optString("postType");
+//                        if ("postPhoto".equals(postType) || "postSticker".equals(postType)) {
+////                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                case SEND_TEXT_MESSAGE:
+//                    JSONObject textJsonObject = (JSONObject) msg.obj;
+//                    try {
+//                        if ("postText".equals(textJsonObject.getString("postType"))) {
+////                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    break;
+//            }
+//        }
+//    };
 
     @Override
     public void onDestroy() {
@@ -282,7 +277,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void initView() {
         mContext = getParentActivity();
-        messageAction = new MessageAction(mContext, handler);
+//        messageAction = new MessageAction(mContext, handler);
         rvList = getViewById(R.id.rv_event_comment_list);
         final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
 //        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
@@ -379,13 +374,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     isStickerItemClick = true;
                     Log.i("isStickerItemClick====","true");
 
-                    commentEntity.setSticker_type(type);
-                    commentEntity.setSticker_group_path(folderName);
-                    commentEntity.setSticker_name(filName);
+                    stickerEntity.setSticker_type(type);
+                    stickerEntity.setSticker_group_path(folderName);
+                    stickerEntity.setSticker_name(filName);
 
-                    Log.i("Metype=======", commentEntity.getSticker_type());
-                    Log.i("MefolderName======", commentEntity.getSticker_group_path());
-                    Log.i("MefilName========", commentEntity.getSticker_name());
+//                    Log.i("Metype=======", commentEntity.getSticker_type());
+//                    Log.i("MefolderName======", commentEntity.getSticker_group_path());
+//                    Log.i("MefilName========", commentEntity.getSticker_name());
 //                    EventCommentEntity msgEntity = new EventCommentEntity();
 //                    msgEntity.setUser_given_name(MainActivity.getUser().getUser_id());
 //                    msgEntity.setUser_id(MainActivity.getUser().getUser_id());
@@ -455,21 +450,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onReciveBitmapUri(Uri uri) {
-
+                    mUri = uri;
                 }
 
                 @Override
                 public void onSendCommentClick(EditText et) {
 //                    if(!isStickerItemClick){
-                        sendComment();
-
-
-
-//                    Log.i("Metype=======", commentEntity.getSticker_type());
-//                    Log.i("MefolderName======", commentEntity.getSticker_group_path());
-//                    Log.i("MefilName========", commentEntity.getSticker_name());
-//                    Log.i("isStickerItemClick====","false");
-
+                    sendComment();
 
                     isStickerItemClick = false;
 
@@ -488,13 +475,12 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public void onRemoveClick() {
                     isStickerItemClick = false;
-                    commentEntity.setSticker_type("");
-                    commentEntity.setSticker_group_path("");
-                    commentEntity.setSticker_name("");
+                    stickerEntity.setSticker_type("");
+                    stickerEntity.setSticker_group_path("");
+                    stickerEntity.setSticker_name("");
 
                 }
             });
-
 
 //            sendComment.setListener(new SendComment.ChildViewClickListener() {
 //                //发送表,问题：发送的时候显示在末尾，刷新以后显示在头。
@@ -837,6 +823,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private void sendComment() {
 
         if (NetworkUtil.isNetworkConnected(getActivity())) {
+
+            if(mUri != null) { // 传输图片
+                new CompressBitmapTask().execute(mUri);
+            }
             progressBar.setVisibility(View.VISIBLE);
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_group_id", event.getContent_group_id());
@@ -845,9 +835,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("comment_content", etChat.getText().toString().trim());
             if(isStickerItemClick){
                 Log.i("isStickerItemClick=====","true");
-                params.put("sticker_group_path", commentEntity.getSticker_group_path());
-                params.put("sticker_name", commentEntity.getSticker_name());
-                params.put("sticker_type", commentEntity.getSticker_type());
+                params.put("sticker_group_path", stickerEntity.getSticker_group_path());
+                params.put("sticker_name", stickerEntity.getSticker_name());
+                params.put("sticker_type", stickerEntity.getSticker_type());
 
             }else{
                 Log.i("isStickerItemClick=====","false");
@@ -873,12 +863,12 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onResult(String response) {
                     startIndex = 0;
                     isRefresh = true;
-                    commentEntity.setSticker_type("");
-                    commentEntity.setSticker_group_path("");
-                    commentEntity.setSticker_name("");
+                    stickerEntity.setSticker_type("");
+                    stickerEntity.setSticker_group_path("");
+                    stickerEntity.setSticker_name("");
+                    etChat.setText("");
                     requestComment();
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                    etChat.setText("");
                     UIUtil.hideKeyboard(getActivity(), etChat);
                     progressBar.setVisibility(View.GONE);
                 }
@@ -905,6 +895,71 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         }
 
     }
+
+    //发送图片
+    class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
+
+        @Override
+        protected String doInBackground(Uri... params) {
+            if(params == null) {
+                return null;
+            }
+            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
+        }
+
+        @Override
+        protected void onPostExecute(String path) {
+            submitPic(path);
+        }
+
+        private void submitPic(String path) {
+            File f = new File(path);
+            if(!f.exists()) {
+                return;
+            }
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("content_group_id", event.getContent_group_id());
+            params.put("comment_owner_id", MainActivity.getUser().getUser_id());
+            params.put("content_type", "comment");
+            params.put("file", f);
+            params.put("photo_fullsize", "1");
+
+
+            new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onFinish() {
+                }
+
+                @Override
+                public void onResult(String string) {
+                    startIndex = 0;
+                    isRefresh = true;
+                    mUri = null;
+                    requestComment();
+                    getParentActivity().setResult(Activity.RESULT_OK);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onCancelled() {
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+        }
+    }
     //发送大表情
     private void sendCommentGif(){
         if(NetworkUtil.isNetworkConnected(getActivity())){
@@ -915,9 +970,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
             params.put("content_type", "comment");
             params.put("comment_content","");
-            params.put("sticker_group_path", commentEntity.getSticker_group_path());
-            params.put("sticker_name", commentEntity.getSticker_name());
-            params.put("sticker_type", commentEntity.getSticker_type());
+            params.put("sticker_group_path", stickerEntity.getSticker_group_path());
+            params.put("sticker_name", stickerEntity.getSticker_name());
+            params.put("sticker_type", stickerEntity.getSticker_type());
 
              new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
 
@@ -1424,78 +1479,85 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         });
 
     }
-
-    List<Uri> pickUries = new ArrayList();
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         sendComment.onActivityResult(requestCode, resultCode, data);
-        if (getParentActivity().RESULT_OK == resultCode) {
-            switch (requestCode) {
-                // 如果是直接从相册获取
-                case REQUEST_HEAD_PHOTO:
-                    pickUries.clear();
-                    if (data != null) {
-                        if (SDKUtil.IS_JB) {
-                            ClipData clipData = data.getClipData();
-                            if (clipData != null) {
-                                int size = clipData.getItemCount();
-                                for (int i = 0; i < size; i++) {
-                                    Uri uri = clipData.getItemAt(i).getUri();
-                                    pickUries.add(uri);
-                                }
-                            } else {
-                                pickUries.add(data.getData());
-                            }
-                        } else {
-                            pickUries.add(data.getData());
-                        }
-                        for (Uri uri : pickUries) {
-                            EventCommentEntity msgEntity = new EventCommentEntity();
-                            msgEntity.setSticker_type(".png");
-                            msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-                            msgEntity.setUri(uri);
-                            adapter.addMsgEntity(msgEntity);
-                        }
-                        handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
-                    }
-
-                    break;
-
-                // 如果是调用相机拍照时
-                case REQUEST_HEAD_CAMERA:
-                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP));
-                    handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
-                    break;
-
-                // 取得裁剪后的图片
-                case REQUEST_HEAD_FINAL:
-                    break;
-                case REQUEST_GET_GROUP_NAME:
-//                    tvTitle.setText(data.getStringExtra("group_name"));
-                    break;
-
-                default:
-                    break;
-
-            }
-        }
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
-                case Constant.ACTION_EVENT_UPDATE:
-                    if (data != null && data.getSerializableExtra("event") != null) {
-                        event = (EventEntity) data.getSerializableExtra("event");
-                        if (event != null) {
-                            bindData();
-                        }
-                    }
-                    getParentActivity().setResult(Activity.RESULT_OK);
-                    getEventResponseInfos();
-                    break;
-            }
-        }
     }
+
+//    List<Uri> pickUries = new ArrayList();
+//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        sendComment.onActivityResult(requestCode, resultCode, data);
+//        if (getParentActivity().RESULT_OK == resultCode) {
+//            switch (requestCode) {
+//                // 如果是直接从相册获取
+//                case REQUEST_HEAD_PHOTO:
+//                    pickUries.clear();
+//                    if (data != null) {
+//                        if (SDKUtil.IS_JB) {
+//                            ClipData clipData = data.getClipData();
+//                            if (clipData != null) {
+//                                int size = clipData.getItemCount();
+//                                for (int i = 0; i < size; i++) {
+//                                    Uri uri = clipData.getItemAt(i).getUri();
+//                                    pickUries.add(uri);
+//                                }
+//                            } else {
+//                                pickUries.add(data.getData());
+//                            }
+//                        } else {
+//                            pickUries.add(data.getData());
+//                        }
+//                        for (Uri uri : pickUries) {
+//                            EventCommentEntity msgEntity = new EventCommentEntity();
+//                            msgEntity.setSticker_type(".png");
+//                            msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+//                            msgEntity.setUri(uri);
+//                            adapter.addMsgEntity(msgEntity);
+//                            Log.i("相册uri=====", uri.toString());
+//                        }
+//                        //handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
+//                    }
+//
+//                    break;
+//
+//                // 如果是调用相机拍照时
+//                case REQUEST_HEAD_CAMERA:
+//                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP));
+//                    handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
+//                    break;
+//
+//                // 取得裁剪后的图片
+//                case REQUEST_HEAD_FINAL:
+//                    break;
+//                case REQUEST_GET_GROUP_NAME:
+////                    tvTitle.setText(data.getStringExtra("group_name"));
+//                    break;
+//
+//                default:
+//                    break;
+//
+//            }
+//        }
+//        if (resultCode == Activity.RESULT_OK) {
+//            switch (requestCode) {
+//                case Constant.ACTION_EVENT_UPDATE:
+//                    if (data != null && data.getSerializableExtra("event") != null) {
+//                        event = (EventEntity) data.getSerializableExtra("event");
+//                        if (event != null) {
+//                            bindData();
+//                        }
+//                    }
+//                    getParentActivity().setResult(Activity.RESULT_OK);
+//                    getEventResponseInfos();
+//                    break;
+//            }
+//        }
+//    }
 
     /**
      * 上传照片
@@ -1507,13 +1569,27 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         if (!file.exists()) {
             return;
         }
+
+        /**
+         * Map<String, Object> params = new HashMap<>();
+         params.put("content_creator_id", MainActivity.getUser().getUser_id());
+         params.put("group_id", groupId);
+         params.put("content_type", "post");
+         params.put("content_group_public", "0");
+         params.put("photo_caption", "");
+         params.put("multiple", "0");
+         params.put("file", file);
+         params.put("photo_fullsize", "1");
+         messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_MESSAGE_POST_TEXT, SEND_PIC_MESSAGE);
+
+         */
         Map<String, Object> params = new HashMap<>();
         params.put("content_group_id", event.getContent_group_id());
         params.put("comment_owner_id", MainActivity.getUser().getUser_id());
         params.put("content_type", "comment");
-        params.put("content_group_public", "0");
-        params.put("photo_caption", "");
-        params.put("multiple", "0");
+//        params.put("content_group_public", "0");
+//        params.put("photo_caption", "");
+//        params.put("multiple", "0");
         params.put("file", file);
         params.put("photo_fullsize", "1");
         messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_COMMENT_POST_TEXT, SEND_PIC_MESSAGE);
