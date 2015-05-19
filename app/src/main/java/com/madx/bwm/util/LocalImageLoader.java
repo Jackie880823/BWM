@@ -687,6 +687,8 @@ public class LocalImageLoader {
 				miniThumbanilUri = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
 
 				cursor.close();
+			} else if(cursor != null) {
+				cursor.close();
 			}
 
 			c.close();

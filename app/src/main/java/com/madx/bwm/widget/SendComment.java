@@ -30,7 +30,6 @@ import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.ui.StickerMainFragment;
 import com.madx.bwm.ui.wall.SelectPhotosActivity;
-import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.UIUtil;
 
 import java.io.File;
@@ -40,7 +39,7 @@ import java.io.InputStream;
 import pl.droidsonroids.gif.GifDrawable;
 
 /**
- * Created by zhuweiping on 5/13/15.
+ * Created by Jackie Zhu on 5/13/15.
  */
 public class SendComment extends FrameLayout implements View.OnClickListener, StickerViewClickListener {
 
@@ -307,10 +306,9 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 case REQUEST_HEAD_PHOTO:
                     if(data != null) {
                         Uri uri = data.getData();
-                        Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 80);
-                        setSendBitmap(bitmap);
                         if(commentListener != null) {
                             commentListener.onReceiveBitmapUri(uri);
+                            hideAllViewState();
                         }
                     } else {
 
@@ -321,10 +319,9 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, CACHE_PIC_NAME_TEMP + cache_count));
                     Log.i(TAG, "onActivityResult& uri: " + uri.getPath());
                     if(new File(uri.getPath()).exists()) {
-                        Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 80);
-                        setSendBitmap(bitmap);
                         if(commentListener != null) {
                             commentListener.onReceiveBitmapUri(uri);
+                            hideAllViewState();
                         }
                     }
                     break;
