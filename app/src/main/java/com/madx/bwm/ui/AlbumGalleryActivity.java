@@ -87,7 +87,7 @@ public class AlbumGalleryActivity extends BaseActivity {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("viewer_id", MainActivity.getUser().getUser_id());
         params.put("member_id", memberId);
-        params.put("limit", "100");
+        params.put("limit", "6");
         params.put("start", "0");
         String url = UrlUtil.generateUrl(Constant.API_ALBUM_GALLERY, params);
 
@@ -120,37 +120,19 @@ public class AlbumGalleryActivity extends BaseActivity {
 
                 for (int i = 0; i < data.size(); i++)
                 {
-                    Log.d("","ccccccddddd" + creationDate);
                     if (creationDate.equals(data.get(i).getCreation_date()))//月份相等时
                     {
                         dataCache.add(data.get(i));//相同月份加入缓存中
-                        Log.d("","datacache----" + data.get(i).getCreation_date());
-
                     }
                     if (i == data.size() - 1)
                     {
                         listData.add(dataCache);//判断到最后一直是同月份。list加入到list中
                         break;
                     }
-
-//                    if (!creationDate.equals(data.get(i).getCreation_date()))//月份不相等时
-//                    {
-//                        listData.add(dataCache);//把同月份缓存list放进list中
-//                        creationDate = data.get(i).getCreation_date();//改变判断的月份
-//                        dataCache.clear();//清空同月份缓存内容
-//                        dataCache.add(data.get(i));//判断到了月份开始改变，也要需加入缓存中
-//                    }
-//                    if (i == data.size() - 1)
-//                    {
-//                        listData.add(dataCache);//判断到最后一直是同月份。list加入到list中
-//                        break;
-//                    }
-
                 }
 
                 if (listData.size() > 0 && listData != null)
                 {
-                    Log.d("","ssssssssss---" + listData.size() );
                     AlbumGalleryAdapter aga = new AlbumGalleryAdapter(AlbumGalleryActivity.this, R.layout.item_album_gallery, listData, memberId);
                     lv.setAdapter(aga);
                 }
@@ -168,12 +150,8 @@ public class AlbumGalleryActivity extends BaseActivity {
                             mData.get(i).setUser_id(memberId);
                             mData.get(i).setPhoto_caption(Constant.Module_Original);
                         }
-
-                        Log.d("","ssssss" + mData.size());
-
                         intent.putExtra("is_data", true);
                         intent.putExtra("datas", (java.io.Serializable) mData);
-
                         startActivity(intent);
                     }
                 });
@@ -195,102 +173,6 @@ public class AlbumGalleryActivity extends BaseActivity {
             }
         });
 
-
-
-
-
-
-
-
-
-//
-//        StringRequest srPhoto = new StringRequest(url, new Response.Listener<String>() {
-//
-//            GsonBuilder gsonb = new GsonBuilder();
-//
-//            Gson gson = gsonb.create();
-//
-//            @Override
-//            public void onResponse(String response) {
-//
-//                if ("[]".equals(response))
-//                {
-//                    MessageUtil.showMessage(AlbumGalleryActivity.this, getResources().getString(R.string.text_no_album_gallery));
-//                    return;
-//                }
-//
-//                data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {}.getType());
-//
-//                String creationDate = data.get(0).getCreation_date();//初始化，日期，用作分组
-//
-//                for (int i = 0; i < data.size(); i++)
-//                {
-//                    Log.d("","ccccccddddd" + creationDate);
-//                    if (creationDate.equals(data.get(i).getCreation_date()))//月份相等时
-//                    {
-//                        dataCache.add(data.get(i));//相同月份加入缓存中
-//                        Log.d("","datacache----" + data.get(i).getCreation_date());
-//
-//                    }
-//                    if (i == data.size() - 1)
-//                    {
-//                        listData.add(dataCache);//判断到最后一直是同月份。list加入到list中
-//                        break;
-//                    }
-//
-////                    if (!creationDate.equals(data.get(i).getCreation_date()))//月份不相等时
-////                    {
-////                        listData.add(dataCache);//把同月份缓存list放进list中
-////                        creationDate = data.get(i).getCreation_date();//改变判断的月份
-////                        dataCache.clear();//清空同月份缓存内容
-////                        dataCache.add(data.get(i));//判断到了月份开始改变，也要需加入缓存中
-////                    }
-////                    if (i == data.size() - 1)
-////                    {
-////                        listData.add(dataCache);//判断到最后一直是同月份。list加入到list中
-////                        break;
-////                    }
-//
-//                }
-//
-//                if (listData.size() > 0 && listData != null)
-//                {
-//                    Log.d("","ssssssssss---" + listData.size() );
-//                    AlbumGalleryAdapter aga = new AlbumGalleryAdapter(AlbumGalleryActivity.this, R.layout.item_album_gallery, listData, memberId);
-//                    lv.setAdapter(aga);
-//                }
-//
-//                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                        Intent intent = new Intent(AlbumGalleryActivity.this, ViewOriginalPicesActivity.class);
-//
-//                        List<PhotoEntity> mData = listData.get(position);
-//
-//                        for (int i = 0; i < mData.size(); i++)
-//                        {
-//                            mData.get(i).setUser_id(memberId);
-//                            mData.get(i).setPhoto_caption(Constant.Module_Original);
-//                        }
-//
-//                        Log.d("","ssssss" + mData.size());
-//
-//                        intent.putExtra("is_data", true);
-//                        intent.putExtra("datas", (java.io.Serializable) mData);
-//
-//                        startActivity(intent);
-//                    }
-//                });
-//
-//            }
-//        },new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//            }
-//        });
-//        VolleyUtil.addRequest2Queue(AlbumGalleryActivity.this, srPhoto, "");
     }
 
     @Override
