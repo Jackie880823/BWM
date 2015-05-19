@@ -431,7 +431,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     startIndex = 0;
                     isRefresh = true;
                     mUri = null;
-                    Log.i("onResult===",string);
                     getComments();
                     getParentActivity().setResult(Activity.RESULT_OK);
                 }

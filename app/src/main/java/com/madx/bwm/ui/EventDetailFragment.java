@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -91,9 +90,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private TextView maybe_count;
     private TextView not_going_count;
 
-//    private String Metype;
-//    private String MefolderName;
-//    private String MefilName;
     private boolean isStickerItemClick = false;
 
     private boolean isRefresh;
@@ -450,7 +446,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     } else if (R.id.ib_top_button_right == v.getId()) {
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
-//                        Log.i("Detail_button_rt====================", "");
                         getActivity().startActivityForResult(intent, 1);
                     }
                     return false;
@@ -632,13 +627,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("content_type", "comment");
             params.put("comment_content", etChat.getText().toString().trim());
             if(isStickerItemClick){
-                Log.i("isStickerItemClick=====","true");
+//                Log.i("isStickerItemClick=====","true");
                 params.put("sticker_group_path", stickerEntity.getSticker_group_path());
                 params.put("sticker_name", stickerEntity.getSticker_name());
                 params.put("sticker_type", stickerEntity.getSticker_type());
 
             }else{
-                Log.i("isStickerItemClick=====","false");
+//                Log.i("isStickerItemClick=====","false");
                 params.put("sticker_group_path", "");
                 params.put("sticker_name", "");
                 params.put("sticker_type", "");
@@ -740,7 +735,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     mUri = null;
                     requestComment();
                     getParentActivity().setResult(Activity.RESULT_OK);
-                    Log.i("onResult====",string);
+//                    Log.i("onResult====",string);
                 }
 
                 @Override
@@ -958,25 +953,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     private ResponseStatus currentStatus;
 
-//    @Override
-//    public void showComments(String type, String folderName, String filName) {
-//        MsgEntity msgEntity = new MsgEntity();
-//        msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-//        msgEntity.setSticker_type(type);
-//        msgEntity.setSticker_group_path(fileName);
-//        msgEntity.setSticker_name(Sticker_name);
-//        msgEntity.setIsNate("true");
-//        messageChatAdapter.addMsgEntity(msgEntity);
-//        HashMap<String, String> params = new HashMap<String, String>();
-//        params.put("content_creator_id", MainActivity.getUser().getUser_id());
-//        params.put("group_id", groupId);
-//        params.put("content_type", "post");
-//        params.put("sticker_group_path", fileName);
-//        params.put("sticker_name", Sticker_name);
-//        params.put("sticker_type", type);
-//        messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
-//    }
-
     private void hideAllViewState() {
         UIUtil.hideKeyboard(getParentActivity(), etChat);
         expandFunctionLinear.setVisibility(View.GONE);
@@ -1050,18 +1026,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     doChangeResponse(ResponseStatus.not_go);
                 }
                 break;
-//            case R.id.camera_tv:
-//                Log.i("打开相机=======","");
-//                openCamera();
-//                break;
-//            case R.id.album_tv:
-//                Log.i("打开相册=======","");
-//                openAlbum();
-//                break;
-//            case R.id.contact_tv:
-//                break;
-//            case R.id.location_tv:
-//                break;
         }
     }
 
@@ -1164,57 +1128,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             }
 
-//            @Override
-//            public void onClick(View v) {
-//
-//                HashMap<String, String> params = new HashMap<String, String>();
-//                params.put("content_group_id", event.getContent_group_id());
-//                params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-//                params.put("content_type", "comment");
-//                params.put("comment_content", etChat.toString());
-//                params.put("sticker_group_path", "");
-//                params.put("sticker_name", "");
-//                params.put("sticker_type", "");
-//
-//                RequestInfo requestInfo = new RequestInfo();
-//                requestInfo.url = String.format(Constant.API_EVENT_COMMENT_DELETE, commentId);
-//                requestInfo.params = params;
-//                new HttpTools(getActivity()).delete(requestInfo, new HttpCallback() {
-//                    @Override
-//                    public void onStart() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onFinish() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onResult(String response) {
-//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-//                        startIndex = 0;
-//                        isRefresh = true;
-//                        requestComment();
-//                    }
-//
-//                    @Override
-//                    public void onError(Exception e) {
-//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onLoading(long count, long current) {
-//
-//                    }
-//                });
-//                removeAlertDialog.dismiss();
-//            }
 
         });
         removeAlertDialog.setButtonCancel(getActivity().getString(R.string.cancel), new View.OnClickListener() {
@@ -1272,7 +1185,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
+//        Log.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         sendCommentView.onActivityResult(requestCode, resultCode, data);
     }
 
