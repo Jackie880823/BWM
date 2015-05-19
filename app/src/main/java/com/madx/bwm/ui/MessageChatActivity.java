@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -52,6 +53,12 @@ import java.util.Map;
  * Created by quankun on 15/4/24.
  */
 public class MessageChatActivity extends BaseActivity implements View.OnTouchListener, StickerViewClickListener {
+    /**
+     * 问题：
+     * 1.actvity 回调方法获取相机或者相册的图片以后，怎么剪切成适合的大小？
+     * 2.这个图片的路径是什么？怎么直接显示到item
+     *
+     */
     private Context mContext;
     private ProgressDialog progressDialog;
     /**
@@ -182,7 +189,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            uploadImage(uri);
+                            Log.i("相机uri=====",uri.toString());
+//                            uploadImage(uri);
                         }
                     }).start();
                     break;
@@ -508,7 +516,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     pickUries.clear();
                     if (data != null) {
                         if (SDKUtil.IS_JB) {
-                            ClipData clipData = data.getClipData();
+                            ClipData clipData = data.getClipData();//??
                             if (clipData != null) {
                                 int size = clipData.getItemCount();
                                 for (int i = 0; i < size; i++) {
@@ -526,6 +534,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             msgEntity.setSticker_type(".png");
                             msgEntity.setUser_id(MainActivity.getUser().getUser_id());
                             msgEntity.setUri(uri);
+                            Log.i("相册uri=====", uri.toString());
                             messageChatAdapter.addMsgEntity(msgEntity);
                         }
                         handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);

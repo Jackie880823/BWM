@@ -108,20 +108,24 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
     @Override
     public int getItemViewType(int position) {
         EventCommentEntity myEevent = data.get(position);
+        Log.i("getItemViewType: ", "position: " + position);
         int type = 0;
         if(!TextUtils.isEmpty(myEevent.getComment_content().trim()) && TextUtils.isEmpty(myEevent.getSticker_group_path().trim())){
-            Log.i("文字====",myEevent.getComment_content().toString());
+            Log.i("getItemViewType 文字====",myEevent.getComment_content().toString());
             type = TEXT;
         }else if(Constant.Sticker_Gif.equals(myEevent.getSticker_type())){
             type = GIF;
         }
         else if(Constant.Sticker_Png.equals(myEevent.getSticker_type())) {
-            Log.i("本地图片===",myEevent.getSticker_type());
+            Log.i("getItemViewType 本地图片===",myEevent.getSticker_type());
             type = PNG;
         }else if(myEevent.getFile_id()!= null ){
-            Log.i("网络图片===",myEevent.getFile_id());
+            Log.i("getItemViewType 网络图片===",myEevent.getFile_id());
             type = PIC;
         }
+//        else{
+//            Log.i("getItemViewType file_id",myEevent.getFile_id()+"");
+//        }
         return type;
 
     }
@@ -167,6 +171,10 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                  view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_png, parent, false);
 //                Log.i("PNG==========","");
                 break;
+            default:
+                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
+                break;
+
         }
         // ViewHolder参数一定要是Item的Root节点.
         return new ViewHolder(view);
@@ -277,13 +285,14 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 //
 //                    }
 //                }
-            }else if (ece.getFile_id() !=null ){//如果有图片id
+            }
+        if (ece.getFile_id() !=null ){//如果有图片id
 //                holder.progressBar.setVisibility(View.GONE);
-//                holder.networkImageView.setVisibility(View.VISIBLE);
-                Log.i("getFile_id===",ece.getFile_id());
-                holder.progressBar.setVisibility(View.GONE);
-                Log.i("显示网络大图", ece.getFile_id());
-                VolleyUtil.initNetworkImageView(mContext, holder.networkImageView, String.format(Constant.API_GET_PIC, "post_preview_m", ece.getUser_id(), ece.getFile_id()),
+            Log.i("getFile_id===",ece.getFile_id());
+            holder.progressBar.setVisibility(View.GONE);
+            holder.networkImageView.setVisibility(View.VISIBLE);
+            Log.i("显示网络大图", ece.getFile_id());
+            VolleyUtil.initNetworkImageView(mContext, holder.networkImageView, String.format(Constant.API_GET_PIC, "post_preview_m", ece.getUser_id(), ece.getFile_id()),
                         R.drawable.network_image_default, R.drawable.network_image_default);
             }
         if (MainActivity.getUser().getUser_id().equals(ece.getUser_id())) {//如果是自己发送到评论，则显示删除按钮，否则隐藏

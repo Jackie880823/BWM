@@ -8,6 +8,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +103,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     }
 
     public void addMsgEntity(MsgEntity msgEntity) {
+        Log.i("添加item======","");
         messageChatActivity.empty_message.setVisibility(View.GONE);
         messageChatActivity.swipeRefreshLayout.setVisibility(View.VISIBLE);
         int listSize = myList.size();
@@ -118,6 +120,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             if (null != msgEntity.getText_id()) {
                 return FROM_ME_TYPE_TEXT;
             } else if (msgEntity.getFile_id() != null) {
+                Log.i("File_id===",msgEntity.getFile_id());
                 return FROM_ME_TYPE_PIC;
             } else if (msgEntity.getLoc_id() != null) {
                 return FROM_ME_TYPE_LOC;
@@ -154,6 +157,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 convertView = mInflater.inflate(R.layout.message_item_right_text, null);
                 break;
             case FROM_ME_TYPE_PIC:
+                Log.i("大图=====","");
                 convertView = mInflater.inflate(R.layout.message_item_right_pic, null);
                 break;
             case FROM_ME_TYPE_LOC:
@@ -190,18 +194,19 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         boolean isSendMe = msgEntity.getUser_id().equals(MainActivity.getUser().getUser_id());
         holder.dateTime.setText(MyDateUtils.getLocalDateStringFromUTC(context, msgEntity.getContent_creation_date()));
         String iconUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, msgEntity.getUser_id());
+        //网络获取头像图片
         VolleyUtil.initNetworkImageView(context, holder.iconImage, iconUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
         if (!isSendMe) {
             holder.leftName.setText(msgEntity.getUser_given_name());
         }
-        if (null != msgEntity.getText_id()) {
+        if (null != msgEntity.getText_id()) {//文字
             holder.messageText.setText(msgEntity.getText_description());
-        } else if (msgEntity.getLoc_id() != null) {
+        } else if (msgEntity.getLoc_id() != null) {//地图 item
             String locUrl = String.format(Constant.MAP_API_GET_LOCATION_PIC, msgEntity.getLoc_latitude() + "," + msgEntity.getLoc_longitude(),
                     context.getString(R.string.google_map_pic_size), msgEntity.getLoc_latitude() + "," + msgEntity.getLoc_longitude());
             VolleyUtil.initNetworkImageView(context, holder.networkImageView
                     , locUrl, R.drawable.network_image_default, R.drawable.network_image_default);
-        } else if (Constant.Sticker_Gif.equals(msgEntity.getSticker_type())) {
+        } else if (Constant.Sticker_Gif.equals(msgEntity.getSticker_type())) {//gif item
             holder.progressBar.setVisibility(View.GONE);
             String stickerGroupPath = msgEntity.getSticker_group_path();
             if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
@@ -211,6 +216,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.gif";
                 GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
                 if (gifDrawable != null) {
+                  Log.i("小图片gif1","");
                     holder.gifImageView.setImageDrawable(gifDrawable);
 //                    if ("true".equals(msgEntity.getIsNate())) {
 //                        holder.progressBar.setVisibility(View.VISIBLE);
@@ -228,7 +234,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
                 e.printStackTrace();
             }
-        } else if (Constant.Sticker_Png.equals(msgEntity.getSticker_type())) {
+        } else if (Constant.Sticker_Png.equals(msgEntity.getSticker_type())) {//Png
+            Log.i("pngImageView===","");
             holder.pngImageView.setImageResource(R.drawable.network_image_default);
             holder.progressBar.setVisibility(View.GONE);
             if (msgEntity.getUri() != null)//直接显示在ListView,相册和相机
@@ -237,35 +244,46 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 bitmapOptions.inSampleSize = 4;
                 Bitmap bitmap = LocalImageLoader.rotaingImageView(LocalImageLoader.readPictureDegree(msgEntity.getUri().getPath()),
                         ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(context, msgEntity.getUri())), 200, 200));
-                holder.pngImageView.setImageBitmap(bitmap);
+                Log.i("小图片Png1","");
+                holder.pngImageView.setImageBitmap(bitmap);//直接把图片显示出来
 
-            } else {
+            } else {//如果是相册或者图库选择的没有路径
+                Log.i("大图片2","");
                 String stickerGroupPath = msgEntity.getSticker_group_path();
                 if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
                 }
 
                 try {
+                    //拼接大图路径
                     String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.png";
-                    InputStream is = context.getAssets().open(pngFileName);
-                    if (is != null) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(is);
-                        holder.pngImageView.setImageBitmap(bitmap);
+                    InputStream is = context.getAssets().open(pngFileName);//得到数据流
+                    if (is != null) {//如果有图片直接显示，否则网络下载
+                        Log.i("pngFileName===",pngFileName);
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);//将流转化成Bitmap对象
+                        holder.pngImageView.setImageBitmap(bitmap);//显示图片
+                        Log.i("大图片3", "本地");
                     } else {
                         String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+                        Log.i("大图片4","网络");
                         downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
                     }
                 } catch (IOException e) {
                     //本地没有png的时候，从服务器下载
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+                    Log.i("服务下载图片","");
+                    Log.i("stickerUrl===",stickerUrl);
                     downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
                     e.printStackTrace();
                 }
             }
         } else if (msgEntity.getFile_id() != null) {
             holder.progressBar.setVisibility(View.GONE);
+            Log.i("networkImageView===","=");
             VolleyUtil.initNetworkImageView(context, holder.networkImageView, String.format(Constant.API_GET_PIC, "post_preview_m", msgEntity.getUser_id(), msgEntity.getFile_id()),
                     R.drawable.network_image_default, R.drawable.network_image_default);
+            Log.i("File_id===1", Constant.API_GET_PIC);
+            Log.i("String.format()",String.format(Constant.API_GET_PIC, "post_preview_m", msgEntity.getUser_id(), msgEntity.getFile_id()));
         }
     }
 
@@ -332,7 +350,6 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
      */
     public void downloadAsyncTask(final ProgressBarCircularIndeterminate progressBar, final GifImageView gifImageView, final String path, final int defaultResource) {
         new AsyncTask<String, Void, byte[]>() {
-
             @Override
             protected byte[] doInBackground(String... params) {
                 return getImageByte(path);
@@ -348,6 +365,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             protected void onPostExecute(byte[] resultByte) {
                 super.onPostExecute(resultByte);
                 progressBar.setVisibility(View.GONE);
+                Log.i("网络加载图片","");
                 try {
                     if (null != resultByte) {
                         GifDrawable gifDrawable = new GifDrawable(resultByte);
@@ -441,14 +459,14 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 networkImageView.setOnClickListener(this);
             }
         }
-
+        //点击事件
         @Override
         public void onClick(View v) {
             MsgEntity msgEntity = myList.get(getAdapterPosition());
             boolean isFromMe = msgEntity.getUser_id().equals(MainActivity.getUser().getUser_id());
             Intent intent;
             switch (v.getId()) {
-                case R.id.message_icon_image:
+                case R.id.message_icon_image://点击头像跳转个人资料
                     if (isFromMe) {
                         intent = new Intent(context, MeActivity.class);
                         context.startActivity(intent);
@@ -458,14 +476,16 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                         context.startActivity(intent);
                     }
                     break;
-                case R.id.message_pic_iv:
-                    if (msgEntity.getLoc_id() != null) {
+                case R.id.message_pic_iv://点击图片跳转大图
+                    if (msgEntity.getLoc_id() != null) {//地图大图片
+                        //图片路径
                         String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=14&q=%f,%f", Double.valueOf(msgEntity.getLoc_latitude()), Double.valueOf(msgEntity.getLoc_longitude()), Double.valueOf(msgEntity.getLoc_latitude()), Double.valueOf(msgEntity.getLoc_longitude()));
+                        //??
                         intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                         context.startActivity(intent);
-                    } else if (msgEntity.getFile_id() != null) {
+                    } else if (msgEntity.getFile_id() != null) {//相册图片
                         intent = new Intent(context, ViewOriginalPicesActivity.class);
-                        ArrayList<PhotoEntity> data = new ArrayList();
+                        ArrayList<PhotoEntity> data = new ArrayList();//图片实体集合
                         PhotoEntity peData = new PhotoEntity();
                         peData.setUser_id(msgEntity.getUser_id());
                         peData.setFile_id(msgEntity.getFile_id());
