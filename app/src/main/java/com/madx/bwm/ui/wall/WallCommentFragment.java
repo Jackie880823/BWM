@@ -112,7 +112,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         rvList = getViewById(R.id.rv_wall_comment_list);
         final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
-        rvList.requestFocus();
         //        rvList.setHasFixedSize(true);
         //        initAdapter();
 

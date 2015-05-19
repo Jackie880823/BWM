@@ -3,7 +3,6 @@ package com.madx.bwm.ui.wall;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.madx.bwm.R;
 import com.madx.bwm.ui.BaseActivity;
@@ -16,8 +15,6 @@ public class WallNewActivity extends BaseActivity {
 
     @Override
     protected void initBottomBar() {
-        // 打开Activity隐藏软键盘；
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     @Override
