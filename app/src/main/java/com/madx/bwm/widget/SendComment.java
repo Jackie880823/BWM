@@ -310,7 +310,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                         Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 80);
                         setSendBitmap(bitmap);
                         if(commentListener != null) {
-                            commentListener.onReciveBitmapUri(uri);
+                            commentListener.onReceiveBitmapUri(uri);
                         }
                     } else {
 
@@ -324,7 +324,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                         Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 80);
                         setSendBitmap(bitmap);
                         if(commentListener != null) {
-                            commentListener.onReciveBitmapUri(uri);
+                            commentListener.onReceiveBitmapUri(uri);
                         }
                     }
                     break;
@@ -451,7 +451,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
          *
          * @param uri
          */
-        void onReciveBitmapUri(Uri uri);
+        void onReceiveBitmapUri(Uri uri);
 
         /**
          * 发送评论
