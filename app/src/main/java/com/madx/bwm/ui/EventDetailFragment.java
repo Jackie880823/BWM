@@ -25,6 +25,7 @@ import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -69,6 +70,8 @@ import java.util.Map;
 public class EventDetailFragment extends BaseFragment<EventDetailActivity> implements View.OnClickListener {
 
     private final static String TAG = EventDetailFragment.class.getSimpleName();
+
+    private ProgressDialog mProgressDialog;
 
     private List<EventCommentEntity> data = new ArrayList<EventCommentEntity>();
     private TextView push_date;
@@ -276,6 +279,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     @Override
     public void initView() {
+        if(mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getParentActivity(), R.string.text_loading);
+        }
         mContext = getParentActivity();
 //        messageAction = new MessageAction(mContext, handler);
         rvList = getViewById(R.id.rv_event_comment_list);
@@ -360,7 +366,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             Socontent.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-//                    Log.i("content========","onTouch");
                     hideAllViewState();
                     return false;
                 }
@@ -372,7 +377,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public void onStickerItemClick(String type, String folderName, String filName) {
                     isStickerItemClick = true;
-                    Log.i("isStickerItemClick====","true");
 
                     stickerEntity.setSticker_type(type);
                     stickerEntity.setSticker_group_path(folderName);
@@ -384,7 +388,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onReciveBitmapUri(Uri uri) {
                     mUri = uri;
                     hideAllViewState();
-                    if(mUri != null) { // 传输图片
+                    if(mUri != null) {
                         new CompressBitmapTask().execute(mUri);
                         return;
                     }
@@ -392,19 +396,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onSendCommentClick(EditText et) {
-//                    if(!isStickerItemClick){
                     sendComment();
                     isStickerItemClick = false;
-
-//                        Log.i("发送文字======","");
-//                    }
-//                    if(isStickerItemClick){
-//                        sendCommentGif();
-//                        Log.i("发送大表情=======", "");
-//                    }else {
-//
-//                    }
-
 
                 }
 
@@ -417,8 +410,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 }
             });
-
-
 
             rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -1133,33 +1124,23 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.accept), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("content_group_id", event.getContent_group_id());
-                params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-                params.put("content_type", "comment");
-                params.put("comment_content", etChat.toString());
-                params.put("sticker_group_path", "");
-                params.put("sticker_name", "");
-                params.put("sticker_type", "");
-
-                RequestInfo requestInfo = new RequestInfo();
-                requestInfo.url = String.format(Constant.API_EVENT_COMMENT_DELETE, commentId);
-                requestInfo.params = params;
+                RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_COMMENT_DELETE, commentId), null);
                 new HttpTools(getActivity()).delete(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
-
+                        mProgressDialog.setTitle(R.string.text_waiting);
+                        mProgressDialog.show();
                     }
 
                     @Override
                     public void onFinish() {
-
+                        mProgressDialog.dismiss();
                     }
 
                     @Override
-                    public void onResult(String response) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                    public void onResult(String string) {
+                        getParentActivity().setResult(Activity.RESULT_OK);
+
                         startIndex = 0;
                         isRefresh = true;
                         requestComment();
@@ -1167,7 +1148,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                     @Override
                     public void onError(Exception e) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     }
 
                     @Override
@@ -1181,7 +1161,61 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     }
                 });
                 removeAlertDialog.dismiss();
+
             }
+
+//            @Override
+//            public void onClick(View v) {
+//
+//                HashMap<String, String> params = new HashMap<String, String>();
+//                params.put("content_group_id", event.getContent_group_id());
+//                params.put("comment_owner_id", MainActivity.getUser().getUser_id());
+//                params.put("content_type", "comment");
+//                params.put("comment_content", etChat.toString());
+//                params.put("sticker_group_path", "");
+//                params.put("sticker_name", "");
+//                params.put("sticker_type", "");
+//
+//                RequestInfo requestInfo = new RequestInfo();
+//                requestInfo.url = String.format(Constant.API_EVENT_COMMENT_DELETE, commentId);
+//                requestInfo.params = params;
+//                new HttpTools(getActivity()).delete(requestInfo, new HttpCallback() {
+//                    @Override
+//                    public void onStart() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onFinish() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onResult(String response) {
+//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//                        startIndex = 0;
+//                        isRefresh = true;
+//                        requestComment();
+//                    }
+//
+//                    @Override
+//                    public void onError(Exception e) {
+//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onLoading(long count, long current) {
+//
+//                    }
+//                });
+//                removeAlertDialog.dismiss();
+//            }
+
         });
         removeAlertDialog.setButtonCancel(getActivity().getString(R.string.cancel), new View.OnClickListener() {
             @Override
