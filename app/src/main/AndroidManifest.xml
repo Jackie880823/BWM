@@ -318,6 +318,43 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
 
+
+
+
+
+
+        <activity android:name=".ui.more.MoreSettingActivity" >
+        </activity>
+        <activity
+            android:name=".ui.more.AutoAcceptActivity"
+            android:label="@string/title_activity_auto_accept"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ui.more.BirthdayAlertActivity"
+            android:label="@string/title_activity_birthday_alert"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ui.more.GroupPrivacyActivity"
+            android:label="@string/title_activity_group_privacy"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ui.more.BondAlert.BigDayActivity"
+            android:label="@string/title_activity_big_day"
+            android:screenOrientation="portrait">
+        </activity>
+
+
+
+
+
+
+
+
+
+
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
         <activity
@@ -391,20 +428,7 @@
         </receiver>
 
         <!-- Required  . Enable it you can get statistics data with channel -->
-        <activity android:name=".ui.more.MoreSettingActivity" >
-        </activity>
-        <activity
-            android:name=".ui.more.AutoAcceptActivity"
-            android:label="@string/title_activity_auto_accept" >
-        </activity>
-        <activity
-            android:name=".ui.more.BirthdayAlertActivity"
-            android:label="@string/title_activity_birthday_alert" >
-        </activity>
-        <activity
-            android:name=".ui.more.GroupPrivacyActivity"
-            android:label="@string/title_activity_group_privacy" >
-        </activity>
+
 
         <meta-data
             android:name="JPUSH_CHANNEL"
@@ -412,10 +436,7 @@
         <meta-data
             android:name="JPUSH_APPKEY"
             android:value="@string/jiguang_api_key" /> <!-- </>值来自开发者平台取得的AppKey -->
-        <activity
-            android:name=".ui.more.BondAlert.BigDayActivity"
-            android:label="@string/title_activity_big_day" >
-        </activity>
+
     </application>
 
 </manifest>
