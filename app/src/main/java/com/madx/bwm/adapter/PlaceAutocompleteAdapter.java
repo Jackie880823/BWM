@@ -17,6 +17,7 @@
 package com.madx.bwm.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -24,10 +25,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.AutocompletePredictionBuffer;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -79,6 +83,10 @@ public class PlaceAutocompleteAdapter
         mGoogleApiClient = googleApiClient;
         mBounds = bounds;
         mPlaceFilter = filter;
+    }
+
+    public ArrayList<PlaceAutocomplete> getmResultList() {
+        return mResultList;
     }
 
     /**
@@ -201,7 +209,7 @@ public class PlaceAutocompleteAdapter
     /**
      * Holder for Places Geo Data Autocomplete API results.
      */
-    class PlaceAutocomplete {
+    public class PlaceAutocomplete {
 
         public CharSequence placeId;
         public CharSequence description;
@@ -215,5 +223,23 @@ public class PlaceAutocompleteAdapter
         public String toString() {
             return description.toString();
         }
+    }
+
+    private void guessCurrentPlace() {
+        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi.getCurrentPlace( mGoogleApiClient, null );
+        result.setResultCallback( new ResultCallback<PlaceLikelihoodBuffer>() {
+            @Override
+            public void onResult( PlaceLikelihoodBuffer likelyPlaces ) {
+
+                PlaceLikelihood placeLikelihood = likelyPlaces.get( 0 );
+                String content = "";
+                if( placeLikelihood != null && placeLikelihood.getPlace() != null && !TextUtils.isEmpty(placeLikelihood.getPlace().getName()) )
+                    content = "Most likely place: " + placeLikelihood.getPlace().getName() + "\n";
+                if( placeLikelihood != null )
+                    content += "Percent change of being there: " + (int) ( placeLikelihood.getLikelihood() * 100 ) + "%";
+
+                likelyPlaces.release();
+            }
+        });
     }
 }
