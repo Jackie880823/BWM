@@ -88,9 +88,13 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+        <!--<meta-data-->
+            <!--android:name="com.google.android.maps.v2.API_KEY"-->
+            <!--android:value="@string/google_maps_key" />-->
+
         <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key"/>
 
         <!-- gcm receiver -->
         <receiver
@@ -320,6 +324,10 @@
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.InviteMemberActivity"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:screenOrientation="portrait" />
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
@@ -379,8 +387,8 @@
         <receiver android:name="cn.jpush.android.service.AlarmReceiver" />
         <!-- 极光自定义的广播接收器 -->
         <receiver
-            android:name=".receiver_service.JiGuanBroadcastReceiver"
-            android:enabled="true">
+            android:name=".receiver_service.JiGuangBroadcastReceiver"
+            android:enabled="true" >
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION" />
                 <!-- Required  用户注册SDK的intent -->
@@ -409,19 +417,19 @@
             android:label="@string/title_activity_birthday_alert"></activity>
         <activity
             android:name=".ui.more.GroupPrivacyActivity"
-            android:label="@string/title_activity_group_privacy"></activity>
+            android:label="@string/title_activity_group_privacy" >
+        </activity>
+        <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
+        <meta-data android:name="JPUSH_APPKEY" android:value="@string/jiguang_api_key" /> <!--  </>值来自开发者平台取得的AppKey-->
 
-        <meta-data
-            android:name="JPUSH_CHANNEL"
-            android:value="developer-default" />
-        <meta-data
-            android:name="JPUSH_APPKEY"
-            android:value="@string/jiguang_api_key" />
-        <!--  </>值来自开发者平台取得的AppKey-->
-        <activity
-            android:name=".ui.InviteMemberActivity"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"
-            android:screenOrientation="portrait" />
+
+        <!-- 全局网络状态监听广播接收器 -->
+        <receiver android:name="com.madx.bwm.receiver_service.NetWorkStateReceiver">
+            <intent-filter >
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <!--<action android:name="android.net.wifi.WIFI_STATE_CHANGED">-->
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

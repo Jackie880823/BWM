@@ -34,7 +34,7 @@
             android:id="@+id/my_location"
             android:layout_width="@dimen/default_small_button_width_height"
             android:layout_height="@dimen/default_small_button_width_height"
-            android:background="@drawable/ic_launcher"
+            android:background="@android:drawable/ic_search_category_default"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true" />
 

@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 
 /**
  * Created by wing on 15/3/21.
+ * fix the SwipeRefreshLayout indicator does not shown
  */
 public class MySwipeRefreshLayout extends SwipeRefreshLayout {
 
@@ -39,4 +40,6 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
             mPreMeasureRefreshing = refreshing;
         }
     }
+
+
 }

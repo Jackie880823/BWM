@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HttpTools {
+public class HttpTools{
     private Context mContext;
     private static RequestQueue sRequestQueue;
     private static RequestQueue sDownloadQueue;

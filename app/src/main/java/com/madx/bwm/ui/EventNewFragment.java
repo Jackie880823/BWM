@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -251,7 +250,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 @Override
                 public void onResult(String response) {
                     getParentActivity().setResult(Activity.RESULT_OK);
-                    Log.i("new_button_rt====================", "");
+//                    Log.i("new_button_rt====================", "");
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     getParentActivity().finish();
                 }
