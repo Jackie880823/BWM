@@ -1,6 +1,8 @@
 package com.madx.bwm.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
@@ -70,6 +72,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         }else{
             msgBarChangeByStatus(View.VISIBLE);
         }
+        msg_bar.setOnClickListener(this);
         initBottomBar();//要先初始
         initView();
         requestData();
@@ -110,7 +113,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //    protected RelativeLayout titleBar;
 
     protected void initTitleBar() {
-        titleBar = getViewById(R.id.fragment_main_top);
+        titleBar = getViewById(R.id.title_bar);
         leftButton = getViewById(R.id.ib_top_button_left);
         tvTitle = getViewById(R.id.tv_title);
         title_icon = getViewById(R.id.title_icon);
@@ -160,10 +163,21 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //            case R.id.ib_top_text_right:
                 titleRightEvent();
                 break;
+            case R.id.msg_bar:
+                goNetworkSetting();
+                break;
             default:
 //                super.onClick(v);
                 break;
         }
+    }
+
+    private void goNetworkSetting(){
+        Intent intent = new Intent();
+
+//        intent.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+        intent.setAction(Settings.ACTION_SETTINGS);
+                startActivity(intent);
     }
 
     @Override

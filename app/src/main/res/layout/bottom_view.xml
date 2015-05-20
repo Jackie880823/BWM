@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:background="@color/tab_color_normal"
     android:weightSum="5">
 
     <RelativeLayout
@@ -10,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/tab_selector"
         android:clickable="true"
+        android:background="@drawable/tab_seletor_1"
         android:orientation="vertical">
 
         <LinearLayout
@@ -20,7 +21,9 @@
             android:layout_centerVertical="true"
             android:orientation="vertical"
             android:paddingBottom="6dp"
-            android:paddingTop="6dp">
+            android:paddingTop="6dp"
+            android:focusable="true"
+            >
 
             <ImageView
                 android:id="@+id/iv_tab_icon0_iv"
@@ -46,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/tab_selector"
+        android:background="@drawable/tab_seletor_1"
         android:clickable="true"
         android:orientation="vertical">
 
@@ -82,8 +85,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/tab_selector"
         android:clickable="true"
+        android:background="@drawable/tab_seletor_2"
         android:orientation="vertical">
 
         <LinearLayout
@@ -118,9 +121,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/tab_selector"
         android:clickable="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/tab_seletor_3"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -157,9 +161,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@drawable/tab_selector"
         android:clickable="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/tab_seletor_4"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"

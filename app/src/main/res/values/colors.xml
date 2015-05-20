@@ -24,6 +24,7 @@
     <color name="tab_color_press2">#8d42eb</color>
     <color name="tab_color_press3">#feb400</color>
     <color name="tab_color_press4">#00b7ff</color>
+    <color name="tab_color_press5">#00b7ff</color>
 
     <!--不同模块按钮点击效果,只对GO -->
     <color name="tab_color_press11">#65BE00</color>

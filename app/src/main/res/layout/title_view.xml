@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/title_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/tab_color_press1"
@@ -13,7 +13,6 @@
         android:minHeight="?attr/actionBarSize"
         android:paddingLeft="@dimen/default_content_padding"
         android:paddingRight="@dimen/default_content_padding"
-        android:id="@+id/title_content"
         >
 
         <ImageButton
@@ -75,7 +74,6 @@
         android:id="@+id/msg_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title_content"
         android:background="@color/btn_bg_color_gray_press"
         android:orientation="horizontal"
         android:padding="@dimen/default_content_padding">
