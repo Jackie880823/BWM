@@ -1,65 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/title_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/tab_color_press1"
-    android:gravity="center_vertical"
-    android:minHeight="?attr/actionBarSize"
-    android:paddingLeft="@dimen/default_content_padding"
-    android:paddingRight="@dimen/default_content_padding">
-
-    <ImageButton
-        android:id="@+id/ib_top_button_left"
-        android:layout_width="@dimen/default_button_width_height"
-        android:layout_height="@dimen/default_button_width_height"
-        android:layout_gravity="center_vertical"
-        android:background="@null"
-        android:src="@drawable/back_normal" />
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/tv_top_title"
-        android:layout_width="0dp"
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/default_view_margin"
-        android:layout_marginRight="@dimen/default_view_margin"
-        android:layout_weight="1"
-        android:gravity="center">
+        android:background="@color/tab_color_press1"
+        android:gravity="center_vertical"
+        android:minHeight="?attr/actionBarSize"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding"
+        >
 
-        <TextView
-            android:id="@+id/tv_title"
-            style="@style/text_title_default"
-            android:layout_gravity="center"
-            android:ellipsize="marquee"
-            android:singleLine="true"
-            android:textStyle="bold" />
+        <ImageButton
+            android:id="@+id/ib_top_button_left"
+            android:layout_width="@dimen/default_button_width_height"
+            android:layout_height="@dimen/default_button_width_height"
+            android:layout_gravity="center_vertical"
+            android:background="@null"
+            android:src="@drawable/back_normal" />
 
-        <ImageView
-            android:id="@+id/title_icon"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/default_text_padding"
-            android:visibility="gone" />
+        <LinearLayout
+            android:id="@+id/tv_top_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:layout_marginRight="@dimen/default_view_margin"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_title"
+                style="@style/text_title_default"
+                android:layout_gravity="center"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/title_icon"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/default_text_padding"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!--<TextView-->
+        <!--android:id="@+id/ib_top_text_right"-->
+        <!--style="@style/text_title_default"-->
+        <!--android:layout_width="@dimen/default_small_button_width_height"-->
+        <!--android:layout_height="@dimen/default_small_button_width_height"-->
+        <!--android:text="GO"-->
+        <!--android:layout_gravity="right|center_vertical"-->
+        <!--android:textColor="@drawable/text_title_seletor"-->
+        <!--android:visibility="gone" />-->
+
+        <ImageButton
+
+            android:id="@+id/ib_top_button_right"
+            android:layout_width="@dimen/default_button_width_height"
+            android:layout_height="@dimen/default_button_width_height"
+            android:layout_gravity="right|center_vertical"
+            android:background="@null"
+            android:src="@drawable/btn_add" />
     </LinearLayout>
 
-    <!--<TextView-->
-    <!--android:id="@+id/ib_top_text_right"-->
-    <!--style="@style/text_title_default"-->
-    <!--android:layout_width="@dimen/default_small_button_width_height"-->
-    <!--android:layout_height="@dimen/default_small_button_width_height"-->
-    <!--android:text="GO"-->
-    <!--android:layout_gravity="right|center_vertical"-->
-    <!--android:textColor="@drawable/text_title_seletor"-->
-    <!--android:visibility="gone" />-->
+    <RelativeLayout
+        android:id="@+id/msg_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/btn_bg_color_gray_press"
+        android:orientation="horizontal"
+        android:padding="@dimen/default_content_padding">
 
-    <ImageButton
+        <TextView
+            android:id="@+id/msg"
+            style="@style/text_default"
+            android:layout_centerVertical="true"
+            android:text="@string/msg_no_internet"
+            android:textColor="@color/bold_text_color_red" />
 
-        android:id="@+id/ib_top_button_right"
-        android:layout_width="@dimen/default_button_width_height"
-        android:layout_height="@dimen/default_button_width_height"
-        android:layout_gravity="right|center_vertical"
-        android:background="@null"
-        android:src="@drawable/btn_add" />
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/item_next_arrow" />
+    </RelativeLayout>
 </LinearLayout>

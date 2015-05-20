@@ -37,10 +37,10 @@ import com.madx.bwm.adapter.FeelingAdapter;
 import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.ui.InviteMemberActivity;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.Map4BaiduActivity;
 import com.madx.bwm.ui.Map4GoogleActivity;
-import com.madx.bwm.ui.SelectPeopleActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MessageUtil;
@@ -558,7 +558,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goChooseMembers() {
-        Intent intent = new Intent(getActivity(), SelectPeopleActivity.class);
+        Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
         intent.putExtra("members_data", gson.toJson(at_members_data));
         intent.putExtra("groups_data", gson.toJson(at_groups_data));
         intent.putExtra("type", 0);

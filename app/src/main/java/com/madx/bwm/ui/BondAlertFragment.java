@@ -200,7 +200,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     }
 
     private void goBigDay() {
-        Intent intent = new Intent(getActivity(), BigDayActivity.class);
+        Intent intent = new Intent(getActivity(), com.madx.bwm.ui.more.BondAlert.BigDayActivity.class);
         startActivity(intent);
     }
 

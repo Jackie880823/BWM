@@ -1,6 +1,8 @@
 package com.madx.bwm.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
@@ -11,13 +13,16 @@ import android.widget.TextView;
 
 import com.madx.bwm.R;
 import com.madx.bwm.interfaces.IViewCommon;
+import com.madx.bwm.interfaces.NetChangeObserver;
+import com.madx.bwm.receiver_service.NetWorkStateReceiver;
+import com.madx.bwm.util.NetworkUtil;
 
 /**
  * activity基类
  *
  * @author wing
  */
-public abstract class BaseActivity extends BaseFragmentActivity implements IViewCommon {
+public abstract class BaseActivity extends BaseFragmentActivity implements IViewCommon,NetChangeObserver {
 
     protected ImageButton leftButton;            //头部栏的左边的按钮
     protected TextView tvTitle;                          //头部栏的标题
@@ -27,6 +32,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //    protected TextView rightTextButton;
 
     Fragment fragment;
+    private View msg_bar;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -50,8 +56,8 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         super.onCreate(savedInstanceState);
         // 打开Activity隐藏软键盘；
         // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
         setContentView(getLayout());
+        NetWorkStateReceiver.registerNetStateObserver(this);
         fragment = getFragment();
         if (fragment != null) {
             if (savedInstanceState == null) {
@@ -60,10 +66,19 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
                         .commit();
             }
         }
+        msg_bar = getViewById(R.id.msg_bar);
+        if(NetworkUtil.isNetworkConnected(this)){
+            msgBarChangeByStatus(View.GONE);
+        }else{
+            msgBarChangeByStatus(View.VISIBLE);
+        }
+        msg_bar.setOnClickListener(this);
         initBottomBar();//要先初始
         initView();
         requestData();
         initTitleBar();
+
+
 
     }
 
@@ -98,7 +113,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //    protected RelativeLayout titleBar;
 
     protected void initTitleBar() {
-        titleBar = getViewById(R.id.fragment_main_top);
+        titleBar = getViewById(R.id.title_bar);
         leftButton = getViewById(R.id.ib_top_button_left);
         tvTitle = getViewById(R.id.tv_title);
         title_icon = getViewById(R.id.title_icon);
@@ -148,12 +163,42 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //            case R.id.ib_top_text_right:
                 titleRightEvent();
                 break;
+            case R.id.msg_bar:
+                goNetworkSetting();
+                break;
             default:
 //                super.onClick(v);
                 break;
         }
     }
 
+    private void goNetworkSetting(){
+        Intent intent = new Intent();
 
+//        intent.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+        intent.setAction(Settings.ACTION_SETTINGS);
+                startActivity(intent);
+    }
 
+    @Override
+    public void OnConnect(int netType) {
+        msgBarChangeByStatus(View.GONE);
+    }
+
+    private void msgBarChangeByStatus(int status){
+        if(msg_bar!=null) {
+            msg_bar.setVisibility(status);
+        }
+    }
+
+    @Override
+    public void OnDisConnect() {
+        msgBarChangeByStatus(View.VISIBLE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NetWorkStateReceiver.unRegisterNetStateObserver(this);
+    }
 }

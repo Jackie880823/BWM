@@ -182,7 +182,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            uploadImage(uri);
+//                            uploadImage(uri);
                         }
                     }).start();
                     break;
@@ -508,7 +508,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     pickUries.clear();
                     if (data != null) {
                         if (SDKUtil.IS_JB) {
-                            ClipData clipData = data.getClipData();
+                            ClipData clipData = data.getClipData();//??
                             if (clipData != null) {
                                 int size = clipData.getItemCount();
                                 for (int i = 0; i < size; i++) {
