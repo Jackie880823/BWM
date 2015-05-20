@@ -623,6 +623,18 @@
     <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_tab_my_family">My Family</string>
+    <string name="text_month_january">January</string>
+    <string name="text_month_february">February</string>
+    <string name="text_month_march">March</string>
+    <string name="text_month_april">April</string>
+    <string name="text_month_may">May</string>
+    <string name="text_month_june">June</string>
+    <string name="text_month_july">July</string>
+    <string name="text_month_august">August</string>
+    <string name="text_month_september">September</string>
+    <string name="text_month_october">October</string>
+    <string name="text_month_november">November</string>
+    <string name="text_month_december">December</string>
 
     <!--end-->
 

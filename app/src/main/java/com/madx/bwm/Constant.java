@@ -195,4 +195,6 @@ public class Constant {
     public static String Sticker_Gif = ".gif";
 
     public static String API_GET_CHAT_MESSAGE_LIST = API_SERVER+"/bondwithme/index.php/api/messages/%s/type/%s";//获取消息成员列表
+    public static String API_GET_YEAR_ALBUM_LIST = API_SERVER+"/bondwithme/index.php/api/userAlbum";//获取my album一年的所有列表
+    public static String API_GET_MONTH_ALBUM_LIST = API_SERVER+"/bondwithme/index.php/api/userAlbumByMonth";//获取my album哪个月的所有列表
 }
