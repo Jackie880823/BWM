@@ -116,7 +116,8 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                 tvIndexOfList.setText(String.format(text, position + 1, data.size()));
             }
         });
-        view_paper.setOffscreenPageLimit(1);
+        view_paper.setOffscreenPageLimit(0);
+//        view_paper.setOffscreenPageLimit(1);
     }
 
 //    private void setViewPaperItems(int mainIndex) {
