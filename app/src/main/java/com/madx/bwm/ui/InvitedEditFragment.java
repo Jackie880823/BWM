@@ -4,16 +4,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.InvitedUserEditAdapter;
+import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.MessageUtil;
@@ -42,6 +46,10 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
     public List<UserEntity> members_data ;
     private final static int GET_MEMBERS = 1;
     private Gson gson = new Gson();
+
+    public List<GroupEntity> at_groups_data = new ArrayList<>();//群组
+    public List<UserEntity>  tempuserList = new ArrayList();
+    public List<UserEntity>  userList = new ArrayList();
 
     public static InvitedEditFragment newInstance(String... params) {
 
@@ -90,18 +98,27 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         group_id = getArguments().getString(ARG_PARAM_PREFIX + 1);
         owner_id = getArguments().getString(ARG_PARAM_PREFIX + 2);
         String members = getArguments()==null?null:getArguments().getString(ARG_PARAM_PREFIX + 0);
-        members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
+//        members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
+//        }.getType());
+        userList = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
         }.getType());
-
         changeData();
 
     }
 
     private void goMore() {
-        Intent intent = new Intent(getParentActivity(), SelectPeopleActivity.class);
-        intent.putExtra("members_data", gson.toJson(adapter.getData()));
-        intent.putExtra("type", 1);
+        tempuserList.clear();
+        userList.clear();
+//        Intent intent = new Intent(getParentActivity(), SelectPeopleActivity.class);
+//        intent.putExtra("members_data", gson.toJson(adapter.getData()));
+//        intent.putExtra("type", 1);
+//        startActivityForResult(intent, GET_MEMBERS);
+        Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
+        intent.putExtra("members_data", gson.toJson(members_data));
+        intent.putExtra("groups_data", gson.toJson(at_groups_data));
+        intent.putExtra("type", 0);
         startActivityForResult(intent, GET_MEMBERS);
+
     }
 
     private void setResult() {
@@ -117,15 +134,98 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
 
     }
 
+    private static void removeDuplicate(List<UserEntity> userList) {
+        for(int i = userList.size()-1;i>0;i--){
+            String item = userList.get(i).getUser_given_name().trim();
+            for (int j=i-1;j>=0; j--){
+                if (userList.get(j).getUser_given_name().trim().equals(item)){
+                    userList.remove(i);
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i<userList.size()-1;i++){
+            if(userList.get(i).getUser_id().trim().equals(MainActivity.getUser().getUser_id())){
+                userList.remove(i);
+                break;
+            }
+        }
+    }
+    private void  getMembersList(){
+        userList.addAll(members_data);
+        if(at_groups_data.size()>0){
+            for (int i=0; i < at_groups_data.size(); i++){
+                final int temp = i;
+                HashMap<String, String> jsonParams = new HashMap<String, String>();
+                jsonParams.put("group_id", at_groups_data.get(i).getGroup_id());
+                jsonParams.put("viewer_id", MainActivity.getUser().getUser_id());
+                String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);//??
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("condition", jsonParamsString);
+                String url = UrlUtil.generateUrl(Constant.API_GROUP_MEMBERS, params);
+
+                new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onResult(String response) {
+                        GsonBuilder gsonb = new GsonBuilder();
+                        Gson gson = gsonb.create();
+                        Log.i("at_groups_data===", at_groups_data.get(temp).getGroup_id());
+                        tempuserList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                        userList.addAll(tempuserList);
+                        if(temp == (at_groups_data.size()-1)){
+                            removeDuplicate(userList);
+                            changeData();
+//                                users_date ＝
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled() {
+
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+            }
+        }
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode==Activity.RESULT_OK){
             switch (requestCode){
                 case GET_MEMBERS:
                     if(data!=null) {
-                        String members = data.getStringExtra("members_data");
+                        String members = data.getStringExtra("members_data");//获取好友选择页面传来到好友数据
+                        members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
+                        }.getType());
+//                    Log.i("members===",members);
+                        String groups = data.getStringExtra("groups_data");//获取好友选择页面的群组数据
+                        at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {
+                        }.getType());
                         //TODO show waitting
-                        submitAddMember(members);
+//                        submitAddMember(members);
+                        getMembersList();
+                        submitAddMember(userList);
+                        changeData();
                     }
                     break;
 
@@ -134,6 +234,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
     }
 
     private void changeData(){
+        /*
         if(members_data==null){
             members_data = new ArrayList<>();
         }
@@ -149,6 +250,31 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         }
 
         adapter = new InvitedUserEditAdapter(getParentActivity(), members_data);
+        adapter.setMemberDeleteListenere(new InvitedUserEditAdapter.MemberDeleteListenere() {
+            @Override
+            public boolean remove(String userId) {
+                submitDeleteMember(userId);
+                return false;
+            }
+        });
+        rvList.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        */
+        if(userList==null){
+            userList = new ArrayList<>();
+        }
+
+        //排队创建者
+        if(MainActivity.getUser().getUser_id().equals(owner_id)) {
+            for (UserEntity user :  userList) {
+                if(MainActivity.getUser().getUser_id().equals(user.getUser_id())) {
+                    userList.remove(user);
+                    break;
+                }
+            }
+        }
+
+        adapter = new InvitedUserEditAdapter(getParentActivity(), userList);
         adapter.setMemberDeleteListenere(new InvitedUserEditAdapter.MemberDeleteListenere() {
             @Override
             public boolean remove(String userId) {
@@ -190,9 +316,9 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                     if (("200").equals(jsonObject.getString("response_status_code"))) {
                         MessageUtil.showMessage(getActivity(),R.string.msg_action_successed);
 //                        getMembersList();
-                        for(UserEntity user:members_data){
+                        for(UserEntity user:userList){
                             if(user.getUser_id().equals(userId)){
-                                members_data.remove(user);
+                                userList.remove(user);
                                 break;
                             }
                         }
@@ -223,9 +349,9 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
             }
         });
     }
-    private void submitAddMember(final String members){
+    private void submitAddMember(List<UserEntity> new_members_data){
 
-        final List<UserEntity> new_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+//        final List<UserEntity> new_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
         if(new_members_data==null||new_members_data.isEmpty()){
             return;
         }
@@ -253,7 +379,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
             @Override
             public void onResult(String response) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                members_data.addAll(new_members_data);
+//                members_data.addAll(new_members_data);
                 changeData();
 //                getMembersList();
             }
