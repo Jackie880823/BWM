@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
@@ -25,19 +23,18 @@ public class AlbumAdapter extends BaseAdapter {
     private List<AlbumEntity> albumEntityList;
     private Context mContext;
     private String memberId;
-    private AlbumPhotoAdapter albumPhotoAdapter;
-    public AlbumAdapter(Context mContext, List<AlbumEntity> albumEntityList,String memberId) {
+
+    public AlbumAdapter(Context mContext, List<AlbumEntity> albumList, String memberId) {
         this.mContext = mContext;
-        this.albumEntityList = albumEntityList;
-        this.memberId=memberId;
+        this.albumEntityList = albumList;
+        this.memberId = memberId;
     }
 
     public void addNewData(List<AlbumEntity> list) {
-        if (list == null || list.size() == 0) {
-            return;
-        }
         albumEntityList.clear();
-        albumEntityList.addAll(list);
+        if (null != list && list.size() > 0) {
+            albumEntityList.addAll(list);
+        }
         notifyDataSetChanged();
     }
 
@@ -58,67 +55,107 @@ public class AlbumAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder groupViewHolder = null;
+        ViewHolder viewHolder = null;
         if (convertView == null) {
-            groupViewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_album_groupview, null);
-            groupViewHolder.monthTv = (TextView) convertView.findViewById(R.id.album_month_tv);
-            groupViewHolder.album_gridView = (GridView) convertView.findViewById(R.id.album_gridView);
-            convertView.setTag(groupViewHolder);
+            viewHolder = new ViewHolder();
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.item_album_gallery, null);
+            viewHolder.monthTv = (TextView) convertView.findViewById(R.id.tv_time);
+            viewHolder.image1 = (NetworkImageView) convertView.findViewById(R.id.ib_1);
+            viewHolder.image2 = (NetworkImageView) convertView.findViewById(R.id.ib_2);
+            viewHolder.image3 = (NetworkImageView) convertView.findViewById(R.id.ib_3);
+            viewHolder.image4 = (NetworkImageView) convertView.findViewById(R.id.ib_4);
+            viewHolder.image5 = (NetworkImageView) convertView.findViewById(R.id.ib_5);
+            viewHolder.image6 = (NetworkImageView) convertView.findViewById(R.id.ib_6);
+            convertView.setTag(viewHolder);
         } else {
-            groupViewHolder = (ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
         AlbumEntity albumEntity = albumEntityList.get(position);
-        groupViewHolder.monthTv.setText(getMonthContent(albumEntity.getMonth()));
-        albumPhotoAdapter=new AlbumPhotoAdapter(albumEntity.getPhotoList());
-        groupViewHolder.album_gridView.setAdapter(albumPhotoAdapter);
+        List<AlbumPhotoEntity> photoList = albumEntity.getPhotoList();
+        String month=albumEntity.getMonth();
+        String year=albumEntity.getYear();
+        if (photoList != null && photoList.size() > 0) {
+            viewHolder.monthTv.setText(getMonthContent(month));
+            if (photoList.size() > 5) {
+                setNetworkImage(viewHolder.image6, photoList.get(5).getFile_id());
+                viewHolder.image6.setOnClickListener(new ImageViewClick(year,month,photoList.get(5).getFile_id()));
+            }
+            if (photoList.size() > 4) {
+                setNetworkImage(viewHolder.image5, photoList.get(4).getFile_id());
+                viewHolder.image5.setOnClickListener(new ImageViewClick(year,month,photoList.get(4).getFile_id()));
+            }
+            if (photoList.size() > 3) {
+                setNetworkImage(viewHolder.image4, photoList.get(3).getFile_id());
+                viewHolder.image4.setOnClickListener(new ImageViewClick(year,month,photoList.get(3).getFile_id()));
+            }
+            if (photoList.size() > 2) {
+                setNetworkImage(viewHolder.image3, photoList.get(2).getFile_id());
+                viewHolder.image3.setOnClickListener(new ImageViewClick(year,month,photoList.get(2).getFile_id()));
+            }
+            if (photoList.size() > 1) {
+                setNetworkImage(viewHolder.image2, photoList.get(1).getFile_id());
+                viewHolder.image2.setOnClickListener(new ImageViewClick(year,month,photoList.get(1).getFile_id()));
+            }
+            setNetworkImage(viewHolder.image1, photoList.get(0).getFile_id());
+        }
+        viewHolder.image1.setOnClickListener(new ImageViewClick(year,month,photoList.get(0).getFile_id()));
         return convertView;
     }
-    static class ViewHolder {
-        TextView monthTv;
-        GridView album_gridView;
+
+    class ImageViewClick implements View.OnClickListener {
+        private String fileId;
+        private String year;
+        private String month;
+
+        public ImageViewClick(String year,String month,String fileId) {
+            this.fileId = fileId;
+            this.year=year;
+            this.month=month;
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.ib_1:
+                    jumpToMoreAlbum(year,month,fileId);
+                    break;
+                case R.id.ib_2:
+                    jumpToMoreAlbum(year,month,fileId);
+                    break;
+                case R.id.ib_3:
+                    jumpToMoreAlbum(year,month,fileId);
+                    break;
+                case R.id.ib_4:
+                    jumpToMoreAlbum(year,month,fileId);
+                    break;
+                case R.id.ib_5:
+                    jumpToMoreAlbum(year,month,fileId);
+                    break;
+                case R.id.ib_6:
+                    jumpToMoreAlbum(year,month,fileId);
+                    break;
+            }
+        }
     }
 
-    class AlbumPhotoAdapter extends BaseAdapter{
-        private List<AlbumPhotoEntity> photoList;
-        public AlbumPhotoAdapter(List<AlbumPhotoEntity> photoList){
-            this.photoList=photoList;
-        }
+    private void jumpToMoreAlbum(String year,String month,String fileId) {
 
-        @Override
-        public int getCount() {
-            return photoList.size();
-        }
+    }
 
-        @Override
-        public Object getItem(int position) {
-            return photoList.get(position);
-        }
+    private void setNetworkImage(NetworkImageView imageView, String fileId) {
+        VolleyUtil.initNetworkImageView(mContext, imageView, String.format(Constant.API_GET_PIC,
+                        Constant.Module_preview_m, memberId, fileId),
+                R.drawable.network_image_default, R.drawable.network_image_default);
+    }
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            NetworkImageView imageView=null;
-            if(convertView==null){
-                imageView=new NetworkImageView(mContext);
-                LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
-                layoutParams.setMargins(10,10,10,10);
-                imageView.setLayoutParams(layoutParams);
-                convertView=imageView;
-                convertView.setTag(imageView);
-            }else{
-                imageView=(NetworkImageView)convertView.getTag();
-            }
-            VolleyUtil.initNetworkImageView(mContext, imageView, String.format(Constant.API_GET_PIC,
-                    Constant.Module_preview_m, memberId, photoList.get(position).getFile_id()),
-                    R.drawable.default_head_icon, R.drawable.default_head_icon);
-            return convertView;
-        }
-
+    static class ViewHolder {
+        TextView monthTv;
+        NetworkImageView image1;
+        NetworkImageView image2;
+        NetworkImageView image3;
+        NetworkImageView image4;
+        NetworkImageView image5;
+        NetworkImageView image6;
     }
 
     private String getMonthContent(String monthData) {

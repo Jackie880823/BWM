@@ -663,6 +663,7 @@
     <string name="title_activity_big_day">BigDayActivity</string>
     <string name="text_upcoming_birthdays">Upcoming birthdays</string>
     <string name="text_today_birthday">Today \'s birthday</string>
+    <string name="text_album_no_pic">NO IMAGE FOUND</string>
 
 
 </resources>
