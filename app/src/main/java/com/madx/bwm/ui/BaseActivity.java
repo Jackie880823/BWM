@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,7 +56,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 打开Activity隐藏软键盘；
-        // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         setContentView(getLayout());
         NetWorkStateReceiver.registerNetStateObserver(this);
         fragment = getFragment();

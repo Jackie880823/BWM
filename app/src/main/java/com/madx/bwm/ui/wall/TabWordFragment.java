@@ -1,7 +1,6 @@
 package com.madx.bwm.ui.wall;
 
 import android.text.Editable;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.madx.bwm.R;
@@ -122,11 +121,7 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
             memberText = "";
         }
         if(groups != null && mGroups.size() > 0) {
-            if(TextUtils.isEmpty(memberText)) {
-                groupText = String.format(getParentActivity().getString(R.string.text_wall_content_at_group_desc) + " ", mGroups.size());
-            } else {
-                groupText = String.format("& " + getParentActivity().getString(R.string.text_wall_content_at_group_desc) + " ", mGroups.size());
-            }
+            groupText = String.format(getParentActivity().getString(R.string.text_wall_content_at_group_desc) + " ", mGroups.size());
             Log.i(TAG, "changeAtDesc& group of at description is " + groupText);
         } else {
             Log.i(TAG, "changeAtDesc& no group of at description");

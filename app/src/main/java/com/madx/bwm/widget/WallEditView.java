@@ -155,11 +155,11 @@ public class WallEditView extends EditText implements TextWatcher {
         Log.i(TAG, "afterTextChanged& s: " + s + " oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
 
         int change = TextChangeListener.CHANGE_MODE_NORMAL;
-//        if(!isVisible) {
-//            Log.w(TAG, "afterTextChanged& this view not show");
-//            change = TextChangeListener.CHANGE_MODE_BLACK_CHANGE;
-//        } else
-    {
+        //        if(!isVisible) {
+        //            Log.w(TAG, "afterTextChanged& this view not show");
+        //            change = TextChangeListener.CHANGE_MODE_BLACK_CHANGE;
+        //        } else
+        {
             if(!TextUtils.isEmpty(oldMemberText)) {
                 SpannableStringBuilder sb = new SpannableStringBuilder(s);
                 Pattern p = Pattern.compile(oldMemberText);
@@ -188,6 +188,20 @@ public class WallEditView extends EditText implements TextWatcher {
     }
 
     public void addAtDesc(String memberText, String groupText, boolean isVisible) {
+        StringBuilder sbLog = new StringBuilder();
+        sbLog.append("addAtDesc& oldMemberText: ");
+        sbLog.append(oldMemberText);
+        sbLog.append("; memberText: ");
+        sbLog.append(memberText);
+        sbLog.append("; oldGroupText: ");
+        sbLog.append(oldGroupText);
+        sbLog.append("; groupText: ");
+        sbLog.append(groupText);
+        sbLog.append("; hasAtMember: ");
+        sbLog.append(hasAtMember);
+        sbLog.append("; hasAtGroup: ");
+        sbLog.append(hasAtGroup);
+        Log.i(TAG, sbLog.toString());
         if(!isVisible) {
             Log.w(TAG, "addAtDesc& this view not show");
             if(textChangeListener != null) {
@@ -197,97 +211,163 @@ public class WallEditView extends EditText implements TextWatcher {
         }
 
         Editable editable = getText();
+        if(!TextUtils.isEmpty(memberText) && !TextUtils.isEmpty(groupText)) {
+            String strDesc = editable.toString();
+            int startMember = strDesc.indexOf(oldMemberText);
+
+            if(TextUtils.isEmpty(oldGroupText)) {
+                if(startMember + oldMemberText.length() == strDesc.length()) {
+                    // @member 后跟着的是@group需要添加 &
+                    groupText = "& " + groupText;
+                }
+            } else {
+                int startGroup = strDesc.indexOf(oldGroupText);
+                if(TextUtils.isEmpty(oldMemberText)) {
+                    if(startGroup + oldGroupText.length() == strDesc.length()) {
+                        // @group 后跟着的是@member需要添加 &
+                        memberText = "& " + memberText;
+                    }
+                } else {
+                    if(startMember + oldMemberText.length() + 1 == startGroup) {
+                        // @group 后跟着的是@member需要添加 &
+                        memberText = "& " + memberText;
+                    } else if(startGroup + oldGroupText.length() + 1 == startMember) {
+                        // @member 后跟着的是@group需要添加 &
+                        groupText = "& " + groupText;
+                    }
+                }
+            }
+        }
 
         SpannableStringBuilder sb = new SpannableStringBuilder(editable.toString());
+        Log.i(TAG, "addAtDesc& 1 sb: " + sb.toString());
         // at member transform about member text
         hasAtMember = setDescSpan(memberText, oldMemberText, hasAtMember, sb);
         oldMemberText = memberText;
 
+        Log.i(TAG, "addAtDesc& 2 sb: " + sb.toString());
+
         // at group transform about group text
         hasAtGroup = setDescSpan(groupText, oldGroupText, hasAtGroup, sb);
         oldGroupText = groupText;
+        Log.i(TAG, "addAtDesc& 3 sb: " + sb.toString());
         this.setText(sb);
         Log.i(TAG, "addAtDesc& oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
     }
 
-    private SpannableStringBuilder getSpanBuilder(SpannableStringBuilder sb, String str) {
-        if(!TextUtils.isEmpty(str)) {
-            Pattern p = Pattern.compile(str);
-            Matcher m = p.matcher(sb.toString());
-            int start;
-            int end;
-            if(m.find()) {
-                start = m.start();
-                end = m.end();
-                sb.replace(start, end, str);
-                ImageSpan is = getImageSpanForText(str);
-                sb.setSpan(is, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-        }
-        return sb;
-    }
+    private boolean setDescSpan(String desc, String oldDesc, boolean hasAt, SpannableStringBuilder ssbDesc) {
+        Log.i(TAG, "addAtDesc& oldDesc: " + oldDesc + "; desc: " + desc + "; hasAt: " + hasAt);
 
-    private boolean setDescSpan(String desc, String oldDesc, boolean hasAt, SpannableStringBuilder sb) {
+        //        int start = 0;
+        //        int end = 0;
+        //        if(TextUtils.isEmpty(desc)) {
+        //            hasAt = false;
+        //            try {
+        //                Pattern p = Pattern.compile(oldDesc);
+        //                Matcher m = p.matcher(sb.toString());
+        //                if(m.find()) {
+        //                    start = m.start();
+        //                    end = m.end();
+        //                    sb.replace(start, end, desc);
+        //                }
+        //            } catch(Exception e) {
+        //                e.printStackTrace();
+        //                return false;
+        //            }
+        //        } else {
+        //
+        //            if(hasAt) {
+        //                try {
+        //                    Pattern p = Pattern.compile(oldDesc);
+        //                    Matcher m = p.matcher(sb.toString());
+        //                    if(m.find()) {
+        //                        start = m.start();
+        //                        end = m.end();
+        //                        sb.replace(start, end, desc);
+        //                    }
+        //                } catch(Exception e) {
+        //                    e.printStackTrace();
+        //                    return false;
+        //                }
+        //            } else {
+        //                start = sb.length();
+        //                sb.append(desc);
+        //                if(start < 0) {
+        //                    start = 0;
+        //                }
+        //                end = sb.length();
+        //            }
+        //            ImageSpan is = getImageSpanForText(desc);
+        //            Log.i(TAG, "addAtDesc& start = " + start + "; end = " + end);
+        //            sb.setSpan(is, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        //
+        //            hasAt = true;
+        //        }
+        //        this.setText(sb);
 
-        getSpanBuilder(sb, oldMemberText);
-        getSpanBuilder(sb, oldGroupText);
-
-        int start = 0;
-        int end = 0;
-
-        if(TextUtils.isEmpty(desc)) {
+        if(!TextUtils.isEmpty(desc)) {
+            ImageSpan is = getImageSpanForText(desc);
+            SpannableString spanStr = new SpannableString(desc);
+            spanStr.setSpan(is, 0, desc.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            setSpecialText(ssbDesc, oldDesc, spanStr);
+            hasAt = true;
+        } else {
             hasAt = false;
             try {
+                int start;
+                int end;
                 Pattern p = Pattern.compile(oldDesc);
-                Matcher m = p.matcher(sb.toString());
+                Matcher m = p.matcher(ssbDesc.toString());
                 if(m.find()) {
                     start = m.start();
                     end = m.end();
-                    sb.replace(start, end, desc);
+                    ssbDesc.replace(start, end, desc);
                 }
             } catch(Exception e) {
                 e.printStackTrace();
+                return false;
             }
-        } else {
 
-
-            if(hasAt) {
-                try {
-                    Pattern p = Pattern.compile(oldDesc);
-                    Matcher m = p.matcher(sb.toString());
-                    if(m.find()) {
-                        start = m.start();
-                        end = m.end();
-                        sb.replace(start, end, desc);
-                    }
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                sb.append(desc);
-                start = sb.length() - desc.length();
-                if(start < 0) {
-                    start = 0;
-                }
-                end = sb.length();
-            }
-            ImageSpan is = getImageSpanForText(desc);
-            Log.i(TAG, "addAtDesc& start = " + start + "; end = " + end);
-            sb.setSpan(is, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            hasAt = true;
         }
-//        this.setText(sb);
         return hasAt;
+    }
+
+    /**
+     * 设置字符特殊效果
+     *
+     * @param ssbDesc
+     * @param strOld
+     * @param spanStr
+     */
+    private void setSpecialText(SpannableStringBuilder ssbDesc, String strOld, SpannableString spanStr) {
+        if(TextUtils.isEmpty(strOld)) {
+            ssbDesc.append(spanStr);
+        } else {
+            try {
+                Pattern p = Pattern.compile(strOld);
+                Matcher m = p.matcher(ssbDesc.toString());
+                if(m.find()) {
+                    int start = m.start();
+                    int end = m.end();
+                    ssbDesc.replace(start, end, spanStr);
+                } else {
+                    ssbDesc.append(spanStr);
+                }
+            } catch(Exception e) {
+                ssbDesc.append(spanStr);
+                e.printStackTrace();
+            }
+        }
     }
 
     public String getRelText() {
         String text = getText().toString();
-//        if(!TextUtils.isEmpty(oldMemberText)) {
-//            text = text.replace(oldMemberText, "");
-//        }
-//        if(!TextUtils.isEmpty(oldGroupText)) {
-//            text = text.replace(oldGroupText, "");
-//        }
+        //        if(!TextUtils.isEmpty(oldMemberText)) {
+        //            text = text.replace(oldMemberText, "");
+        //        }
+        //        if(!TextUtils.isEmpty(oldGroupText)) {
+        //            text = text.replace(oldGroupText, "");
+        //        }
         return text;
     }
 
