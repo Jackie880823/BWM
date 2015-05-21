@@ -69,73 +69,73 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
 
 
     @Override
-    public void onBindViewHolder(WallAdapter.VHItem holder, int position) {
+    public void onBindViewHolder(final WallAdapter.VHItem holder, int position) {
         final WallEntity wall = data.get(position);
         VolleyUtil.initNetworkImageView(mContext, holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wall.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
         String atDescription = TextUtils.isEmpty(wall.getText_description()) ? "" : wall.getText_description();
         holder.tvContent.setText(atDescription);
-        // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
-        holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
-        String text = holder.tvContent.getText().toString();
-        SpannableStringBuilder ssb = new SpannableStringBuilder(text);
-        String strMember = null;
-        if(wall.getTag_member().size() > 0) {
-            strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
+        Log.i(TAG, "onBindViewHolder& description: " + atDescription);
 
-            // 文字特殊效果设置
-            SpannableString ssMember = new SpannableString(strMember);
+        int tagMemberCount = wall.getTag_member().size();
+        int tagGroupCount = wall.getTag_group().size();
+        if(tagMemberCount > 0 || tagGroupCount > 0) { // 有TAG用户或分组需要显示字符特效
+            // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
+            holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+            SpannableStringBuilder ssb = new SpannableStringBuilder(atDescription);
+            String strMember = null;
 
-            // 给文字添加点击响应，跳转至显示被@的用户
-            ssMember.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    if(mViewClickListener != null) {
-                        Log.i(TAG, "onClick& mViewClickListener not null showMembers");
-                        mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
-                    } else {
-                        Log.i(TAG, "onClick& mViewClickListener do nothing");
+            if(tagMemberCount > 0) {
+                strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), tagMemberCount);
+
+                // 文字特殊效果设置
+                SpannableString ssMember = new SpannableString(strMember);
+
+                // 给文字添加点击响应，跳转至显示被@的用户
+                ssMember.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        if(mViewClickListener != null) {
+                            Log.i(TAG, "onClick& mViewClickListener not null showMembers");
+                            mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
+                        } else {
+                            Log.i(TAG, "onClick& mViewClickListener do nothing");
+                        }
                     }
-                }
-            }, 0, strMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            // 设置文字的前景色为蓝色
-            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
-            ssMember.setSpan(colorSpan, 0, ssMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, 0, strMember.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                // 设置文字的前景色为蓝色
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
+                ssMember.setSpan(colorSpan, 0, ssMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            setSpecialText(ssb, strMember, ssMember);
-        }
-        if(wall.getTag_group().size() > 0) {
-            if(!TextUtils.isEmpty(strMember)) {
-                ssb.append(mContext.getString(R.string.text_and));
+                setSpecialText(ssb, strMember, ssMember);
             }
-            String strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), wall.getTag_group().size());
-            // 文字特殊效果设置
-            SpannableString ssGroup = new SpannableString(strGroup);
 
-            // 给文字添加点击响应，跳转至显示被@的群组
-            ssGroup.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    if(mViewClickListener != null) {
-                        Log.i(TAG, "onClick& mViewClickListener not null showGroups");
-                        mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
-                    } else {
-                        Log.i(TAG, "onClick& mViewClickListener do nothing");
+            if(tagGroupCount > 0) {
+                String strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), tagGroupCount);
+                // 文字特殊效果设置
+                SpannableString ssGroup = new SpannableString(strGroup);
+
+                // 给文字添加点击响应，跳转至显示被@的群组
+                ssGroup.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        if(mViewClickListener != null) {
+                            Log.i(TAG, "onClick& mViewClickListener not null showGroups");
+                            mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
+                        } else {
+                            Log.i(TAG, "onClick& mViewClickListener do nothing");
+                        }
                     }
-                }
-            }, 0, strGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, 0, strGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            // 设置文字的前景色为蓝色
-            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
-            ssGroup.setSpan(colorSpan, 0, ssGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            if(wall.getTag_member().size() > 0) {
-                // 同时@了用户和群组，用户和群组之间用&分开
-                holder.tvContent.append(" & ");
+                // 设置文字的前景色为蓝色
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
+                ssGroup.setSpan(colorSpan, 0, ssGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                setSpecialText(ssb, strGroup, ssGroup);
             }
-            setSpecialText(ssb, strGroup, ssGroup);
+
+            holder.tvContent.setText(ssb);
         }
-        holder.tvContent.setText(ssb);
 
         holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, wall.getContent_creation_date()));
         //            holder.tvTime.setText(wall.getTime());
@@ -362,19 +362,10 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                 }
             });
 
+            itemView.findViewById(R.id.top_event).setOnClickListener(this);
             ibAgree.setOnClickListener(this);
-            //            ibComment.setOnClickListener(this);
             btn_del.setOnClickListener(this);
             imWallsImages.setOnClickListener(this);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(mViewClickListener != null) {
-                        WallEntity wallEntity = data.get(getAdapterPosition());
-                        mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
-                    }
-                }
-            });
         }
 
         @Override
@@ -400,7 +391,8 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                         check(position);
                     }
                     break;
-                case R.id.iv_comment:
+
+                case R.id.top_event:
                     if(mViewClickListener != null) {
                         mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
                     }
