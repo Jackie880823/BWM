@@ -212,18 +212,27 @@ public class WallEditView extends EditText implements TextWatcher {
 
         Editable editable = getText();
         if(!TextUtils.isEmpty(memberText) && !TextUtils.isEmpty(groupText)) {
+            String strDesc = editable.toString();
+            int startMember = strDesc.indexOf(oldMemberText);
+
             if(TextUtils.isEmpty(oldGroupText)) {
-                groupText = "& " + groupText;
+                if(startMember + oldMemberText.length() == strDesc.length()) {
+                    // @member 后跟着的是@group需要添加 &
+                    groupText = "& " + groupText;
+                }
             } else {
+                int startGroup = strDesc.indexOf(oldGroupText);
                 if(TextUtils.isEmpty(oldMemberText)) {
-                    memberText = "& " + memberText;
-                } else {
-                    String strDesc = editable.toString();
-                    int startMember = strDesc.indexOf(oldMemberText);
-                    int startGroup = strDesc.indexOf(oldGroupText);
-                    if(startMember > startGroup) {
+                    if(startGroup + oldGroupText.length() == strDesc.length()) {
+                        // @group 后跟着的是@member需要添加 &
                         memberText = "& " + memberText;
-                    } else {
+                    }
+                } else {
+                    if(startMember + oldMemberText.length() + 1 == startGroup) {
+                        // @group 后跟着的是@member需要添加 &
+                        memberText = "& " + memberText;
+                    } else if(startGroup + oldGroupText.length() + 1 == startMember) {
+                        // @member 后跟着的是@group需要添加 &
                         groupText = "& " + groupText;
                     }
                 }

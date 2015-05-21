@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/album_item_linear"
+        android:layout_width="@dimen/_65dp"
+        android:layout_height="@dimen/_65dp"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <com.madx.bwm.widget.SquareLinnerLayout
+            android:layout_width="@dimen/_62dp"
+            android:layout_height="@dimen/_62dp"
+            android:gravity="center">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/album_item_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:background="@null" />
+        </com.madx.bwm.widget.SquareLinnerLayout>
+    </LinearLayout>
+</LinearLayout>

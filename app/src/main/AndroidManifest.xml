@@ -358,6 +358,12 @@
             android:name=".ui.InviteMemberActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AlbumActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AlbumDetailActivity"
+            android:screenOrientation="portrait" />
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
