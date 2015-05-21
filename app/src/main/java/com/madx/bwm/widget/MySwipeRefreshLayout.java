@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 
+import com.madx.bwm.R;
+
 /**
  * Created by wing on 15/3/21.
  * fix the SwipeRefreshLayout indicator does not shown
@@ -19,6 +21,8 @@ public class MySwipeRefreshLayout extends SwipeRefreshLayout {
 
     public MySwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        this.setColorSchemeResources(R.color.progress_color_1,R.color.progress_color_2,R.color.progress_color_3,R.color.progress_color_4);
     }
 
 
