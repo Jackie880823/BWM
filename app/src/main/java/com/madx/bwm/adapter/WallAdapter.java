@@ -137,6 +137,8 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             }
             setClickNormal(ssb, strMember, strGroup, wall);
             holder.tvContent.setText(ssb);
+        } else {
+            holder.tvContent.setOnClickListener(holder);
         }
 
         // 显示发表的时间
@@ -486,7 +488,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                         check(position);
                     }
                     break;
-
+                case R.id.tv_wall_content:
                 case R.id.top_event:
                     if(mViewClickListener != null) {
                         mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
