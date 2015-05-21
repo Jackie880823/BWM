@@ -23,8 +23,6 @@ import java.util.TimerTask;
  * @author chenjing
  */
 public class PickerView extends View {
-
-    public static final String TAG = "PickerView";
     /**
      * text之间间距和minTextSize之比
      */
@@ -98,6 +96,10 @@ public class PickerView extends View {
     private void performSelect() {
         if (mSelectListener != null)
             mSelectListener.onSelect(mDataList.get(mCurrentSelected));
+    }
+
+    public String getSelectData() {
+        return mDataList.get(mCurrentSelected);
     }
 
     public void setData(List<String> datas) {

@@ -100,7 +100,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
             @Override
             public void onClick(View v) {
                 //TODO
-                Intent intent = new Intent(getActivity(), AlbumGalleryActivity.class);
+                Intent intent = new Intent(getActivity(), AlbumActivity.class);
                 intent.putExtra("member_id", MainActivity.getUser().getUser_id());
                 startActivity(intent);
             }
