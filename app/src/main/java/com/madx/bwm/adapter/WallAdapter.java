@@ -84,8 +84,8 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
             holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
             SpannableStringBuilder ssb = new SpannableStringBuilder(atDescription);
-            String strMember = null;
 
+            String strMember = "";
             if(tagMemberCount > 0) {
                 strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), tagMemberCount);
 
@@ -110,6 +110,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
 
                 setSpecialText(ssb, strMember, ssMember);
             }
+
             String strGroup = "";
             if(tagGroupCount > 0) {
                 strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), tagGroupCount);
@@ -138,9 +139,12 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             holder.tvContent.setText(ssb);
         }
 
+        // 显示发表的时间
         holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, wall.getContent_creation_date()));
-        //            holder.tvTime.setText(wall.getTime());
+        // 用户名
         holder.tvUserName.setText(wall.getUser_given_name());
+
+        // file_id 为空表示没有发表图片，有则需要显示图片
         if(TextUtils.isEmpty(wall.getFile_id())) {
             holder.llWallsImage.setVisibility(View.GONE);
         } else {
