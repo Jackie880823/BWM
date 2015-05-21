@@ -269,6 +269,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
      */
     private void setClickNormal(SpannableStringBuilder ssb, String strMember, String strGroup, WallEntity wallEntity) {
         String description = ssb.toString();
+        Log.i(TAG, "setClickNormal& description: " + description + "; member: " + strMember + "; group: " + strGroup);
         int startMember = description.indexOf(strMember);
         int endMember = startMember + strMember.length();
         int startGroup = description.indexOf(strGroup);
@@ -280,43 +281,40 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
 
             // 普通文字的点击事件，跳转到评论详情
             int length = description.length();
-            if(startMember > startGroup) {
+            if(startMember > startGroup | TextUtils.isEmpty(strMember)) {
                 Log.i(TAG, "setClickNormal& group first");
 
-                String strFirst = description.substring(0, startGroup);
-                String strMind = description.substring(endGroup, startMember);
-                String strEnd = description.substring(endMember, length);
+                setSpecialText(ssb, wallEntity, description, 0, startGroup);
 
-                SpannableString ssFirst = new SpannableString(strFirst);
-                SpannableString ssMind = new SpannableString(strMind);
-                SpannableString ssEnd = new SpannableString(strEnd);
+                if(endGroup < startMember) {
+                    setSpecialText(ssb, wallEntity, description, endGroup, startMember);
 
-                setSpanClickShowComments(strFirst, ssFirst, wallEntity);
-                setSpanClickShowComments(strMind, ssMind, wallEntity);
-                setSpanClickShowComments(strEnd, ssEnd, wallEntity);
-
-                setSpecialText(ssb, strFirst, ssFirst);
-                setSpecialText(ssb, strMind, ssMind);
-                setSpecialText(ssb, strEnd, ssEnd);
+                    setSpecialText(ssb, wallEntity, description, endMember, length);
+                } else {
+                    setSpecialText(ssb, wallEntity, description, endGroup, length);
+                }
             } else {
                 Log.i(TAG, "setClickNormal& member first");
 
-                String strFirst = description.substring(0, startMember);
-                String strMind = description.substring(endMember, startGroup);
-                String strEnd = description.substring(endGroup, length);
+                setSpecialText(ssb, wallEntity, description, 0, startMember);
 
-                SpannableString ssFirst = new SpannableString(strFirst);
-                SpannableString ssMind = new SpannableString(strMind);
-                SpannableString ssEnd = new SpannableString(strEnd);
+                if(endMember < startGroup) {
+                    setSpecialText(ssb, wallEntity, description, endMember, startGroup);
 
-                setSpanClickShowComments(strFirst, ssFirst, wallEntity);
-                setSpanClickShowComments(strMind, ssMind, wallEntity);
-                setSpanClickShowComments(strEnd, ssEnd, wallEntity);
-
-                setSpecialText(ssb, strFirst, ssFirst);
-                setSpecialText(ssb, strMind, ssMind);
-                setSpecialText(ssb, strEnd, ssEnd);
+                    setSpecialText(ssb, wallEntity, description, endGroup, length);
+                } else {
+                    setSpecialText(ssb, wallEntity, description, endMember, length);
+                }
             }
+        }
+    }
+
+    private void setSpecialText(SpannableStringBuilder ssb, WallEntity wallEntity, String description, int start, int end) {
+        if(start >= 0 && start < end) {
+            String strMind = description.substring(start, end);
+            SpannableString ssMind = new SpannableString(strMind);
+            setSpanClickShowComments(strMind, ssMind, wallEntity);
+            setSpecialText(ssb, strMind, ssMind);
         }
     }
 
