@@ -50,7 +50,6 @@ public class AlbumActivity extends BaseActivity {
     private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0X11;
     private LinearLayout no_image_linear;
-    private Dialog showSelectDialog;
 
     public AlbumActivity() {
     }
@@ -77,7 +76,6 @@ public class AlbumActivity extends BaseActivity {
 
     private void showSelectDialog() {
         final View selectIntention = LayoutInflater.from(mContext).inflate(R.layout.dialog_album_select_year, null);
-//        showSelectDialog = new MyDialog(mContext, null, selectIntention);
         final PickerView year_pv = (PickerView) selectIntention.findViewById(R.id.select_year_picker_view);
         List<String> data = new ArrayList<String>();
         int nowYear = Calendar.getInstance().get(Calendar.YEAR);
