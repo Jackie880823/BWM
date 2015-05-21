@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +12,22 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MembersGridAdapter;
 import com.madx.bwm.entity.EventEntity;
+import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
+import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.SharedPreferencesUtils;
@@ -67,7 +72,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private String location;
     private Long date;
 
-    public List<UserEntity> members_data = new ArrayList();
+    public List<UserEntity> members_data = new ArrayList();//好友
+    public List<GroupEntity> at_groups_data = new ArrayList<>();//群组
+    public List<UserEntity>  tempuserList = new ArrayList();
+    public List<UserEntity>  userList = new ArrayList();
     private final static String USER_HEAD = "user_head";
     private final static String USER_NAME = "user_name";
 
@@ -76,7 +84,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     Calendar calendar;
 
     String members;
+    String groups;
     private String Spmemeber_date;
+    private String users_date;
 
     public static EventNewFragment newInstance(String... params) {
 
@@ -172,12 +182,17 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //             Log.i("Spmemeber_date=====================",date_desc.getText().toString().trim());
             return true;
         }
-        String tempdate = Spmemeber_date.trim();
-        String string = tempdate.replaceAll("\\[([^\\]]*)\\]", "$1");
-        if(!TextUtils.isEmpty(string.trim())){
-//            System.out.println(string+"==========================");
-//            Log.i("Spmemeber_date=====================",Spmemeber_date.trim());
-            return true;
+        if(members != null){
+            String tempdate = members.trim().replaceAll("\\[([^\\]]*)\\]", "$1");//处理两边的中括号
+            if(!TextUtils.isEmpty(tempdate.trim())){
+                return true;
+            }
+        }
+        if(groups != null){
+            String userDate = groups.trim().replaceAll("\\[([^\\]]*)\\]", "$1");
+            if (!TextUtils.isEmpty(userDate.trim())){
+                return true;
+            }
         }
         return false;
     }
@@ -198,11 +213,88 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         content = SharedPreferencesUtils.getParam(getParentActivity(),"content","").toString();
         location = SharedPreferencesUtils.getParam(getParentActivity(),"location","").toString();
         date = (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
-        Spmemeber_date = SharedPreferencesUtils.getParam(getParentActivity(),"members_data","").toString();
+        members = SharedPreferencesUtils.getParam(getParentActivity(),"members_data","").toString();
+        groups = SharedPreferencesUtils.getParam(getParentActivity(), "Groups_date","").toString();
+        users_date = SharedPreferencesUtils.getParam(getParentActivity(),"users_date","").toString();
 
         setText();
         latitude = TextUtils.isEmpty(mEevent.getLoc_latitude()) ? -1000 : Double.valueOf(mEevent.getLoc_latitude());
         longitude = TextUtils.isEmpty(mEevent.getLoc_longitude()) ? -1000 : Double.valueOf(mEevent.getLoc_longitude());
+    }
+
+    public static void removeDuplicate(List<UserEntity> userList) {
+        for(int i=0; i<userList.size()-1; i++){
+            for (int j = userList.size()-1; j>i; j--){
+                if(userList.get(j).getUser_given_name().equals(userList.get(i).getUser_given_name()) ||
+                        userList.get(j).getUser_id().equals(MainActivity.getUser().getUser_id())){
+//                    Log.i("remove===",j+"");
+                    userList.remove(j);
+                }
+
+            }
+            if(userList.get(i).getUser_id().equals(MainActivity.getUser().getUser_id())){
+                userList.remove(i);
+            }
+        }
+    }
+
+    private void  getMembersList(){
+        userList.addAll(members_data);
+        if(at_groups_data.size()>0){
+            for (int i=0; i < at_groups_data.size(); i++){
+                final int temp = i;
+                HashMap<String, String> jsonParams = new HashMap<String, String>();
+                jsonParams.put("group_id", at_groups_data.get(i).getGroup_id());
+                jsonParams.put("viewer_id", MainActivity.getUser().getUser_id());
+                String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);//??
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("condition", jsonParamsString);
+                String url = UrlUtil.generateUrl(Constant.API_GROUP_MEMBERS, params);
+
+                new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onResult(String response) {
+                        GsonBuilder gsonb = new GsonBuilder();
+                        Gson gson = gsonb.create();
+                        Log.i("at_groups_data===", at_groups_data.get(temp).getGroup_id());
+                        tempuserList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                        userList.addAll(tempuserList);
+                        if(temp == (at_groups_data.size()-1)){
+                            removeDuplicate(userList);
+                            changeData();
+//                                users_date ＝
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled() {
+
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+            }
+        }
+
     }
 
     private void submit() {
@@ -293,10 +385,15 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
 
         }
-        if(!TextUtils.isEmpty(Spmemeber_date)){
-//            members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
-            members_data = gson.fromJson(Spmemeber_date, new TypeToken<ArrayList<UserEntity>>() {}.getType());
-//             = Spmemeber_date;
+        if(!TextUtils.isEmpty(members)){
+            members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+        }
+        if(!TextUtils.isEmpty(groups)){
+            at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+
+        }
+        if (!TextUtils.isEmpty(users_date)){
+            userList = gson.fromJson(users_date,new TypeToken<ArrayList<UserEntity>>() {}.getType());
             changeData();
         }
 
@@ -319,6 +416,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         SharedPreferencesUtils.removeParam(getParentActivity(),"location","");
         SharedPreferencesUtils.removeParam(getParentActivity(),"date",0L);
         SharedPreferencesUtils.removeParam(getParentActivity(),"members_data","");
+        SharedPreferencesUtils.removeParam(getParentActivity(),"Groups_date","");
+        SharedPreferencesUtils.removeParam(getParentActivity(),"users_date","");
 
     }
 
@@ -366,8 +465,18 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                         SharedPreferencesUtils.setParam(getParentActivity(), "location", position_name.getText().toString());
 //                        Log.i("location=============",position_name.getText().toString());
                     }
-                    if(!TextUtils.isEmpty(Spmemeber_date.trim())){
-                        SharedPreferencesUtils.setParam(getParentActivity(), "members_data", Spmemeber_date);
+                    if(!TextUtils.isEmpty(members.trim())){
+                        SharedPreferencesUtils.setParam(getParentActivity(), "members_data", members);
+//                        Log.i("Set_Spmemeber_date===", Spmemeber_date);
+                    }
+                    if(!TextUtils.isEmpty(groups.trim())){
+                        SharedPreferencesUtils.setParam(getParentActivity(), "Groups_date", groups);
+//                        Log.i("Set_Groups_date===", Groups_date);
+                    }
+                    if(userList.size()>0){
+                        Gson gson = new Gson();
+                        SharedPreferencesUtils.setParam(getParentActivity(), "users_date", gson.toJson(userList));
+//                        Log.i("Set_users_date===", users_date);
                     }
                     getParentActivity().finish();
                 }
@@ -465,8 +574,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void goChooseMembers() {
-        Intent intent = new Intent(getActivity(), SelectPeopleActivity.class);
+        tempuserList.clear();
+        userList.clear();
+//        Intent intent = new Intent(getActivity(), SelectPeopleActivity.class);
+        Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
         intent.putExtra("members_data", gson.toJson(members_data));
+        intent.putExtra("groups_data", gson.toJson(at_groups_data));
         intent.putExtra("type", 0);
         startActivityForResult(intent, GET_MEMBERS);
     }
@@ -493,11 +606,15 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     break;
                 case GET_MEMBERS:
                     //获取SelectPeopleActivity回调的参数
-                    String members = data.getStringExtra("members_data");
-                    Spmemeber_date = members;
-
+                    members = data.getStringExtra("members_data");//获取好友选择页面传来到好友数据
                     members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                     }.getType());
+//                    Log.i("members===",members);
+                    groups = data.getStringExtra("groups_data");//获取好友选择页面的群组数据
+                    at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {
+                    }.getType());
+//                    Log.i("groups===", groups);
+                    getMembersList();
                     changeData();
                     break;
             }
@@ -541,10 +658,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     //刷新数据
     private void changeData() {
-        if (members_data == null) {
-            members_data = new ArrayList<>();
+        if (userList == null) {
+            userList = new ArrayList<>();
         }
-        adapter = new MembersGridAdapter(getActivity(), members_data);
+        adapter = new MembersGridAdapter(getActivity(), userList);
         gvFriends.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
