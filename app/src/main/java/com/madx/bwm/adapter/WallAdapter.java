@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -69,77 +70,83 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
 
 
     @Override
-    public void onBindViewHolder(WallAdapter.VHItem holder, int position) {
+    public void onBindViewHolder(final WallAdapter.VHItem holder, int position) {
         final WallEntity wall = data.get(position);
         VolleyUtil.initNetworkImageView(mContext, holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wall.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
         String atDescription = TextUtils.isEmpty(wall.getText_description()) ? "" : wall.getText_description();
         holder.tvContent.setText(atDescription);
-        // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
-        holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
-        String text = holder.tvContent.getText().toString();
-        SpannableStringBuilder ssb = new SpannableStringBuilder(text);
-        String strMember = null;
-        if(wall.getTag_member().size() > 0) {
-            strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
+        Log.i(TAG, "onBindViewHolder& description: " + atDescription);
 
-            // 文字特殊效果设置
-            SpannableString ssMember = new SpannableString(strMember);
+        int tagMemberCount = wall.getTag_member().size();
+        int tagGroupCount = wall.getTag_group().size();
+        if(tagMemberCount > 0 || tagGroupCount > 0) { // 有TAG用户或分组需要显示字符特效
+            // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
+            holder.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+            SpannableStringBuilder ssb = new SpannableStringBuilder(atDescription);
 
-            // 给文字添加点击响应，跳转至显示被@的用户
-            ssMember.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    if(mViewClickListener != null) {
-                        Log.i(TAG, "onClick& mViewClickListener not null showMembers");
-                        mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
-                    } else {
-                        Log.i(TAG, "onClick& mViewClickListener do nothing");
+            String strMember = "";
+            if(tagMemberCount > 0) {
+                strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), tagMemberCount);
+
+                // 文字特殊效果设置
+                SpannableString ssMember = new SpannableString(strMember);
+
+                // 给文字添加点击响应，跳转至显示被@的用户
+                ssMember.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        if(mViewClickListener != null) {
+                            Log.i(TAG, "onClick& mViewClickListener not null showMembers");
+                            mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
+                        } else {
+                            Log.i(TAG, "onClick& mViewClickListener do nothing");
+                        }
                     }
-                }
-            }, 0, strMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            // 设置文字的前景色为蓝色
-            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
-            ssMember.setSpan(colorSpan, 0, ssMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, 0, strMember.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                // 设置文字的前景色为蓝色
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
+                ssMember.setSpan(colorSpan, 0, ssMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            setSpecialText(ssb, strMember, ssMember);
-        }
-        if(wall.getTag_group().size() > 0) {
-            if(!TextUtils.isEmpty(strMember)) {
-                ssb.append(mContext.getString(R.string.text_and));
+                setSpecialText(ssb, strMember, ssMember);
             }
-            String strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), wall.getTag_group().size());
-            // 文字特殊效果设置
-            SpannableString ssGroup = new SpannableString(strGroup);
 
-            // 给文字添加点击响应，跳转至显示被@的群组
-            ssGroup.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    if(mViewClickListener != null) {
-                        Log.i(TAG, "onClick& mViewClickListener not null showGroups");
-                        mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
-                    } else {
-                        Log.i(TAG, "onClick& mViewClickListener do nothing");
+            String strGroup = "";
+            if(tagGroupCount > 0) {
+                strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), tagGroupCount);
+                // 文字特殊效果设置
+                SpannableString ssGroup = new SpannableString(strGroup);
+
+                // 给文字添加点击响应，跳转至显示被@的群组
+                ssGroup.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        if(mViewClickListener != null) {
+                            Log.i(TAG, "onClick& mViewClickListener not null showGroups");
+                            mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
+                        } else {
+                            Log.i(TAG, "onClick& mViewClickListener do nothing");
+                        }
                     }
-                }
-            }, 0, strGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, 0, strGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            // 设置文字的前景色为蓝色
-            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
-            ssGroup.setSpan(colorSpan, 0, ssGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            if(wall.getTag_member().size() > 0) {
-                // 同时@了用户和群组，用户和群组之间用&分开
-                holder.tvContent.append(" & ");
+                // 设置文字的前景色为蓝色
+                ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
+                ssGroup.setSpan(colorSpan, 0, ssGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                setSpecialText(ssb, strGroup, ssGroup);
             }
-            setSpecialText(ssb, strGroup, ssGroup);
+            setClickNormal(ssb, strMember, strGroup, wall);
+            holder.tvContent.setText(ssb);
+        } else {
+            holder.tvContent.setOnClickListener(holder);
         }
-        holder.tvContent.setText(ssb);
 
+        // 显示发表的时间
         holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, wall.getContent_creation_date()));
-        //            holder.tvTime.setText(wall.getTime());
+        // 用户名
         holder.tvUserName.setText(wall.getUser_given_name());
+
+        // file_id 为空表示没有发表图片，有则需要显示图片
         if(TextUtils.isEmpty(wall.getFile_id())) {
             holder.llWallsImage.setVisibility(View.GONE);
         } else {
@@ -255,6 +262,96 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
         }
     }
 
+    /**
+     * 分割出普通文字并设置点击事件，跳转到评论详情
+     * @param ssb
+     * @param strMember
+     * @param strGroup
+     * @param wallEntity
+     */
+    private void setClickNormal(SpannableStringBuilder ssb, String strMember, String strGroup, WallEntity wallEntity) {
+        String description = ssb.toString();
+        Log.i(TAG, "setClickNormal& description: " + description + "; member: " + strMember + "; group: " + strGroup);
+        int startMember = description.indexOf(strMember);
+        int endMember = startMember + strMember.length();
+        int startGroup = description.indexOf(strGroup);
+        int endGroup = startGroup + strGroup.length();
+        if(endGroup == endMember) {
+            Log.w(TAG, "setClickNormal& no action");
+            return;
+        } else {
+
+            // 普通文字的点击事件，跳转到评论详情
+            int length = description.length();
+            if(startMember > startGroup | TextUtils.isEmpty(strMember)) {
+                Log.i(TAG, "setClickNormal& group first");
+
+                setSpecialText(ssb, wallEntity, description, 0, startGroup);
+
+                if(endGroup < startMember) {
+                    setSpecialText(ssb, wallEntity, description, endGroup, startMember);
+
+                    setSpecialText(ssb, wallEntity, description, endMember, length);
+                } else {
+                    setSpecialText(ssb, wallEntity, description, endGroup, length);
+                }
+            } else {
+                Log.i(TAG, "setClickNormal& member first");
+
+                setSpecialText(ssb, wallEntity, description, 0, startMember);
+
+                if(endMember < startGroup) {
+                    setSpecialText(ssb, wallEntity, description, endMember, startGroup);
+
+                    setSpecialText(ssb, wallEntity, description, endGroup, length);
+                } else {
+                    setSpecialText(ssb, wallEntity, description, endMember, length);
+                }
+            }
+        }
+    }
+
+    private void setSpecialText(SpannableStringBuilder ssb, WallEntity wallEntity, String description, int start, int end) {
+        if(start >= 0 && start < end) {
+            String strMind = description.substring(start, end);
+            SpannableString ssMind = new SpannableString(strMind);
+            setSpanClickShowComments(strMind, ssMind, wallEntity);
+            setSpecialText(ssb, strMind, ssMind);
+        }
+    }
+
+    /**
+     * 普通文字的点击事件，跳转到评论详情
+     * @param str
+     * @param s
+     * @param wallEntity
+     */
+    private void setSpanClickShowComments(String str, SpannableString s, final WallEntity wallEntity){
+        s.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Log.i(TAG, "setClickNormal& onClick");
+                if(mViewClickListener != null) {
+                    mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
+                } else {
+
+                }
+            }
+
+            /**
+             * Makes the text underlined and in the link color.
+             *
+             * @param ds
+             */
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+                ds.setColor(Color.BLACK);
+            }
+        }, 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+
     private void gotoLocationSetting(WallEntity wall) {
         Intent intent = new Intent(mContext, Map4BaiduActivity.class);
         //        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
@@ -362,19 +459,10 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                 }
             });
 
+            itemView.findViewById(R.id.top_event).setOnClickListener(this);
             ibAgree.setOnClickListener(this);
-            //            ibComment.setOnClickListener(this);
             btn_del.setOnClickListener(this);
             imWallsImages.setOnClickListener(this);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(mViewClickListener != null) {
-                        WallEntity wallEntity = data.get(getAdapterPosition());
-                        mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
-                    }
-                }
-            });
         }
 
         @Override
@@ -400,7 +488,8 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                         check(position);
                     }
                     break;
-                case R.id.iv_comment:
+                case R.id.tv_wall_content:
+                case R.id.top_event:
                     if(mViewClickListener != null) {
                         mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
                     }

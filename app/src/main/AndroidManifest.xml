@@ -230,6 +230,9 @@
             android:name=".ui.MemberActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AlertGroupActivity"
+            android:screenOrientation="portrait" />
 
 
         <!-- christopher -->
@@ -354,6 +357,12 @@
         <activity
             android:name=".ui.InviteMemberActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AlbumActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AlbumDetailActivity"
             android:screenOrientation="portrait" />
 
         <!-- 极光推送 -->

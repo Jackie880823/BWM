@@ -224,7 +224,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             @Override
             public void onClick(View v) {
                 if (data != null && data.size() > 0) {
-                    Intent intent = new Intent(getActivity(), AlbumGalleryActivity.class);
+                    Intent intent = new Intent(getActivity(), AlbumActivity.class);
                     intent.putExtra("member_id", memberId);
                     startActivity(intent);
                 }
