@@ -7,15 +7,15 @@
     <item android:state_focused="true"  android:drawable="@drawable/gs_btn_from" />-->
 
     <!--按下-->
-    <item android:state_pressed="true" android:drawable="@color/tab_color_press5">
+    <item android:state_pressed="true" android:drawable="@color/tab_color_press4">
     </item>
 
     <!--焦点-->
-    <item android:state_focused="true" android:drawable="@color/tab_color_press5">
+    <item android:state_focused="true" android:drawable="@color/tab_color_press4">
     </item>
 
     <!--默认-->
-    <item android:state_enabled="false" android:drawable="@color/tab_color_normal">
+    <item android:state_enabled="false" android:drawable="@color/transparent_color">
 
     </item>
 </selector>

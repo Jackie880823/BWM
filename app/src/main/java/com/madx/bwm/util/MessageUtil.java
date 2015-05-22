@@ -2,19 +2,23 @@ package com.madx.bwm.util;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.madx.bwm.R;
+import com.madx.bwm.widget.CustomDialog;
 
 
 public class MessageUtil {
 	
-//	static CustomDialog wattingDialog;
+	static CustomDialog wattingDialog;
 	static Dialog alertDialog;
 
-	/**
-	 * 隐藏等待提示
-	 */
-//	public static void dismissWattingDialog() {
-//		if (wattingDialog != null)
+//	/**
+//	 * 隐藏等待提示
+//	 */
+//	public static void dismissWattingDialog(Context context) {
+//		if (wattingDialog != null&&wattingDialog.getContext()==context)
 //			wattingDialog.dismiss();
 //	}
 	/**
@@ -25,6 +29,7 @@ public class MessageUtil {
 //		if (context == null) {
 //			return;
 //		}
+//
 //		//加上context判断是为了解决在不同activity重用wattingDailog，"is your activity runnning"问题
 //		if (wattingDialog == null||wattingDialog.getContext()!=context) {
 //			wattingDialog = new CustomDialog(context, R.layout.waitting_dialog,
