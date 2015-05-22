@@ -1,121 +1,150 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/default_content_bg"
+    android:background="@color/default_text_color_while"
     tools:context="com.madx.bwm.ui.ViaContactMainActivity">
-        <include
-            android:id="@+id/fragment_main_top"
-            layout="@layout/title_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true" />
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <ScrollView
+        android:id="@+id/contact_scroll"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/fragment_main_top"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-                <TextView
-                    android:id="@+id/tv_select_contact"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/et_round_white"
-                    android:padding="@dimen/default_content_padding"
-                    android:textSize="@dimen/text_medium_size"
-                    android:textColor="@color/default_text_color_dark"
-                    android:textStyle="bold"
-                    android:layout_marginTop="16dp"
-                    android:text=""
-                    android:hint="@string/text_select_contact"
-                    android:drawableRight="@drawable/profile_right"
-                    android:singleLine="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"/>
 
-                <TextView
-                    android:id="@+id/tv_relationship"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/et_round_white"
-                    android:padding="@dimen/default_content_padding"
-                    android:textSize="@dimen/text_medium_size"
-                    android:singleLine="true"
-                    android:textColor="@color/default_text_color_dark"
-                    android:hint="@string/text_select_relationship"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:drawableRight="@drawable/profile_right"/>
-
-                <EditText
-                    android:id="@+id/et_message"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:text=""
-                    android:textStyle="bold"
-                    android:textColor="@color/default_text_color_dark"
-                    android:hint="@string/text_personal_message"
-                    android:maxLength="30"
-                    android:lines="3"
-                    android:padding="@dimen/default_content_padding"
-                    android:background="@drawable/et_round_white"
-                    android:textSize="@dimen/text_medium_size"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"/>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/tv_select_contact"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:background="@drawable/ll_round_white"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_contact_information"
-                    android:textStyle="bold"
-                    android:textColor="@color/default_text_color_dark"
-                    android:textSize="@dimen/text_medium_size"
-                    android:layout_margin="@dimen/default_view_margin"/>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/default_split_line"/>
-                <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                    <com.madx.bwm.widget.MyListViewForScroolView
-                        android:id="@+id/lv"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </com.madx.bwm.widget.MyListViewForScroolView>
-                </ScrollView>
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_16dp"
+                android:textColor="#333333"
+                android:hint="@string/text_select_contact"
+                android:textColorHint="#333"
+                android:drawableRight="@drawable/profile_right"
+                android:singleLine="true"
+                android:paddingTop="@dimen/_10dp"
+                android:paddingBottom="@dimen/_10dp"
+                android:paddingLeft="@dimen/_18dp"
+                android:paddingRight="@dimen/_10dp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/tv_select_contact"
+                android:background="#ccc" />
+
+            <TextView
+                android:id="@+id/tv_relationship"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_16dp"
+                android:singleLine="true"
+                android:textColor="@color/default_text_color_dark"
+                android:hint="@string/text_select_relationship"
+                android:textColorHint="#333"
+                android:drawableRight="@drawable/profile_right"
+                android:paddingTop="@dimen/_10dp"
+                android:paddingBottom="@dimen/_10dp"
+                android:paddingLeft="@dimen/_18dp"
+                android:paddingRight="@dimen/_10dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#ccc" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/_16dp"
+                android:textStyle="bold"
+                android:background="#efeff4"
+                android:textSize="@dimen/_11dp"
+                android:textColor="#666"
+                android:text="@string/text_personal_msg" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#ccc" />
+
+            <EditText
+                android:id="@+id/et_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:textColor="#ccc"
+                android:hint="@string/text_type_meaage_here"
+                android:textColorHint="#ccc"
+                android:maxLength="30"
+                android:lines="3"
+                android:background="@drawable/et_round_white"
+                android:textSize="@dimen/_16dp"
+                android:paddingTop="@dimen/_10dp"
+                android:paddingBottom="@dimen/_10dp"
+                android:paddingLeft="@dimen/_16dp"
+                android:paddingRight="@dimen/_16dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#ccc" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/_16dp"
+                android:background="#efeff4"
+                android:textStyle="bold"
+                android:textSize="@dimen/_11dp"
+                android:textColor="#666"
+                android:text="@string/text_send_invitation_to" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#ccc" />
+
+                <com.madx.bwm.widget.MyListViewForScroolView
+                    android:id="@+id/lv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"></com.madx.bwm.widget.MyListViewForScroolView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#ccc" />
             <Button
                 android:id="@+id/btn_add"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
+                android:layout_height="@dimen/_35dp"
                 android:text="@string/text_add"
                 android:textColor="#ffffff"
                 android:textStyle="bold"
                 android:textSize="@dimen/text_large_size"
                 android:background="@drawable/btn_chat_send_bg"
-
                 android:layout_marginLeft="32dp"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/_60dp"
                 android:layout_marginRight="32dp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp" />
         </LinearLayout>
+    </ScrollView>
 
 
-</LinearLayout>
+</RelativeLayout>

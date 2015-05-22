@@ -42,7 +42,6 @@ public class ViaIdNameActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class ViaIdNameActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText("Add New Members");
+        tvTitle.setText(getString(R.string.title_via_id_username));
     }
 
     @Override
