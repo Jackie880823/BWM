@@ -44,7 +44,7 @@
     <string name="alert_text_date_null">Please choose an event date</string>
 
     <string name="title_message_myfamily">My Family</string>
-    <string name="title_message_creategroup">Create Group</string>
+    <string name="title_message_creategroup">New Group</string>
     <string name="alert_comment_null">Comment can not be empty!</string>
     <string name="alert_comment_del">Are you sure you want to delete this comment?</string>
     <string name="alert_wall_del">Delete this post?</string>
@@ -642,7 +642,8 @@
     <string name="text_type_meaage_here">Type your message here...</string>
     <string name="title_via_id_username">Via ID / Username</string>
     <string name="text_select_relation">RELATIONSHIP</string>
-
+    <string name="text_member_add">MEMBERS ADDED</string>
+    <string name="text_members_num">%s members</string>
     <!--end-->
 
 
