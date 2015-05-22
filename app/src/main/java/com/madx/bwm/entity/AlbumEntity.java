@@ -9,6 +9,7 @@ public class AlbumEntity {
     private String year;// year 年份
     private String month;// month 月份
     private List<AlbumPhotoEntity> photoList;
+    private String total;
 
     public String getYear() {
         return year;
@@ -16,6 +17,14 @@ public class AlbumEntity {
 
     public void setYear(String year) {
         this.year = year;
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
     }
 
     public String getMonth() {

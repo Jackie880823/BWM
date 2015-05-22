@@ -1,38 +1,94 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/comment_bar" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_wall_comment_list"
+    <ScrollView
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/comment_bar"
-        android:paddingLeft="@dimen/default_content_padding"
-        android:paddingRight="@dimen/default_content_padding"
-        android:paddingTop="@dimen/default_view_margin"
-        android:scrollbars="vertical">
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/default_content_padding"
+        android:layout_above="@+id/send_comment"
+        android:fillViewport="true">
 
-    </android.support.v7.widget.RecyclerView>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_centerInParent="true"
-        >
-
-        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
-            android:id="@+id/progressBar"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_centerInParent="true"
-            android:background="@color/bg_progressBar"
-            android:visibility="gone"
-            />
-    </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:paddingRight="@dimen/default_content_padding">
 
 
+            <include layout="@layout/wall_item"/>
+
+            <android.support.v7.widget.CardView
+                style="@style/CardViewDefault"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:paddingRight="@dimen/default_content_padding"
+                android:paddingTop="@dimen/default_view_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="@dimen/default_content_padding">
+
+                        <ImageView
+                            android:id="@+id/icon_comments"
+                            android:layout_width="@dimen/default_small_button_width_height"
+                            android:layout_height="@dimen/default_small_button_width_height"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/icon_comments"
+                            />
+
+                        <TextView
+                            style="@style/text_dark_default"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/default_view_margin"
+                            android:layout_toRightOf="@+id/icon_comments"
+                            android:text="@string/text_comments"/>
+
+                        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+                            android:id="@+id/progressBar"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerInParent="true"
+                            android:layout_centerVertical="true"
+                            android:background="@color/bg_progressBar"
+                            />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:id="@+id/comment_split_line"
+                        style="@style/split_line_default"
+                        android:visibility="gone"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_wall_comment_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical">
+                    </android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.madx.bwm.widget.SendComment
+        android:id="@+id/send_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>
-

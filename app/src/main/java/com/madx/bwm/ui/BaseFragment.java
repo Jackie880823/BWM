@@ -122,4 +122,6 @@ public abstract class BaseFragment<P extends Activity> extends Fragment implemen
         public void onFragmentInteraction(Uri uri);
     }
 
+
+
 }
