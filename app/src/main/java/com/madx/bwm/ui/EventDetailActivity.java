@@ -37,7 +37,7 @@ public class EventDetailActivity extends BaseActivity {
 
         title_icon.setVisibility(View.VISIBLE);
         title_icon.setImageResource(R.drawable.arrow_down);
-        changeTitleColor(R.color.tab_color_press2);
+//        changeTitleColor(R.color.tab_color_press2);
 //        if (isCurrentUser()) {
 //            rightButton.setImageResource(R.drawable.btn_edit);
 //            rightButton.setVisibility(View.VISIBLE);

@@ -11,7 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import com.madx.bwm.R;
 import com.madx.bwm.ui.AlertEventActivity;
 import com.madx.bwm.ui.AlertWallActivity;
-import com.madx.bwm.ui.BigDayActivity;
+import com.madx.bwm.ui.more.BondAlert.BigDayActivity;
 import com.madx.bwm.ui.MemberActivity;
 import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.ui.MissListActivity;

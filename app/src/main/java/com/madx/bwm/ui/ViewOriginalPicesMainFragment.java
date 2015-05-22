@@ -117,6 +117,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                 } else {
                     text = getActivity().getString(R.string.photo_position_double_arrow);
                 }
+                currentId = position;
                 tvIndexOfList.setText(String.format(text, position + 1, data.size()));
             }
         });
@@ -276,7 +277,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                     //                        });
                     if(currentId != position) {
                         view_paper.setCurrentItem(position);
-                        currentId = position;
+//                        currentId = position;
                     }
 
 

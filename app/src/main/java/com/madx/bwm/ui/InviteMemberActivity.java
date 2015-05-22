@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.gc.materialdesign.widgets.Dialog;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,10 +43,10 @@ import com.madx.bwm.entity.FamilyGroupEntity;
 import com.madx.bwm.entity.FamilyMemberEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
-import com.madx.bwm.util.MslToast;
 import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.PinYin4JUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
+import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.MySwipeRefreshLayout;
 
 import org.json.JSONException;
@@ -247,6 +248,22 @@ public class InviteMemberActivity extends BaseActivity {
         return results;
     }
 
+    private void showNoFriendDialog() {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.text_pending_approval));
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
+    }
+
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
         View userView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
@@ -272,7 +289,7 @@ public class InviteMemberActivity extends BaseActivity {
 //                }
                 if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
                     //不是好友,提示等待接收
-                    MslToast.getInstance(mContext).showLongToast(getString(R.string.text_awaiting_for_approval));
+                    showNoFriendDialog();
                     return;
                 } else {
                     CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
@@ -426,13 +443,13 @@ public class InviteMemberActivity extends BaseActivity {
             if (arg0 == 0) {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_selected_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
-                message_group_tv.setTextColor(Color.parseColor("#878787"));
+                message_group_tv.setTextColor(Color.parseColor("#666666"));
                 message_member_tv.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_normal_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_selected_shap);
                 message_group_tv.setTextColor(Color.parseColor("#ffffff"));
-                message_member_tv.setTextColor(Color.parseColor("#878787"));
+                message_member_tv.setTextColor(Color.parseColor("#666666"));
             }
         }
 
@@ -616,7 +633,6 @@ public class InviteMemberActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
         rightButton.setImageResource(R.drawable.btn_done);
         rightButton.setVisibility(View.VISIBLE);
     }
@@ -629,7 +645,7 @@ public class InviteMemberActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         // 隐藏键盘
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED|WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override

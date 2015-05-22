@@ -90,13 +90,13 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             if (arg0 == 0) {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_selected_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
-                message_group_tv.setTextColor(Color.parseColor("#878787"));
+                message_group_tv.setTextColor(Color.parseColor("#666666"));
                 message_member_tv.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_normal_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_selected_shap);
                 message_group_tv.setTextColor(Color.parseColor("#ffffff"));
-                message_member_tv.setTextColor(Color.parseColor("#878787"));
+                message_member_tv.setTextColor(Color.parseColor("#666666"));
             }
         }
 
@@ -104,13 +104,12 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 
     private void showSelectDialog() {
         LayoutInflater factory = LayoutInflater.from(getActivity());
-        final View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
+        View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
 
         showSelectDialog = new MyDialog(getParentActivity(), null, selectIntention);
-
         TextView tvAddNewMember = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         TextView tvCreateNewGroup = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
-
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
         tvAddNewMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +122,12 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), CreateGroupActivity.class));
+                showSelectDialog.dismiss();
+            }
+        });
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 showSelectDialog.dismiss();
             }
         });

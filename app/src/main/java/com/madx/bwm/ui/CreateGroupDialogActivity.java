@@ -48,19 +48,20 @@ public class CreateGroupDialogActivity extends Activity {
     public static final int TAKE_PHOTO = 1;
     public static final int CROP_PHOTO = 2;
 
-    ImageView ivGroupPic;
-    EditText etGroupName;
-    Button btnDone;
+    private ImageView ivGroupPic;
+    private EditText etGroupName;
+    private Button btnDone;
 
-    String groupMembers;//上一个界面传来的成员数据(JSON格式)
+    private String groupMembers;//上一个界面传来的成员数据(JSON格式)
 
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     private final static int REQUEST_HEAD_PHOTO = 1;
     private final static int REQUEST_HEAD_CAMERA = 2;
     private final static int REQUEST_HEAD_FINAL = 3;
-    Uri mCropImagedUri;//裁剪后的uri
+    private Uri mCropImagedUri;//裁剪后的uri
     private String imagePath;
+    private TextView member_num;
     /**
      * 头像缓存文件名称
      */
@@ -72,21 +73,21 @@ public class CreateGroupDialogActivity extends Activity {
     public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_group_dialog);
 
-        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
+        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
 
         groupMembers = getIntent().getStringExtra("members_json");//上一个界面传来的成员数据(JSON格式)
-        Log.d("", "groupMembers--->" + groupMembers);
-
-        ivGroupPic = (ImageView)findViewById(R.id.creategroup_imageview);
-        etGroupName = (EditText)findViewById(R.id.creategroup_editText);
-        btnDone = (Button)findViewById(R.id.creategroup_button);
-
+        member_num = (TextView) findViewById(R.id.member_num);
+        ivGroupPic = (ImageView) findViewById(R.id.creategroup_imageview);
+        etGroupName = (EditText) findViewById(R.id.creategroup_editText);
+        btnDone = (Button) findViewById(R.id.creategroup_button);
+        String memberLength = getIntent().getIntExtra("memberLength", 0) + "";
+        String memberFormat = String.format(getString(R.string.text_members_num), memberLength);
+        member_num.setText(memberFormat);
         ivGroupPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,18 +103,12 @@ public class CreateGroupDialogActivity extends Activity {
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(etGroupName.getText()))
-                {
-                    Toast.makeText(CreateGroupDialogActivity.this,getResources().getString(R.string.text_input_your_group_name), Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    if (TextUtils.isEmpty(groupMembers) || "[]".equals(groupMembers))
-                    {
+                if (TextUtils.isEmpty(etGroupName.getText())) {
+                    Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_input_your_group_name), Toast.LENGTH_SHORT).show();
+                } else {
+                    if (TextUtils.isEmpty(groupMembers) || "[]".equals(groupMembers)) {
                         //没选人
-                    }
-                    else
-                    {
+                    } else {
                         //TODO
                         //弹窗禁止再次点击DONE
                         btnDone.setEnabled(false);
@@ -152,7 +147,7 @@ public class CreateGroupDialogActivity extends Activity {
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(CreateGroupDialogActivity.this, CACHE_PIC_NAME_TEMP));
                     if (new File(uri.getPath()).exists()) {
                         try {
-                            startPhotoZoom(uri,false);
+                            startPhotoZoom(uri, false);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -190,8 +185,6 @@ public class CreateGroupDialogActivity extends Activity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-
-
 
 
     /**
@@ -299,8 +292,7 @@ public class CreateGroupDialogActivity extends Activity {
 
     private void uploadImage() {
 
-        if (mCropImagedUri==null)
-        {
+        if (mCropImagedUri == null) {
             /**
              * begin QK
              */
@@ -311,7 +303,6 @@ public class CreateGroupDialogActivity extends Activity {
             btnDone.setEnabled(true);
             return;
         }
-
 
 
         File f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
@@ -350,14 +341,11 @@ public class CreateGroupDialogActivity extends Activity {
                     String groupId;
                     JSONObject jsonObject = new JSONObject(response);
                     groupId = jsonObject.getString("group_id");
-                    if (TextUtils.isEmpty(groupId))
-                    {
+                    if (TextUtils.isEmpty(groupId)) {
                         progressDialog.dismiss();
                         btnDone.setEnabled(true);
                         Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_fail_to_create_group), Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_success_to_create_group), Toast.LENGTH_SHORT).show();
 
                         GroupEntity groupEntity = new GroupEntity();
@@ -406,8 +394,7 @@ public class CreateGroupDialogActivity extends Activity {
 
     private Dialog showCameraAlbum;
 
-    private void showCameraAlbum()
-    {
+    private void showCameraAlbum() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_camera_album, null);
 

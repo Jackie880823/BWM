@@ -22,7 +22,6 @@ public class AddNewMembersActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
