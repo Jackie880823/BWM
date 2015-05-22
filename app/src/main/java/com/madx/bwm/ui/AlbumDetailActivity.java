@@ -79,6 +79,12 @@ public class AlbumDetailActivity extends BaseActivity {
     }
 
     @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+        rightButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
     protected Fragment getFragment() {
         return null;
     }

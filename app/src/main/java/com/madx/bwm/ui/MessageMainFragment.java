@@ -90,13 +90,13 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             if (arg0 == 0) {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_selected_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
-                message_group_tv.setTextColor(Color.parseColor("#878787"));
+                message_group_tv.setTextColor(Color.parseColor("#666666"));
                 message_member_tv.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_normal_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_selected_shap);
                 message_group_tv.setTextColor(Color.parseColor("#ffffff"));
-                message_member_tv.setTextColor(Color.parseColor("#878787"));
+                message_member_tv.setTextColor(Color.parseColor("#666666"));
             }
         }
 

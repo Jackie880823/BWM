@@ -84,8 +84,8 @@ public class MainActivity extends BaseActivity {
     private static boolean hasUpdate;
     private static MainActivity mainActivityInstance;
     private String leaveGroup;
-    private static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
-    private static final String SAVE_FILE_NAME = "leaveTab";
+    public static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
+    public static String SAVE_FILE_NAME = "leaveTab";
     private int leavePagerIndex = 0;
 
     @Override
@@ -266,7 +266,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
+        SAVE_FILE_NAME=MainActivity.getUser().getUser_id()+SAVE_FILE_NAME;
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
@@ -367,7 +367,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        TabEnum tab ;
+        TabEnum tab;
         switch (leavePagerIndex) {
             case 0:
                 tab = TabEnum.family;
@@ -429,7 +429,6 @@ public class MainActivity extends BaseActivity {
         ivTab4.setBackgroundColor(getResources().getColor(R.color.transparent_color));
 
     }
-
 
 
     protected void changeTab(TabEnum tabEnum) {

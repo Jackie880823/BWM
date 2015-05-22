@@ -644,6 +644,10 @@
     <string name="text_select_relation">RELATIONSHIP</string>
     <string name="text_member_add">MEMBERS ADDED</string>
     <string name="text_members_num">%s members</string>
+    <string name="family_search">Search</string>
+    <string name="text_dialog_ok">OK</string>
+    <string name="text_all_field_compulsory">All fields are compulsory</string>
+    <string name="text_pending_approval">Pending approval.</string>
     <!--end-->
 
 
