@@ -16,7 +16,7 @@ public class EventNewActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setImageResource(R.drawable.btn_done);
-        changeTitleColor(R.color.tab_color_press2);
+//        changeTitleColor(R.color.tab_color_press2);
 //        rightTextButton.setVisibility(View.VISIBLE);
     }
 
