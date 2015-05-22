@@ -20,4 +20,21 @@
         tools:context=".ui.BaseActivity"
         />
 
+
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:clickable="true"-->
+            <!--android:layout_centerInParent="true">-->
+
+            <!--<com.gc.materialdesign.views.ProgressBarCircularIndeterminate-->
+                <!--android:id="@+id/progressBar"-->
+                <!--android:layout_width="32dp"-->
+                <!--android:layout_height="32dp"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:background="@color/bg_progressBar"-->
+                 <!--/>-->
+        <!--</RelativeLayout>-->
+
 </RelativeLayout>

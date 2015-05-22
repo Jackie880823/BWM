@@ -23,4 +23,5 @@
     <declare-styleable name="WallEditView">
         <attr name="max_length" format="integer"></attr>
     </declare-styleable>
+
 </resources>
