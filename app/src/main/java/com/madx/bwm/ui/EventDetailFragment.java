@@ -383,7 +383,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onReceiveBitmapUri(Uri uri) {
                     mUri = uri;
                     hideAllViewState();
-                    if(mUri != null) {
+                    if (mUri != null) {
                         new CompressBitmapTask().execute(mUri);
                         return;
                     }
@@ -420,31 +420,45 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             });
 
 
+
             getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
                 @Override
                 public boolean execute(View v) {
-                    if (R.id.tv_title == v.getId()) {
-                        if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
-                            option_cancel.setVisibility(View.VISIBLE);
-                            option_status.setVisibility(View.GONE);
-                        } else {
-                            option_cancel.setVisibility(View.GONE);
-                            option_status.setVisibility(View.VISIBLE);
 
-                        }
-                        if (event_options.getVisibility() == View.VISIBLE) {
-                            event_options.setVisibility(View.GONE);
-                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
-                        } else {
-                            event_options.setVisibility(View.VISIBLE);
-                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
-                        }
+                    if("2".equals(event.getGroup_event_status())){
+                        return false;
+                    }else {
+                        if (R.id.tv_title == v.getId()) {
+                            if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
 
-                    } else if (R.id.ib_top_button_right == v.getId()) {
-                        intent = new Intent(getParentActivity(), EventEditActivity.class);
-                        intent.putExtra("event", event);
-                        getActivity().startActivityForResult(intent, 1);
+                                option_cancel.setVisibility(View.VISIBLE);
+                                option_status.setVisibility(View.GONE);
+
+                            } else {
+                                option_cancel.setVisibility(View.GONE);
+                                option_status.setVisibility(View.VISIBLE);
+
+                            }
+                            if(event_options.getVisibility() == View.VISIBLE) {
+                                    event_options.setVisibility(View.GONE);
+                                    getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
+                            } else {
+                                    event_options.setVisibility(View.VISIBLE);
+                                    getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
+                            }
+
+//                        if(event.getGroup_event_status()!= "2"){
+//
+//                        }
+
+                        } else if (R.id.ib_top_button_right == v.getId()) {
+                            intent = new Intent(getParentActivity(), EventEditActivity.class);
+                            intent.putExtra("event", event);
+                            getActivity().startActivityForResult(intent, 1);
+                        }
                     }
+
+
                     return false;
                 }
             });

@@ -2,17 +2,32 @@ package com.madx.bwm.ui.wall;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.android.volley.toolbox.NetworkImageView;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
@@ -25,22 +40,30 @@ import com.madx.bwm.adapter.WallCommentAdapter;
 import com.madx.bwm.entity.WallCommentEntity;
 import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.UrlUtil;
+import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.ui.Map4BaiduActivity;
 import com.madx.bwm.ui.ViewOriginalPicesActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MessageUtil;
+import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.UIUtil;
+import com.madx.bwm.widget.CircularNetworkImage;
+import com.madx.bwm.widget.FullyLinearLayoutManager;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.SendComment;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -50,10 +73,46 @@ import java.util.Map;
  * Use the {@link WallCommentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements ViewClickListener {
+public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements ViewClickListener, View.OnClickListener {
     private final static String TAG = WallCommentFragment.class.getSimpleName();
 
+    private CircularNetworkImage nivHead;
+    private TextView tvContent;
+    /**
+     * 时间
+     */
+    private TextView tvDate;
+    /**
+     * 用户名
+     */
+    private TextView tvUserName;
+    View llWallsImage;
+    /**
+     * 分享的网络图片显示控件
+     */
+    private NetworkImageView imWallsImages;
+    /**
+     * 图片数量统计显示
+     */
+    private TextView tvPhotoCount;
+    /**
+     *
+     */
+    private TextView tvAgreeCount;
+    /**
+     * 评论总数显示
+     */
+    private TextView tvCommentCount;
+    private ImageButton ibAgree;
+    private ImageButton ibComment;
+    private ImageButton btn_del;
+    private ImageView iv_mood;
+    // location tag
+    private LinearLayout llLocation;
+    private ImageView ivLocation;
+    private TextView tvLocation;
 
+    boolean loving = false;
 
     private ProgressDialog mProgressDialog;
     private String content_group_id;
@@ -63,7 +122,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private int currentPage = 1;
     private final static int offset = 20;
     private boolean loading;
+    private View split;
     private RecyclerView rvList;
+    private ScrollView scrollView;
     private ProgressBarCircularIndeterminate progressBar;
     private SendComment sendCommentView;
 
@@ -109,11 +170,22 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         // initView
         progressBar = getViewById(R.id.progressBar);
+        scrollView = getViewById(R.id.content);
         rvList = getViewById(R.id.rv_wall_comment_list);
-        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
+        final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
         //        rvList.setHasFixedSize(true);
         //        initAdapter();
+
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(sendCommentView != null) {
+                    sendCommentView.hideAllViewStatue(true);
+                }
+                return false;
+            }
+        });
 
         sendCommentView = getViewById(R.id.send_comment);
         sendCommentView.initViewPager(getParentActivity(), this);
@@ -154,7 +226,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItem =  llm.findLastVisibleItemPosition();
+                int lastVisibleItem = llm.findLastVisibleItemPosition();
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
@@ -166,7 +238,31 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             }
         });
 
+        split = getViewById(R.id.comment_split_line);
+        nivHead = getViewById(R.id.owner_head);
+        tvUserName = getViewById(R.id.owner_name);
+        tvContent = getViewById(R.id.tv_wall_content);
+        tvDate = getViewById(R.id.push_date);
+        llWallsImage = getViewById(R.id.ll_walls_image);
+        imWallsImages = getViewById(R.id.iv_walls_images);
+        tvPhotoCount = getViewById(R.id.tv_wall_photo_count);
+        tvAgreeCount = getViewById(R.id.tv_wall_agree_count);
+        tvCommentCount = getViewById(R.id.tv_wall_relay_count);
+        ibAgree = getViewById(R.id.iv_love);
+        ibComment = getViewById(R.id.iv_comment);
+        btn_del = getViewById(R.id.btn_del);
+        iv_mood = getViewById(R.id.iv_mood);
+        llLocation = getViewById(R.id.ll_location);
+        ivLocation = getViewById(R.id.iv_location);
+        tvLocation = getViewById(R.id.tv_location);
 
+        ivLocation.setOnClickListener(this);
+        tvLocation.setOnClickListener(this);
+
+        ibAgree.setOnClickListener(this);
+        //            ibComment.setOnClickListener(this);
+        btn_del.setOnClickListener(this);
+        imWallsImages.setOnClickListener(this);
     }
 
     /**
@@ -216,6 +312,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             @Override
             public void onResult(String string) {
                 wall = new Gson().fromJson(string, WallEntity.class);
+                setWallContext();
             }
 
             @Override
@@ -235,6 +332,166 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             }
         });
 
+    }
+
+    private void setWallContext() {
+        VolleyUtil.initNetworkImageView(getParentActivity(), nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wall.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+
+        String atDescription = TextUtils.isEmpty(wall.getText_description()) ? "" : wall.getText_description();
+        tvContent.setText(atDescription);
+        // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
+        tvContent.setMovementMethod(LinkMovementMethod.getInstance());
+
+        String text = tvContent.getText().toString();
+        SpannableStringBuilder ssb = new SpannableStringBuilder(text);
+        String strMember = null;
+        if(wall.getTag_member().size() > 0) {
+            strMember = String.format(getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
+            // 文字特殊效果设置
+            SpannableString ssMember = new SpannableString(strMember);
+
+            // 给文字添加点击响应，跳转至显示被@的用户
+            ssMember.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    showMembers(wall.getContent_group_id(), wall.getGroup_id());
+                }
+            }, 0, strMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            //设置文字的前景色为蓝色
+            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
+            ssMember.setSpan(colorSpan, 0, strMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            setSpecialText(ssb, strMember, ssMember);
+        }
+        if(wall.getTag_group().size() > 0) {
+            if(!TextUtils.isEmpty(strMember)) {
+                ssb.append(getString(R.string.text_and));
+            }
+            String strGroup = String.format(getString(R.string.text_wall_content_at_group_desc), wall.getTag_group().size());
+            // 文字特殊效果设置
+            SpannableString ssGroup = new SpannableString(strGroup);
+
+            // 给文字添加点击响应，跳转至显示被@的群组
+            ssGroup.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    showGroups(wall.getContent_group_id(), wall.getGroup_id());
+                }
+            }, 0, strGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            //设置文字的前景色为蓝色
+            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
+            ssGroup.setSpan(colorSpan, 0, ssGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if(wall.getTag_member().size() > 0) {
+                // 同时@了用户和群组，用户和群组之间用&分开
+                tvContent.append(" & ");
+            }
+            setSpecialText(ssb, strGroup, ssGroup);
+        }
+        tvContent.setText(ssb);
+
+        tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(getParentActivity(), wall.getContent_creation_date()));
+        //            tvTime.setText(wall.getTime());
+        tvUserName.setText(wall.getUser_given_name());
+        if(TextUtils.isEmpty(wall.getFile_id())) {
+            llWallsImage.setVisibility(View.GONE);
+        } else {
+            llWallsImage.setVisibility(View.VISIBLE);
+
+            VolleyUtil.initNetworkImageView(getParentActivity(), imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, wall.getUser_id(), wall.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+
+            // 有图片显示图片总数
+            int count = Integer.valueOf(wall.getPhoto_count());
+            if(count > 1) {
+                String photoCountStr;
+                photoCountStr = count + " " + getString(R.string.text_photos);
+                tvPhotoCount.setText(photoCountStr);
+                tvPhotoCount.setVisibility(View.VISIBLE);
+            } else {
+                tvPhotoCount.setVisibility(View.GONE);
+            }
+        }
+
+         /*is owner wall*/
+        //        if (!TextUtils.isEmpty(wall.getUser_id())&&wall.getUser_id().equals("49")) {
+        //            ibDelete.setVisibility(View.VISIBLE);
+        //        } else {
+        //            ibDelete.setVisibility(View.GONE);
+        //        }
+
+        try {
+            if(wall.getDofeel_code() != null) {
+                StringBuilder b = new StringBuilder(wall.getDofeel_code());
+                int charIndex = wall.getDofeel_code().lastIndexOf("_");
+                b.replace(charIndex, charIndex + 1, "/");
+
+                InputStream is = getParentActivity().getAssets().open(b.toString());
+                if(is != null) {
+                    iv_mood.setImageBitmap(BitmapFactory.decodeStream(is));
+                } else {
+                    iv_mood.setVisibility(View.GONE);
+                }
+            } else {
+                iv_mood.setVisibility(View.GONE);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            iv_mood.setVisibility(View.GONE);
+        }
+
+        /*location*/
+        //        if (TextUtils.isEmpty(wall.getLoc_name())) {
+        //            at.setVisibility(View.GONE);
+        //        } else {
+        //            at.setVisibility(View.VISIBLE);
+        //            tvLocation.setText(wall.getLoc_name());
+        //        }
+
+        tvAgreeCount.setText(wall.getLove_count());
+        tvCommentCount.setText(wall.getComment_count());
+
+
+        if(MainActivity.getUser().getUser_id().equals(wall.getUser_id())) {
+            btn_del.setVisibility(View.VISIBLE);
+        } else {
+            btn_del.setVisibility(View.GONE);
+        }
+
+        if(TextUtils.isEmpty(wall.getLove_id())) {
+            ibAgree.setImageResource(R.drawable.love_normal);
+        } else {
+            ibAgree.setImageResource(R.drawable.love_press);
+        }
+
+        if(TextUtils.isEmpty(wall.getLoc_name())) {
+            llLocation.setVisibility(View.GONE);
+        } else {
+            llLocation.setVisibility(View.VISIBLE);
+            tvLocation.setText(wall.getLoc_name());
+        }
+    }
+
+    /**
+     * 设置字符特殊效果
+     *
+     * @param ssb
+     * @param strAt
+     * @param ssAt
+     */
+    private void setSpecialText(SpannableStringBuilder ssb, String strAt, SpannableString ssAt) {
+        try {
+            Pattern p = Pattern.compile(strAt);
+            Matcher m = p.matcher(ssb.toString());
+            if(m.find()) {
+                int start = m.start();
+                int end = m.end();
+                ssb.replace(start, end, ssAt);
+            } else {
+                ssb.append(ssAt);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void getComments() {
@@ -285,7 +542,15 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                         adapter.addData(data);
                     }
                 }
-                wall.setComment_count(adapter.getItemCount() - 1 + "");
+                wall.setComment_count(adapter.getItemCount() + "");
+                tvCommentCount.setText(wall.getComment_count());
+
+                if (adapter != null && adapter.getItemCount() > 0) {
+                    split.setVisibility(View.VISIBLE);
+                } else {
+                    split.setVisibility(View.GONE);
+                }
+
                 progressBar.setVisibility(View.GONE);
                 loading = false;
             }
@@ -310,7 +575,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void initAdapter() {
-        adapter = new WallCommentAdapter(getParentActivity(), data, wall);
+        adapter = new WallCommentAdapter(getParentActivity(), data);
         adapter.setPicClickListener(this);
         adapter.setCommentActionListener(new WallCommentAdapter.CommentActionListener() {
             @Override
@@ -331,7 +596,14 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void sendComment(final EditText et) {
         String commentText = et.getText().toString();
+        if(TextUtils.isEmpty(commentText) && TextUtils.isEmpty(stickerGroupPath)) {
+            // 如果没有输入字符且没有添加表情，不发送评论
+            return;
+        }
         et.setText(null);
+
+        progressBar.setVisibility(View.VISIBLE);
+
         HashMap<String, String> params = new HashMap<>();
         params.put("content_group_id", content_group_id);
         params.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -384,6 +656,132 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     }
 
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.iv_love:
+                int count = Integer.valueOf(tvAgreeCount.getText().toString());
+                if(TextUtils.isEmpty(wall.getLove_id())) {
+                    tvAgreeCount.setText(count + 1 + "");
+                    ibAgree.setImageResource(R.drawable.love_press);
+                    wall.setLove_id(MainActivity.getUser().getUser_id());
+                } else {
+                    ibAgree.setImageResource(R.drawable.love_normal);
+                    wall.setLove_id(null);
+                    tvAgreeCount.setText(count - 1 + "");
+                }
+                Log.i(TAG, "love count = " + count);
+                //判断是否已经有进行中的判断
+                if(!loving) {
+                    Log.i(TAG, "prepare love");
+                    loving = true;
+                    check();
+                } else {
+                    Log.i(TAG, "not love");
+                }
+                break;
+            case R.id.iv_walls_images:
+                showOriginalPic(wall.getContent_id());
+                break;
+            case R.id.btn_del:
+                remove(wall.getContent_group_id());
+                break;
+            case R.id.iv_location:
+            case R.id.tv_location:
+                gotoLocationSetting(wall);
+                break;
+        }
+    }
+
+    private void gotoLocationSetting(WallEntity wall) {
+        if(!TextUtils.isEmpty(wall.getLoc_name())) {
+            Intent intent = new Intent(getParentActivity(), Map4BaiduActivity.class);
+            //        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
+            //        intent.putExtra("has_location", position_name.getText().toString());
+            intent.putExtra("location_name", wall.getLoc_name());
+            intent.putExtra("latitude", Double.valueOf(wall.getLoc_latitude()));
+            intent.putExtra("longitude", Double.valueOf(wall.getLoc_longitude()));
+            getParentActivity().startActivity(intent);
+        }
+    }
+
+    private void check() {
+
+        // 数据有修改设置result 为 Activity.RESULT_OK
+        getParentActivity().setResult(Activity.RESULT_OK);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //缓冲时间为100
+                    Thread.sleep(100);
+                } catch(InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    loving = false;
+                } catch(Exception e) {
+                }
+
+                if(TextUtils.isEmpty(wall.getLove_id())) {
+                    doLove(wall, false);
+                } else {
+                    doLove(wall, true);
+                }
+            }
+        }).start();
+    }
+
+    private void doLove(WallEntity wallEntity, boolean love) {
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("content_id", wallEntity.getContent_id());
+        params.put("love", love ? "1" : "0");// 0-取消，1-赞
+        params.put("user_id", "" + MainActivity.getUser().getUser_id());
+
+        RequestInfo requestInfo = new RequestInfo(Constant.API_WALL_LOVE, params);
+
+        new HttpTools(getParentActivity()).post(requestInfo, new HttpCallback() {
+            @Override
+            public void onStart() {
+                Log.i(TAG, "onStart");
+            }
+
+            @Override
+            public void onFinish() {
+                Log.i(TAG, "onFinish");
+            }
+
+            @Override
+            public void onResult(String response) {
+                Log.i(TAG, "onResult");
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
+    }
+
     class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
 
         @Override
@@ -404,7 +802,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             if(!f.exists()) {
                 return;
             }
-
+            progressBar.setVisibility(View.VISIBLE);
             Map<String, Object> params = new HashMap<>();
             params.put("content_group_id", content_group_id);
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());

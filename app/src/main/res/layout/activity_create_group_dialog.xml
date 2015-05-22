@@ -12,55 +12,85 @@
     tools:context="com.example.christepherzhang.myapplication.CreateGroupDialogActivity">
 
     <com.madx.bwm.widget.CircularImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/_120dp"
+        android:layout_height="@dimen/_120dp"
         android:id="@+id/creategroup_imageview"
         android:src="@drawable/network_image_default"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="30dp"
-        />
+        android:layout_marginBottom="30dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_create_group"
-            android:textSize="18sp"
-            android:padding="5dp"
-            android:singleLine="true"
-            android:textColor="#FEB400"
-        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ccc" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/creategroup_editText"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="10dp"
-            android:drawablePadding="10dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:gravity="center_vertical"
-            android:background="@drawable/et_round_white"
-            />
+    <EditText
+        android:id="@+id/creategroup_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_15dp"
+        android:paddingBottom="@dimen/_15dp"
+        android:paddingLeft="@dimen/_16dp"
+        android:hint="Type group name here"
+        android:textSize="@dimen/_16dp"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:background="@drawable/et_round_white"
+        android:textColor="#ccc"
+        android:textColorHint="#ccc"
+        android:paddingRight="@dimen/_16dp" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/text_done"
-            android:textSize="30dp"
-            android:textColor="#ffffff"
-            android:id="@+id/creategroup_button"
-            android:background="@drawable/btn_chat_send_bg"
-            android:layout_marginBottom="50dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ccc" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/_16dp"
+        android:textStyle="bold"
+        android:background="#efeff4"
+        android:textSize="@dimen/_11dp"
+        android:textColor="#666"
+        android:text="@string/text_member_add" />
 
-            />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ccc" />
+
+    <TextView
+        android:id="@+id/member_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_15dp"
+        android:paddingBottom="@dimen/_15dp"
+        android:paddingLeft="@dimen/_16dp"
+        android:textSize="@dimen/_16dp"
+        android:singleLine="true"
+        android:textColor="@color/default_text_color_dark"
+        android:textColorHint="#333" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ccc" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20dp"
+        android:text="@string/text_done"
+        android:textSize="@dimen/_25dp"
+        android:textColor="#ffffff"
+        android:id="@+id/creategroup_button"
+        android:background="@drawable/btn_chat_send_bg"
+        android:layout_marginBottom="@dimen/_30dp"
+        android:layout_marginLeft="@dimen/_30dp"
+        android:layout_marginRight="@dimen/_30dp" />
 
 
 </LinearLayout>

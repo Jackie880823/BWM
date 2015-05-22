@@ -231,11 +231,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
         if (userOrGroupType == 1) {
             rightButton.setVisibility(View.VISIBLE);
         } else {
-            rightButton.setVisibility(View.GONE);
+            rightButton.setVisibility(View.INVISIBLE);
         }
         rightButton.setImageResource(R.drawable.btn_group_setting);
     }

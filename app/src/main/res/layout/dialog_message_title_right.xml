@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
         <TextView
             android:id="@+id/tv_add_new_member"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/text_add_new_member"
-            android:textSize="@dimen/text_large_size"
+            android:textSize="@dimen/_18dp"
             android:background="@drawable/bg_white_gray"
-            android:textColor="@color/default_text_color_dark"
-            android:paddingTop="2dp"
+            android:textColor="#0066ff"
+            android:paddingTop="@dimen/_5dp"
             android:paddingBottom="@dimen/default_content_padding"
             android:paddingLeft="@dimen/default_content_padding"
             android:paddingRight="@dimen/default_content_padding"/>
@@ -23,7 +23,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_split_line"/>
+            android:background="@color/default_split_line" />
 
         <TextView
             android:id="@+id/tv_create_new_group"
@@ -32,8 +32,25 @@
             android:gravity="center_horizontal"
             android:text="@string/text_create_new_group"
             android:background="@drawable/bg_white_gray"
-            android:textSize="@dimen/text_large_size"
-            android:textColor="@color/default_text_color_dark"
-            android:padding="@dimen/default_content_padding"/>
+            android:textSize="@dimen/_18dp"
+            android:textColor="#0066ff"
+            android:padding="@dimen/default_content_padding" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_split_line" />
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/cancel"
+            android:background="@drawable/bg_white_gray"
+            android:textSize="@dimen/_18dp"
+            android:textStyle="bold"
+            android:textColor="#0066ff"
+            android:padding="@dimen/default_content_padding" />
 
 </LinearLayout>
