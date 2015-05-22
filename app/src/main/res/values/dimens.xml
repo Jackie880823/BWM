@@ -130,9 +130,11 @@
     <dimen name="_98dp">98dp</dimen>
     <dimen name="_99dp">99dp</dimen>
     <dimen name="_100dp">100dp</dimen>
+    <dimen name="_120dp">120dp</dimen>
     <dimen name="_150dp">150dp</dimen>
+    <dimen name="_160dp">160dp</dimen>
     <dimen name="_200dp">200dp</dimen>
     <dimen name="_240dp">240dp</dimen>
-
+    <dimen name="_250dp">250dp</dimen>
     <dimen name="_280dp">280dp</dimen>
 </resources>

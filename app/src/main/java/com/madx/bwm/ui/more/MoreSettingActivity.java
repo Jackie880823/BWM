@@ -33,7 +33,7 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        titleBar.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
+//        titleBar.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
         rightButton.setVisibility(View.INVISIBLE);
     }
 

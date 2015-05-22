@@ -24,9 +24,11 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.gc.materialdesign.widgets.Dialog;
 import com.google.gson.Gson;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.widget.MyDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,7 +58,6 @@ public class ViaContactMainActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class ViaContactMainActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(getString(R.string.titlte_add_new_members));
+        tvTitle.setText(getString(R.string.title_via_contact));
     }
 
     @Override
@@ -92,7 +93,7 @@ public class ViaContactMainActivity extends BaseActivity {
         tvSelectContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(Intent.ACTION_PICK,ContactsContract.Contacts.CONTENT_URI), 2);
+                startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), 2);
             }
         });
 
@@ -107,30 +108,24 @@ public class ViaContactMainActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                ((CheckBox)view.findViewById(R.id.cb)).toggle();
+                ((CheckBox) view.findViewById(R.id.cb)).toggle();
                 //获得选中的手机号
-                if ( (position < userNumber.size()) && ((CheckBox)view.findViewById(R.id.cb)).isChecked())
-                {
+                if ((position < userNumber.size()) && ((CheckBox) view.findViewById(R.id.cb)).isChecked()) {
                     dataNumber.add(userNumber.get(position).toString());
-                    Log.d("","------->" + userNumber.get(position).toString());
-                }
-                else if(position < userNumber.size())
-                {
+                    Log.d("", "------->" + userNumber.get(position).toString());
+                } else if (position < userNumber.size()) {
                     dataNumber.remove(userNumber.get(position).toString());
-                    Log.d("","------->" + userNumber.get(position).toString());
+                    Log.d("", "------->" + userNumber.get(position).toString());
                 }
 
                 //获得选中的邮箱
-                if ( (position > userNumber.size() - 1) && (((CheckBox)view.findViewById(R.id.cb)).isChecked()) )
-                {
+                if ((position > userNumber.size() - 1) && (((CheckBox) view.findViewById(R.id.cb)).isChecked())) {
                     dataEmail.add(userEmail.get(position - userNumber.size()).toString());
 
-                    Log.d("","------->" + userEmail.get(position - userNumber.size()).toString());
-                }
-                else if (position > userNumber.size() - 1)
-                {
+                    Log.d("", "------->" + userEmail.get(position - userNumber.size()).toString());
+                } else if (position > userNumber.size() - 1) {
                     dataEmail.remove(userEmail.get(position - userNumber.size()).toString());
-                    Log.d("","------->" + userEmail.get(position - userNumber.size()).toString());
+                    Log.d("", "------->" + userEmail.get(position - userNumber.size()).toString());
                 }
 
                 Log.d("", "!!!!!!---->" + gson.toJson(dataNumber));
@@ -144,8 +139,7 @@ public class ViaContactMainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if (!TextUtils.isEmpty(tvSelectContact.getText()) && !TextUtils.isEmpty(tvRelationship.getText()) && !TextUtils.isEmpty(etMessage.getText()) && ( (!"[]".equals(gson.toJson(dataNumber))) || (!"[]".equals(gson.toJson(dataEmail))) ) )
-                {
+                if (!TextUtils.isEmpty(tvSelectContact.getText()) && !TextUtils.isEmpty(tvRelationship.getText()) && !TextUtils.isEmpty(etMessage.getText()) && ((!"[]".equals(gson.toJson(dataNumber))) || (!"[]".equals(gson.toJson(dataEmail))))) {
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("user_fullname", tvSelectContact.getText().toString());
                     params.put("user_relationship_name", tvRelationship.getText().toString());
@@ -173,24 +167,21 @@ public class ViaContactMainActivity extends BaseActivity {
                         public void onResult(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                if ("Success".equals(jsonObject.getString("response_status")))
-                                {
+                                if ("Success".equals(jsonObject.getString("response_status"))) {
                                     Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_lwait_for_respons), Toast.LENGTH_SHORT).show();
                                     finish();
-                                }
-                                else if ("Fail".equals(jsonObject.getString("response_status")))
-                                {
-                                    Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+                                } else if ("Fail".equals(jsonObject.getString("response_status"))) {
+                                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
-                                Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
 
                         @Override
                         public void onError(Exception e) {
-                            Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -203,82 +194,9 @@ public class ViaContactMainActivity extends BaseActivity {
 
                         }
                     });
+                } else {
+                    showSelectDialog();
                 }
-                else if(TextUtils.isEmpty(tvSelectContact.getText()))
-                {
-                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_select_contact), Toast.LENGTH_SHORT).show();
-                }
-                else if(TextUtils.isEmpty(tvRelationship.getText()))
-                {
-                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_select_relationship), Toast.LENGTH_SHORT).show();
-                }
-                else if(TextUtils.isEmpty(etMessage.getText()))
-                {
-                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_input_personal_message), Toast.LENGTH_SHORT).show();
-                }
-                else if ("[]".equals(gson.toJson(dataNumber)) && "[]".equals(gson.toJson(dataEmail)) )
-                {
-                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_choose_contact_information), Toast.LENGTH_SHORT).show();
-                }
-
-
-
-
-
-
-
-//                if (!TextUtils.isEmpty(tvSelectContact.getText()) && !TextUtils.isEmpty(tvRelationship.getText()) && !TextUtils.isEmpty(etMessage.getText()) && ( (!"[]".equals(gson.toJson(dataNumber))) || (!"[]".equals(gson.toJson(dataEmail))) ) )
-//                {
-//                    StringRequest srAddMember = new StringRequest(Request.Method.POST, Constant.API_ADD_MEMBER_THROUGH_CONTACT, new Response.Listener<String>() {
-//
-//                        @Override
-//                        public void onResponse(String response) {
-//
-//                            try {
-//                                JSONObject jsonObject = new JSONObject(response);
-//                                Log.d("","@@@@@@---->" + response);
-//                                if ("Success".equals(jsonObject.getString("response_status")))
-//                                {
-//                                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_lwait_for_respons), Toast.LENGTH_SHORT).show();
-//                                    finish();
-//                                }
-//                                else if ("Fail".equals(jsonObject.getString("response_status")))
-//                                {
-//                                    Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
-//                                }
-//
-//
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            //TODO
-//                            error.printStackTrace();
-//                            Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }) {
-//                        @Override
-//                        protected Map<String, String> getParams() throws AuthFailureError {
-//                            HashMap<String, String> params = new HashMap<String, String>();
-//                            params.put("user_fullname", tvSelectContact.getText().toString());
-//                            params.put("user_relationship_name", tvRelationship.getText().toString());
-//                            params.put("user_status", "invite");
-//                            params.put("personal_Msg", etMessage.getText().toString());
-//                            params.put("creator_id", MainActivity.getUser().getUser_id());
-//                            params.put("creator_given_name", MainActivity.getUser().getUser_given_name());
-//                            params.put("creator_country_code", MainActivity.getUser().getUser_country_code());
-//                            params.put("userEmailList", gson.toJson(dataEmail));
-//                            params.put("userPhoneList", gson.toJson(dataNumber));
-//
-//                            return params;
-//                        }
-//                    };
-//                    VolleyUtil.addRequest2Queue(ViaContactMainActivity.this, srAddMember, "");
-//                }
 //                else if(TextUtils.isEmpty(tvSelectContact.getText()))
 //                {
 //                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_select_contact), Toast.LENGTH_SHORT).show();
@@ -295,10 +213,25 @@ public class ViaContactMainActivity extends BaseActivity {
 //                {
 //                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_choose_contact_information), Toast.LENGTH_SHORT).show();
 //                }
-
             }
         });
 
+    }
+
+    private void showSelectDialog() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+        final Dialog showSelectDialog = new MyDialog(this, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.text_all_field_compulsory));
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
     }
 
     @Override
@@ -312,25 +245,21 @@ public class ViaContactMainActivity extends BaseActivity {
     }
 
     private String username;
-    private List userNumber ;
-    private List userEmail ;
+    private List userNumber;
+    private List userEmail;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode)
-        {
+        switch (requestCode) {
             case 1:
-                if (resultCode == RESULT_OK)
-                {
+                if (resultCode == RESULT_OK) {
                     tvRelationship.setText(data.getStringExtra("relationship"));
                 }
-            break;
+                break;
 
-            case 2 :
-            {
+            case 2: {
 
-                if (resultCode == Activity.RESULT_OK)
-                {
+                if (resultCode == Activity.RESULT_OK) {
 
                     userNumber = new ArrayList<String>();
                     userEmail = new ArrayList<String>();
@@ -365,22 +294,15 @@ public class ViaContactMainActivity extends BaseActivity {
 
                     while (phone.moveToNext()) {
                         userNumber.add(phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-                        Log.d("", "----->" + username + "/////" + phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-
                     }
 
                     while (email.moveToNext()) {
                         userEmail.add(email.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
-                        Log.d("", "----->" + username  +  "\\\\" + email.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
-
                     }
 
                     tvSelectContact.setText(username);
-
                     Adapter adapter = new Adapter(this, R.layout.item_phone_email, userNumber, userEmail);
                     lvInfo.setAdapter(adapter);
-
-
                 }
 
             }
@@ -389,8 +311,7 @@ public class ViaContactMainActivity extends BaseActivity {
         }
     }
 
-    public class Adapter extends ArrayAdapter
-    {
+    public class Adapter extends ArrayAdapter {
 
         private Context mContext;
         private int resourceId;
@@ -420,14 +341,11 @@ public class ViaContactMainActivity extends BaseActivity {
 
             viewHolder = new ViewHolder();
 
-            viewHolder.tvInfo = (TextView)convertView.findViewById(R.id.tv_info);
+            viewHolder.tvInfo = (TextView) convertView.findViewById(R.id.tv_info);
 
-            if (position < mUserNumber.size())
-            {
+            if (position < mUserNumber.size()) {
                 viewHolder.tvInfo.setText(mUserNumber.get(position).toString());
-            }
-            else
-            {
+            } else {
                 viewHolder.tvInfo.setText(mUserEmail.get(position - mUserNumber.size()).toString());
             }
 
@@ -435,8 +353,7 @@ public class ViaContactMainActivity extends BaseActivity {
 
         }
 
-        class ViewHolder
-        {
+        class ViewHolder {
             TextView tvInfo;
         }
     }

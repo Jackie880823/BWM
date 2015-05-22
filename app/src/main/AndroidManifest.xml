@@ -134,9 +134,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
-            android:name=".ui.BirthdayActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.EventNewActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
@@ -223,12 +220,15 @@
             android:name=".ui.AddMemberWorkFlow"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.BigDayActivity"
+            android:name=".ui.more.BondAlert.BigDayActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MemberActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AlertGroupActivity"
             android:screenOrientation="portrait" />
 
 
@@ -347,13 +347,14 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.more.BondAlert.BigDayActivity"
-            android:label="@string/title_activity_big_day"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
             android:name=".ui.InviteMemberActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AlbumActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AlbumDetailActivity"
             android:screenOrientation="portrait" />
 
         <!-- 极光推送 -->

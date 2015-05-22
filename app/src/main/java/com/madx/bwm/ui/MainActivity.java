@@ -84,8 +84,8 @@ public class MainActivity extends BaseActivity {
     private static boolean hasUpdate;
     private static MainActivity mainActivityInstance;
     private String leaveGroup;
-    private static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
-    private static final String SAVE_FILE_NAME = "leaveTab";
+    public static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
+    public static String SAVE_FILE_NAME = "leaveTab";
     private int leavePagerIndex = 0;
 
     @Override
@@ -117,6 +117,9 @@ public class MainActivity extends BaseActivity {
                 f.getRetainInstance();
             }
         }
+//        if(currentTabEnum!=null){
+//            changeTitleColor();
+//        }
     }
 
     @Override
@@ -263,7 +266,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
+        SAVE_FILE_NAME=MainActivity.getUser().getUser_id()+SAVE_FILE_NAME;
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
@@ -364,7 +367,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        TabEnum tab ;
+        TabEnum tab;
         switch (leavePagerIndex) {
             case 0:
                 tab = TabEnum.family;
@@ -419,8 +422,14 @@ public class MainActivity extends BaseActivity {
         tabTv2.setTextColor(Color.GRAY);
         tabTv3.setTextColor(Color.GRAY);
         tabTv4.setTextColor(Color.GRAY);
+        ivTab0.setBackgroundColor(getResources().getColor(R.color.transparent_color));
+        ivTab1.setBackgroundColor(getResources().getColor(R.color.transparent_color));
+        ivTab2.setBackgroundColor(getResources().getColor(R.color.transparent_color));
+        ivTab3.setBackgroundColor(getResources().getColor(R.color.transparent_color));
+        ivTab4.setBackgroundColor(getResources().getColor(R.color.transparent_color));
 
     }
+
 
     protected void changeTab(TabEnum tabEnum) {
         switch (tabEnum) {
@@ -436,6 +445,7 @@ public class MainActivity extends BaseActivity {
                 leftButton.setVisibility(View.INVISIBLE);
                 rightButton.setVisibility(View.VISIBLE);
                 tabIv1.setImageResource(R.drawable.tab_wall_select);
+                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
                 tabTv1.setTextColor(Color.BLACK);
                 break;
             case event:
@@ -450,6 +460,7 @@ public class MainActivity extends BaseActivity {
                 leftButton.setVisibility(View.INVISIBLE);
                 rightButton.setVisibility(View.VISIBLE);
                 tabIv2.setImageResource(R.drawable.tab_event_select);
+                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_press2));
                 tabTv2.setTextColor(Color.BLACK);
                 break;
             case chat:
@@ -465,6 +476,7 @@ public class MainActivity extends BaseActivity {
                 leftButton.setImageResource(R.drawable.btn_family);
                 rightButton.setVisibility(View.VISIBLE);
                 tabIv3.setImageResource(R.drawable.tab_message_select);
+                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_press3));
                 tabTv3.setTextColor(Color.BLACK);
                 break;
             case more:
@@ -479,12 +491,13 @@ public class MainActivity extends BaseActivity {
                 leftButton.setVisibility(View.INVISIBLE);
                 rightButton.setVisibility(View.INVISIBLE);
                 tabIv4.setImageResource(R.drawable.tab_more_select);
+                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
                 tabTv4.setTextColor(Color.BLACK);
                 break;
             case family:
                 setDrawable();
                 //ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
-                changeTitleColor(R.color.tab_color_press1);
+                changeTitleColor(R.color.tab_color_press5);
                 changeTitle(R.string.title_tab_my_family);
 //                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
 //                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
@@ -493,6 +506,7 @@ public class MainActivity extends BaseActivity {
                 leftButton.setVisibility(View.INVISIBLE);
                 rightButton.setVisibility(View.VISIBLE);
                 tabIv0.setImageResource(R.drawable.tab_family_select);
+                ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press5));
                 tabTv0.setTextColor(Color.BLACK);
                 break;
         }
