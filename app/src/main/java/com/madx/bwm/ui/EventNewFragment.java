@@ -505,23 +505,28 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
         calendar = Calendar.getInstance();
 //        MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis())
-        //如果有时间缓存
 //        Long ltime =  (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
-        if(date != null && date != 0L){
-            Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
+        //如果有时间缓存
+        if(mEevent.getGroup_event_date() != null){
+            Timestamp ts = Timestamp.valueOf(mEevent.getGroup_event_date());
             calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
             datePicker.setCalendar(calendar);
             timePicker.setCalendar(calendar);
-            mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
-//            Log.i("ltime=======================",ltime.toString());
-        }
+        }else if(date != null && date != 0L){
+
+                Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
+                calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
+                datePicker.setCalendar(calendar);
+                timePicker.setCalendar(calendar);
+                mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
+            }
         //日历dialog
         pickDateTimeDialog = new MyDialog(getParentActivity(), getString(R.string.title_pick_date_time), dateTimePicker);
         pickDateTimeDialog.setButtonAccept(getString(R.string.accept), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickDateTimeDialog.dismiss();
-                if(datePicker != null && timePicker != null){
+                if (datePicker != null && timePicker != null) {
 
                 }
                 mCalendar = Calendar.getInstance();
@@ -531,12 +536,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 mCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHourOfDay());
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
 
-                if(MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())){
-                    MessageUtil.showMessage(getActivity(),R.string.msg_date_not_befort_now);
+                if (MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
                     return;
                 }
                 //把时间储存到缓存
-                if(mCalendar!=null){
+                if (mCalendar != null) {
                     SharedPreferencesUtils.setParam(getParentActivity(), "date", mCalendar.getTimeInMillis());
                 }
                 //将日历的时间转化成字符串
