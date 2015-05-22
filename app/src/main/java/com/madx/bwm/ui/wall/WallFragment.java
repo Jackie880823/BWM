@@ -90,6 +90,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
         mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
         mProgressDialog.show();
 
+
+
         if (getArguments() != null) {
             member_id = getArguments().getString(ARG_PARAM_PREFIX + 0);
         }

@@ -106,7 +106,10 @@ public class App extends Application {
             PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_REG_ID, "");
             PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_APP_VERSION, "");
             NotificationUtil.clearNotification(context);
+
             context.finish();
+
+            PreferencesUtil.saveValue(context, "lastLeaveIndex",-1);
         }
     }
 
