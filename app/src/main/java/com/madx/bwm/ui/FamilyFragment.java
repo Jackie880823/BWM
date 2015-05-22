@@ -1,6 +1,5 @@
 package com.madx.bwm.ui;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -624,13 +623,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     private void showSelectDialog() {
         LayoutInflater factory = LayoutInflater.from(getActivity());
-        final View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
+        View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
 
         showSelectDialog = new MyDialog(getParentActivity(), null, selectIntention);
-
         TextView tvAddNewMember = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         TextView tvCreateNewGroup = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
-
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
         tvAddNewMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -643,6 +641,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), CreateGroupActivity.class));
+                showSelectDialog.dismiss();
+            }
+        });
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 showSelectDialog.dismiss();
             }
         });
