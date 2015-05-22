@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="app_theme_color">#bf360c</color>
+    <color name="transparent_color">#00000000</color>
+    <!-- for progress bar -->
+    <color name="progress_color_1">#008000</color>
+    <color name="progress_color_2">#FF0000</color>
+    <color name="progress_color_3">#0000FF</color>
+    <color name="progress_color_4">#FFFF00</color>
+
     <color name="actionbar_color">#bf360c</color>
     <color name="dialog_bg_color">#55000000</color>
 
@@ -20,10 +27,12 @@
 
 
     <color name="tab_color_normal">#EBEBF4</color>
-    <color name="tab_color_press1">#a8e300</color>
-    <color name="tab_color_press2">#8d42eb</color>
-    <color name="tab_color_press3">#feb400</color>
-    <color name="tab_color_press4">#00b7ff</color>
+    <color name="tab_color_press1">#99ff66</color>
+    <color name="tab_color_press2">#66ccff</color>
+    <color name="tab_color_press3">#cc99ff</color>
+    <color name="tab_color_press4">#cccc99</color>
+    <!--add for fimily-->
+    <color name="tab_color_press5">#ffcc33</color>
 
     <!--不同模块按钮点击效果,只对GO -->
     <color name="tab_color_press11">#65BE00</color>

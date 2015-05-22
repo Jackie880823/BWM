@@ -1,9 +1,12 @@
 package com.madx.bwm.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,7 +23,7 @@ import com.madx.bwm.util.NetworkUtil;
  *
  * @author wing
  */
-public abstract class BaseActivity extends BaseFragmentActivity implements IViewCommon,NetChangeObserver {
+public abstract class BaseActivity extends BaseFragmentActivity implements IViewCommon, NetChangeObserver {
 
     protected ImageButton leftButton;            //头部栏的左边的按钮
     protected TextView tvTitle;                          //头部栏的标题
@@ -45,7 +48,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         return super.dispatchKeyEvent(event); // 按下其他按钮，调用父类进行默认处理
     }
 
-    protected Fragment getFragmentInstance(){
+    protected Fragment getFragmentInstance() {
         return fragment;
     }
 
@@ -53,7 +56,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 打开Activity隐藏软键盘；
-        // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(getLayout());
         NetWorkStateReceiver.registerNetStateObserver(this);
         fragment = getFragment();
@@ -65,16 +68,16 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
             }
         }
         msg_bar = getViewById(R.id.msg_bar);
-        if(NetworkUtil.isNetworkConnected(this)){
+        if (NetworkUtil.isNetworkConnected(this)) {
             msgBarChangeByStatus(View.GONE);
-        }else{
+        } else {
             msgBarChangeByStatus(View.VISIBLE);
         }
+        msg_bar.setOnClickListener(this);
         initBottomBar();//要先初始
         initView();
         requestData();
         initTitleBar();
-
 
 
     }
@@ -104,13 +107,18 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
      * TitilBar 右边事件
      */
     protected abstract void titleRightEvent();
-    protected void titleMiddleEvent(){}
+
+    protected void titleMiddleEvent() {
+    }
 
     protected LinearLayout titleBar;
 //    protected RelativeLayout titleBar;
 
     protected void initTitleBar() {
-        titleBar = getViewById(R.id.fragment_main_top);
+        titleBar = getViewById(R.id.title_bar);
+        if(currentColor!=-1){
+            titleBar.setBackgroundColor(getResources().getColor(currentColor));
+        }
         leftButton = getViewById(R.id.ib_top_button_left);
         tvTitle = getViewById(R.id.tv_title);
         title_icon = getViewById(R.id.title_icon);
@@ -128,8 +136,10 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         return (V) findViewById(id);
     }
 
+    protected static int currentColor=-1;
     protected void changeTitleColor(int color) {
         if (titleBar != null) {
+            currentColor = color;
             titleBar.setBackgroundColor(getResources().getColor(color));
         }
     }
@@ -160,10 +170,21 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //            case R.id.ib_top_text_right:
                 titleRightEvent();
                 break;
+            case R.id.msg_bar:
+                goNetworkSetting();
+                break;
             default:
 //                super.onClick(v);
                 break;
         }
+    }
+
+    private void goNetworkSetting() {
+        Intent intent = new Intent();
+
+//        intent.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+        intent.setAction(Settings.ACTION_SETTINGS);
+        startActivity(intent);
     }
 
     @Override
@@ -171,8 +192,8 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         msgBarChangeByStatus(View.GONE);
     }
 
-    private void msgBarChangeByStatus(int status){
-        if(msg_bar!=null) {
+    private void msgBarChangeByStatus(int status) {
+        if (msg_bar != null) {
             msg_bar.setVisibility(status);
         }
     }

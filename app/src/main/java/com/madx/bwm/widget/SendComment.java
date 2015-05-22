@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -30,7 +31,6 @@ import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.ui.StickerMainFragment;
 import com.madx.bwm.ui.wall.SelectPhotosActivity;
-import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.UIUtil;
 
 import java.io.File;
@@ -40,7 +40,7 @@ import java.io.InputStream;
 import pl.droidsonroids.gif.GifDrawable;
 
 /**
- * Created by zhuweiping on 5/13/15.
+ * Created by Jackie Zhu on 5/13/15.
  */
 public class SendComment extends FrameLayout implements View.OnClickListener, StickerViewClickListener {
 
@@ -167,7 +167,10 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 break;
             case R.id.et_chat:
                 hideAllViewState();
-                UIUtil.showKeyboard(getContext(), etChat);
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if(!imm.isActive()) {
+                    UIUtil.showKeyboard(getContext(), etChat);
+                }
                 break;
             case R.id.camera_tv://打开相机
                 if(listener != null) {
@@ -276,14 +279,21 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
     }
 
     /**
-     * 隐藏表情和扩展功能视图
+     * 隐藏表、扩展功能和键盘视图
      */
     private void hideAllViewState() {
-        UIUtil.hideKeyboard(getContext(), etChat);
+//        UIUtil.hideKeyboard(getContext(), etChat);
         llMore.setVisibility(View.GONE);
         llSticker.setVisibility(View.GONE);
         ibMore.setImageResource(R.drawable.chat_plus_normal);
         ibSticker.setImageResource(R.drawable.chat_expression_normal);
+    }
+
+    public void hideAllViewStatue(boolean hideKeyboard){
+        if(hideKeyboard) {
+            UIUtil.hideKeyboard(getContext(), etChat);
+        }
+        hideAllViewState();
     }
 
     /**
@@ -307,10 +317,9 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 case REQUEST_HEAD_PHOTO:
                     if(data != null) {
                         Uri uri = data.getData();
-                        Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 80);
-                        setSendBitmap(bitmap);
                         if(commentListener != null) {
                             commentListener.onReceiveBitmapUri(uri);
+                            hideAllViewState();
                         }
                     } else {
 
@@ -321,10 +330,9 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, CACHE_PIC_NAME_TEMP + cache_count));
                     Log.i(TAG, "onActivityResult& uri: " + uri.getPath());
                     if(new File(uri.getPath()).exists()) {
-                        Bitmap bitmap = LocalImageLoader.getMiniThumbnailBitmap(mActivity, uri, 80);
-                        setSendBitmap(bitmap);
                         if(commentListener != null) {
                             commentListener.onReceiveBitmapUri(uri);
+                            hideAllViewState();
                         }
                     }
                     break;
@@ -365,12 +373,13 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 if(is != null) {
                     Bitmap bitmap = BitmapFactory.decodeStream(is);
                     setSendBitmap(bitmap);
-                setSendBitmap(bitmap);
+                    setSendBitmap(bitmap);
                 }
             } catch(IOException e) {
                 e.printStackTrace();
             }
-        } Log.i(TAG, "showComments& path: " + path);
+        }
+        Log.i(TAG, "showComments& path: " + path);
         if(commentListener != null) {
             commentListener.onStickerItemClick(type, folderName, filName);
         }

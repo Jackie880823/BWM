@@ -1,8 +1,10 @@
 package com.madx.bwm.ui;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MyFragmentPagerAdapter;
+import com.madx.bwm.adapter.ViewPicAdapter;
 import com.madx.bwm.entity.PhotoEntity;
 import com.madx.bwm.widget.ViewPagerFixed;
 
@@ -35,7 +38,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
     /**
      * 小图预览列表
      */
-    // private RecyclerView rvList;
+    private RecyclerView rvList;
 
     /**
      * 图片浏览进度提示: 当前图片位置/总图片数
@@ -48,7 +51,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
     LinearLayoutManager llm;
     private String request_url;
     private static List<PhotoEntity> data;
-    // private ViewPicAdapter adapter;
+    private ViewPicAdapter adapter;
     private ViewPagerFixed view_paper;
     private MyFragmentPagerAdapter viewPaperAdapter;
     private List<Fragment> fragments = new ArrayList<>();
@@ -70,6 +73,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
 
     /**
      * 只用于数据实体传入
+     *
      * @param inDatas
      * @return
      */
@@ -81,19 +85,19 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
 
     @Override
     public void initView() {
-        // rvList = (RecyclerView) getViewById(R.id.small_image_view_container);
+        rvList = (RecyclerView) getViewById(R.id.small_image_view_container);
         tvIndexOfList = (TextView) getViewById(R.id.tv_index_count);
         llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        // rvList.setLayoutManager(llm);
-//        got_data_in = getArguments().getBoolean("is_data",false);
+        rvList.setLayoutManager(llm);
+        //        got_data_in = getArguments().getBoolean("is_data",false);
         request_url = getArguments().getString("request_url");
-        if(getArguments()==null||TextUtils.isEmpty(request_url)) {
+        if(getArguments() == null || TextUtils.isEmpty(request_url)) {
             got_data_in = true;
 
-        }else{
+        } else {
             got_data_in = false;
-                if (data != null)
-                    data.clear();
+            if(data != null)
+                data.clear();
         }
         view_paper = (ViewPagerFixed) getViewById(R.id.view_paper);
         viewPaperAdapter = new MyFragmentPagerAdapter(getFragmentManager(), getActivity(), view_paper, fragments);
@@ -104,7 +108,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                 String text = null;
                 int count = data.size();
                 Log.i(TAG, "onPageChange& position = " + position + "; count = " + count);
-                if(count == 1){
+                if(count == 1) {
                     text = getActivity().getString(R.string.photo_position_no_arrow);
                 } else if(position <= 0) {
                     text = getActivity().getString(R.string.photo_position_right_arrow);
@@ -113,41 +117,43 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                 } else {
                     text = getActivity().getString(R.string.photo_position_double_arrow);
                 }
+                currentId = position;
                 tvIndexOfList.setText(String.format(text, position + 1, data.size()));
             }
         });
-        view_paper.setOffscreenPageLimit(1);
+        view_paper.setOffscreenPageLimit(0);
+//        view_paper.setOffscreenPageLimit(1);
     }
 
-//    private void setViewPaperItems(int mainIndex) {
-//        if (mainIndex >= 0) {
-//            currentIndex = mainIndex;
-//            if (mainIndex > 0) {
-//                leftIndex = mainIndex - 1;
-//            } else {
-//                leftIndex = -1;
-//            }
-//            if (mainIndex < (data.size() - 1)) {
-//                rightIndex = mainIndex + 1;
-//            } else {
-//                rightIndex = -1;
-//            }
-//        }
-//    }
+    //    private void setViewPaperItems(int mainIndex) {
+    //        if (mainIndex >= 0) {
+    //            currentIndex = mainIndex;
+    //            if (mainIndex > 0) {
+    //                leftIndex = mainIndex - 1;
+    //            } else {
+    //                leftIndex = -1;
+    //            }
+    //            if (mainIndex < (data.size() - 1)) {
+    //                rightIndex = mainIndex + 1;
+    //            } else {
+    //                rightIndex = -1;
+    //            }
+    //        }
+    //    }
 
     @Override
     public void requestData() {
         if(got_data_in) {
             //默认第一张
-            // initAdapter();
+            initAdapter();
             initViewPaper(0);
-        }else {
-            if (TextUtils.isEmpty(request_url)) {
+        } else {
+            if(TextUtils.isEmpty(request_url)) {
                 getActivity().finish();
                 return;
             }
 
-            new HttpTools(getActivity()).get(request_url,null,new HttpCallback() {
+            new HttpTools(getActivity()).get(request_url, null, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -166,10 +172,9 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                     //给GsonBuilder方法单独指定Date类型的反序列化方法
                     //gsonb.registerTypeAdapter(Date.class, ds);
                     Gson gson = gsonb.create();
-                    data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
-                    }.getType());
+                    data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {}.getType());
                     //默认第一张
-                    // initAdapter();
+                    initAdapter();
                     initViewPaper(0);
                 }
 
@@ -194,20 +199,21 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
 
     /**
      * 初始化
+     *
      * @param dataIndex
      */
     private void initViewPaper(int dataIndex) {
-//        setViewPaperItems(dataIndex);
-        if (data != null && !data.isEmpty()) {
+        //        setViewPaperItems(dataIndex);
+        if(data != null && !data.isEmpty()) {
             int count = data.size();
-            for (int i = 0; i < count; i++) {
+            for(int i = 0; i < count; i++) {
                 fragments.add(generatePicFragment(data.get(i)));
             }
             viewPaperAdapter.notifyDataSetChanged();
 
             tvIndexOfList.setVisibility(View.VISIBLE);
             String text = null;
-            if(count == 1){
+            if(count == 1) {
                 text = getActivity().getString(R.string.photo_position_no_arrow);
             } else {
                 text = getActivity().getString(R.string.photo_position_right_arrow);
@@ -228,61 +234,60 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
         return viewPic;
     }
 
-    //    private void initAdapter() {
-    //        if (data != null && !data.isEmpty()) {
-    //            adapter = new ViewPicAdapter(getActivity(), data);
-    //             rvList.setAdapter(adapter);
-    //            big_url = String.format(Constant.API_GET_PIC, Constant.Module_preview_m, data.get(0).getUser_id(), data.get(0).getFile_id());
-    //            if (!TextUtils.isEmpty(big_url)) {
-    //                watting_progressBar.setVisibility(View.VISIBLE);
-    //                VolleyUtil.loadImage(ViewOriginalPicesActivity.this, big_url, new ImageLoader.ImageListener() {
-    //                    @Override
-    //                    public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-    //                        imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(), response.getBitmap()));
-    //                        watting_progressBar.setVisibility(View.GONE);
-    //                    }
-    //
-    //                    @Override
-    //                    public void onErrorResponse(VolleyError error) {
-    //                        watting_progressBar.setVisibility(View.GONE);
-    //                    }
-    //                });
-    //            }
-    //            adapter.setItemClickListenner(new ViewPicAdapter.ItemClickListenner() {
-    //
-    //                @Override
-    //                public void onItemClick(Drawable smallPic, PhotoEntity photoEntity, int position) {
-    //                    //set the small pic first
-    //                    imageSwitcher.setImageDrawable(drawable);
-    //                    watting_progressBar.setVisibility(View.VISIBLE);
-    //                    big_url = String.format(Constant.API_GET_PIC, Constant.Module_preview_xl, photoEntity.getUser_id(), photoEntity.getFile_id());
-    //                    VolleyUtil.loadImage(ViewOriginalPicesActivity.this, big_url, new ImageLoader.ImageListener() {
-    //                        @Override
-    //                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-    //                            //change to big pic
-    //                            imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(), response.getBitmap()));
-    //                            watting_progressBar.setVisibility(View.GONE);
-    //                        }
-    //
-    //                        @Override
-    //                        public void onErrorResponse(VolleyError error) {
-    //                            watting_progressBar.setVisibility(View.GONE);
-    //                        }
-    //                    });
-    //                    if(currentId!=position) {
-    //                        view_paper.setCurrentItem(position);
-    //                        currentId = position;
-    //                    }
-    //
-    //
-    //
-    //                    initViewPaper(position);
-    //                }
-    //            });
-    //            adapter.notifyDataSetChanged();
-    //
-    //        }
-    //
-    //    }
+    private void initAdapter() {
+        if(data != null && !data.isEmpty()) {
+            adapter = new ViewPicAdapter(getActivity(), data);
+            rvList.setAdapter(adapter);
+            //                big_url = String.format(Constant.API_GET_PIC, Constant.Module_preview_m, data.get(0).getUser_id(), data.get(0).getFile_id());
+            //                if (!TextUtils.isEmpty(big_url)) {
+            //                    watting_progressBar.setVisibility(View.VISIBLE);
+            //                    VolleyUtil.loadImage(ViewOriginalPicesActivity.this, big_url, new ImageLoader.ImageListener() {
+            //                        @Override
+            //                        public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+            //                            imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(), response.getBitmap()));
+            //                            watting_progressBar.setVisibility(View.GONE);
+            //                        }
+            //
+            //                        @Override
+            //                        public void onErrorResponse(VolleyError error) {
+            //                            watting_progressBar.setVisibility(View.GONE);
+            //                        }
+            //                    });
+            //                }
+            adapter.setItemClickListenner(new ViewPicAdapter.ItemClickListenner() {
+
+                @Override
+                public void onItemClick(Drawable smallPic, PhotoEntity photoEntity, int position) {
+                    //set the small pic first
+                    //                        imageSwitcher.setImageDrawable(drawable);
+                    //                        watting_progressBar.setVisibility(View.VISIBLE);
+                    //                        big_url = String.format(Constant.API_GET_PIC, Constant.Module_preview_xl, photoEntity.getUser_id(), photoEntity.getFile_id());
+                    //                        VolleyUtil.loadImage(ViewOriginalPicesActivity.this, big_url, new ImageLoader.ImageListener() {
+                    //                            @Override
+                    //                            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    //                                //change to big pic
+                    //                                imageSwitcher.setImageDrawable(new BitmapDrawable(getResources(), response.getBitmap()));
+                    //                                watting_progressBar.setVisibility(View.GONE);
+                    //                            }
+                    //
+                    //                            @Override
+                    //                            public void onErrorResponse(VolleyError error) {
+                    //                                watting_progressBar.setVisibility(View.GONE);
+                    //                            }
+                    //                        });
+                    if(currentId != position) {
+                        view_paper.setCurrentItem(position);
+//                        currentId = position;
+                    }
+
+
+                    //                        initViewPaper(position);
+                }
+            });
+            adapter.notifyDataSetChanged();
+
+        }
+
+    }
 
 }
