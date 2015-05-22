@@ -56,7 +56,6 @@ public class ViaContactMainActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
@@ -67,7 +66,7 @@ public class ViaContactMainActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(getString(R.string.titlte_add_new_members));
+        tvTitle.setText(getString(R.string.title_via_contact));
     }
 
     @Override
@@ -222,80 +221,6 @@ public class ViaContactMainActivity extends BaseActivity {
                 }
 
 
-
-
-
-
-
-//                if (!TextUtils.isEmpty(tvSelectContact.getText()) && !TextUtils.isEmpty(tvRelationship.getText()) && !TextUtils.isEmpty(etMessage.getText()) && ( (!"[]".equals(gson.toJson(dataNumber))) || (!"[]".equals(gson.toJson(dataEmail))) ) )
-//                {
-//                    StringRequest srAddMember = new StringRequest(Request.Method.POST, Constant.API_ADD_MEMBER_THROUGH_CONTACT, new Response.Listener<String>() {
-//
-//                        @Override
-//                        public void onResponse(String response) {
-//
-//                            try {
-//                                JSONObject jsonObject = new JSONObject(response);
-//                                Log.d("","@@@@@@---->" + response);
-//                                if ("Success".equals(jsonObject.getString("response_status")))
-//                                {
-//                                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_lwait_for_respons), Toast.LENGTH_SHORT).show();
-//                                    finish();
-//                                }
-//                                else if ("Fail".equals(jsonObject.getString("response_status")))
-//                                {
-//                                    Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
-//                                }
-//
-//
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            //TODO
-//                            error.printStackTrace();
-//                            Toast.makeText(ViaContactMainActivity.this,getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }) {
-//                        @Override
-//                        protected Map<String, String> getParams() throws AuthFailureError {
-//                            HashMap<String, String> params = new HashMap<String, String>();
-//                            params.put("user_fullname", tvSelectContact.getText().toString());
-//                            params.put("user_relationship_name", tvRelationship.getText().toString());
-//                            params.put("user_status", "invite");
-//                            params.put("personal_Msg", etMessage.getText().toString());
-//                            params.put("creator_id", MainActivity.getUser().getUser_id());
-//                            params.put("creator_given_name", MainActivity.getUser().getUser_given_name());
-//                            params.put("creator_country_code", MainActivity.getUser().getUser_country_code());
-//                            params.put("userEmailList", gson.toJson(dataEmail));
-//                            params.put("userPhoneList", gson.toJson(dataNumber));
-//
-//                            return params;
-//                        }
-//                    };
-//                    VolleyUtil.addRequest2Queue(ViaContactMainActivity.this, srAddMember, "");
-//                }
-//                else if(TextUtils.isEmpty(tvSelectContact.getText()))
-//                {
-//                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_select_contact), Toast.LENGTH_SHORT).show();
-//                }
-//                else if(TextUtils.isEmpty(tvRelationship.getText()))
-//                {
-//                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_select_relationship), Toast.LENGTH_SHORT).show();
-//                }
-//                else if(TextUtils.isEmpty(etMessage.getText()))
-//                {
-//                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_input_personal_message), Toast.LENGTH_SHORT).show();
-//                }
-//                else if ("[]".equals(gson.toJson(dataNumber)) && "[]".equals(gson.toJson(dataEmail)) )
-//                {
-//                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_choose_contact_information), Toast.LENGTH_SHORT).show();
-//                }
-
             }
         });
 
@@ -365,22 +290,15 @@ public class ViaContactMainActivity extends BaseActivity {
 
                     while (phone.moveToNext()) {
                         userNumber.add(phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-                        Log.d("", "----->" + username + "/////" + phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-
                     }
 
                     while (email.moveToNext()) {
                         userEmail.add(email.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
-                        Log.d("", "----->" + username  +  "\\\\" + email.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
-
                     }
 
                     tvSelectContact.setText(username);
-
                     Adapter adapter = new Adapter(this, R.layout.item_phone_email, userNumber, userEmail);
                     lvInfo.setAdapter(adapter);
-
-
                 }
 
             }

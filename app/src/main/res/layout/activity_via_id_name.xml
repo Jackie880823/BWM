@@ -3,72 +3,101 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/default_text_color_while"
     tools:context="com.madx.bwm.ui.ViaIdNameActivity">
-        <include
-            android:id="@+id/fragment_main_top"
-            layout="@layout/title_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/fragment_main_top">
-                <EditText
-                    android:id="@+id/et_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/et_round_white"
-                    android:padding="@dimen/default_content_padding"
-                    android:textSize="@dimen/text_medium_size"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold"
-                    android:layout_marginTop="16dp"
-                    android:text=""
-                    android:hint="@string/hint_id_accout"
-                    android:singleLine="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"/>
-                <TextView
-                    android:id="@+id/tv_warning"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:text="@string/text_warning_invaild_id_name"
-                    android:visibility="gone"
-                    android:textColor="@color/default_text_color_red"
-                    android:textSize="@dimen/text_mirco_size"/>
-                <TextView
-                    android:id="@+id/tv_relationship"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/et_round_white"
-                    android:padding="@dimen/default_content_padding"
-                    android:textSize="@dimen/text_medium_size"
-                    android:singleLine="true"
-                    android:hint="@string/text_select_relationship"
-                    android:textStyle="bold"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:drawableRight="@drawable/profile_right"/>
-        </LinearLayout>
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
-        <Button
-            android:id="@+id/btn_add"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/fragment_main_top">
+
+        <EditText
+            android:id="@+id/et_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/default_content_padding"
-            android:layout_alignParentBottom="true"
-            android:text="@string/text_add"
-            android:textColor="#ffffff"
+            android:background="@drawable/et_round_white"
+            android:textSize="@dimen/_16dp"
+            android:textColor="#333"
+            android:layout_marginTop="16dp"
+            android:hint="@string/hint_id_accout"
+            android:singleLine="true"
+            android:paddingLeft="@dimen/_16dp"
+            android:paddingTop="@dimen/_10dp"
+            android:paddingBottom="@dimen/_10dp"
+            android:paddingRight="@dimen/_16dp" />
+
+        <TextView
+            android:id="@+id/tv_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="@string/text_warning_invaild_id_name"
+            android:visibility="gone"
+            android:textColor="@color/default_text_color_red"
+            android:textSize="@dimen/text_mirco_size" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#ccc" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_35dp"
+            android:text="@string/text_select_relation"
+            android:paddingLeft="@dimen/_16dp"
             android:textStyle="bold"
-            android:textSize="@dimen/text_large_size"
-            android:background="@drawable/btn_chat_send_bg"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginBottom="16dp"/>
+            android:textSize="@dimen/_11dp"
+            android:textColor="#666"
+            android:gravity="center_vertical"
+            android:background="#efeff4" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#ccc" />
+
+        <TextView
+            android:id="@+id/tv_relationship"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/et_round_white"
+            android:textSize="@dimen/_16dp"
+            android:singleLine="true"
+            android:textColor="#333"
+            android:hint="@string/text_select_relationship"
+            android:paddingLeft="@dimen/_16dp"
+            android:paddingTop="@dimen/_10dp"
+            android:paddingBottom="@dimen/_10dp"
+            android:paddingRight="@dimen/_16dp"
+            android:drawableRight="@drawable/profile_right" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#ccc" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/text_add"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_large_size"
+        android:background="@drawable/btn_chat_send_bg"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="16dp" />
 
 </RelativeLayout>

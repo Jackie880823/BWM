@@ -134,6 +134,6 @@
     <dimen name="_160dp">160dp</dimen>
     <dimen name="_200dp">200dp</dimen>
     <dimen name="_240dp">240dp</dimen>
-
+    <dimen name="_250dp">250dp</dimen>
     <dimen name="_280dp">280dp</dimen>
 </resources>

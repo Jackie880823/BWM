@@ -422,8 +422,8 @@
     <!--xml-->
     <!--xml-->
 
-    <string name="text_via_contact">via Contact</string>
-    <string name="text_ID_name">via BondWithMe ID / Account</string>
+    <string name="text_via_contact">Via Contact</string>
+    <string name="text_ID_name">Via BondWithMe ID / Username</string>
     <string name="text_QR">Add via Q.R Code</string>
     <string name="text_location">Location</string>
     <string name="text_stickers">Stickers</string>
@@ -475,7 +475,7 @@
     <string name="text_select_relationship">Select relationship</string>
     <string name="text_personal_message">Personal message. \nMax is 30 characters.</string>
     <string name="text_warning_invaild_id_name">Invaild ID / Username, please try again</string>
-    <string name="hint_id_accout">BondWithMe ID / Account</string>
+    <string name="hint_id_accout">Insert ID / Username</string>
     <string name="text_remove_user">Remove User</string>
     <string name="text_add_member">Add Member?</string>
     <string name="text_view_profile">View User\'s Profile</string>
@@ -636,6 +636,12 @@
     <string name="text_month_november">November</string>
     <string name="text_month_december">December</string>
     <string name="text_album_no_pic">NO IMAGE FOUND</string>
+    <string name="title_via_contact">Via Contact</string>
+    <string name="text_personal_msg">PERSONAL MESSAGE</string>
+    <string name="text_send_invitation_to">SEND INVITATION TO:</string>
+    <string name="text_type_meaage_here">Type your message here...</string>
+    <string name="title_via_id_username">Via ID / Username</string>
+    <string name="text_select_relation">RELATIONSHIP</string>
 
     <!--end-->
 
