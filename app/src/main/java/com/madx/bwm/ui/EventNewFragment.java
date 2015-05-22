@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -508,7 +509,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //        Long ltime =  (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
         if(date != null && date != 0L){
             Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
-            calendar.setTimeInMillis(ts.getTime());
+            calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
             datePicker.setCalendar(calendar);
             timePicker.setCalendar(calendar);
             mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
