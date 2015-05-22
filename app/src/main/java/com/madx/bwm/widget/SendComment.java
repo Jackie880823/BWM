@@ -289,6 +289,13 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
         ibSticker.setImageResource(R.drawable.chat_expression_normal);
     }
 
+    public void hideAllViewStatue(boolean hideKeyboard){
+        if(hideKeyboard) {
+            UIUtil.hideKeyboard(getContext(), etChat);
+        }
+        hideAllViewState();
+    }
+
     /**
      * Receive the result from a previous call to
      * related Activity API as described there in
