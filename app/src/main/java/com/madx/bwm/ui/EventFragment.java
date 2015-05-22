@@ -26,7 +26,6 @@ import com.madx.bwm.widget.MySwipeRefreshLayout;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -204,9 +203,12 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     adapter.setItemClickListener(new EventAdapter.ItemClickListener() {
                         @Override
                         public void topItemClick(List<BirthdayEntity> birthdayEntitys) {
-                            Intent intent = new Intent(getActivity(), BirthdayActivity.class);
-                            intent.putExtra("birthday_events", (Serializable) birthdayEntitys);
-                            startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
+//                            Intent intent = new Intent(getActivity(), BirthdayActivity.class);
+//                            intent.putExtra("birthday_events", (Serializable) birthdayEntitys);
+//                            startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
+                            //跳转生日界面
+                            Intent intent = new Intent(getActivity(), com.madx.bwm.ui.more.BondAlert.BigDayActivity.class);
+                            startActivity(intent);
                         }
 
                         @Override
