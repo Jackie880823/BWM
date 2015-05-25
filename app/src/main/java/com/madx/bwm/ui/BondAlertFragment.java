@@ -91,6 +91,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         checkDataAndBond2View(news_alert_num,jsonObject.getString("news"));
         checkDataAndBond2View(member_alert_num,jsonObject.getString("member"));
         checkDataAndBond2View(recommend_alert_num,jsonObject.getString("recommended"));
+        checkDataAndBond2View(group_alert_num,jsonObject.getString("group"));
 
     }
 

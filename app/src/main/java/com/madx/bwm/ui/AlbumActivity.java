@@ -84,6 +84,7 @@ public class AlbumActivity extends BaseActivity {
             data.add(i + "");
         }
         year_pv.setData(data);
+
         new AlertDialog.Builder(mContext).setView(selectIntention)
                 .setPositiveButton(R.string.text_yes, new DialogInterface.OnClickListener() {
                     @Override
@@ -92,6 +93,7 @@ public class AlbumActivity extends BaseActivity {
                         selectYear = year_pv.getSelectData();
                         requestData();
                         mProgressDialog.show();
+                        tvTitle.setText(selectYear);
                     }
                 })
                 .setNegativeButton(R.string.cancel,
@@ -101,12 +103,13 @@ public class AlbumActivity extends BaseActivity {
                                                 int which) {
                             }
                         })
-                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        tvTitle.setText(selectYear);
-                    }
-                }).show();
+                .show();
+//                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                    @Override
+//                    public void onDismiss(DialogInterface dialog) {
+//                        tvTitle.setText(selectYear);
+//                    }
+//                }).show();
 //        year_pv.setOnSelectListener(new PickerView.onSelectListener() {
 //
 //            @Override
@@ -234,7 +237,7 @@ public class AlbumActivity extends BaseActivity {
                         Message.obtain(handler, GET_DATA, albumList).sendToTarget();
                         if (null == albumList || albumList.size() == 0) {
                             no_image_linear.setVisibility(View.VISIBLE);
-                        }else{
+                        } else {
                             no_image_linear.setVisibility(View.GONE);
                         }
                     }

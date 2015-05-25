@@ -260,6 +260,7 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
         /**wing begin test gcm*/
         initGCM();
@@ -278,7 +279,6 @@ public class LoginActivity extends Activity {
             finish();
             return;
         }
-        setContentView(R.layout.activity_login);
 
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
 

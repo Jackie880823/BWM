@@ -45,7 +45,7 @@ public class BigDayActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        titleBar.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
+//        titleBar.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
         rightButton.setVisibility(View.INVISIBLE);
     }
 
