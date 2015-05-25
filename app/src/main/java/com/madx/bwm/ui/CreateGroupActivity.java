@@ -44,26 +44,21 @@ import java.util.List;
 
 public class CreateGroupActivity extends BaseActivity {
 
-    List<UserEntity> userList  = new ArrayList();
-    List<GroupEntity> groupList = new ArrayList();
+    private List<UserEntity> userList = new ArrayList();
+    private List<GroupEntity> groupList = new ArrayList();
+    private List<UserEntity> searchUserList = new ArrayList<>();//好友
+    private List<GroupEntity> searchGroupList = new ArrayList<>();//群组
+    private ImageButton mTop;
+    private Gson gson = new Gson();
+    private List memberList = new ArrayList();//要添加的成员user_id，需要变成json作为一个接口变量，传到CreateGroupDialogActivity创建群组
 
-    List<UserEntity> searchUserList = new ArrayList<>();//好友
-    List<GroupEntity> searchGroupList = new ArrayList<>();//群组
-
-    ImageButton mTop;
-
-    Gson gson = new Gson();
-    List memberList = new ArrayList();//要添加的成员user_id，需要变成json作为一个接口变量，传到CreateGroupDialogActivity创建群组
-
-    GridView mGridView;
-    Boolean isSearch = false;
-    List data = new ArrayList<>();
-
-    EditText etSearch;
-
+    private GridView mGridView;
+    private Boolean isSearch = false;
+    private List data = new ArrayList<>();
+    private EditText etSearch;
     private List<String> checkItem = new ArrayList();
 
-    ProgressBarCircularIndeterminate progressBar;
+    private ProgressBarCircularIndeterminate progressBar;
 
     public static CreateGroupActivity instance;
 
@@ -75,7 +70,6 @@ public class CreateGroupActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
         rightButton.setImageResource(R.drawable.btn_done);
     }
 
@@ -91,15 +85,12 @@ public class CreateGroupActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        if ((data.size() > 0) && data !=null)
-        {
+        if (data != null && data.size() > 0) {
             Intent intent = new Intent(CreateGroupActivity.this, CreateGroupDialogActivity.class);
             intent.putExtra("members_json", gson.toJson(data));
-
+            intent.putExtra("memberLength", data.size());
             startActivity(intent);
-        }
-        else
-        {
+        } else {
             Toast.makeText(CreateGroupActivity.this, "You didn't choose any members.", Toast.LENGTH_SHORT).show();//成功
         }
 
@@ -111,68 +102,51 @@ public class CreateGroupActivity extends BaseActivity {
     }
 
 
-
     @Override
     public void initView() {
         instance = this;
-
-        mGridView = (GridView)findViewById(R.id.creategroup_gridView);
-
+        mGridView = (GridView) findViewById(R.id.creategroup_gridView);
         mTop = getViewById(R.id.ib_top);
-
         etSearch = getViewById(R.id.et_search);
-
         progressBar = getViewById(R.id.gv_progress_bar);
 
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (isSearch)
-                {
-                    if ("0".equals(searchUserList.get(position).getFam_accept_flag()))
-                    {
+                if (isSearch) {
+                    if ("0".equals(searchUserList.get(position).getFam_accept_flag())) {
                         //不是好友,不做任何处理
                         Toast.makeText(CreateGroupActivity.this, "Awaiting for approval from member.", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    Log.i("","check------" +position);
-                    ((CheckBox)view.findViewById(R.id.creategroup_image_right)).toggle();
-                    if ( ((CheckBox)view.findViewById(R.id.creategroup_image_right)).isChecked())
-                    {
+                    Log.i("", "check------" + position);
+                    ((CheckBox) view.findViewById(R.id.creategroup_image_right)).toggle();
+                    if (((CheckBox) view.findViewById(R.id.creategroup_image_right)).isChecked()) {
                         data.add(searchUserList.get(position).getUser_id().toString());
                         checkItem.add(searchUserList.get(position).getUser_id());
-                    }
-                    else
-                    {
+                    } else {
                         data.remove(searchUserList.get(position).getUser_id().toString());
                         checkItem.remove(searchUserList.get(position).getUser_id());
                     }
-                }
-                else
-                {
-                    if ("0".equals(userList.get(position).getFam_accept_flag()))
-                    {
+                } else {
+                    if ("0".equals(userList.get(position).getFam_accept_flag())) {
                         //不是好友,不做任何处理
                         Toast.makeText(CreateGroupActivity.this, "Awaiting for approval from member.", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    Log.i("","check------" +position);
-                    ((CheckBox)view.findViewById(R.id.creategroup_image_right)).toggle();
-                    if ( ((CheckBox)view.findViewById(R.id.creategroup_image_right)).isChecked())
-                    {
+                    Log.i("", "check------" + position);
+                    ((CheckBox) view.findViewById(R.id.creategroup_image_right)).toggle();
+                    if (((CheckBox) view.findViewById(R.id.creategroup_image_right)).isChecked()) {
                         data.add(userList.get(position).getUser_id().toString());
                         checkItem.add(userList.get(position).getUser_id());
-                    }
-                    else
-                    {
+                    } else {
                         data.remove(userList.get(position).getUser_id().toString());
                         checkItem.remove(userList.get(position).getUser_id());
                     }
                 }
-
 
 
             }
@@ -201,28 +175,22 @@ public class CreateGroupActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
 
 
-                if (TextUtils.isEmpty(etSearch.getText()))
-                {
+                if (TextUtils.isEmpty(etSearch.getText())) {
                     CreateGroupAdapter createGroupAdapter1 = new CreateGroupAdapter(CreateGroupActivity.this, R.layout.gridview_item_for_creategroup, userList, groupList);
                     mGridView.setAdapter(createGroupAdapter1);
                     isSearch = false;
-                }
-                else
-                {
+                } else {
                     searchGroupList.clear();
                     searchUserList.clear();
 
                     for (int i = 0; i < groupList.size(); i++) {
-                        if (groupList.get(i).getGroup_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase()))
-                        {
+                        if (groupList.get(i).getGroup_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase())) {
                             searchGroupList.add(groupList.get(i));
                         }
                     }
 
-                    for(int j = 0; j < userList.size(); j++)
-                    {
-                        if (userList.get(j).getUser_given_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase()))
-                        {
+                    for (int j = 0; j < userList.size(); j++) {
+                        if (userList.get(j).getUser_given_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase())) {
                             searchUserList.add(userList.get(j));
                         }
 
@@ -260,8 +228,10 @@ public class CreateGroupActivity extends BaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
 
-                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {}.getType());
-                    groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {}.getType());
+                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {
+                    }.getType());
+                    groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {
+                    }.getType());
 
                     CreateGroupAdapter createGroupAdapter = new CreateGroupAdapter(CreateGroupActivity.this, R.layout.gridview_item_for_creategroup, userList, groupList);
 
@@ -271,8 +241,7 @@ public class CreateGroupActivity extends BaseActivity {
 
                     progressBar.setVisibility(View.GONE);
 
-                } catch (JSONException e)
-                {
+                } catch (JSONException e) {
                     MessageUtil.showMessage(CreateGroupActivity.this, getResources().getString(R.string.text_error));
                     e.printStackTrace();
                 }
@@ -293,49 +262,6 @@ public class CreateGroupActivity extends BaseActivity {
 
             }
         });
-
-
-
-
-
-
-//        StringRequest stringRequest = new StringRequest(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//
-//                GsonBuilder gsonb = new GsonBuilder();
-//
-//                Gson gson = gsonb.create();
-//
-//                try {
-//                    JSONObject jsonObject = new JSONObject(response);
-//
-//                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {}.getType());
-//                    groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {}.getType());
-//
-//                    CreateGroupAdapter createGroupAdapter = new CreateGroupAdapter(CreateGroupActivity.this, R.layout.gridview_item_for_creategroup, userList, groupList);
-//
-//                    mGridView.setAdapter(createGroupAdapter);
-//
-//                    createGroupAdapter.notifyDataSetChanged();
-//
-//                    progressBar.setVisibility(View.GONE);
-//
-//                } catch (JSONException e)
-//                {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.i("", "error=====" + error.getMessage());
-//            }
-//        });
-//
-//        VolleyUtil.addRequest2Queue(this.getApplicationContext(), stringRequest, "");
-
     }
 
     @Override
@@ -343,13 +269,11 @@ public class CreateGroupActivity extends BaseActivity {
 
     }
 
-
-
-    public class CreateGroupAdapter extends ArrayAdapter<UserEntity>
-    {
+    public class CreateGroupAdapter extends ArrayAdapter<UserEntity> {
         private int resourceId;
         private Context mContext;
-        List<UserEntity> mUserList = new ArrayList<>();;
+        List<UserEntity> mUserList = new ArrayList<>();
+        ;
         List<GroupEntity> mGroupList;
 
         public CreateGroupAdapter(Context context, int gridViewResourceId, List<UserEntity> userList, List<GroupEntity> groupList) {
@@ -370,66 +294,38 @@ public class CreateGroupActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             ViewHolder viewHolder;
-
-//            if(convertView == null)
-//            {
-//                convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
-//
-//                viewHolder = new ViewHolder();
-//
-//                viewHolder.imageMain = (CircularNetworkImage)convertView.findViewById(R.id.creategroup_image_main);
-//                viewHolder.imageRight = (CheckBox)convertView.findViewById(R.id.creategroup_image_right);
-//                viewHolder.textName = (TextView)convertView.findViewById(R.id.creategroup_name);
-//
-//                convertView.setTag(viewHolder);
-//            }
-//            else
-//            {
-//                viewHolder = (ViewHolder)convertView.getTag();
-//            }
-//
-//            UserEntity userEntity = mUserList.get(position);
-//            Log.i("","----------" + position);
-//            viewHolder.textName.setText(userEntity.getUser_given_name());
-//            VolleyUtil.initNetworkImageView(mContext,viewHolder.imageMain,String.format(Constant.API_GET_PIC,Constant.Module_profile, userEntity.getUser_id(),"profile"),R.drawable.network_image_default, R.drawable.network_image_default);
-
             convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
 
             viewHolder = new ViewHolder();
 
-            viewHolder.imageMain = (CircularNetworkImage)convertView.findViewById(R.id.creategroup_image_main);
-            viewHolder.imageRight = (CheckBox)convertView.findViewById(R.id.creategroup_image_right);
-            viewHolder.textName = (TextView)convertView.findViewById(R.id.creategroup_name);
+            viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.creategroup_image_main);
+            viewHolder.imageRight = (CheckBox) convertView.findViewById(R.id.creategroup_image_right);
+            viewHolder.textName = (TextView) convertView.findViewById(R.id.creategroup_name);
 
             UserEntity userEntity = mUserList.get(position);
 
             //
-            if ("0".equals(userEntity.getFam_accept_flag()))
-            {
-                viewHolder.imageTop = (ImageView)convertView.findViewById(R.id.creategroup_image_top);
+            if ("0".equals(userEntity.getFam_accept_flag())) {
+                viewHolder.imageTop = (ImageView) convertView.findViewById(R.id.creategroup_image_top);
                 viewHolder.imageTop.setVisibility(View.VISIBLE);
                 viewHolder.imageRight.setVisibility(View.GONE);
             }
 
-            if (checkItem.contains(userEntity.getUser_id()))
-            {
+            if (checkItem.contains(userEntity.getUser_id())) {
                 viewHolder.textName.setText(userEntity.getUser_given_name());
                 viewHolder.imageRight.setChecked(true);
-                VolleyUtil.initNetworkImageView(mContext,viewHolder.imageMain,String.format(Constant.API_GET_PIC,Constant.Module_profile, userEntity.getUser_id(),"profile"),R.drawable.network_image_default, R.drawable.network_image_default);
+                VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PIC, Constant.Module_profile, userEntity.getUser_id(), "profile"), R.drawable.network_image_default, R.drawable.network_image_default);
 
-            }
-            else
-            {
+            } else {
                 viewHolder.textName.setText(userEntity.getUser_given_name());
                 viewHolder.imageRight.setChecked(false);
-                VolleyUtil.initNetworkImageView(mContext,viewHolder.imageMain,String.format(Constant.API_GET_PIC,Constant.Module_profile, userEntity.getUser_id(),"profile"),R.drawable.network_image_default, R.drawable.network_image_default);
+                VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PIC, Constant.Module_profile, userEntity.getUser_id(), "profile"), R.drawable.network_image_default, R.drawable.network_image_default);
             }
 
             return convertView;
         }
 
-        class ViewHolder
-        {
+        class ViewHolder {
             CircularNetworkImage imageMain;
             CheckBox imageRight;
             ImageView imageTop;

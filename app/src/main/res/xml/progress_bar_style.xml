@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="progress_bar">
+        <item name="layout_width">@dimen/_50dp</item>
+        <item name="layout_height">@dimen/_50dp</item>
+        <item name="layout_centerInParent">true</item>
+        <item name="background">@color/bg_progressBar</item>
+    </style>
+</resources>

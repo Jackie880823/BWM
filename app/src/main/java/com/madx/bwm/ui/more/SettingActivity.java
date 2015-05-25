@@ -58,7 +58,7 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        titleBar.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
+//        titleBar.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
         rightButton.setImageResource(R.drawable.btn_done);
 //        rightButton.setVisibility(View.INVISIBLE);
     }

@@ -254,6 +254,14 @@
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
 
+    <style name="progress_bar">
+        <item name="android:layout_width">@dimen/_50dp</item>
+        <item name="android:layout_height">@dimen/_50dp</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:background">@color/bg_progressBar</item>
+
+    </style>
+
 
     <!-- other-->
     <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
