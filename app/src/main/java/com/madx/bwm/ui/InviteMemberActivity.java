@@ -81,6 +81,7 @@ public class InviteMemberActivity extends BaseActivity {
     private int type;
     private List<FamilyMemberEntity> selectMemberEntityList;
     private List<FamilyGroupEntity> selectGroupEntityList;
+    private boolean isFirstData = true;
 
     Handler handler = new Handler() {
         @Override
@@ -89,6 +90,7 @@ public class InviteMemberActivity extends BaseActivity {
             switch (msg.what) {
                 case GET_DATA:
                     Map<String, List> map = (Map<String, List>) msg.obj;
+                    memberEntityList.clear();
                     memberEntityList = map.get("private");
                     if (type == 1) {
                         List<FamilyMemberEntity> memberList = new ArrayList<>();
@@ -96,18 +98,21 @@ public class InviteMemberActivity extends BaseActivity {
                             if (!selectMemberList.contains(memberEntity.getUser_id())) {
                                 memberList.add(memberEntity);
                             } else {
-                                selectMemberEntityList.add(memberEntity);
+                                if (isFirstData) {
+                                    selectMemberEntityList.add(memberEntity);
+                                }
                             }
                         }
                         memberAdapter.addNewData(memberList);
                     } else {
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
-                            if (selectMemberList.contains(memberEntity.getUser_id())) {
+                            if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
                                 selectMemberEntityList.add(memberEntity);
                             }
                         }
                         memberAdapter.addNewData(memberEntityList);
                     }
+                    groupEntityList.clear();
                     groupEntityList = map.get("group");
                     if (type == 1) {
                         List<FamilyGroupEntity> groupList = new ArrayList<>();
@@ -115,13 +120,15 @@ public class InviteMemberActivity extends BaseActivity {
                             if (!selectGroupList.contains(groupEntity.getGroup_id())) {
                                 groupList.add(groupEntity);
                             } else {
-                                selectGroupEntityList.add(groupEntity);
+                                if (isFirstData) {
+                                    selectGroupEntityList.add(groupEntity);
+                                }
                             }
                         }
                         groupAdapter.addData(groupList);
                     } else {
                         for (FamilyGroupEntity groupEntity : groupEntityList) {
-                            if (selectGroupList.contains(groupEntity.getGroup_id())) {
+                            if (selectGroupList.contains(groupEntity.getGroup_id()) && isFirstData) {
                                 selectGroupEntityList.add(groupEntity);
                             }
                         }
@@ -309,6 +316,7 @@ public class InviteMemberActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 isMemberRefresh = true;
+                isFirstData = false;
                 requestData();
             }
         });
@@ -363,6 +371,7 @@ public class InviteMemberActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 isGroupRefresh = true;
+                isFirstData = false;
                 requestData();
             }
 
