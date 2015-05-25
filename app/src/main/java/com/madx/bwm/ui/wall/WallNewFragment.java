@@ -75,6 +75,24 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
      */
     private final static String TAG = WallNewFragment.class.getSimpleName();
 
+    public static final String PREFERENCE_NAME = "SAVE_DRAFT";
+    public static final String PREFERENCE_KEY_IS_SAVE = "IS_SAVE";
+
+    private static final String PREFERENCE_KEY_PIC_CONTENT = "PIC_CONTENT";
+    private static final String PREFERENCE_KEY_PIC_COUNT = "PIC_COUNT";
+    private static final String PREFERENCE_KEY_PIC_VIEW_WIDTH = "PIC_VIEW_WIDTH";
+    private static final String PREFERENCE_KEY_LOC_NAME = "LOC_NAME";
+    private static final String PREFERENCE_KEY_LOC_LONGITUDE = "LOC_LONGITUDE";
+    private static final String PREFERENCE_KEY_LOC_LATITUDE = "LOC_LATITUDE";
+    private static final String PREFERENCE_KEY_DO_FEEL_CODE = "DO_FEEL_CODE";
+    private static final String PREFERENCE_KEY_CHECK_ITEM_INDEX = "CHECK_ITEM_INDEX";
+    private static final String PREFERENCE_KEY_CONTENT_GROUP_PUBLIC = "CONTENT_GROUP_PUBLIC";
+    private static final String PREFERENCE_KEY_TAG_MEMBERS = "TAG_MEMBERS";
+    private static final String PREFERENCE_KEY_TAG_GROUPS = "TAG_GROUPS";
+    private static final String PREFERENCE_KEY_OLD_MEMBER_TEXT = "OLD_MEMBER_TEXT";
+    private static final String PREFERENCE_KEY_OLD_GROUP_TEXT = "OLD_GROUP_TEXT";
+    private static final String PREFERENCE_KEY_TEXT_CONTENT = "TEXT_CONTENT";
+
     /**
      * 输入文字的TAB
      */
@@ -287,24 +305,6 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         editor.commit();
     }
 
-    public static final String PREFERENCE_NAME = "SAVE_DRAFT";
-    public static final String PREFERENCE_KEY_IS_SAVE = "IS_SAVE";
-
-    private static final String PREFERENCE_KEY_PIC_CONTENT = "PIC_CONTENT";
-    private static final String PREFERENCE_KEY_PIC_COUNT = "PIC_COUNT";
-    private static final String PREFERENCE_KEY_PIC_VIEW_WIDTH = "PIC_VIEW_WIDTH";
-    private static final String PREFERENCE_KEY_LOC_NAME = "LOC_NAME";
-    private static final String PREFERENCE_KEY_LOC_LONGITUDE = "LOC_LONGITUDE";
-    private static final String PREFERENCE_KEY_LOC_LATITUDE = "LOC_LATITUDE";
-    private static final String PREFERENCE_KEY_DO_FEEL_CODE = "DO_FEEL_CODE";
-    private static final String PREFERENCE_KEY_CHECK_ITEM_INDEX = "CHECK_ITEM_INDEX";
-    private static final String PREFERENCE_KEY_CONTENT_GROUP_PUBLIC = "CONTENT_GROUP_PUBLIC";
-    private static final String PREFERENCE_KEY_TAG_MEMBERS = "TAG_MEMBERS";
-    private static final String PREFERENCE_KEY_TAG_GROUPS = "TAG_GROUPS";
-    private static final String PREFERENCE_KEY_OLD_MEMBER_TEXT = "OLD_MEMBER_TEXT";
-    private static final String PREFERENCE_KEY_OLD_GROUP_TEXT = "OLD_GROUP_TEXT";
-    private static final String PREFERENCE_KEY_TEXT_CONTENT = "TEXT_CONTENT";
-
     /**
      * 恢复草稿
      */
@@ -511,7 +511,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     if("1".equals(obj.getString("resultStatus")) && !TextUtils.isEmpty(obj.getString("contentID"))) {
                         String contentId = obj.getString("contentID");
                         if(!hasPicContent) {
-                            mHandler.sendEmptyMessage(ACTION_SUCCESSED);
+                            mHandler.sendEmptyMessage(ACTION_SUCCEED);
                         } else {
                             int count = pic_content.size();
                             boolean multiple = (count > 0 ? false : true);
@@ -553,7 +553,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private static final int SHOW_PROGRESS = 11;
     private static final int HIDE_PROGRESS = 12;
     private static final int ACTION_FAILED = 13;
-    private static final int ACTION_SUCCESSED = 14;
+    private static final int ACTION_SUCCEED = 14;
 
     Handler mHandler = new Handler() {
         @Override
@@ -563,18 +563,21 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     sendEmptyMessage(HIDE_PROGRESS);
                     break;
-                case ACTION_SUCCESSED:
+                case ACTION_SUCCEED:
                     SharedPreferences.Editor editor = draftPreferences.edit();
                     editor.clear().commit();
                     getParentActivity().setResult(Activity.RESULT_OK);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     sendEmptyMessage(HIDE_PROGRESS);
-                    getActivity().finish();
+                    if(getActivity() != null) {
+                        getActivity().finish();
+                    }
                     break;
                 case SHOW_PROGRESS:
                     if(progressDialog == null) {
                         progressDialog = new ProgressDialog(getActivity(), R.string.text_uploading);
                     }
+                    progressDialog.setCanceledOnTouchOutside(false);
                     progressDialog.show();
                     break;
                 case HIDE_PROGRESS:
@@ -698,7 +701,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             @Override
             public void onResult(String string) {
                 if(lastPic) {
-                    mHandler.sendEmptyMessage(ACTION_SUCCESSED);
+                    mHandler.sendEmptyMessage(ACTION_SUCCEED);
                 }
             }
 
