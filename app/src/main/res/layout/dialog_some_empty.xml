@@ -8,7 +8,8 @@
     <TextView
         android:id="@+id/tv_no_member"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_60dp"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/_60dp"
         android:text="@string/text_add_new_member"
         android:textSize="@dimen/_18dp"
         android:background="@drawable/bg_white_gray"
@@ -22,10 +23,33 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/default_split_line" />
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/text_dialog_show_no"
+        android:background="@drawable/bg_white_gray"
+        android:textSize="@dimen/_18dp"
+        android:textStyle="bold"
+        android:textColor="#0066ff"
+        android:visibility="gone"
+        android:padding="@dimen/default_content_padding" />
+    <View
+        android:id="@+id/line_view"
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:background="@color/default_split_line"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/tv_ok"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:text="@string/text_dialog_ok"
@@ -34,5 +58,8 @@
         android:textStyle="bold"
         android:textColor="#0066ff"
         android:padding="@dimen/default_content_padding" />
+
+    </LinearLayout>
+
 
 </LinearLayout>
