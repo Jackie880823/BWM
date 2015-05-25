@@ -545,7 +545,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 wall.setComment_count(adapter.getItemCount() + "");
                 tvCommentCount.setText(wall.getComment_count());
 
-                if (adapter != null && adapter.getItemCount() > 0) {
+                if(adapter != null && adapter.getItemCount() > 0) {
                     split.setVisibility(View.VISIBLE);
                 } else {
                     split.setVisibility(View.GONE);
@@ -604,6 +604,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         et.setText(null);
 
         progressBar.setVisibility(View.VISIBLE);
+        mProgressDialog.show();
+        UIUtil.hideKeyboard(getActivity(), et);
 
         HashMap<String, String> params = new HashMap<>();
         params.put("content_group_id", content_group_id);
@@ -634,7 +636,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 stickerType = "";
                 stickerGroupPath = "";
                 getParentActivity().setResult(Activity.RESULT_OK);
-                UIUtil.hideKeyboard(getActivity(), et);
+                mProgressDialog.dismiss();
             }
 
             @Override
