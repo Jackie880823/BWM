@@ -425,6 +425,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public boolean execute(View v) {
 
+                    /*
                     if("2".equals(event.getGroup_event_status())){
                         return false;
                     }else {
@@ -457,8 +458,36 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             getActivity().startActivityForResult(intent, 1);
                         }
                     }
+                    */
 
+                    if (R.id.tv_title == v.getId()) {
+                        if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
 
+                            option_cancel.setVisibility(View.VISIBLE);
+                            option_status.setVisibility(View.GONE);
+
+                        } else {
+                            option_cancel.setVisibility(View.GONE);
+                            option_status.setVisibility(View.VISIBLE);
+
+                        }
+                        if(event_options.getVisibility() == View.VISIBLE) {
+                            event_options.setVisibility(View.GONE);
+                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
+                        } else {
+                            event_options.setVisibility(View.VISIBLE);
+                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
+                        }
+
+//                        if(event.getGroup_event_status()!= "2"){
+//
+//                        }
+
+                    } else if (R.id.ib_top_button_right == v.getId()) {
+                        intent = new Intent(getParentActivity(), EventEditActivity.class);
+                        intent.putExtra("event", event);
+                        getActivity().startActivityForResult(intent, 1);
+                    }
                     return false;
                 }
             });
@@ -1096,7 +1125,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_comment_del));
 
-        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.accept), new View.OnClickListener() {
+        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.event_accept), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_COMMENT_DELETE, commentId), null);
@@ -1141,7 +1170,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
 
         });
-        removeAlertDialog.setButtonCancel(getActivity().getString(R.string.cancel), new View.OnClickListener() {
+        removeAlertDialog.setButtonCancel(getActivity().getString(R.string.event_cancel), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 removeAlertDialog.dismiss();

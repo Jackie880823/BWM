@@ -16,7 +16,7 @@
     <string name="title_event_edit">Event Edit</string>
     <string name="title_wall_new">Post</string>
     <string name="title_map_choose_location">Choose location</string>
-    <string name="title_invited_status">Participants</string>
+    <string name="title_invited_status">Invited Participants</string>
     <string name="title_birthday_alert">Birthday Alerts</string>
     <string name="title_birthday_title">%1$s%2$s birthday is coming !</string>
     <string name="title_birthday_title_prefix1">and others</string>
@@ -36,6 +36,10 @@
     <string name="msg_load_config_successed">Loaded successfully</string>
     <string name="msg_load_config_failed">Loading failed</string>
     <string name="msg_date_not_befort_now">Date must be later than now</string>
+    <string name="draft_tips_title">Save as Draft</string>
+    <string name="draft_ask_save">Do you want to save as draft for next event?</string>
+    <string name="event_accept">YES</string>
+    <string name="event_cancel">NO</string>
     <string name="text_tips_title">Action</string>
     <string name="text_more">More</string>
     <string name="alert_text_title_null">Title cannot be empty</string>
