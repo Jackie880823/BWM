@@ -24,12 +24,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -117,7 +117,8 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private LinearLayout btn_submit;
     private LinearLayout btn_location;
     private TextView location_desc;
-
+    // 加载框
+    private RelativeLayout rlProgress;
 
     private List<String> fileNames = new ArrayList<>();
 
@@ -165,6 +166,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         gson = new Gson();
         getViewById(R.id.tv_tab_word).setOnClickListener(this);
         getViewById(R.id.tv_tab_picture).setOnClickListener(this);
+        rlProgress = getViewById(R.id.rl_progress);
         ivCursor = getViewById(R.id.cursor);
 
         fragment1 = new TabWordFragment();
@@ -415,7 +417,6 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     boolean hasPicContent;
     boolean hasTextContent;
-    ProgressDialog progressDialog;
 
     private void submitWall() {
         hasTextContent = false;
@@ -574,16 +575,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     }
                     break;
                 case SHOW_PROGRESS:
-                    if(progressDialog == null) {
-                        progressDialog = new ProgressDialog(getActivity(), R.string.text_uploading);
-                    }
-                    progressDialog.setCanceledOnTouchOutside(false);
-                    progressDialog.show();
+                    rlProgress.setVisibility(View.VISIBLE);
                     break;
                 case HIDE_PROGRESS:
-                    if(progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
+                    rlProgress.setVisibility(View.GONE);
                     break;
             }
         }
@@ -592,9 +587,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     @Override
     public void onDestroy() {
-        if(progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        rlProgress.setVisibility(View.GONE);
         super.onDestroy();
     }
 
@@ -676,7 +669,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
         File f = new File(path);
-        if(!f.exists()) {
+        if(!f.exists() || getActivity() == null) {
             return;
         }
 

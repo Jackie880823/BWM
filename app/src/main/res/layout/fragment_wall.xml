@@ -65,4 +65,6 @@
 
     </com.madx.bwm.widget.MySwipeRefreshLayout>
 
+    <include layout="@layout/progress_layout"/>
+
 </RelativeLayout>
