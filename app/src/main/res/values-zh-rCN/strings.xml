@@ -4,7 +4,7 @@
     <string name="app_name">BWM</string>
     <string name="title_tab_wall">日记</string>
     <string name="title_tab_event">事件</string>
-    <string name="title_tab_chat">对话</string>
+    <string name="title_tab_chat">信息</string>
     <string name="title_tab_more">更多</string>
     <string name="action_settings">设置</string>
     <string name="msg_google_service_not_found">No valid Google Play Services APK found</string>
@@ -117,8 +117,8 @@
     <string name="text_sign_out">Sign Out</string>
     <string name="msg_ask_exit_app">Do you really want to sign out?</string>
     <string name="text_yes">YES</string>
-    <string name="text_camera">Camera</string>
-    <string name="text_album">Album</string>
+    <string name="text_camera">拍照</string>
+    <string name="text_album">从相册选择</string>
     <string name="text_news">News</string>
     <string name="title_text_miss">Miss Alert</string>
     <string name="text_miss_you">miss you</string>
@@ -422,8 +422,8 @@
     <!--xml-->
     <!--xml-->
 
-    <string name="text_via_contact">Via Contact</string>
-    <string name="text_ID_name">Via BondWithMe ID / Username</string>
+    <string name="text_via_contact">通过手机号码</string>
+    <string name="text_ID_name">通过伴我玩账号 / 用户名字</string>
     <string name="text_QR">Add via Q.R Code</string>
     <string name="text_location">Location</string>
     <string name="text_stickers">Stickers</string>
@@ -452,8 +452,8 @@
     <string name="hint_phone_username">Phone Number / Username</string>
     <string name="text_password">Password</string>
     <string name="text_my_view_profile">View Profile</string>
-    <string name="text_album_gallery">Album Gallery</string>
-    <string name="text_wall_posting">Wall Posting</string>
+    <string name="text_album_gallery">相册</string>
+    <string name="text_wall_posting">动态</string>
     <string name="text_reset_password">Reset Password</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
@@ -471,11 +471,11 @@
     <string name="text_re_enter_password">Re-enter Password</string>
     <string name="text_create_new_password">Create A New Password</string>
     <string name="text_contact_information">Contact information</string>
-    <string name="text_select_contact">Select contact</string>
-    <string name="text_select_relationship">Select relationship</string>
+    <string name="text_select_contact">选择手机号码</string>
+    <string name="text_select_relationship">选择关系</string>
     <string name="text_personal_message">Personal message. \nMax is 30 characters.</string>
     <string name="text_warning_invaild_id_name">Invaild ID / Username, please try again</string>
-    <string name="hint_id_accout">Insert ID / Username</string>
+    <string name="hint_id_accout">加入伴我玩账号 / 用户名字</string>
     <string name="text_remove_user">Remove User</string>
     <string name="text_add_member">Add Member?</string>
     <string name="text_view_profile">View User\'s Profile</string>
@@ -483,8 +483,8 @@
     <string name="text_add_new_member">Add New Member</string>
     <string name="text_create_new_group">Create New Group</string>
     <string name="text_view_profile_family">View Profile</string>
-    <string name="text_i_miss_you">I Miss You !</string>
-    <string name="text_path_relationship"><![CDATA[Path & Relationship]]></string>
+    <string name="text_i_miss_you">想你了</string>
+    <string name="text_path_relationship">关系</string>
     <string name="text_send_message">Send Message</string>
 
     <!--xml-->
@@ -500,7 +500,7 @@
     <string name="text_wall_loved_your_post">love your post</string>
 
 
-    <string name="title_add_new_members">Add New Members</string>
+    <string name="title_add_new_members">添加新会员</string>
     <string name="title_album_gallery">Album gallery</string>
     <string name="title_country_code">Country Code</string>
     <string name="title_family_profile">Profile</string>
@@ -580,7 +580,7 @@
     <string name="text_fail_add_member">Add member failed. Try again.</string>
     <string name="title_select_relationship">Select Relationship</string>
     <string name="title_reset_password">Reset Password</string>
-    <string name="title_select_members">Select Members</string>
+    <string name="title_select_members">选择会员</string>
     <string name="text_awaiting_approval_member">Awaiting for approval from member.</string>
     <string name="text_try_again">Try Again</string>
     <string name="title_sign_up">Sign Up</string>
@@ -622,7 +622,7 @@
     <string name="some_hour_ago">%d hr ago</string>
     <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_tab_my_family">My Family</string>
+    <string name="title_tab_my_family">我的家庭</string>
     <string name="text_month_january">January</string>
     <string name="text_month_february">February</string>
     <string name="text_month_march">March</string>
@@ -637,17 +637,25 @@
     <string name="text_month_december">December</string>
     <string name="text_album_no_pic">NO IMAGE FOUND</string>
     <string name="title_via_contact">Via Contact</string>
-    <string name="text_personal_msg">PERSONAL MESSAGE</string>
-    <string name="text_send_invitation_to">SEND INVITATION TO:</string>
+    <string name="text_personal_msg">私信</string>
+    <string name="text_send_invitation_to">发送给</string>
     <string name="text_type_meaage_here">Type your message here...</string>
-    <string name="title_via_id_username">Via ID / Username</string>
-    <string name="text_select_relation">RELATIONSHIP</string>
-    <string name="text_member_add">MEMBERS ADDED</string>
+    <string name="title_via_id_username">通过伴我玩账号 / 用户名字</string>
+    <string name="text_select_relation">关系</string>
+    <string name="text_member_add">已加入会员</string>
     <string name="text_members_num">%s members</string>
-    <string name="family_search">Search</string>
-    <string name="text_dialog_ok">OK</string>
-    <string name="text_all_field_compulsory">All fields are compulsory</string>
-    <string name="text_pending_approval">Pending approval.</string>
+    <string name="family_search">搜索</string>
+    <string name="text_dialog_ok">好的</string>
+    <string name="text_all_field_compulsory">请填满所有空格。</string>
+    <string name="text_pending_approval">待允许</string>
+    <string name="text_new_member">会员</string>
+    <string name="text_new_group">群组</string>
+    <string name="text_new_family_tree">家谱</string>
+    <string name="text_group_name_here">填写群组名称</string>
+    <string name="text_dialog_no">NO</string>
+    <string name="text_dialog_show_no">取消</string>
+    <string name="text_create_group_not_save">确定取消？资料将不被保存。</string>
+    <string name="text_create_group_members_least_two">你必须拥有两个或以上的会员以创建新群组。添加新会员吧</string>
     <!--end-->
 
 

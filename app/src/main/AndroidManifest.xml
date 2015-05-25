@@ -241,8 +241,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CreateGroupDialogActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.GroupSettingActivity"
             android:screenOrientation="portrait" />
