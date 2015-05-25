@@ -12,11 +12,11 @@ import com.madx.bwm.R;
 /**
  * Created by wing on 15/3/23.
  */
-public class ViewOriginalPicesActivity extends BaseFragmentActivity{
+public class ViewOriginalPicesActivity extends BaseFragmentActivity {
 
 
     private String request_url;
-
+    private String memberId;
 
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
@@ -29,12 +29,14 @@ public class ViewOriginalPicesActivity extends BaseFragmentActivity{
         setContentView(R.layout.activity_view_original_pices);
         ViewOriginalPicesMainFragment fragment;
         Bundle bundle = new Bundle();
-        if(getIntent().getBooleanExtra("is_data",false)){
+        if (getIntent().getBooleanExtra("is_data", false)) {
             fragment = ViewOriginalPicesMainFragment.newInstance((java.util.List<com.madx.bwm.entity.PhotoEntity>) getIntent().getSerializableExtra("datas"));
-        }else{
+        } else {
             fragment = new ViewOriginalPicesMainFragment();
             request_url = getIntent().getStringExtra("request_url");
-            bundle.putString("request_url",request_url);
+            memberId = getIntent().getStringExtra("memberId");
+            bundle.putString("request_url", request_url);
+            bundle.putString("memberId", memberId);
         }
         fragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
