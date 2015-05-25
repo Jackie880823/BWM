@@ -1,6 +1,7 @@
 package com.madx.bwm.ui.wall;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
@@ -123,7 +125,6 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         getViewById(R.id.ll_to_camera).setOnClickListener(this);
 
         gvPictures = getViewById(R.id.gv_pictures);
-        columnWidthHeight = gvPictures.getColumnWidth();
 
         adapter = new PickPicAdapter(getActivity(), datas, R.layout.picture_item_for_gridview, new String[]{"pic_resId",}, new int[]{R.id.iv_pic});
 
@@ -154,7 +155,9 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         });
 
         gvPictures.setAdapter(adapter);
-
+        if(uris != null && uris.size() > 0) {
+            addDataAndNotify(getMiniThumbnailUri(uris));
+        }
     }
 
     @Override
@@ -197,7 +200,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         }
     }
 
-    private void addDataAndNofify(Bitmap uri) {
+    private void addDataAndNotify(Bitmap uri) {
         Map<String, Bitmap> map = new HashMap<>();
         map.put("pic_resId", uri);
         datas.add(map);
@@ -294,12 +297,12 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      * pick到的图片byte[]
      */
     //	byte[] personHeadImage;
-    private void addDataAndNofify(List<Bitmap> uries) {
-        if(uries != null && uries.size() > 0) {
-            int count = uries.size();
+    private void addDataAndNotify(List<Bitmap> uris) {
+        if(uris != null && uris.size() > 0) {
+            int count = uris.size();
             for(int i = 0; i < count; i++) {
                 Map<String, Bitmap> map = new HashMap<>();
-                map.put("pic_resId", uries.get(i));
+                map.put("pic_resId", uris.get(i));
                 datas.add(map);
             }
             adapter.notifyDataSetChanged();
@@ -308,6 +311,10 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "onActivityResult");
+        // 没有退出编辑不用保存蓝草稿
+        getParentActivity().getSharedPreferences(WallNewFragment.PREFERENCE_NAME, Context.MODE_PRIVATE).edit().putBoolean(WallNewFragment.PREFERENCE_KEY_IS_SAVE, false).commit();
+
         if(getActivity().RESULT_OK == resultCode) {
 
             switch(requestCode) {
@@ -333,7 +340,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                         //                            pickUries.add(data.getData());
                         //                        }
                         pickUries = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
-                        addDataAndNofify(getMiniThumbnailUri(pickUries));
+                        addDataAndNotify(getMiniThumbnailUri(pickUries));
                         uris.addAll(pickUries);
                     }
                     break;
@@ -350,7 +357,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                         if(columnWidthHeight == 0) {
                             columnWidthHeight = gvPictures.getColumnWidth();
                         }
-                        addDataAndNofify(LocalImageLoader.getMiniThumbnailBitmap(getActivity(), uri, columnWidthHeight));
+                        addDataAndNotify(LocalImageLoader.getMiniThumbnailBitmap(getActivity(), uri, columnWidthHeight));
                         uris.add(uri);
                     }
                     //                    }
@@ -400,6 +407,14 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         }
     }
 
+    public int getColumnWidthHeight() {
+        return columnWidthHeight;
+    }
+
+    public void setColumnWidthHeight(int columnWidthHeight) {
+        this.columnWidthHeight = columnWidthHeight;
+    }
+
     private List<Bitmap> getMiniThumbnailUri(List<Uri> uris) {
 
         List<Bitmap> miniThumbnailUris = new ArrayList<>();
@@ -423,6 +438,10 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
     public List<Uri> getEditPic4Content() {
         return uris;
+    }
+
+    public void setEditPicContent(List<Uri> uris) {
+        this.uris = uris;
     }
 
 

@@ -3,6 +3,7 @@ package com.madx.bwm.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,12 @@ import java.util.List;
 public class ViewPicAdapter extends RecyclerView.Adapter<ViewPicAdapter.VHItem> {
     private Context mContext;
     private List<PhotoEntity> data;
+    private String memberId;
 
-
-    public ViewPicAdapter(Context context, List<PhotoEntity> data) {
+    public ViewPicAdapter(Context context, List<PhotoEntity> data, String memberId) {
         mContext = context;
         this.data = data;
+        this.memberId = memberId;
     }
 
     @Override
@@ -40,7 +42,11 @@ public class ViewPicAdapter extends RecyclerView.Adapter<ViewPicAdapter.VHItem> 
     @Override
     public void onBindViewHolder(ViewPicAdapter.VHItem holder, int position) {
         PhotoEntity photo = data.get(position);
-        VolleyUtil.initNetworkImageView(mContext, holder.iv_pic, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, photo.getUser_id(), photo.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        String userId = photo.getUser_id();
+        if (TextUtils.isEmpty(userId)) {
+            userId = memberId;
+        }
+        VolleyUtil.initNetworkImageView(mContext, holder.iv_pic, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, photo.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
     }
 
 
@@ -70,7 +76,7 @@ public class ViewPicAdapter extends RecyclerView.Adapter<ViewPicAdapter.VHItem> 
                 PhotoEntity photoEntity = data.get(position);
                 NetworkImageView ss = (NetworkImageView) v.findViewById(R.id.iv_pic);
                 ss.buildDrawingCache();
-                mItemClickListenner.onItemClick(ss.getDrawable(),photoEntity,position);
+                mItemClickListenner.onItemClick(ss.getDrawable(), photoEntity, position);
             }
 
         }
@@ -84,7 +90,7 @@ public class ViewPicAdapter extends RecyclerView.Adapter<ViewPicAdapter.VHItem> 
     }
 
     public interface ItemClickListenner {
-        void onItemClick(Drawable smallPic, PhotoEntity photoEntity,int position);
+        void onItemClick(Drawable smallPic, PhotoEntity photoEntity, int position);
     }
 
 }

@@ -71,11 +71,11 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
                     case CHANGE_MODE_NORMAL:
                         if(lastChange == CHANGE_MODE_BLACK_CHANGE) {
                             lastChange = change;
-                            changeAtDesc(mMembers, mGroups);
+                            changeAtDesc(mMembers, mGroups, true);
                             return;
                         }
                         break;
-                    case CHANGE_MODE_DLETE_AT_ALL:
+                    case CHANGE_MODE_DELETE_AT_ALL:
                         if(mMembers != null) {
                             mMembers.clear();
                         }
@@ -84,13 +84,13 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
                         }
                         break;
 
-                    case CHANGE_MODE_DLETE_AT_GROUPS:
+                    case CHANGE_MODE_DELETE_AT_GROUPS:
                         if(mGroups != null) {
                             mGroups.clear();
                         }
                         break;
 
-                    case CHANGE_MODE_DLETE_AT_MEMBER:
+                    case CHANGE_MODE_DELETE_AT_MEMBER:
                         if(mMembers != null) {
                             mMembers.clear();
                         }
@@ -106,7 +106,7 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
         return getViewById(R.id.wall_text_content);
     }
 
-    public void changeAtDesc(List<UserEntity> members, List<GroupEntity> groups) {
+    public void changeAtDesc(List<UserEntity> members, List<GroupEntity> groups, boolean checkVisible) {
         mMembers = members;
         mGroups = groups;
 
@@ -127,9 +127,11 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
             Log.i(TAG, "changeAtDesc& no group of at description");
             groupText = "";
         }
-
-        editText.addAtDesc(memberText, groupText, isVisible());
-
+        if(!checkVisible) {
+            editText.addAtDesc(memberText, groupText, true);
+        } else {
+            editText.addAtDesc(memberText, groupText, isVisible());
+        }
     }
 
     @Override
