@@ -20,6 +20,7 @@ import com.madx.bwm.interfaces.IViewCommon;
 import com.madx.bwm.interfaces.NetChangeObserver;
 import com.madx.bwm.receiver_service.NetWorkStateReceiver;
 import com.madx.bwm.util.NetworkUtil;
+import com.madx.bwm.util.UIUtil;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -135,6 +136,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
      * TitilBar 左边事件
      */
     protected void titleLeftEvent() {
+        UIUtil.hideKeyboard(this, getCurrentFocus());
         finish();
     }
 

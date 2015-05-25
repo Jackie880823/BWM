@@ -23,6 +23,7 @@ import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.NetworkUtil;
+import com.madx.bwm.widget.CircularNetworkImage;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(final RecyclerView.ViewHolder viewHolder, int i) {
         VHItem item = (VHItem) viewHolder;
         WallCommentEntity comment = data.get(i);
-        //            VolleyUtil.initNetworkImageView(mContext, item.civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, comment.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(mContext, item.civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, comment.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         item.tv_comment_owner_name.setText(comment.getUser_given_name());
         item.tv_comment_content.setText(comment.getComment_content());
         item.tv_agree_count.setText((TextUtils.isEmpty(comment.getLove_count()) ? "0" : comment.getLove_count()));
@@ -199,7 +200,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     class VHItem extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        //        CircularNetworkImage civ_comment_owner_head;
+        CircularNetworkImage civ_comment_owner_head;
         TextView tv_comment_owner_name;
         TextView tv_comment_content;
         TextView tv_agree_count;
@@ -211,7 +212,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public VHItem(View itemView) {
             super(itemView);
-            //            civ_comment_owner_head = (CircularNetworkImage) itemView.findViewById(R.id.civ_comment_owner_head);
+            civ_comment_owner_head = (CircularNetworkImage) itemView.findViewById(R.id.civ_comment_owner_head);
             tv_comment_content = (TextView) itemView.findViewById(R.id.tv_comment_content);
             tv_comment_owner_name = (TextView) itemView.findViewById(R.id.tv_comment_owner_name);
             comment_date = (TextView) itemView.findViewById(R.id.comment_date);

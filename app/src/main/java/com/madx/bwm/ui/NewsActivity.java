@@ -54,7 +54,7 @@ public class NewsActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.text_news);
+        tvTitle.setText(R.string.title_news_alert);
     }
 
     @Override

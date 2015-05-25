@@ -3,30 +3,34 @@
 
     <string name="app_name">BWM</string>
     <string name="title_tab_wall">日记</string>
-    <string name="title_tab_event">事件</string>
     <string name="title_tab_chat">信息</string>
+    <string name="title_tab_event">活动</string>
     <string name="title_tab_more">更多</string>
     <string name="action_settings">设置</string>
     <string name="msg_google_service_not_found">No valid Google Play Services APK found</string>
 
     <string name="title_event_detail">Detail</string>
     <string name="title_wall_comment">Wall Comments</string>
-    <string name="title_event_new">New Event</string>
+    <string name="title_event_new">新建活动</string>
     <string name="title_event_edit">Event Edit</string>
     <string name="title_wall_new">Post</string>
     <string name="title_map_choose_location">Choose location</string>
-    <string name="title_invited_status">Participants</string>
+    <string name="title_invited_status">被邀请的会员</string>
     <string name="title_birthday_alert">Birthday Alerts</string>
     <string name="title_birthday_title">%1$s%2$s birthday is coming !</string>
     <string name="title_birthday_title_prefix1">and others</string>
     <string name="title_birthday_title_prefix2">\'s</string>
     <string name="title_birthday_left_day_desc"> day left</string>
     <string name="text_and">&amp;</string>
-    <string name="text_hint_event_title">Event title</string>
-    <string name="text_hint_event_content">Event content</string>
-    <string name="text_hint_event_position">Event location</string>
-    <string name="text_hint_event_date">Choose a date</string>
-    <string name="text_canceled">Canceled</string>
+    <string name="text_hint_event_title">填写标题在此处</string>
+    <string name="text_hint_event_content">描述您的活动</string>
+    <string name="text_hint_event_position">活动的地点</string>
+    <string name="text_hint_event_date">选择日期&amp;时间</string>
+    <string name="text_canceled">已取消</string>
+    <string name="draft_tips_title">保存为草稿</string>
+    <string name="draft_ask_save">您要保存为草稿吗?</string>
+    <string name="event_accept">YES</string>
+    <string name="event_cancel">NO</string>
     <string name="msg_action_successed">Action successful</string>
     <string name="msg_action_canceled">Action canceled</string>
     <string name="msg_action_failed">Action failed</string>
@@ -54,7 +58,7 @@
     <string name="text_word">Text</string>
     <string name="text_picture">Picture</string>
     <string name="text_photo">Photo</string>
-    <string name="text_invited_members">Invited Members</string>
+    <string name="text_invited_members">邀请会员</string>
     <string name="text_all">All</string>
     <string name="text_going">Joined</string>
     <string name="text_maybe">Maybe</string>
@@ -100,32 +104,30 @@
 
 
     <!-- about -->
-    <string name="text_about_title">About Us</string>
+
     <string name="text_about_terms">Terms</string>
     <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
-    <string name="text_bond_alert">Bond Alert</string>
+
     <string name="text_me">Me</string>
     <string name="text_my_family">My Family</string>
-    <string name="text_tell_friend">Tell A Friend</string>
-    <string name="text_setting">Settings</string>
+
+
     <string name="text_sticker_store">Sticker Store</string>
-    <string name="text_about_us">About Us</string>
-    <string name="text_contact_us">Contact Us</string>
-    <string name="text_terms">Terms</string>
-    <string name="text_sign_out">Sign Out</string>
+
+
+
     <string name="msg_ask_exit_app">Do you really want to sign out?</string>
     <string name="text_yes">YES</string>
     <string name="text_camera">拍照</string>
     <string name="text_album">从相册选择</string>
-    <string name="text_news">News</string>
     <string name="title_text_miss">Miss Alert</string>
     <string name="text_miss_you">miss you</string>
-    <string name="text_member">Member</string>
-    <string name="text_recommend">Recommended</string>
-    <string name="text_big_day">Big Day</string>
-    <string name="title_bond_alert">Bond Alert</string>
+
+
+
+
 
     <string name="hint_mail">Your email</string>
     <string name="hint_subject">Select a subject</string>
@@ -592,22 +594,15 @@
     <string name="title_password">Password</string>
     <string name="text_invalid_account_name">Invalid account name. Please try again.</string>
     <string name="text_input_re_enter_password">Please confirm your password</string>
-    <string name="titlte_terms_and_privacy">Terms and Privacy</string>
+
     <string name="titlte_add_new_members">Add New Members</string>
     <string name="text_lwait_for_respons">Awaiting member response.</string>
     <string name="text_input_personal_message">Input personal message</string>
     <string name="text_choose_contact_information">Please select at least a contact</string>
 
 
-    <string name="text_invited_event">invited you to %s event.</string>
-    <string name="text_responded_event">responded for %s event.</string>
-    <string name="text_commented_event">commented on %s event.</string>
-    <string name="text_also_commented_event">also commented on %s event.</string>
-    <string name="text_updated_event">updated %s event.</string>
-    <string name="text_cancelled_event">cancelled %s event.</string>
-    <string name="text_love_comment_event">loved your comment in %s event.</string>
-    <string name="text_love_event">loved your %s event.</string>
-    <string name="text_upcoming_event">Upcoming event: %s </string>
+
+
     <string name="text_photos">photos</string>
     <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" ">]]></string>
     <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
@@ -659,4 +654,76 @@
     <!--end-->
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--Christopher-->
+    <string name="title_bond_alert">伴通告</string>
+    <string name="title_wall_alert">动态通告</string>
+    <string name="title_event_alert">活动通告</string>
+    <string name="title_big_day_alert">大日子通告</string>
+    <string name="title_miss_alert">想念通告</string>
+    <string name="title_news_alert">消息通告</string>
+    <string name="title_member_alert">会员通告</string>
+    <string name="title_recommended_alert">推荐通告</string>
+    <string name="title_group_alert">群组通告</string>
+
+    <string name="text_bond_alert">伴通告</string>
+    <!--Wall-->
+    <string name="text_bond_alert_wall">动态</string>
+    <!--Event-->
+    <string name="text_bond_alert_event">活动</string>
+    <string name="text_big_day">大日子</string>
+    <string name="text_miss">想念</string>
+    <string name="text_news">消息</string>
+    <string name="text_member">会员</string>
+    <string name="text_recommend">推荐</string>
+    <string name="text_alert_group">群组</string>
+
+    <string name="titlte_terms_and_privacy">法律声明</string>
+
+    <string name="text_tell_friend">推介给朋友</string>
+    <string name="text_setting">设置</string>
+    <string name="text_about_us">关于伴我玩</string>
+    <string name="text_contact_us">联系我们</string>
+    <string name="text_terms">法律</string>
+    <string name="text_sign_out">Sign Out</string>
+
+    <string name="text_invited_event">%s invited you to event.</string>
+    <string name="text_responded_event">%s responded for event.</string>
+    <string name="text_commented_event">%s commented on event.</string>
+    <string name="text_also_commented_event">%s also commented on event.</string>
+    <string name="text_updated_event">%s updated event.</string>
+    <string name="text_cancelled_event">%s cancelled event.</string>
+    <string name="text_love_comment_event">%s loved your comment in event.</string>
+    <string name="text_love_event">%s loved your event.</string>
+    <string name="text_upcoming_event">Upcoming event: %s </string>
+    <!--Christopher-->
 </resources>
