@@ -237,6 +237,7 @@
 
         <activity
             android:name=".ui.CreateGroupActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CreateGroupDialogActivity"
