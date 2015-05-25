@@ -162,7 +162,8 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView item_unenable;
         ImageView icon_release_date;
         RelativeLayout item_event;
-        FrameLayout event_start;
+//        FrameLayout event_start;
+        RelativeLayout event_start;
 
 
 
@@ -176,7 +177,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             item_unenable = (TextView) itemView.findViewById(R.id.item_unenable);
             icon_release_date = (ImageView) itemView.findViewById(R.id.icon_release_date);
             item_event = (RelativeLayout) itemView.findViewById(R.id.item_event);
-            event_start = (FrameLayout) itemView.findViewById(R.id.event_start);
+            event_start = (RelativeLayout) itemView.findViewById(R.id.event_start);
 //
 //            if(){
 //

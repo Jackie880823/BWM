@@ -3,7 +3,7 @@
 
     <string name="app_name">BWM</string>
     <string name="title_tab_wall">日记</string>
-    <string name="title_tab_event">事件</string>
+    <string name="title_tab_event">活动</string>
     <string name="title_tab_chat">对话</string>
     <string name="title_tab_more">更多</string>
     <string name="action_settings">设置</string>
@@ -11,22 +11,26 @@
 
     <string name="title_event_detail">Detail</string>
     <string name="title_wall_comment">Wall Comments</string>
-    <string name="title_event_new">New Event</string>
+    <string name="title_event_new">新建活动</string>
     <string name="title_event_edit">Event Edit</string>
     <string name="title_wall_new">Post</string>
     <string name="title_map_choose_location">Choose location</string>
-    <string name="title_invited_status">Participants</string>
+    <string name="title_invited_status">被邀请的会员</string>
     <string name="title_birthday_alert">Birthday Alerts</string>
     <string name="title_birthday_title">%1$s%2$s birthday is coming !</string>
     <string name="title_birthday_title_prefix1">and others</string>
     <string name="title_birthday_title_prefix2">\'s</string>
     <string name="title_birthday_left_day_desc"> day left</string>
     <string name="text_and">&amp;</string>
-    <string name="text_hint_event_title">Event title</string>
-    <string name="text_hint_event_content">Event content</string>
-    <string name="text_hint_event_position">Event location</string>
-    <string name="text_hint_event_date">Choose a date</string>
-    <string name="text_canceled">Canceled</string>
+    <string name="text_hint_event_title">填写标题在此处</string>
+    <string name="text_hint_event_content">描述您的活动</string>
+    <string name="text_hint_event_position">活动的地点</string>
+    <string name="text_hint_event_date">选择日期&amp;时间</string>
+    <string name="text_canceled">已取消</string>
+    <string name="draft_tips_title">保存为草稿</string>
+    <string name="draft_ask_save">您要保存为草稿吗?</string>
+    <string name="event_accept">YES</string>
+    <string name="event_cancel">NO</string>
     <string name="msg_action_successed">Action successful</string>
     <string name="msg_action_canceled">Action canceled</string>
     <string name="msg_action_failed">Action failed</string>
@@ -54,7 +58,7 @@
     <string name="text_word">Text</string>
     <string name="text_picture">Picture</string>
     <string name="text_photo">Photo</string>
-    <string name="text_invited_members">Invited Members</string>
+    <string name="text_invited_members">邀请会员</string>
     <string name="text_all">All</string>
     <string name="text_going">Joined</string>
     <string name="text_maybe">Maybe</string>
