@@ -205,6 +205,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             @Override
             public void onReceiveBitmapUri(Uri uri) {
                 if(uri != null) { // 传输图片
+                    mProgressDialog.show();
                     new CompressBitmapTask().execute(uri);
                 }
             }
@@ -303,7 +304,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             @Override
             public void onFinish() {
                 getComments();
-                mProgressDialog.dismiss();
                 if(wall == null) {
                     getParentActivity().finish();
                 }
@@ -495,6 +495,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void getComments() {
+        mProgressDialog.dismiss();
         HashMap<String, String> jsonParams = new HashMap<>();
         jsonParams.put("content_group_id", content_group_id);
         jsonParams.put("group_id", group_id);
@@ -636,14 +637,13 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 stickerType = "";
                 stickerGroupPath = "";
                 getParentActivity().setResult(Activity.RESULT_OK);
-                mProgressDialog.dismiss();
             }
 
             @Override
             public void onError(Exception e) {
                 UIUtil.hideKeyboard(getActivity(), et);
+                mProgressDialog.dismiss();
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-
             }
 
             @Override
@@ -833,6 +833,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
                 @Override
                 public void onError(Exception e) {
+                    mProgressDialog.dismiss();
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     e.printStackTrace();
                 }
 
@@ -911,6 +913,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
                     @Override
                     public void onError(Exception e) {
+                        mProgressDialog.dismiss();
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     }
 
                     @Override
