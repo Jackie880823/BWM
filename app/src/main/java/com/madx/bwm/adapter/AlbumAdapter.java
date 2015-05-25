@@ -13,10 +13,14 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.AlbumEntity;
 import com.madx.bwm.entity.AlbumPhotoEntity;
+import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
-import com.madx.bwm.ui.AlbumDetailActivity;
+import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.ui.ViewOriginalPicesActivity;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by quankun on 15/5/19.
@@ -76,31 +80,32 @@ public class AlbumAdapter extends BaseAdapter {
         List<AlbumPhotoEntity> photoList = albumEntity.getPhotoList();
         String month = albumEntity.getMonth();
         String year = albumEntity.getYear();
+        String total = albumEntity.getTotal();
         if (photoList != null && photoList.size() > 0) {
             viewHolder.monthTv.setText(getMonthContent(month));
             if (photoList.size() > 5) {
                 setNetworkImage(viewHolder.image6, photoList.get(5).getFile_id());
-                viewHolder.image6.setOnClickListener(new ImageViewClick(year, month, photoList.get(5).getFile_id()));
+                viewHolder.image6.setOnClickListener(new ImageViewClick(year, month, photoList.get(5).getFile_id(), total));
             }
             if (photoList.size() > 4) {
                 setNetworkImage(viewHolder.image5, photoList.get(4).getFile_id());
-                viewHolder.image5.setOnClickListener(new ImageViewClick(year, month, photoList.get(4).getFile_id()));
+                viewHolder.image5.setOnClickListener(new ImageViewClick(year, month, photoList.get(4).getFile_id(), total));
             }
             if (photoList.size() > 3) {
                 setNetworkImage(viewHolder.image4, photoList.get(3).getFile_id());
-                viewHolder.image4.setOnClickListener(new ImageViewClick(year, month, photoList.get(3).getFile_id()));
+                viewHolder.image4.setOnClickListener(new ImageViewClick(year, month, photoList.get(3).getFile_id(), total));
             }
             if (photoList.size() > 2) {
                 setNetworkImage(viewHolder.image3, photoList.get(2).getFile_id());
-                viewHolder.image3.setOnClickListener(new ImageViewClick(year, month, photoList.get(2).getFile_id()));
+                viewHolder.image3.setOnClickListener(new ImageViewClick(year, month, photoList.get(2).getFile_id(), total));
             }
             if (photoList.size() > 1) {
                 setNetworkImage(viewHolder.image2, photoList.get(1).getFile_id());
-                viewHolder.image2.setOnClickListener(new ImageViewClick(year, month, photoList.get(1).getFile_id()));
+                viewHolder.image2.setOnClickListener(new ImageViewClick(year, month, photoList.get(1).getFile_id(), total));
             }
             setNetworkImage(viewHolder.image1, photoList.get(0).getFile_id());
         }
-        viewHolder.image1.setOnClickListener(new ImageViewClick(year, month, photoList.get(0).getFile_id()));
+        viewHolder.image1.setOnClickListener(new ImageViewClick(year, month, photoList.get(0).getFile_id(), total));
         return convertView;
     }
 
@@ -108,44 +113,59 @@ public class AlbumAdapter extends BaseAdapter {
         private String fileId;
         private String year;
         private String month;
+        private String total;
+        private String contentId;
 
-        public ImageViewClick(String year, String month, String fileId) {
+        public ImageViewClick(String year, String month, String fileId, String total) {
             this.fileId = fileId;
             this.year = year;
             this.month = month;
+            this.total = total;
         }
 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.ib_1:
-                    jumpToMoreAlbum(year, month, fileId);
+                    jumpToMoreAlbum(year, month, fileId, total);
                     break;
                 case R.id.ib_2:
-                    jumpToMoreAlbum(year, month, fileId);
+                    jumpToMoreAlbum(year, month, fileId, total);
                     break;
                 case R.id.ib_3:
-                    jumpToMoreAlbum(year, month, fileId);
+                    jumpToMoreAlbum(year, month, fileId, total);
                     break;
                 case R.id.ib_4:
-                    jumpToMoreAlbum(year, month, fileId);
+                    jumpToMoreAlbum(year, month, fileId, total);
                     break;
                 case R.id.ib_5:
-                    jumpToMoreAlbum(year, month, fileId);
+                    jumpToMoreAlbum(year, month, fileId, total);
                     break;
                 case R.id.ib_6:
-                    jumpToMoreAlbum(year, month, fileId);
+                    jumpToMoreAlbum(year, month, fileId, total);
                     break;
             }
         }
     }
 
-    private void jumpToMoreAlbum(String year, String month, String fileId) {
-        Intent intent = new Intent(mContext, AlbumDetailActivity.class);
-        intent.putExtra("year", year);
-        intent.putExtra("month", month);
+    private void jumpToMoreAlbum(String year, String month, String fileId, String total) {
+//        Intent intent = new Intent(mContext, AlbumDetailActivity.class);
+//        intent.putExtra("year", year);
+//        intent.putExtra("month", month);
+//        intent.putExtra("memberId", memberId);
+//        intent.putExtra("fileId", fileId);
+//        mContext.startActivity(intent);
+        HashMap<String, String> params = new HashMap<>();
+        params.put("viewer_id", MainActivity.getUser().getUser_id());
+        params.put("member_id", memberId);
+        params.put("year", year);
+        params.put("month", month);
+        params.put("start", "0");
+        params.put("limit", total);
+        String url = UrlUtil.generateUrl(Constant.API_GET_MONTH_ALBUM_LIST, params);
+        Intent intent = new Intent(mContext, ViewOriginalPicesActivity.class);
+        intent.putExtra("request_url", url);
         intent.putExtra("memberId", memberId);
-        intent.putExtra("fileId", fileId);
         mContext.startActivity(intent);
     }
 

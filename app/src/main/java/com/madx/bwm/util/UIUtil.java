@@ -113,6 +113,14 @@ public class UIUtil {
         }
     }
 
+    public static void hideKeyboard(Context context, View view) {
+        if (context != null && view != null) {
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     public static void showKeyboard(Context context, EditText et) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(
                 Context.INPUT_METHOD_SERVICE);

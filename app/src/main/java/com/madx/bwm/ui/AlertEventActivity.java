@@ -55,7 +55,7 @@ public class AlertEventActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.title_tab_event);
+        tvTitle.setText(R.string.title_event_alert);
     }
 
     @Override
