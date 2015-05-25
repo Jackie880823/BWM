@@ -671,6 +671,14 @@
     <string name="text_dialog_ok">OK</string>
     <string name="text_all_field_compulsory">All fields are compulsory</string>
     <string name="text_pending_approval">Pending approval.</string>
+    <string name="text_new_member">MEMBER</string>
+    <string name="text_new_group">GROUP</string>
+    <string name="text_new_family_tree">family_tree</string>
+    <string name="text_group_name_here">Type group name here</string>
+    <string name="text_dialog_no">NO</string>
+    <string name="text_dialog_show_no">NO</string>
+    <string name="text_create_group_not_save">Are you sure you want to cancel ? Changes made will not be save !</string>
+    <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group. Add more members now!</string>
 
 
 
