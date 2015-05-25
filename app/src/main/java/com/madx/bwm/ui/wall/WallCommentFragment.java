@@ -596,8 +596,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void sendComment(final EditText et) {
         String commentText = et.getText().toString();
-        if(TextUtils.isEmpty(commentText) && TextUtils.isEmpty(stickerGroupPath)) {
+        if(TextUtils.isEmpty(commentText.trim()) && TextUtils.isEmpty(stickerGroupPath)) {
             // 如果没有输入字符且没有添加表情，不发送评论
+            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
             return;
         }
         et.setText(null);
