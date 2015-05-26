@@ -282,6 +282,14 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     }
 
     private void showMemberEmptyView() {
+        if (memberList != null) {
+            memberList.clear();
+            FamilyMemberEntity member = new FamilyMemberEntity();
+            member.setUser_given_name(FAMILY_TREE);
+            member.setUser_id(FAMILY_TREE);
+            memberList.add(member);
+        }
+        memberAdapter.addNewData(memberList);
         emptyMemberLinear.setVisibility(View.VISIBLE);
         emptyMemberIv.setImageResource(R.drawable.family_member_msg_empty);
         emptyMemberTv.setText(getString(R.string.text_empty_add_member));
