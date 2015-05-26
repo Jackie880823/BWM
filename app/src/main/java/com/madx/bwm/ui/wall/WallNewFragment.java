@@ -33,6 +33,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.FeelingAdapter;
@@ -49,6 +50,7 @@ import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.SystemUtil;
 import com.madx.bwm.util.UIUtil;
 import com.madx.bwm.util.animation.ViewHelper;
+import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.WallEditView;
 
 import org.json.JSONObject;
@@ -127,6 +129,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private String text_content;
     private String locationName;
     private List<Uri> pic_content;
+    private List<CompressBitmapTask> tasks;
 
     private double latitude;
     private double longitude;
@@ -193,9 +196,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         btn_share_option.setOnClickListener(this);
         btn_submit.setOnClickListener(this);
         btn_location.setOnClickListener(this);
-
     }
-
 
     FragmentManager fragmentManager;
     TabWordFragment fragment1;
@@ -208,6 +209,67 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     public void requestData() {
 
         //        uploadImages();
+    }
+
+    MyDialog myDialog;
+
+    public boolean backCheck() {
+        if(tasks != null && tasks.size() > 0) {
+            // 图片上任务正在执行
+            Log.i(TAG, "backCheck& tasks size: " + tasks.size());
+            return true;
+        } else {
+            hasTextContent = false;
+            hasPicContent = false;
+            if(fragment1 != null) {
+                WallEditView editText = fragment1.getEditText4Content();
+                text_content = editText.getRelText();
+                if(TextUtils.isEmpty(text_content.trim())) {
+                    hasTextContent = false;
+                } else {
+                    hasTextContent = true;
+                }
+            }
+            if(fragment2 != null) {
+                pic_content = fragment2.getEditPic4Content();
+                if(pic_content == null || pic_content.size() == 0) {
+                    hasPicContent = false;
+                } else {
+                    hasPicContent = true;
+                }
+            }
+            Log.i(TAG, "backCheck& hasTextContent: " + hasTextContent + "; hasPicContent: " + hasPicContent);
+            SharedPreferences.Editor editor = draftPreferences.edit();
+            if(!hasTextContent && !hasPicContent) {
+                // 没有需要上传的内容
+                editor.clear().commit();
+                return false;
+            }
+
+            // 提示是否将内容保存到草稿
+            if(myDialog == null) {
+                myDialog = new MyDialog(getActivity(), "", getActivity().getString(R.string.text_dialog_save_draft));
+                myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        saveDraft();
+                        myDialog.dismiss();
+                        getActivity().finish();
+                    }
+                });
+                myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        getActivity().finish();
+                    }
+                });
+            }
+            if(!myDialog.isShowing()) {
+                myDialog.show();
+            }
+            return true;
+        }
     }
 
     /**
@@ -240,8 +302,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
      */
     @Override
     public void onDestroyView() {
+        if(myDialog != null && myDialog.isShowing()) {
+            myDialog.dismiss();
+        }
         super.onDestroyView();
-        saveDraft();
     }
 
     /**
@@ -249,33 +313,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
      */
     private void saveDraft() {
         Log.i(TAG, "saveDraft");
-
-        hasTextContent = false;
-        hasPicContent = false;
-        if(fragment1 != null) {
-            WallEditView editText = fragment1.getEditText4Content();
-            text_content = editText.getRelText();
-            if(TextUtils.isEmpty(text_content.trim())) {
-                hasTextContent = false;
-            } else {
-                hasTextContent = true;
-            }
-        }
-        if(fragment2 != null) {
-            pic_content = fragment2.getEditPic4Content();
-            if(pic_content == null || pic_content.size() == 0) {
-                hasPicContent = false;
-            } else {
-                hasPicContent = true;
-            }
-        }
-
         SharedPreferences.Editor editor = draftPreferences.edit();
-        if(!hasTextContent && !hasPicContent) {
-            editor.clear().commit();
-            return;
-        }
-
         if(hasPicContent) {
             int i = 0;
             for(Uri uri : pic_content) {
@@ -494,7 +532,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.params = params;
         requestInfo.url = Constant.API_WALL_TEXT_POST;
-        new HttpTools(getActivity()).post(requestInfo, new HttpCallback() {
+        new HttpTools(App.getContextInstance()).post(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -516,11 +554,17 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                         } else {
                             int count = pic_content.size();
                             boolean multiple = (count > 0 ? false : true);
+                            tasks = new ArrayList<>();
                             for(int index = 0; index < count; index++) {
+
                                 if(index == count - 1) {
-                                    new CompressBitmapTask(contentId, index, multiple, true).execute(pic_content.get(index));
+                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
+                                    tasks.add(task);
+                                    task.execute(pic_content.get(index));
                                 } else {
-                                    new CompressBitmapTask(contentId, index, multiple, false).execute(pic_content.get(index));
+                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, false);
+                                    tasks.add(task);
+                                    task.execute(pic_content.get(index));
                                 }
                             }
                         }
@@ -561,14 +605,14 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         public void handleMessage(Message msg) {
             switch(msg.what) {
                 case ACTION_FAILED:
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_failed);
                     sendEmptyMessage(HIDE_PROGRESS);
                     break;
                 case ACTION_SUCCEED:
                     SharedPreferences.Editor editor = draftPreferences.edit();
                     editor.clear().commit();
                     getParentActivity().setResult(Activity.RESULT_OK);
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                     sendEmptyMessage(HIDE_PROGRESS);
                     if(getActivity() != null) {
                         getActivity().finish();
@@ -656,20 +700,25 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
         @Override
         protected String doInBackground(Uri... params) {
-            if(params == null)
+            if(params == null) {
                 return null;
-            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
+            }
+            return LocalImageLoader.compressBitmap(App.getContextInstance(), FileUtil.getRealPathFromURI(App.getContextInstance(), params[0]), 480, 800, false);
         }
 
         @Override
         protected void onPostExecute(String path) {
             submitPic(path, contentId, index, multiple, lastPic);
+            tasks.remove(this);
         }
     }
 
     private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
         File f = new File(path);
-        if(!f.exists() || getActivity() == null) {
+        if(!f.exists()) {
+            if(lastPic) {
+                mHandler.sendEmptyMessage(ACTION_FAILED);
+            }
             return;
         }
 
@@ -682,7 +731,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         params.put("multiple", multiple ? "1" : "0");
 
 
-        new HttpTools(getActivity()).upload(Constant.API_WALL_PIC_POST, params, new HttpCallback() {
+        new HttpTools(App.getContextInstance()).upload(Constant.API_WALL_PIC_POST, params, new HttpCallback() {
             @Override
             public void onStart() {
             }

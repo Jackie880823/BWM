@@ -90,49 +90,57 @@ public class InviteMemberActivity extends BaseActivity {
             switch (msg.what) {
                 case GET_DATA:
                     Map<String, List> map = (Map<String, List>) msg.obj;
-                    memberEntityList.clear();
+                    if (memberEntityList != null) {
+                        memberEntityList.clear();
+                    }
                     memberEntityList = map.get("private");
-                    if (type == 1) {
-                        List<FamilyMemberEntity> memberList = new ArrayList<>();
-                        for (FamilyMemberEntity memberEntity : memberEntityList) {
-                            if (!selectMemberList.contains(memberEntity.getUser_id())) {
-                                memberList.add(memberEntity);
-                            } else {
-                                if (isFirstData) {
+                    if (memberEntityList != null) {
+                        if (type == 1) {
+                            List<FamilyMemberEntity> memberList = new ArrayList<>();
+                            for (FamilyMemberEntity memberEntity : memberEntityList) {
+                                if (!selectMemberList.contains(memberEntity.getUser_id())) {
+                                    memberList.add(memberEntity);
+                                } else {
+                                    if (isFirstData) {
+                                        selectMemberEntityList.add(memberEntity);
+                                    }
+                                }
+                            }
+                            memberAdapter.addNewData(memberList);
+                        } else {
+                            for (FamilyMemberEntity memberEntity : memberEntityList) {
+                                if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
                                     selectMemberEntityList.add(memberEntity);
                                 }
                             }
+                            memberAdapter.addNewData(memberEntityList);
                         }
-                        memberAdapter.addNewData(memberList);
-                    } else {
-                        for (FamilyMemberEntity memberEntity : memberEntityList) {
-                            if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
-                                selectMemberEntityList.add(memberEntity);
-                            }
-                        }
-                        memberAdapter.addNewData(memberEntityList);
                     }
-                    groupEntityList.clear();
+                    if (groupEntityList != null) {
+                        groupEntityList.clear();
+                    }
                     groupEntityList = map.get("group");
-                    if (type == 1) {
-                        List<FamilyGroupEntity> groupList = new ArrayList<>();
-                        for (FamilyGroupEntity groupEntity : groupEntityList) {
-                            if (!selectGroupList.contains(groupEntity.getGroup_id())) {
-                                groupList.add(groupEntity);
-                            } else {
-                                if (isFirstData) {
+                    if (groupEntityList != null) {
+                        if (type == 1) {
+                            List<FamilyGroupEntity> groupList = new ArrayList<>();
+                            for (FamilyGroupEntity groupEntity : groupEntityList) {
+                                if (!selectGroupList.contains(groupEntity.getGroup_id())) {
+                                    groupList.add(groupEntity);
+                                } else {
+                                    if (isFirstData) {
+                                        selectGroupEntityList.add(groupEntity);
+                                    }
+                                }
+                            }
+                            groupAdapter.addData(groupList);
+                        } else {
+                            for (FamilyGroupEntity groupEntity : groupEntityList) {
+                                if (selectGroupList.contains(groupEntity.getGroup_id()) && isFirstData) {
                                     selectGroupEntityList.add(groupEntity);
                                 }
                             }
+                            groupAdapter.addData(groupEntityList);
                         }
-                        groupAdapter.addData(groupList);
-                    } else {
-                        for (FamilyGroupEntity groupEntity : groupEntityList) {
-                            if (selectGroupList.contains(groupEntity.getGroup_id()) && isFirstData) {
-                                selectGroupEntityList.add(groupEntity);
-                            }
-                        }
-                        groupAdapter.addData(groupEntityList);
                     }
                     break;
             }

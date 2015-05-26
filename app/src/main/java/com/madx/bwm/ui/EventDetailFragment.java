@@ -658,6 +658,12 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     //发送评论
     private void sendComment() {
+//        String commentText = et.getText().toString();
+        if(TextUtils.isEmpty(etChat.getText().toString().trim()) && isStickerItemClick==false) {
+            // 如果没有输入字符且没有添加表情，不发送评论
+            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            return;
+        }
 
         if (NetworkUtil.isNetworkConnected(getActivity())) {
             progressBar.setVisibility(View.VISIBLE);
@@ -699,6 +705,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     stickerEntity.setSticker_type("");
                     stickerEntity.setSticker_group_path("");
                     stickerEntity.setSticker_name("");
+
                     etChat.setText("");
                     requestComment();
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
