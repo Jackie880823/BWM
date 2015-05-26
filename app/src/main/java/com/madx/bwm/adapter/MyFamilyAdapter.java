@@ -94,7 +94,7 @@ public class MyFamilyAdapter extends BaseAdapter {
         viewHolder.imageRight.setVisibility(View.GONE);
         viewHolder.imageLeft.setVisibility(View.GONE);
         if (FamilyFragment.FAMILY_TREE.equals(userId)) {
-            viewHolder.textName.setText(mContext.getString(R.string.text_family_tree));
+            viewHolder.textName.setText(mContext.getString(R.string.text_new_family_tree));
             VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, null, R.drawable.family_tree, R.drawable.family_tree);
         } else if (FamilyFragment.FAMILY_MORE_MEMBER.equals(userId)) {
             viewHolder.textName.setText(familyMemberEntity.getUser_given_name());

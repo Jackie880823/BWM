@@ -177,7 +177,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(sendCommentView != null) {
-                    sendCommentView.hideAllViewStatue(true);
+                    sendCommentView.hideAllViewState(true);
                 }
                 return false;
             }
@@ -191,6 +191,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 stickerType = type;
                 stickerGroupPath = folderName;
                 stickerName = filName;
+                sendComment(null);
             }
 
             /**
@@ -589,13 +590,16 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         //        animator.setRemoveDuration(1000);
     }
 
-    private void sendComment(final EditText et) {
-        String commentText = et.getText().toString();
+    private void sendComment(EditText et) {
+        String commentText = "";
+        if(et != null) {
+            commentText = et.getText().toString();
+            et.setText(null);
+        }
         if(TextUtils.isEmpty(commentText) && TextUtils.isEmpty(stickerGroupPath)) {
             // 如果没有输入字符且没有添加表情，不发送评论
             return;
         }
-        et.setText(null);
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -623,17 +627,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 startIndex = 0;
                 isRefresh = true;
                 getComments();
-                et.setText("");
                 stickerName = "";
                 stickerType = "";
                 stickerGroupPath = "";
                 getParentActivity().setResult(Activity.RESULT_OK);
-                UIUtil.hideKeyboard(getActivity(), et);
+                UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
             }
 
             @Override
             public void onError(Exception e) {
-                UIUtil.hideKeyboard(getActivity(), et);
+                progressBar.setVisibility(View.GONE);
+                UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
 
             }

@@ -23,8 +23,8 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements O
     protected boolean savedState = false;
 
     /*当activity无法处理，需要fragent处理时，使用该接口*/
-    protected CommandListener commandlistener;         //很重要，把activity中的命令，传递给fragment
-
+    protected CommandListener familyCommandListener;         //很重要，把activity中的命令，传递给fragment
+    protected CommandListener commandlistener;
     /********************************************/
 
     @Override
@@ -47,7 +47,9 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements O
     public void setCommandlistener(CommandListener commandlistener) {
         this.commandlistener = commandlistener;
     }
-
+    public void setFamilyCommandListener(CommandListener commandlistener) {
+        this.familyCommandListener = commandlistener;
+    }
     public interface CommandListener
     {
         public boolean execute(View v);
