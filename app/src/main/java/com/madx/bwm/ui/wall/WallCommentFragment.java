@@ -876,7 +876,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void removeComment(final String commentId) {
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_comment_del));
-        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.accept), new View.OnClickListener() {
+        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_COMMENT_DELETE, commentId), null);
@@ -963,8 +963,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     @Override
     public void remove(final String content_group_id) {
 
-        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_wall_del));
-        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.accept), new View.OnClickListener() {
+        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.alert_wall_del_title), getActivity().getString(R.string.alert_wall_del));
+        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
