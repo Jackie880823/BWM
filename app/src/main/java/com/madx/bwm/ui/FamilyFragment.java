@@ -82,7 +82,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private static final int GET_DATA = 0x11;
     private MyFamilyAdapter memberAdapter;
     private FamilyGroupAdapter groupAdapter;
-    public static final String FAMILY_TREE = "family_tree";
+    public static String FAMILY_TREE = "family_tree";
     public static final String FAMILY_PARENT = "parent";
     public static final String FAMILY_CHILDREN = "children";
     public static final String FAMILY_SIBLING = "sibling";
@@ -146,6 +146,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     @Override
     public void initView() {
         mContext = getActivity();
+        FAMILY_TREE = mContext.getString(R.string.text_new_family_tree);
         pager = getViewById(R.id.family_list_viewpager);
         message_member_tv = getViewById(R.id.message_member_tv);
         message_group_tv = getViewById(R.id.message_group_tv);

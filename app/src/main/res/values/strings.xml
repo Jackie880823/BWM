@@ -11,7 +11,7 @@
     <string name="msg_google_service_not_found">No valid Google Play Services APK found</string>
 
     <string name="title_event_detail">Detail</string>
-    <string name="title_wall_comment">Wall Comments</string>
+    <string name="title_wall_comment">Comments</string>
     <string name="title_event_new">New Event</string>
     <string name="title_event_edit">Event Edit</string>
     <string name="title_wall_new">Post</string>
@@ -50,7 +50,9 @@
     <string name="title_message_creategroup">New Group</string>
     <string name="alert_comment_null">Comment can not be empty!</string>
     <string name="alert_comment_del">Are you sure you want to delete this comment?</string>
-    <string name="alert_wall_del">Delete this post?</string>
+    <string name="alert_wall_del_title">Delete Post</string>
+    <string name="alert_wall_del">Are you sure you want to delete this post?</string>
+    <string name="alert_wall_del_photo_title">Delete Photo</string>
     <string name="alert_wall_del_photo">Delete this photo?</string>
 
     <string name="text_word">Text</string>
@@ -90,6 +92,7 @@
     <string name="text_destination">目的地</string>
     <string name="title_pick_date_time">Event date &amp; time</string>
     <string name="accept">Accept</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="alert_exit">Exit</string>
     <string name="msg_ask_save">Do you want to save as draft?</string>
@@ -668,6 +671,15 @@
     <string name="text_dialog_ok">OK</string>
     <string name="text_all_field_compulsory">All fields are compulsory</string>
     <string name="text_pending_approval">Pending approval.</string>
+    <string name="wall_comments">Comments</string>
+    <string name="text_new_member">MEMBER</string>
+    <string name="text_new_group">GROUP</string>
+    <string name="text_new_family_tree">family_tree</string>
+    <string name="text_group_name_here">Type group name here</string>
+    <string name="text_dialog_no">NO</string>
+    <string name="text_dialog_show_no">NO</string>
+    <string name="text_create_group_not_save">Are you sure you want to cancel ? Changes made will not be save !</string>
+    <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group. Add more members now!</string>
 
 
 

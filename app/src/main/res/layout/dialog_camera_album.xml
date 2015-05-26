@@ -35,4 +35,19 @@
             android:textStyle="bold"
             android:textSize="@dimen/text_large_size"
             android:padding="@dimen/default_content_padding"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_split_line"/>
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/text_cancel"
+        android:background="@drawable/bg_white_gray"
+        android:textColor="@color/tab_color_press3"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_large_size"
+        android:padding="@dimen/default_content_padding"/>
 </LinearLayout>

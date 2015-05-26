@@ -160,7 +160,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/default_view_margin"/>
 
-
             </LinearLayout>
 
             <LinearLayout
@@ -187,7 +186,7 @@
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/default_view_margin"
-                    android:text="Comments"/>
+                    android:text="@string/wall_comments"/>
 
             </LinearLayout>
 
