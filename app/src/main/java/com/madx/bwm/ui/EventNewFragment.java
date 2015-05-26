@@ -233,9 +233,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 }
 
             }
-            if(userList.get(i).getUser_id().equals(MainActivity.getUser().getUser_id())){
-                userList.remove(i);
-            }
+//            if(userList.get(i).getUser_id().equals(MainActivity.getUser().getUser_id())){
+//                userList.remove(i);
+//            }
         }
     }
 
@@ -726,6 +726,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private void changeData() {
         if (userList == null) {
             userList = new ArrayList<>();
+        }
+        for (UserEntity u : userList){
+            if (u.getUser_id().equals(MainActivity.getUser().getUser_id())){
+                userList.remove(u);
+            }
         }
         adapter = new MembersGridAdapter(getActivity(), userList);
         gvFriends.setAdapter(adapter);
