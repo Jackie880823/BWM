@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <com.madx.bwm.widget.CircularImageView
+        android:layout_width="@dimen/_120dp"
+        android:layout_height="@dimen/_120dp"
+        android:id="@+id/creategroup_imageview"
+        android:src="@drawable/network_image_default"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/fragment_main_top"
+        android:layout_marginBottom="30dp"
+        app:border="false" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/creategroup_imageview"
+        android:background="#ccc" />
+
+    <EditText
+        android:id="@+id/creategroup_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_15dp"
+        android:paddingBottom="@dimen/_15dp"
+        android:paddingLeft="@dimen/_16dp"
+        android:hint="@string/text_group_name_here"
+        android:textSize="@dimen/_16dp"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:background="@drawable/et_round_white"
+        android:textColor="#ccc"
+        android:textColorHint="#ccc"
+        android:layout_below="@+id/view1"
+        android:paddingRight="@dimen/_16dp" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/creategroup_editText"
+        android:layout_height="0.5dp"
+        android:background="#ccc" />
+
+    <TextView
+        android:id="@+id/text_view1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/_16dp"
+        android:textStyle="bold"
+        android:background="#efeff4"
+        android:layout_below="@+id/view2"
+        android:textSize="@dimen/_11dp"
+        android:textColor="#666"
+        android:text="@string/text_member_add" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/text_view1"
+        android:background="#ccc" />
+
+    <TextView
+        android:id="@+id/member_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/_15dp"
+        android:paddingBottom="@dimen/_15dp"
+        android:paddingLeft="@dimen/_16dp"
+        android:textSize="@dimen/_16dp"
+        android:layout_below="@+id/view3"
+        android:singleLine="true"
+        android:textColor="@color/default_text_color_dark"
+        android:textColorHint="#333" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ccc" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35dp"
+        android:layout_marginTop="@dimen/_20dp"
+        android:text="@string/text_done"
+        android:textSize="@dimen/_22dp"
+        android:textColor="#ffffff"
+        android:id="@+id/creategroup_button"
+        android:background="@drawable/btn_chat_send_bg"
+        android:layout_marginBottom="@dimen/_20dp"
+        android:layout_above="@+id/cancel_button"
+        android:layout_marginLeft="@dimen/_30dp"
+        android:layout_marginRight="@dimen/_30dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35dp"
+        android:text="@string/text_cancel"
+        android:textSize="@dimen/_22dp"
+        android:textColor="#ffffff"
+        android:id="@+id/cancel_button"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/btn_chat_send_bg"
+        android:layout_marginBottom="@dimen/_30dp"
+        android:layout_marginLeft="@dimen/_30dp"
+        android:layout_marginRight="@dimen/_30dp" />
+</RelativeLayout>

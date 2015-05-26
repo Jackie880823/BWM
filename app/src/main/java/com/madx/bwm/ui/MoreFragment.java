@@ -2,6 +2,7 @@ package com.madx.bwm.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,14 +87,17 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 
             @Override
             public void onResult(String response) {
+
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String countString = jsonObject.getString("total");
                     int count = Integer.valueOf(countString);
 
                     if (count > 0) {
+                        Log.d("","mmmmmmmmm" + "mmmmmmm>0");
                         tv_num.setVisibility(View.VISIBLE);
                     } else {
+                        Log.d("","mmmmmmmmm" + "mmmmmmm<0");
                         tv_num.setVisibility(View.GONE);
                     }
 
@@ -126,6 +130,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         switch (v.getId()) {
             case R.id.btn_bond_alert:
                 goBondAlert();
+                v.findViewById(R.id.tv_num).setVisibility(View.GONE);
                 break;
             case R.id.btn_me:
                 goMe();
@@ -246,5 +251,13 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
             }
         }
 
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("","mmmmmmmmm" + "mmmmmmm");
+        requestData();
     }
 }

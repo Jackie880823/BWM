@@ -60,6 +60,7 @@ public class Constant {
     public static String API_EVENT_POST_COMMENT = API_SERVER+"/bondwithme/index.php/api/posts";
     public static String API_EVENT_COMMENT_PIC_POST = API_SERVER+"/bondwithme/index.php/api/uploadCommentPhoto";
     public static String API_GET_EVENT_DETAIL = API_SERVER+"/bondwithme/index.php/api/event";
+    public static String API_GET_EVENT_GROUP_MEMBERS = "http://dev.bondwith.me/bondwithme/index.php/api/filterGroupMember";
 
 
     public static String API_EVENT_INVITED = API_SERVER+"/bondwithme/index.php/api/eventMember";

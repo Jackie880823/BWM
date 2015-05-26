@@ -58,7 +58,7 @@ public class RecommendActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.text_recommend);
+        tvTitle.setText(R.string.title_recommended_alert);
     }
 
     @Override

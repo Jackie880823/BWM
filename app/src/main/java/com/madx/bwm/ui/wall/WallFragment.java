@@ -315,8 +315,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
     @Override
     public void remove(final String content_group_id) {
 
-        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_wall_del));
-        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.accept), new View.OnClickListener() {
+        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.alert_wall_del_title), getActivity().getString(R.string.alert_wall_del));
+        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

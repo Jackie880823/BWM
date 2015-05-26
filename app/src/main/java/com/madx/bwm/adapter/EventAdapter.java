@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -162,7 +161,8 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView item_unenable;
         ImageView icon_release_date;
         RelativeLayout item_event;
-        FrameLayout event_start;
+//        FrameLayout event_start;
+        RelativeLayout event_start;
 
 
 
@@ -176,7 +176,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             item_unenable = (TextView) itemView.findViewById(R.id.item_unenable);
             icon_release_date = (ImageView) itemView.findViewById(R.id.icon_release_date);
             item_event = (RelativeLayout) itemView.findViewById(R.id.item_event);
-            event_start = (FrameLayout) itemView.findViewById(R.id.event_start);
+            event_start = (RelativeLayout) itemView.findViewById(R.id.event_start);
 //
 //            if(){
 //
@@ -207,7 +207,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView date;
         private TextView left_daty_count;
         private TextView tv_date_desc;
-        private FrameLayout event_start;
+        private RelativeLayout event_start;
 
 
         public VHHeader(View itemView) {
@@ -217,7 +217,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             date = (TextView) itemView.findViewById(R.id.date);
             left_daty_count = (TextView) itemView.findViewById(R.id.left_daty_count);
             tv_date_desc = (TextView) itemView.findViewById(R.id.tv_date_desc);
-            event_start = (FrameLayout) itemView.findViewById(R.id.event_start);
+            event_start = (RelativeLayout) itemView.findViewById(R.id.event_start);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

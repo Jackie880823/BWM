@@ -39,7 +39,7 @@ public class BigDayActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.text_big_day);
+        tvTitle.setText(R.string.title_big_day_alert);
     }
 
     @Override

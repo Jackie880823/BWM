@@ -33,11 +33,19 @@ public class BondAlertActivity extends BaseActivity {
         titleBar.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
     }
 
+
+
+
     @Override
-    protected void titleRightEvent() {
+    protected void titleLeftEvent() {
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    protected void titleRightEvent() {
+
     }
 
     @Override

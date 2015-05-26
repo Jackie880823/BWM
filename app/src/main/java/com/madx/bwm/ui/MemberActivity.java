@@ -56,7 +56,7 @@ public class MemberActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.text_member);
+        tvTitle.setText(R.string.title_member_alert);
     }
 
     @Override

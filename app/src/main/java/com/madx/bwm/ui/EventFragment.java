@@ -213,14 +213,17 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
                         @Override
                         public void contentItemClick(EventEntity eventEntity) {
-                            //item的点击事件跳转到EventDetailActivity
+                            if("1".equals(eventEntity.getGroup_event_status())){
+                                //item的点击事件跳转到EventDetailActivity
 //                            requestData();
 //                            adapter.notifyDataSetChanged();
-                            Intent intent = new Intent(getActivity(), EventDetailActivity.class);
+                                Intent intent = new Intent(getActivity(), EventDetailActivity.class);
 //                            intent.putExtra("event", eventEntity);
-                            intent.putExtra("group_id", eventEntity.getGroup_id());
-                            startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
+                                intent.putExtra("group_id", eventEntity.getGroup_id());
+                                startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
 //                            requestData();
+                            }
+
                         }
                     });
                     rvList.setAdapter(adapter);
