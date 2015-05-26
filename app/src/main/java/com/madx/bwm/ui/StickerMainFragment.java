@@ -1,6 +1,7 @@
 package com.madx.bwm.ui;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,8 +14,11 @@ import android.widget.AdapterView;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MessageHorizontalListViewAdapter;
 import com.madx.bwm.interfaces.StickerViewClickListener;
+import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.widget.HorizontalListView;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,11 +33,11 @@ public class StickerMainFragment extends Fragment {
     }
 
     private View rootView;
-    private List<String> stickerNameList;
     private HorizontalListView horizontalListView;
-    private List<String> sticker_List_Id;
     private MessageStickerFragment fragment = null;
     private MessageHorizontalListViewAdapter horizontalListViewAdapter;
+    static List<String> STICKER_NAME_LIST = new ArrayList<>();
+    static List<String> FIRST_STICKER_LIST = new ArrayList<>();
 
     public void setPicClickListener(StickerViewClickListener viewClickListener) {
         stickerViewClickListener = viewClickListener;
@@ -46,9 +50,13 @@ public class StickerMainFragment extends Fragment {
         }
         rootView = inflater.inflate(R.layout.fragment_sticker_main, null);
         horizontalListView = (HorizontalListView) rootView.findViewById(R.id.sticker_listView);
-        stickerNameList = MainActivity.STICKER_NAME_LIST;
-        sticker_List_Id = MainActivity.FIRST_STICKER_LIST;
-        horizontalListViewAdapter = new MessageHorizontalListViewAdapter(sticker_List_Id, getActivity());
+        if (STICKER_NAME_LIST.size() == 0) {
+            addStickerList();
+        }
+        if (FIRST_STICKER_LIST.size() == 0) {
+            addImageList();
+        }
+        horizontalListViewAdapter = new MessageHorizontalListViewAdapter(FIRST_STICKER_LIST, getActivity());
         horizontalListView.setAdapter(horizontalListViewAdapter);
         setTabSelection(0);
         horizontalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -62,11 +70,36 @@ public class StickerMainFragment extends Fragment {
         return rootView;
     }
 
+    private void addStickerList() {
+        try {
+            List<String> pathList = FileUtil.getAllFilePathsFromAssets(getActivity(), MessageChatActivity.STICKERS_NAME);
+            if (null != pathList) {
+                for (String string : pathList) {
+                    STICKER_NAME_LIST.add(MessageChatActivity.STICKERS_NAME + File.separator + string);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addImageList() {
+        if (STICKER_NAME_LIST != null && STICKER_NAME_LIST.size() > 0) {
+            for (String string : STICKER_NAME_LIST) {
+                List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(getActivity(), string);
+                if (null != stickerAllNameList) {
+                    String iconPath = string + File.separator + stickerAllNameList.get(0);
+                    FIRST_STICKER_LIST.add(iconPath);
+                }
+            }
+        }
+    }
+
     private void setTabSelection(int index) {
         if (getActivity().isFinishing()) {
             return;
         }
-        String selectStickerName = stickerNameList.get(index);
+        String selectStickerName = STICKER_NAME_LIST.get(index);
         // 开启一个Fragment事务
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         fragment = new MessageStickerFragment();//selectStickerName, MessageChatActivity.this, groupId);

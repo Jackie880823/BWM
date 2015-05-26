@@ -113,7 +113,7 @@
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
 
-    <string name="text_me">Me</string>
+
     <string name="text_my_family">My Family</string>
 
 
@@ -132,9 +132,7 @@
 
 
 
-    <string name="hint_mail">Your email</string>
-    <string name="hint_subject">Select a subject</string>
-    <string name="hint_mail_content">Text here</string>
+
     <string name="hint_search_name">Search by name</string>
     <string name="alert_text_mail_info_not_complete">Please fill up all the fields</string>
     <!--<array name="mail_subjects" >-->
@@ -153,8 +151,7 @@
     <string name="text_search_contact">Search name here</string>
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">No contact selected</string>
-    <string name="text_item_resend">Resend</string>
-    <string name="text_item_remove">Remove</string>
+
 
     <string name="text_setting_1_title">Birthday Alert Reminder</string>
     <string name="text_setting_1_1">1 Day earlier</string>
@@ -485,8 +482,8 @@
     <string name="text_add_member">Add Member?</string>
     <string name="text_view_profile">View User\'s Profile</string>
     <string name="text_message_user">Message User</string>
-    <string name="text_add_new_member">Add New Member</string>
-    <string name="text_create_new_group">Create New Group</string>
+    <string name="text_add_new_member">添加家庭成员</string>
+    <string name="text_create_new_group">创建新群组</string>
     <string name="text_view_profile_family">View Profile</string>
     <string name="text_i_miss_you">想你了</string>
     <string name="text_path_relationship">关系</string>
@@ -656,6 +653,16 @@
     <!--end-->
 
     <!--Christopher-->
+
+    <string name="hint_mail">你的邮址</string>
+    <string name="hint_subject">关于</string>
+    <string name="hint_mail_content">有什么我们可以帮您吗?</string>
+
+    <string name="text_me">我</string>
+
+    <string name="text_item_resend">再发</string>
+    <string name="text_item_remove">删除</string>
+
     <string name="title_bond_alert">伴通告</string>
     <string name="title_wall_alert">动态通告</string>
     <string name="title_event_alert">活动通告</string>
@@ -697,5 +704,8 @@
     <string name="text_love_event">%s loved your event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
     <string name="text_dialog_save_draft">保存为草稿</string>
+    <string name="text_empty_add_member">点击+以添加家庭成员！</string>
+    <string name="text_empty_add_group">点击+以创建新群组！</string>
+    <string name="text_message_type_here">type message here</string>
     <!--Christopher-->
 </resources>
