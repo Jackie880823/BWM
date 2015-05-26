@@ -391,7 +391,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onSendCommentClick(EditText et) {
-                    sendComment(et);
+                    sendComment();
                     isStickerItemClick = false;
                 }
 
@@ -657,9 +657,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     public EventCommentAdapter adapter;
 
     //发送评论
-    private void sendComment(final EditText et) {
-        String commentText = et.getText().toString();
-        if(TextUtils.isEmpty(commentText.trim()) && isStickerItemClick==false) {
+    private void sendComment() {
+//        String commentText = et.getText().toString();
+        if(TextUtils.isEmpty(etChat.getText().toString().trim()) && isStickerItemClick==false) {
             // 如果没有输入字符且没有添加表情，不发送评论
             MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
             return;
@@ -705,6 +705,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     stickerEntity.setSticker_type("");
                     stickerEntity.setSticker_group_path("");
                     stickerEntity.setSticker_name("");
+
                     etChat.setText("");
                     requestComment();
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
