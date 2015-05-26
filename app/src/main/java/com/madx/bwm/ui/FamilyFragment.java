@@ -25,6 +25,8 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +92,13 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     public static final String FAMILY_MORE_MEMBER = "More";
     public static final String FAMILY_HIDE_MEMBER = "Hide";
 
+    private LinearLayout emptyGroupLinear;
+    private LinearLayout emptyMemberLinear;
+    private ImageView emptyGroupIv;
+    private ImageView emptyMemberIv;
+    private TextView emptyGroupTv;
+    private TextView emptyMemberTv;
+
     public static FamilyFragment newInstance(String... params) {
         return createInstance(new FamilyFragment(), params);
     }
@@ -106,9 +115,15 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             switch (msg.what) {
                 case GET_DATA:
                     Map<String, List> map = (Map<String, List>) msg.obj;
-                    memberEntityList.clear();
-                    memberList.clear();
-                    moreMemberList.clear();
+                    if (memberEntityList != null) {
+                        memberEntityList.clear();
+                    }
+                    if (memberList != null) {
+                        memberList.clear();
+                    }
+                    if (moreMemberList != null) {
+                        moreMemberList.clear();
+                    }
                     memberEntityList = map.get("private");
                     if (memberEntityList != null && memberEntityList.size() > 0) {
                         FamilyMemberEntity member = new FamilyMemberEntity();
@@ -166,14 +181,14 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         getParentActivity().setFamilyCommandListener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
-                //showSelectDialog();
-                Intent intent = new Intent();
-                if (pager.getCurrentItem() == 0) {
-                    intent.setClass(getActivity(), AddNewMembersActivity.class);
-                } else {
-                    intent.setClass(getActivity(), CreateGroupActivity.class);
-                }
-                startActivity(intent);
+                showSelectDialog();
+//                Intent intent = new Intent();
+//                if (pager.getCurrentItem() == 0) {
+//                    intent.setClass(getActivity(), AddNewMembersActivity.class);
+//                } else {
+//                    intent.setClass(getActivity(), CreateGroupActivity.class);
+//                }
+//                startActivity(intent);
                 return false;
             }
         });
@@ -266,12 +281,35 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         showSelectDialog.show();
     }
 
+    private void showMemberEmptyView() {
+        emptyMemberLinear.setVisibility(View.VISIBLE);
+        emptyMemberIv.setImageResource(R.drawable.family_member_msg_empty);
+        emptyMemberTv.setText(getString(R.string.text_empty_add_member));
+    }
+
+    private void showGroupEmptyView() {
+        emptyGroupLinear.setVisibility(View.VISIBLE);
+        emptyGroupIv.setImageResource(R.drawable.family_group_msg_empty);
+        emptyGroupTv.setText(mContext.getString(R.string.text_empty_add_group));
+    }
+
+    private void hideMemberEmptyView() {
+        emptyMemberLinear.setVisibility(View.GONE);
+    }
+
+    private void hideGroupEmptyView() {
+        emptyGroupLinear.setVisibility(View.GONE);
+    }
+
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
         View userView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
         final GridView userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
         final ImageButton userIb = (ImageButton) userView.findViewById(R.id.ib_top);
         memberRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
+        emptyMemberLinear = (LinearLayout) userView.findViewById(R.id.family_empty_linear);
+        emptyMemberIv = (ImageView) userView.findViewById(R.id.family_image_empty);
+        emptyMemberTv = (TextView) userView.findViewById(R.id.family_text_empty);
         userGridView.setAdapter(memberAdapter);
         userIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -358,6 +396,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
         groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
+        emptyGroupLinear = (LinearLayout) groupView.findViewById(R.id.family_empty_linear);
+        emptyGroupIv = (ImageView) groupView.findViewById(R.id.family_image_empty);
+        emptyGroupTv = (TextView) groupView.findViewById(R.id.family_text_empty);
         groupListView.setAdapter(groupAdapter);
         groupIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -705,6 +746,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         if (mProgressDialog.isShowing()) {
                             mProgressDialog.dismiss();
                         }
+                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                            showMemberEmptyView();
+                            showGroupEmptyView();
+                        }
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             List<FamilyMemberEntity> memberList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
@@ -713,15 +758,24 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                             }.getType());
                             Map<String, List> map = new HashMap<>();
                             if (memberList != null && memberList.size() > 0) {
+                                hideMemberEmptyView();
                                 map.put("private", memberList);
+                            } else {
+                                showMemberEmptyView();
                             }
                             if (groupList != null && groupList.size() > 0) {
+                                hideGroupEmptyView();
                                 map.put("group", groupList);
+                            } else {
+                                showGroupEmptyView();
                             }
-                            Message.obtain(handler, GET_DATA, map).sendToTarget();
+                            if (map.size() > 0) {
+                                Message.obtain(handler, GET_DATA, map).sendToTarget();
+                            }
                         } catch (JSONException e) {
-                            MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                             finishReFresh();
+                            showGroupEmptyView();
+                            showMemberEmptyView();
                             e.printStackTrace();
                         }
                     }

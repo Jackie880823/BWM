@@ -737,5 +737,8 @@
     <string name="text_love_comment_event">%s loved your comment in event.</string>
     <string name="text_love_event">%s loved your event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
+    <string name="text_empty_add_member">Tap on the + to add family member.</string>
+    <string name="text_empty_add_group">Tap on the + to create group.</string>
+    <string name="text_message_type_here">type message here</string>
     <!--Christopher-->
 </resources>

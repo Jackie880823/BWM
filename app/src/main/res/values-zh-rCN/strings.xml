@@ -703,5 +703,8 @@
     <string name="text_love_comment_event">%s loved your comment in event.</string>
     <string name="text_love_event">%s loved your event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
+    <string name="text_empty_add_member">点击+以添加家庭成员！</string>
+    <string name="text_empty_add_group">点击+以创建新群组！</string>
+    <string name="text_message_type_here">type message here</string>
     <!--Christopher-->
 </resources>
