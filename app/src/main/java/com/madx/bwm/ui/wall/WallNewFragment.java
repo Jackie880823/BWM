@@ -713,6 +713,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
         File f = new File(path);
         if(!f.exists()) {
+            if(lastPic) {
+                mHandler.sendEmptyMessage(ACTION_FAILED);
+            }
             return;
         }
 
