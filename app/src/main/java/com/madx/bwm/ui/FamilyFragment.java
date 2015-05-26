@@ -163,7 +163,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         //绑定自定义适配器
         pager.setAdapter(new FamilyPagerAdapter(initPagerView()));
         pager.setOnPageChangeListener(new MyOnPageChanger());
-        getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
+        getParentActivity().setFamilyCommandListener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
                 //showSelectDialog();
