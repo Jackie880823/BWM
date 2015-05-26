@@ -730,5 +730,6 @@
     <string name="text_love_comment_event">%s loved your comment in event.</string>
     <string name="text_love_event">%s loved your event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
+    <string name="text_dialog_save_draft">Save as Draft?</string>
     <!--Christopher-->
 </resources>
