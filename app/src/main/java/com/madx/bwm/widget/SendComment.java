@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -22,22 +21,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.interfaces.StickerViewClickListener;
 import com.madx.bwm.ui.BaseActivity;
 import com.madx.bwm.ui.BaseFragment;
-import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.ui.StickerMainFragment;
 import com.madx.bwm.ui.wall.SelectPhotosActivity;
 import com.madx.bwm.util.UIUtil;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import pl.droidsonroids.gif.GifDrawable;
 
 /**
  * Created by Jackie Zhu on 5/13/15.
@@ -173,9 +166,6 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 }
                 break;
             case R.id.camera_tv://打开相机
-                if(listener != null) {
-                    listener.onClickCamera();
-                }
 
                 if(mActivity != null) {
                     cache_count++;
@@ -192,9 +182,6 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 }
                 break;
             case R.id.album_tv://打开本地相册
-                if(listener != null) {
-                    listener.onClickAlbum();
-                }
 
                 if(mActivity != null) {
                     Intent intent = new Intent(mActivity, SelectPhotosActivity.class);
@@ -205,25 +192,12 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 }
                 break;
             case R.id.location_tv://打开地图
-                if(listener != null) {
-                    listener.onClickLocation();
-                }
                 break;
             case R.id.video_tv://视频功能
-                if(listener != null) {
-                    listener.onClickVideo();
-                }
                 break;
             case R.id.contact_tv://打开名片
-                if(listener != null) {
-                    listener.onClickContact();
-                }
                 break;
             case R.id.tv_send:
-                if(listener != null) {
-                    listener.onSendCommentClick(etChat);
-                }
-
                 hideAllViewState();
                 cvLayout.setVisibility(View.GONE);
                 if(commentListener != null) {
@@ -289,7 +263,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
         ibSticker.setImageResource(R.drawable.chat_expression_normal);
     }
 
-    public void hideAllViewStatue(boolean hideKeyboard){
+    public void hideAllViewState(boolean hideKeyboard){
         if(hideKeyboard) {
             UIUtil.hideKeyboard(getContext(), etChat);
         }
@@ -351,100 +325,43 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
      * @param filName    sticker的文件名
      */
     public void showComments(String type, String folderName, String filName) {
-        if(listener != null) {
-            listener.onStickerItemClick(type, folderName, filName);
-        }
         Log.i(TAG, "showComments& type: " + type);
-        String path = null;
-        if(Constant.Sticker_Gif.equals(type)) {
-            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.gif";
-            try {
-                GifDrawable gifDrawable = new GifDrawable(mActivity.getAssets(), path);
-                if(gifDrawable != null) {
-                    setSendDrawable(gifDrawable);
-                }
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
-        } else if(Constant.Sticker_Png.equals(type)) {
-            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.png";
-            try {
-                InputStream is = mActivity.getAssets().open(path);
-                if(is != null) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-                    setSendBitmap(bitmap);
-                    setSendBitmap(bitmap);
-                }
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
-        }
-        Log.i(TAG, "showComments& path: " + path);
+//        String path = null;
+//        if(Constant.Sticker_Gif.equals(type)) {
+//            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.gif";
+//            try {
+//                GifDrawable gifDrawable = new GifDrawable(mActivity.getAssets(), path);
+//                if(gifDrawable != null) {
+//                    setSendDrawable(gifDrawable);
+//                }
+//            } catch(IOException e) {
+//                e.printStackTrace();
+//            }
+//        } else if(Constant.Sticker_Png.equals(type)) {
+//            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.png";
+//            try {
+//                InputStream is = mActivity.getAssets().open(path);
+//                if(is != null) {
+//                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                    setSendBitmap(bitmap);
+//                    setSendBitmap(bitmap);
+//                }
+//            } catch(IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        Log.i(TAG, "showComments& path: " + path);
         if(commentListener != null) {
             commentListener.onStickerItemClick(type, folderName, filName);
+            hideAllViewState(true);
         }
     }
 
-    ChildViewClickListener listener;
-
-    @Deprecated
-    public void setListener(ChildViewClickListener listener) {
-        this.listener = listener;
-    }
 
     CommentListener commentListener;
 
     public void setCommentListenr(CommentListener commentListener) {
         this.commentListener = commentListener;
-    }
-
-    @Deprecated
-    public interface ChildViewClickListener {
-        /**
-         * @param type       sticker的后缀类型(.gif)
-         * @param folderName 放置sticker的文件夹名称
-         * @param filName    sticker的文件名
-         */
-        @Deprecated
-        void onStickerItemClick(String type, String folderName, String filName);
-
-        /**
-         * 点击打开相删
-         */
-        @Deprecated
-        void onClickAlbum();
-
-        /**
-         * 点击打开相机
-         */
-        @Deprecated
-        void onClickCamera();
-
-        /**
-         * 点击添加地址
-         */
-        @Deprecated
-        void onClickLocation();
-
-        /**
-         * 点击添加视频
-         */
-        @Deprecated
-        void onClickVideo();
-
-        /**
-         * 点击添加联系人
-         */
-        @Deprecated
-        void onClickContact();
-
-        /**
-         * 发送评论
-         *
-         * @param et
-         */
-        @Deprecated
-        void onSendCommentClick(EditText et);
     }
 
     public interface CommentListener {
