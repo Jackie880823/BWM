@@ -302,6 +302,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
      */
     @Override
     public void onDestroyView() {
+        if(myDialog != null && myDialog.isShowing()) {
+            myDialog.dismiss();
+        }
         super.onDestroyView();
     }
 

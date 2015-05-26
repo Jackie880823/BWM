@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
 
     <uk.co.senab.photoview.PhotoView
@@ -11,7 +11,7 @@
         android:maxHeight="1000dp"
         android:maxWidth="1000dp"
         android:scaleType="centerInside"
-        android:src="@drawable/network_image_default" />
+        android:src="@drawable/network_image_default"/>
 
     <RelativeLayout
         android:id="@+id/btn_save_2_local"
@@ -26,12 +26,12 @@
         <ImageView
             android:layout_width="@dimen/default_small_button_width_height"
             android:layout_height="@dimen/default_small_button_width_height"
-            android:src="@drawable/download_save"
             android:layout_centerInParent="true"
+            android:src="@drawable/download_save"
             />
-
-
     </RelativeLayout>
+
+    <include layout="@layout/progress_layout"/>
 
 </RelativeLayout>
 
