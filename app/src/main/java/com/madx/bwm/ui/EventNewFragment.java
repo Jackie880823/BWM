@@ -239,13 +239,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
     }
 
+
     private void  getMembersList(final String strGroupsid){
-        /*
-        userList.addAll(members_data);
         HashMap<String,String> params = new HashMap<String,String>();
         params.put("user_id",MainActivity.getUser().getUser_id());
         params.put("group_list",strGroupsid);
-        String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS,params);
+        String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
         new HttpTools(getActivity()).get(url, null, new HttpCallback() {
             @Override
             public void onStart() {
@@ -263,17 +262,17 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 Gson gson = gsonb.create();
 //                Log.i("at_groups_data===", at_groups_data.get(temp).getGroup_id());
                 tempuserList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
-                Log.i("onResult===",response);
-                Log.i("tempuserList_size===", tempuserList.size()+"");
+//                Log.i("onResult===",response);
+//                Log.i("tempuserList_size===", tempuserList.size()+"");
                 userList.addAll(tempuserList);
-//                removeDuplicate(userList);
+                removeDuplicate(userList);
                 changeData();
 
             }
 
             @Override
             public void onError(Exception e) {
-                Log.i("onError===",e.getMessage());
+//                Log.i("onError===",e.getMessage());
                 Toast.makeText(getActivity(), getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
 
@@ -287,9 +286,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
             }
         });
-        */
 
 
+
+        /*
         if(at_groups_data.size()>0){
 
             for (int i=0; i < at_groups_data.size(); i++){
@@ -345,7 +345,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 });
             }
         }
-
+        */
 
     }
 
@@ -377,7 +377,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("loc_name", position_name.getText().toString());
             params.put("text_description", event_desc.getText().toString());
             params.put("user_id", MainActivity.getUser().getUser_id());
-            params.put("event_member", gson.toJson(setGetMembersIds(members_data)));
+            params.put("event_member", gson.toJson(setGetMembersIds(userList)));
             requestInfo.params = params;
 
             new HttpTools(getActivity()).post(requestInfo,new HttpCallback() {
@@ -667,15 +667,17 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                     }.getType());
 //                    Log.i("members===",members);
+
                     groups = data.getStringExtra("groups_data");//获取好友选择页面的群组数据
                     at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {
                     }.getType());
+                    userList.addAll(members_data);
                     List memberList = new ArrayList();
                     for (int i = 0; i < at_groups_data.size(); i++){
                         memberList.add(at_groups_data.get(i).getGroup_id());
                     }
                     if(memberList.size() != 0){
-                        Log.i("groupsid====",gson.toJson(memberList));
+                        Log.i("groupsid====", gson.toJson(memberList));
                         getMembersList(gson.toJson(memberList));
                     }
 //                    Log.i("groups===", groups);
