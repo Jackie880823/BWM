@@ -25,9 +25,7 @@ import com.madx.bwm.adapter.MyFragmentPagerAdapter;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.ui.wall.WallNewActivity;
-import com.madx.bwm.util.FileUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -201,8 +199,8 @@ public class MainActivity extends BaseActivity {
                             break;
                         case family:
 //                          fragment.startActivity(new Intent(getApplicationContext(), CreateGroupActivity.class));
-                            if (commandlistener != null) {
-                                commandlistener.execute(rightButton);
+                            if (familyCommandListener != null) {
+                                familyCommandListener.execute(rightButton);
                             }
                             break;
                         case more:
@@ -266,7 +264,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        SAVE_FILE_NAME=MainActivity.getUser().getUser_id()+SAVE_FILE_NAME;
+        SAVE_FILE_NAME = MainActivity.getUser().getUser_id() + SAVE_FILE_NAME;
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
@@ -307,41 +305,6 @@ public class MainActivity extends BaseActivity {
         leaveGroup = getIntent().getStringExtra("leaveGroup");
         if ("leaveGroup".equals(leaveGroup)) {
             leavePagerIndex = 3;
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                addStickerList();
-                addImageList();
-            }
-        }).start();
-    }
-
-    static List<String> STICKER_NAME_LIST = new ArrayList<>();
-    static List<String> FIRST_STICKER_LIST = new ArrayList<>();
-
-    private void addStickerList() {
-        try {
-            List<String> pathList = FileUtil.getAllFilePathsFromAssets(this, MessageChatActivity.STICKERS_NAME);
-            if (null != pathList) {
-                for (String string : pathList) {
-                    STICKER_NAME_LIST.add(MessageChatActivity.STICKERS_NAME + File.separator + string);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addImageList() {
-        if (STICKER_NAME_LIST != null && STICKER_NAME_LIST.size() > 0) {
-            for (String string : STICKER_NAME_LIST) {
-                List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(this, string);
-                if (null != stickerAllNameList) {
-                    String iconPath = string + File.separator + stickerAllNameList.get(0);
-                    FIRST_STICKER_LIST.add(iconPath);
-                }
-            }
         }
     }
 
