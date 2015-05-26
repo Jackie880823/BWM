@@ -16,7 +16,7 @@
     <string name="title_event_edit">Event Edit</string>
     <string name="title_wall_new">Post</string>
     <string name="title_map_choose_location">Choose location</string>
-    <string name="title_invited_status">Participants</string>
+    <string name="title_invited_status">Invited Participants</string>
     <string name="title_birthday_alert">Birthday Alerts</string>
     <string name="title_birthday_title">%1$s%2$s birthday is coming !</string>
     <string name="title_birthday_title_prefix1">and others</string>
@@ -36,6 +36,10 @@
     <string name="msg_load_config_successed">Loaded successfully</string>
     <string name="msg_load_config_failed">Loading failed</string>
     <string name="msg_date_not_befort_now">Date must be later than now</string>
+    <string name="draft_tips_title">Save as Draft</string>
+    <string name="draft_ask_save">Do you want to save as draft for next event?</string>
+    <string name="event_accept">YES</string>
+    <string name="event_cancel">NO</string>
     <string name="text_tips_title">Action</string>
     <string name="text_more">More</string>
     <string name="alert_text_title_null">Title cannot be empty</string>
@@ -98,33 +102,32 @@
     <string name="np_number_picker_decrement_button">Decrement</string>
 
     <!-- about -->
-    <string name="text_about_title">About Us</string>
+
     <string name="text_about_terms">Terms</string>
     <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you  and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
-    <string name="text_bond_alert">Bond Alert</string>
+
     <string name="text_me">Me</string>
     <string name="text_my_family">My Family</string>
-    <string name="text_tell_friend">Tell A Friend</string>
-    <string name="text_setting">Settings</string>
+
+
     <string name="text_sticker_store">Sticker Store</string>
-    <string name="text_about_us">About Us</string>
-    <string name="text_contact_us">Contact Us</string>
-    <string name="text_terms">Terms</string>
-    <string name="text_sign_out">Sign Out</string>
+
+
+
     <string name="msg_ask_exit_app">Do you really want to sign out?</string>
     <string name="text_yes">YES</string>
     <string name="text_camera">Camera</string>
     <string name="text_album">Album</string>
-    <string name="text_news">News</string>
-    <string name="title_text_miss">Miss Alert</string>
+
+
     <string name="text_miss_you">miss you</string>
-    <string name="text_member">Member</string>
-    <string name="text_recommend">Recommended</string>
-    <string name="text_alert_group">Group</string>
-    <string name="text_big_day">Big Day</string>
-    <string name="title_bond_alert">Bond Alert</string>
+
+
+
+
+
     <string name="hint_mail">Your email</string>
     <string name="hint_subject">Select a subject</string>
     <string name="hint_mail_content">Text here</string>
@@ -580,7 +583,7 @@
     <string name="title_password">Password</string>
     <string name="text_invalid_account_name">Invalid account name. Please try again.</string>
     <string name="text_input_re_enter_password">Please confirm your password</string>
-    <string name="titlte_terms_and_privacy">Terms and Privacy</string>
+
     <string name="titlte_add_new_members">Add New Members</string>
     <string name="text_lwait_for_respons">Awaiting member response.</string>
     <string name="text_input_personal_message">Input personal message</string>
@@ -588,15 +591,7 @@
 
 
 
-    <string name="text_invited_event">%s invited you to event.</string>
-    <string name="text_responded_event">%s responded for event.</string>
-    <string name="text_commented_event">%s commented on event.</string>
-    <string name="text_also_commented_event">%s also commented on event.</string>
-    <string name="text_updated_event">%s updated event.</string>
-    <string name="text_cancelled_event">%s cancelled event.</string>
-    <string name="text_love_comment_event">%s loved your comment in event.</string>
-    <string name="text_love_event">%s loved your event.</string>
-    <string name="text_upcoming_event">Upcoming event: %s </string>
+
 
 
 
@@ -680,5 +675,60 @@
     <string name="text_all_field_compulsory">All fields are compulsory</string>
     <string name="text_pending_approval">Pending approval.</string>
     <string name="wall_comments">Comments</string>
+    <string name="text_new_member">MEMBER</string>
+    <string name="text_new_group">GROUP</string>
+    <string name="text_new_family_tree">family_tree</string>
+    <string name="text_group_name_here">Type group name here</string>
+    <string name="text_dialog_no">NO</string>
+    <string name="text_dialog_show_no">NO</string>
+    <string name="text_create_group_not_save">Are you sure you want to cancel ? Changes made will not be save !</string>
+    <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group. Add more members now!</string>
 
+
+
+
+
+
+    <!--Christopher-->
+    <string name="title_bond_alert">Bond Alert</string>
+    <string name="title_wall_alert">Wall Alert</string>
+    <string name="title_event_alert">Event Alert</string>
+    <string name="title_big_day_alert">Big Day Alert</string>
+    <string name="title_miss_alert">Miss Alert</string>
+    <string name="title_news_alert">News Alert</string>
+    <string name="title_member_alert">Member Alert</string>
+    <string name="title_recommended_alert">Recommended Alert</string>
+    <string name="title_group_alert">Group Alert</string>
+
+    <string name="text_bond_alert">Bond Alert</string>
+    <!--Wall-->
+    <string name="text_bond_alert_wall">wall</string>
+    <!--Event-->
+    <string name="text_bond_alert_event">event</string>
+    <string name="text_big_day">Big Day</string>
+    <string name="text_miss">Miss</string>
+    <string name="text_news">News</string>
+    <string name="text_member">Members</string>
+    <string name="text_recommend">Recommended</string>
+    <string name="text_alert_group">Group</string>
+
+    <string name="titlte_terms_and_privacy">Terms and Privacy</string>
+
+    <string name="text_tell_friend">Tell A Friend</string>
+    <string name="text_setting">Settings</string>
+    <string name="text_about_us">About Us</string>
+    <string name="text_contact_us">Contact Us</string>
+    <string name="text_terms">Terms</string>
+    <string name="text_sign_out">Sign Out</string>
+
+    <string name="text_invited_event">%s invited you to event.</string>
+    <string name="text_responded_event">%s responded for event.</string>
+    <string name="text_commented_event">%s commented on event.</string>
+    <string name="text_also_commented_event">%s also commented on event.</string>
+    <string name="text_updated_event">%s updated event.</string>
+    <string name="text_cancelled_event">%s cancelled event.</string>
+    <string name="text_love_comment_event">%s loved your comment in event.</string>
+    <string name="text_love_event">%s loved your event.</string>
+    <string name="text_upcoming_event">Upcoming event: %s </string>
+    <!--Christopher-->
 </resources>

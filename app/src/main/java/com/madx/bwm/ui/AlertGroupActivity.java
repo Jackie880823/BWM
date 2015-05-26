@@ -57,7 +57,7 @@ public class AlertGroupActivity extends BaseActivity{
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.text_alert_group);
+        tvTitle.setText(R.string.title_group_alert);
     }
 
     @Override

@@ -3,30 +3,34 @@
 
     <string name="app_name">BWM</string>
     <string name="title_tab_wall">动态</string>
-    <string name="title_tab_event">事件</string>
-    <string name="title_tab_chat">对话</string>
+    <string name="title_tab_chat">信息</string>
+    <string name="title_tab_event">活动</string>
     <string name="title_tab_more">更多</string>
     <string name="action_settings">设置</string>
     <string name="msg_google_service_not_found">No valid Google Play Services APK found</string>
 
     <string name="title_event_detail">Detail</string>
     <string name="title_wall_comment">评论</string>
-    <string name="title_event_new">New Event</string>
+    <string name="title_event_new">新建活动</string>
     <string name="title_event_edit">Event Edit</string>
     <string name="title_wall_new">Post</string>
     <string name="title_map_choose_location">Choose location</string>
-    <string name="title_invited_status">Participants</string>
+    <string name="title_invited_status">被邀请的会员</string>
     <string name="title_birthday_alert">Birthday Alerts</string>
     <string name="title_birthday_title">%1$s%2$s birthday is coming !</string>
     <string name="title_birthday_title_prefix1">and others</string>
     <string name="title_birthday_title_prefix2">\'s</string>
     <string name="title_birthday_left_day_desc"> day left</string>
     <string name="text_and">&amp;</string>
-    <string name="text_hint_event_title">Event title</string>
-    <string name="text_hint_event_content">Event content</string>
-    <string name="text_hint_event_position">Event location</string>
-    <string name="text_hint_event_date">Choose a date</string>
-    <string name="text_canceled">Canceled</string>
+    <string name="text_hint_event_title">填写标题在此处</string>
+    <string name="text_hint_event_content">描述您的活动</string>
+    <string name="text_hint_event_position">活动的地点</string>
+    <string name="text_hint_event_date">选择日期&amp;时间</string>
+    <string name="text_canceled">已取消</string>
+    <string name="draft_tips_title">保存为草稿</string>
+    <string name="draft_ask_save">您要保存为草稿吗?</string>
+    <string name="event_accept">YES</string>
+    <string name="event_cancel">NO</string>
     <string name="msg_action_successed">Action successful</string>
     <string name="msg_action_canceled">Action canceled</string>
     <string name="msg_action_failed">Action failed</string>
@@ -56,7 +60,7 @@
     <string name="text_word">Text</string>
     <string name="text_picture">Picture</string>
     <string name="text_photo">Photo</string>
-    <string name="text_invited_members">Invited Members</string>
+    <string name="text_invited_members">邀请会员</string>
     <string name="text_all">All</string>
     <string name="text_going">Joined</string>
     <string name="text_maybe">Maybe</string>
@@ -86,7 +90,7 @@
     <!--<string name="text_location">地理位置</string>-->
     <!--<string name="text_tag">do what</string>-->
     <!--<string name="text_face">图标</string>-->
-    <string name="text_send">Send</string>
+    <string name="text_send">发送</string>
     <string name="text_map">Map</string>
     <string name="text_destination">Destination</string>
 
@@ -103,32 +107,30 @@
 
 
     <!-- about -->
-    <string name="text_about_title">About Us</string>
+
     <string name="text_about_terms">Terms</string>
     <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
-    <string name="text_bond_alert">Bond Alert</string>
+
     <string name="text_me">Me</string>
     <string name="text_my_family">My Family</string>
-    <string name="text_tell_friend">Tell A Friend</string>
-    <string name="text_setting">Settings</string>
+
+
     <string name="text_sticker_store">Sticker Store</string>
-    <string name="text_about_us">About Us</string>
-    <string name="text_contact_us">Contact Us</string>
-    <string name="text_terms">Terms</string>
-    <string name="text_sign_out">Sign Out</string>
+
+
+
     <string name="msg_ask_exit_app">Do you really want to sign out?</string>
     <string name="text_yes">YES</string>
     <string name="text_camera">拍照</string>
     <string name="text_album">相册</string>
-    <string name="text_news">News</string>
     <string name="title_text_miss">Miss Alert</string>
     <string name="text_miss_you">miss you</string>
-    <string name="text_member">Member</string>
-    <string name="text_recommend">Recommended</string>
-    <string name="text_big_day">Big Day</string>
-    <string name="title_bond_alert">Bond Alert</string>
+
+
+
+
 
     <string name="hint_mail">Your email</string>
     <string name="hint_subject">Select a subject</string>
@@ -425,8 +427,8 @@
     <!--xml-->
     <!--xml-->
 
-    <string name="text_via_contact">Via Contact</string>
-    <string name="text_ID_name">Via BondWithMe ID / Username</string>
+    <string name="text_via_contact">通过手机号码</string>
+    <string name="text_ID_name">通过伴我玩账号 / 用户名字</string>
     <string name="text_QR">Add via Q.R Code</string>
     <string name="text_location">地点</string>
     <string name="text_stickers">表情</string>
@@ -455,8 +457,8 @@
     <string name="hint_phone_username">Phone Number / Username</string>
     <string name="text_password">Password</string>
     <string name="text_my_view_profile">View Profile</string>
-    <string name="text_album_gallery">Album Gallery</string>
-    <string name="text_wall_posting">Wall Posting</string>
+    <string name="text_album_gallery">相册</string>
+    <string name="text_wall_posting">动态</string>
     <string name="text_reset_password">Reset Password</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
@@ -474,11 +476,11 @@
     <string name="text_re_enter_password">Re-enter Password</string>
     <string name="text_create_new_password">Create A New Password</string>
     <string name="text_contact_information">Contact information</string>
-    <string name="text_select_contact">Select contact</string>
-    <string name="text_select_relationship">Select relationship</string>
+    <string name="text_select_contact">选择手机号码</string>
+    <string name="text_select_relationship">选择关系</string>
     <string name="text_personal_message">Personal message. \nMax is 30 characters.</string>
     <string name="text_warning_invaild_id_name">Invaild ID / Username, please try again</string>
-    <string name="hint_id_accout">Insert ID / Username</string>
+    <string name="hint_id_accout">加入伴我玩账号 / 用户名字</string>
     <string name="text_remove_user">Remove User</string>
     <string name="text_add_member">Add Member?</string>
     <string name="text_view_profile">View User\'s Profile</string>
@@ -486,8 +488,8 @@
     <string name="text_add_new_member">Add New Member</string>
     <string name="text_create_new_group">Create New Group</string>
     <string name="text_view_profile_family">View Profile</string>
-    <string name="text_i_miss_you">I Miss You !</string>
-    <string name="text_path_relationship"><![CDATA[Path & Relationship]]></string>
+    <string name="text_i_miss_you">想你了</string>
+    <string name="text_path_relationship">关系</string>
     <string name="text_send_message">Send Message</string>
 
     <!--xml-->
@@ -503,7 +505,7 @@
     <string name="text_wall_loved_your_post">love your post</string>
 
 
-    <string name="title_add_new_members">Add New Members</string>
+    <string name="title_add_new_members">添加新会员</string>
     <string name="title_album_gallery">Album gallery</string>
     <string name="title_country_code">Country Code</string>
     <string name="title_family_profile">Profile</string>
@@ -583,7 +585,7 @@
     <string name="text_fail_add_member">Add member failed. Try again.</string>
     <string name="title_select_relationship">Select Relationship</string>
     <string name="title_reset_password">Reset Password</string>
-    <string name="title_select_members">Select Members</string>
+    <string name="title_select_members">选择会员</string>
     <string name="text_awaiting_approval_member">Awaiting for approval from member.</string>
     <string name="text_try_again">Try Again</string>
     <string name="title_sign_up">Sign Up</string>
@@ -595,22 +597,13 @@
     <string name="title_password">Password</string>
     <string name="text_invalid_account_name">Invalid account name. Please try again.</string>
     <string name="text_input_re_enter_password">Please confirm your password</string>
-    <string name="titlte_terms_and_privacy">Terms and Privacy</string>
+
     <string name="titlte_add_new_members">Add New Members</string>
     <string name="text_lwait_for_respons">Awaiting member response.</string>
     <string name="text_input_personal_message">Input personal message</string>
     <string name="text_choose_contact_information">Please select at least a contact</string>
 
 
-    <string name="text_invited_event">invited you to %s event.</string>
-    <string name="text_responded_event">responded for %s event.</string>
-    <string name="text_commented_event">commented on %s event.</string>
-    <string name="text_also_commented_event">also commented on %s event.</string>
-    <string name="text_updated_event">updated %s event.</string>
-    <string name="text_cancelled_event">cancelled %s event.</string>
-    <string name="text_love_comment_event">loved your comment in %s event.</string>
-    <string name="text_love_event">loved your %s event.</string>
-    <string name="text_upcoming_event">Upcoming event: %s </string>
     <string name="text_photos">张照片</string>
     <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" ">]]></string>
     <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
@@ -625,7 +618,7 @@
     <string name="some_hour_ago">%d 小时前</string>
     <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
     <string name="hello_world">Hello world!</string>
-    <string name="title_tab_my_family">My Family</string>
+    <string name="title_tab_my_family">我的家庭</string>
     <string name="text_month_january">January</string>
     <string name="text_month_february">February</string>
     <string name="text_month_march">March</string>
@@ -640,19 +633,68 @@
     <string name="text_month_december">December</string>
     <string name="text_album_no_pic">NO IMAGE FOUND</string>
     <string name="title_via_contact">Via Contact</string>
-    <string name="text_personal_msg">PERSONAL MESSAGE</string>
-    <string name="text_send_invitation_to">SEND INVITATION TO:</string>
+    <string name="text_personal_msg">私信</string>
+    <string name="text_send_invitation_to">发送给</string>
     <string name="text_type_meaage_here">Type your message here...</string>
-    <string name="title_via_id_username">Via ID / Username</string>
-    <string name="text_select_relation">RELATIONSHIP</string>
-    <string name="text_member_add">MEMBERS ADDED</string>
+    <string name="title_via_id_username">通过伴我玩账号 / 用户名字</string>
+    <string name="text_select_relation">关系</string>
+    <string name="text_member_add">已加入会员</string>
     <string name="text_members_num">%s members</string>
-    <string name="family_search">Search</string>
-    <string name="text_dialog_ok">OK</string>
-    <string name="text_all_field_compulsory">All fields are compulsory</string>
-    <string name="text_pending_approval">Pending approval.</string>
     <string name="wall_comments">评论</string>
+    <string name="family_search">搜索</string>
+    <string name="text_dialog_ok">好的</string>
+    <string name="text_all_field_compulsory">请填满所有空格。</string>
+    <string name="text_pending_approval">待允许</string>
+    <string name="text_new_member">会员</string>
+    <string name="text_new_group">群组</string>
+    <string name="text_new_family_tree">家谱</string>
+    <string name="text_group_name_here">填写群组名称</string>
+    <string name="text_dialog_no">NO</string>
+    <string name="text_dialog_show_no">取消</string>
+    <string name="text_create_group_not_save">确定取消？资料将不被保存。</string>
+    <string name="text_create_group_members_least_two">你必须拥有两个或以上的会员以创建新群组。添加新会员吧</string>
     <!--end-->
 
+    <!--Christopher-->
+    <string name="title_bond_alert">伴通告</string>
+    <string name="title_wall_alert">动态通告</string>
+    <string name="title_event_alert">活动通告</string>
+    <string name="title_big_day_alert">大日子通告</string>
+    <string name="title_miss_alert">想念通告</string>
+    <string name="title_news_alert">消息通告</string>
+    <string name="title_member_alert">会员通告</string>
+    <string name="title_recommended_alert">推荐通告</string>
+    <string name="title_group_alert">群组通告</string>
 
+    <string name="text_bond_alert">伴通告</string>
+    <!--Wall-->
+    <string name="text_bond_alert_wall">动态</string>
+    <!--Event-->
+    <string name="text_bond_alert_event">活动</string>
+    <string name="text_big_day">大日子</string>
+    <string name="text_miss">想念</string>
+    <string name="text_news">消息</string>
+    <string name="text_member">会员</string>
+    <string name="text_recommend">推荐</string>
+    <string name="text_alert_group">群组</string>
+
+    <string name="titlte_terms_and_privacy">法律声明</string>
+
+    <string name="text_tell_friend">推介给朋友</string>
+    <string name="text_setting">设置</string>
+    <string name="text_about_us">关于伴我玩</string>
+    <string name="text_contact_us">联系我们</string>
+    <string name="text_terms">法律</string>
+    <string name="text_sign_out">Sign Out</string>
+
+    <string name="text_invited_event">%s invited you to event.</string>
+    <string name="text_responded_event">%s responded for event.</string>
+    <string name="text_commented_event">%s commented on event.</string>
+    <string name="text_also_commented_event">%s also commented on event.</string>
+    <string name="text_updated_event">%s updated event.</string>
+    <string name="text_cancelled_event">%s cancelled event.</string>
+    <string name="text_love_comment_event">%s loved your comment in event.</string>
+    <string name="text_love_event">%s loved your event.</string>
+    <string name="text_upcoming_event">Upcoming event: %s </string>
+    <!--Christopher-->
 </resources>
