@@ -40,16 +40,16 @@
 
                     <TextView
                         android:id="@+id/wall_alert_num"
-                        android:layout_alignParentRight="true"
                         style="@style/RedPoint"
-                        />
+                        android:layout_alignParentRight="true"
+                         />
                 </RelativeLayout>
 
                 <TextView
                     style="@style/text_dark_default"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/title_tab_wall" />
+                    android:text="@string/text_bond_alert_wall" />
 
             </LinearLayout>
 
@@ -58,8 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/btn_alert_event"
@@ -76,16 +75,15 @@
 
                     <TextView
                         android:id="@+id/event_alert_num"
-                        android:layout_alignParentRight="true"
                         style="@style/RedPoint"
-                        />
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
 
                 <TextView
                     style="@style/text_dark_default"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/title_tab_event" />
+                    android:text="@string/text_bond_alert_event" />
 
             </LinearLayout>
 
@@ -111,9 +109,8 @@
 
                     <TextView
                         android:id="@+id/bigday_alert_num"
-                        android:layout_alignParentRight="true"
                         style="@style/RedPoint"
-                        />
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
 
                 <TextView
@@ -139,8 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/btn_alert_miss"
@@ -157,16 +153,15 @@
 
                     <TextView
                         android:id="@+id/miss_alert_num"
-                        android:layout_alignParentRight="true"
                         style="@style/RedPoint"
-                        />
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
 
                 <TextView
                     style="@style/text_dark_default"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/title_text_miss" />
+                    android:text="@string/text_miss" />
 
             </LinearLayout>
 
@@ -192,9 +187,8 @@
 
                     <TextView
                         android:id="@+id/news_alert_num"
-                        android:layout_alignParentRight="true"
                         style="@style/RedPoint"
-                        />
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
 
                 <TextView
@@ -227,9 +221,8 @@
 
                     <TextView
                         android:id="@+id/member_alert_num"
-                        android:layout_alignParentRight="true"
                         style="@style/RedPoint"
-                        />
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
 
                 <TextView
@@ -256,8 +249,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/btn_alert_recommend"
@@ -274,9 +266,8 @@
 
                     <TextView
                         android:id="@+id/recommend_alert_num"
-                        android:layout_alignParentRight="true"
                         style="@style/RedPoint"
-                        />
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
 
                 <TextView
@@ -294,8 +285,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/btn_alert_group"
@@ -312,9 +302,8 @@
 
                     <TextView
                         android:id="@+id/group_alert_num"
-                        android:layout_alignParentRight="true"
                         style="@style/RedPoint"
-                        />
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
 
                 <TextView

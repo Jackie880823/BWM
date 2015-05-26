@@ -61,7 +61,7 @@ public class MissListActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.title_text_miss);
+        tvTitle.setText(R.string.title_miss_alert);
     }
 
     @Override

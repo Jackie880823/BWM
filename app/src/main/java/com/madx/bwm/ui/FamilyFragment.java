@@ -45,7 +45,6 @@ import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.MessageUtil;
-import com.madx.bwm.util.MslToast;
 import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.PinYin4JUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
@@ -83,7 +82,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private static final int GET_DATA = 0x11;
     private MyFamilyAdapter memberAdapter;
     private FamilyGroupAdapter groupAdapter;
-    public static final String FAMILY_TREE = "family_tree";
+    public static String FAMILY_TREE = "family_tree";
     public static final String FAMILY_PARENT = "parent";
     public static final String FAMILY_CHILDREN = "children";
     public static final String FAMILY_SIBLING = "sibling";
@@ -147,6 +146,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     @Override
     public void initView() {
         mContext = getActivity();
+        FAMILY_TREE = mContext.getString(R.string.text_new_family_tree);
         pager = getViewById(R.id.family_list_viewpager);
         message_member_tv = getViewById(R.id.message_member_tv);
         message_group_tv = getViewById(R.id.message_group_tv);
@@ -243,6 +243,22 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         return results;
     }
 
+    private void showNoFriendDialog() {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.text_pending_approval));
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
+    }
+
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
         View userView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
@@ -272,7 +288,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 } else {
                     if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
                         //不是好友,提示等待接收
-                        MslToast.getInstance(mContext).showLongToast(getString(R.string.text_awaiting_for_approval));
+                        showNoFriendDialog();
                         return;
                     } else {
                         //member, 跳转到个人资料页面需要
@@ -579,13 +595,13 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             if (arg0 == 0) {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_selected_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
-                message_group_tv.setTextColor(Color.parseColor("#878787"));
+                message_group_tv.setTextColor(Color.parseColor("#666666"));
                 message_member_tv.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_normal_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_selected_shap);
                 message_group_tv.setTextColor(Color.parseColor("#ffffff"));
-                message_member_tv.setTextColor(Color.parseColor("#878787"));
+                message_member_tv.setTextColor(Color.parseColor("#666666"));
             }
         }
 

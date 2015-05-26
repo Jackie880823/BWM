@@ -27,11 +27,6 @@ public class InvitedStatusActivity extends BaseActivity {
     }
 
     @Override
-    protected void changeTitleColor(int color) {
-        super.changeTitleColor(color);
-    }
-
-    @Override
     protected void setTitle() {
         tvTitle.setText(R.string.title_invited_status);
     }

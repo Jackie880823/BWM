@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.madx.bwm.R;
 import com.madx.bwm.ui.BaseActivity;
@@ -21,8 +20,6 @@ public class WallCommentActivity extends BaseActivity {
 
     @Override
     protected void initBottomBar() {
-        // 隐藏键盘
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED|WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override

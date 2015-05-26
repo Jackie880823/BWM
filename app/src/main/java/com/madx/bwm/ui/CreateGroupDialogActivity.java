@@ -1,13 +1,13 @@
 package com.madx.bwm.ui;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,25 +43,21 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CreateGroupDialogActivity extends Activity {
-
+public class CreateGroupDialogActivity extends BaseActivity {
     public static final int TAKE_PHOTO = 1;
     public static final int CROP_PHOTO = 2;
-
     private ImageView ivGroupPic;
     private EditText etGroupName;
     private Button btnDone;
-
     private String groupMembers;//上一个界面传来的成员数据(JSON格式)
-
     private ProgressDialog progressDialog;
-
     private final static int REQUEST_HEAD_PHOTO = 1;
     private final static int REQUEST_HEAD_CAMERA = 2;
     private final static int REQUEST_HEAD_FINAL = 3;
     private Uri mCropImagedUri;//裁剪后的uri
     private String imagePath;
     private TextView member_num;
+    private Context mContext;
     /**
      * 头像缓存文件名称
      */
@@ -72,53 +68,35 @@ public class CreateGroupDialogActivity extends Activity {
      */
     public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
 
+    @Override
+    public int getLayout() {
+        return R.layout.activity_create_new_group;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_group_dialog);
+    protected void initBottomBar() {
 
-        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
+    }
 
-        groupMembers = getIntent().getStringExtra("members_json");//上一个界面传来的成员数据(JSON格式)
-        member_num = (TextView) findViewById(R.id.member_num);
-        ivGroupPic = (ImageView) findViewById(R.id.creategroup_imageview);
-        etGroupName = (EditText) findViewById(R.id.creategroup_editText);
-        btnDone = (Button) findViewById(R.id.creategroup_button);
-        String memberLength = getIntent().getIntExtra("memberLength", 0) + "";
-        String memberFormat = String.format(getString(R.string.text_members_num), memberLength);
-        member_num.setText(memberFormat);
-        ivGroupPic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(Intent.ACTION_PICK, null);
-//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-//                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-//                startActivityForResult(intent, REQUEST_HEAD_PHOTO);
+    @Override
+    protected void setTitle() {
+        tvTitle.setText(R.string.title_message_creategroup);
+    }
 
-                showCameraAlbum();
-            }
-        });
+    @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+        rightButton.setVisibility(View.INVISIBLE);
+    }
 
-        btnDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(etGroupName.getText())) {
-                    Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_input_your_group_name), Toast.LENGTH_SHORT).show();
-                } else {
-                    if (TextUtils.isEmpty(groupMembers) || "[]".equals(groupMembers)) {
-                        //没选人
-                    } else {
-                        //TODO
-                        //弹窗禁止再次点击DONE
-                        btnDone.setEnabled(false);
-                        uploadImage();
-                    }
+    @Override
+    protected void titleRightEvent() {
 
-                }
-            }
-        });
+    }
 
+    @Override
+    protected Fragment getFragment() {
+        return null;
     }
 
     @Override
@@ -140,8 +118,6 @@ public class CreateGroupDialogActivity extends Activity {
                         }
                     }
                     break;
-
-
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(CreateGroupDialogActivity.this, CACHE_PIC_NAME_TEMP));
@@ -258,22 +234,12 @@ public class CreateGroupDialogActivity extends Activity {
             // outputX outputY 是裁剪图片宽高
             intent.putExtra("outputX", width);
             intent.putExtra("outputY", height);
-
-            // //防止毛边
-            // intent.putExtra("scale", true);//黑边
-            // intent.putExtra("scaleUpIfNeeded", true);//黑边
-
             intent.putExtra("return-data", false);
             intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
             intent.putExtra("noFaceDetection", true);
-
-            //		if(fromPhoto){
             File f = PicturesCacheUtil.getCachePicFileByName(CreateGroupDialogActivity.this, CACHE_PIC_NAME);
             mCropImagedUri = Uri.fromFile(f);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
-            //		}else{
-            //			mCropImagedUri = uri;
-            //		}
             startActivityForResult(intent, REQUEST_HEAD_FINAL);
         }
     }
@@ -293,28 +259,17 @@ public class CreateGroupDialogActivity extends Activity {
     private void uploadImage() {
 
         if (mCropImagedUri == null) {
-            /**
-             * begin QK
-             */
             Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_choose_your_group_picture), Toast.LENGTH_SHORT).show();
-            /**
-             * end
-             */
             btnDone.setEnabled(true);
             return;
         }
-
-
         File f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
         if (!f.exists()) {
             btnDone.setEnabled(true);
             return;
         }
-
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
-
-
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
         params.put("fileName", "GroupPicture" + MainActivity.getUser().getUser_id() + groupMembers);
@@ -336,7 +291,6 @@ public class CreateGroupDialogActivity extends Activity {
 
             @Override
             public void onResult(String response) {
-                Log.i("", "333response==========" + response);
                 try {
                     String groupId;
                     JSONObject jsonObject = new JSONObject(response);
@@ -362,7 +316,6 @@ public class CreateGroupDialogActivity extends Activity {
                         finish();
 
                     }
-
 
                 } catch (JSONException e) {
                     progressDialog.dismiss();
@@ -402,6 +355,7 @@ public class CreateGroupDialogActivity extends Activity {
 
         TextView tvCamera = (TextView) selectIntention.findViewById(R.id.tv_camera);
         TextView tvAlbum = (TextView) selectIntention.findViewById(R.id.tv_album);
+        TextView tv_cancel = (TextView) selectIntention.findViewById(R.id.tv_cancel);
 
         tvCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -421,7 +375,12 @@ public class CreateGroupDialogActivity extends Activity {
                 startActivityForResult(intent2, REQUEST_HEAD_CAMERA);
             }
         });
-
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCameraAlbum.dismiss();
+            }
+        });
         tvAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -436,4 +395,87 @@ public class CreateGroupDialogActivity extends Activity {
         showCameraAlbum.show();
     }
 
+    @Override
+    public void initView() {
+        mContext = this;
+        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
+        groupMembers = getIntent().getStringExtra("members_json");//上一个界面传来的成员数据(JSON格式)
+        member_num = getViewById(R.id.member_num);
+        ivGroupPic = getViewById(R.id.creategroup_imageview);
+        etGroupName = getViewById(R.id.creategroup_editText);
+        btnDone = getViewById(R.id.creategroup_button);
+        String memberLength = getIntent().getIntExtra("memberLength", 0) + "";
+        String memberFormat = String.format(getString(R.string.text_members_num), memberLength);
+        member_num.setText(memberFormat);
+        ivGroupPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCameraAlbum();
+            }
+        });
+
+        btnDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (TextUtils.isEmpty(etGroupName.getText())) {
+                    Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_input_your_group_name), Toast.LENGTH_SHORT).show();
+                } else {
+                    if (TextUtils.isEmpty(groupMembers) || "[]".equals(groupMembers)) {
+                    } else {
+                        btnDone.setEnabled(false);
+                        uploadImage();
+                    }
+
+                }
+            }
+        });
+        getViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNoFriendDialog();
+            }
+        });
+        member_num.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    private void showNoFriendDialog() {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.text_create_group_not_save));
+        TextView okTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        cancelTv.setVisibility(View.VISIBLE);
+        ((View) selectIntention.findViewById(R.id.line_view)).setVisibility(View.VISIBLE);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        okTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        showSelectDialog.show();
+    }
+
+    @Override
+    public void requestData() {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

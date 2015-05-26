@@ -5,21 +5,26 @@
     android:orientation="vertical"
     android:background="@color/default_content_bg"
     tools:context="com.example.christepherzhang.myapplication.MyFamilyActivity">
-<LinearLayout
-    android:id="@+id/search_linear"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <EditText
-        android:id="@+id/et_search"
+
+    <LinearLayout
+        android:id="@+id/search_linear"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_content_padding"
-        android:padding="@dimen/default_content_padding"
-        android:singleLine="true"
-        android:background="@drawable/et_oval_white"
-        android:drawablePadding="@dimen/default_view_margin"
-        android:drawableRight="@drawable/search" />
-</LinearLayout>
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_content_padding"
+            android:padding="@dimen/default_content_padding"
+            android:singleLine="true"
+            android:hint="@string/family_search"
+            android:textColorHint="#ccc"
+            android:background="@drawable/et_oval_white"
+            android:drawablePadding="@dimen/default_view_margin"
+            android:drawableRight="@drawable/search" />
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/my_family_linear"
         android:layout_width="match_parent"
@@ -42,9 +47,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="MEMBER"
+                android:text="@string/text_new_member"
                 android:gravity="center"
-                android:textSize="@dimen/_18dp"
+                android:textSize="@dimen/_13dp"
                 android:background="@drawable/message_member_selected_shap"
                 android:layout_marginTop="@dimen/_1dp"
                 android:layout_marginBottom="@dimen/_1dp"
@@ -56,13 +61,14 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="@dimen/_18dp"
+                android:textSize="@dimen/_13dp"
+                android:textColor="#666"
                 android:layout_marginTop="@dimen/_1dp"
                 android:layout_marginBottom="@dimen/_1dp"
                 android:layout_marginRight="@dimen/_1dp"
                 android:background="@drawable/message_group_normal_shap"
                 android:gravity="center"
-                android:text="GROUP" />
+                android:text="@string/text_new_group" />
         </LinearLayout>
     </LinearLayout>
 

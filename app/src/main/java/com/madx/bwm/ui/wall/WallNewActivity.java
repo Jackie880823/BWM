@@ -12,7 +12,6 @@ import com.madx.bwm.ui.BaseActivity;
  */
 public class WallNewActivity extends BaseActivity {
 
-
     @Override
     protected void initBottomBar() {
     }

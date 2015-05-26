@@ -4,19 +4,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.util.AttributeSet;
+import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.madx.bwm.R;
 import com.madx.bwm.interfaces.IViewCommon;
 import com.madx.bwm.interfaces.NetChangeObserver;
 import com.madx.bwm.receiver_service.NetWorkStateReceiver;
 import com.madx.bwm.util.NetworkUtil;
+import com.madx.bwm.util.UIUtil;
+
+import org.xmlpull.v1.XmlPullParser;
 
 /**
  * activity基类
@@ -56,9 +62,11 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 打开Activity隐藏软键盘；
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(getLayout());
+        //注册网络观察者
         NetWorkStateReceiver.registerNetStateObserver(this);
+
         fragment = getFragment();
         if (fragment != null) {
             if (savedInstanceState == null) {
@@ -80,6 +88,34 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         initTitleBar();
 
 
+//        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
+//                .findViewById(android.R.id.content)).getChildAt(0);
+//        viewGroup.addView(setWaittingView());
+
+    }
+
+    private View setWaittingView(){
+
+        RelativeLayout relativeLayout = new RelativeLayout(this);
+        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+        relativeLayout.setClickable(true);
+//        relativeLayout.setVisibility(View.GONE);
+
+
+//        obtainStyledAttributes(R.style.progress_bar,null);
+
+        XmlPullParser parser = getResources().getXml(R.xml.progress_bar_style);
+        AttributeSet attributes = Xml.asAttributeSet(parser);
+        ProgressBarCircularIndeterminate progress_bar = new ProgressBarCircularIndeterminate(this,attributes);
+
+        relativeLayout.addView(progress_bar);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) progress_bar.getLayoutParams();
+        layoutParams.width =100;
+        layoutParams.height =100;
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        progress_bar.setBackgroundColor(getResources().getColor(R.color.bg_progressBar));
+
+        return relativeLayout;
     }
 
     public int getLayout() {
@@ -100,6 +136,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
      * TitilBar 左边事件
      */
     protected void titleLeftEvent() {
+        UIUtil.hideKeyboard(this, getCurrentFocus());
         finish();
     }
 
@@ -207,5 +244,9 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onDestroy() {
         super.onDestroy();
         NetWorkStateReceiver.unRegisterNetStateObserver(this);
+    }
+
+    protected void showWaitting(){
+        ((ProgressBarCircularIndeterminate)getViewById(R.id.progressBar)).setVisibility(View.VISIBLE);
     }
 }

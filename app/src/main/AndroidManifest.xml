@@ -128,7 +128,8 @@
             android:name=".ui.MainActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="adjustPan|stateHidden"
+             />
         <activity
             android:name=".ui.EventDetailActivity"
             android:screenOrientation="portrait"
@@ -220,7 +221,7 @@
             android:name=".ui.AddMemberWorkFlow"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.BigDayActivity"
+            android:name=".ui.more.BondAlert.BigDayActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
@@ -236,11 +237,11 @@
 
         <activity
             android:name=".ui.CreateGroupActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CreateGroupDialogActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.GroupSettingActivity"
             android:screenOrientation="portrait" />
@@ -344,11 +345,6 @@
         <activity
             android:name=".ui.more.GroupPrivacyActivity"
             android:label="@string/title_activity_group_privacy"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".ui.more.BondAlert.BigDayActivity"
-            android:label="@string/title_activity_big_day"
             android:screenOrientation="portrait">
         </activity>
         <activity

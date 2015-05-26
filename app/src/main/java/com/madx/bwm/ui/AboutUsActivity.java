@@ -24,7 +24,7 @@ public class AboutUsActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.text_about_title);
+        tvTitle.setText(R.string.text_about_us);
     }
 
     @Override

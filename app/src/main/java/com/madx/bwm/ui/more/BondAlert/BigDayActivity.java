@@ -39,13 +39,13 @@ public class BigDayActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.text_big_day);
+        tvTitle.setText(R.string.title_big_day_alert);
     }
 
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        titleBar.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
+//        titleBar.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
         rightButton.setVisibility(View.INVISIBLE);
     }
 

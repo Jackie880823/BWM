@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.gc.materialdesign.widgets.Dialog;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -42,10 +43,10 @@ import com.madx.bwm.entity.FamilyGroupEntity;
 import com.madx.bwm.entity.FamilyMemberEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
-import com.madx.bwm.util.MslToast;
 import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.PinYin4JUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
+import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.MySwipeRefreshLayout;
 
 import org.json.JSONException;
@@ -80,6 +81,7 @@ public class InviteMemberActivity extends BaseActivity {
     private int type;
     private List<FamilyMemberEntity> selectMemberEntityList;
     private List<FamilyGroupEntity> selectGroupEntityList;
+    private boolean isFirstData = true;
 
     Handler handler = new Handler() {
         @Override
@@ -88,6 +90,7 @@ public class InviteMemberActivity extends BaseActivity {
             switch (msg.what) {
                 case GET_DATA:
                     Map<String, List> map = (Map<String, List>) msg.obj;
+                    memberEntityList.clear();
                     memberEntityList = map.get("private");
                     if (type == 1) {
                         List<FamilyMemberEntity> memberList = new ArrayList<>();
@@ -95,18 +98,21 @@ public class InviteMemberActivity extends BaseActivity {
                             if (!selectMemberList.contains(memberEntity.getUser_id())) {
                                 memberList.add(memberEntity);
                             } else {
-                                selectMemberEntityList.add(memberEntity);
+                                if (isFirstData) {
+                                    selectMemberEntityList.add(memberEntity);
+                                }
                             }
                         }
                         memberAdapter.addNewData(memberList);
                     } else {
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
-                            if (selectMemberList.contains(memberEntity.getUser_id())) {
+                            if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
                                 selectMemberEntityList.add(memberEntity);
                             }
                         }
                         memberAdapter.addNewData(memberEntityList);
                     }
+                    groupEntityList.clear();
                     groupEntityList = map.get("group");
                     if (type == 1) {
                         List<FamilyGroupEntity> groupList = new ArrayList<>();
@@ -114,13 +120,15 @@ public class InviteMemberActivity extends BaseActivity {
                             if (!selectGroupList.contains(groupEntity.getGroup_id())) {
                                 groupList.add(groupEntity);
                             } else {
-                                selectGroupEntityList.add(groupEntity);
+                                if (isFirstData) {
+                                    selectGroupEntityList.add(groupEntity);
+                                }
                             }
                         }
                         groupAdapter.addData(groupList);
                     } else {
                         for (FamilyGroupEntity groupEntity : groupEntityList) {
-                            if (selectGroupList.contains(groupEntity.getGroup_id())) {
+                            if (selectGroupList.contains(groupEntity.getGroup_id()) && isFirstData) {
                                 selectGroupEntityList.add(groupEntity);
                             }
                         }
@@ -173,7 +181,7 @@ public class InviteMemberActivity extends BaseActivity {
         mProgressDialog.show();
 
         memberAdapter = new InviteMemberAdapter(mContext, memberEntityList, selectMemberList);
-        groupAdapter = new FamilyGroupAdapter(groupEntityList);
+        groupAdapter = new FamilyGroupAdapter(groupEntityList, selectGroupList);
         //绑定自定义适配器
         pager.setAdapter(new FamilyPagerAdapter(initPagerView()));
         pager.setOnPageChangeListener(new MyOnPageChanger());
@@ -247,6 +255,22 @@ public class InviteMemberActivity extends BaseActivity {
         return results;
     }
 
+    private void showNoFriendDialog() {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.text_pending_approval));
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
+    }
+
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
         View userView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
@@ -272,17 +296,17 @@ public class InviteMemberActivity extends BaseActivity {
 //                }
                 if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
                     //不是好友,提示等待接收
-                    MslToast.getInstance(mContext).showLongToast(getString(R.string.text_awaiting_for_approval));
+                    showNoFriendDialog();
                     return;
                 } else {
                     CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
                     if (selectItem.isChecked()) {
                         selectItem.setChecked(false);
-                        //memberAdapter.removeSelectData(userId);
+                        memberAdapter.removeSelectData(userId);
                         selectMemberEntityList.remove(familyMemberEntity);
                     } else {
                         selectItem.setChecked(true);
-                        //memberAdapter.addSelectData(userId);
+                        memberAdapter.addSelectData(userId);
                         selectMemberEntityList.add(familyMemberEntity);
                     }
                 }
@@ -292,6 +316,7 @@ public class InviteMemberActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 isMemberRefresh = true;
+                isFirstData = false;
                 requestData();
             }
         });
@@ -346,6 +371,7 @@ public class InviteMemberActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 isGroupRefresh = true;
+                isFirstData = false;
                 requestData();
             }
 
@@ -362,9 +388,11 @@ public class InviteMemberActivity extends BaseActivity {
                 CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
                 if (selectItem.isChecked()) {
                     selectItem.setChecked(false);
+                    groupAdapter.removeSelectData(groupId);
                     selectGroupEntityList.remove(groupEntity);
                 } else {
                     selectItem.setChecked(true);
+                    groupAdapter.addSelectData(groupId);
                     selectGroupEntityList.add(groupEntity);
                 }
             }
@@ -426,13 +454,13 @@ public class InviteMemberActivity extends BaseActivity {
             if (arg0 == 0) {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_selected_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_normal_shap);
-                message_group_tv.setTextColor(Color.parseColor("#878787"));
+                message_group_tv.setTextColor(Color.parseColor("#666666"));
                 message_member_tv.setTextColor(Color.parseColor("#ffffff"));
             } else {
                 message_member_tv.setBackgroundResource(R.drawable.message_member_normal_shap);
                 message_group_tv.setBackgroundResource(R.drawable.message_group_selected_shap);
                 message_group_tv.setTextColor(Color.parseColor("#ffffff"));
-                message_member_tv.setTextColor(Color.parseColor("#878787"));
+                message_member_tv.setTextColor(Color.parseColor("#666666"));
             }
         }
 
@@ -550,9 +578,11 @@ public class InviteMemberActivity extends BaseActivity {
 
     class FamilyGroupAdapter extends BaseAdapter {
         List<FamilyGroupEntity> groupList;
+        List<String> searchGroupList;
 
-        public FamilyGroupAdapter(List<FamilyGroupEntity> groupList) {
+        public FamilyGroupAdapter(List<FamilyGroupEntity> groupList, List<String> searchGroupList) {
             this.groupList = groupList;
+            this.searchGroupList = searchGroupList;
         }
 
         public void addData(List<FamilyGroupEntity> list) {
@@ -562,6 +592,20 @@ public class InviteMemberActivity extends BaseActivity {
             groupList.clear();
             groupList.addAll(list);
             notifyDataSetChanged();
+        }
+
+        public void addSelectData(String userId) {
+            if (!searchGroupList.contains(userId)) {
+                searchGroupList.add(userId);
+                notifyDataSetChanged();
+            }
+        }
+
+        public void removeSelectData(String userId) {
+            if (searchGroupList.contains(userId)) {
+                searchGroupList.remove(userId);
+                notifyDataSetChanged();
+            }
         }
 
         public List<FamilyGroupEntity> getGroupList() {
@@ -597,8 +641,10 @@ public class InviteMemberActivity extends BaseActivity {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             FamilyGroupEntity familyGroupEntity = groupList.get(position);
-            if (null != selectGroupList && selectGroupList.contains(familyGroupEntity.getGroup_id())) {
+            if (null != searchGroupList && searchGroupList.contains(familyGroupEntity.getGroup_id())) {
                 viewHolder.imageRight.setChecked(true);
+            } else {
+                viewHolder.imageRight.setChecked(false);
             }
             viewHolder.textName.setText(familyGroupEntity.getGroup_name());
             VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
@@ -616,7 +662,6 @@ public class InviteMemberActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
         rightButton.setImageResource(R.drawable.btn_done);
         rightButton.setVisibility(View.VISIBLE);
     }
@@ -629,7 +674,7 @@ public class InviteMemberActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         // 隐藏键盘
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED|WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override
