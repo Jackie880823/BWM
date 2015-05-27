@@ -3,7 +3,6 @@ package com.madx.bwm.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -26,7 +25,7 @@ import java.util.List;
 
 public class AlbumGalleryActivity extends BaseActivity {
 
-    String memberId ;
+    String memberId;
 
     public List<PhotoEntity> data = new ArrayList<>();//所有照片数据
 
@@ -44,18 +43,11 @@ public class AlbumGalleryActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
     protected void setTitle() {
-        /**
-         * begin QK
-         */
         tvTitle.setText(getResources().getString(R.string.title_album_gallery));
-        /**
-         * end
-         */
     }
 
     @Override
@@ -108,31 +100,28 @@ public class AlbumGalleryActivity extends BaseActivity {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
 
-                if ("[]".equals(response))
-                {
+                if ("[]".equals(response)) {
                     MessageUtil.showMessage(AlbumGalleryActivity.this, getResources().getString(R.string.text_no_album_gallery));
                     return;
                 }
 
-                data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {}.getType());
+                data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
+                }.getType());
 
                 String creationDate = data.get(0).getCreation_date();//初始化，日期，用作分组
 
-                for (int i = 0; i < data.size(); i++)
-                {
+                for (int i = 0; i < data.size(); i++) {
                     if (creationDate.equals(data.get(i).getCreation_date()))//月份相等时
                     {
                         dataCache.add(data.get(i));//相同月份加入缓存中
                     }
-                    if (i == data.size() - 1)
-                    {
+                    if (i == data.size() - 1) {
                         listData.add(dataCache);//判断到最后一直是同月份。list加入到list中
                         break;
                     }
                 }
 
-                if (listData.size() > 0 && listData != null)
-                {
+                if (listData.size() > 0 && listData != null) {
                     AlbumGalleryAdapter aga = new AlbumGalleryAdapter(AlbumGalleryActivity.this, R.layout.item_album_gallery, listData, memberId);
                     lv.setAdapter(aga);
                 }
@@ -145,8 +134,7 @@ public class AlbumGalleryActivity extends BaseActivity {
 
                         List<PhotoEntity> mData = listData.get(position);
 
-                        for (int i = 0; i < mData.size(); i++)
-                        {
+                        for (int i = 0; i < mData.size(); i++) {
                             mData.get(i).setUser_id(memberId);
                             mData.get(i).setPhoto_caption(Constant.Module_Original);
                         }

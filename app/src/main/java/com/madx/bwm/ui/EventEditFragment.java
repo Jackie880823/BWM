@@ -9,11 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
@@ -287,7 +295,9 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 goLocationSetting();
                 break;
             case R.id.item_date:
-                showDateTimePicker();
+                if(pickDateTimeDialog==null||!pickDateTimeDialog.isShowing()) {
+                    showDateTimePicker();
+                }
                 break;
         }
     }
@@ -381,18 +391,35 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     }
 
     private void goLocationSetting() {
-        Intent intent;
+        Intent intent = null;
         //判断是用百度还是google
         if (SystemUtil.checkPlayServices(getActivity())) {
-            intent = new Intent(getActivity(), Map4GoogleActivity.class);
+//            intent = new Intent(getActivity(), Map4GoogleActivity.class);
+            try {
+                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+//                intentBuilder.setLatLngBounds(new LatLngBounds(new LatLng(latitude,longitude),new LatLng(latitude,longitude)));
+                intent = intentBuilder.build(getActivity());
+
+                // Hide the pick option in the UI to prevent users from starting the picker
+                // multiple times.
+//                showPickAction(false);
+
+            } catch (GooglePlayServicesRepairableException e) {
+                GooglePlayServicesUtil
+                        .getErrorDialog(e.getConnectionStatusCode(), getActivity(), 0);
+            } catch (GooglePlayServicesNotAvailableException e) {
+                Toast.makeText(getActivity(), "Google Play Services is not available.",
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
         }else {
             intent = new Intent(getActivity(), Map4BaiduActivity.class);
+//        intent.putExtra("has_location", position_name.getText().toString());
+            intent.putExtra("location_name", position_name.getText().toString());
+            intent.putExtra("latitude", latitude);
+            intent.putExtra("longitude", longitude);
         }
 
-//        intent.putExtra("has_location", position_name.getText().toString());
-        intent.putExtra("location_name", position_name.getText().toString());
-        intent.putExtra("latitude", latitude);
-        intent.putExtra("longitude", longitude);
         startActivityForResult(intent, GET_LOCATION);
     }
 
@@ -403,16 +430,27 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 case GET_LOCATION:
                     if (data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
-                        String locationName = data.getStringExtra("location_name");
-                        if (!TextUtils.isEmpty(locationName)) {
-                            position_name.setText(locationName);
-                            mEevent.setLoc_name(locationName);
-                            latitude = data.getDoubleExtra("latitude", 0);
-                            longitude = data.getDoubleExtra("longitude", 0);
-                        } else {
-                            position_name.setText("");
-                            latitude = -1000;
-                            longitude = -1000;
+                        if (SystemUtil.checkPlayServices(getActivity())) {
+                            final Place place = PlacePicker.getPlace(data, getActivity());
+                            if(place!=null) {
+                                String locationName = place.getAddress().toString();
+                                position_name.setText(locationName);
+                                latitude = place.getLatLng().latitude;
+                                longitude = place.getLatLng().longitude;
+                            }
+
+                        }else {
+                            String locationName = data.getStringExtra("location_name");
+                            if (!TextUtils.isEmpty(locationName)) {
+                                position_name.setText(locationName);
+                                mEevent.setLoc_name(locationName);
+                                latitude = data.getDoubleExtra("latitude", 0);
+                                longitude = data.getDoubleExtra("longitude", 0);
+                            } else {
+                                position_name.setText(null);
+                                latitude = -1000;
+                                longitude = -1000;
+                            }
                         }
                     }
                     break;

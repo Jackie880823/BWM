@@ -92,4 +92,6 @@
 
     </LinearLayout>
 
+    <include layout="@layout/progress_layout"/>
+
 </RelativeLayout>

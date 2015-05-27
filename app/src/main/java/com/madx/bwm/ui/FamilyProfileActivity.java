@@ -20,38 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FamilyProfileActivity extends BaseActivity {
-
-    String useId;//本人Id，这个将来是全局变量
-    String memberId;//本人的memberId
-
-    CircularNetworkImage cniMain;
-    ImageView ivBottomLeft;
-    ImageView ivBottomRight;
-    TextView tvName1;
-    TextView tvId1;
-    ImageButton ibMiss;
-
-    LinearLayout llViewProfile;
-
-    RelativeLayout rlPathRelationship;
-    RelativeLayout rlAlbumGallery;
-    RelativeLayout rlWallPosting;
-
-    Button btnSendMessage;
-
     public List<UserEntity> data = new ArrayList<>();
     UserEntity userEntity = new UserEntity();
-
-//    @Override
-//    public int getLayout() {
-//
-//        return R.layout.activity_family_profile;
-//    }
 
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
@@ -62,13 +36,7 @@ public class FamilyProfileActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        /**
-         * begin QK
-         */
         tvTitle.setText(getResources().getString(R.string.title_family_profile));
-        /**
-         * end
-         */
     }
 
     @Override
@@ -83,8 +51,6 @@ public class FamilyProfileActivity extends BaseActivity {
 
     @Override
     public void initView() {
-
-
     }
 
 
@@ -103,7 +69,6 @@ public class FamilyProfileActivity extends BaseActivity {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
         } else {
-            Log.i("","titleLeftEvent============");
             super.titleLeftEvent();
         }
     }
@@ -116,9 +81,7 @@ public class FamilyProfileActivity extends BaseActivity {
             }
             return true;
         } else {
-//            Log.i("","2titleLeftEvent============");
             return super.dispatchKeyEvent(event);
         }
     }
-
 }

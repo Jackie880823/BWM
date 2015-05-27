@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -60,14 +59,11 @@ import java.util.Map;
 import java.util.TimeZone;
 
 public class MyViewProfileActivity extends BaseActivity {
-
     private CircularNetworkImage cniMain;
     private ImageView ivBottomLeft;
     private TextView tvName1;
     private TextView tvId1;
-
     private LinearLayout llResetPassword;
-
     private TextView tvId2;
     private TextView etFirstName;
     private TextView etLastName;
@@ -79,22 +75,18 @@ public class MyViewProfileActivity extends BaseActivity {
     private RelativeLayout rlGender;
     private TextView etEmail;
     private TextView etRegion;
-
-
     private Dialog showSelectDialog;
     private Dialog showCameraAlbum;
+    private Boolean isUploadName = false;
+    private Boolean isUploadImage = false;
+
+    private Boolean isUploadNameSuccess = false;
+    private Boolean isUploadImageSuccess = false;
 
 
-    Boolean isUploadName = false;
-    Boolean isUploadImage = false;
+    private String userGender;
 
-    Boolean isUploadNameSuccess = false;
-    Boolean isUploadImageSuccess = false;
-
-
-    String userGender;
-
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     private final static int REQUEST_HEAD_PHOTO = 1;
     private final static int REQUEST_HEAD_CAMERA = 2;
@@ -112,7 +104,6 @@ public class MyViewProfileActivity extends BaseActivity {
      */
     public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
 
-
     @Override
     public int getLayout() {
         return R.layout.activity_my_view_profile;
@@ -121,7 +112,6 @@ public class MyViewProfileActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
@@ -132,13 +122,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        /**
-         * begin QK
-         */
         tvTitle.setText(getResources().getString(R.string.title_my_profile));
-        /**
-         * end
-         */
     }
 
     @Override
@@ -408,9 +392,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private void showSelectDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_male_female, null);
-
         showSelectDialog = new MyDialog(this, null, selectIntention);
-
         TextView tvMale = (TextView) selectIntention.findViewById(R.id.tv_male);
         TextView tvFemale = (TextView) selectIntention.findViewById(R.id.tv_female);
 
@@ -441,6 +423,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
         TextView tvCamera = (TextView) selectIntention.findViewById(R.id.tv_camera);
         TextView tvAlbum = (TextView) selectIntention.findViewById(R.id.tv_album);
+        TextView tv_cancel = (TextView) selectIntention.findViewById(R.id.tv_cancel);
 
         tvCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -471,7 +454,12 @@ public class MyViewProfileActivity extends BaseActivity {
                 startActivityForResult(intent, REQUEST_HEAD_PHOTO);
             }
         });
-
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCameraAlbum.dismiss();
+            }
+        });
         showCameraAlbum.show();
     }
 

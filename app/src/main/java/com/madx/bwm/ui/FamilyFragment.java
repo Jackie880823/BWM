@@ -34,7 +34,6 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.widgets.Dialog;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -80,7 +79,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private List<FamilyMemberEntity> moreMemberList;
     private List<FamilyGroupEntity> groupEntityList;
     private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0x11;
     private MyFamilyAdapter memberAdapter;
     private FamilyGroupAdapter groupAdapter;
@@ -98,6 +97,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private ImageView emptyMemberIv;
     private TextView emptyGroupTv;
     private TextView emptyMemberTv;
+    private View vProgress;
 
     public static FamilyFragment newInstance(String... params) {
         return createInstance(new FamilyFragment(), params);
@@ -170,8 +170,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         groupEntityList = new ArrayList<>();
         memberList = new ArrayList<>();
         moreMemberList = new ArrayList<>();
-        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
-        mProgressDialog.show();
+//        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
+//        mProgressDialog.show();
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
 
         memberAdapter = new MyFamilyAdapter(mContext, memberEntityList);
         groupAdapter = new FamilyGroupAdapter(groupEntityList);
@@ -477,10 +479,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         params.put("member_id", member_id);
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_UPDATE_MISS, MainActivity.getUser().getUser_id());
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
                 new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
@@ -520,8 +522,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     }
                 });
 
-            }
-        }.start();
+//            }
+//        }.start();
 
     }
 
@@ -530,11 +532,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             return;
         }
-        mProgressDialog.show();
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
+        vProgress.setVisibility(View.VISIBLE);
+//        mProgressDialog.show();
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
                 new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
                     @Override
                     public void onStart() {
@@ -543,7 +546,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
                     @Override
                     public void onFinish() {
-
+                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -557,11 +560,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                                 }
                             } else {
                                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                                mProgressDialog.dismiss();
                             }
                         } catch (Exception e) {
                             MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                            mProgressDialog.dismiss();
                             e.printStackTrace();
                         }
                     }
@@ -569,7 +570,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     @Override
                     public void onError(Exception e) {
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                        mProgressDialog.dismiss();
                     }
 
                     @Override
@@ -583,8 +583,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     }
                 });
 
-            }
-        }.start();
+//            }
+//        }.start();
 
     }
 
@@ -600,14 +600,14 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
             @Override
             public void onFinish() {
-
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
             public void onResult(String string) {
                 File file = new File(target);
                 if (file.exists()) {
-                    mProgressDialog.dismiss();
+//                    mProgressDialog.dismiss();
                     Uri path1 = Uri.fromFile(file);
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(path1, "application/pdf");
@@ -622,7 +622,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
             @Override
             public void onError(Exception e) {
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
 
@@ -744,6 +744,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
                     @Override
                     public void onFinish() {
+                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -751,8 +752,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         GsonBuilder gsonb = new GsonBuilder();
                         Gson gson = gsonb.create();
                         finishReFresh();
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
+                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                            showMemberEmptyView();
+                            showGroupEmptyView();
                         }
                         if (TextUtils.isEmpty(response) || "{}".equals(response)) {
                             showMemberEmptyView();
