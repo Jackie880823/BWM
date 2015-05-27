@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -81,18 +80,11 @@ public class GroupNameSettingActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
-    protected void setTitle()     {
-        /**
-         * begin QK
-         */
+    protected void setTitle() {
         tvTitle.setText(getResources().getString(R.string.title_group_setting));
-        /**
-         * end
-         */
     }
 
     @Override
@@ -103,16 +95,8 @@ public class GroupNameSettingActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-
-        if (mCropImagedUri == null && groupName.equals(etGroupName.getText().toString()))
-        {
-            /**
-             * begin QK
-             */
+        if (mCropImagedUri == null && groupName.equals(etGroupName.getText().toString())) {
             Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_not_change_anything), Toast.LENGTH_SHORT).show();
-            /**
-             * end
-             */
             return;
         }
         uploadImage();
@@ -127,7 +111,7 @@ public class GroupNameSettingActivity extends BaseActivity {
     @Override
     public void initView() {
 
-        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
+        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
 
         civGroupPic = getViewById(R.id.iv_pic);
         etGroupName = getViewById(R.id.et_group_name);
@@ -136,7 +120,7 @@ public class GroupNameSettingActivity extends BaseActivity {
         groupName = getIntent().getStringExtra("groupName");
         etGroupName.setText(groupName);
 
-        VolleyUtil.initNetworkImageView(this, civGroupPic, String.format(Constant.API_GET_GROUP_PHOTO,  groupId), R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(this, civGroupPic, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
 
         civGroupPic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,7 +167,7 @@ public class GroupNameSettingActivity extends BaseActivity {
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(GroupNameSettingActivity.this, CACHE_PIC_NAME_TEMP));
                     if (new File(uri.getPath()).exists()) {
                         try {
-                            startPhotoZoom(uri,false);
+                            startPhotoZoom(uri, false);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -276,13 +260,7 @@ public class GroupNameSettingActivity extends BaseActivity {
         List<ResolveInfo> list = GroupNameSettingActivity.this.getPackageManager().queryIntentActivities(intent, 0);
         int size = list.size();
         if (size == 0) {
-            /**
-             * begin QK
-             */
             Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_no_found_reduce), Toast.LENGTH_SHORT).show();
-            /**
-             * end
-             */
             return;
         } else {
             // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
@@ -325,17 +303,13 @@ public class GroupNameSettingActivity extends BaseActivity {
         }
     }
 
-
     private void uploadImage() {
 
-        if (mCropImagedUri==null)
-        {
+        if (mCropImagedUri == null) {
             return;
         }
 
         isUploadImage = true;
-
-
         String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 480, 800, false);
         File file = new File(path);
 
@@ -354,46 +328,28 @@ public class GroupNameSettingActivity extends BaseActivity {
         new HttpTools(this).upload(Constant.API_UPLOAD_GROUP_PHOTO, params, new HttpCallback() {
             @Override
             public void onStart() {
-                Log.i("", "11response==========");
             }
 
             @Override
             public void onFinish() {
-                Log.i("", "222response==========");
             }
 
             @Override
             public void onResult(String response) {
-                Log.i("", "333response==========" + response);
                 try {
-
                     JSONObject jsonObject = new JSONObject(response);
 
-                    if ("Success".equals(jsonObject.getString("response_status")))
-                    {
-                        /**
-                         * begin QK
-                         */
+                    if ("Success".equals(jsonObject.getString("response_status"))) {
+
                         Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_success_upload_group_profile_phone), Toast.LENGTH_SHORT).show();
-                        /**
-                         * end
-                         */
                         isUploadImageSuccess = true;
                         Intent intent = new Intent();
-                        intent.putExtra("groupName",etGroupName.getText().toString());
+                        intent.putExtra("groupName", etGroupName.getText().toString());
                         setResult(RESULT_OK, intent);
                         progressDialog.dismiss();
                         finish();
-                    }
-                    else
-                    {
-                        /**
-                         * begin QK
-                         */
+                    } else {
                         Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_fail_upload_group_profile_phone), Toast.LENGTH_SHORT).show();
-                        /**
-                         * end
-                         */
                     }
 
 
@@ -406,19 +362,11 @@ public class GroupNameSettingActivity extends BaseActivity {
             @Override
             public void onError(Exception e) {
                 progressDialog.dismiss();
-                Log.i("", "444response==========");
-                /**
-                 * begin QK
-                 */
-                Toast.makeText(GroupNameSettingActivity.this,getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
-                /**
-                 * end
-                 */
+                Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onCancelled() {
-                Log.i("", "555response==========");
             }
 
             @Override
@@ -430,11 +378,9 @@ public class GroupNameSettingActivity extends BaseActivity {
     }
 
 
-
     private void uploadName() {
 
-        if (groupName.equals(etGroupName.getText().toString()))
-        {
+        if (groupName.equals(etGroupName.getText().toString())) {
             return;
         }
 
@@ -471,10 +417,9 @@ public class GroupNameSettingActivity extends BaseActivity {
                     if (("200").equals(jsonObject.getString("response_status_code"))) {
                         Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_success_update_group_name), Toast.LENGTH_SHORT).show();//成功
                         isUploadNameSuccess = true;
-                        if (!isUploadImage)
-                        {
+                        if (!isUploadImage) {
                             Intent intent = new Intent();
-                            intent.putExtra("groupName",etGroupName.getText().toString());
+                            intent.putExtra("groupName", etGroupName.getText().toString());
                             setResult(RESULT_OK, intent);
                             finish();
                         }
@@ -482,14 +427,14 @@ public class GroupNameSettingActivity extends BaseActivity {
                         Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_fail_update_group_name), Toast.LENGTH_SHORT).show();//失败
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(GroupNameSettingActivity.this,getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(GroupNameSettingActivity.this,getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+                Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -502,80 +447,11 @@ public class GroupNameSettingActivity extends BaseActivity {
 
             }
         });
-
-
-
-
-
-
-
-//        StringRequest srUpdateGroupName = new StringRequest(Request.Method.PUT, String.format(Constant.API_UPDATE_GROUP_NAME, groupId), new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//
-//                try {
-//
-//                    JSONObject jsonObject = new JSONObject(response);
-//
-//                    if (("200").equals(jsonObject.getString("response_status_code"))) {
-//                        /**
-//                         * begin QK
-//                         */
-//                        Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_success_update_group_name), Toast.LENGTH_SHORT).show();//成功
-//                        /**
-//                         * end
-//                         */
-//                        isUploadNameSuccess = true;
-//                        if (!isUploadImage)
-//                        {
-//                            Intent intent = new Intent();
-//                            intent.putExtra("groupName",etGroupName.getText().toString());
-//                            setResult(RESULT_OK, intent);
-//                            finish();
-//                        }
-//                    } else {
-//                        /**
-//                         * begin QK
-//                         */
-//                        Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_fail_update_group_name), Toast.LENGTH_SHORT).show();//失败
-//                        /**
-//                         * end
-//                         */
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                error.printStackTrace();
-//                /**
-//                 * begin QK
-//                 */
-//                Toast.makeText(GroupNameSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//                /**
-//                 * end
-//                 */
-//            }
-//        }) {
-//
-//            @Override
-//            public byte[] getBody() throws AuthFailureError {
-//                return jsonParamsString.getBytes();
-//            }
-//        };
-//        VolleyUtil.addRequest2Queue(GroupNameSettingActivity.this, srUpdateGroupName, "");
     }
-
-
-    /** christopher begin */
 
     private Dialog showCameraAlbum;
 
-    private void showCameraAlbum()
-    {
+    private void showCameraAlbum() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_camera_album, null);
 
@@ -616,6 +492,5 @@ public class GroupNameSettingActivity extends BaseActivity {
 
         showCameraAlbum.show();
     }
-    /** christopher end */
 
 }

@@ -50,7 +50,8 @@ public class SelectPeopleActivity extends BaseActivity {
     List<GroupEntity> groupList;//群组数据 这里没用到
 
     List<UserEntity> searchUserList = new ArrayList<>();//好友
-    List<GroupEntity> searchGroupList = new ArrayList<>();;//群组
+    List<GroupEntity> searchGroupList = new ArrayList<>();
+    ;//群组
 
     LinkedList<UserEntity> ll = new LinkedList<>();//全部数据+排序的
 
@@ -77,7 +78,6 @@ public class SelectPeopleActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
         rightButton.setImageResource(R.drawable.btn_done);
         rightButton.setVisibility(View.INVISIBLE);
     }
@@ -125,7 +125,7 @@ public class SelectPeopleActivity extends BaseActivity {
     @Override
     public void initView() {
 
-        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
+        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         Intent intent = getIntent();
 
         data = intent.getStringExtra("members_data");
@@ -148,10 +148,8 @@ public class SelectPeopleActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (isSearch)
-                {
-                    if ("0".equals(searchUserList.get(position).getFam_accept_flag()))
-                    {
+                if (isSearch) {
+                    if ("0".equals(searchUserList.get(position).getFam_accept_flag())) {
                         //不是好友,不做任何处理
                         Toast.makeText(SelectPeopleActivity.this, getString(R.string.text_awaiting_approval_member), Toast.LENGTH_SHORT).show();
                         return;
@@ -172,13 +170,10 @@ public class SelectPeopleActivity extends BaseActivity {
                             }
                         }
                     }
-                }
-                else
-                {
-                    if ("0".equals(ll.get(position).getFam_accept_flag()))
-                    {
+                } else {
+                    if ("0".equals(ll.get(position).getFam_accept_flag())) {
                         //不是好友,不做任何处理
-                        Toast.makeText(SelectPeopleActivity.this,getString(R.string.text_awaiting_approval_member), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SelectPeopleActivity.this, getString(R.string.text_awaiting_approval_member), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -198,7 +193,6 @@ public class SelectPeopleActivity extends BaseActivity {
                         }
                     }
                 }
-
 
 
             }
@@ -225,28 +219,22 @@ public class SelectPeopleActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (TextUtils.isEmpty(etSearch.getText()))
-                {
+                if (TextUtils.isEmpty(etSearch.getText())) {
                     CreateGroupAdapter createGroupAdapter1 = new CreateGroupAdapter(SelectPeopleActivity.this, R.layout.gridview_item_for_creategroup, ll);
                     mGridView.setAdapter(createGroupAdapter1);
                     isSearch = false;
-                }
-                else
-                {
+                } else {
                     searchGroupList.clear();
                     searchUserList.clear();
 
                     for (int i = 0; i < groupList.size(); i++) {
-                        if (groupList.get(i).getGroup_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase()))
-                        {
+                        if (groupList.get(i).getGroup_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase())) {
                             searchGroupList.add(groupList.get(i));
                         }
                     }
 
-                    for(int j = 0; j < ll.size(); j++)
-                    {
-                        if (ll.get(j).getUser_given_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase()))
-                        {
+                    for (int j = 0; j < ll.size(); j++) {
+                        if (ll.get(j).getUser_given_name().toLowerCase().contains(etSearch.getText().toString().toLowerCase())) {
                             searchUserList.add(ll.get(j));
                         }
                     }
@@ -263,13 +251,12 @@ public class SelectPeopleActivity extends BaseActivity {
     }
 
 
-
     @Override
     public void requestData() {
 
         progressDialog.show();
 
-        new HttpTools(SelectPeopleActivity.this).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()),null,new HttpCallback() {
+        new HttpTools(SelectPeopleActivity.this).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -296,15 +283,14 @@ public class SelectPeopleActivity extends BaseActivity {
 
                     if (type == 0) { //创建 已选上的人还会显示
                         ll = initList();//排序
-                        for(int i = 0;i<inList.size();i++){
+                        for (int i = 0; i < inList.size(); i++) {
                             checkItem.add(inList.get(i).getUser_id());
                         }
 
                     } else if (type == 1) { //update, 已选上的人不显示 隐藏
                         for (int i = 0; i < inList.size(); i++) {
                             for (int j = 0; j < userList.size(); j++) {
-                                if (!TextUtils.isEmpty(userList.get(j).getUser_id()))
-                                {
+                                if (!TextUtils.isEmpty(userList.get(j).getUser_id())) {
                                     if (userList.get(j).getUser_id().equals(inList.get(i).getUser_id())) {
                                         userList.remove(j);
                                         break;
@@ -348,76 +334,6 @@ public class SelectPeopleActivity extends BaseActivity {
 
             }
         });
-
-
-
-
-
-
-//        StringRequest stringRequest = new StringRequest(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//
-//                GsonBuilder gsonb = new GsonBuilder();
-//
-//                Gson gson = gsonb.create();
-//
-//                try {
-//                    JSONObject jsonObject = new JSONObject(response);
-//
-//                    userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {
-//                    }.getType());
-//                    groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {
-//                    }.getType());
-//
-//                    if (type == 0) { //创建 已选上的人还会显示
-//                        ll = initList();//排序
-//                        for(int i = 0;i<inList.size();i++){
-//                            checkItem.add(inList.get(i).getUser_id());
-//                        }
-//
-//                    } else if (type == 1) { //update, 已选上的人不显示 隐藏
-//                        for (int i = 0; i < inList.size(); i++) {
-//                            for (int j = 0; j < userList.size(); j++) {
-//                                if (!TextUtils.isEmpty(userList.get(j).getUser_id()))
-//                                {
-//                                    if (userList.get(j).getUser_id().equals(inList.get(i).getUser_id())) {
-//                                        userList.remove(j);
-//                                        break;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        inList.clear();
-//                        ll.addAll(userList);
-//                    } else {
-//                        finish();
-//                    }
-//
-//                    CreateGroupAdapter createGroupAdapter = new CreateGroupAdapter(SelectPeopleActivity.this, R.layout.gridview_item_for_creategroup, ll);
-//
-//                    mGridView.setAdapter(createGroupAdapter);
-//
-//                    createGroupAdapter.notifyDataSetChanged();
-//
-//                    rightButton.setVisibility(View.VISIBLE);
-//
-//                    progressDialog.dismiss();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                progressDialog.dismiss();
-//                Log.i("", "error=====" + error.getMessage());
-//            }
-//        });
-//
-//        VolleyUtil.addRequest2Queue(this.getApplicationContext(), stringRequest, "");
-
     }
 
     @Override
@@ -452,34 +368,6 @@ public class SelectPeopleActivity extends BaseActivity {
 
             ViewHolder viewHolder;
 
-//            if (convertView == null) {
-//                convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
-//
-//                viewHolder = new ViewHolder();
-//
-//                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.creategroup_image_main);
-//                viewHolder.imageRight = (CheckBox) convertView.findViewById(R.id.creategroup_image_right);
-//                viewHolder.textName = (TextView) convertView.findViewById(R.id.creategroup_name);
-//
-//                convertView.setTag(viewHolder);
-//            } else {
-//                viewHolder = (ViewHolder) convertView.getTag();
-//            }
-//
-//            UserEntity userEntity = mUserList.get(position);
-//
-//            if (position < mInList.size()) {
-//                Log.i("", "----------" + position);
-//                viewHolder.textName.setText(userEntity.getUser_given_name());
-//                viewHolder.imageRight.setChecked(true);
-//                VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PIC, Constant.Module_profile, userEntity.getUser_id(), "profile"), R.drawable.network_image_default, R.drawable.network_image_default);
-//            } else {
-//                viewHolder.textName.setText(userEntity.getUser_given_name());
-//                viewHolder.imageRight.setChecked(false);
-//                VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PIC, Constant.Module_profile, userEntity.getUser_id(), "profile"), R.drawable.network_image_default, R.drawable.network_image_default);
-//            }
-
-
             convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
 
             viewHolder = new ViewHolder();
@@ -490,9 +378,8 @@ public class SelectPeopleActivity extends BaseActivity {
 
             UserEntity userEntity = mUserList.get(position);
 
-            if ("0".equals(userEntity.getFam_accept_flag()))
-            {
-                viewHolder.imageTop = (ImageView)convertView.findViewById(R.id.creategroup_image_top);
+            if ("0".equals(userEntity.getFam_accept_flag())) {
+                viewHolder.imageTop = (ImageView) convertView.findViewById(R.id.creategroup_image_top);
                 viewHolder.imageTop.setVisibility(View.VISIBLE);
                 viewHolder.imageRight.setVisibility(View.GONE);
             }
@@ -502,28 +389,12 @@ public class SelectPeopleActivity extends BaseActivity {
                 viewHolder.textName.setText(userEntity.getUser_given_name());
                 viewHolder.imageRight.setChecked(true);
                 VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PIC, Constant.Module_profile, userEntity.getUser_id(), "profile"), R.drawable.network_image_default, R.drawable.network_image_default);
-            }else {
+            } else {
                 viewHolder.textName.setText(userEntity.getUser_given_name());
                 viewHolder.imageRight.setChecked(false);
                 VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PIC, Constant.Module_profile, userEntity.getUser_id(), "profile"), R.drawable.network_image_default, R.drawable.network_image_default);
             }
-
-
             return convertView;
-
-            /*MyFamilyUserEntity myFamilyUserEntity = mUserList.get(position);
-
-            View view = LayoutInflater.from(getContext()).inflate(resourceId, null);
-            Log.i("","----------" + position);
-            CircularNetworkImage circularNetworkImage = (CircularNetworkImage)view.findViewById(R.id.creategroup_image_main);
-            CheckBox checkBox = (CheckBox)view.findViewById(R.id.creategroup_image_right);
-            TextView textView = (TextView)view.findViewById(R.id.creategroup_name);
-            VolleyUtil.initNetworkImageView(mContext,circularNetworkImage,String.format(Constant.API_GET_PIC,Constant.Module_profile, myFamilyUserEntity.getUser_id(),"profile"),R.drawable.network_image_default, R.drawable.network_image_default);
-            textView.setText(myFamilyUserEntity.getUser_given_name());
-
-            return view;*/
-
-
         }
 
         class ViewHolder {
@@ -563,20 +434,5 @@ public class SelectPeopleActivity extends BaseActivity {
 
         return list3;
     }
-
-//    @Override
-//    public boolean dispatchKeyEvent(KeyEvent event) {
-//        if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-//            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-//                    Intent intent = new Intent();
-//                    Gson gson = new Gson();
-//
-//                    intent.putExtra("members_data", gson.toJson(inList));
-//
-//                    setResult(RESULT_OK, intent);
-//            }
-//        }
-//        return super.dispatchKeyEvent(event);
-//    }
 
 }
