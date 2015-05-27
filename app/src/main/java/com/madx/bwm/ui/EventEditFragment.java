@@ -295,7 +295,9 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 goLocationSetting();
                 break;
             case R.id.item_date:
-                showDateTimePicker();
+                if(pickDateTimeDialog==null||!pickDateTimeDialog.isShowing()) {
+                    showDateTimePicker();
+                }
                 break;
         }
     }
