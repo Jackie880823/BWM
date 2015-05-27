@@ -25,6 +25,8 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +34,6 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.widgets.Dialog;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -78,7 +79,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private List<FamilyMemberEntity> moreMemberList;
     private List<FamilyGroupEntity> groupEntityList;
     private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0x11;
     private MyFamilyAdapter memberAdapter;
     private FamilyGroupAdapter groupAdapter;
@@ -89,6 +90,14 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     public static final String FAMILY_SPOUSE = "spouse";
     public static final String FAMILY_MORE_MEMBER = "More";
     public static final String FAMILY_HIDE_MEMBER = "Hide";
+
+    private LinearLayout emptyGroupLinear;
+    private LinearLayout emptyMemberLinear;
+    private ImageView emptyGroupIv;
+    private ImageView emptyMemberIv;
+    private TextView emptyGroupTv;
+    private TextView emptyMemberTv;
+    private View vProgress;
 
     public static FamilyFragment newInstance(String... params) {
         return createInstance(new FamilyFragment(), params);
@@ -106,9 +115,15 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             switch (msg.what) {
                 case GET_DATA:
                     Map<String, List> map = (Map<String, List>) msg.obj;
-                    memberEntityList.clear();
-                    memberList.clear();
-                    moreMemberList.clear();
+                    if (memberEntityList != null) {
+                        memberEntityList.clear();
+                    }
+                    if (memberList != null) {
+                        memberList.clear();
+                    }
+                    if (moreMemberList != null) {
+                        moreMemberList.clear();
+                    }
                     memberEntityList = map.get("private");
                     if (memberEntityList != null && memberEntityList.size() > 0) {
                         FamilyMemberEntity member = new FamilyMemberEntity();
@@ -155,18 +170,27 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         groupEntityList = new ArrayList<>();
         memberList = new ArrayList<>();
         moreMemberList = new ArrayList<>();
-        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
-        mProgressDialog.show();
+//        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
+//        mProgressDialog.show();
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
 
         memberAdapter = new MyFamilyAdapter(mContext, memberEntityList);
         groupAdapter = new FamilyGroupAdapter(groupEntityList);
         //绑定自定义适配器
         pager.setAdapter(new FamilyPagerAdapter(initPagerView()));
         pager.setOnPageChangeListener(new MyOnPageChanger());
-        getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
+        getParentActivity().setFamilyCommandListener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
                 showSelectDialog();
+//                Intent intent = new Intent();
+//                if (pager.getCurrentItem() == 0) {
+//                    intent.setClass(getActivity(), AddNewMembersActivity.class);
+//                } else {
+//                    intent.setClass(getActivity(), CreateGroupActivity.class);
+//                }
+//                startActivity(intent);
                 return false;
             }
         });
@@ -259,12 +283,43 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         showSelectDialog.show();
     }
 
+    private void showMemberEmptyView() {
+        if (memberList != null) {
+            memberList.clear();
+            FamilyMemberEntity member = new FamilyMemberEntity();
+            member.setUser_given_name(FAMILY_TREE);
+            member.setUser_id(FAMILY_TREE);
+            memberList.add(member);
+        }
+        memberAdapter.addNewData(memberList);
+        emptyMemberLinear.setVisibility(View.VISIBLE);
+        emptyMemberIv.setImageResource(R.drawable.family_member_msg_empty);
+        emptyMemberTv.setText(getString(R.string.text_empty_add_member));
+    }
+
+    private void showGroupEmptyView() {
+        emptyGroupLinear.setVisibility(View.VISIBLE);
+        emptyGroupIv.setImageResource(R.drawable.family_group_msg_empty);
+        emptyGroupTv.setText(mContext.getString(R.string.text_empty_add_group));
+    }
+
+    private void hideMemberEmptyView() {
+        emptyMemberLinear.setVisibility(View.GONE);
+    }
+
+    private void hideGroupEmptyView() {
+        emptyGroupLinear.setVisibility(View.GONE);
+    }
+
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
         View userView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
         final GridView userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
         final ImageButton userIb = (ImageButton) userView.findViewById(R.id.ib_top);
         memberRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
+        emptyMemberLinear = (LinearLayout) userView.findViewById(R.id.family_empty_linear);
+        emptyMemberIv = (ImageView) userView.findViewById(R.id.family_image_empty);
+        emptyMemberTv = (TextView) userView.findViewById(R.id.family_text_empty);
         userGridView.setAdapter(memberAdapter);
         userIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -351,6 +406,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
         groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
+        emptyGroupLinear = (LinearLayout) groupView.findViewById(R.id.family_empty_linear);
+        emptyGroupIv = (ImageView) groupView.findViewById(R.id.family_image_empty);
+        emptyGroupTv = (TextView) groupView.findViewById(R.id.family_text_empty);
         groupListView.setAdapter(groupAdapter);
         groupIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -421,10 +479,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         params.put("member_id", member_id);
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_UPDATE_MISS, MainActivity.getUser().getUser_id());
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
                 new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
@@ -464,8 +522,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     }
                 });
 
-            }
-        }.start();
+//            }
+//        }.start();
 
     }
 
@@ -474,11 +532,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             return;
         }
-        mProgressDialog.show();
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
+        vProgress.setVisibility(View.VISIBLE);
+//        mProgressDialog.show();
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
                 new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
                     @Override
                     public void onStart() {
@@ -487,7 +546,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
                     @Override
                     public void onFinish() {
-
+                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -501,11 +560,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                                 }
                             } else {
                                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                                mProgressDialog.dismiss();
                             }
                         } catch (Exception e) {
                             MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                            mProgressDialog.dismiss();
                             e.printStackTrace();
                         }
                     }
@@ -513,7 +570,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     @Override
                     public void onError(Exception e) {
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                        mProgressDialog.dismiss();
                     }
 
                     @Override
@@ -527,8 +583,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     }
                 });
 
-            }
-        }.start();
+//            }
+//        }.start();
 
     }
 
@@ -544,14 +600,14 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
             @Override
             public void onFinish() {
-
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
             public void onResult(String string) {
                 File file = new File(target);
                 if (file.exists()) {
-                    mProgressDialog.dismiss();
+//                    mProgressDialog.dismiss();
                     Uri path1 = Uri.fromFile(file);
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(path1, "application/pdf");
@@ -566,7 +622,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
             @Override
             public void onError(Exception e) {
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
 
@@ -688,6 +744,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
                     @Override
                     public void onFinish() {
+                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -695,8 +752,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         GsonBuilder gsonb = new GsonBuilder();
                         Gson gson = gsonb.create();
                         finishReFresh();
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
+                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                            showMemberEmptyView();
+                            showGroupEmptyView();
                         }
                         try {
                             JSONObject jsonObject = new JSONObject(response);
@@ -706,15 +767,24 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                             }.getType());
                             Map<String, List> map = new HashMap<>();
                             if (memberList != null && memberList.size() > 0) {
+                                hideMemberEmptyView();
                                 map.put("private", memberList);
+                            } else {
+                                showMemberEmptyView();
                             }
                             if (groupList != null && groupList.size() > 0) {
+                                hideGroupEmptyView();
                                 map.put("group", groupList);
+                            } else {
+                                showGroupEmptyView();
                             }
-                            Message.obtain(handler, GET_DATA, map).sendToTarget();
+                            if (map.size() > 0) {
+                                Message.obtain(handler, GET_DATA, map).sendToTarget();
+                            }
                         } catch (JSONException e) {
-                            MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                             finishReFresh();
+                            showGroupEmptyView();
+                            showMemberEmptyView();
                             e.printStackTrace();
                         }
                     }

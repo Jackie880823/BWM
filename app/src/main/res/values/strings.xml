@@ -11,7 +11,7 @@
     <string name="msg_google_service_not_found">No valid Google Play Services APK found</string>
 
     <string name="title_event_detail">Detail</string>
-    <string name="title_wall_comment">Wall Comments</string>
+    <string name="title_wall_comment">Comments</string>
     <string name="title_event_new">New Event</string>
     <string name="title_event_edit">Event Edit</string>
     <string name="title_wall_new">Post</string>
@@ -50,7 +50,9 @@
     <string name="title_message_creategroup">New Group</string>
     <string name="alert_comment_null">Comment can not be empty!</string>
     <string name="alert_comment_del">Are you sure you want to delete this comment?</string>
-    <string name="alert_wall_del">Delete this post?</string>
+    <string name="alert_wall_del_title">Delete Post</string>
+    <string name="alert_wall_del">Are you sure you want to delete this post?</string>
+    <string name="alert_wall_del_photo_title">Delete Photo</string>
     <string name="alert_wall_del_photo">Delete this photo?</string>
 
     <string name="text_word">Text</string>
@@ -90,6 +92,7 @@
     <string name="text_destination">目的地</string>
     <string name="title_pick_date_time">Event date &amp; time</string>
     <string name="accept">Accept</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="alert_exit">Exit</string>
     <string name="msg_ask_save">Do you want to save as draft?</string>
@@ -105,7 +108,7 @@
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
 
-    <string name="text_me">Me</string>
+
     <string name="text_my_family">My Family</string>
 
 
@@ -125,9 +128,7 @@
 
 
 
-    <string name="hint_mail">Your email</string>
-    <string name="hint_subject">Select a subject</string>
-    <string name="hint_mail_content">Text here</string>
+
     <string name="hint_search_name">Search by name</string>
     <string name="alert_text_mail_info_not_complete">Please fill up all the fields</string>
     <!-- <array name="mail_subjects" > -->
@@ -145,8 +146,7 @@
     <string name="text_search_contact">Search name here</string>
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">No contact selected</string>
-    <string name="text_item_resend">Resend</string>
-    <string name="text_item_remove">Remove</string>
+
     <string name="text_setting_1_title">Birthday Alert Reminder</string>
     <string name="text_setting_1_1">1 Day earlier</string>
     <string name="text_setting_1_2">3 Days earlier</string>
@@ -671,6 +671,7 @@
     <string name="text_dialog_ok">OK</string>
     <string name="text_all_field_compulsory">All fields are compulsory</string>
     <string name="text_pending_approval">Pending approval.</string>
+    <string name="wall_comments">Comments</string>
     <string name="text_new_member">MEMBER</string>
     <string name="text_new_group">GROUP</string>
     <string name="text_new_family_tree">family_tree</string>
@@ -686,6 +687,16 @@
 
 
     <!--Christopher-->
+
+    <string name="hint_mail">Your email address</string>
+    <string name="hint_subject">Select a subject</string>
+    <string name="hint_mail_content">What can we help you?</string>
+
+    <string name="text_me">Me</string>
+
+    <string name="text_item_resend">Resend</string>
+    <string name="text_item_remove">Remove</string>
+
     <string name="title_bond_alert">Bond Alert</string>
     <string name="title_wall_alert">Wall Alert</string>
     <string name="title_event_alert">Event Alert</string>
@@ -726,5 +737,9 @@
     <string name="text_love_comment_event">%s loved your comment in event.</string>
     <string name="text_love_event">%s loved your event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
+    <string name="text_dialog_save_draft">Save as Draft?</string>
+    <string name="text_empty_add_member">Tap on the + to add family member.</string>
+    <string name="text_empty_add_group">Tap on the + to create group.</string>
+    <string name="text_message_type_here">type message here</string>
     <!--Christopher-->
 </resources>

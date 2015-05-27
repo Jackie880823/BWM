@@ -18,6 +18,11 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -239,13 +244,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
     }
 
+
     private void  getMembersList(final String strGroupsid){
-        /*
-        userList.addAll(members_data);
         HashMap<String,String> params = new HashMap<String,String>();
         params.put("user_id",MainActivity.getUser().getUser_id());
         params.put("group_list",strGroupsid);
-        String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS,params);
+        String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
         new HttpTools(getActivity()).get(url, null, new HttpCallback() {
             @Override
             public void onStart() {
@@ -263,17 +267,17 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 Gson gson = gsonb.create();
 //                Log.i("at_groups_data===", at_groups_data.get(temp).getGroup_id());
                 tempuserList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
-                Log.i("onResult===",response);
-                Log.i("tempuserList_size===", tempuserList.size()+"");
+//                Log.i("onResult===",response);
+//                Log.i("tempuserList_size===", tempuserList.size()+"");
                 userList.addAll(tempuserList);
-//                removeDuplicate(userList);
+                removeDuplicate(userList);
                 changeData();
 
             }
 
             @Override
             public void onError(Exception e) {
-                Log.i("onError===",e.getMessage());
+//                Log.i("onError===",e.getMessage());
                 Toast.makeText(getActivity(), getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
 
@@ -287,9 +291,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
             }
         });
-        */
 
 
+
+        /*
         if(at_groups_data.size()>0){
 
             for (int i=0; i < at_groups_data.size(); i++){
@@ -345,7 +350,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 });
             }
         }
-
+        */
 
     }
 
@@ -377,7 +382,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("loc_name", position_name.getText().toString());
             params.put("text_description", event_desc.getText().toString());
             params.put("user_id", MainActivity.getUser().getUser_id());
-            params.put("event_member", gson.toJson(setGetMembersIds(members_data)));
+            params.put("event_member", gson.toJson(setGetMembersIds(userList)));
             requestInfo.params = params;
 
             new HttpTools(getActivity()).post(requestInfo,new HttpCallback() {
@@ -613,16 +618,30 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void goLocationSetting() {
-        Intent intent;
+        Intent intent = null;
         //判断是用百度还是google
         if (SystemUtil.checkPlayServices(getActivity())) {
-            intent = new Intent(getActivity(), Map4GoogleActivity.class);
+//            intent = new Intent(getActivity(), Map4GoogleActivity.class);
+            try {
+                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+//                intentBuilder.setLatLngBounds(new LatLngBounds(new LatLng(latitude,longitude),new LatLng(latitude,longitude)));
+                intent = intentBuilder.build(getActivity());
+
+                // Hide the pick option in the UI to prevent users from starting the picker
+                // multiple times.
+//                showPickAction(false);
+
+            } catch (GooglePlayServicesRepairableException e) {
+                GooglePlayServicesUtil
+                        .getErrorDialog(e.getConnectionStatusCode(), getActivity(), 0);
+            } catch (GooglePlayServicesNotAvailableException e) {
+                Toast.makeText(getActivity(), "Google Play Services is not available.",
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
         }else {
             intent = new Intent(getActivity(), Map4BaiduActivity.class);
-        }
-
-        //        intent.putExtra("has_location", position_name.getText().toString());
-        if (!TextUtils.isEmpty(position_name.getText())) {
+//        intent.putExtra("has_location", position_name.getText().toString());
             intent.putExtra("location_name", position_name.getText().toString());
             intent.putExtra("latitude", latitude);
             intent.putExtra("longitude", longitude);
@@ -648,16 +667,27 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 case GET_LOCATION:
                     if (data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
-                        String locationName = data.getStringExtra("location_name");
-                        if (!TextUtils.isEmpty(locationName)) {
-                            position_name.setText(locationName);
-                            mEevent.setLoc_name(locationName);
-                            latitude = data.getDoubleExtra("latitude", 0);
-                            longitude = data.getDoubleExtra("longitude", 0);
-                        }else{
-                            position_name.setText("");
-                            latitude = -1000;
-                            longitude = -1000;
+                        if (SystemUtil.checkPlayServices(getActivity())) {
+                            final Place place = PlacePicker.getPlace(data, getActivity());
+                            if(place!=null) {
+                                String locationName = place.getAddress().toString();
+                                position_name.setText(locationName);
+                                latitude = place.getLatLng().latitude;
+                                longitude = place.getLatLng().longitude;
+                            }
+
+                        }else {
+                            String locationName = data.getStringExtra("location_name");
+                            if (!TextUtils.isEmpty(locationName)) {
+                                position_name.setText(locationName);
+                                mEevent.setLoc_name(locationName);
+                                latitude = data.getDoubleExtra("latitude", 0);
+                                longitude = data.getDoubleExtra("longitude", 0);
+                            } else {
+                                position_name.setText(null);
+                                latitude = -1000;
+                                longitude = -1000;
+                            }
                         }
                     }
                     break;
@@ -667,15 +697,17 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                     }.getType());
 //                    Log.i("members===",members);
+
                     groups = data.getStringExtra("groups_data");//获取好友选择页面的群组数据
                     at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {
                     }.getType());
+                    userList.addAll(members_data);
                     List memberList = new ArrayList();
                     for (int i = 0; i < at_groups_data.size(); i++){
                         memberList.add(at_groups_data.get(i).getGroup_id());
                     }
                     if(memberList.size() != 0){
-                        Log.i("groupsid====",gson.toJson(memberList));
+                        Log.i("groupsid====", gson.toJson(memberList));
                         getMembersList(gson.toJson(memberList));
                     }
 //                    Log.i("groups===", groups);

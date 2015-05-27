@@ -5,16 +5,19 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -41,14 +44,17 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
     private ListView userListView;
     private ImageButton userIb;
     private MySwipeRefreshLayout userRefreshLayout;
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
     private MessagePrivateListAdapter privateAdapter;
     private Context mContext;
     private List<PrivateMessageEntity> userEntityList;
     private boolean isUserRefresh = false;
     private int startIndex = 1;
     private boolean isPullData = false;
-
+    private LinearLayout emptyMemberMessageLinear;
+    private ImageView emptyMemberMessageIv;
+    private TextView emptyMemberMessageTv;
+    private View vProgress;
 
     public static MemberMessageFragment newInstance(String... params) {
 
@@ -86,8 +92,13 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
         userListView = getViewById(R.id.message_listView);
         userIb = getViewById(R.id.ib_top);
         userRefreshLayout = getViewById(R.id.swipe_refresh_layout);
-        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
-        mProgressDialog.show();
+        emptyMemberMessageLinear = getViewById(R.id.message_main_empty_linear);
+        emptyMemberMessageIv = getViewById(R.id.message_main_image_empty);
+        emptyMemberMessageTv = getViewById(R.id.message_main_text_empty);
+//        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
+//        mProgressDialog.show();
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
         userEntityList = new ArrayList<>();
         privateAdapter = new MessagePrivateListAdapter(mContext, userEntityList);
         userListView.setAdapter(privateAdapter);
@@ -162,6 +173,16 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
         }
     }
 
+    private void showMemberEmptyView() {
+        emptyMemberMessageLinear.setVisibility(View.VISIBLE);
+        emptyMemberMessageIv.setImageResource(R.drawable.family_member_msg_empty);
+        emptyMemberMessageTv.setText(getString(R.string.text_empty_add_member));
+    }
+
+    private void hideMemberEmptyView() {
+        emptyMemberMessageLinear.setVisibility(View.GONE);
+    }
+
     private void getData(int beginIndex) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
             MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
@@ -186,13 +207,19 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
 
                     @Override
                     public void onFinish() {
+                        if(vProgress!=null){
+                            vProgress.setVisibility(View.GONE);
+                        }
                     }
 
                     @Override
                     public void onResult(String response) {
                         userFinishReFresh();
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
+                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                            showMemberEmptyView();
                         }
                         Gson gson = new GsonBuilder().create();
                         try {
@@ -205,19 +232,28 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
                                 isPullData = false;
                                 Message.obtain(handler, GET_PULL_DATA, userList).sendToTarget();
                             } else {
+                                if (null == userList || userList.size() == 0) {
+                                    showMemberEmptyView();
+                                } else {
+                                    hideMemberEmptyView();
+                                }
                                 Message.obtain(handler, GET_NEW_DATA, userList).sendToTarget();
                             }
                         } catch (JSONException e) {
-                            MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                            if (isPullData) {
+                                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                            } else {
+                                showMemberEmptyView();
+                            }
                             e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                         userFinishReFresh();
                     }

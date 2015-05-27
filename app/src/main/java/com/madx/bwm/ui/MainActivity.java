@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -142,7 +141,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.i("", "leavePagerIndex===========" + currentTabEnum.ordinal());
         PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
 //        editor.putInt(LAST_LEAVE_INDEX, mViewPager.getCurrentItem());
     }
@@ -217,8 +215,8 @@ public class MainActivity extends BaseActivity {
                             break;
                         case family:
 //                          fragment.startActivity(new Intent(getApplicationContext(), CreateGroupActivity.class));
-                            if (commandlistener != null) {
-                                commandlistener.execute(rightButton);
+                            if (familyCommandListener != null) {
+                                familyCommandListener.execute(rightButton);
                             }
                             break;
                         case more:

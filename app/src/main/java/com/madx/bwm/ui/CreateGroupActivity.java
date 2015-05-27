@@ -88,7 +88,7 @@ public class CreateGroupActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        if (data != null && data.size() > 1) {
+        if (data != null && data.size() > 0) {
             Intent intent = new Intent(CreateGroupActivity.this, CreateGroupDialogActivity.class);
             intent.putExtra("members_json", gson.toJson(data));
             intent.putExtra("memberLength", data.size());
