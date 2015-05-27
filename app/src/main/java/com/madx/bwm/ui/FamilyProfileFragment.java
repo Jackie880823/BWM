@@ -3,14 +3,15 @@ package com.madx.bwm.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,6 +31,7 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.ui.wall.WallFragment;
+import com.madx.bwm.util.MslToast;
 import com.madx.bwm.widget.CircularNetworkImage;
 
 import org.json.JSONException;
@@ -51,27 +53,24 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
+    private String useId;//本人Id，这个将来是全局变量
+    private String memberId;//本人的memberId
+    private CircularNetworkImage cniMain;
+    private ImageView ivBottomLeft;
+    private ImageView ivBottomRight;
+    private TextView tvName1;
+    private TextView tvId1;
+    private CheckBox ibMiss;
+    private LinearLayout llViewProfile;
 
-    String useId;//本人Id，这个将来是全局变量
-    String memberId;//本人的memberId
+    private RelativeLayout rlPathRelationship;
+    private RelativeLayout rlAlbumGallery;
+    private RelativeLayout rlWallPosting;
 
-    CircularNetworkImage cniMain;
-    ImageView ivBottomLeft;
-    ImageView ivBottomRight;
-    TextView tvName1;
-    TextView tvId1;
-    ImageButton ibMiss;
+    private Button btnSendMessage;
+    private UserEntity userEntity;
 
-    LinearLayout llViewProfile;
-
-    RelativeLayout rlPathRelationship;
-    RelativeLayout rlAlbumGallery;
-    RelativeLayout rlWallPosting;
-
-    Button btnSendMessage;
-
-    public List<UserEntity> data = new ArrayList<>();
-    UserEntity userEntity = new UserEntity();
+    private static final int GET_USER_ENTITY = 0X11;
 
     public static FamilyProfileFragment newInstance(String... params) {
         return createInstance(new FamilyProfileFragment());
@@ -79,13 +78,42 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     public FamilyProfileFragment() {
         super();
-        // Required empty public constructor
     }
 
     @Override
     public void setLayoutId() {
         this.layoutId = R.layout.family_profile_fragment;
     }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case GET_USER_ENTITY:
+                    userEntity = (UserEntity) msg.obj;
+                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                    tvName1.setText(userEntity.getUser_given_name());
+                    getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
+                    tvId1.setText("ID:" + userEntity.getDis_bondwithme_id());
+                    String dofeel_code = userEntity.getDofeel_code();
+                    if (!TextUtils.isEmpty(dofeel_code)) {
+                        try {
+                            String filePath = "";
+                            if (dofeel_code.indexOf("_") != -1) {
+                                filePath = dofeel_code.replaceAll("_", File.separator);
+                            }
+                            InputStream is = App.getContextInstance().getAssets().open(filePath);
+                            Bitmap bitmap = BitmapFactory.decodeStream(is);
+                            ivBottomLeft.setImageBitmap(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     public void initView() {
@@ -104,12 +132,11 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlAlbumGallery = getViewById(R.id.rl_album_gallery);
         rlWallPosting = getViewById(R.id.rl_wall_posting);
         btnSendMessage = getViewById(R.id.btn_message);
-
+        ibMiss.setChecked(true);
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
-
                 ArrayList<PhotoEntity> datas = new ArrayList();
                 PhotoEntity peData = new PhotoEntity();
                 peData.setUser_id(memberId);
@@ -117,10 +144,8 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 peData.setPhoto_caption(Constant.Module_profile);
                 peData.setPhoto_multipe("false");
                 datas.add(peData);
-
                 intent.putExtra("is_data", true);
                 intent.putExtra("datas", datas);
-
                 startActivity(intent);
             }
         });
@@ -128,7 +153,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         llViewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data != null && data.size() > 0) {
+                if (userEntity != null) {
                     Intent intent1 = new Intent(getActivity(), FamilyViewProfileActivity.class);
                     intent1.putExtra("userEntity", userEntity);
                     startActivity(intent1);
@@ -139,12 +164,11 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data != null && data.size() > 0) {
+                if (userEntity != null) {
                     Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
                     intent2.putExtra("type", 0);
                     intent2.putExtra("groupId", userEntity.getGroup_id());
                     intent2.putExtra("titleName", userEntity.getUser_given_name());
-                    //intent2.putExtra("userEntity", userEntity);
                     startActivity(intent2);
                 }
             }
@@ -153,55 +177,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         ibMiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if ((data != null) && (data.size() > 0)) {
-
-                    HashMap<String, String> params = new HashMap<String, String>();
-                    params.put("from_user_id", MainActivity.getUser().getUser_id());
-                    params.put("to_user_id", memberId);
-                    params.put("to_user_fullname", userEntity.getUser_given_name());
-
-                    new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params, new HttpCallback() {
-                        @Override
-                        public void onStart() {
-
-                        }
-
-                        @Override
-                        public void onFinish() {
-
-                        }
-
-                        @Override
-                        public void onResult(String response) {
-                            GsonBuilder gsonb = new GsonBuilder();
-                            Gson gson = gsonb.create();
-
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-
-                                Toast.makeText(getActivity(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                Toast.makeText(getActivity(), getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            Toast.makeText(getActivity(), getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onCancelled() {
-
-                        }
-
-                        @Override
-                        public void onLoading(long count, long current) {
-
-                        }
-                    });
+                ibMiss.setChecked(true);
+                if (userEntity != null) {
+                    getHasMiss();
                 }
             }
         });
@@ -209,7 +187,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlPathRelationship.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data != null && data.size() > 0) {
+                if (userEntity != null) {
                     Intent intent = new Intent(getActivity(), PathRelationshipActivity.class);
                     intent.putExtra("member_id", memberId);
                     intent.putExtra("relationship", userEntity.getTree_type_name());
@@ -223,33 +201,75 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlAlbumGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data != null && data.size() > 0) {
-                    Intent intent = new Intent(getActivity(), AlbumActivity.class);
-                    intent.putExtra("member_id", memberId);
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getActivity(), AlbumActivity.class);
+                intent.putExtra("member_id", memberId);
+                startActivity(intent);
             }
         });
 
         rlWallPosting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (data != null && data.size() > 0) {
-                    FragmentManager fm = getParentActivity().getSupportFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    Fragment f = WallFragment.newInstance(memberId);
-                    Log.d("", "memberId============" + memberId);
-                    ft.replace(R.id.container, f);
-                    ft.addToBackStack(null);
-                    ft.commit();
+                FragmentManager fm = getParentActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                Fragment f = WallFragment.newInstance(memberId);
+                ft.replace(R.id.container, f);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+    }
+
+    private void getHasMiss() {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("from_user_id", MainActivity.getUser().getUser_id());
+        params.put("to_user_id", memberId);
+        params.put("to_user_fullname", userEntity.getUser_given_name());
+        new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params, new HttpCallback() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+//                    String missMessage = jsonObject.getString("message");
+//                    if (missMessage.startsWith("You already sent miss")) {
+//
+//                    } else if (missMessage.startsWith("You successfully sent miss")) {
+//
+//                    }
+                    MslToast.getInstance(getActivity()).showShortToast(jsonObject.getString("message"));
+                } catch (JSONException e) {
+                    MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
+                    e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
             }
         });
     }
 
     @Override
     public void requestData() {
-        data.clear();
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", useId);
         jsonParams.put("member_id", memberId);
@@ -271,36 +291,13 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
             @Override
             public void onResult(String response) {
-
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-
-                data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                List<UserEntity> data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
-
                 if ((data != null) && (data.size() > 0)) {
-                    userEntity = data.get(0);
-
-                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-                    tvName1.setText(userEntity.getUser_given_name());
-                    getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
-                    tvId1.setText("ID:" + userEntity.getDis_bondwithme_id());
-                    String dofeel_code = userEntity.getDofeel_code();
-                    if (!TextUtils.isEmpty(dofeel_code)) {
-                        try {
-                            String filePath = "";
-                            if (dofeel_code.indexOf("_") != -1) {
-                                filePath = dofeel_code.replaceAll("_", File.separator);
-                            }
-                            InputStream is = App.getContextInstance().getAssets().open(filePath);
-                            Bitmap bitmap = BitmapFactory.decodeStream(is);
-                            ivBottomLeft.setImageBitmap(bitmap);
-
-                        } catch (IOException e) {
-                            Toast.makeText(getActivity(), getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
-                        }
-                    }
+                    UserEntity userEntity = data.get(0);
+                    Message.obtain(handler, GET_USER_ENTITY, userEntity).sendToTarget();
                 }
             }
 
@@ -319,54 +316,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
             }
         });
-
-
-//        StringRequest srMemberProfile = new StringRequest(url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response)
-//            {
-//
-//                Log.d("", "@@@@@@@@@@@@!!!!" + response);
-//
-//                GsonBuilder gsonb = new GsonBuilder();
-//
-//                Gson gson = gsonb.create();
-//
-//                data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
-//
-//                if( (data != null) && (data.size()>0) )
-//                {
-//                    userEntity = data.get(0);
-//
-//                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//                    tvName1.setText(userEntity.getUser_given_name());
-//                    getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
-//                    tvId1.setText("ID:" + userEntity.getDis_bondwithme_id());
-//
-//                    if (!TextUtils.isEmpty(userEntity.getUser_emoticon()))
-//                    {
-//                        try {
-//                            InputStream is = App.getContextInstance().getAssets().open(userEntity.getUser_emoticon()+".png");
-//                            Bitmap bitmap= BitmapFactory.decodeStream(is);
-//                            ivBottomLeft.setImageBitmap(bitmap);
-//
-////                    Drawable da = Drawable.createFromStream(is, null);
-////                    ivBottomLeft.setImageDrawable(da);
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//            }
-//        });
-//
-//        VolleyUtil.addRequest2Queue(getActivity(), srMemberProfile, "");
     }
 
     @Override
@@ -378,6 +327,4 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 }
         }
     }
-
-
 }
