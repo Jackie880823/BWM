@@ -30,7 +30,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * 主页Activity,包含了头部和底部，无需定义中间内容(ViewPaper)
  */
@@ -321,43 +320,6 @@ public class MainActivity extends BaseActivity {
             leavePagerIndex = 3;
         }
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                addStickerList();
-//                addImageList();
-//            }
-//        }).start();
-
-
-    }
-
-    static List<String> STICKER_NAME_LIST = new ArrayList<>();
-    static List<String> FIRST_STICKER_LIST = new ArrayList<>();
-
-    private void addStickerList() {
-        try {
-            List<String> pathList = FileUtil.getAllFilePathsFromAssets(this, MessageChatActivity.STICKERS_NAME);
-            if (null != pathList) {
-                for (String string : pathList) {
-                    STICKER_NAME_LIST.add(MessageChatActivity.STICKERS_NAME + File.separator + string);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addImageList() {
-        if (STICKER_NAME_LIST != null && STICKER_NAME_LIST.size() > 0) {
-            for (String string : STICKER_NAME_LIST) {
-                List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(this, string);
-                if (null != stickerAllNameList) {
-                    String iconPath = string + File.separator + stickerAllNameList.get(0);
-                    FIRST_STICKER_LIST.add(iconPath);
-                }
-            }
-        }
     }
 
     private boolean isEventFragmentDate() {

@@ -175,8 +175,8 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
 
     private void showMemberEmptyView() {
         emptyMemberMessageLinear.setVisibility(View.VISIBLE);
-        emptyMemberMessageIv.setImageResource(R.drawable.family_member_msg_empty);
-        emptyMemberMessageTv.setText(getString(R.string.text_empty_add_member));
+        emptyMemberMessageIv.setImageResource(R.drawable.message_member_empty);
+        emptyMemberMessageTv.setText("");
     }
 
     private void hideMemberEmptyView() {
@@ -218,6 +218,9 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
 //                        if (mProgressDialog.isShowing()) {
 //                            mProgressDialog.dismiss();
 //                        }
+                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                            showMemberEmptyView();
+                        }
                         if (TextUtils.isEmpty(response) || "{}".equals(response)) {
                             showMemberEmptyView();
                         }

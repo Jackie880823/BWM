@@ -169,8 +169,8 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
 
     private void showGroupEmptyView() {
         emptyGroupMessageLinear.setVisibility(View.VISIBLE);
-        emptyGroupMessageIv.setImageResource(R.drawable.family_member_msg_empty);
-        emptyGroupMessageTv.setText(getString(R.string.text_empty_add_member));
+        emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
+        emptyGroupMessageTv.setText("");
     }
 
     private void hideGroupEmptyView() {

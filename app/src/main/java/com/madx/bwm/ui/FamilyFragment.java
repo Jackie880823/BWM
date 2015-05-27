@@ -759,6 +759,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                             showMemberEmptyView();
                             showGroupEmptyView();
                         }
+                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                            showMemberEmptyView();
+                            showGroupEmptyView();
+                        }
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             List<FamilyMemberEntity> memberList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
