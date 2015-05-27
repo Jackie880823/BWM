@@ -451,8 +451,8 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                 removeDuplicate(userList);
                 if(isRefresh){
                     isRefresh = false;
-                    changeData();
                 }
+                changeData();
 //                Log.i("AddMembe_userList===3", userList.size() + "");
 
 //                getMembersList();
