@@ -488,6 +488,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        }
 
                     } else if (R.id.ib_top_button_right == v.getId()) {
+                        //打开编辑页面
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
                         getActivity().startActivityForResult(intent, 1);
@@ -955,6 +956,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private void goInvitedStutus() {
         intent = new Intent(getActivity(), InvitedStatusActivity.class);
         intent.putExtra("event", event);
+        //打开好友选择页面
         startActivity(intent);
     }
 
