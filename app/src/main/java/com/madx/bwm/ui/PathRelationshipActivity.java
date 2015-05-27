@@ -33,12 +33,10 @@ import java.util.List;
 
 public class PathRelationshipActivity extends BaseActivity {
 
-    String memberId ;
+    String memberId;
     String relationship;
     String fam_nickname;
     String member_status;
-
-
     List<MemberPathEntity> pathList = new ArrayList<MemberPathEntity>();
 
     LinearLayout llRelationship;
@@ -61,7 +59,6 @@ public class PathRelationshipActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
@@ -72,13 +69,7 @@ public class PathRelationshipActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        /**
-         * begin QK
-         */
         tvTitle.setText(getString(R.string.title_path_relationship));
-        /**
-         * end
-         */
     }
 
     @Override
@@ -104,8 +95,7 @@ public class PathRelationshipActivity extends BaseActivity {
         fam_nickname = getIntent().getStringExtra("fam_nickname");
         member_status = getIntent().getStringExtra("member_status");
 
-        if (TextUtils.isEmpty(memberId) && TextUtils.isEmpty(relationship))
-        {
+        if (TextUtils.isEmpty(memberId) && TextUtils.isEmpty(relationship)) {
             finish();
         }
 
@@ -142,7 +132,7 @@ public class PathRelationshipActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PathRelationshipActivity.this, RelationshipActivity.class);
-                startActivityForResult(intent,1);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -175,7 +165,7 @@ public class PathRelationshipActivity extends BaseActivity {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
 
-                Log.d("","!!!!!!!!" + response);
+                Log.d("", "!!!!!!!!" + response);
 //                if ("[]".equals(response))
 //                {
 //                    Toast.makeText(PathRelationshipActivity.this, "", Toast.LENGTH_SHORT).show();
@@ -191,7 +181,7 @@ public class PathRelationshipActivity extends BaseActivity {
                     tvNames[i].setText(pathList.get(i).getMember_fullname());
                 }
 
-                for (int j = pathList.size(); j < 4 ; j++)//其他空位
+                for (int j = pathList.size(); j < 4; j++)//其他空位
                 {
                     ll[j].setVisibility(View.INVISIBLE);
                 }
@@ -212,58 +202,6 @@ public class PathRelationshipActivity extends BaseActivity {
 
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-//        StringRequest srPhoto = new StringRequest(url, new Response.Listener<String>() {
-//
-//            GsonBuilder gsonb = new GsonBuilder();
-//
-//            Gson gson = gsonb.create();
-//
-//            @Override
-//            public void onResponse(String response) {
-//
-//                Log.d("","!!!!!!!!" + response);
-////                if ("[]".equals(response))
-////                {
-////                    Toast.makeText(PathRelationshipActivity.this, "", Toast.LENGTH_SHORT).show();
-////                    finish();
-////                }
-//                pathList = gson.fromJson(response, new TypeToken<ArrayList<MemberPathEntity>>() {
-//                }.getType());
-//
-//                for (int i = 0; i < pathList.size(); i++) {//关系列表
-//                    ll[i].setVisibility(View.VISIBLE);
-//                    VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//                    tvRelationships[i].setText(pathList.get(i).getRelationship());
-//                    tvNames[i].setText(pathList.get(i).getMember_fullname());
-//                }
-//
-//                for (int j = pathList.size(); j < 4 ; j++)//其他空位
-//                {
-//                    ll[j].setVisibility(View.INVISIBLE);
-//                }
-//
-//
-//
-//            }
-//        },new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//            }
-//        });
-//        VolleyUtil.addRequest2Queue(PathRelationshipActivity.this, srPhoto, "");
     }
 
     @Override
@@ -273,11 +211,9 @@ public class PathRelationshipActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode)
-        {
+        switch (requestCode) {
             case 1:
-                if (resultCode == RESULT_OK)
-                {
+                if (resultCode == RESULT_OK) {
                     tvRelationship.setText(data.getStringExtra("relationship"));
                     updateRelationship();
                 }
@@ -294,8 +230,7 @@ public class PathRelationshipActivity extends BaseActivity {
     }
 
 
-    public void updateRelationship()
-    {
+    public void updateRelationship() {
         RequestInfo requestInfo = new RequestInfo();
 
         HashMap<String, String> jsonParams = new HashMap<String, String>();
@@ -352,47 +287,5 @@ public class PathRelationshipActivity extends BaseActivity {
             }
         });
 
-
-
-
-
-
-
-
-
-
-//        StringRequest srUpdateRelationship = new StringRequest(Request.Method.PUT, String.format(Constant.API_UPDATE_RELATIONSHIP_NICKNAME, MainActivity.getUser().getUser_id()), new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//
-//                try {
-//                    JSONObject jsonObject = new JSONObject(response);
-//
-//                    if (("200").equals(jsonObject.getString("response_status_code"))) {
-//                        Toast.makeText(PathRelationshipActivity.this, getString(R.string.successfully_update_relationship), Toast.LENGTH_SHORT).show();//成功
-//                        requestData();
-//                    } else {
-//                        Toast.makeText(PathRelationshipActivity.this, getString(R.string.fail_update_relationship), Toast.LENGTH_SHORT).show();//失败
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                //TODO
-//                error.printStackTrace();
-//                Toast.makeText(PathRelationshipActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//            }
-//        }) {
-//
-//            @Override
-//            public byte[] getBody() throws AuthFailureError {
-//                return jsonParamsString.getBytes();
-//            }
-//        };
-//        VolleyUtil.addRequest2Queue(PathRelationshipActivity.this, srUpdateRelationship, "");
     }
 }

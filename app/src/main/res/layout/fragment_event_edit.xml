@@ -46,7 +46,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/default_view_margin"
                         android:background="@null"
-                        android:hint="@string/text_hint_event_title" />
+                        android:hint="@string/text_hint_event_title"
+                        android:maxLength="30"/>
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -137,7 +138,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:hint="@string/text_hint_event_position"
-                        android:maxLength="30" />
+                        android:maxLength="30"/>
 
                     <ImageButton
                         android:id="@+id/position_choose"
