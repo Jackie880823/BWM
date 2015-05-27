@@ -24,4 +24,5 @@
         <attr name="max_length" format="integer"></attr>
     </declare-styleable>
 
+
 </resources>
