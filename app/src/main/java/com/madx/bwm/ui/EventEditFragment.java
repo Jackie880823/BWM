@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -141,7 +142,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         event_title.setText(getParentActivity().eventEntity.getGroup_name());
         event_desc.setText(getParentActivity().eventEntity.getText_description());
         position_name.setText(mEevent.getLoc_name());
-        date_desc.setText(MyDateUtils.getLocalDateStringFromUTC(getActivity(), mEevent.getGroup_event_date()));
+        date_desc.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), mEevent.getGroup_event_date()));
 
         latitude = TextUtils.isEmpty(mEevent.getLoc_latitude()) ? -1000 : Double.valueOf(mEevent.getLoc_latitude());
         longitude = TextUtils.isEmpty(mEevent.getLoc_longitude()) ? -1000 : Double.valueOf(mEevent.getLoc_longitude());
@@ -290,7 +291,9 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 goLocationSetting();
                 break;
             case R.id.item_date:
-                showDateTimePicker();
+                if(pickDateTimeDialog==null||!pickDateTimeDialog.isShowing()) {
+                    showDateTimePicker();
+                }
                 break;
         }
     }
@@ -358,7 +361,8 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                     return;
                 }
 
-                String dateDesc = MyDateUtils.getLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
+                String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
+                Log.i("TimeDialog===",dateDesc);
                 mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
 
                 date_desc.setText(dateDesc);
