@@ -48,6 +48,8 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
     private final static int GET_MEMBERS = 1;
     private Gson gson = new Gson();
 
+    private boolean isRefresh;
+
     public List<GroupEntity> at_groups_data = new ArrayList<>();//群组
     public List<UserEntity>  tempuserList = new ArrayList();
     public List<UserEntity>  userList ;
@@ -146,12 +148,6 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                 }
             }
         }
-//        for (int i = 0; i<userList.size()-1;i++){
-//            if(userList.get(i).getUser_id().trim().equals(MainActivity.getUser().getUser_id())){
-//                userList.remove(i);
-//                break;
-//            }
-//        }
     }
     private void  getMembersList(final String strGroupsid){
 
@@ -342,7 +338,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                 }
             }
         }
-
+        //适配器
         adapter = new InvitedUserEditAdapter(getParentActivity(), userList);
         adapter.setMemberDeleteListenere(new InvitedUserEditAdapter.MemberDeleteListenere() {
             @Override
@@ -355,7 +351,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         adapter.notifyDataSetChanged();
     }
 
-
+    //删除好友
     private void submitDeleteMember(final String userId) {
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", userId);//MainActivity
@@ -378,6 +374,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
 
             @Override
             public void onResult(String response) {
+                isRefresh = true;
                 try {
 
                     JSONObject jsonObject = new JSONObject(response);
@@ -452,8 +449,12 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                 userList.addAll(new_members_data);
 //                Log.i("AddMembe_userList===2", userList.size() + "");
                 removeDuplicate(userList);
+                if(isRefresh){
+                    isRefresh = false;
+                    changeData();
+                }
 //                Log.i("AddMembe_userList===3", userList.size() + "");
-                changeData();
+
 //                getMembersList();
             }
 
