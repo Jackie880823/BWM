@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,20 +98,13 @@ public class GroupSettingActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
         rightButton.setVisibility(View.INVISIBLE);
 
     }
 
     @Override
     protected void setTitle() {
-        /**
-         * begin QK
-         */
         tvTitle.setText(getResources().getString(R.string.title_group_info));
-        /**
-         * end
-         */
     }
 
     @Override
@@ -135,7 +127,7 @@ public class GroupSettingActivity extends BaseActivity {
     public void initView() {
         //groupEntity = (GroupEntity) getIntent().getExtras().getSerializable("groupEntity");
         groupId = getIntent().getStringExtra("groupId");
-        groupName=getIntent().getStringExtra("groupName");
+        groupName = getIntent().getStringExtra("groupName");
         llSetting = getViewById(R.id.ll_setting);
 
         cniMain = getViewById(R.id.cni_main);
@@ -146,7 +138,7 @@ public class GroupSettingActivity extends BaseActivity {
 
         btnLeaveGroup = getViewById(R.id.btn_leave_group);
 
-        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO,  groupId), R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName.setText(groupName);
         //groupName = groupEntity.getGroup_name();
 
@@ -179,78 +171,52 @@ public class GroupSettingActivity extends BaseActivity {
         llSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isAdmin)
-                {
+                if (isAdmin) {
                     Intent intent = new Intent(GroupSettingActivity.this, GroupNameSettingActivity.class);
                     intent.putExtra("groupId", groupId);
                     intent.putExtra("groupName", tvName.getText().toString());
                     startActivityForResult(intent, SET_GROUP_PIC_NAME);
-                }
-                else
-                {
+                } else {
 
                 }
             }
         });
 
 
-
-
         lvMembers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (isAdmin)
-                {
-                    if (position == 0)
-                    {
+                if (isAdmin) {
+                    if (position == 0) {
                         //群主点击群主
-                    }
-                    else
-                    {
+                    } else {
                         //群主点击群成员
                         //判断AddedFlag值
-                        if ("0".equals(userList.get(position).getAdded_flag()))
-                        {
+                        if ("0".equals(userList.get(position).getAdded_flag())) {
                             showAdminDialog0(position);
-                        }
-                        else if ("1".equals(userList.get(position).getAdded_flag()))
-                        {
+                        } else if ("1".equals(userList.get(position).getAdded_flag())) {
                             showAdminDialog1(position);
                         }
 
                     }
-                }
-                else
-                {
-                    if (position == 0)
-                    {
+                } else {
+                    if (position == 0) {
                         //用户成员点击群主
-                        if ("0".equals(userList.get(position).getAdded_flag()))
-                        {
+                        if ("0".equals(userList.get(position).getAdded_flag())) {
                             showNonAdminDialog0(position);
-                        }
-                        else if ("1".equals(userList.get(position).getAdded_flag()))
-                        {
+                        } else if ("1".equals(userList.get(position).getAdded_flag())) {
                             showNonAdminDialog1(position);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         //用户成员点击群成员
                         //判断AddedFlag值
                         //还要判断是不是自己
-                        if (MainActivity.getUser().getUser_id().equals(userList.get(position).getUser_id()))
-                        {
+                        if (MainActivity.getUser().getUser_id().equals(userList.get(position).getUser_id())) {
                             //表示是自己
-                        }
-                        else
-                        {
-                            if ("0".equals(userList.get(position).getAdded_flag()))
-                            {
+                        } else {
+                            if ("0".equals(userList.get(position).getAdded_flag())) {
                                 showNonAdminDialog0(position);
-                            }
-                            else if ("1".equals(userList.get(position).getAdded_flag()))
-                            {
+                            } else if ("1".equals(userList.get(position).getAdded_flag())) {
                                 showNonAdminDialog1(position);
                             }
                         }
@@ -264,8 +230,7 @@ public class GroupSettingActivity extends BaseActivity {
         btnLeaveGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(groupOwnerId))
-                {
+                if (!TextUtils.isEmpty(groupOwnerId)) {
                     leaveGroup();
                 }
 
@@ -278,8 +243,7 @@ public class GroupSettingActivity extends BaseActivity {
 
     }
 
-    public void getMembersList()
-    {
+    public void getMembersList() {
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("group_id", groupId);
         jsonParams.put("viewer_id", MainActivity.getUser().getUser_id());
@@ -304,10 +268,10 @@ public class GroupSettingActivity extends BaseActivity {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
 
-                userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                }.getType());
 
-                if (userList != null)
-                {
+                if (userList != null) {
                     GroupSettingAdapter groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
 
                     lvMembers.setAdapter(groupSettingAdapter);
@@ -319,7 +283,7 @@ public class GroupSettingActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -332,58 +296,6 @@ public class GroupSettingActivity extends BaseActivity {
 
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        StringRequest srMembers = new StringRequest(url, new Response.Listener<String>() {
-//
-//            GsonBuilder gsonb = new GsonBuilder();
-//
-//            Gson gson = gsonb.create();
-//
-//            @Override
-//            public void onResponse(String response) {
-//
-//                Log.d("","response" + response);
-//
-//                userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
-//
-//                if (userList != null)
-//                {
-//                    GroupSettingAdapter groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
-//
-//                    lvMembers.setAdapter(groupSettingAdapter);
-//                    /**
-//                     * begin QK
-//                     */
-//                    tvNumMembers.setText(userList.size() + getResources().getString(R.string.text_members));
-//                    /**
-//                     * end
-//                     */
-//
-//                }
-//            }
-//        },new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//
-//            }
-//        });
-//        VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srMembers, "");
     }
 
     @Override
@@ -391,12 +303,11 @@ public class GroupSettingActivity extends BaseActivity {
 
     }
 
-    public class GroupSettingAdapter extends ArrayAdapter
-    {
+    public class GroupSettingAdapter extends ArrayAdapter {
 
         private int resourceId;
         private Context mContext;
-        List<UserEntity> mUserList ;
+        List<UserEntity> mUserList;
 
         public GroupSettingAdapter(Context context, int listViewResourceId, List userList) {
             super(context, listViewResourceId, userList);
@@ -422,49 +333,36 @@ public class GroupSettingActivity extends BaseActivity {
             convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
 
             viewHolder.cniMain = (CircularNetworkImage) convertView.findViewById(R.id.cni_main);
-            viewHolder.tvName = (TextView)convertView.findViewById(R.id.tv_name);
-            viewHolder.tvAdmin = (TextView)convertView.findViewById(R.id.tv_admin);
-            viewHolder.ivWaitting = (ImageView)convertView.findViewById(R.id.iv_waitting);
+            viewHolder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
+            viewHolder.tvAdmin = (TextView) convertView.findViewById(R.id.tv_admin);
+            viewHolder.ivWaitting = (ImageView) convertView.findViewById(R.id.iv_waitting);
 
             VolleyUtil.initNetworkImageView(mContext, viewHolder.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
-            if (userEntity.getUser_id().equals(userEntity.getGroup_owner_id()))
-            {
+            if (userEntity.getUser_id().equals(userEntity.getGroup_owner_id())) {
                 viewHolder.tvName.setText(userEntity.getUser_given_name());
                 viewHolder.tvAdmin.setVisibility(View.VISIBLE);
                 viewHolder.ivWaitting.setVisibility(View.GONE);
                 groupOwnerId = userEntity.getGroup_owner_id();
-                if (MainActivity.getUser().getUser_id().equals(userEntity.getGroup_owner_id()))
-                {
+                if (MainActivity.getUser().getUser_id().equals(userEntity.getGroup_owner_id())) {
                     isAdmin = true;
                     rightButton.setVisibility(View.VISIBLE);
-
+                } else {
                 }
-                else
-                {
-
-                }
-            }
-            else
-            {
+            } else {
                 viewHolder.tvName.setText(userEntity.getUser_given_name());
             }
 
-            if ("1".equals(userEntity.getJoin_group()))
-            {
+            if ("1".equals(userEntity.getJoin_group())) {
                 viewHolder.ivWaitting.setImageResource(R.drawable.existing_user);
-            }
-            else
-            {
+            } else {
                 viewHolder.ivWaitting.setImageResource(R.drawable.pending_user);
             }
-
             return convertView;
 
         }
 
-        class ViewHolder
-        {
+        class ViewHolder {
             CircularNetworkImage cniMain;
             TextView tvName;
             TextView tvAdmin;
@@ -474,8 +372,7 @@ public class GroupSettingActivity extends BaseActivity {
     }
 
     //admin and addedflag = 1
-    private void showAdminDialog1(final int position)
-    {
+    private void showAdminDialog1(final int position) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin1, null);
 
@@ -525,14 +422,14 @@ public class GroupSettingActivity extends BaseActivity {
                                 showAdminDialog1.dismiss();
                             }
                         } catch (JSONException e) {
-                            Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                         showAdminDialog1.dismiss();
                     }
 
@@ -546,55 +443,6 @@ public class GroupSettingActivity extends BaseActivity {
 
                     }
                 });
-
-
-
-
-
-
-
-
-
-
-
-//                StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId), new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//
-//                        try {
-//
-//                            JSONObject jsonObject = new JSONObject(response);
-//
-//                            if (("200").equals(jsonObject.getString("response_status_code"))) {
-//                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();//成功
-//                                showAdminDialog1.dismiss();
-//                                getMembersList();
-//
-//                            } else {
-//                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();//成功
-//                                showAdminDialog1.dismiss();
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                    }
-//                }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        error.printStackTrace();
-//                        Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//                        showAdminDialog1.dismiss();
-//                    }
-//                }) {
-//
-//                    @Override
-//                    public byte[] getBody() throws AuthFailureError {
-//                        return jsonParamsString.getBytes();
-//                    }
-//
-//                };
-//                VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srRemoveMember, "");
             }
         });
 
@@ -604,7 +452,6 @@ public class GroupSettingActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent1 = new Intent(GroupSettingActivity.this, FamilyProfileActivity.class);
                 intent1.putExtra("member_id", userList.get(position).getUser_id());
-                Log.d("", "------@@@-----" + userList.get(position).getUser_id());
                 startActivity(intent1);
                 showAdminDialog1.dismiss();
             }
@@ -625,12 +472,8 @@ public class GroupSettingActivity extends BaseActivity {
         showAdminDialog1.show();
     }
 
-
-
-
     //admin and addedflag = 0
-    private void showAdminDialog0(final int position)
-    {
+    private void showAdminDialog0(final int position) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin0, null);
 
@@ -649,8 +492,6 @@ public class GroupSettingActivity extends BaseActivity {
                 final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                 requestInfo.url = String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId);
                 requestInfo.jsonParam = jsonParamsString;
-
-
                 new HttpTools(GroupSettingActivity.this).put(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
@@ -665,26 +506,24 @@ public class GroupSettingActivity extends BaseActivity {
                     @Override
                     public void onResult(String response) {
                         try {
-
                             JSONObject jsonObject = new JSONObject(response);
-
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
-                                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();
                                 showAdminDialog0.dismiss();
                                 getMembersList();
                             } else {
-                                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();
                                 showAdminDialog0.dismiss();
                             }
                         } catch (JSONException e) {
-                            Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                         showAdminDialog0.dismiss();
                     }
 
@@ -698,44 +537,6 @@ public class GroupSettingActivity extends BaseActivity {
 
                     }
                 });
-
-
-
-//                StringRequest srRemoveMember = new StringRequest(Request.Method.PUT, String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId), new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//
-//                        try {
-//
-//                            JSONObject jsonObject = new JSONObject(response);
-//
-//                            if (("200").equals(jsonObject.getString("response_status_code"))) {
-//                                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();
-//                                showAdminDialog0.dismiss();
-//                                getMembersList();
-//                            } else {
-//                                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();
-//                                showAdminDialog0.dismiss();
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        error.printStackTrace();
-//                        Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//                        showAdminDialog0.dismiss();
-//                    }
-//                }) {
-//
-//                    @Override
-//                    public byte[] getBody() throws AuthFailureError {
-//                        return jsonParamsString.getBytes();
-//                    }
-//                };
-//                VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srRemoveMember, "");
             }
         });
 
@@ -750,12 +551,7 @@ public class GroupSettingActivity extends BaseActivity {
         showAdminDialog0.show();
     }
 
-
-
-
-    //non admin and addedflag = 1
-    private void showNonAdminDialog1(final int position)
-    {
+    private void showNonAdminDialog1(final int position) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_non_admin1, null);
 
@@ -769,7 +565,6 @@ public class GroupSettingActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent intent1 = new Intent(GroupSettingActivity.this, FamilyProfileActivity.class);
                 intent1.putExtra("member_id", userList.get(position).getUser_id());
-                Log.d("", "------@@@-----" + userList.get(position).getUser_id());
                 startActivity(intent1);
                 showNonAdminDialog1.dismiss();
             }
@@ -790,59 +585,40 @@ public class GroupSettingActivity extends BaseActivity {
         showNonAdminDialog1.show();
     }
 
-
     //non admin and addedflag = 0
-    private void showNonAdminDialog0(final int position)
-    {
+    private void showNonAdminDialog0(final int position) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_non_admin0, null);
-
         showNonAdminDialog0 = new MyDialog(this, null, selectIntention);
-
         TextView tvAdd = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
-
         tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
                 showNonAdminDialog0.dismiss();
                 getMemberType(position);
             }
         });
-
         showNonAdminDialog0.show();
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == this.RESULT_OK) {
             switch (requestCode) {
-
                 case GET_MEMBERS:
                     String members = data.getStringExtra("members_data");
                     members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                     }.getType());
 
-                    Log.d("","#######" + members);
-                    Log.d("","#######------" + members_data.size());
-
                     List memberList = new ArrayList();//要添加的成员user_id，需要变成json作为一个接口变量
 
-                    for (int i = 0; i < members_data.size(); i++)
-                    {
+                    for (int i = 0; i < members_data.size(); i++) {
                         memberList.add(members_data.get(i).getUser_id());
                     }
 
-                    if (memberList.size() != 0)
-                    {
-                        Log.d("", "@@@@@@@@@" + gson.toJson(memberList));
-
+                    if (memberList.size() != 0) {
                         addGroupMember(gson.toJson(memberList));
-                    }
-                    else
-                    {
-
+                    } else {
                     }
 
                     break;
@@ -867,7 +643,6 @@ public class GroupSettingActivity extends BaseActivity {
                 /** christopher end */
 
 
-
                 case GET_RELATIONSHIP:
                     response_relationship = data.getStringExtra("relationship");
                     setRelationship(positionEnd);
@@ -876,8 +651,7 @@ public class GroupSettingActivity extends BaseActivity {
         }
     }
 
-    public void addGroupMember(final String strGroupMembers)
-    {
+    public void addGroupMember(final String strGroupMembers) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("group_id", groupId);
         params.put("group_owner_id", MainActivity.getUser().getUser_id());
@@ -916,65 +690,24 @@ public class GroupSettingActivity extends BaseActivity {
 
             }
         });
-
-
-//
-//        StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_GROUP_ADD_MEMBERS, new Response.Listener<String>() {
-//
-//            GsonBuilder gsonb = new GsonBuilder();
-//
-//            Gson gson = gsonb.create();
-//
-//            @Override
-//            public void onResponse(String response) {
-//
-//                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success), Toast.LENGTH_SHORT).show();
-//
-//                getMembersList();
-//
-//            }
-//        }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                error.printStackTrace();
-//                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//            }
-//        }) {
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                HashMap<String, String> params = new HashMap<String, String>();
-//                params.put("group_id", groupId);
-//                params.put("group_owner_id", MainActivity.getUser().getUser_id());
-//                params.put("query_on", "addGroupMember");
-//                params.put("group_members", strGroupMembers);
-//
-//                return params;
-//            }
-//        };
-//        VolleyUtil.addRequest2Queue(GroupSettingActivity.this, stringRequestPost, "");
     }
 
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-                Intent intent = new Intent();
-                intent.putExtra("group_name", tvName.getText().toString());
-                setResult(RESULT_OK, intent);
-                finish();
+            Intent intent = new Intent();
+            intent.putExtra("group_name", tvName.getText().toString());
+            setResult(RESULT_OK, intent);
+            finish();
         }
         return super.dispatchKeyEvent(event);
     }
 
 
-
     MyDialog leaveGroupAlertDialog;
 
     private void leaveGroup() {
-        /**
-         * begin QK
-         */
         leaveGroupAlertDialog = new MyDialog(this, null, getResources().getString(R.string.text_leave_group_sure));
 
         leaveGroupAlertDialog.setButtonAccept(getResources().getString(R.string.text_dialog_yes), new View.OnClickListener() {
@@ -1010,17 +743,15 @@ public class GroupSettingActivity extends BaseActivity {
                     @Override
                     public void onResult(String response) {
                         try {
-
                             JSONObject jsonObject = new JSONObject(response);
-
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_leave_group), Toast.LENGTH_SHORT).show();//成功
-                                Intent intent =new Intent(GroupSettingActivity.this,MainActivity.class);
-                                intent.putExtra("leaveGroup","leaveGroup");
+                                Intent intent = new Intent(GroupSettingActivity.this, MainActivity.class);
+                                intent.putExtra("leaveGroup", "leaveGroup");
                                 startActivity(intent);
                                 //finish();
                             } else {
-                                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_fail_leave_group), Toast.LENGTH_SHORT).show();//失败
+                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_fail_leave_group), Toast.LENGTH_SHORT).show();//失败
                             }
                         } catch (JSONException e) {
                             Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
@@ -1043,58 +774,6 @@ public class GroupSettingActivity extends BaseActivity {
 
                     }
                 });
-
-
-
-
-
-
-
-//                StringRequest srUpdateGroupName = new StringRequest(Request.Method.PUT, String.format(Constant.API_LEAVE_GROUP, groupId), new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        Log.d("","#########" + response);
-//                        try {
-//
-//                            JSONObject jsonObject = new JSONObject(response);
-//
-//                            if (("200").equals(jsonObject.getString("response_status_code"))) {
-//                                /**
-//                                 * begin QK
-//                                 */
-//                                Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_leave_group), Toast.LENGTH_SHORT).show();//成功
-//                                finish();
-//                            } else {
-//                                Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_fail_leave_group), Toast.LENGTH_SHORT).show();//失败
-//                                /**
-//                                 * end
-//                                 */
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//
-//                    }
-//                }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        error.printStackTrace();
-//                        /**
-//                         * begin QK
-//                         */
-//                        Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//                        /**
-//                         * end
-//                         */
-//                    }
-//                }) {
-//
-//                    @Override
-//                    public byte[] getBody() throws AuthFailureError {
-//                        return jsonParamsString.getBytes();
-//                    }
-//                };
-//                VolleyUtil.addRequest2Queue(GroupSettingActivity.this, srUpdateGroupName, "");
             }
         });
         leaveGroupAlertDialog.setButtonCancel(this.getString(R.string.cancel), new View.OnClickListener() {
@@ -1115,14 +794,10 @@ public class GroupSettingActivity extends BaseActivity {
     String response_relationship;
     int positionEnd;
 
-    public void getMemberType(final int position)
-    {
+    public void getMemberType(final int position) {
         RequestInfo requestInfo = new RequestInfo();
-        requestInfo.params=null;
-        requestInfo.url = String.format(Constant.API_GET_MEMBER_TYPE, MainActivity.getUser().getUser_id(),userList.get(position).getUser_id());
-
-        Log.d("","uuuuurl" + requestInfo.url);
-
+        requestInfo.params = null;
+        requestInfo.url = String.format(Constant.API_GET_MEMBER_TYPE, MainActivity.getUser().getUser_id(), userList.get(position).getUser_id());
         new HttpTools(this).get(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
@@ -1136,47 +811,25 @@ public class GroupSettingActivity extends BaseActivity {
 
             @Override
             public void onResult(String string) {
-
-                Log.i("", "response" + string);
-
                 try {
                     JSONObject jsonObject = new JSONObject(string);
-                    if ("Success".equals(jsonObject.getString("response_status")))
-                    {
+                    if ("Success".equals(jsonObject.getString("response_status"))) {
                         response_type = jsonObject.getString("response_type");
                         response_relationship = jsonObject.getString("response_relationship");
-                        Log.d("","type" + response_type);
-                        /**
-                         * begin QK
-                         */
-//                        Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_get_member_type), Toast.LENGTH_SHORT).show();//成功 需要不提示
-
-                        if ("Resend".equals(response_type))
-                        {
-                            Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_success_resend) , Toast.LENGTH_SHORT).show();
+                        if ("Resend".equals(response_type)) {
+                            Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_resend), Toast.LENGTH_SHORT).show();
+                        } else if ("Request".equals(response_type)) {
+                            Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_request), Toast.LENGTH_SHORT).show();
+                        } else if ("Accept".equals(response_type)) {
+                            Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_accept), Toast.LENGTH_SHORT).show();
                         }
-                        else if ("Request".equals(response_type))
-                        {
-                            Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_success_request), Toast.LENGTH_SHORT).show();
-                        }
-                        else if ("Accept".equals(response_type))
-                        {
-                            Toast.makeText(GroupSettingActivity.this,getResources().getString(R.string.text_success_accept), Toast.LENGTH_SHORT).show();
-                        }
-                        /**
-                         * end
-                         */
                         if (TextUtils.isEmpty(response_relationship))//关系为空时, 跳转到选择界面
                         {
-                            Log.d("","response_relationship----1" + response_relationship);
                             positionEnd = position;
                             startActivityForResult(new Intent(GroupSettingActivity.this, RelationshipActivity.class), GET_RELATIONSHIP);
-                            Log.d("","response_relationship----2" + response_relationship);
 
                         }
-                    }
-                    else
-                    {
+                    } else {
                         //失败
                     }
 
@@ -1204,8 +857,7 @@ public class GroupSettingActivity extends BaseActivity {
 
     }
 
-    public void setRelationship(int position)
-    {
+    public void setRelationship(int position) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("member_id", userList.get(position).getUser_id());
@@ -1225,25 +877,13 @@ public class GroupSettingActivity extends BaseActivity {
 
             @Override
             public void onResult(String response) {
-
-                Log.i("", "response---setRelationship" + response);
-
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    if ("Success".equals(jsonObject.getString("response_status")))
-                    {
-                        /**
-                         * begin QK
-                         */
+                    if ("Success".equals(jsonObject.getString("response_status"))) {
                         Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_set_relationship), Toast.LENGTH_SHORT).show();//成功
-                        /**
-                         * end
-                         */
                         getMembersList();
 
-                    }
-                    else
-                    {
+                    } else {
 
                     }
 

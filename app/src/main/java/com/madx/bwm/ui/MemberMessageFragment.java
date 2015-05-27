@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -45,7 +44,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
     private ListView userListView;
     private ImageButton userIb;
     private MySwipeRefreshLayout userRefreshLayout;
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
     private MessagePrivateListAdapter privateAdapter;
     private Context mContext;
     private List<PrivateMessageEntity> userEntityList;
@@ -55,6 +54,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
     private LinearLayout emptyMemberMessageLinear;
     private ImageView emptyMemberMessageIv;
     private TextView emptyMemberMessageTv;
+    private View vProgress;
 
     public static MemberMessageFragment newInstance(String... params) {
 
@@ -95,8 +95,10 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
         emptyMemberMessageLinear = getViewById(R.id.message_main_empty_linear);
         emptyMemberMessageIv = getViewById(R.id.message_main_image_empty);
         emptyMemberMessageTv = getViewById(R.id.message_main_text_empty);
-        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
-        mProgressDialog.show();
+//        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
+//        mProgressDialog.show();
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
         userEntityList = new ArrayList<>();
         privateAdapter = new MessagePrivateListAdapter(mContext, userEntityList);
         userListView.setAdapter(privateAdapter);
@@ -173,8 +175,8 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
 
     private void showMemberEmptyView() {
         emptyMemberMessageLinear.setVisibility(View.VISIBLE);
-        emptyMemberMessageIv.setImageResource(R.drawable.family_member_msg_empty);
-        emptyMemberMessageTv.setText(getString(R.string.text_empty_add_member));
+        emptyMemberMessageIv.setImageResource(R.drawable.message_member_empty);
+        emptyMemberMessageTv.setText("");
     }
 
     private void hideMemberEmptyView() {
@@ -205,13 +207,19 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
 
                     @Override
                     public void onFinish() {
+                        if(vProgress!=null){
+                            vProgress.setVisibility(View.GONE);
+                        }
                     }
 
                     @Override
                     public void onResult(String response) {
                         userFinishReFresh();
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
+                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                            showMemberEmptyView();
                         }
                         if (TextUtils.isEmpty(response) || "{}".equals(response)) {
                             showMemberEmptyView();
@@ -246,9 +254,9 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
 
                     @Override
                     public void onError(Exception e) {
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                         userFinishReFresh();
                     }

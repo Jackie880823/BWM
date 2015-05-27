@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.entity.PhotoEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.widget.CircularNetworkImage;
@@ -22,15 +23,8 @@ import com.madx.bwm.widget.CircularNetworkImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
-/**
- * A simple {@link android.support.v4.app.Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link com.madx.bwm.ui.MeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link com.madx.bwm.ui.MeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MeFragment extends BaseFragment<MeActivity> {
 
     private final static int UPDATE_PROFILE = 1;
@@ -99,7 +93,6 @@ public class MeFragment extends BaseFragment<MeActivity> {
         rlAlbumGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
                 Intent intent = new Intent(getActivity(), AlbumActivity.class);
                 intent.putExtra("member_id", MainActivity.getUser().getUser_id());
                 startActivity(intent);
@@ -109,8 +102,6 @@ public class MeFragment extends BaseFragment<MeActivity> {
         rlWallPosting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
-
                 FragmentManager fm = getParentActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 Fragment f = WallFragment.newInstance(MainActivity.getUser().getUser_id());
@@ -120,6 +111,22 @@ public class MeFragment extends BaseFragment<MeActivity> {
 
             }
         });
+        cniMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
+                ArrayList<PhotoEntity> datas = new ArrayList();
+                PhotoEntity peData = new PhotoEntity();
+                peData.setUser_id(MainActivity.getUser().getUser_id());
+                peData.setFile_id("profile");
+                peData.setPhoto_caption(Constant.Module_profile);
+                peData.setPhoto_multipe("false");
+                datas.add(peData);
+                intent.putExtra("is_data", true);
+                intent.putExtra("datas", datas);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -127,11 +134,6 @@ public class MeFragment extends BaseFragment<MeActivity> {
 
     }
 
-
-    /**
-     * christopher begin
-     */
-    //TODO
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -162,7 +164,4 @@ public class MeFragment extends BaseFragment<MeActivity> {
             default:
         }
     }
-    /** christopher end */
-
-
 }
