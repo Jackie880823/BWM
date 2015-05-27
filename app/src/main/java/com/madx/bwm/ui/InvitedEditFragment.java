@@ -119,7 +119,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
         intent.putExtra("members_data", gson.toJson(userList));
         intent.putExtra("groups_data", "");
-        intent.putExtra("type", 0);
+        intent.putExtra("type", 1);
 //        Log.i("startActivity===",userList.size()+"");
         startActivityForResult(intent, GET_MEMBERS);
 
