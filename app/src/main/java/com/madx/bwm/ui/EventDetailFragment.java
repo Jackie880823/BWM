@@ -93,6 +93,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private boolean isStickerItemClick = false;
 
     private boolean isRefresh;
+    private boolean isComment;
     private int startIndex = 0;
     private int currentPage = 1;
     private final static int offset = 20;
@@ -275,6 +276,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     @Override
     public void initView() {
+        isComment = true;
         if(mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getParentActivity(), R.string.text_loading);
         }
@@ -391,7 +393,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onSendCommentClick(EditText et) {
-                    sendComment();
+                    if (isComment){
+                        sendComment();
+                    }
                     isStickerItemClick = false;
                 }
 
@@ -724,80 +728,85 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
 //            return;
 //        }
+        isComment = false;
         if(TextUtils.isEmpty(etChat.getText().toString().trim())) {
             // 如果没有输入字不发送评论
             MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            isComment = true;
             return;
-        }
-        if (NetworkUtil.isNetworkConnected(getActivity())) {
-            progressBar.setVisibility(View.VISIBLE);
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put("content_group_id", event.getContent_group_id());
-            params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-            params.put("content_type", "comment");
-            params.put("comment_content", etChat.getText().toString().trim());
+        }else {
+            if (NetworkUtil.isNetworkConnected(getActivity())) {
+                progressBar.setVisibility(View.VISIBLE);
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("content_group_id", event.getContent_group_id());
+                params.put("comment_owner_id", MainActivity.getUser().getUser_id());
+                params.put("content_type", "comment");
+                params.put("comment_content", etChat.getText().toString().trim());
 //            if(isStickerItemClick){
-            if(false){
+                if(false){
 //                Log.i("isStickerItemClick=====","true");
-                params.put("sticker_group_path", stickerEntity.getSticker_group_path());
-                params.put("sticker_name", stickerEntity.getSticker_name());
-                params.put("sticker_type", stickerEntity.getSticker_type());
+                    params.put("sticker_group_path", stickerEntity.getSticker_group_path());
+                    params.put("sticker_name", stickerEntity.getSticker_name());
+                    params.put("sticker_type", stickerEntity.getSticker_type());
 
-            }else{
+                }else{
 //                Log.i("isStickerItemClick=====","false");
-                params.put("sticker_group_path", "");
-                params.put("sticker_name", "");
-                params.put("sticker_type", "");
-            }
-
-
-
-            new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
-                @Override
-                public void onStart() {
-
+                    params.put("sticker_group_path", "");
+                    params.put("sticker_name", "");
+                    params.put("sticker_type", "");
                 }
 
-                @Override
-                public void onFinish() {
 
-                }
 
-                @Override
-                public void onResult(String response) {
-                    startIndex = 0;
-                    isRefresh = true;
-                    stickerEntity.setSticker_type("");
-                    stickerEntity.setSticker_group_path("");
-                    stickerEntity.setSticker_name("");
+                new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
+                    @Override
+                    public void onStart() {
 
-                    etChat.setText("");
-                    requestComment();
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                    UIUtil.hideKeyboard(getActivity(), etChat);
-                    progressBar.setVisibility(View.GONE);
-                }
+                    }
 
-                @Override
-                public void onError(Exception e) {
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onResult(String response) {
+                        startIndex = 0;
+                        isRefresh = true;
+                        isComment = true;
+                        stickerEntity.setSticker_type("");
+                        stickerEntity.setSticker_group_path("");
+                        stickerEntity.setSticker_name("");
+
+                        etChat.setText("");
+                        requestComment();
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                        UIUtil.hideKeyboard(getActivity(), etChat);
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
 //                    UIUtil.hideKeyboard(getActivity(), et_comment);
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    progressBar.setVisibility(View.GONE);
-                }
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                        progressBar.setVisibility(View.GONE);
+                    }
 
-                @Override
-                public void onCancelled() {
+                    @Override
+                    public void onCancelled() {
 
-                }
+                    }
 
-                @Override
-                public void onLoading(long count, long current) {
+                    @Override
+                    public void onLoading(long count, long current) {
 
-                }
-            });
-        } else {
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_internet);
+                    }
+                });
+            } else {
+                MessageUtil.showMessage(getActivity(), R.string.msg_no_internet);
+            }
         }
+
 
     }
 

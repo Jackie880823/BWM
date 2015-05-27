@@ -498,7 +498,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 goLocationSetting();
                 break;
             case R.id.item_date:
-                showDateTimePicker();
+                if(pickDateTimeDialog==null||!pickDateTimeDialog.isShowing()) {
+                    showDateTimePicker();
+                }
                 break;
         }
     }
