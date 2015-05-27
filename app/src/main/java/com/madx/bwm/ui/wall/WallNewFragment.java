@@ -213,7 +213,15 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     MyDialog myDialog;
 
+    /**
+     * 返回检测，如正在上传或有数据返回为true，表示不能禁止返回
+     * @return
+     */
     public boolean backCheck() {
+        if(rlProgress.getVisibility() == View.VISIBLE) {
+            MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
+            return  true;
+        }
         if(tasks != null && tasks.size() > 0) {
             // 图片上任务正在执行
             Log.i(TAG, "backCheck& tasks size: " + tasks.size());
@@ -613,10 +621,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     editor.clear().commit();
                     getParentActivity().setResult(Activity.RESULT_OK);
                     MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
-                    sendEmptyMessage(HIDE_PROGRESS);
                     if(getActivity() != null) {
                         getActivity().finish();
                     }
+                    sendEmptyMessage(HIDE_PROGRESS);
                     break;
                 case SHOW_PROGRESS:
                     rlProgress.setVisibility(View.VISIBLE);
