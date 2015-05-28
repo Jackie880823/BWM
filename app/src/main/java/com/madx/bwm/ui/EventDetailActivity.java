@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
@@ -82,7 +83,17 @@ public class EventDetailActivity extends BaseActivity {
     }
 
     boolean changeMode;
-
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK&&event.getAction()==KeyEvent.ACTION_DOWN) {
+            if(titleLeftClick != null){
+                titleLeftClick.Click();
+            }
+            titleLeftEvent();
+            return true;
+        }
+        return super.onKeyUp(keyCode,event);
+    }
     @Override
     protected void titleLeftEvent() {
         if(commandlistener!=null)
@@ -204,5 +215,14 @@ public class EventDetailActivity extends BaseActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public TitleLeftClick titleLeftClick;
+    public void setTitleLeftClick(TitleLeftClick titleLeftClick){
+        this.titleLeftClick = titleLeftClick;
+    }
+    public interface TitleLeftClick{
+        void Click();
+
     }
 }

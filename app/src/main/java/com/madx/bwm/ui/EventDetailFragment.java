@@ -290,6 +290,17 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         rvList.setLayoutManager(llm);
 //        rvList.setHasFixedSize(true);
         initAdapter();
+        EventDetailActivity eventDetailActivity = new EventDetailActivity();
+        eventDetailActivity.setTitleLeftClick(new EventDetailActivity.TitleLeftClick() {
+            @Override
+            public void Click() {
+                if (false) {
+                    getParentActivity().finish();
+                } else {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                }
+            }
+        });
         if (NetworkUtil.isNetworkConnected(getActivity())) {
 
             progressBar = getViewById(R.id.progressBar);
@@ -386,12 +397,16 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public void onReceiveBitmapUri(Uri uri) {
                     isCommentBim = false;
+                    if(uri != null){
+                        uploadImage(uri);
+                    }
                     mUri = uri;
                     hideAllViewState();
-                    if (mUri != null) {
-                        new CompressBitmapTask().execute(mUri);
-                        return;
-                    }
+//                    if (mUri != null) {
+//                        String path = LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), mUri), 480, 800, false);
+//                        new CompressBitmapTask().execute(mUri);
+//                        return;
+//                    }
                 }
 
                 @Override
@@ -822,6 +837,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     //发送图片
+//    class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
+//
+//        @Override
+//        protected String doInBackground(Uri... params) {
+//            if(params == null) {
+//                return null;
+//            }
+//            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
+//        }
     class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
 
         @Override
@@ -1397,30 +1421,49 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         if (!file.exists()) {
             return;
         }
-
-        /**
-         * Map<String, Object> params = new HashMap<>();
-         params.put("content_creator_id", MainActivity.getUser().getUser_id());
-         params.put("group_id", groupId);
-         params.put("content_type", "post");
-         params.put("content_group_public", "0");
-         params.put("photo_caption", "");
-         params.put("multiple", "0");
-         params.put("file", file);
-         params.put("photo_fullsize", "1");
-         messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_MESSAGE_POST_TEXT, SEND_PIC_MESSAGE);
-
-         */
         Map<String, Object> params = new HashMap<>();
         params.put("content_group_id", event.getContent_group_id());
         params.put("comment_owner_id", MainActivity.getUser().getUser_id());
         params.put("content_type", "comment");
-//        params.put("content_group_public", "0");
-//        params.put("photo_caption", "");
-//        params.put("multiple", "0");
         params.put("file", file);
         params.put("photo_fullsize", "1");
-        messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_COMMENT_POST_TEXT, SEND_PIC_MESSAGE);
+
+
+        new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onResult(String string) {
+                startIndex = 0;
+                isRefresh = true;
+                isCommentBim = true;
+                mUri = null;
+                requestComment();
+                getParentActivity().setResult(Activity.RESULT_OK);
+//                    Log.i("onResult====",string);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
     }
 
      /**
