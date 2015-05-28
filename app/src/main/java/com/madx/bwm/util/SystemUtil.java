@@ -1,6 +1,6 @@
 package com.madx.bwm.util;
 
-import android.app.Activity;
+import android.content.Context;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -16,7 +16,7 @@ public class SystemUtil {
      * it doesn't, display a dialog that allows users to download the APK from
      * the Google Play Store or enable it in the device's system settings.
      */
-    public static boolean checkPlayServices(Activity context) {
+    public static boolean checkPlayServices(Context context) {
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
         if (resultCode != ConnectionResult.SUCCESS) {
             /**提示安装google 服务*/

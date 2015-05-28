@@ -43,10 +43,10 @@ import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
-import com.madx.bwm.ui.Map4BaiduActivity;
 import com.madx.bwm.ui.ViewOriginalPicesActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.UIUtil;
@@ -698,15 +698,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void gotoLocationSetting(WallEntity wall) {
-        if(!TextUtils.isEmpty(wall.getLoc_name())) {
-            Intent intent = new Intent(getParentActivity(), Map4BaiduActivity.class);
-            //        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
-            //        intent.putExtra("has_location", position_name.getText().toString());
-            intent.putExtra("location_name", wall.getLoc_name());
-            intent.putExtra("latitude", Double.valueOf(wall.getLoc_latitude()));
-            intent.putExtra("longitude", Double.valueOf(wall.getLoc_longitude()));
-            getParentActivity().startActivity(intent);
+        if (TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
+            return;
         }
+        LocationUtil.goNavigation(getActivity(), Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()));
     }
 
     private void check() {

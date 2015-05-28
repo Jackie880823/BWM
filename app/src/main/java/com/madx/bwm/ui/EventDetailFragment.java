@@ -39,6 +39,7 @@ import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.NetworkUtil;
@@ -55,7 +56,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -488,6 +488,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        }
 
                     } else if (R.id.ib_top_button_right == v.getId()) {
+                        //打开编辑页面
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
                         getActivity().startActivityForResult(intent, 1);
@@ -955,22 +956,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private void goInvitedStutus() {
         intent = new Intent(getActivity(), InvitedStatusActivity.class);
         intent.putExtra("event", event);
+        //打开好友选择页面
         startActivity(intent);
     }
 
-    private void goNavigation() {
-        if (TextUtils.isEmpty(event.getLoc_latitude()) || TextUtils.isEmpty(event.getLoc_longitude())) {
-            return;
-        }
-        try {
-            //14为缩放比例
-            String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=14&q=%f,%f", Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()), Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()));
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            getActivity().startActivity(intent);
-        } catch (Exception e) {
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_map_app);
-        }
-    }
+
 
     private void cancelEvent() {
 
@@ -1117,7 +1107,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 break;
             case R.id.btn_location:
             case R.id.event_picture_4_location:
-                goNavigation();
+                if (TextUtils.isEmpty(event.getLoc_latitude()) || TextUtils.isEmpty(event.getLoc_longitude())) {
+                    return;
+                }
+                LocationUtil.goNavigation(getActivity(), Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()));
                 break;
             case R.id.option_cancel:
                 event_options.setVisibility(View.GONE);
