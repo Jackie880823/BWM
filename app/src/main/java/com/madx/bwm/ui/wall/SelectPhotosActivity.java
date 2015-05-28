@@ -59,7 +59,6 @@ public class SelectPhotosActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setImageResource(R.drawable.btn_done);
-        titleBar.setBackgroundColor(getResources().getColor(R.color.default_text_color_red));
         leftButton.setImageResource(R.drawable.text_title_seletor);
     }
 

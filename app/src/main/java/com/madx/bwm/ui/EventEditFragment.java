@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
@@ -22,6 +25,7 @@ import com.madx.bwm.adapter.MembersGridAdapter;
 import com.madx.bwm.entity.EventEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.SystemUtil;
@@ -138,7 +142,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         event_title.setText(getParentActivity().eventEntity.getGroup_name());
         event_desc.setText(getParentActivity().eventEntity.getText_description());
         position_name.setText(mEevent.getLoc_name());
-        date_desc.setText(MyDateUtils.getLocalDateStringFromUTC(getActivity(), mEevent.getGroup_event_date()));
+        date_desc.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), mEevent.getGroup_event_date()));
 
         latitude = TextUtils.isEmpty(mEevent.getLoc_latitude()) ? -1000 : Double.valueOf(mEevent.getLoc_latitude());
         longitude = TextUtils.isEmpty(mEevent.getLoc_longitude()) ? -1000 : Double.valueOf(mEevent.getLoc_longitude());
@@ -287,7 +291,9 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 goLocationSetting();
                 break;
             case R.id.item_date:
-                showDateTimePicker();
+                if(pickDateTimeDialog==null||!pickDateTimeDialog.isShowing()) {
+                    showDateTimePicker();
+                }
                 break;
         }
     }
@@ -355,7 +361,8 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                     return;
                 }
 
-                String dateDesc = MyDateUtils.getLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
+                String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
+                Log.i("TimeDialog===",dateDesc);
                 mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
 
                 date_desc.setText(dateDesc);
@@ -381,19 +388,9 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     }
 
     private void goLocationSetting() {
-        Intent intent;
-        //判断是用百度还是google
-        if (SystemUtil.checkPlayServices(getActivity())) {
-            intent = new Intent(getActivity(), Map4GoogleActivity.class);
-        }else {
-            intent = new Intent(getActivity(), Map4BaiduActivity.class);
-        }
-
-//        intent.putExtra("has_location", position_name.getText().toString());
-        intent.putExtra("location_name", position_name.getText().toString());
-        intent.putExtra("latitude", latitude);
-        intent.putExtra("longitude", longitude);
-        startActivityForResult(intent, GET_LOCATION);
+        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude);
+        if(intent!=null)
+            startActivityForResult(intent, GET_LOCATION);
     }
 
     @Override
@@ -403,16 +400,27 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 case GET_LOCATION:
                     if (data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
-                        String locationName = data.getStringExtra("location_name");
-                        if (!TextUtils.isEmpty(locationName)) {
-                            position_name.setText(locationName);
-                            mEevent.setLoc_name(locationName);
-                            latitude = data.getDoubleExtra("latitude", 0);
-                            longitude = data.getDoubleExtra("longitude", 0);
-                        } else {
-                            position_name.setText("");
-                            latitude = -1000;
-                            longitude = -1000;
+                        if (SystemUtil.checkPlayServices(getActivity())) {
+                            final Place place = PlacePicker.getPlace(data, getActivity());
+                            if(place!=null) {
+                                String locationName = place.getAddress().toString();
+                                position_name.setText(locationName);
+                                latitude = place.getLatLng().latitude;
+                                longitude = place.getLatLng().longitude;
+                            }
+
+                        }else {
+                            String locationName = data.getStringExtra("location_name");
+                            if (!TextUtils.isEmpty(locationName)) {
+                                position_name.setText(locationName);
+                                mEevent.setLoc_name(locationName);
+                                latitude = data.getDoubleExtra("latitude", 0);
+                                longitude = data.getDoubleExtra("longitude", 0);
+                            } else {
+                                position_name.setText(null);
+                                latitude = -1000;
+                                longitude = -1000;
+                            }
                         }
                     }
                     break;

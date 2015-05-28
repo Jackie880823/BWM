@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,8 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +29,7 @@ import com.madx.bwm.entity.EventEntity;
 import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.SharedPreferencesUtils;
@@ -75,8 +77,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     public List<UserEntity> members_data = new ArrayList();//好友
     public List<GroupEntity> at_groups_data = new ArrayList<>();//群组
-    public List<UserEntity>  tempuserList = new ArrayList();
-    public List<UserEntity>  userList = new ArrayList();
+    public List<UserEntity> tempuserList = new ArrayList();
+    public List<UserEntity> userList = new ArrayList();
     private final static String USER_HEAD = "user_head";
     private final static String USER_NAME = "user_name";
 
@@ -149,9 +151,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             @Override
             public boolean execute(View v) {
                 if (v.getId() == getParentActivity().leftButton.getId()) {
-                    if(isEventDate()){
+                    if (isEventDate()) {
                         showSaveAlert();
-                    }else {
+                    } else {
                         getParentActivity().finish();
                     }
 //                    getParentActivity().finish();
@@ -166,7 +168,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         bindData2View();
 
     }
-    private boolean isEventDate(){
+
+    private boolean isEventDate() {
         if (!TextUtils.isEmpty(event_title.getText().toString().trim())) {
 //             Log.i("event_title=====================",event_title.getText().toString().trim());
             return true;
@@ -183,15 +186,15 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //             Log.i("Spmemeber_date=====================",date_desc.getText().toString().trim());
             return true;
         }
-        if(members != null){
+        if (members != null) {
             String tempdate = members.trim().replaceAll("\\[([^\\]]*)\\]", "$1");//处理两边的中括号
-            if(!TextUtils.isEmpty(tempdate.trim())){
+            if (!TextUtils.isEmpty(tempdate.trim())) {
                 return true;
             }
         }
-        if(groups != null){
+        if (groups != null) {
             String userDate = groups.trim().replaceAll("\\[([^\\]]*)\\]", "$1");
-            if (!TextUtils.isEmpty(userDate.trim())){
+            if (!TextUtils.isEmpty(userDate.trim())) {
                 return true;
             }
         }
@@ -211,12 +214,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private void bindData2View() {
 //        Log.i("bindData2View====================================="," ");
         title = SharedPreferencesUtils.getParam(getParentActivity(), "title", "").toString();
-        content = SharedPreferencesUtils.getParam(getParentActivity(),"content","").toString();
-        location = SharedPreferencesUtils.getParam(getParentActivity(),"location","").toString();
-        date = (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
-        members = SharedPreferencesUtils.getParam(getParentActivity(),"members_data","").toString();
-        groups = SharedPreferencesUtils.getParam(getParentActivity(), "Groups_date","").toString();
-        users_date = SharedPreferencesUtils.getParam(getParentActivity(),"users_date","").toString();
+        content = SharedPreferencesUtils.getParam(getParentActivity(), "content", "").toString();
+        location = SharedPreferencesUtils.getParam(getParentActivity(), "location", "").toString();
+        date = (Long) SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(), "date", 0L);
+        members = SharedPreferencesUtils.getParam(getParentActivity(), "members_data", "").toString();
+        groups = SharedPreferencesUtils.getParam(getParentActivity(), "Groups_date", "").toString();
+        users_date = SharedPreferencesUtils.getParam(getParentActivity(), "users_date", "").toString();
 
         setText();
         latitude = TextUtils.isEmpty(mEevent.getLoc_latitude()) ? -1000 : Double.valueOf(mEevent.getLoc_latitude());
@@ -224,26 +227,26 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     public static void removeDuplicate(List<UserEntity> userList) {
-        for(int i=0; i<userList.size()-1; i++){
-            for (int j = userList.size()-1; j>i; j--){
-                if(userList.get(j).getUser_given_name().equals(userList.get(i).getUser_given_name()) ||
-                        userList.get(j).getUser_id().equals(MainActivity.getUser().getUser_id())){
+        for (int i = 0; i < userList.size() - 1; i++) {
+            for (int j = userList.size() - 1; j > i; j--) {
+                if (userList.get(j).getUser_given_name().equals(userList.get(i).getUser_given_name()) ||
+                        userList.get(j).getUser_id().equals(MainActivity.getUser().getUser_id())) {
 //                    Log.i("remove===",j+"");
                     userList.remove(j);
                 }
 
             }
-            if(userList.get(i).getUser_id().equals(MainActivity.getUser().getUser_id())){
-                userList.remove(i);
-            }
+//            if(userList.get(i).getUser_id().equals(MainActivity.getUser().getUser_id())){
+//                userList.remove(i);
+//            }
         }
     }
 
 
-    private void  getMembersList(final String strGroupsid){
-        HashMap<String,String> params = new HashMap<String,String>();
-        params.put("user_id",MainActivity.getUser().getUser_id());
-        params.put("group_list",strGroupsid);
+    private void getMembersList(final String strGroupsid) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("user_id", MainActivity.getUser().getUser_id());
+        params.put("group_list", strGroupsid);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
         new HttpTools(getActivity()).get(url, null, new HttpCallback() {
             @Override
@@ -261,11 +264,13 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
 //                Log.i("at_groups_data===", at_groups_data.get(temp).getGroup_id());
-                tempuserList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                tempuserList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                }.getType());
 //                Log.i("onResult===",response);
 //                Log.i("tempuserList_size===", tempuserList.size()+"");
                 userList.addAll(tempuserList);
                 removeDuplicate(userList);
+
                 changeData();
 
             }
@@ -351,7 +356,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private void submit() {
 
-        if(progressBar.getVisibility()==View.VISIBLE){
+        if (progressBar.getVisibility() == View.VISIBLE) {
             return;
         }
         if (validateForm()) {
@@ -367,10 +372,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("group_name", event_title.getText().toString());
             params.put("group_owner_id", MainActivity.getUser().getUser_id());
             params.put("group_type", "1");
-            if(latitude==-1000||longitude==-1000) {
+            if (latitude == -1000 || longitude == -1000) {
                 params.put("loc_latitude", "");
                 params.put("loc_longitude", "");
-            }else{
+            } else {
                 params.put("loc_latitude", latitude + "");
                 params.put("loc_longitude", longitude + "");
             }
@@ -380,7 +385,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("event_member", gson.toJson(setGetMembersIds(userList)));
             requestInfo.params = params;
 
-            new HttpTools(getActivity()).post(requestInfo,new HttpCallback() {
+            new HttpTools(getActivity()).post(requestInfo, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -419,57 +424,61 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
     }
 
-    private void setText(){
-        if(!TextUtils.isEmpty(title)){
+    private void setText() {
+        if (!TextUtils.isEmpty(title)) {
             event_title.setText(title);
 
         }
-        if(!TextUtils.isEmpty(content)){
+        if (!TextUtils.isEmpty(content)) {
             event_desc.setText(content);
 
         }
-        if(!TextUtils.isEmpty(location)){
+        if (!TextUtils.isEmpty(location)) {
             position_name.setText(location);
 
         }
-        if(date!=null && date!=0L){
-            date_desc.setText(MyDateUtils.getEventLocalDateStringFromLocal(getParentActivity(),date));
+        if (date != null && date != 0L) {
+            date_desc.setText(MyDateUtils.getEventLocalDateStringFromLocal(getParentActivity(), date));
             mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
 
         }
-        if(!TextUtils.isEmpty(members)){
-            members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+        if (!TextUtils.isEmpty(members)) {
+            members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
+            }.getType());
         }
-        if(!TextUtils.isEmpty(groups)){
-            at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+        if (!TextUtils.isEmpty(groups)) {
+            at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<UserEntity>>() {
+            }.getType());
 
         }
-        if (!TextUtils.isEmpty(users_date)){
-            userList = gson.fromJson(users_date,new TypeToken<ArrayList<UserEntity>>() {}.getType());
+        if (!TextUtils.isEmpty(users_date)) {
+            userList = gson.fromJson(users_date, new TypeToken<ArrayList<UserEntity>>() {
+            }.getType());
             changeData();
         }
 
     }
-    private void cleanText(){
+
+    private void cleanText() {
         event_title.setText("");
         event_desc.setText("");
         position_name.setText("");
         date_desc.setText("");
     }
 
-    private void reomveSP(){
+    private void reomveSP() {
 //        File file = new File("/data/data/"+getParentActivity().getPackageName().toString()+"/shared_prefs","EventNew_date.xml");
 //        if (file.exists()){
 //            file.delete();
 ////            Toast.makeText(getParentActivity(), "删除成功", Toast.LENGTH_LONG).show();
 //        }
-        SharedPreferencesUtils.removeParam(getParentActivity(),"title","");
-        SharedPreferencesUtils.removeParam(getParentActivity(),"content","");
-        SharedPreferencesUtils.removeParam(getParentActivity(),"location","");
-        SharedPreferencesUtils.removeParam(getParentActivity(),"date",0L);
-        SharedPreferencesUtils.removeParam(getParentActivity(),"members_data","");
-        SharedPreferencesUtils.removeParam(getParentActivity(),"Groups_date","");
-        SharedPreferencesUtils.removeParam(getParentActivity(),"users_date","");
+        SharedPreferencesUtils.removeParam(getParentActivity(), "title", "");
+        SharedPreferencesUtils.removeParam(getParentActivity(), "content", "");
+        SharedPreferencesUtils.removeParam(getParentActivity(), "location", "");
+        SharedPreferencesUtils.removeParam(getParentActivity(), "date", 0L);
+        SharedPreferencesUtils.removeParam(getParentActivity(), "members_data", "");
+        SharedPreferencesUtils.removeParam(getParentActivity(), "Groups_date", "");
+        SharedPreferencesUtils.removeParam(getParentActivity(), "users_date", "");
 
     }
 
@@ -492,7 +501,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 goLocationSetting();
                 break;
             case R.id.item_date:
-                showDateTimePicker();
+                if(pickDateTimeDialog==null||!pickDateTimeDialog.isShowing()) {
+                    showDateTimePicker();
+                }
                 break;
         }
     }
@@ -505,27 +516,27 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 public void onClick(View v) {
                     saveAlertDialog.dismiss();
 //                    Long tiem = mCalendar.getTimeInMillis();
-                    if(!TextUtils.isEmpty(event_title.getText().toString().trim())){
+                    if (!TextUtils.isEmpty(event_title.getText().toString().trim())) {
                         SharedPreferencesUtils.setParam(getParentActivity(), "title", event_title.getText().toString());
 //                        Log.i("title=============",event_title.getText().toString());
                     }
-                    if(!TextUtils.isEmpty(event_desc.getText().toString().trim())){
+                    if (!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
                         SharedPreferencesUtils.setParam(getParentActivity(), "content", event_desc.getText().toString());
 //                        Log.i("content=============",event_desc.getText().toString());
                     }
-                    if(!TextUtils.isEmpty(position_name.getText().toString().trim())){
+                    if (!TextUtils.isEmpty(position_name.getText().toString().trim())) {
                         SharedPreferencesUtils.setParam(getParentActivity(), "location", position_name.getText().toString());
 //                        Log.i("location=============",position_name.getText().toString());
                     }
-                    if(!TextUtils.isEmpty(members.trim())){
+                    if (!TextUtils.isEmpty(members.trim())) {
                         SharedPreferencesUtils.setParam(getParentActivity(), "members_data", members);
 //                        Log.i("Set_Spmemeber_date===", Spmemeber_date);
                     }
-                    if(!TextUtils.isEmpty(groups.trim())){
+                    if (!TextUtils.isEmpty(groups.trim())) {
                         SharedPreferencesUtils.setParam(getParentActivity(), "Groups_date", groups);
 //                        Log.i("Set_Groups_date===", Groups_date);
                     }
-                    if(userList.size()>0){
+                    if (userList.size() > 0) {
                         Gson gson = new Gson();
                         SharedPreferencesUtils.setParam(getParentActivity(), "users_date", gson.toJson(userList));
 //                        Log.i("Set_users_date===", users_date);
@@ -558,19 +569,19 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //        MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis())
 //        Long ltime =  (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
         //如果有时间缓存
-        if(mEevent.getGroup_event_date() != null){
+        if (mEevent.getGroup_event_date() != null) {
             Timestamp ts = Timestamp.valueOf(mEevent.getGroup_event_date());
             calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
             datePicker.setCalendar(calendar);
             timePicker.setCalendar(calendar);
-        }else if(date != null && date != 0L){
+        } else if (date != null && date != 0L) {
 
-                Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
-                calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
-                datePicker.setCalendar(calendar);
-                timePicker.setCalendar(calendar);
-                mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
-            }
+            Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
+            calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
+            datePicker.setCalendar(calendar);
+            timePicker.setCalendar(calendar);
+            mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(calendar.getTimeInMillis()));
+        }
         //日历dialog
         pickDateTimeDialog = new MyDialog(getParentActivity(), getString(R.string.title_pick_date_time), dateTimePicker);
         pickDateTimeDialog.setButtonAccept(getString(R.string.accept), new View.OnClickListener() {
@@ -613,21 +624,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void goLocationSetting() {
-        Intent intent;
-        //判断是用百度还是google
-        if (SystemUtil.checkPlayServices(getActivity())) {
-            intent = new Intent(getActivity(), Map4GoogleActivity.class);
-        }else {
-            intent = new Intent(getActivity(), Map4BaiduActivity.class);
-        }
-
-        //        intent.putExtra("has_location", position_name.getText().toString());
-        if (!TextUtils.isEmpty(position_name.getText())) {
-            intent.putExtra("location_name", position_name.getText().toString());
-            intent.putExtra("latitude", latitude);
-            intent.putExtra("longitude", longitude);
-        }
-        startActivityForResult(intent, GET_LOCATION);
+        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude);
+        if(intent!=null)
+            startActivityForResult(intent, GET_LOCATION);
     }
 
     private void goChooseMembers() {
@@ -648,16 +647,27 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 case GET_LOCATION:
                     if (data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
-                        String locationName = data.getStringExtra("location_name");
-                        if (!TextUtils.isEmpty(locationName)) {
-                            position_name.setText(locationName);
-                            mEevent.setLoc_name(locationName);
-                            latitude = data.getDoubleExtra("latitude", 0);
-                            longitude = data.getDoubleExtra("longitude", 0);
-                        }else{
-                            position_name.setText("");
-                            latitude = -1000;
-                            longitude = -1000;
+                        if (SystemUtil.checkPlayServices(getActivity())) {
+                            final Place place = PlacePicker.getPlace(data, getActivity());
+                            if(place!=null) {
+                                String locationName = place.getAddress().toString();
+                                position_name.setText(locationName);
+                                latitude = place.getLatLng().latitude;
+                                longitude = place.getLatLng().longitude;
+                            }
+
+                        }else {
+                            String locationName = data.getStringExtra("location_name");
+                            if (!TextUtils.isEmpty(locationName)) {
+                                position_name.setText(locationName);
+                                mEevent.setLoc_name(locationName);
+                                latitude = data.getDoubleExtra("latitude", 0);
+                                longitude = data.getDoubleExtra("longitude", 0);
+                            } else {
+                                position_name.setText(null);
+                                latitude = -1000;
+                                longitude = -1000;
+                            }
                         }
                     }
                     break;
@@ -671,17 +681,19 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     groups = data.getStringExtra("groups_data");//获取好友选择页面的群组数据
                     at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {
                     }.getType());
+                    userList.clear();
                     userList.addAll(members_data);
-                    List memberList = new ArrayList();
-                    for (int i = 0; i < at_groups_data.size(); i++){
-                        memberList.add(at_groups_data.get(i).getGroup_id());
+                    List groupIdList = new ArrayList();
+                    for (int i = 0; i < at_groups_data.size(); i++) {
+                        groupIdList.add(at_groups_data.get(i).getGroup_id());
                     }
-                    if(memberList.size() != 0){
-                        Log.i("groupsid====", gson.toJson(memberList));
-                        getMembersList(gson.toJson(memberList));
-                    }
+                    if (groupIdList.size() != 0) {
+//                        Log.i("groupsid====", gson.toJson(groupIdList));
+                        getMembersList(gson.toJson(groupIdList));
+                    } else {
 //                    Log.i("groups===", groups);
-                    changeData();
+                        changeData();
+                    }
                     break;
             }
         }
@@ -726,6 +738,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private void changeData() {
         if (userList == null) {
             userList = new ArrayList<>();
+        }
+        for (UserEntity u : userList) {
+            if (u.getUser_id().equals(MainActivity.getUser().getUser_id())) {
+                userList.remove(u);
+            }
         }
         adapter = new MembersGridAdapter(getActivity(), userList);
         gvFriends.setAdapter(adapter);

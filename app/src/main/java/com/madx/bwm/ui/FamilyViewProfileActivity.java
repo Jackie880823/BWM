@@ -33,7 +33,7 @@ public class FamilyViewProfileActivity extends BaseActivity {
     TextView tvID2;
     TextView tvFirstName;
     TextView tvLastName;
-//    TextView tvAge;
+    //    TextView tvAge;
     TextView tvBirthday;
     TextView tvGender;
     TextView tvEmail;
@@ -51,7 +51,6 @@ public class FamilyViewProfileActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
@@ -130,15 +129,12 @@ public class FamilyViewProfileActivity extends BaseActivity {
             }
         });
 
-        if ("F".equals(userEntity.getUser_gender()))
-        {
+        if ("F".equals(userEntity.getUser_gender())) {
             /**
              * begin QK
              */
             tvGender.setText(getResources().getString(R.string.text_female));
-        }
-        else if ("M".equals(userEntity.getUser_gender()))
-        {
+        } else if ("M".equals(userEntity.getUser_gender())) {
             tvGender.setText(getResources().getString(R.string.text_male));
             /**
              * end
@@ -148,15 +144,14 @@ public class FamilyViewProfileActivity extends BaseActivity {
         tvEmail.setText(userEntity.getUser_email());
         tvRegion.setText(userEntity.getUser_location_name());
         String dofeel_code = userEntity.getDofeel_code();
-        if (!TextUtils.isEmpty(dofeel_code))
-        {
+        if (!TextUtils.isEmpty(dofeel_code)) {
             try {
                 String filePath = "";
                 if (dofeel_code.indexOf("_") != -1) {
                     filePath = dofeel_code.replaceAll("_", File.separator);
                 }
                 InputStream is = FamilyViewProfileActivity.this.getAssets().open(filePath);
-                Bitmap bitmap= BitmapFactory.decodeStream(is);
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
                 ivBottomLeft.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();

@@ -13,7 +13,6 @@
     <string name="title_wall_comment">评论</string>
     <string name="title_event_new">新建活动</string>
     <string name="title_event_edit">Event Edit</string>
-    <string name="title_wall_new">Post</string>
     <string name="title_map_choose_location">Choose location</string>
     <string name="title_invited_status">被邀请的会员</string>
     <string name="title_birthday_alert">Birthday Alerts</string>
@@ -707,5 +706,6 @@
     <string name="text_empty_add_member">点击+以添加家庭成员！</string>
     <string name="text_empty_add_group">点击+以创建新群组！</string>
     <string name="text_message_type_here">type message here</string>
+    <string name="waiting_upload">请等待完成上传</string>
     <!--Christopher-->
 </resources>
