@@ -747,7 +747,7 @@ public class GroupSettingActivity extends BaseActivity {
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_leave_group), Toast.LENGTH_SHORT).show();//成功
                                 Intent intent = new Intent(GroupSettingActivity.this, MainActivity.class);
-                                intent.putExtra("leaveGroup", "leaveGroup");
+                                intent.putExtra("jumpIndex", 1);
                                 startActivity(intent);
                                 //finish();
                             } else {

@@ -79,7 +79,7 @@ public class MainActivity extends BaseActivity {
     //以下为暂定全局变量
     private static boolean hasUpdate;
     private static MainActivity mainActivityInstance;
-    private String leaveGroup;
+    private int jumpIndex;
     public static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
     private int leavePagerIndex = 0;
 
@@ -314,11 +314,10 @@ public class MainActivity extends BaseActivity {
 
 
         leavePagerIndex = PreferencesUtil.getValue(this, LAST_LEAVE_INDEX, 0);
-        leaveGroup = getIntent().getStringExtra("leaveGroup");
-        if ("leaveGroup".equals(leaveGroup)) {
-            leavePagerIndex = 3;
+        jumpIndex = getIntent().getIntExtra("jumpIndex", -1);
+        if (jumpIndex != -1) {
+            leavePagerIndex = jumpIndex;
         }
-
     }
 
     private boolean isEventFragmentDate() {
@@ -489,7 +488,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public enum TabEnum {
-        family, chat,wall, event, more;
+        family, chat, wall, event, more;
     }
 
     SnackBar snackBar;

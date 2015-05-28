@@ -82,6 +82,8 @@ public class InviteMemberActivity extends BaseActivity {
     private List<FamilyMemberEntity> selectMemberEntityList;
     private List<FamilyGroupEntity> selectGroupEntityList;
     private boolean isFirstData = true;
+    private boolean isCreateNewGroup;
+    private int jumpIndex=0;
 
     Handler handler = new Handler() {
         @Override
@@ -154,6 +156,8 @@ public class InviteMemberActivity extends BaseActivity {
         Intent intent = getIntent();
         String memberData = intent.getStringExtra("members_data");//需要传过来的已选中的gson格式的UserEntity或FamilyMemberEntity
         String groupData = intent.getStringExtra("groups_data");//需要传过来的已选中的gson格式的GroupEntity或FamilyGroupEntity
+        isCreateNewGroup = intent.getBooleanExtra("isCreateNewGroup", false);
+        jumpIndex=intent.getIntExtra("jumpIndex",0);
         type = intent.getIntExtra("type", 0);//传过来1表示要隐藏；0表示不隐藏
         List<FamilyMemberEntity> memberSelectList = null;
         if (memberData != null) {
@@ -696,8 +700,35 @@ public class InviteMemberActivity extends BaseActivity {
         Gson gson = new Gson();
         intent.putExtra("members_data", gson.toJson(selectMemberEntityList));
         intent.putExtra("groups_data", gson.toJson(selectGroupEntityList));
-        setResult(RESULT_OK, intent);
-        finish();
+        if (isCreateNewGroup) {
+            if ((selectMemberEntityList != null && selectMemberEntityList.size() > 0) ||
+                    (selectGroupEntityList != null && selectGroupEntityList.size() > 0)) {
+                intent.setClass(mContext, CreateGroupDialogActivity.class);
+                intent.putExtra("jumpIndex",jumpIndex);
+                startActivity(intent);
+            } else {
+                showSelectDialog();
+            }
+        } else {
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+    }
+
+    private void showSelectDialog() {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.text_create_group_members_least_two));
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
     }
 
     @Override
