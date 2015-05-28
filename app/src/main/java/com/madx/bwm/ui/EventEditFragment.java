@@ -84,6 +84,8 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     private TextView date_desc;
     private TextView position_name;
 
+    private boolean isFinish;
+
     private double latitude = -1000;
     private double longitude = -1000;
     private ProgressBarCircularIndeterminate progressBar;
@@ -95,6 +97,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         progressBar = getViewById(R.id.progressBar);
         mEevent = getParentActivity().eventEntity;
         gvFriends = getViewById(R.id.gv_all_friends);
+        isFinish = true;
 
         changeData();
 
@@ -127,8 +130,11 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                     // showSaveAlert();
                     getParentActivity().finish();
                 } else if (v.getId() == getParentActivity().rightButton.getId()) {
-                    //？？右边打勾按钮触发的事件的事件
-                    submit();
+                    //右边打勾按钮触发的事件的事件
+                    if (isFinish){
+                        isFinish = false;
+                        submit();
+                    }
                 }
                 return true;
             }
