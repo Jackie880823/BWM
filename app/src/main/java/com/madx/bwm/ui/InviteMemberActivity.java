@@ -706,6 +706,7 @@ public class InviteMemberActivity extends BaseActivity {
                 intent.setClass(mContext, CreateGroupDialogActivity.class);
                 intent.putExtra("jumpIndex",jumpIndex);
                 startActivity(intent);
+                finish();
             } else {
                 showSelectDialog();
             }

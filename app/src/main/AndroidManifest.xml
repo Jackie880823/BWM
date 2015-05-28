@@ -273,9 +273,6 @@
             android:name=".ui.PersonalPictureActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SelectPeopleActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.FamilyProfileActivity"
             android:screenOrientation="portrait" />
         <activity
