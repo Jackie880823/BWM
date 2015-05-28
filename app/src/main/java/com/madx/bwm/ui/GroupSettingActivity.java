@@ -3,6 +3,8 @@ package com.madx.bwm.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
@@ -27,6 +29,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.entity.FamilyGroupEntity;
 import com.madx.bwm.entity.PhotoEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
@@ -68,14 +71,16 @@ public class GroupSettingActivity extends BaseActivity {
     private String groupId;//当前群Id
     private String groupName;//当前群名字
     private String groupOwnerId;
-
-    Gson gson = new Gson();
-
-    public List<UserEntity> members_data = new ArrayList<UserEntity>();//传到选人的界面上去的
-
+    private Gson gson;
     private final static int GET_MEMBERS = 2;
     private final static int SET_GROUP_PIC_NAME = 3;
     private final static int GET_RELATIONSHIP = 4;
+    private List<String> memberList;
+    private List<String> addMemberList;
+    private Context mContext;
+    private static final int GET_DATA = 0X11;
+    private String groupData = null;
+    private List<FamilyGroupEntity> familyGroupEntityList;
 
     @Override
     public int getLayout() {
@@ -110,11 +115,10 @@ public class GroupSettingActivity extends BaseActivity {
     @Override
     protected void titleRightEvent() {
         //是否会出现list数据还没下载完就点击进去了。此时不是最新数据。这里需要怎么处理呢？
-        Intent intent = new Intent(GroupSettingActivity.this, SelectPeopleActivity.class);
-
+        Intent intent = new Intent(GroupSettingActivity.this, InviteMemberActivity.class);
         intent.putExtra("type", 1);
         intent.putExtra("members_data", new Gson().toJson(userList));
-
+        intent.putExtra("groups_data", new Gson().toJson(familyGroupEntityList));
         startActivityForResult(intent, GET_MEMBERS);
     }
 
@@ -125,19 +129,23 @@ public class GroupSettingActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        //groupEntity = (GroupEntity) getIntent().getExtras().getSerializable("groupEntity");
+        mContext = this;
         groupId = getIntent().getStringExtra("groupId");
         groupName = getIntent().getStringExtra("groupName");
         llSetting = getViewById(R.id.ll_setting);
-
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_group_name);
         tvNumMembers = getViewById(R.id.tv_num_members);
-
         lvMembers = getViewById(R.id.lv_members);
-
         btnLeaveGroup = getViewById(R.id.btn_leave_group);
-
+        memberList = new ArrayList();
+        addMemberList = new ArrayList();
+        familyGroupEntityList = new ArrayList<>();
+        FamilyGroupEntity groupEntity = new FamilyGroupEntity();
+        groupEntity.setGroup_id(groupId);
+        groupEntity.setGroup_name(groupName);
+        familyGroupEntityList.add(groupEntity);
+        gson = new Gson();
         VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName.setText(groupName);
         //groupName = groupEntity.getGroup_name();
@@ -271,11 +279,12 @@ public class GroupSettingActivity extends BaseActivity {
                 userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
 
-                if (userList != null) {
+                if (userList != null && userList.size() > 0) {
+                    for (UserEntity user : userList) {
+                        addMemberList.add(user.getUser_id());
+                    }
                     GroupSettingAdapter groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
-
                     lvMembers.setAdapter(groupSettingAdapter);
-
                     tvNumMembers.setText(userList.size() + getResources().getString(R.string.text_members));
 
                 }
@@ -601,30 +610,120 @@ public class GroupSettingActivity extends BaseActivity {
         showNonAdminDialog0.show();
     }
 
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case GET_DATA:
+                    List<UserEntity> userList = (List<UserEntity>) msg.obj;
+                    List<UserEntity> userEntityList = new ArrayList<>();
+                    userEntityList.addAll(userList);
+                    if (memberList.size() > 0) {
+                        for (UserEntity userEntity : userList) {
+                            for (String userId : memberList) {
+                                if (userEntity.getUser_id().equals(userId)) {
+                                    userEntityList.remove(userEntity);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    for (UserEntity user : userEntityList) {
+                        addMemberList.add(user.getUser_id());
+                    }
+                    if (addMemberList.size() > 0) {
+                        addGroupMember(gson.toJson(addMemberList));
+                    }
+                    break;
+            }
+        }
+    };
+
+    public void getSelectMembersList(String groupIdList) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("user_id", MainActivity.getUser().getUser_id());
+        params.put("group_list", groupIdList);
+        String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
+        new HttpTools(mContext).get(url, null, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                List<UserEntity> userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                }.getType());
+                if (userList != null && userList.size() > 0) {
+                    Message.obtain(handler, GET_DATA, userList).sendToTarget();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(mContext, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == this.RESULT_OK) {
             switch (requestCode) {
                 case GET_MEMBERS:
                     String members = data.getStringExtra("members_data");
-                    members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
+                    groupData = data.getStringExtra("groups_data");
+                    List<UserEntity> userEntityList = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                     }.getType());
-
-                    List memberList = new ArrayList();//要添加的成员user_id，需要变成json作为一个接口变量
-
-                    for (int i = 0; i < members_data.size(); i++) {
-                        memberList.add(members_data.get(i).getUser_id());
+                    if (null != userEntityList && userEntityList.size() > 0) {
+                        for (UserEntity user : userEntityList) {
+                            String userId = user.getUser_id();
+                            if (!memberList.contains(userId)) {
+                                addMemberList.add(user.getUser_id());
+                            }
+                        }
                     }
-
-                    if (memberList.size() != 0) {
-                        addGroupMember(gson.toJson(memberList));
+                    List<FamilyGroupEntity> groupEntityList = null;
+                    if (null != groupData) {
+                        groupEntityList = new GsonBuilder().create().fromJson(groupData, new TypeToken<ArrayList<FamilyGroupEntity>>() {
+                        }.getType());
+                    }
+                    if (groupEntityList != null && groupEntityList.size() > 0) {
+                        familyGroupEntityList.addAll(groupEntityList);
+                        List<String> groupIdList = new ArrayList<>();
+                        for (FamilyGroupEntity familyGroupEntity : groupEntityList) {
+                            groupIdList.add(familyGroupEntity.getGroup_id());
+                        }
+                        if (addMemberList.size() > 0) {
+                            memberList.addAll(addMemberList);
+                        }
+                        getSelectMembersList(new Gson().toJson(groupIdList));
                     } else {
+                        if (addMemberList.size() > 0) {
+                            addGroupMember(gson.toJson(addMemberList));
+                        }
                     }
-
                     break;
 
                 /** christopher begin */
-                //TODO
                 case SET_GROUP_PIC_NAME:
                     finish();
 //                    tvName.setText(data.getStringExtra("groupName"));
@@ -747,7 +846,7 @@ public class GroupSettingActivity extends BaseActivity {
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_leave_group), Toast.LENGTH_SHORT).show();//成功
                                 Intent intent = new Intent(GroupSettingActivity.this, MainActivity.class);
-                                intent.putExtra("leaveGroup", "leaveGroup");
+                                intent.putExtra("jumpIndex", 1);
                                 startActivity(intent);
                                 //finish();
                             } else {

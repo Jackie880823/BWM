@@ -26,14 +26,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
@@ -48,9 +44,9 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.InviteMemberActivity;
 import com.madx.bwm.ui.MainActivity;
-import com.madx.bwm.ui.Map4BaiduActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.SystemUtil;
 import com.madx.bwm.util.UIUtil;
@@ -218,7 +214,15 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     MyDialog myDialog;
 
+    /**
+     * 返回检测，如正在上传或有数据返回为true，表示不能禁止返回
+     * @return
+     */
     public boolean backCheck() {
+        if(rlProgress.getVisibility() == View.VISIBLE) {
+            MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
+            return  true;
+        }
         if(tasks != null && tasks.size() > 0) {
             // 图片上任务正在执行
             Log.i(TAG, "backCheck& tasks size: " + tasks.size());
@@ -618,10 +622,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     editor.clear().commit();
                     getParentActivity().setResult(Activity.RESULT_OK);
                     MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
-                    sendEmptyMessage(HIDE_PROGRESS);
                     if(getActivity() != null) {
                         getActivity().finish();
                     }
+                    sendEmptyMessage(HIDE_PROGRESS);
                     break;
                 case SHOW_PROGRESS:
                     rlProgress.setVisibility(View.VISIBLE);
@@ -777,35 +781,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goLocationSetting() {
-        Intent intent = null;
-        //判断是用百度还是google
-        if (SystemUtil.checkPlayServices(getActivity())) {
-//            intent = new Intent(getActivity(), Map4GoogleActivity.class);
-            try {
-                PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-//                intentBuilder.setLatLngBounds(new LatLngBounds(new LatLng(latitude,longitude),new LatLng(latitude,longitude)));
-                intent = intentBuilder.build(getActivity());
-
-                // Hide the pick option in the UI to prevent users from starting the picker
-                // multiple times.
-//                showPickAction(false);
-
-            } catch (GooglePlayServicesRepairableException e) {
-                GooglePlayServicesUtil
-                        .getErrorDialog(e.getConnectionStatusCode(), getActivity(), 0);
-            } catch (GooglePlayServicesNotAvailableException e) {
-                Toast.makeText(getActivity(), "Google Play Services is not available.",
-                        Toast.LENGTH_LONG)
-                        .show();
-            }
-        }else {
-            intent = new Intent(getActivity(), Map4BaiduActivity.class);
-//        intent.putExtra("has_location", position_name.getText().toString());
-            intent.putExtra("location_name", location_desc.getText().toString());
-            intent.putExtra("latitude", latitude);
-            intent.putExtra("longitude", longitude);
-        }
-        startActivityForResult(intent, GET_LOCATION);
+        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude);
+        if(intent!=null)
+            startActivityForResult(intent, GET_LOCATION);
     }
 
     private void goChooseMembers() {

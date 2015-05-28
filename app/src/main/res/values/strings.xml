@@ -742,5 +742,6 @@
     <string name="text_empty_add_member">Tap on the + to add family member.</string>
     <string name="text_empty_add_group">Tap on the + to create group.</string>
     <string name="text_message_type_here">type message here</string>
+    <string name="waiting_upload">Waiting for the upload to complete, please</string>
     <!--Christopher-->
 </resources>

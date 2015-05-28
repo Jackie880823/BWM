@@ -6,10 +6,11 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,12 +23,19 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.widgets.Dialog;
 import com.gc.materialdesign.widgets.ProgressDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.entity.FamilyGroupEntity;
 import com.madx.bwm.entity.GroupEntity;
+import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.PicturesCacheUtil;
+import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.MD5Util;
 import com.madx.bwm.widget.MyDialog;
 
 import org.json.JSONException;
@@ -38,14 +46,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 public class CreateGroupDialogActivity extends BaseActivity {
-    public static final int TAKE_PHOTO = 1;
-    public static final int CROP_PHOTO = 2;
     private ImageView ivGroupPic;
     private EditText etGroupName;
     private Button btnDone;
@@ -58,6 +65,12 @@ public class CreateGroupDialogActivity extends BaseActivity {
     private String imagePath;
     private TextView member_num;
     private Context mContext;
+    private List<String> selectUserList;
+    private List<FamilyGroupEntity> selectGroupEntityList;
+    private static final int GET_DATA = 0X11;
+    private static final int JUMP_SELECT_MEMBER = 0X12;
+    private int jumpIndex = 0;
+    private List<UserEntity> selectUserEntityList;
     /**
      * 头像缓存文件名称
      */
@@ -95,15 +108,27 @@ public class CreateGroupDialogActivity extends BaseActivity {
     }
 
     @Override
+    protected void titleLeftEvent() {
+//        super.titleLeftEvent();
+        backToLastPage();
+    }
+
+    private void backToLastPage() {
+        Intent intent = new Intent(mContext, InviteMemberActivity.class);
+        String selectMemberData = new Gson().toJson(selectUserEntityList);
+        intent.putExtra("members_data", selectMemberData);
+        intent.putExtra("type", 0);
+        startActivityForResult(intent, JUMP_SELECT_MEMBER);
+    }
+
+    @Override
     protected Fragment getFragment() {
         return null;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (CreateGroupDialogActivity.RESULT_OK == resultCode) {
-
             switch (requestCode) {
                 // 如果是直接从相册获取
                 case REQUEST_HEAD_PHOTO:
@@ -127,7 +152,6 @@ public class CreateGroupDialogActivity extends BaseActivity {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
                     }
                     break;
 
@@ -148,17 +172,52 @@ public class CreateGroupDialogActivity extends BaseActivity {
                                 }
                             }
                         } catch (FileNotFoundException e) {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                     }
                     break;
-
+                case JUMP_SELECT_MEMBER:
+                    if (data != null) {
+                        initData(data);
+                    }
                 default:
                     break;
 
             }
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void initData(Intent data) {
+        selectUserList.clear();
+        selectUserEntityList.clear();
+        String members_data = data.getStringExtra("members_data");
+        if (members_data != null) {
+            List<UserEntity> userEntityList = new GsonBuilder().create().fromJson(members_data, new TypeToken<ArrayList<UserEntity>>() {
+            }.getType());
+            if (userEntityList != null && userEntityList.size() > 0) {
+                for (UserEntity userEntity : userEntityList) {
+                    selectUserList.add(userEntity.getUser_id());
+                }
+                selectUserEntityList.addAll(userEntityList);
+            }
+        }
+        String groups_data = data.getStringExtra("groups_data");
+        List<FamilyGroupEntity> groupEntityList = null;
+        if (null != groups_data) {
+            groupEntityList = new GsonBuilder().create().fromJson(groups_data, new TypeToken<ArrayList<FamilyGroupEntity>>() {
+            }.getType());
+        }
+        if (groupEntityList != null && groupEntityList.size() > 0) {
+            List<String> groupIdList = new ArrayList<>();
+            for (FamilyGroupEntity familyGroupEntity : groupEntityList) {
+                groupIdList.add(familyGroupEntity.getGroup_id());
+            }
+            getMembersList(new Gson().toJson(groupIdList));
+        } else {
+            String memberFormat = String.format(getString(R.string.text_members_num), selectUserList.size() + "");
+            member_num.setText(memberFormat);
+            groupMembers = new Gson().toJson(selectUserList);
         }
     }
 
@@ -217,13 +276,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
         List<ResolveInfo> list = CreateGroupDialogActivity.this.getPackageManager().queryIntentActivities(intent, 0);
         int size = list.size();
         if (size == 0) {
-            /**
-             * begin QK
-             */
             Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_no_found_reduce), Toast.LENGTH_SHORT).show();
-            /**
-             * end
-             */
             return;
         } else {
             // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
@@ -257,7 +310,6 @@ public class CreateGroupDialogActivity extends BaseActivity {
     }
 
     private void uploadImage() {
-
         if (mCropImagedUri == null) {
             Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_choose_your_group_picture), Toast.LENGTH_SHORT).show();
             btnDone.setEnabled(true);
@@ -272,7 +324,8 @@ public class CreateGroupDialogActivity extends BaseActivity {
         progressDialog.show();
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
-        params.put("fileName", "GroupPicture" + MainActivity.getUser().getUser_id() + groupMembers);
+        String fileName = MD5Util.string2MD5(System.currentTimeMillis() + "");
+        params.put("fileName", fileName);
         params.put("mimeType", "image/png");
         params.put("file", f);
         params.put("group_owner_id", MainActivity.getUser().getUser_id());
@@ -300,8 +353,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
                         btnDone.setEnabled(true);
                         Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_fail_to_create_group), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_success_to_create_group), Toast.LENGTH_SHORT).show();
-
+                        //                      Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_success_to_create_group), Toast.LENGTH_SHORT).show();
                         GroupEntity groupEntity = new GroupEntity();
                         groupEntity.setGroup_id(groupId);
                         groupEntity.setGroup_name(etGroupName.getText().toString());
@@ -311,10 +363,9 @@ public class CreateGroupDialogActivity extends BaseActivity {
                         intent.putExtra("titleName", groupEntity.getGroup_name());
                         //intent.putExtra("groupEntity",groupEntity);
                         startActivity(intent);//创建完群组直接跳转到聊天界面，那么前面的CreateGroupActivity和CreateGroupDialogActivity界面如何处理???
-                        CreateGroupActivity.instance.finish();
                         progressDialog.dismiss();
-                        finish();
 
+                        finish();
                     }
 
                 } catch (JSONException e) {
@@ -395,18 +446,50 @@ public class CreateGroupDialogActivity extends BaseActivity {
         showCameraAlbum.show();
     }
 
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case GET_DATA:
+                    List<UserEntity> userList = (List<UserEntity>) msg.obj;
+                    List<UserEntity> userEntityList = new ArrayList<>();
+                    userEntityList.addAll(userList);
+                    if (selectUserList.size() > 0) {
+                        for (UserEntity userEntity : userList) {
+                            for (String userId : selectUserList) {
+                                if (userEntity.getUser_id().equals(userId)) {
+                                    userEntityList.remove(userEntity);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    for (UserEntity user : userEntityList) {
+                        selectUserList.add(user.getUser_id());
+                    }
+                    selectUserEntityList.addAll(userEntityList);
+                    String memberFormat = String.format(getString(R.string.text_members_num), selectUserList.size() + "");
+                    member_num.setText(memberFormat);
+                    groupMembers = new Gson().toJson(selectUserList);
+                    break;
+            }
+        }
+    };
+
     @Override
     public void initView() {
         mContext = this;
+        selectUserList = new ArrayList<>();
+        selectUserEntityList = new ArrayList<>();
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
-        groupMembers = getIntent().getStringExtra("members_json");//上一个界面传来的成员数据(JSON格式)
         member_num = getViewById(R.id.member_num);
         ivGroupPic = getViewById(R.id.creategroup_imageview);
         etGroupName = getViewById(R.id.creategroup_editText);
         btnDone = getViewById(R.id.creategroup_button);
-        String memberLength = getIntent().getIntExtra("memberLength", 0) + "";
-        String memberFormat = String.format(getString(R.string.text_members_num), memberLength);
-        member_num.setText(memberFormat);
+        //groupMembers = getIntent().getStringExtra("members_json");//上一个界面传来的成员数据(JSON格式)
+        jumpIndex = getIntent().getIntExtra("jumpIndex", 0);
+        initData(getIntent());
         ivGroupPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -438,7 +521,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
         member_num.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                backToLastPage();
             }
         });
     }
@@ -463,6 +546,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MainActivity.class);
+                intent.putExtra("jumpIndex", jumpIndex);
                 startActivity(intent);
             }
         });
@@ -472,6 +556,50 @@ public class CreateGroupDialogActivity extends BaseActivity {
     @Override
     public void requestData() {
 
+    }
+
+    public void getMembersList(String groupIdList) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("user_id", MainActivity.getUser().getUser_id());
+        params.put("group_list", groupIdList);
+        String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
+        new HttpTools(mContext).get(url, null, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                List<UserEntity> userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                }.getType());
+                if (userList != null && userList.size() > 0) {
+                    Message.obtain(handler, GET_DATA, userList).sendToTarget();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(mContext, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     @Override

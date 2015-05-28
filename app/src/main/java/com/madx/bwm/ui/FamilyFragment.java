@@ -284,14 +284,14 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     }
 
     private void showMemberEmptyView() {
-        if (memberList != null) {
-            memberList.clear();
-            FamilyMemberEntity member = new FamilyMemberEntity();
-            member.setUser_given_name(FAMILY_TREE);
-            member.setUser_id(FAMILY_TREE);
-            memberList.add(member);
-        }
-        memberAdapter.addNewData(memberList);
+//        if (memberList != null) {
+//            memberList.clear();
+//            FamilyMemberEntity member = new FamilyMemberEntity();
+//            member.setUser_given_name(FAMILY_TREE);
+//            member.setUser_id(FAMILY_TREE);
+//            memberList.add(member);
+//        }
+//        memberAdapter.addNewData(memberList);
         emptyMemberLinear.setVisibility(View.VISIBLE);
         emptyMemberIv.setImageResource(R.drawable.family_member_msg_empty);
         emptyMemberTv.setText(getString(R.string.text_empty_add_member));
@@ -712,7 +712,11 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         tvCreateNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), CreateGroupActivity.class));
+                //startActivity(new Intent(getActivity(), CreateGroupActivity.class));
+                Intent intent=new Intent(getActivity(), InviteMemberActivity.class);
+                intent.putExtra("isCreateNewGroup",true);
+                intent.putExtra("jumpIndex",0);
+                startActivity(intent);
                 showSelectDialog.dismiss();
             }
         });

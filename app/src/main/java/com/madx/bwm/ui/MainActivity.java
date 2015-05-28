@@ -23,10 +23,8 @@ import com.madx.bwm.adapter.MyFragmentPagerAdapter;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.ui.wall.WallNewActivity;
-import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.PreferencesUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +79,7 @@ public class MainActivity extends BaseActivity {
     //以下为暂定全局变量
     private static boolean hasUpdate;
     private static MainActivity mainActivityInstance;
-    private String leaveGroup;
+    private int jumpIndex;
     public static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
     private int leavePagerIndex = 0;
 
@@ -101,6 +99,7 @@ public class MainActivity extends BaseActivity {
 
 
         //for default
+        setDrawable();
         changeTitleColor(R.color.tab_color_press5);
         changeTitle(R.string.title_tab_my_family);
         leftButton.setVisibility(View.INVISIBLE);
@@ -315,11 +314,10 @@ public class MainActivity extends BaseActivity {
 
 
         leavePagerIndex = PreferencesUtil.getValue(this, LAST_LEAVE_INDEX, 0);
-        leaveGroup = getIntent().getStringExtra("leaveGroup");
-        if ("leaveGroup".equals(leaveGroup)) {
-            leavePagerIndex = 3;
+        jumpIndex = getIntent().getIntExtra("jumpIndex", -1);
+        if (jumpIndex != -1) {
+            leavePagerIndex = jumpIndex;
         }
-
     }
 
     private boolean isEventFragmentDate() {
@@ -490,7 +488,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public enum TabEnum {
-        family, chat,wall, event, more;
+        family, chat, wall, event, more;
     }
 
     SnackBar snackBar;

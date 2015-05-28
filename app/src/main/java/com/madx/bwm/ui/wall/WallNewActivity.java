@@ -32,9 +32,9 @@ public class WallNewActivity extends BaseActivity {
     protected void titleLeftEvent() {
         Fragment fragment = getFragmentInstance();
         if(fragment instanceof WallNewFragment) {
-            canBack = ((WallNewFragment) fragment).backCheck();
+            banBack = ((WallNewFragment) fragment).backCheck();
         }
-        if(!canBack) {
+        if(!banBack) {
             super.titleLeftEvent();
         }
     }
@@ -70,7 +70,7 @@ public class WallNewActivity extends BaseActivity {
 
     }
 
-    private boolean canBack;
+    private boolean banBack;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -79,10 +79,11 @@ public class WallNewActivity extends BaseActivity {
             if(event.getAction() == KeyEvent.ACTION_DOWN) {
                 Fragment fragment = getFragmentInstance();
                 if(fragment instanceof WallNewFragment) {
-                    canBack = ((WallNewFragment) fragment).backCheck();
+                    banBack = ((WallNewFragment) fragment).backCheck();
                 }
             }
-            return canBack ? canBack : super.dispatchKeyEvent(event);
+            Log.i(TAG, "dispatchKeyEvent& banBack: " + banBack);
+            return banBack ? banBack : super.dispatchKeyEvent(event);
         }
         return super.dispatchKeyEvent(event);
     }

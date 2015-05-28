@@ -128,7 +128,11 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         tvCreateNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), CreateGroupActivity.class));
+                //startActivity(new Intent(getActivity(), CreateGroupActivity.class));
+                Intent intent=new Intent(getActivity(), InviteMemberActivity.class);
+                intent.putExtra("isCreateNewGroup",true);
+                intent.putExtra("jumpIndex",1);
+                startActivity(intent);
                 showSelectDialog.dismiss();
             }
         });
