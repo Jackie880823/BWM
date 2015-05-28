@@ -29,6 +29,7 @@
     <string name="text_canceled">已取消</string>
     <string name="draft_tips_title">保存为草稿</string>
     <string name="draft_ask_save">您要保存为草稿吗?</string>
+    <string name="msg_date_not_commentbim_now">评论没有发送完成</string>
     <string name="event_accept">YES</string>
     <string name="event_cancel">NO</string>
     <string name="msg_action_successed">Action successful</string>

@@ -94,6 +94,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     private boolean isRefresh;
     private boolean isComment;
+    private boolean isCommentBim;
     private int startIndex = 0;
     private int currentPage = 1;
     private final static int offset = 20;
@@ -277,6 +278,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void initView() {
         isComment = true;
+        isCommentBim = true;
         if(mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getParentActivity(), R.string.text_loading);
         }
@@ -383,6 +385,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onReceiveBitmapUri(Uri uri) {
+                    isCommentBim = false;
                     mUri = uri;
                     hideAllViewState();
                     if (mUri != null) {
@@ -492,6 +495,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
                         getActivity().startActivityForResult(intent, 1);
+                    }else if(v.getId() == getParentActivity().leftButton.getId()){
+                        if (isCommentBim){
+                            getParentActivity().finish();
+                        }else {
+                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                        }
+
                     }
                     return false;
                 }
@@ -854,6 +864,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onResult(String string) {
                     startIndex = 0;
                     isRefresh = true;
+                    isCommentBim = true;
                     mUri = null;
                     requestComment();
                     getParentActivity().setResult(Activity.RESULT_OK);
