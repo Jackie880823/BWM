@@ -38,6 +38,7 @@
     <string name="msg_date_not_befort_now">Date must be later than now</string>
     <string name="draft_tips_title">Save as Draft</string>
     <string name="draft_ask_save">Do you want to save as draft for next event?</string>
+    <string name="msg_date_not_commentbim_now">The comments did not send complete</string>
     <string name="event_accept">YES</string>
     <string name="event_cancel">NO</string>
     <string name="text_tips_title">Action</string>
