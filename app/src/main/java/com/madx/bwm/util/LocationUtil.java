@@ -108,9 +108,9 @@ public class LocationUtil implements LocationListener,GoogleApiClient.OnConnecti
 
             //判断是用百度还是google
             if (SystemUtil.checkPlayServices(context)) {
-                if(getLastKnowLocation(context)==null){
-
-                }
+//                if(getLastKnowLocation(context)==null){
+//
+//                }
 //            intent = new Intent(context, Map4GoogleActivity.class);
                 try {
                     PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
