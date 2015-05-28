@@ -382,6 +382,7 @@
     <string name="text_ID_name">Via BondWithMe ID / Username</string>
     <string name="text_QR">Add via Q.R Code</string>
     <string name="text_location">Location</string>
+    <string name="msg_not_open_gps">Please open location service!</string>
     <string name="text_stickers">Stickers</string>
     <string name="text_video">Video</string>
     <string name="text_contact">Contact</string>
