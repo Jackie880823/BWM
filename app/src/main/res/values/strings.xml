@@ -397,9 +397,7 @@
 
 
 
-    <string name="text_call_service_phone">Email us for support</string>
-    <string name="text_service_phone_num">contact.us@bondwithme.com</string>
-    <string name="text_cancel">Cancel</string>
+
     <string name="text_group_name">Group Name</string>
     <string name="text_members">Members</string>
     <string name="text_leave_group">Leave Group</string>
@@ -410,12 +408,6 @@
     <string name="text_reset_password">Reset Password</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
-    <string name="text_from_camera">From Camera</string>
-    <string name="text_from_camera_bottom">Snap a photo of yourself</string>
-    <string name="text_from_album">From Album</string>
-    <string name="text_from_album_bottom">Choose a photo from your Album gallery</string>
-    <string name="text_skip">...SKIP</string>
-    <string name="text_start_bonding">Start Bonding</string>
     <string name="text_wrong_password">Invalid password, please try again.</string>
     <string name="text_not_use_special_characters">Do not use special characters. E.g ,/?!@#*$</string>
     <string name="text_back">Back</string>
@@ -453,12 +445,10 @@
     <string name="text_wall_loved_your_post">love your post</string>
     <string name="title_add_new_members">Add New Members</string>
     <string name="title_album_gallery">Album gallery</string>
-    <string name="title_country_code">Country Code</string>
-    <string name="title_family_profile">Profile</string>
-    <string name="title_forget_password">Forget Password</string>
+
     <string name="title_group_setting">Group Setting</string>
     <string name="title_group_info">Group Info</string>
-    <string name="title_personal_information">Personal Information</string>
+
     <string name="title_me">Me</string>
     <string name="title_my_profile">My Profile</string>
     <string name="title_path_relationship">Path &amp; Relationship</string>
@@ -643,8 +633,23 @@
 
     <!--Christopher-->
 
+    <string name="title_personal_information">Personal Information</string>
+    <string name="title_country_code">Country Code</string>
+    <string name="title_family_profile">Profile</string>
+    <string name="title_forget_password">Forget Password</string>
+
     <string name="text_next">Next</string>
     <string name="text_or">or</string>
+    <string name="text_call_service_phone">Email us for support</string>
+    <string name="text_service_phone_num">contact.us@bondwithme.com</string>
+    <string name="text_cancel">Cancel</string>
+
+    <string name="text_from_camera">From Camera</string>
+    <string name="text_from_camera_bottom">Snap a photo of yourself</string>
+    <string name="text_from_album">From Album</string>
+    <string name="text_from_album_bottom">Choose a photo from your Album gallery</string>
+    <string name="text_skip">...SKIP</string>
+    <string name="text_start_bonding">Start Bonding</string>
 
     <!-- Login 界面 -->
     <string name="text_sign_up">SIGN UP</string>
