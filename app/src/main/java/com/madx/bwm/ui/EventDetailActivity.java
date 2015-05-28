@@ -84,6 +84,12 @@ public class EventDetailActivity extends BaseActivity {
     boolean changeMode;
 
     @Override
+    protected void titleLeftEvent() {
+        if(commandlistener!=null)
+            commandlistener.execute(leftButton);
+    }
+
+    @Override
     protected void titleRightEvent() {
 
         if (commandlistener != null)

@@ -38,6 +38,7 @@
     <string name="msg_date_not_befort_now">Date must be later than now</string>
     <string name="draft_tips_title">Save as Draft</string>
     <string name="draft_ask_save">Do you want to save as draft for next event?</string>
+    <string name="msg_date_not_commentbim_now">The comments did not send complete</string>
     <string name="event_accept">YES</string>
     <string name="event_cancel">NO</string>
     <string name="text_tips_title">Action</string>
@@ -741,5 +742,6 @@
     <string name="text_empty_add_member">Tap on the + to add family member.</string>
     <string name="text_empty_add_group">Tap on the + to create group.</string>
     <string name="text_message_type_here">type message here</string>
+    <string name="waiting_upload">Waiting for the upload to complete, please</string>
     <!--Christopher-->
 </resources>
