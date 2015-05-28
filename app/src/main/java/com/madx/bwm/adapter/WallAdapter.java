@@ -1,7 +1,6 @@
 package com.madx.bwm.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +32,7 @@ import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.MainActivity;
-import com.madx.bwm.ui.Map4BaiduActivity;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.widget.CircularNetworkImage;
 
@@ -353,13 +352,10 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
     }
 
     private void gotoLocationSetting(WallEntity wall) {
-        Intent intent = new Intent(mContext, Map4BaiduActivity.class);
-        //        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
-        //        intent.putExtra("has_location", position_name.getText().toString());
-        intent.putExtra("location_name", wall.getLoc_name());
-        intent.putExtra("latitude", Double.valueOf(wall.getLoc_latitude()));
-        intent.putExtra("longitude", Double.valueOf(wall.getLoc_longitude()));
-        mContext.startActivity(intent);
+        if(wall.getLoc_latitude()==null||wall.getLoc_longitude()==null){
+            return;
+        }
+        LocationUtil.goNavigation(mContext, Double.valueOf(wall.getLoc_latitude()),Double.valueOf(wall.getLoc_longitude()));
     }
 
 
