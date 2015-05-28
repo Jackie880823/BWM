@@ -650,7 +650,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                         if (SystemUtil.checkPlayServices(getActivity())) {
                             final Place place = PlacePicker.getPlace(data, getActivity());
                             if(place!=null) {
-                                String locationName = place.getAddress().toString();
+//                                String locationName = place.getAddress().toString();
+                                String locationName = place.getName().toString();
+                                //TODO 弹窗输入目标名称
+                                if(locationName==null){
+
+                                }
                                 position_name.setText(locationName);
                                 latitude = place.getLatLng().latitude;
                                 longitude = place.getLatLng().longitude;
