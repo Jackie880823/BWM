@@ -108,6 +108,9 @@ public class StickerMainFragment extends Fragment {
     private void addImageList() {
         if (STICKER_NAME_LIST != null && STICKER_NAME_LIST.size() > 0) {
             for (String string : STICKER_NAME_LIST) {
+                if(null==string){
+                    continue;
+                }
                 List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(getActivity(), string);
                 if (null != stickerAllNameList) {
                     String iconPath = string + File.separator + stickerAllNameList.get(0);
