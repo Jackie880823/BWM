@@ -156,7 +156,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     } else {
                         getParentActivity().finish();
                     }
-//                    getParentActivity().finish();
                 } else if (v.getId() == getParentActivity().rightButton.getId()) {
                     reomveSP();
                     submit();
@@ -186,14 +185,20 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //             Log.i("Spmemeber_date=====================",date_desc.getText().toString().trim());
             return true;
         }
-        if (members != null) {
-            String tempdate = members.trim().replaceAll("\\[([^\\]]*)\\]", "$1");//处理两边的中括号
-            if (!TextUtils.isEmpty(tempdate.trim())) {
-                return true;
-            }
-        }
-        if (groups != null) {
-            String userDate = groups.trim().replaceAll("\\[([^\\]]*)\\]", "$1");
+//        if (members != null) {
+//            String tempdate = members.trim().replaceAll("\\[([^\\]]*)\\]", "$1");//处理两边的中括号
+//            if (!TextUtils.isEmpty(tempdate.trim())) {
+//                return true;
+//            }
+//        }
+//        if (groups != null) {
+//            String userDate = groups.trim().replaceAll("\\[([^\\]]*)\\]", "$1");
+//            if (!TextUtils.isEmpty(userDate.trim())) {
+//                return true;
+//            }
+//        }
+        if (users_date != null) {
+            String userDate = users_date.trim().replaceAll("\\[([^\\]]*)\\]", "$1");
             if (!TextUtils.isEmpty(userDate.trim())) {
                 return true;
             }
@@ -212,13 +217,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //    }
 
     private void bindData2View() {
-//        Log.i("bindData2View====================================="," ");
         title = SharedPreferencesUtils.getParam(getParentActivity(), "title", "").toString();
         content = SharedPreferencesUtils.getParam(getParentActivity(), "content", "").toString();
         location = SharedPreferencesUtils.getParam(getParentActivity(), "location", "").toString();
         date = (Long) SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(), "date", 0L);
-        members = SharedPreferencesUtils.getParam(getParentActivity(), "members_data", "").toString();
-        groups = SharedPreferencesUtils.getParam(getParentActivity(), "Groups_date", "").toString();
+//        members = SharedPreferencesUtils.getParam(getParentActivity(), "members_data", "").toString();
+//        groups = SharedPreferencesUtils.getParam(getParentActivity(), "Groups_date", "").toString();
         users_date = SharedPreferencesUtils.getParam(getParentActivity(), "users_date", "").toString();
 
         setText();
@@ -229,16 +233,13 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     public static void removeDuplicate(List<UserEntity> userList) {
         for (int i = 0; i < userList.size() - 1; i++) {
             for (int j = userList.size() - 1; j > i; j--) {
-                if (userList.get(j).getUser_given_name().equals(userList.get(i).getUser_given_name()) ||
+                if (userList.get(j).getUser_id().equals(userList.get(i).getUser_id()) ||
                         userList.get(j).getUser_id().equals(MainActivity.getUser().getUser_id())) {
 //                    Log.i("remove===",j+"");
                     userList.remove(j);
                 }
 
             }
-//            if(userList.get(i).getUser_id().equals(MainActivity.getUser().getUser_id())){
-//                userList.remove(i);
-//            }
         }
     }
 
@@ -476,8 +477,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         SharedPreferencesUtils.removeParam(getParentActivity(), "content", "");
         SharedPreferencesUtils.removeParam(getParentActivity(), "location", "");
         SharedPreferencesUtils.removeParam(getParentActivity(), "date", 0L);
-        SharedPreferencesUtils.removeParam(getParentActivity(), "members_data", "");
-        SharedPreferencesUtils.removeParam(getParentActivity(), "Groups_date", "");
+//        SharedPreferencesUtils.removeParam(getParentActivity(), "members_data", "");
+//        SharedPreferencesUtils.removeParam(getParentActivity(), "Groups_date", "");
         SharedPreferencesUtils.removeParam(getParentActivity(), "users_date", "");
 
     }
@@ -528,14 +529,14 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                         SharedPreferencesUtils.setParam(getParentActivity(), "location", position_name.getText().toString());
 //                        Log.i("location=============",position_name.getText().toString());
                     }
-                    if (!TextUtils.isEmpty(members.trim())) {
-                        SharedPreferencesUtils.setParam(getParentActivity(), "members_data", members);
-//                        Log.i("Set_Spmemeber_date===", Spmemeber_date);
-                    }
-                    if (!TextUtils.isEmpty(groups.trim())) {
-                        SharedPreferencesUtils.setParam(getParentActivity(), "Groups_date", groups);
-//                        Log.i("Set_Groups_date===", Groups_date);
-                    }
+//                    if (!TextUtils.isEmpty(members.trim())) {
+//                        SharedPreferencesUtils.setParam(getParentActivity(), "members_data", members);
+////                        Log.i("Set_Spmemeber_date===", Spmemeber_date);
+//                    }
+//                    if (!TextUtils.isEmpty(groups.trim())) {
+//                        SharedPreferencesUtils.setParam(getParentActivity(), "Groups_date", groups);
+////                        Log.i("Set_Groups_date===", Groups_date);
+//                    }
                     if (userList.size() > 0) {
                         Gson gson = new Gson();
                         SharedPreferencesUtils.setParam(getParentActivity(), "users_date", gson.toJson(userList));
@@ -630,13 +631,13 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void goChooseMembers() {
-        tempuserList.clear();
-        userList.clear();
 //        Intent intent = new Intent(getActivity(), SelectPeopleActivity.class);
         Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
-        intent.putExtra("members_data", gson.toJson(members_data));
-        intent.putExtra("groups_data", gson.toJson(at_groups_data));
+        intent.putExtra("members_data", gson.toJson(userList));
+        intent.putExtra("groups_data", "");
         intent.putExtra("type", 0);
+        tempuserList.clear();
+//        userList.clear();
         startActivityForResult(intent, GET_MEMBERS);
     }
 
@@ -650,7 +651,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                         if (SystemUtil.checkPlayServices(getActivity())) {
                             final Place place = PlacePicker.getPlace(data, getActivity());
                             if(place!=null) {
-                                String locationName = place.getAddress().toString();
+//                                String locationName = place.getAddress().toString();
+                                String locationName = place.getName().toString();
+                                //TODO 弹窗输入目标名称
+                                if(locationName==null){
+
+                                }
                                 position_name.setText(locationName);
                                 latitude = place.getLatLng().latitude;
                                 longitude = place.getLatLng().longitude;
