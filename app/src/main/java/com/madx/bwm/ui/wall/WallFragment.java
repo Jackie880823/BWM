@@ -24,7 +24,7 @@ import com.madx.bwm.R;
 import com.madx.bwm.adapter.WallAdapter;
 import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.interfaces.ViewClickListener;
+import com.madx.bwm.interfaces.WallViewClickListener;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.ViewOriginalPicesActivity;
@@ -45,7 +45,7 @@ import java.util.Map;
  * Use the {@link WallFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WallFragment extends BaseFragment<MainActivity> implements ViewClickListener {
+public class WallFragment extends BaseFragment<MainActivity> implements WallViewClickListener {
 
 
     public static WallFragment newInstance(String... params) {

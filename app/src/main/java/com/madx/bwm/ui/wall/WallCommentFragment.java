@@ -3,17 +3,11 @@ package com.madx.bwm.ui.wall;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +34,7 @@ import com.madx.bwm.entity.WallCommentEntity;
 import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
-import com.madx.bwm.interfaces.ViewClickListener;
+import com.madx.bwm.interfaces.WallViewClickListener;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.ViewOriginalPicesActivity;
@@ -50,6 +44,7 @@ import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.UIUtil;
+import com.madx.bwm.util.WallUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.FullyLinearLayoutManager;
 import com.madx.bwm.widget.MyDialog;
@@ -61,8 +56,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -72,7 +65,7 @@ import java.util.regex.Pattern;
  * Use the {@link WallCommentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements ViewClickListener, View.OnClickListener {
+public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements WallViewClickListener, View.OnClickListener {
     private final static String TAG = WallCommentFragment.class.getSimpleName();
 
     private CircularNetworkImage nivHead;
@@ -129,7 +122,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private WallCommentAdapter adapter;
 
-    public List<WallCommentEntity> data = new ArrayList();
+    public List<WallCommentEntity> data = new ArrayList<>();
 
     private WallEntity wall;
     private String stickerType = "";
@@ -337,53 +330,12 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
         tvContent.setMovementMethod(LinkMovementMethod.getInstance());
 
-        String text = tvContent.getText().toString();
-        SpannableStringBuilder ssb = new SpannableStringBuilder(text);
-        String strMember = null;
-        if(wall.getTag_member().size() > 0) {
-            strMember = String.format(getString(R.string.text_wall_content_at_member_desc), wall.getTag_member().size());
-            // 文字特殊效果设置
-            SpannableString ssMember = new SpannableString(strMember);
-
-            // 给文字添加点击响应，跳转至显示被@的用户
-            ssMember.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    showMembers(wall.getContent_group_id(), wall.getGroup_id());
-                }
-            }, 0, strMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            //设置文字的前景色为蓝色
-            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
-            ssMember.setSpan(colorSpan, 0, strMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            setSpecialText(ssb, strMember, ssMember);
+        int tagMemberCount = wall.getTag_member().size();
+        int tagGroupCount = wall.getTag_group().size();
+        if(tagMemberCount > 0 || tagGroupCount > 0) {
+            WallUtil wallUtil = new WallUtil(getActivity());
+            wallUtil.setSpanContent(tvContent, wall, atDescription, tagMemberCount, tagGroupCount);
         }
-        if(wall.getTag_group().size() > 0) {
-            if(!TextUtils.isEmpty(strMember)) {
-                ssb.append(getString(R.string.text_and));
-            }
-            String strGroup = String.format(getString(R.string.text_wall_content_at_group_desc), wall.getTag_group().size());
-            // 文字特殊效果设置
-            SpannableString ssGroup = new SpannableString(strGroup);
-
-            // 给文字添加点击响应，跳转至显示被@的群组
-            ssGroup.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-                    showGroups(wall.getContent_group_id(), wall.getGroup_id());
-                }
-            }, 0, strGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            //设置文字的前景色为蓝色
-            ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
-            ssGroup.setSpan(colorSpan, 0, ssGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            if(wall.getTag_member().size() > 0) {
-                // 同时@了用户和群组，用户和群组之间用&分开
-                tvContent.append(" & ");
-            }
-            setSpecialText(ssb, strGroup, ssGroup);
-        }
-        tvContent.setText(ssb);
 
         tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(getParentActivity(), wall.getContent_creation_date()));
         //            tvTime.setText(wall.getTime());
@@ -421,11 +373,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 b.replace(charIndex, charIndex + 1, "/");
 
                 InputStream is = getParentActivity().getAssets().open(b.toString());
-                if(is != null) {
-                    iv_mood.setImageBitmap(BitmapFactory.decodeStream(is));
-                } else {
-                    iv_mood.setVisibility(View.GONE);
-                }
+                iv_mood.setImageBitmap(BitmapFactory.decodeStream(is));
             } else {
                 iv_mood.setVisibility(View.GONE);
             }
@@ -463,29 +411,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         } else {
             llLocation.setVisibility(View.VISIBLE);
             tvLocation.setText(wall.getLoc_name());
-        }
-    }
-
-    /**
-     * 设置字符特殊效果
-     *
-     * @param ssb
-     * @param strAt
-     * @param ssAt
-     */
-    private void setSpecialText(SpannableStringBuilder ssb, String strAt, SpannableString ssAt) {
-        try {
-            Pattern p = Pattern.compile(strAt);
-            Matcher m = p.matcher(ssb.toString());
-            if(m.find()) {
-                int start = m.start();
-                int end = m.end();
-                ssb.replace(start, end, ssAt);
-            } else {
-                ssb.append(ssAt);
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -719,10 +644,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     e.printStackTrace();
                 }
 
-                try {
-                    loving = false;
-                } catch(Exception e) {
-                }
+                loving = false;
 
                 if(TextUtils.isEmpty(wall.getLove_id())) {
                     doLove(wall, false);
@@ -735,7 +657,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void doLove(WallEntity wallEntity, boolean love) {
 
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("content_id", wallEntity.getContent_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
         params.put("user_id", "" + MainActivity.getUser().getUser_id());
