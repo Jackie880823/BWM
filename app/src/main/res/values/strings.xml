@@ -373,45 +373,7 @@
         <item>263,ZW</item>
     </string-array>
 
-    <!-- Login 界面 -->
-    <string name="text_sign_up">SIGN UP</string>
-    <string name="text_login_warning">Ignore country code if signing in via Username</string>
-    <string name="text_country_code">Country Code</string>
-    <string name="text_et_hint_login_account">Phone Number / Username</string>
-    <string name="text_et_hint_login_password">Password</string>
-    <string name="text_login_forget_password">Forget your password?</string>
-    <string name="text_login_faile_prompt">Are you sure your account is:</string>
 
-    <!-- Personal Information -->
-    <string name="text_personal_information">Personal Information</string>
-    <!-- sign up phone -->
-    <string name="text_sign_up_phone_warning">Are you sure your number is: </string>
-    <string name="text_btn_verification">REQUEST</string>
-    <string name="text_et_hint_verification_code">Verification Code</string>
-    <string name="text_sign_up_username">Username Registration</string>
-
-    <!-- sign up phone password 界面 -->
-    <string name="title_activity_sign_up_phone_password">SignUpPhonePasswordActivity</string>
-    <string name="text_sign_up_phone_password_warning">Min 6 characters (alpha numeric)</string>
-
-    <!-- sign up phone information 界面 -->
-    <string name="text_sign_up_phone_information_name_warning">We encourage you to use your real name for easier member recommendation</string>
-    <string name="text_sign_up_phone_information_agree_warning">I agree with the Terms &amp; Condition.</string>
-
-    <!-- sign up username 界面 -->
-    <string name="title_activity_sign_up_username_verify_phone">SignUpUsernameVerifyPhoneActivity</string>
-    <string name="text_sign_up_username_warning">Contains at least 5 alpha numeric characters.</string>
-
-    <!-- forget password 界面 -->
-    <string name="text_forget_password_contact1">If you still issues with your password, please</string>
-    <string name="text_forget_password_contact2">contact us</string>
-    <string name="text_forget_password_phone_warning1">We have sent code to</string>
-    <string name="text_forget_password_phone_warning2">, please check it.</string>
-
-    <!-- reset password 界面 -->
-    <string name="text_reset_password_warning">Contain 8~16 alpha numeric characters</string>
-    <string name="text_download">Downloading...</string>
-    <string name="text_awaiting_for_approval">Awaiting for approval from member.</string>
 
     <!-- xml -->
     <!-- xml -->
@@ -420,6 +382,7 @@
     <string name="text_ID_name">Via BondWithMe ID / Username</string>
     <string name="text_QR">Add via Q.R Code</string>
     <string name="text_location">Location</string>
+    <string name="msg_not_open_gps">Please open location service!</string>
     <string name="text_stickers">Stickers</string>
     <string name="text_video">Video</string>
     <string name="text_contact">Contact</string>
@@ -432,31 +395,20 @@
     <string name="text_gender">Gender</string>
     <string name="text_email">Email</string>
     <string name="text_region">Region</string>
-    <string name="text_username">Username</string>
-    <string name="text_or">or</string>
-    <string name="text_phone_number">Phone Number</string>
-    <string name="text_next">Next</string>
-    <string name="text_call_service_phone">Email us for support</string>
-    <string name="text_service_phone_num">contact.us@bondwithme.com</string>
-    <string name="text_cancel">Cancel</string>
+
+
+
+
     <string name="text_group_name">Group Name</string>
     <string name="text_members">Members</string>
     <string name="text_leave_group">Leave Group</string>
-    <string name="text_login">LOGIN</string>
-    <string name="hint_phone_username">Phone Number / Username</string>
-    <string name="text_password">Password</string>
+
     <string name="text_my_view_profile">View Profile</string>
     <string name="text_album_gallery">Album Gallery</string>
     <string name="text_wall_posting">Wall Posting</string>
     <string name="text_reset_password">Reset Password</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
-    <string name="text_from_camera">From Camera</string>
-    <string name="text_from_camera_bottom">Snap a photo of yourself</string>
-    <string name="text_from_album">From Album</string>
-    <string name="text_from_album_bottom">Choose a photo from your Album gallery</string>
-    <string name="text_skip">...SKIP</string>
-    <string name="text_start_bonding">Start Bonding</string>
     <string name="text_wrong_password">Invalid password, please try again.</string>
     <string name="text_not_use_special_characters">Do not use special characters. E.g ,/?!@#*$</string>
     <string name="text_back">Back</string>
@@ -494,12 +446,10 @@
     <string name="text_wall_loved_your_post">love your post</string>
     <string name="title_add_new_members">Add New Members</string>
     <string name="title_album_gallery">Album gallery</string>
-    <string name="title_country_code">Country Code</string>
-    <string name="title_family_profile">Profile</string>
-    <string name="title_forget_password">Forget Password</string>
+
     <string name="title_group_setting">Group Setting</string>
     <string name="title_group_info">Group Info</string>
-    <string name="title_personal_information">Personal Information</string>
+
     <string name="title_me">Me</string>
     <string name="title_my_profile">My Profile</string>
     <string name="title_path_relationship">Path &amp; Relationship</string>
@@ -571,8 +521,8 @@
     <string name="title_reset_password">Reset Password</string>
     <string name="title_select_members">Select Members</string>
     <string name="text_awaiting_approval_member">Awaiting for approval from member.</string>
-    <string name="text_try_again">Try Again</string>
-    <string name="title_sign_up">Sign Up</string>
+
+
     <string name="text_account_already_exist">Account already exist</string>
     <string name="text_verification_fail">Verification fail. Try again.</string>
     <string name="text_verification_successful">Verification successful.</string>
@@ -682,12 +632,69 @@
     <string name="text_create_group_not_save">Are you sure you want to cancel ? Changes made will not be save !</string>
     <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group. Add more members now!</string>
 
-
-
-
-
-
     <!--Christopher-->
+
+    <string name="title_personal_information">Personal Information</string>
+    <string name="title_country_code">Country Code</string>
+    <string name="title_family_profile">Profile</string>
+    <string name="title_forget_password">Forget Password</string>
+
+    <string name="text_next">Next</string>
+    <string name="text_or">or</string>
+    <string name="text_call_service_phone">Email us for support</string>
+    <string name="text_service_phone_num">contact.us@bondwithme.com</string>
+    <string name="text_cancel">Cancel</string>
+
+    <string name="text_from_camera">From Camera</string>
+    <string name="text_from_camera_bottom">Snap a photo of yourself</string>
+    <string name="text_from_album">From Album</string>
+    <string name="text_from_album_bottom">Choose a photo from your Album gallery</string>
+    <string name="text_skip">...SKIP</string>
+    <string name="text_start_bonding">Start Bonding</string>
+
+    <!-- Login 界面 -->
+    <string name="text_sign_up">SIGN UP</string>
+    <string name="text_login_warning">Ignore country code if signing in via Username</string>
+    <string name="text_country_code">Country Code</string>
+    <string name="text_login_forget_password">Forget your password?</string>
+    <string name="text_login_faile_prompt">Are you sure your account is:</string>
+    <string name="text_login">LOGIN</string>
+    <string name="hint_phone_username">Phone Number / Username</string>
+    <string name="text_password">Password</string>
+
+    <!-- Personal Information -->
+    <string name="text_personal_information">Personal Information</string>
+    <!-- sign up phone -->
+    <string name="text_sign_up_phone_warning">Are you sure your number is: </string>
+    <string name="text_btn_verification">REQUEST</string>
+    <string name="text_et_hint_verification_code">Verification Code</string>
+    <string name="text_sign_up_username">Username Registration</string>
+    <string name="text_try_again">Try Again</string>
+    <string name="title_sign_up">Sign Up</string>
+    <string name="text_phone_number">Phone Number</string>
+
+    <!-- sign up phone password 界面 -->
+    <string name="title_activity_sign_up_phone_password">SignUpPhonePasswordActivity</string>
+    <string name="text_sign_up_phone_password_warning">Min 6 characters (alpha numeric)</string>
+
+    <!-- sign up phone information 界面 -->
+    <string name="text_sign_up_phone_information_name_warning">We encourage you to use your real name for easier member recommendation</string>
+    <string name="text_sign_up_phone_information_agree_warning">I agree with the Terms &amp; Condition.</string>
+
+    <!-- sign up username 界面 -->
+    <string name="title_activity_sign_up_username_verify_phone">SignUpUsernameVerifyPhoneActivity</string>
+    <string name="text_sign_up_username_warning">Contains at least 5 alpha numeric characters.</string>
+
+    <!-- forget password 界面 -->
+    <string name="text_forget_password_contact1">If you still issues with your password, please</string>
+    <string name="text_forget_password_contact2">contact us</string>
+    <string name="text_forget_password_phone_warning1">We have sent code to</string>
+    <string name="text_forget_password_phone_warning2">, please check it.</string>
+    <string name="text_username">Username</string>
+
+    <!-- reset password 界面 -->
+    <string name="text_reset_password_warning">Contain 8~16 alpha numeric characters</string>
+    <string name="text_download">Downloading...</string>
 
     <string name="hint_mail">Your email address</string>
     <string name="hint_subject">Select a subject</string>
