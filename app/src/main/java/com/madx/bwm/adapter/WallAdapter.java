@@ -157,6 +157,12 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
         if(!TextUtils.isEmpty(locationName)) {
             holder.llLocation.setVisibility(View.VISIBLE);
             holder.tvLocation.setText(locationName);
+            holder.llLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoLocationSetting(wall);
+                }
+            });
             holder.tvLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

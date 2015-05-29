@@ -245,7 +245,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         llLocation = getViewById(R.id.ll_location);
         ivLocation = getViewById(R.id.iv_location);
         tvLocation = getViewById(R.id.tv_location);
-
+        llLocation.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
         tvLocation.setOnClickListener(this);
 
@@ -617,6 +617,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 break;
             case R.id.iv_location:
             case R.id.tv_location:
+            case R.id.ll_location:
                 gotoLocationSetting(wall);
                 break;
         }
