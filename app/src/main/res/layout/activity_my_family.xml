@@ -47,7 +47,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="MEMBER"
+                android:text="@string/text_new_member"
                 android:gravity="center"
                 android:textSize="@dimen/_13dp"
                 android:background="@drawable/message_member_selected_shap"
@@ -68,7 +68,7 @@
                 android:layout_marginRight="@dimen/_1dp"
                 android:background="@drawable/message_group_normal_shap"
                 android:gravity="center"
-                android:text="GROUP" />
+                android:text="@string/text_new_group" />
         </LinearLayout>
     </LinearLayout>
 
@@ -91,5 +91,7 @@
             android:background="@android:color/white" />
 
     </LinearLayout>
+
+    <include layout="@layout/progress_layout"/>
 
 </RelativeLayout>

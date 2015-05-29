@@ -19,56 +19,60 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            >
+            android:paddingRight="16dp">
 
-
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#ff000000"
-                android:textSize="@dimen/text_medium_size"
-                android:textStyle="bold"
-                android:visibility="gone"
-                android:text="SSDDDDD"
-                />
-
-            <ScrollView
-                android:id="@+id/message_scrollView"
+            <LinearLayout
+                android:id="@+id/content"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_below="@id/title"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:scrollbarSize="2dp"
-                android:scrollbarThumbVertical="@color/thumbColor">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp">
 
-                <LinearLayout
-                    android:id="@+id/contentContainer"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_marginTop="8dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#ff000000"
+                    android:textSize="@dimen/text_medium_size"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
-                    <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-                    <!--android:textSize="@dimen/text_medium_size"-->
-                    <!--android:textStyle="bold"-->
-                    <!--android:layout_marginTop="8dp"-->
-                    <!--android:textColor="#ff000000"-->
-                    <!--/>-->
-                </LinearLayout>
-            </ScrollView>
+                <ScrollView
+                    android:id="@+id/message_scrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_below="@id/title"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:scrollbarSize="2dp"
+                    android:scrollbarThumbVertical="@color/thumbColor">
+
+                    <LinearLayout
+                        android:id="@+id/contentContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+                        <!--android:textSize="@dimen/text_medium_size"-->
+                        <!--android:textStyle="bold"-->
+                        <!--android:layout_marginTop="8dp"-->
+                        <!--android:textColor="#ff000000"-->
+                        <!--/>-->
+                    </LinearLayout>
+                </ScrollView>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/message_scrollView"
+                android:layout_below="@id/content"
                 android:layout_marginTop="8dp"
                 android:gravity="right"
                 android:orientation="horizontal"

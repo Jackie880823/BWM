@@ -11,12 +11,12 @@
     <string name="msg_google_service_not_found">No valid Google Play Services APK found</string>
 
     <string name="title_event_detail">Detail</string>
-    <string name="title_wall_comment">Wall Comments</string>
+    <string name="title_wall_comment">Comments</string>
     <string name="title_event_new">New Event</string>
     <string name="title_event_edit">Event Edit</string>
     <string name="title_wall_new">Post</string>
     <string name="title_map_choose_location">Choose location</string>
-    <string name="title_invited_status">Participants</string>
+    <string name="title_invited_status">Invited Participants</string>
     <string name="title_birthday_alert">Birthday Alerts</string>
     <string name="title_birthday_title">%1$s%2$s birthday is coming !</string>
     <string name="title_birthday_title_prefix1">and others</string>
@@ -36,6 +36,11 @@
     <string name="msg_load_config_successed">Loaded successfully</string>
     <string name="msg_load_config_failed">Loading failed</string>
     <string name="msg_date_not_befort_now">Date must be later than now</string>
+    <string name="draft_tips_title">Save as Draft</string>
+    <string name="draft_ask_save">Do you want to save as draft for next event?</string>
+    <string name="msg_date_not_commentbim_now">The comments did not send complete</string>
+    <string name="event_accept">YES</string>
+    <string name="event_cancel">NO</string>
     <string name="text_tips_title">Action</string>
     <string name="text_more">More</string>
     <string name="alert_text_title_null">Title cannot be empty</string>
@@ -46,7 +51,9 @@
     <string name="title_message_creategroup">New Group</string>
     <string name="alert_comment_null">Comment can not be empty!</string>
     <string name="alert_comment_del">Are you sure you want to delete this comment?</string>
-    <string name="alert_wall_del">Delete this post?</string>
+    <string name="alert_wall_del_title">Delete Post</string>
+    <string name="alert_wall_del">Are you sure you want to delete this post?</string>
+    <string name="alert_wall_del_photo_title">Delete Photo</string>
     <string name="alert_wall_del_photo">Delete this photo?</string>
 
     <string name="text_word">Text</string>
@@ -86,6 +93,7 @@
     <string name="text_destination">目的地</string>
     <string name="title_pick_date_time">Event date &amp; time</string>
     <string name="accept">Accept</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="alert_exit">Exit</string>
     <string name="msg_ask_save">Do you want to save as draft?</string>
@@ -95,36 +103,33 @@
     <string name="np_number_picker_decrement_button">Decrement</string>
 
     <!-- about -->
-    <string name="text_about_title">About Us</string>
+
     <string name="text_about_terms">Terms</string>
     <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you  and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
-    <string name="text_bond_alert">Bond Alert</string>
-    <string name="text_me">Me</string>
+
+
     <string name="text_my_family">My Family</string>
-    <string name="text_tell_friend">Tell A Friend</string>
-    <string name="text_setting">Settings</string>
+
+
     <string name="text_sticker_store">Sticker Store</string>
-    <string name="text_about_us">About Us</string>
-    <string name="text_contact_us">Contact Us</string>
-    <string name="text_terms">Terms</string>
-    <string name="text_sign_out">Sign Out</string>
+
+
+
     <string name="msg_ask_exit_app">Do you really want to sign out?</string>
     <string name="text_yes">YES</string>
     <string name="text_camera">Camera</string>
     <string name="text_album">Album</string>
-    <string name="text_news">News</string>
-    <string name="title_text_miss">Miss Alert</string>
-    <string name="text_miss_you">miss you</string>
-    <string name="text_member">Member</string>
-    <string name="text_recommend">Recommended</string>
-    <string name="text_alert_group">Group</string>
-    <string name="text_big_day">Big Day</string>
-    <string name="title_bond_alert">Bond Alert</string>
-    <string name="hint_mail">Your email</string>
-    <string name="hint_subject">Select a subject</string>
-    <string name="hint_mail_content">Text here</string>
+
+
+
+
+
+
+
+
+
     <string name="hint_search_name">Search by name</string>
     <string name="alert_text_mail_info_not_complete">Please fill up all the fields</string>
     <!-- <array name="mail_subjects" > -->
@@ -142,8 +147,7 @@
     <string name="text_search_contact">Search name here</string>
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">No contact selected</string>
-    <string name="text_item_resend">Resend</string>
-    <string name="text_item_remove">Remove</string>
+
     <string name="text_setting_1_title">Birthday Alert Reminder</string>
     <string name="text_setting_1_1">1 Day earlier</string>
     <string name="text_setting_1_2">3 Days earlier</string>
@@ -369,45 +373,7 @@
         <item>263,ZW</item>
     </string-array>
 
-    <!-- Login 界面 -->
-    <string name="text_sign_up">SIGN UP</string>
-    <string name="text_login_warning">Ignore country code if signing in via Username</string>
-    <string name="text_country_code">Country Code</string>
-    <string name="text_et_hint_login_account">Phone Number / Username</string>
-    <string name="text_et_hint_login_password">Password</string>
-    <string name="text_login_forget_password">Forget your password?</string>
-    <string name="text_login_faile_prompt">Are you sure your account is:</string>
 
-    <!-- Personal Information -->
-    <string name="text_personal_information">Personal Information</string>
-    <!-- sign up phone -->
-    <string name="text_sign_up_phone_warning">Are you sure your number is: </string>
-    <string name="text_btn_verification">REQUEST</string>
-    <string name="text_et_hint_verification_code">Verification Code</string>
-    <string name="text_sign_up_username">Username Registration</string>
-
-    <!-- sign up phone password 界面 -->
-    <string name="title_activity_sign_up_phone_password">SignUpPhonePasswordActivity</string>
-    <string name="text_sign_up_phone_password_warning">Min 6 characters (alpha numeric)</string>
-
-    <!-- sign up phone information 界面 -->
-    <string name="text_sign_up_phone_information_name_warning">We encourage you to use your real name for easier member recommendation</string>
-    <string name="text_sign_up_phone_information_agree_warning">I agree with the Terms &amp; Condition.</string>
-
-    <!-- sign up username 界面 -->
-    <string name="title_activity_sign_up_username_verify_phone">SignUpUsernameVerifyPhoneActivity</string>
-    <string name="text_sign_up_username_warning">Contains at least 5 alpha numeric characters.</string>
-
-    <!-- forget password 界面 -->
-    <string name="text_forget_password_contact1">If you still issues with your password, please</string>
-    <string name="text_forget_password_contact2">contact us</string>
-    <string name="text_forget_password_phone_warning1">We have sent code to</string>
-    <string name="text_forget_password_phone_warning2">, please check it.</string>
-
-    <!-- reset password 界面 -->
-    <string name="text_reset_password_warning">Contain 8~16 alpha numeric characters</string>
-    <string name="text_download">Downloading...</string>
-    <string name="text_awaiting_for_approval">Awaiting for approval from member.</string>
 
     <!-- xml -->
     <!-- xml -->
@@ -416,6 +382,7 @@
     <string name="text_ID_name">Via BondWithMe ID / Username</string>
     <string name="text_QR">Add via Q.R Code</string>
     <string name="text_location">Location</string>
+    <string name="msg_not_open_gps">Please open location service!</string>
     <string name="text_stickers">Stickers</string>
     <string name="text_video">Video</string>
     <string name="text_contact">Contact</string>
@@ -428,31 +395,20 @@
     <string name="text_gender">Gender</string>
     <string name="text_email">Email</string>
     <string name="text_region">Region</string>
-    <string name="text_username">Username</string>
-    <string name="text_or">or</string>
-    <string name="text_phone_number">Phone Number</string>
-    <string name="text_next">Next</string>
-    <string name="text_call_service_phone">Email us for support</string>
-    <string name="text_service_phone_num">contact.us@bondwithme.com</string>
-    <string name="text_cancel">Cancel</string>
+
+
+
+
     <string name="text_group_name">Group Name</string>
     <string name="text_members">Members</string>
     <string name="text_leave_group">Leave Group</string>
-    <string name="text_login">LOGIN</string>
-    <string name="hint_phone_username">Phone Number / Username</string>
-    <string name="text_password">Password</string>
+
     <string name="text_my_view_profile">View Profile</string>
     <string name="text_album_gallery">Album Gallery</string>
     <string name="text_wall_posting">Wall Posting</string>
     <string name="text_reset_password">Reset Password</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
-    <string name="text_from_camera">From Camera</string>
-    <string name="text_from_camera_bottom">Snap a photo of yourself</string>
-    <string name="text_from_album">From Album</string>
-    <string name="text_from_album_bottom">Choose a photo from your Album gallery</string>
-    <string name="text_skip">...SKIP</string>
-    <string name="text_start_bonding">Start Bonding</string>
     <string name="text_wrong_password">Invalid password, please try again.</string>
     <string name="text_not_use_special_characters">Do not use special characters. E.g ,/?!@#*$</string>
     <string name="text_back">Back</string>
@@ -483,19 +439,13 @@
 
     <!-- begin -->
     <!-- Bond Alert 界面 -->
-    <string name="text_wall_posted_to_wall">posted to wall</string>
-    <string name="text_wall_tagged_you_in_post">tagged you in a post</string>
-    <string name="text_wall_commented_on_your_post">commented on your post</string>
-    <string name="text_wall_loved_your_comment">love your comment</string>
-    <string name="text_wall_loved_your_post">love your post</string>
+
     <string name="title_add_new_members">Add New Members</string>
     <string name="title_album_gallery">Album gallery</string>
-    <string name="title_country_code">Country Code</string>
-    <string name="title_family_profile">Profile</string>
-    <string name="title_forget_password">Forget Password</string>
+
     <string name="title_group_setting">Group Setting</string>
     <string name="title_group_info">Group Info</string>
-    <string name="title_personal_information">Personal Information</string>
+
     <string name="title_me">Me</string>
     <string name="title_my_profile">My Profile</string>
     <string name="title_path_relationship">Path &amp; Relationship</string>
@@ -567,8 +517,8 @@
     <string name="title_reset_password">Reset Password</string>
     <string name="title_select_members">Select Members</string>
     <string name="text_awaiting_approval_member">Awaiting for approval from member.</string>
-    <string name="text_try_again">Try Again</string>
-    <string name="title_sign_up">Sign Up</string>
+
+
     <string name="text_account_already_exist">Account already exist</string>
     <string name="text_verification_fail">Verification fail. Try again.</string>
     <string name="text_verification_successful">Verification successful.</string>
@@ -577,7 +527,7 @@
     <string name="title_password">Password</string>
     <string name="text_invalid_account_name">Invalid account name. Please try again.</string>
     <string name="text_input_re_enter_password">Please confirm your password</string>
-    <string name="titlte_terms_and_privacy">Terms and Privacy</string>
+
     <string name="titlte_add_new_members">Add New Members</string>
     <string name="text_lwait_for_respons">Awaiting member response.</string>
     <string name="text_input_personal_message">Input personal message</string>
@@ -585,15 +535,7 @@
 
 
 
-    <string name="text_invited_event">%s invited you to event.</string>
-    <string name="text_responded_event">%s responded for event.</string>
-    <string name="text_commented_event">%s commented on event.</string>
-    <string name="text_also_commented_event">%s also commented on event.</string>
-    <string name="text_updated_event">%s updated event.</string>
-    <string name="text_cancelled_event">%s cancelled event.</string>
-    <string name="text_love_comment_event">%s loved your comment in event.</string>
-    <string name="text_love_event">%s loved your event.</string>
-    <string name="text_upcoming_event">Upcoming event: %s </string>
+
 
 
 
@@ -603,16 +545,7 @@
     <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" ">]]></string>
     <string name="photo_position_no_arrow">%1$d/%2$d</string>
 
-    <!--Alert Group-->
-    <string name="text_pending">requested you to join the group</string>
-    <string name="text_add_group">added you to group</string>
-    <string name="text_reject_has">has</string>
-    <string name="text_reject_dec">declined</string>
-    <string name="text_reject_invite">your invite to</string>
-    <string name="text_reject_group">group</string>
-    <string name="text_dialog_title">Action</string>
-    <string name="text_item_accept">Accept</string>
-    <string name="text_item_decline">Decline</string>
+
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="yesterday_ago">Yesterday&#160;</string>
@@ -661,8 +594,7 @@
     <string name="text_month_december">December</string>
 
     <string name="title_activity_big_day">BigDayActivity</string>
-    <string name="text_upcoming_birthdays">Upcoming birthdays</string>
-    <string name="text_today_birthday">Today \'s birthday</string>
+
     <string name="text_album_no_pic">NO IMAGE FOUND</string>
     <string name="title_via_contact">Via Contact</string>
     <string name="text_personal_msg">PERSONAL MESSAGE</string>
@@ -676,5 +608,160 @@
     <string name="text_dialog_ok">OK</string>
     <string name="text_all_field_compulsory">All fields are compulsory</string>
     <string name="text_pending_approval">Pending approval.</string>
+    <string name="wall_comments">Comments</string>
+    <string name="text_new_member">MEMBER</string>
+    <string name="text_new_group">GROUP</string>
+    <string name="text_new_family_tree">family_tree</string>
+    <string name="text_group_name_here">Type group name here</string>
+    <string name="text_dialog_no">NO</string>
+    <string name="text_dialog_show_no">NO</string>
+    <string name="text_create_group_not_save">Are you sure you want to cancel ? Changes made will not be save !</string>
+    <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group. Add more members now!</string>
 
+    <!--Christopher-->
+
+    <string name="text_upcoming_birthdays">Upcoming birthdays</string>
+    <string name="text_today_birthday">Today \'s birthday</string>
+    <string name="text_today_birthday_on"> birthday is today!</string>
+    <string name="text_upcoming_birthdays_on"> birthday is on</string>
+    <string name="text_d">d </string>
+    <string name="text_left">left</string>
+
+    <string name="text_miss_you">miss you</string>
+
+    <!--wall-->
+    <string name="text_wall_posted_to_wall">posted to wall</string>
+    <string name="text_wall_tagged_you_in_post">tagged you in a post</string>
+    <string name="text_wall_commented_on_your_post">commented on your post</string>
+    <string name="text_wall_loved_your_comment">love your comment</string>
+    <string name="text_wall_loved_your_post">love your post</string>
+
+    <!--Alert Group-->
+    <string name="text_pending">&#160;requested you to join the group</string>
+    <string name="text_add_group">&#160;added you to group</string>
+    <string name="text_reject_has">&#160;has</string>
+    <string name="text_reject_dec">&#160;declined</string>
+    <string name="text_reject_invite">&#160;your invite to&#160;</string>
+    <string name="text_reject_group">&#160;group</string>
+    <string name="text_dialog_title">Action</string>
+    <string name="text_item_accept">Accept</string>
+    <string name="text_item_decline">Decline</string>
+
+    <string name="title_personal_information">Personal Information</string>
+    <string name="title_country_code">Country Code</string>
+    <string name="title_family_profile">Profile</string>
+    <string name="title_forget_password">Forget Password</string>
+
+    <string name="text_next">Next</string>
+    <string name="text_or">or</string>
+    <string name="text_call_service_phone">Email us for support</string>
+    <string name="text_service_phone_num">contact.us@bondwithme.com</string>
+    <string name="text_cancel">Cancel</string>
+
+    <string name="text_from_camera">From Camera</string>
+    <string name="text_from_camera_bottom">Snap a photo of yourself</string>
+    <string name="text_from_album">From Album</string>
+    <string name="text_from_album_bottom">Choose a photo from your Album gallery</string>
+    <string name="text_skip">...SKIP</string>
+    <string name="text_start_bonding">Start Bonding</string>
+
+    <!-- Login 界面 -->
+    <string name="text_sign_up">SIGN UP</string>
+    <string name="text_login_warning">Ignore country code if signing in via Username</string>
+    <string name="text_country_code">Country Code</string>
+    <string name="text_login_forget_password">Forget your password?</string>
+    <string name="text_login_faile_prompt">Are you sure your account is:</string>
+    <string name="text_login">LOGIN</string>
+    <string name="hint_phone_username">Phone Number / Username</string>
+    <string name="text_password">Password</string>
+
+    <!-- Personal Information -->
+    <string name="text_personal_information">Personal Information</string>
+    <!-- sign up phone -->
+    <string name="text_sign_up_phone_warning">Are you sure your number is: </string>
+    <string name="text_btn_verification">REQUEST</string>
+    <string name="text_et_hint_verification_code">Verification Code</string>
+    <string name="text_sign_up_username">Username Registration</string>
+    <string name="text_try_again">Try Again</string>
+    <string name="title_sign_up">Sign Up</string>
+    <string name="text_phone_number">Phone Number</string>
+
+    <!-- sign up phone password 界面 -->
+    <string name="title_activity_sign_up_phone_password">SignUpPhonePasswordActivity</string>
+    <string name="text_sign_up_phone_password_warning">Min 6 characters (alpha numeric)</string>
+
+    <!-- sign up phone information 界面 -->
+    <string name="text_sign_up_phone_information_name_warning">We encourage you to use your real name for easier member recommendation</string>
+    <string name="text_sign_up_phone_information_agree_warning">I agree with the Terms &amp; Condition.</string>
+
+    <!-- sign up username 界面 -->
+    <string name="title_activity_sign_up_username_verify_phone">SignUpUsernameVerifyPhoneActivity</string>
+    <string name="text_sign_up_username_warning">Contains at least 5 alpha numeric characters.</string>
+
+    <!-- forget password 界面 -->
+    <string name="text_forget_password_contact1">If you still issues with your password, please</string>
+    <string name="text_forget_password_contact2">contact us</string>
+    <string name="text_forget_password_phone_warning1">We have sent code to</string>
+    <string name="text_forget_password_phone_warning2">, please check it.</string>
+    <string name="text_username">Username</string>
+
+    <!-- reset password 界面 -->
+    <string name="text_reset_password_warning">Contain 8~16 alpha numeric characters</string>
+    <string name="text_download">Downloading...</string>
+
+    <string name="hint_mail">Your email address</string>
+    <string name="hint_subject">Select a subject</string>
+    <string name="hint_mail_content">What can we help you?</string>
+
+    <string name="text_me">Me</string>
+
+    <string name="text_item_resend">Resend</string>
+    <string name="text_item_remove">Remove</string>
+
+    <string name="title_bond_alert">Bond Alert</string>
+    <string name="title_wall_alert">Wall Alert</string>
+    <string name="title_event_alert">Event Alert</string>
+    <string name="title_big_day_alert">Big Day Alert</string>
+    <string name="title_miss_alert">Miss Alert</string>
+    <string name="title_news_alert">News Alert</string>
+    <string name="title_member_alert">Member Alert</string>
+    <string name="title_recommended_alert">Recommended Alert</string>
+    <string name="title_group_alert">Group Alert</string>
+
+    <string name="text_bond_alert">Bond Alert</string>
+    <!--Wall-->
+    <string name="text_bond_alert_wall">wall</string>
+    <!--Event-->
+    <string name="text_bond_alert_event">event</string>
+    <string name="text_big_day">Big Day</string>
+    <string name="text_miss">Miss</string>
+    <string name="text_news">News</string>
+    <string name="text_member">Members</string>
+    <string name="text_recommend">Recommended</string>
+    <string name="text_alert_group">Group</string>
+
+    <string name="titlte_terms_and_privacy">Terms and Privacy</string>
+
+    <string name="text_tell_friend">Tell A Friend</string>
+    <string name="text_setting">Settings</string>
+    <string name="text_about_us">About Us</string>
+    <string name="text_contact_us">Contact Us</string>
+    <string name="text_terms">Terms</string>
+    <string name="text_sign_out">Sign Out</string>
+
+    <string name="text_invited_event">%s invited you to event.</string>
+    <string name="text_responded_event">%s responded for event.</string>
+    <string name="text_commented_event">%s commented on event.</string>
+    <string name="text_also_commented_event">%s also commented on event.</string>
+    <string name="text_updated_event">%s updated event.</string>
+    <string name="text_cancelled_event">%s cancelled event.</string>
+    <string name="text_love_comment_event">%s loved your comment in event.</string>
+    <string name="text_love_event">%s loved your event.</string>
+    <string name="text_upcoming_event">Upcoming event: %s </string>
+    <string name="text_dialog_save_draft">Save as Draft?</string>
+    <string name="text_empty_add_member">Tap on the + to add family member.</string>
+    <string name="text_empty_add_group">Tap on the + to create group.</string>
+    <string name="text_message_type_here">type message here</string>
+    <string name="waiting_upload">Waiting for the upload to complete, please</string>
+    <!--Christopher-->
 </resources>

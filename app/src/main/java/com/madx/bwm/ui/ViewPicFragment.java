@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.madx.bwm.R;
 import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.util.LocalImageLoader;
@@ -30,8 +29,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
     private final static int IMAGE_LOADED_SUCCESSED = 10;
     private final static int HIDE_WAITTING = 11;
     private final static int SHOW_WAITTING = 12;
-    private ProgressDialog progressDialog;
-
+    private View vProgress;
 
     public ViewPicFragment() {
         super();
@@ -54,15 +52,13 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
                     mHandler.sendEmptyMessage(HIDE_WAITTING);
                     break;
                 case SHOW_WAITTING:
-                    if (progressDialog == null) {
-                        progressDialog = new ProgressDialog(getActivity(), R.string.text_loading);
+                    if(vProgress == null) {
+                        vProgress = getViewById(R.id.rl_progress);
                     }
-                        progressDialog.show();
+                    vProgress.setVisibility(View.VISIBLE);
                     break;
                 case HIDE_WAITTING:
-                    if (progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
+                     vProgress.setVisibility(View.GONE);
                     break;
             }
         }
@@ -70,9 +66,6 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 
     @Override
     public void onDestroy() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
         if (iv_pic != null) {
             iv_pic.destroyDrawingCache();
             iv_pic.getDrawable().setCallback(null);
@@ -205,6 +198,10 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
         if (!TextUtils.isEmpty(pic_url)) {
 
             Log.i("", "lazyLoad===================" + pic_url);
+            if(getActivity() == null || getActivity().isFinishing()) {
+                return;
+            }
+
             new HttpTools(getActivity()).download(pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
                 @Override
                 public void onStart() {

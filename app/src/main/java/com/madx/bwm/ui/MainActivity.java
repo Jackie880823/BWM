@@ -1,8 +1,6 @@
 package com.madx.bwm.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,12 +23,10 @@ import com.madx.bwm.adapter.MyFragmentPagerAdapter;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.ui.wall.WallNewActivity;
-import com.madx.bwm.util.FileUtil;
+import com.madx.bwm.util.PreferencesUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * 主页Activity,包含了头部和底部，无需定义中间内容(ViewPaper)
@@ -83,9 +79,8 @@ public class MainActivity extends BaseActivity {
     //以下为暂定全局变量
     private static boolean hasUpdate;
     private static MainActivity mainActivityInstance;
-    private String leaveGroup;
+    private int jumpIndex;
     public static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
-    public static String SAVE_FILE_NAME = "leaveTab";
     private int leavePagerIndex = 0;
 
     @Override
@@ -98,6 +93,23 @@ public class MainActivity extends BaseActivity {
         mainActivityInstance = this;
     }
 
+    @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+
+
+        //for default
+        setDrawable();
+        changeTitleColor(R.color.tab_color_press5);
+        changeTitle(R.string.title_tab_my_family);
+        leftButton.setVisibility(View.INVISIBLE);
+        rightButton.setVisibility(View.VISIBLE);
+        tabIv0.setImageResource(R.drawable.tab_family_select);
+        ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_press5));
+        tabTv0.setTextColor(Color.BLACK);
+        //for last tab
+        mViewPager.setCurrentItem(leavePagerIndex);
+    }
 
     @Override
     protected void onPause() {
@@ -111,6 +123,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
+
         super.onResume();
         if (fragments != null) {
             for (Fragment f : fragments) {
@@ -120,15 +133,14 @@ public class MainActivity extends BaseActivity {
 //        if(currentTabEnum!=null){
 //            changeTitleColor();
 //        }
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        SharedPreferences sp = getSharedPreferences(SAVE_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(LAST_LEAVE_INDEX, mViewPager.getCurrentItem());
-        editor.commit();
+        PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
+//        editor.putInt(LAST_LEAVE_INDEX, mViewPager.getCurrentItem());
     }
 
     public static UserEntity getUser() {
@@ -201,8 +213,8 @@ public class MainActivity extends BaseActivity {
                             break;
                         case family:
 //                          fragment.startActivity(new Intent(getApplicationContext(), CreateGroupActivity.class));
-                            if (commandlistener != null) {
-                                commandlistener.execute(rightButton);
+                            if (familyCommandListener != null) {
+                                familyCommandListener.execute(rightButton);
                             }
                             break;
                         case more:
@@ -266,11 +278,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        SAVE_FILE_NAME=MainActivity.getUser().getUser_id()+SAVE_FILE_NAME;
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
         fragments.add(FamilyFragment.newInstance());
+        fragments.add(MessageMainFragment.newInstance());
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
 //        eventFragment = EventFragment.newInstance();
@@ -286,7 +298,6 @@ public class MainActivity extends BaseActivity {
 ////            fragments.add(1,eventStartupFragment);
 //        }
 //        fragments.add(MessageFragment.newInstance());
-        fragments.add(MessageMainFragment.newInstance());
         fragments.add(MoreFragment.newInstance());
 
 
@@ -301,47 +312,11 @@ public class MainActivity extends BaseActivity {
 
         mViewPager.setOffscreenPageLimit(0);
 
-        SharedPreferences sp = getSharedPreferences(SAVE_FILE_NAME, Context.MODE_PRIVATE);
-        leavePagerIndex = sp.getInt(LAST_LEAVE_INDEX, 0);
 
-        leaveGroup = getIntent().getStringExtra("leaveGroup");
-        if ("leaveGroup".equals(leaveGroup)) {
-            leavePagerIndex = 3;
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                addStickerList();
-                addImageList();
-            }
-        }).start();
-    }
-
-    static List<String> STICKER_NAME_LIST = new ArrayList<>();
-    static List<String> FIRST_STICKER_LIST = new ArrayList<>();
-
-    private void addStickerList() {
-        try {
-            List<String> pathList = FileUtil.getAllFilePathsFromAssets(this, MessageChatActivity.STICKERS_NAME);
-            if (null != pathList) {
-                for (String string : pathList) {
-                    STICKER_NAME_LIST.add(MessageChatActivity.STICKERS_NAME + File.separator + string);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addImageList() {
-        if (STICKER_NAME_LIST != null && STICKER_NAME_LIST.size() > 0) {
-            for (String string : STICKER_NAME_LIST) {
-                List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(this, string);
-                if (null != stickerAllNameList) {
-                    String iconPath = string + File.separator + stickerAllNameList.get(0);
-                    FIRST_STICKER_LIST.add(iconPath);
-                }
-            }
+        leavePagerIndex = PreferencesUtil.getValue(this, LAST_LEAVE_INDEX, 0);
+        jumpIndex = getIntent().getIntExtra("jumpIndex", -1);
+        if (jumpIndex != -1) {
+            leavePagerIndex = jumpIndex;
         }
     }
 
@@ -362,39 +337,6 @@ public class MainActivity extends BaseActivity {
 //            }
 //        });
         return iseventdate;
-    }
-
-    @Override
-    protected void initTitleBar() {
-        super.initTitleBar();
-        TabEnum tab;
-        switch (leavePagerIndex) {
-            case 0:
-                tab = TabEnum.family;
-                break;
-            case 1:
-                tab = TabEnum.wall;
-                break;
-            case 2:
-                tab = TabEnum.event;
-                break;
-            case 3:
-                tab = TabEnum.chat;
-                break;
-            case 4:
-                tab = TabEnum.more;
-                break;
-            default:
-                tab = TabEnum.family;
-                break;
-        }
-        changeTab(tab);//默认第一个
-        mViewPager.setCurrentItem(leavePagerIndex);
-//        if ("leaveGroup".equals(leaveGroup)) {
-//            mViewPager.setCurrentItem(3);
-//        } else {
-//            changeTab(TabEnum.family);//默认第一个
-//        }
     }
 
     @Override
@@ -429,7 +371,6 @@ public class MainActivity extends BaseActivity {
         ivTab4.setBackgroundColor(getResources().getColor(R.color.transparent_color));
 
     }
-
 
     protected void changeTab(TabEnum tabEnum) {
         switch (tabEnum) {
@@ -547,7 +488,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public enum TabEnum {
-        family, wall, event, chat, more;
+        family, chat, wall, event, more;
     }
 
     SnackBar snackBar;

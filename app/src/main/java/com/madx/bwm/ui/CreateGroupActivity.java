@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.gc.materialdesign.widgets.Dialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -34,6 +35,7 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
+import com.madx.bwm.widget.MyDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +63,7 @@ public class CreateGroupActivity extends BaseActivity {
     private ProgressBarCircularIndeterminate progressBar;
 
     public static CreateGroupActivity instance;
+    private Context mContext;
 
     @Override
     protected void initBottomBar() {
@@ -91,9 +94,25 @@ public class CreateGroupActivity extends BaseActivity {
             intent.putExtra("memberLength", data.size());
             startActivity(intent);
         } else {
-            Toast.makeText(CreateGroupActivity.this, "You didn't choose any members.", Toast.LENGTH_SHORT).show();//成功
+            showNoFriendDialog();
         }
 
+    }
+
+    private void showNoFriendDialog() {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.text_create_group_members_least_two));
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
     }
 
     @Override
@@ -104,6 +123,7 @@ public class CreateGroupActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        mContext = this;
         instance = this;
         mGridView = (GridView) findViewById(R.id.creategroup_gridView);
         mTop = getViewById(R.id.ib_top);
@@ -176,7 +196,8 @@ public class CreateGroupActivity extends BaseActivity {
 
 
                 if (TextUtils.isEmpty(etSearch.getText())) {
-                    CreateGroupAdapter createGroupAdapter1 = new CreateGroupAdapter(CreateGroupActivity.this, R.layout.gridview_item_for_creategroup, userList, groupList);
+                    CreateGroupAdapter createGroupAdapter1 = new CreateGroupAdapter(
+                            CreateGroupActivity.this, R.layout.gridview_item_for_creategroup, userList, groupList);
                     mGridView.setAdapter(createGroupAdapter1);
                     isSearch = false;
                 } else {
@@ -196,7 +217,8 @@ public class CreateGroupActivity extends BaseActivity {
 
                     }
 
-                    CreateGroupAdapter createGroupAdapter2 = new CreateGroupAdapter(CreateGroupActivity.this, R.layout.gridview_item_for_creategroup, searchUserList, searchGroupList);
+                    CreateGroupAdapter createGroupAdapter2 = new CreateGroupAdapter(
+                            CreateGroupActivity.this, R.layout.gridview_item_for_creategroup, searchUserList, searchGroupList);
                     mGridView.setAdapter(createGroupAdapter2);
                     isSearch = true;
                 }
@@ -208,7 +230,8 @@ public class CreateGroupActivity extends BaseActivity {
     @Override
     public void requestData() {
 
-        new HttpTools(CreateGroupActivity.this).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+        new HttpTools(CreateGroupActivity.this).get(String.format(Constant.API_GET_EVERYONE,
+                MainActivity.getUser().getUser_id()), null, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -233,7 +256,8 @@ public class CreateGroupActivity extends BaseActivity {
                     groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupEntity>>() {
                     }.getType());
 
-                    CreateGroupAdapter createGroupAdapter = new CreateGroupAdapter(CreateGroupActivity.this, R.layout.gridview_item_for_creategroup, userList, groupList);
+                    CreateGroupAdapter createGroupAdapter = new CreateGroupAdapter(CreateGroupActivity.this,
+                            R.layout.gridview_item_for_creategroup, userList, groupList);
 
                     mGridView.setAdapter(createGroupAdapter);
 
@@ -273,7 +297,6 @@ public class CreateGroupActivity extends BaseActivity {
         private int resourceId;
         private Context mContext;
         List<UserEntity> mUserList = new ArrayList<>();
-        ;
         List<GroupEntity> mGroupList;
 
         public CreateGroupAdapter(Context context, int gridViewResourceId, List<UserEntity> userList, List<GroupEntity> groupList) {
@@ -293,35 +316,34 @@ public class CreateGroupActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            ViewHolder viewHolder;
-            convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
-
-            viewHolder = new ViewHolder();
-
-            viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.creategroup_image_main);
-            viewHolder.imageRight = (CheckBox) convertView.findViewById(R.id.creategroup_image_right);
-            viewHolder.textName = (TextView) convertView.findViewById(R.id.creategroup_name);
-
-            UserEntity userEntity = mUserList.get(position);
-
-            //
-            if ("0".equals(userEntity.getFam_accept_flag())) {
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
+                viewHolder = new ViewHolder();
+                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.creategroup_image_main);
+                viewHolder.imageRight = (CheckBox) convertView.findViewById(R.id.creategroup_image_right);
+                viewHolder.textName = (TextView) convertView.findViewById(R.id.creategroup_name);
                 viewHolder.imageTop = (ImageView) convertView.findViewById(R.id.creategroup_image_top);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            UserEntity userEntity = mUserList.get(position);
+            viewHolder.textName.setText(userEntity.getUser_given_name());
+            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain,
+                    String.format(Constant.API_GET_PIC, Constant.Module_profile, userEntity.getUser_id(), "profile"),
+                    R.drawable.network_image_default, R.drawable.network_image_default);
+            if ("0".equals(userEntity.getFam_accept_flag())) {
                 viewHolder.imageTop.setVisibility(View.VISIBLE);
-                viewHolder.imageRight.setVisibility(View.GONE);
+            } else {
+                viewHolder.imageTop.setVisibility(View.GONE);
             }
 
             if (checkItem.contains(userEntity.getUser_id())) {
-                viewHolder.textName.setText(userEntity.getUser_given_name());
                 viewHolder.imageRight.setChecked(true);
-                VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PIC, Constant.Module_profile, userEntity.getUser_id(), "profile"), R.drawable.network_image_default, R.drawable.network_image_default);
-
             } else {
-                viewHolder.textName.setText(userEntity.getUser_given_name());
                 viewHolder.imageRight.setChecked(false);
-                VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PIC, Constant.Module_profile, userEntity.getUser_id(), "profile"), R.drawable.network_image_default, R.drawable.network_image_default);
             }
-
             return convertView;
         }
 
@@ -331,8 +353,6 @@ public class CreateGroupActivity extends BaseActivity {
             ImageView imageTop;
             TextView textName;
         }
-
-
     }
 
 }

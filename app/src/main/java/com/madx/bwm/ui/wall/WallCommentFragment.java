@@ -29,7 +29,6 @@ import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -44,10 +43,10 @@ import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.interfaces.ViewClickListener;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
-import com.madx.bwm.ui.Map4BaiduActivity;
 import com.madx.bwm.ui.ViewOriginalPicesActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.UIUtil;
@@ -111,10 +110,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private LinearLayout llLocation;
     private ImageView ivLocation;
     private TextView tvLocation;
+    private View vProgress;
 
     boolean loving = false;
 
-    private ProgressDialog mProgressDialog;
     private String content_group_id;
     private String group_id;
     private boolean isRefresh;
@@ -156,10 +155,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     @Override
     public void initView() {
-        if(mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getParentActivity(), R.string.text_loading);
-        }
-
 
         try {
             content_group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
@@ -170,6 +165,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         // initView
         progressBar = getViewById(R.id.progressBar);
+        vProgress = getViewById(R.id.rl_progress);
         scrollView = getViewById(R.id.content);
         rvList = getViewById(R.id.rv_wall_comment_list);
         final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
@@ -181,7 +177,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(sendCommentView != null) {
-                    sendCommentView.hideAllViewStatue(true);
+                    sendCommentView.hideAllViewState(true);
                 }
                 return false;
             }
@@ -195,6 +191,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 stickerType = type;
                 stickerGroupPath = folderName;
                 stickerName = filName;
+                sendComment(null);
             }
 
             /**
@@ -294,18 +291,16 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         new HttpTools(getActivity()).get(Constant.API_WALL_DETAIL, params, new HttpCallback() {
             @Override
             public void onStart() {
-                if(mProgressDialog != null) {
-                    mProgressDialog.setTitle(R.string.text_loading);
-                    mProgressDialog.show();
-                }
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
-                getComments();
-                mProgressDialog.dismiss();
                 if(wall == null) {
                     getParentActivity().finish();
+                } else {
+                    vProgress.setVisibility(View.GONE);
+                    getComments();
                 }
             }
 
@@ -545,7 +540,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 wall.setComment_count(adapter.getItemCount() + "");
                 tvCommentCount.setText(wall.getComment_count());
 
-                if (adapter != null && adapter.getItemCount() > 0) {
+                if(adapter != null && adapter.getItemCount() > 0) {
                     split.setVisibility(View.VISIBLE);
                 } else {
                     split.setVisibility(View.GONE);
@@ -557,6 +552,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             @Override
             public void onError(Exception e) {
+                progressBar.setVisibility(View.GONE);
                 loading = false;
             }
 
@@ -594,13 +590,16 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         //        animator.setRemoveDuration(1000);
     }
 
-    private void sendComment(final EditText et) {
-        String commentText = et.getText().toString();
+    private void sendComment(EditText et) {
+        String commentText = "";
+        if(et != null) {
+            commentText = et.getText().toString();
+            et.setText(null);
+        }
         if(TextUtils.isEmpty(commentText) && TextUtils.isEmpty(stickerGroupPath)) {
             // 如果没有输入字符且没有添加表情，不发送评论
             return;
         }
-        et.setText(null);
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -628,17 +627,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 startIndex = 0;
                 isRefresh = true;
                 getComments();
-                et.setText("");
                 stickerName = "";
                 stickerType = "";
                 stickerGroupPath = "";
                 getParentActivity().setResult(Activity.RESULT_OK);
-                UIUtil.hideKeyboard(getActivity(), et);
+                UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
             }
 
             @Override
             public void onError(Exception e) {
-                UIUtil.hideKeyboard(getActivity(), et);
+                progressBar.setVisibility(View.GONE);
+                UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
 
             }
@@ -699,15 +698,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void gotoLocationSetting(WallEntity wall) {
-        if(!TextUtils.isEmpty(wall.getLoc_name())) {
-            Intent intent = new Intent(getParentActivity(), Map4BaiduActivity.class);
-            //        Intent intent = new Intent(getActivity(), Map4GoogleActivity.class);
-            //        intent.putExtra("has_location", position_name.getText().toString());
-            intent.putExtra("location_name", wall.getLoc_name());
-            intent.putExtra("latitude", Double.valueOf(wall.getLoc_latitude()));
-            intent.putExtra("longitude", Double.valueOf(wall.getLoc_longitude()));
-            getParentActivity().startActivity(intent);
+        if (TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
+            return;
         }
+        LocationUtil.goNavigation(getActivity(), Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()));
     }
 
     private void check() {
@@ -881,20 +875,19 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void removeComment(final String commentId) {
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_comment_del));
-        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.accept), new View.OnClickListener() {
+        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_COMMENT_DELETE, commentId), null);
                 new HttpTools(getActivity()).delete(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
-                        mProgressDialog.setTitle(R.string.text_waiting);
-                        mProgressDialog.show();
+                        vProgress.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onFinish() {
-                        mProgressDialog.dismiss();
+                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -908,6 +901,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
                     @Override
                     public void onError(Exception e) {
+                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -937,8 +931,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     @Override
     public void onDestroy() {
-        if(mProgressDialog != null)
-            mProgressDialog.dismiss();
+        vProgress.setVisibility(View.GONE);
         super.onDestroy();
     }
 
@@ -969,8 +962,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     @Override
     public void remove(final String content_group_id) {
 
-        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_wall_del));
-        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.accept), new View.OnClickListener() {
+        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.alert_wall_del_title), getActivity().getString(R.string.alert_wall_del));
+        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -978,17 +971,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
-                        mProgressDialog.setTitle(R.string.text_waiting);
-                        mProgressDialog.show();
+                        vProgress.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onFinish() {
-                        mProgressDialog.dismiss();
+                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onResult(String string) {
+                        vProgress.setVisibility(View.GONE);
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                         getParentActivity().setResult(Activity.RESULT_OK);
                         getParentActivity().finish();
@@ -996,7 +989,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
                     @Override
                     public void onError(Exception e) {
-
+                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override

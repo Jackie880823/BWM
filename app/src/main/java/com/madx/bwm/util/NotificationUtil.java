@@ -117,9 +117,11 @@ public class NotificationUtil {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.tab_message)
                         .setContentTitle(title)
                         .setContentText(message);
+        if(smallIcon !=-1) {
+            mBuilder.setSmallIcon(smallIcon);
+        }
         mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
         if(msgCount>1) {
             mBuilder.setNumber(msgCount);
@@ -136,6 +138,7 @@ public class NotificationUtil {
 
     static MessageType msgType ;
     static int msgCount;
+    static int smallIcon = -1;
     private static PendingIntent getFowwordIntent(Context context, Bundle msg,boolean isGCM) throws JSONException {
         if (msg == null) {
             return null;
@@ -171,30 +174,38 @@ public class NotificationUtil {
         Intent intent = null;
         switch (msgType){
             case BONDALERT_WALL:
+                smallIcon = R.drawable.bondalert_wall_icon;
                 intent = new Intent(context, AlertWallActivity.class);
                 break;
             case BONDALERT_EVENT:
+                smallIcon = R.drawable.bondalert_event_icon;
                 intent = new Intent(context, AlertEventActivity.class);
                 break;
             case BONDALERT_MEMBER:
+                smallIcon = R.drawable.bondalert_member_icon;
                 intent = new Intent(context, MemberActivity.class);
                 break;
             case BONDALERT_MESSAGE:
+                smallIcon = R.drawable.bondalert_message_icon;
                 intent = new Intent(context, MessageChatActivity.class);
                 intent.putExtra("type", jsonObjectExtras.getString("group_type"));
                 intent.putExtra("groupId", jsonObjectExtras.getString("group_id"));
                 intent.putExtra("titleName", jsonObjectExtras.getString("group_name"));
                 break;
             case BONDALERT_MISS:
+                smallIcon = R.drawable.bondalert_miss_icon;
                 intent = new Intent(context, MissListActivity.class);
                 break;
             case BONDALERT_BIGDAY:
+                smallIcon = R.drawable.bondalert_bigday_icon;
                 intent = new Intent(context, BigDayActivity.class);
                 break;
             case BONDALERT_NEWS:
+                smallIcon = R.drawable.bondalert_news_icon;
                 intent = new Intent(context, NewsActivity.class);
                 break;
             case BONDALERT_RECOMMENDED:
+                smallIcon = R.drawable.bondalert_recommended_icon;
                 intent = new Intent(context, RecommendActivity.class);
                 break;
 

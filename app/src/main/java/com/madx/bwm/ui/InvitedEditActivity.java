@@ -24,29 +24,20 @@ public class InvitedEditActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK&&event.getAction()==KeyEvent.ACTION_DOWN) {
+            titleLeftEvent();
+            return true;
+        }
+        return super.onKeyUp(keyCode,event);
+    }
+
+    @Override
     protected void titleLeftEvent() {
         if(commandlistener!=null) {
             commandlistener.execute(leftButton);
         }
         super.titleLeftEvent();
-    }
-
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if(event.getKeyCode()==KeyEvent.KEYCODE_BACK) {
-            if(event.getAction()==KeyEvent.ACTION_DOWN) {
-                if (commandlistener != null) {
-                    commandlistener.execute(leftButton);
-                }
-            }
-            return true;
-        }
-        return super.dispatchKeyEvent(event);
-    }
-
-    @Override
-    protected void changeTitleColor(int color) {
-        super.changeTitleColor(color);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.madx.bwm.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -8,7 +9,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -59,14 +59,11 @@ import java.util.Map;
 import java.util.TimeZone;
 
 public class MyViewProfileActivity extends BaseActivity {
-
     private CircularNetworkImage cniMain;
     private ImageView ivBottomLeft;
     private TextView tvName1;
     private TextView tvId1;
-
     private LinearLayout llResetPassword;
-
     private TextView tvId2;
     private TextView etFirstName;
     private TextView etLastName;
@@ -78,22 +75,18 @@ public class MyViewProfileActivity extends BaseActivity {
     private RelativeLayout rlGender;
     private TextView etEmail;
     private TextView etRegion;
-
-
     private Dialog showSelectDialog;
     private Dialog showCameraAlbum;
+    private Boolean isUploadName = false;
+    private Boolean isUploadImage = false;
+
+    private Boolean isUploadNameSuccess = false;
+    private Boolean isUploadImageSuccess = false;
 
 
-    Boolean isUploadName = false;
-    Boolean isUploadImage = false;
+    private String userGender;
 
-    Boolean isUploadNameSuccess = false;
-    Boolean isUploadImageSuccess = false;
-
-
-    String userGender;
-
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
 
     private final static int REQUEST_HEAD_PHOTO = 1;
     private final static int REQUEST_HEAD_CAMERA = 2;
@@ -101,6 +94,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
     Uri mCropImagedUri;
     private String imagePath;
+    private Context mContext;
     /**
      * 头像缓存文件名称
      */
@@ -110,7 +104,6 @@ public class MyViewProfileActivity extends BaseActivity {
      */
     public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
 
-
     @Override
     public int getLayout() {
         return R.layout.activity_my_view_profile;
@@ -119,7 +112,6 @@ public class MyViewProfileActivity extends BaseActivity {
     @Override
     protected void initBottomBar() {
         super.initTitleBar();
-        changeTitleColor(R.color.tab_color_press3);
     }
 
     @Override
@@ -130,23 +122,56 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        /**
-         * begin QK
-         */
         tvTitle.setText(getResources().getString(R.string.title_my_profile));
-        /**
-         * end
-         */
     }
 
     @Override
     protected void titleRightEvent() {
-
         uploadImage();
-
         updateProfile();
-
     }
+
+    @Override
+    protected void titleLeftEvent() {
+        // super.titleLeftEvent();
+        showNoFriendDialog();
+    }
+
+    private void showNoFriendDialog() {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.text_create_group_not_save));
+        TextView okTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        cancelTv.setVisibility(View.VISIBLE);
+        ((View) selectIntention.findViewById(R.id.line_view)).setVisibility(View.VISIBLE);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        okTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                finish();
+            }
+        });
+        showSelectDialog.show();
+    }
+
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            showNoFriendDialog();
+//            return true;
+//        } else {
+//            return super.onKeyDown(keyCode, event);
+//        }
+//    }
 
     @Override
     protected Fragment getFragment() {
@@ -155,13 +180,8 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        /**
-         * begin QK
-         */
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
-        /**
-         * end
-         */
+        mContext = this;
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
         tvName1 = getViewById(R.id.tv_name1);
@@ -181,10 +201,8 @@ public class MyViewProfileActivity extends BaseActivity {
         etEmail = getViewById(R.id.et_email);
         etRegion = getViewById(R.id.et_region);
 
-        VolleyUtil.initNetworkImageView(MyViewProfileActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-
-        Log.d("", "就问你我们一不一样" + String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()));
-
+        VolleyUtil.initNetworkImageView(MyViewProfileActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile,
+                MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
         etFirstName.setText(MainActivity.getUser().getUser_given_name());
         etLastName.setText(MainActivity.getUser().getUser_surname());
@@ -192,7 +210,7 @@ public class MyViewProfileActivity extends BaseActivity {
         tvId1.setText("ID:" + MainActivity.getUser().getDis_bondwithme_id());
         tvId2.setText(MainActivity.getUser().getDis_bondwithme_id());
 
-//        tvAge.setText(MainActivity.getUser().getUser_dob());//需要做处理，年转为岁数//TODO
+//        tvAge.setText(MainActivity.getUser().getUser_dob());//需要做处理，年转为岁数
         tvBirthday.setText(MainActivity.getUser().getUser_dob());
 //
 //        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()))
@@ -201,23 +219,18 @@ public class MyViewProfileActivity extends BaseActivity {
 //            ts = Timestamp.valueOf(tvBirthday.getText().toString() + " 00:00:00");
 //            Calendar mCalendar = Calendar.getContextInstance(TimeZone.getDefault());
 //            mCalendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
-//            int age = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date())) - Integer.parseInt(new SimpleDateFormat("yyy").format(mCalendar.getTime()));
+//            int age = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date())) -
+//              Integer.parseInt(new SimpleDateFormat("yyy").format(mCalendar.getTime()));
 //            tvAge.setText(String.valueOf(age));
 //        }
 
 
         if ("F".equals(MainActivity.getUser().getUser_gender())) {
-            /**
-             * begin QK
-             */
             tvGender.setText(getResources().getString(R.string.text_female));
         } else if ("M".equals(MainActivity.getUser().getUser_gender())) {
             tvGender.setText(getResources().getString(R.string.text_male));
         } else {
             tvGender.setText(getResources().getString(R.string.text_null));
-            /**
-             * end
-             */
         }
 
         etEmail.setText(MainActivity.getUser().getUser_email());
@@ -308,8 +321,6 @@ public class MyViewProfileActivity extends BaseActivity {
         } else {
             userGender = "F";
         }
-
-
         RequestInfo requestInfo = new RequestInfo();
 
         HashMap<String, String> jsonParams = new HashMap<String, String>();
@@ -328,12 +339,10 @@ public class MyViewProfileActivity extends BaseActivity {
         new HttpTools(MyViewProfileActivity.this).put(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
-
             }
 
             @Override
             public void onFinish() {
-
             }
 
             @Override
@@ -370,7 +379,6 @@ public class MyViewProfileActivity extends BaseActivity {
 
             @Override
             public void onCancelled() {
-
             }
 
             @Override
@@ -384,9 +392,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private void showSelectDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_male_female, null);
-
         showSelectDialog = new MyDialog(this, null, selectIntention);
-
         TextView tvMale = (TextView) selectIntention.findViewById(R.id.tv_male);
         TextView tvFemale = (TextView) selectIntention.findViewById(R.id.tv_female);
 
@@ -417,6 +423,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
         TextView tvCamera = (TextView) selectIntention.findViewById(R.id.tv_camera);
         TextView tvAlbum = (TextView) selectIntention.findViewById(R.id.tv_album);
+        TextView tv_cancel = (TextView) selectIntention.findViewById(R.id.tv_cancel);
 
         tvCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -447,7 +454,12 @@ public class MyViewProfileActivity extends BaseActivity {
                 startActivityForResult(intent, REQUEST_HEAD_PHOTO);
             }
         });
-
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCameraAlbum.dismiss();
+            }
+        });
         showCameraAlbum.show();
     }
 
@@ -499,7 +511,6 @@ public class MyViewProfileActivity extends BaseActivity {
                                 }
                             }
                         } catch (FileNotFoundException e) {
-                            // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
                     }
@@ -567,13 +578,7 @@ public class MyViewProfileActivity extends BaseActivity {
         List<ResolveInfo> list = MyViewProfileActivity.this.getPackageManager().queryIntentActivities(intent, 0);
         int size = list.size();
         if (size == 0) {
-            /**
-             * begin QK
-             */
             Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_no_found_reduce), Toast.LENGTH_SHORT).show();
-            /**
-             * end
-             */
             return;
         } else {
             // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
@@ -584,15 +589,12 @@ public class MyViewProfileActivity extends BaseActivity {
             // outputX outputY 是裁剪图片宽高
             intent.putExtra("outputX", width);
             intent.putExtra("outputY", height);
-
             // //防止毛边
             // intent.putExtra("scale", true);//黑边
             // intent.putExtra("scaleUpIfNeeded", true);//黑边
-
             intent.putExtra("return-data", false);
             intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
             intent.putExtra("noFaceDetection", true);
-
             //		if(fromPhoto){
             File f = PicturesCacheUtil.getCachePicFileByName(MyViewProfileActivity.this, CACHE_PIC_NAME);
             mCropImagedUri = Uri.fromFile(f);
@@ -615,24 +617,18 @@ public class MyViewProfileActivity extends BaseActivity {
         }
     }
 
-
     private void uploadImage() {
 
         if (mCropImagedUri == null) {
             return;
         }
-
         String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 480, 800, false);
         File file = new File(path);
-
         isUploadImage = true;
-
 //        File f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
         if (!file.exists()) {
-
             return;
         }
-
         progressDialog.show();
 
         Map<String, Object> params = new HashMap<>();
@@ -694,8 +690,6 @@ public class MyViewProfileActivity extends BaseActivity {
 
             }
         });
-
-
     }
 
     private MyDialog pickDateTimeDialog;
@@ -706,23 +700,19 @@ public class MyViewProfileActivity extends BaseActivity {
         final View dateTimePicker = factory.inflate(R.layout.dialog_date_picker, null);
         final DatePicker datePicker = (DatePicker) dateTimePicker.findViewById(R.id.datePicker);
         Timestamp ts;
-
         if (strData == null) {
             if (TextUtils.isEmpty(tvBirthday.getText().toString())) {
                 ts = new Timestamp(System.currentTimeMillis());
             } else {
                 ts = Timestamp.valueOf(tvBirthday.getText().toString() + " 00:00:00");
             }
-
         } else {
             ts = Timestamp.valueOf(strData);
         }
 
-
         Calendar mCalendar = Calendar.getInstance(TimeZone.getDefault());
         mCalendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
         datePicker.setCalendar(mCalendar);
-
 
         pickDateTimeDialog = new MyDialog(this, null, dateTimePicker);
         pickDateTimeDialog.setButtonAccept(getString(R.string.accept), new View.OnClickListener() {
@@ -733,19 +723,14 @@ public class MyViewProfileActivity extends BaseActivity {
                 mCalendar.set(Calendar.YEAR, datePicker.getYear());
                 mCalendar.set(Calendar.MONTH, datePicker.getMonth());
                 mCalendar.set(Calendar.DAY_OF_MONTH, datePicker.getDay());
-
-
                 if (!MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
                     MessageUtil.showMessage(MyViewProfileActivity.this, R.string.text_wrong_data);
                     return;
                 }
-
-
                 String dateDesc = MyDateUtils.getLocalDateStringFromLocal(MyViewProfileActivity.this, mCalendar.getTimeInMillis());
                 strData = MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis());
                 SimpleDateFormat defaultDateFormat = new SimpleDateFormat("yyy-MM-dd");
                 tvBirthday.setText(defaultDateFormat.format(mCalendar.getTime()));
-
                 int age = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date())) - Integer.parseInt(new SimpleDateFormat("yyy").format(mCalendar.getTime()));
 //                tvAge.setText(String.valueOf(age));
             }

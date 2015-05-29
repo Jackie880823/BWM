@@ -39,6 +39,7 @@ import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.util.NetworkUtil;
@@ -55,7 +56,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -93,6 +93,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private boolean isStickerItemClick = false;
 
     private boolean isRefresh;
+    private boolean isComment;
+    private boolean isCommentBim;
     private int startIndex = 0;
     private int currentPage = 1;
     private final static int offset = 20;
@@ -275,6 +277,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     @Override
     public void initView() {
+        isComment = true;
+        isCommentBim = true;
         if(mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getParentActivity(), R.string.text_loading);
         }
@@ -373,14 +377,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public void onStickerItemClick(String type, String folderName, String filName) {
                     isStickerItemClick = true;
-
                     stickerEntity.setSticker_type(type);
                     stickerEntity.setSticker_group_path(folderName);
                     stickerEntity.setSticker_name(filName);
+                    sendSticker();
                 }
 
                 @Override
                 public void onReceiveBitmapUri(Uri uri) {
+                    isCommentBim = false;
                     mUri = uri;
                     hideAllViewState();
                     if (mUri != null) {
@@ -391,7 +396,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onSendCommentClick(EditText et) {
-                    sendComment();
+                    if (isComment){
+                        sendComment();
+                    }
                     isStickerItemClick = false;
                 }
 
@@ -425,6 +432,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public boolean execute(View v) {
 
+                    /*
                     if("2".equals(event.getGroup_event_status())){
                         return false;
                     }else {
@@ -457,8 +465,44 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             getActivity().startActivityForResult(intent, 1);
                         }
                     }
+                    */
 
+                    if (R.id.tv_title == v.getId()) {
+                        if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
 
+                            option_cancel.setVisibility(View.VISIBLE);
+                            option_status.setVisibility(View.GONE);
+
+                        } else {
+                            option_cancel.setVisibility(View.GONE);
+                            option_status.setVisibility(View.VISIBLE);
+
+                        }
+                        if(event_options.getVisibility() == View.VISIBLE) {
+                            event_options.setVisibility(View.GONE);
+                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
+                        } else {
+                            event_options.setVisibility(View.VISIBLE);
+                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
+                        }
+
+//                        if(event.getGroup_event_status()!= "2"){
+//
+//                        }
+
+                    } else if (R.id.ib_top_button_right == v.getId()) {
+                        //打开编辑页面
+                        intent = new Intent(getParentActivity(), EventEditActivity.class);
+                        intent.putExtra("event", event);
+                        getActivity().startActivityForResult(intent, 1);
+                    }else if(v.getId() == getParentActivity().leftButton.getId()){
+                        if (isCommentBim){
+                            getParentActivity().finish();
+                        }else {
+                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                        }
+
+                    }
                     return false;
                 }
             });
@@ -623,32 +667,22 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //    LinearLayout option_no_going;
 //    LinearLayout option_maybe;
 //    LinearLayout option_going;
-
-
     public EventCommentAdapter adapter;
 
-    //发送评论
-    private void sendComment() {
-
-        if (NetworkUtil.isNetworkConnected(getActivity())) {
+    //发送大表情
+    private void sendSticker(){
+        if (NetworkUtil.isNetworkConnected(getActivity())){
             progressBar.setVisibility(View.VISIBLE);
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_group_id", event.getContent_group_id());
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
             params.put("content_type", "comment");
-            params.put("comment_content", etChat.getText().toString().trim());
-            if(isStickerItemClick){
-//                Log.i("isStickerItemClick=====","true");
-                params.put("sticker_group_path", stickerEntity.getSticker_group_path());
-                params.put("sticker_name", stickerEntity.getSticker_name());
-                params.put("sticker_type", stickerEntity.getSticker_type());
+            params.put("comment_content", "");
+//          Log.i("isStickerItemClick=====","true");
+            params.put("sticker_group_path", stickerEntity.getSticker_group_path());
+            params.put("sticker_name", stickerEntity.getSticker_name());
+            params.put("sticker_type", stickerEntity.getSticker_type());
 
-            }else{
-//                Log.i("isStickerItemClick=====","false");
-                params.put("sticker_group_path", "");
-                params.put("sticker_name", "");
-                params.put("sticker_type", "");
-            }
 
 
 
@@ -670,7 +704,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     stickerEntity.setSticker_type("");
                     stickerEntity.setSticker_group_path("");
                     stickerEntity.setSticker_name("");
-                    etChat.setText("");
+
                     requestComment();
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
@@ -694,9 +728,96 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 }
             });
-        } else {
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_internet);
         }
+    }
+
+    //发送评论
+    private void sendComment() {
+//        String commentText = et.getText().toString();
+//        if(TextUtils.isEmpty(etChat.getText().toString().trim()) && isStickerItemClick==false) {
+//            // 如果没有输入字符且没有添加表情，不发送评论
+//            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+//            return;
+//        }
+        isComment = false;
+        if(TextUtils.isEmpty(etChat.getText().toString().trim())) {
+            // 如果没有输入字不发送评论
+            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            isComment = true;
+            return;
+        }else {
+            if (NetworkUtil.isNetworkConnected(getActivity())) {
+                progressBar.setVisibility(View.VISIBLE);
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("content_group_id", event.getContent_group_id());
+                params.put("comment_owner_id", MainActivity.getUser().getUser_id());
+                params.put("content_type", "comment");
+                params.put("comment_content", etChat.getText().toString().trim());
+//            if(isStickerItemClick){
+                if(false){
+//                Log.i("isStickerItemClick=====","true");
+                    params.put("sticker_group_path", stickerEntity.getSticker_group_path());
+                    params.put("sticker_name", stickerEntity.getSticker_name());
+                    params.put("sticker_type", stickerEntity.getSticker_type());
+
+                }else{
+//                Log.i("isStickerItemClick=====","false");
+                    params.put("sticker_group_path", "");
+                    params.put("sticker_name", "");
+                    params.put("sticker_type", "");
+                }
+
+
+
+                new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onResult(String response) {
+                        startIndex = 0;
+                        isRefresh = true;
+                        isComment = true;
+                        stickerEntity.setSticker_type("");
+                        stickerEntity.setSticker_group_path("");
+                        stickerEntity.setSticker_name("");
+
+                        etChat.setText("");
+                        requestComment();
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                        UIUtil.hideKeyboard(getActivity(), etChat);
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+//                    UIUtil.hideKeyboard(getActivity(), et_comment);
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onCancelled() {
+
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+            } else {
+                MessageUtil.showMessage(getActivity(), R.string.msg_no_internet);
+            }
+        }
+
 
     }
 
@@ -743,6 +864,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onResult(String string) {
                     startIndex = 0;
                     isRefresh = true;
+                    isCommentBim = true;
                     mUri = null;
                     requestComment();
                     getParentActivity().setResult(Activity.RESULT_OK);
@@ -845,22 +967,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private void goInvitedStutus() {
         intent = new Intent(getActivity(), InvitedStatusActivity.class);
         intent.putExtra("event", event);
+        //打开好友选择页面
         startActivity(intent);
     }
 
-    private void goNavigation() {
-        if (TextUtils.isEmpty(event.getLoc_latitude()) || TextUtils.isEmpty(event.getLoc_longitude())) {
-            return;
-        }
-        try {
-            //14为缩放比例
-            String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=14&q=%f,%f", Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()), Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()));
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-            getActivity().startActivity(intent);
-        } catch (Exception e) {
-            MessageUtil.showMessage(getActivity(), R.string.msg_no_map_app);
-        }
-    }
+
 
     private void cancelEvent() {
 
@@ -1007,7 +1118,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 break;
             case R.id.btn_location:
             case R.id.event_picture_4_location:
-                goNavigation();
+                if (TextUtils.isEmpty(event.getLoc_latitude()) || TextUtils.isEmpty(event.getLoc_longitude())) {
+                    return;
+                }
+                LocationUtil.goNavigation(getActivity(), Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()));
                 break;
             case R.id.option_cancel:
                 event_options.setVisibility(View.GONE);
@@ -1096,7 +1210,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_comment_del));
 
-        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.accept), new View.OnClickListener() {
+        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.event_accept), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_COMMENT_DELETE, commentId), null);
@@ -1141,7 +1255,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
 
         });
-        removeAlertDialog.setButtonCancel(getActivity().getString(R.string.cancel), new View.OnClickListener() {
+        removeAlertDialog.setButtonCancel(getActivity().getString(R.string.event_cancel), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 removeAlertDialog.dismiss();

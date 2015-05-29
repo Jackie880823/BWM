@@ -10,7 +10,6 @@ import android.widget.FrameLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -40,7 +39,7 @@ import java.util.List;
  */
 public class EventFragment extends BaseFragment<MainActivity> {
 
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
 
     public static EventFragment newInstance(String... params) {
 
@@ -80,15 +79,18 @@ public class EventFragment extends BaseFragment<MainActivity> {
     private boolean loading;
 
     LinearLayoutManager llm;
+    private View vProgress;
 
     @Override
     public void initView() {
 
 
-        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
-        mProgressDialog.show();
+//        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
+//        mProgressDialog.show();
         rvList = getViewById(R.id.rv_event_list);
         eventStart = getViewById(R.id.eventStart);
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
 
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
@@ -175,7 +177,8 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+                if(vProgress!=null)
+                    vProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -213,14 +216,17 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
                         @Override
                         public void contentItemClick(EventEntity eventEntity) {
-                            //item的点击事件跳转到EventDetailActivity
+                            if("1".equals(eventEntity.getGroup_event_status())){
+                                //item的点击事件跳转到EventDetailActivity
 //                            requestData();
 //                            adapter.notifyDataSetChanged();
-                            Intent intent = new Intent(getActivity(), EventDetailActivity.class);
+                                Intent intent = new Intent(getActivity(), EventDetailActivity.class);
 //                            intent.putExtra("event", eventEntity);
-                            intent.putExtra("group_id", eventEntity.getGroup_id());
-                            startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
+                                intent.putExtra("group_id", eventEntity.getGroup_id());
+                                startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
 //                            requestData();
+                            }
+
                         }
                     });
                     rvList.setAdapter(adapter);

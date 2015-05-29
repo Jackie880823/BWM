@@ -77,16 +77,17 @@ public class EventDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void changeTitleColor(int color) {
-        super.changeTitleColor(color);
-    }
-
-    @Override
     protected void setTitle() {
         tvTitle.setText(R.string.title_event_detail);
     }
 
     boolean changeMode;
+
+    @Override
+    protected void titleLeftEvent() {
+        if(commandlistener!=null)
+            commandlistener.execute(leftButton);
+    }
 
     @Override
     protected void titleRightEvent() {

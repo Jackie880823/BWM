@@ -1,7 +1,9 @@
 package com.madx.bwm.ui.wall;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -22,15 +24,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.FeelingAdapter;
@@ -39,13 +44,14 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.InviteMemberActivity;
 import com.madx.bwm.ui.MainActivity;
-import com.madx.bwm.ui.Map4BaiduActivity;
-import com.madx.bwm.ui.Map4GoogleActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.SystemUtil;
+import com.madx.bwm.util.UIUtil;
 import com.madx.bwm.util.animation.ViewHelper;
+import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.WallEditView;
 
 import org.json.JSONObject;
@@ -72,6 +78,24 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
      */
     private final static String TAG = WallNewFragment.class.getSimpleName();
 
+    public static final String PREFERENCE_NAME = "SAVE_DRAFT";
+    public static final String PREFERENCE_KEY_IS_SAVE = "IS_SAVE";
+
+    private static final String PREFERENCE_KEY_PIC_CONTENT = "PIC_CONTENT";
+    private static final String PREFERENCE_KEY_PIC_COUNT = "PIC_COUNT";
+    private static final String PREFERENCE_KEY_PIC_VIEW_WIDTH = "PIC_VIEW_WIDTH";
+    private static final String PREFERENCE_KEY_LOC_NAME = "LOC_NAME";
+    private static final String PREFERENCE_KEY_LOC_LONGITUDE = "LOC_LONGITUDE";
+    private static final String PREFERENCE_KEY_LOC_LATITUDE = "LOC_LATITUDE";
+    private static final String PREFERENCE_KEY_DO_FEEL_CODE = "DO_FEEL_CODE";
+    private static final String PREFERENCE_KEY_CHECK_ITEM_INDEX = "CHECK_ITEM_INDEX";
+    private static final String PREFERENCE_KEY_CONTENT_GROUP_PUBLIC = "CONTENT_GROUP_PUBLIC";
+    private static final String PREFERENCE_KEY_TAG_MEMBERS = "TAG_MEMBERS";
+    private static final String PREFERENCE_KEY_TAG_GROUPS = "TAG_GROUPS";
+    private static final String PREFERENCE_KEY_OLD_MEMBER_TEXT = "OLD_MEMBER_TEXT";
+    private static final String PREFERENCE_KEY_OLD_GROUP_TEXT = "OLD_GROUP_TEXT";
+    private static final String PREFERENCE_KEY_TEXT_CONTENT = "TEXT_CONTENT";
+
     /**
      * 输入文字的TAB
      */
@@ -96,7 +120,8 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private LinearLayout btn_submit;
     private LinearLayout btn_location;
     private TextView location_desc;
-
+    // 加载框
+    private RelativeLayout rlProgress;
 
     private List<String> fileNames = new ArrayList<>();
 
@@ -105,10 +130,13 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private String text_content;
     private String locationName;
     private List<Uri> pic_content;
+    private List<CompressBitmapTask> tasks;
 
     private double latitude;
     private double longitude;
     private Gson gson;
+
+    public static SharedPreferences draftPreferences;
 
     /**
      * private ProgressBarCircularIndeterminate progressBar;
@@ -142,6 +170,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         gson = new Gson();
         getViewById(R.id.tv_tab_word).setOnClickListener(this);
         getViewById(R.id.tv_tab_picture).setOnClickListener(this);
+        rlProgress = getViewById(R.id.rl_progress);
         ivCursor = getViewById(R.id.cursor);
 
         fragment1 = new TabWordFragment();
@@ -168,9 +197,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         btn_share_option.setOnClickListener(this);
         btn_submit.setOnClickListener(this);
         btn_location.setOnClickListener(this);
-
     }
-
 
     FragmentManager fragmentManager;
     TabWordFragment fragment1;
@@ -185,6 +212,212 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         //        uploadImages();
     }
 
+    MyDialog myDialog;
+
+    /**
+     * 返回检测，如正在上传或有数据返回为true，表示不能禁止返回
+     * @return
+     */
+    public boolean backCheck() {
+        if(rlProgress.getVisibility() == View.VISIBLE) {
+            MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
+            return  true;
+        }
+        if(tasks != null && tasks.size() > 0) {
+            // 图片上任务正在执行
+            Log.i(TAG, "backCheck& tasks size: " + tasks.size());
+            return true;
+        } else {
+            hasTextContent = false;
+            hasPicContent = false;
+            if(fragment1 != null) {
+                WallEditView editText = fragment1.getEditText4Content();
+                text_content = editText.getRelText();
+                if(TextUtils.isEmpty(text_content.trim())) {
+                    hasTextContent = false;
+                } else {
+                    hasTextContent = true;
+                }
+            }
+            if(fragment2 != null) {
+                pic_content = fragment2.getEditPic4Content();
+                if(pic_content == null || pic_content.size() == 0) {
+                    hasPicContent = false;
+                } else {
+                    hasPicContent = true;
+                }
+            }
+            Log.i(TAG, "backCheck& hasTextContent: " + hasTextContent + "; hasPicContent: " + hasPicContent);
+            SharedPreferences.Editor editor = draftPreferences.edit();
+            if(!hasTextContent && !hasPicContent) {
+                // 没有需要上传的内容
+                editor.clear().commit();
+                return false;
+            }
+
+            // 提示是否将内容保存到草稿
+            if(myDialog == null) {
+                myDialog = new MyDialog(getActivity(), "", getActivity().getString(R.string.text_dialog_save_draft));
+                myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        saveDraft();
+                        myDialog.dismiss();
+                        getActivity().finish();
+                    }
+                });
+                myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        getActivity().finish();
+                    }
+                });
+            }
+            if(!myDialog.isShowing()) {
+                myDialog.show();
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally
+     * tied to {@link Activity#onResume() Activity.onResume} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume");
+
+        try {
+            recoverDraft();
+        } catch(Exception e) {
+            draftPreferences.edit().clear().commit();
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Called when the view previously created by {@link #onCreateView} has
+     * been detached from the fragment.  The next time the fragment needs
+     * to be displayed, a new view will be created.  This is called
+     * after {@link #onStop()} and before {@link #onDestroy()}.  It is called
+     * <em>regardless</em> of whether {@link #onCreateView} returned a
+     * non-null view.  Internally it is called after the view's state has
+     * been saved but before it has been removed from its parent.
+     */
+    @Override
+    public void onDestroyView() {
+        if(myDialog != null && myDialog.isShowing()) {
+            myDialog.dismiss();
+        }
+        super.onDestroyView();
+    }
+
+    /**
+     * 保存草稿
+     */
+    private void saveDraft() {
+        Log.i(TAG, "saveDraft");
+        SharedPreferences.Editor editor = draftPreferences.edit();
+        if(hasPicContent) {
+            int i = 0;
+            for(Uri uri : pic_content) {
+                editor.putString(PREFERENCE_KEY_PIC_CONTENT + i++, uri.toString());
+                Log.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CONTENT + ": " + uri.toString());
+            }
+            editor.putInt(PREFERENCE_KEY_PIC_COUNT, i);
+            editor.putInt(PREFERENCE_KEY_PIC_VIEW_WIDTH, fragment2.getColumnWidthHeight());
+        }
+
+        editor.putString(PREFERENCE_KEY_LOC_NAME, location_desc.getText().toString());
+        editor.putFloat(PREFERENCE_KEY_LOC_LONGITUDE, (float) longitude);
+        editor.putFloat(PREFERENCE_KEY_LOC_LATITUDE, (float) latitude);
+
+        editor.putString(PREFERENCE_KEY_DO_FEEL_CODE, selectFeelingPath);
+        editor.putInt(PREFERENCE_KEY_CHECK_ITEM_INDEX, checkItemIndex);
+        editor.putBoolean(PREFERENCE_KEY_CONTENT_GROUP_PUBLIC, allRange);
+
+        editor.putString(PREFERENCE_KEY_TAG_MEMBERS, gson.toJson(at_members_data));
+        editor.putString(PREFERENCE_KEY_TAG_GROUPS, gson.toJson(at_groups_data));
+
+        WallEditView editView = fragment1.getEditText4Content();
+        editor.putString(PREFERENCE_KEY_TEXT_CONTENT, editView.getRelText());
+        editor.putString(PREFERENCE_KEY_OLD_MEMBER_TEXT, editView.getOldMemberText());
+        editor.putString(PREFERENCE_KEY_OLD_GROUP_TEXT, editView.getOldGroupText());
+
+        editor.putBoolean(PREFERENCE_KEY_IS_SAVE, true);
+
+        editor.commit();
+    }
+
+    /**
+     * 恢复草稿
+     */
+    private void recoverDraft() throws Exception {
+        Log.i(TAG, "recoverDraft");
+        if(draftPreferences == null) {
+            draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        }
+        if(!draftPreferences.getBoolean(PREFERENCE_KEY_IS_SAVE, false)) {
+            return;
+        }
+        location_desc.setText(draftPreferences.getString(PREFERENCE_KEY_LOC_NAME, ""));
+        longitude = draftPreferences.getFloat(PREFERENCE_KEY_LOC_LONGITUDE, (float) longitude);
+        latitude = draftPreferences.getFloat(PREFERENCE_KEY_LOC_LATITUDE, (float) latitude);
+
+        selectFeelingPath = draftPreferences.getString(PREFERENCE_KEY_DO_FEEL_CODE, selectFeelingPath);
+        if(!TextUtils.isEmpty(selectFeelingPath)) {
+            checkItemIndex = draftPreferences.getInt(PREFERENCE_KEY_CHECK_ITEM_INDEX, checkItemIndex);
+            iv_feeling.setVisibility(View.VISIBLE);
+            try {
+                iv_feeling.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(selectFeelingPath)));
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        allRange = draftPreferences.getBoolean(PREFERENCE_KEY_CONTENT_GROUP_PUBLIC, allRange);
+        if(allRange) {
+            btn_share_option.setBackgroundResource(R.drawable.post_rang_all);
+            btn_share_option.setText(R.string.text_all);
+        } else {
+            btn_share_option.setBackgroundResource(R.drawable.post_rang_private);
+            btn_share_option.setText(R.string.text_private);
+        }
+
+        String members = draftPreferences.getString(PREFERENCE_KEY_TAG_MEMBERS, "");
+        at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+        String groups = draftPreferences.getString(PREFERENCE_KEY_TAG_GROUPS, "");
+        at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {}.getType());
+
+        WallEditView editView = fragment1.getEditText4Content();
+        editView.setOldMemberText(draftPreferences.getString(PREFERENCE_KEY_OLD_MEMBER_TEXT, editView.getOldMemberText()));
+        editView.setOldGroupText(draftPreferences.getString(PREFERENCE_KEY_OLD_GROUP_TEXT, editView.getOldGroupText()));
+        editView.setText(draftPreferences.getString(PREFERENCE_KEY_TEXT_CONTENT, editView.getRelText()));
+        changeAtDesc(false);
+
+        int picCount = draftPreferences.getInt(PREFERENCE_KEY_PIC_COUNT, 0);
+        if(picCount > 0) {
+            pic_content = new ArrayList<>();
+            for(int i = 0; i < picCount; i++) {
+                String strUri = draftPreferences.getString(PREFERENCE_KEY_PIC_CONTENT + i, "");
+                Log.i(TAG, "recoverDraft& uri: " + strUri);
+                if(!TextUtils.isEmpty(strUri)) {
+                    Uri uri = Uri.parse(strUri);
+                    pic_content.add(uri);
+                }
+            }
+            fragment2.setColumnWidthHeight(draftPreferences.getInt(PREFERENCE_KEY_PIC_VIEW_WIDTH, 0));
+            fragment2.setEditPicContent(pic_content);
+            pic_content = new ArrayList<>();
+        }
+
+        draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).commit();
+    }
 
     private boolean allRange = true;
 
@@ -231,7 +464,6 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     boolean hasPicContent;
     boolean hasTextContent;
-    ProgressDialog progressDialog;
 
     private void submitWall() {
         hasTextContent = false;
@@ -239,7 +471,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         if(fragment1 != null) {
             WallEditView editText = fragment1.getEditText4Content();
             text_content = editText.getRelText();
-            if(TextUtils.isEmpty(text_content)) {
+            if(TextUtils.isEmpty(text_content.trim())) {
                 hasTextContent = false;
             } else {
                 hasTextContent = true;
@@ -309,7 +541,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.params = params;
         requestInfo.url = Constant.API_WALL_TEXT_POST;
-        new HttpTools(getActivity()).post(requestInfo, new HttpCallback() {
+        new HttpTools(App.getContextInstance()).post(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -327,19 +559,24 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     if("1".equals(obj.getString("resultStatus")) && !TextUtils.isEmpty(obj.getString("contentID"))) {
                         String contentId = obj.getString("contentID");
                         if(!hasPicContent) {
-                            mHandler.sendEmptyMessage(ACTION_SUCCESSED);
+                            mHandler.sendEmptyMessage(ACTION_SUCCEED);
                         } else {
                             int count = pic_content.size();
                             boolean multiple = (count > 0 ? false : true);
+                            tasks = new ArrayList<>();
                             for(int index = 0; index < count; index++) {
+
                                 if(index == count - 1) {
-                                    new CompressBitmapTask(contentId, index, multiple, true).execute(pic_content.get(index));
+                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
+                                    tasks.add(task);
+                                    task.execute(pic_content.get(index));
                                 } else {
-                                    new CompressBitmapTask(contentId, index, multiple, false).execute(pic_content.get(index));
+                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, false);
+                                    tasks.add(task);
+                                    task.execute(pic_content.get(index));
                                 }
                             }
                         }
-
                     } else {
                         mHandler.sendEmptyMessage(ACTION_FAILED);
                     }
@@ -370,32 +607,31 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private static final int SHOW_PROGRESS = 11;
     private static final int HIDE_PROGRESS = 12;
     private static final int ACTION_FAILED = 13;
-    private static final int ACTION_SUCCESSED = 14;
+    private static final int ACTION_SUCCEED = 14;
 
     Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch(msg.what) {
                 case ACTION_FAILED:
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_failed);
                     sendEmptyMessage(HIDE_PROGRESS);
                     break;
-                case ACTION_SUCCESSED:
+                case ACTION_SUCCEED:
+                    SharedPreferences.Editor editor = draftPreferences.edit();
+                    editor.clear().commit();
                     getParentActivity().setResult(Activity.RESULT_OK);
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
+                    if(getActivity() != null) {
+                        getActivity().finish();
+                    }
                     sendEmptyMessage(HIDE_PROGRESS);
-                    getActivity().finish();
                     break;
                 case SHOW_PROGRESS:
-                    if(progressDialog == null) {
-                        progressDialog = new ProgressDialog(getActivity(), R.string.text_uploading);
-                    }
-                    progressDialog.show();
+                    rlProgress.setVisibility(View.VISIBLE);
                     break;
                 case HIDE_PROGRESS:
-                    if(progressDialog != null) {
-                        progressDialog.dismiss();
-                    }
+                    rlProgress.setVisibility(View.GONE);
                     break;
             }
         }
@@ -404,9 +640,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     @Override
     public void onDestroy() {
-        if(progressDialog != null) {
-            progressDialog.dismiss();
-        }
+        rlProgress.setVisibility(View.GONE);
         super.onDestroy();
     }
 
@@ -426,6 +660,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             }
             ivCursor.startAnimation(translateAnimation1);
         } else {
+            UIUtil.hideKeyboard(getParentActivity(), fragment1.getEditText4Content());
             fragment = fragment2;
             if(translateAnimation2 == null) {
                 translateAnimation2 = new TranslateAnimation(0, ivCursor.getWidth(), ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
@@ -474,20 +709,25 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
         @Override
         protected String doInBackground(Uri... params) {
-            if(params == null)
+            if(params == null) {
                 return null;
-            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
+            }
+            return LocalImageLoader.compressBitmap(App.getContextInstance(), FileUtil.getRealPathFromURI(App.getContextInstance(), params[0]), 480, 800, false);
         }
 
         @Override
         protected void onPostExecute(String path) {
             submitPic(path, contentId, index, multiple, lastPic);
+            tasks.remove(this);
         }
     }
 
     private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
         File f = new File(path);
         if(!f.exists()) {
+            if(lastPic) {
+                mHandler.sendEmptyMessage(ACTION_FAILED);
+            }
             return;
         }
 
@@ -500,7 +740,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         params.put("multiple", multiple ? "1" : "0");
 
 
-        new HttpTools(getActivity()).upload(Constant.API_WALL_PIC_POST, params, new HttpCallback() {
+        new HttpTools(App.getContextInstance()).upload(Constant.API_WALL_PIC_POST, params, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -512,7 +752,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             @Override
             public void onResult(String string) {
                 if(lastPic) {
-                    mHandler.sendEmptyMessage(ACTION_SUCCESSED);
+                    mHandler.sendEmptyMessage(ACTION_SUCCEED);
                 }
             }
 
@@ -541,20 +781,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goLocationSetting() {
-        Intent intent;
-        //判断是用百度还是google
-        if (SystemUtil.checkPlayServices(getActivity())) {
-            intent = new Intent(getActivity(), Map4GoogleActivity.class);
-        }else {
-            intent = new Intent(getActivity(), Map4BaiduActivity.class);
-        }
-        //        intent.putExtra("has_location", position_name.getText().toString());
-        if(!TextUtils.isEmpty(location_desc.getText())) {
-            intent.putExtra("location_name", location_desc.getText().toString());
-            intent.putExtra("latitude", latitude);
-            intent.putExtra("longitude", longitude);
-        }
-        startActivityForResult(intent, GET_LOCATION);
+        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude);
+        if(intent!=null)
+            startActivityForResult(intent, GET_LOCATION);
     }
 
     private void goChooseMembers() {
@@ -568,34 +797,54 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "onActivityResult");
+
+        // 没有退出编辑不用保存蓝草稿
+        draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).commit();
+
         if(resultCode == getActivity().RESULT_OK) {
             switch(requestCode) {
                 case GET_LOCATION:
                     if(data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
-                        locationName = data.getStringExtra("location_name");
-                        Log.i(TAG, "onActivityResult: location" + locationName);
-                        if(!TextUtils.isEmpty(locationName)) {
-                            location_desc.setText(locationName);
-                            latitude = data.getDoubleExtra("latitude", 0);
-                            longitude = data.getDoubleExtra("longitude", 0);
+                        if (SystemUtil.checkPlayServices(getActivity())) {
+                            final Place place = PlacePicker.getPlace(data, getActivity());
+                            if(place!=null) {
+                                String locationName = place.getAddress().toString();
+                                location_desc.setText(locationName);
+                                latitude = place.getLatLng().latitude;
+                                longitude = place.getLatLng().longitude;
+                            }
+
+                        }else {
+                            String locationName = data.getStringExtra("location_name");
+                            if (!TextUtils.isEmpty(locationName)) {
+                                location_desc.setText(locationName);
+                                latitude = data.getDoubleExtra("latitude", 0);
+                                longitude = data.getDoubleExtra("longitude", 0);
+                            } else {
+                                location_desc.setText(null);
+                                latitude = -1000;
+                                longitude = -1000;
+                            }
                         }
                     }
                     break;
                 case GET_MEMBERS:
                     String members = data.getStringExtra("members_data");
                     at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                    Log.i(TAG, "onActivityResult: size = " + at_members_data.size());
                     String groups = data.getStringExtra("groups_data");
                     at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {}.getType());
-                    changeAtDesc();
+                    changeAtDesc(true);
                     break;
             }
         }
     }
 
-    void changeAtDesc() {
+    void changeAtDesc(boolean checkVisible) {
         if(fragment1 != null) {
-            fragment1.changeAtDesc(at_members_data, at_groups_data);
+            fragment1.changeAtDesc(at_members_data, at_groups_data, checkVisible);
         } else {
             Log.w(TAG, "changeAtDesc fragment1 is null, can't change at description");
         }
@@ -661,6 +910,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         }
         return ids;
     }
+
     private List<String> setGetGroupIds(List<GroupEntity> groups) {
         List<String> ids = new ArrayList<>();
         if(groups != null) {

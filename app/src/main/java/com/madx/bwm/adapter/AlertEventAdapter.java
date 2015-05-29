@@ -3,7 +3,6 @@ package com.madx.bwm.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,22 +82,8 @@ public class AlertEventAdapter extends RecyclerView.Adapter<AlertEventAdapter.VH
                 whatEvent = moduleAction + moduleName;
                 break;
         }
-        int firstPosition = 0;
-        int lastPosition = 0;
-        if (null != moduleName) {
-            if ("reminder".equalsIgnoreCase(moduleName.trim())) {
-                firstPosition = whatEvent.length() - moduleName.length();
-                lastPosition = whatEvent.length();
-            } else {
-                firstPosition = whatEvent.length() - moduleName.length() - 7;
-                lastPosition = whatEvent.length() - 7;
-            }
-        }
-        SpannableString msp = new SpannableString(whatEvent);
-//        msp.setSpan(new AbsoluteSizeSpan(mContext.getResources().getDimensionPixelSize(R.dimen.text_medium_size)), firstPosition, lastPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        msp.setSpan(new ForegroundColorSpan(Color.parseColor("#00b7ff")), firstPosition, lastPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), firstPosition, lastPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return msp;
+
+        return whatEvent;
     }
 
     @Override

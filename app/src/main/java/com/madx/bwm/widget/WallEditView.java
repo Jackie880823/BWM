@@ -106,6 +106,22 @@ public class WallEditView extends EditText implements TextWatcher {
 
     }
 
+    public String getOldGroupText() {
+        return oldGroupText;
+    }
+
+    public void setOldGroupText(String oldGroupText) {
+        this.oldGroupText = oldGroupText;
+    }
+
+    public String getOldMemberText() {
+        return oldMemberText;
+    }
+
+    public void setOldMemberText(String oldMemberText) {
+        this.oldMemberText = oldMemberText;
+    }
+
     public void initUI(Context context, AttributeSet attrs) {
         addTextChangedListener(this);
         //        TypedArray mTypedArray;
@@ -120,11 +136,11 @@ public class WallEditView extends EditText implements TextWatcher {
     }
 
     public interface TextChangeListener {
-        public static final int CHANGE_MODE_NORMAL = 0;
-        public static final int CHANGE_MODE_DLETE_AT_MEMBER = 1;
-        public static final int CHANGE_MODE_DLETE_AT_GROUPS = 2;
-        public static final int CHANGE_MODE_DLETE_AT_ALL = 3;
-        public static final int CHANGE_MODE_BLACK_CHANGE = 4;
+        int CHANGE_MODE_NORMAL = 0;
+        int CHANGE_MODE_DELETE_AT_MEMBER = 1;
+        int CHANGE_MODE_DELETE_AT_GROUPS = 2;
+        int CHANGE_MODE_DELETE_AT_ALL = 3;
+        int CHANGE_MODE_BLACK_CHANGE = 4;
 
         void beforeTextChanged(CharSequence s, int start, int count, int after);
 
@@ -166,7 +182,7 @@ public class WallEditView extends EditText implements TextWatcher {
                 Matcher m = p.matcher(sb.toString());
                 if(!m.find() || (m.end() == 0)) {
                     hasAtMember = false;
-                    change |= TextChangeListener.CHANGE_MODE_DLETE_AT_MEMBER;
+                    change |= TextChangeListener.CHANGE_MODE_DELETE_AT_MEMBER;
                     oldMemberText = "";
                 }
             }
@@ -176,7 +192,7 @@ public class WallEditView extends EditText implements TextWatcher {
                 Matcher m = p.matcher(sb.toString());
                 if(!m.find() || (m.end() == 0)) {
                     hasAtGroup = false;
-                    change |= TextChangeListener.CHANGE_MODE_DLETE_AT_GROUPS;
+                    change |= TextChangeListener.CHANGE_MODE_DELETE_AT_GROUPS;
                     oldGroupText = "";
                 }
             }
@@ -202,6 +218,7 @@ public class WallEditView extends EditText implements TextWatcher {
         sbLog.append("; hasAtGroup: ");
         sbLog.append(hasAtGroup);
         Log.i(TAG, sbLog.toString());
+
         if(!isVisible) {
             Log.w(TAG, "addAtDesc& this view not show");
             if(textChangeListener != null) {

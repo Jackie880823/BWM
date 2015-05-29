@@ -44,6 +44,45 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/iv_tab_icon3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp">
+
+            <ImageView
+                android:id="@+id/iv_tab_icon3_iv"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/tab_message"
+
+                />
+
+
+            <TextView
+                android:id="@+id/iv_tab_icon3_tv"
+                style="@style/text_default"
+                android:text="@string/title_tab_chat"
+                android:layout_gravity="center_horizontal"
+
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/iv_tab_icon1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -113,44 +152,7 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/iv_tab_icon3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:clickable="true"
-        android:orientation="vertical"
-        >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:orientation="vertical"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp">
-
-            <ImageView
-                android:id="@+id/iv_tab_icon3_iv"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/tab_message"
-
-                />
-
-
-            <TextView
-                android:id="@+id/iv_tab_icon3_tv"
-                style="@style/text_default"
-                android:text="@string/title_tab_chat"
-                android:layout_gravity="center_horizontal"
-
-                />
-
-        </LinearLayout>
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/iv_tab_icon4"

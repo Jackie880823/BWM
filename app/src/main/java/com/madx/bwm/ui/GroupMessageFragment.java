@@ -9,7 +9,10 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -46,9 +49,11 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
     private boolean isGroupRefresh = false;
     private int startIndex = 1;
     private boolean isPullData = false;
+    private LinearLayout emptyGroupMessageLinear;
+    private ImageView emptyGroupMessageIv;
+    private TextView emptyGroupMessageTv;
 
     public static GroupMessageFragment newInstance(String... params) {
-
         return createInstance(new GroupMessageFragment());
     }
 
@@ -83,6 +88,9 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
         groupListView = getViewById(R.id.message_listView);
         groupIb = getViewById(R.id.ib_top);
         groupRefreshLayout = getViewById(R.id.swipe_refresh_layout);
+        emptyGroupMessageLinear = getViewById(R.id.message_main_empty_linear);
+        emptyGroupMessageIv = getViewById(R.id.message_main_image_empty);
+        emptyGroupMessageTv = getViewById(R.id.message_main_text_empty);
         userEntityList = new ArrayList<>();
         messageGroupAdapter = new MessageGroupFragmentAdapter(mContext, userEntityList);
         groupListView.setAdapter(messageGroupAdapter);
@@ -159,6 +167,16 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
         }
     }
 
+    private void showGroupEmptyView() {
+        emptyGroupMessageLinear.setVisibility(View.VISIBLE);
+        emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
+        emptyGroupMessageTv.setText("");
+    }
+
+    private void hideGroupEmptyView() {
+        emptyGroupMessageLinear.setVisibility(View.GONE);
+    }
+
     private void getData(int beginIndex) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
             MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
@@ -200,10 +218,19 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
                                 isPullData = false;
                                 Message.obtain(handler, GET_PULL_DATA, groupList).sendToTarget();
                             } else {
+                                if (null == groupList || groupList.size() == 0) {
+                                    showGroupEmptyView();
+                                } else {
+                                    hideGroupEmptyView();
+                                }
                                 Message.obtain(handler, GET_NEW_DATA, groupList).sendToTarget();
                             }
                         } catch (JSONException e) {
-                            MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                            if (isPullData) {
+                                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                            } else {
+                                showGroupEmptyView();
+                            }
                             e.printStackTrace();
                         }
                     }

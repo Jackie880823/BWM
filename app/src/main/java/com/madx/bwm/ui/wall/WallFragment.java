@@ -16,7 +16,6 @@ import android.widget.FrameLayout;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -49,8 +48,6 @@ import java.util.Map;
 public class WallFragment extends BaseFragment<MainActivity> implements ViewClickListener {
 
 
-    private ProgressDialog mProgressDialog;
-
     public static WallFragment newInstance(String... params) {
         return createInstance(new WallFragment(), params);
     }
@@ -61,8 +58,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
 
     }
@@ -76,8 +72,9 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
     private RecyclerView rvList;
     private WallAdapter adapter;
     private MySwipeRefreshLayout swipeRefreshLayout;
+    private View vProgress;
     private boolean isRefresh = true;
-    public List<WallEntity> data = new ArrayList<WallEntity>();
+    public List<WallEntity> data = new ArrayList<>();
     private int startIndex = 0;
     private int offset = 10;
     private int currentPage = 1;
@@ -87,14 +84,15 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
 
     @Override
     public void initView() {
-        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
-        mProgressDialog.show();
 
-        if (getArguments() != null) {
+        if(getArguments() != null) {
             member_id = getArguments().getString(ARG_PARAM_PREFIX + 0);
         }
 
         flWallStartUp = getViewById(R.id.wall_start_up);
+
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
 
         rvList = getViewById(R.id.rv_wall_list);
         llm = new LinearLayoutManager(getParentActivity());
@@ -109,7 +107,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
                 }
@@ -128,33 +126,33 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
             }
 
         });
-//        swipeRefreshLayout.setProgressBackgroundColor(getResources().getColor(R.color.default_text_color_light));
-//        swipeRefreshLayout.setColorSchemeColors(android.R.color.holo_blue_bright,
-//                android.R.color.holo_green_dark,
-//                android.R.color.holo_orange_dark,
-//                android.R.color.holo_red_dark);
+        //        swipeRefreshLayout.setProgressBackgroundColor(getResources().getColor(R.color.default_text_color_light));
+        //        swipeRefreshLayout.setColorSchemeColors(android.R.color.holo_blue_bright,
+        //                android.R.color.holo_green_dark,
+        //                android.R.color.holo_orange_dark,
+        //                android.R.color.holo_red_dark);
 
-//        isRefresh = true;
-//        swipeRefreshLayout.setRefreshing(true);
+        //        isRefresh = true;
+        //        swipeRefreshLayout.setRefreshing(true);
 
-//        try {
-//            Dao<OrmEntityDemo,Integer> demoDao = App.getContextInstance().getDBHelper().getDao(OrmEntityDemo.class);
-//            int i = 0;
-//            for(;i<20;i++) {
-//                OrmEntityDemo ormEntityDemo = new OrmEntityDemo();
-//                ormEntityDemo.setRegisterDate(System.currentTimeMillis());
-//                ormEntityDemo.setSecurityKey("abc" + i);
-//                demoDao.create(ormEntityDemo);
-//            }
-//
-//            List<OrmEntityDemo> ormEntityDemos = demoDao.queryForAll();
-//            for(OrmEntityDemo demo :ormEntityDemos){
-//                Log.i("", "demo==========" + demo.getSecurityKey());
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        //        try {
+        //            Dao<OrmEntityDemo,Integer> demoDao = App.getContextInstance().getDBHelper().getDao(OrmEntityDemo.class);
+        //            int i = 0;
+        //            for(;i<20;i++) {
+        //                OrmEntityDemo ormEntityDemo = new OrmEntityDemo();
+        //                ormEntityDemo.setRegisterDate(System.currentTimeMillis());
+        //                ormEntityDemo.setSecurityKey("abc" + i);
+        //                demoDao.create(ormEntityDemo);
+        //            }
+        //
+        //            List<OrmEntityDemo> ormEntityDemos = demoDao.queryForAll();
+        //            for(OrmEntityDemo demo :ormEntityDemos){
+        //                Log.i("", "demo==========" + demo.getSecurityKey());
+        //            }
+        //
+        //        } catch (SQLException e) {
+        //            e.printStackTrace();
+        //        }
 
 
     }
@@ -172,7 +170,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("limit", offset + "");
         params.put("start", startIndex + "");
-        if (!TextUtils.isEmpty(member_id)) {
+        if(!TextUtils.isEmpty(member_id)) {
             params.put("member_id", member_id + "");
         }
 
@@ -197,9 +195,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
                 //gsonb.registerTypeAdapter(Date.class, ds);
                 Gson gson = gsonb.create();
                 try {
-                    data = gson.fromJson(response, new TypeToken<ArrayList<WallEntity>>() {
-                    }.getType());
-                    if (isRefresh) {
+                    data = gson.fromJson(response, new TypeToken<ArrayList<WallEntity>>() {}.getType());
+                    if(isRefresh) {
                         startIndex = data.size();
                         currentPage = 1;
                         finishReFresh();
@@ -214,20 +211,21 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
                         flWallStartUp.setVisibility(View.GONE);
                     }
                     loading = false;
-                } catch (Exception e) {
+                } catch(Exception e) {
                     e.printStackTrace();
                     reInitDataStatus();
-                }finally {
-                    mProgressDialog.dismiss();
+                } finally {
+                    vProgress.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                if (isRefresh) {
+                if(isRefresh) {
                     finishReFresh();
                 }
                 loading = false;
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -243,7 +241,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
 
     }
 
-    private void reInitDataStatus(){
+    private void reInitDataStatus() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
         startIndex = 0;
@@ -257,7 +255,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
     }
 
     /**
-     *显示用户分享的图片
+     * 显示用户分享的图片
+     *
      * @param content_id
      */
     @Override
@@ -316,8 +315,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
     @Override
     public void remove(final String content_group_id) {
 
-        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_wall_del));
-        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.accept), new View.OnClickListener() {
+        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.alert_wall_del_title), getActivity().getString(R.string.alert_wall_del));
+        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -325,13 +324,12 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
                 new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
-                        mProgressDialog.setTitle(R.string.text_waiting);
-                        mProgressDialog.show();
+                        vProgress.setVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onFinish() {
-                        mProgressDialog.dismiss();
+                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -342,7 +340,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
 
                     @Override
                     public void onError(Exception e) {
-
+                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -364,7 +362,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
                 removeAlertDialog.dismiss();
             }
         });
-        if (!removeAlertDialog.isShowing()) {
+        if(!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
 
@@ -373,13 +371,13 @@ public class WallFragment extends BaseFragment<MainActivity> implements ViewClic
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
+        if(resultCode == Activity.RESULT_OK) {
+            switch(requestCode) {
                 case Constant.ACTION_CREATE_WALL:
                     //wait a mement for the pic handle on server
                     try {
                         Thread.sleep(2000);
-                    } catch (InterruptedException e) {
+                    } catch(InterruptedException e) {
                         e.printStackTrace();
                     }
                 case Constant.ACTION_COMMENT_WALL:

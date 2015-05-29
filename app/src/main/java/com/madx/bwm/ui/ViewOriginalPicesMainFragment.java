@@ -22,6 +22,8 @@ import com.madx.bwm.adapter.ViewPicAdapter;
 import com.madx.bwm.entity.PhotoEntity;
 import com.madx.bwm.widget.ViewPagerFixed;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +58,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
     private MyFragmentPagerAdapter viewPaperAdapter;
     private List<Fragment> fragments = new ArrayList<>();
     private int currentId;
+    private String memberId;
 
     private static boolean got_data_in;
 
@@ -91,12 +94,13 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
         rvList.setLayoutManager(llm);
         //        got_data_in = getArguments().getBoolean("is_data",false);
         request_url = getArguments().getString("request_url");
-        if(getArguments() == null || TextUtils.isEmpty(request_url)) {
+        memberId = getArguments().getString("memberId");
+        if (getArguments() == null || TextUtils.isEmpty(request_url)) {
             got_data_in = true;
 
         } else {
             got_data_in = false;
-            if(data != null)
+            if (data != null)
                 data.clear();
         }
         view_paper = (ViewPagerFixed) getViewById(R.id.view_paper);
@@ -108,11 +112,11 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                 String text = null;
                 int count = data.size();
                 Log.i(TAG, "onPageChange& position = " + position + "; count = " + count);
-                if(count == 1) {
+                if (count == 1) {
                     text = getActivity().getString(R.string.photo_position_no_arrow);
-                } else if(position <= 0) {
+                } else if (position <= 0) {
                     text = getActivity().getString(R.string.photo_position_right_arrow);
-                } else if(position == count - 1) {
+                } else if (position == count - 1) {
                     text = getActivity().getString(R.string.photo_position_left_arrow);
                 } else {
                     text = getActivity().getString(R.string.photo_position_double_arrow);
@@ -143,12 +147,12 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
 
     @Override
     public void requestData() {
-        if(got_data_in) {
+        if (got_data_in) {
             //默认第一张
             initAdapter();
             initViewPaper(0);
         } else {
-            if(TextUtils.isEmpty(request_url)) {
+            if (TextUtils.isEmpty(request_url)) {
                 getActivity().finish();
                 return;
             }
@@ -166,16 +170,28 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
 
                 @Override
                 public void onResult(String response) {
-                    GsonBuilder gsonb = new GsonBuilder();
-                    //Json中的日期表达方式没有办法直接转换成我们的Date类型, 因此需要单独注册一个Date的反序列化类.
-                    //DateDeserializer ds = new DateDeserializer();
-                    //给GsonBuilder方法单独指定Date类型的反序列化方法
-                    //gsonb.registerTypeAdapter(Date.class, ds);
-                    Gson gson = gsonb.create();
-                    data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {}.getType());
-                    //默认第一张
-                    initAdapter();
-                    initViewPaper(0);
+                    try {
+                        GsonBuilder gsonb = new GsonBuilder();
+                        //Json中的日期表达方式没有办法直接转换成我们的Date类型, 因此需要单独注册一个Date的反序列化类.
+                        //DateDeserializer ds = new DateDeserializer();
+                        //给GsonBuilder方法单独指定Date类型的反序列化方法
+                        //gsonb.registerTypeAdapter(Date.class, ds);
+                        Gson gson = gsonb.create();
+                        if (response.startsWith("{\"data\":")) {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String dataString = jsonObject.optString("data");
+                            data = gson.fromJson(dataString, new TypeToken<ArrayList<PhotoEntity>>() {
+                            }.getType());
+                        } else {
+                            data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
+                            }.getType());
+                        }
+                        //默认第一张
+                        initAdapter();
+                        initViewPaper(0);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -204,16 +220,16 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
      */
     private void initViewPaper(int dataIndex) {
         //        setViewPaperItems(dataIndex);
-        if(data != null && !data.isEmpty()) {
+        if (data != null && !data.isEmpty()) {
             int count = data.size();
-            for(int i = 0; i < count; i++) {
+            for (int i = 0; i < count; i++) {
                 fragments.add(generatePicFragment(data.get(i)));
             }
             viewPaperAdapter.notifyDataSetChanged();
 
             tvIndexOfList.setVisibility(View.VISIBLE);
             String text = null;
-            if(count == 1) {
+            if (count == 1) {
                 text = getActivity().getString(R.string.photo_position_no_arrow);
             } else {
                 text = getActivity().getString(R.string.photo_position_right_arrow);
@@ -226,7 +242,11 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
     }
 
     private Fragment generatePicFragment(PhotoEntity photoEntity) {
-        String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, photoEntity.getUser_id(), photoEntity.getFile_id());
+        String userId = photoEntity.getUser_id();
+        if (TextUtils.isEmpty(userId)) {
+            userId = memberId;
+        }
+        String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, userId, photoEntity.getFile_id());
         ViewPicFragment viewPic = new ViewPicFragment();
         Bundle bundle = new Bundle();
         bundle.putString("pic_url", picUrl);
@@ -235,8 +255,8 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
     }
 
     private void initAdapter() {
-        if(data != null && !data.isEmpty()) {
-            adapter = new ViewPicAdapter(getActivity(), data);
+        if (data != null && !data.isEmpty()) {
+            adapter = new ViewPicAdapter(getActivity(), data, memberId);
             rvList.setAdapter(adapter);
             //                big_url = String.format(Constant.API_GET_PIC, Constant.Module_preview_m, data.get(0).getUser_id(), data.get(0).getFile_id());
             //                if (!TextUtils.isEmpty(big_url)) {
@@ -275,7 +295,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                     //                                watting_progressBar.setVisibility(View.GONE);
                     //                            }
                     //                        });
-                    if(currentId != position) {
+                    if (currentId != position) {
                         view_paper.setCurrentItem(position);
 //                        currentId = position;
                     }

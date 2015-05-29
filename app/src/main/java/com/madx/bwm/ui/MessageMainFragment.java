@@ -56,6 +56,13 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             @Override
             public boolean execute(View v) {
                 showSelectDialog();
+//                Intent intent = new Intent();
+//                if (pager.getCurrentItem() == 0) {
+//                    intent.setClass(getActivity(), AddNewMembersActivity.class);
+//                } else {
+//                    intent.setClass(getActivity(), CreateGroupActivity.class);
+//                }
+//                startActivity(intent);
                 return false;
             }
         });
@@ -121,7 +128,11 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         tvCreateNewGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), CreateGroupActivity.class));
+                //startActivity(new Intent(getActivity(), CreateGroupActivity.class));
+                Intent intent=new Intent(getActivity(), InviteMemberActivity.class);
+                intent.putExtra("isCreateNewGroup",true);
+                intent.putExtra("jumpIndex",1);
+                startActivity(intent);
                 showSelectDialog.dismiss();
             }
         });
