@@ -148,18 +148,7 @@
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">No contact selected</string>
 
-    <string name="text_setting_1_title">Birthday Alert Reminder</string>
-    <string name="text_setting_1_1">1 Day earlier</string>
-    <string name="text_setting_1_2">3 Days earlier</string>
-    <string name="text_setting_1_3">1 Week earlier</string>
-    <string name="text_setting_1_4">1 Month earlier</string>
-    <string name="text_setting_2_title">Auto-Accept</string>
-    <string name="text_setting_2_1">All relationship</string>
-    <string name="text_setting_2_2">Parent relationship</string>
-    <string name="text_setting_2_3">Spouse relationship</string>
-    <string name="text_setting_2_4">Sibling relationship</string>
-    <string name="text_setting_2_5">Children relationship</string>
-    <string name="text_setting_2_6">Others relationship</string>
+
 
     <string name="text_my_location">My Location</string>
 
@@ -615,6 +604,20 @@
     <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group. Add more members now!</string>
 
     <!--Christopher-->
+
+    <string name="text_setting_1_title">Birthday Alert Reminder</string>
+    <string name="text_setting_1_1">1 Day earlier</string>
+    <string name="text_setting_1_2">3 Days earlier</string>
+    <string name="text_setting_1_3">1 Week earlier</string>
+    <string name="text_setting_1_4">1 Month earlier</string>
+
+    <string name="text_setting_2_title">Auto-Accept</string>
+    <string name="text_setting_2_1">All relationship</string>
+    <string name="text_setting_2_2">Parent relationship</string>
+    <string name="text_setting_2_3">Spouse relationship</string>
+    <string name="text_setting_2_4">Sibling relationship</string>
+    <string name="text_setting_2_5">Children relationship</string>
+    <string name="text_setting_2_6">Others relationship</string>
 
     <string name="text_auto_accept">Auto-Accept Relationship</string>
     <string name="text_birthday_alert_reminder">Birthday Reminder</string>
