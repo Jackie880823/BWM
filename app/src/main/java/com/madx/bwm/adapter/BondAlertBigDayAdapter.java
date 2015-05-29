@@ -83,7 +83,7 @@ public class BondAlertBigDayAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
 
             VolleyUtil.initNetworkImageView(mContext, item.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-            item.tvName.setText(mData.get(position).getUser_given_name() + " birthday is today!");
+            item.tvName.setText(mData.get(position).getUser_given_name() + mContext.getResources().getString(R.string.text_today_birthday_on));
             item.tvTime.setText(mData.get(position).getDay() + ", " + mData.get(position).getBirthday_date());
         }
         else if (holder instanceof UpcomingViewHolder)
@@ -105,9 +105,9 @@ public class BondAlertBigDayAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
             VolleyUtil.initNetworkImageView(mContext, item.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-            item.tvName.setText(mData.get(position).getUser_given_name() + " birthday is on");
+            item.tvName.setText(mData.get(position).getUser_given_name() + mContext.getResources().getString(R.string.text_upcoming_birthdays_on));
             item.tvTime.setText(mData.get(position).getDay() + ", " + mData.get(position).getBirthday_date());
-            item.tvLeft.setText(mData.get(position).getDay_left() + "d " + "left");
+            item.tvLeft.setText(mData.get(position).getDay_left() + mContext.getResources().getString(R.string.text_d) + mContext.getResources().getString(R.string.text_left));
         }
     }
 

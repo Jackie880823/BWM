@@ -123,7 +123,7 @@
     <string name="text_album">Album</string>
 
 
-    <string name="text_miss_you">miss you</string>
+
 
 
 
@@ -439,11 +439,7 @@
 
     <!-- begin -->
     <!-- Bond Alert 界面 -->
-    <string name="text_wall_posted_to_wall">posted to wall</string>
-    <string name="text_wall_tagged_you_in_post">tagged you in a post</string>
-    <string name="text_wall_commented_on_your_post">commented on your post</string>
-    <string name="text_wall_loved_your_comment">love your comment</string>
-    <string name="text_wall_loved_your_post">love your post</string>
+
     <string name="title_add_new_members">Add New Members</string>
     <string name="title_album_gallery">Album gallery</string>
 
@@ -549,16 +545,7 @@
     <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" ">]]></string>
     <string name="photo_position_no_arrow">%1$d/%2$d</string>
 
-    <!--Alert Group-->
-    <string name="text_pending">requested you to join the group</string>
-    <string name="text_add_group">added you to group</string>
-    <string name="text_reject_has">has</string>
-    <string name="text_reject_dec">declined</string>
-    <string name="text_reject_invite">your invite to</string>
-    <string name="text_reject_group">group</string>
-    <string name="text_dialog_title">Action</string>
-    <string name="text_item_accept">Accept</string>
-    <string name="text_item_decline">Decline</string>
+
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="yesterday_ago">Yesterday&#160;</string>
@@ -607,8 +594,7 @@
     <string name="text_month_december">December</string>
 
     <string name="title_activity_big_day">BigDayActivity</string>
-    <string name="text_upcoming_birthdays">Upcoming birthdays</string>
-    <string name="text_today_birthday">Today \'s birthday</string>
+
     <string name="text_album_no_pic">NO IMAGE FOUND</string>
     <string name="title_via_contact">Via Contact</string>
     <string name="text_personal_msg">PERSONAL MESSAGE</string>
@@ -633,6 +619,33 @@
     <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group. Add more members now!</string>
 
     <!--Christopher-->
+
+    <string name="text_upcoming_birthdays">Upcoming birthdays</string>
+    <string name="text_today_birthday">Today \'s birthday</string>
+    <string name="text_today_birthday_on"> birthday is today!</string>
+    <string name="text_upcoming_birthdays_on"> birthday is on</string>
+    <string name="text_d">d </string>
+    <string name="text_left">left</string>
+
+    <string name="text_miss_you">miss you</string>
+
+    <!--wall-->
+    <string name="text_wall_posted_to_wall">posted to wall</string>
+    <string name="text_wall_tagged_you_in_post">tagged you in a post</string>
+    <string name="text_wall_commented_on_your_post">commented on your post</string>
+    <string name="text_wall_loved_your_comment">love your comment</string>
+    <string name="text_wall_loved_your_post">love your post</string>
+
+    <!--Alert Group-->
+    <string name="text_pending">&#160;requested you to join the group</string>
+    <string name="text_add_group">&#160;added you to group</string>
+    <string name="text_reject_has">&#160;has</string>
+    <string name="text_reject_dec">&#160;declined</string>
+    <string name="text_reject_invite">&#160;your invite to&#160;</string>
+    <string name="text_reject_group">&#160;group</string>
+    <string name="text_dialog_title">Action</string>
+    <string name="text_item_accept">Accept</string>
+    <string name="text_item_decline">Decline</string>
 
     <string name="title_personal_information">Personal Information</string>
     <string name="title_country_code">Country Code</string>

@@ -126,7 +126,7 @@
     <string name="text_camera">拍照</string>
     <string name="text_album">相册</string>
     <string name="title_text_miss">Miss Alert</string>
-    <string name="text_miss_you">miss you</string>
+
 
 
 
@@ -440,13 +440,6 @@
 
 
     <!--begin-->
-    <!--Bond Alert 界面 -->
-    <string name="text_wall_posted_to_wall">posted to wall</string>
-    <string name="text_wall_tagged_you_in_post">tagged you in a post</string>
-    <string name="text_wall_commented_on_your_post">commented on your post</string>
-    <string name="text_wall_loved_your_comment">love your comment</string>
-    <string name="text_wall_loved_your_post">love your post</string>
-
 
     <string name="title_add_new_members">添加新会员</string>
     <string name="title_album_gallery">Album gallery</string>
@@ -594,6 +587,33 @@
 
     <!--Christopher-->
 
+    <string name="text_upcoming_birthdays">Upcoming birthdays</string>
+    <string name="text_today_birthday">Today \'s birthday</string>
+    <string name="text_today_birthday_on"> 的生日在今天!</string>
+    <string name="text_upcoming_birthdays_on"> 的生日在</string>
+    <string name="text_d">天 </string>
+    <string name="text_left">后</string>
+
+    <string name="text_miss_you">想念你</string>
+
+    <!--wall-->
+    <string name="text_wall_posted_to_wall">加了1项新动态</string>
+    <string name="text_wall_tagged_you_in_post">在一项张贴标签您</string>
+    <string name="text_wall_commented_on_your_post">评论您的张贴</string>
+    <string name="text_wall_loved_your_comment">给了您的评论1个赞</string>
+    <string name="text_wall_loved_your_post">给了您的张贴1个赞</string>
+
+    <!--Alert Group-->
+    <string name="text_pending">&#160;邀请您加入群组</string>
+    <string name="text_add_group">&#160;将您加入到群组</string>
+    <string name="text_reject_has">&#160;</string>
+    <string name="text_reject_dec">拒绝</string>
+    <string name="text_reject_invite">加入到你的</string>
+    <string name="text_reject_group">&#160;群组</string>
+    <string name="text_dialog_title">Action</string>
+    <string name="text_item_accept">接收</string>
+    <string name="text_item_decline">拒绝</string>
+
     <string name="title_personal_information">个人信息</string>
     <string name="title_country_code">国家区号</string>
     <string name="title_family_profile">Profile</string>
@@ -692,17 +712,18 @@
     <string name="text_about_us">关于伴我玩</string>
     <string name="text_contact_us">联系我们</string>
     <string name="text_terms">法律</string>
-    <string name="text_sign_out">Sign Out</string>
+    <string name="text_sign_out">登出</string>
 
-    <string name="text_invited_event">%s invited you to event.</string>
-    <string name="text_responded_event">%s responded for event.</string>
-    <string name="text_commented_event">%s commented on event.</string>
-    <string name="text_also_commented_event">%s also commented on event.</string>
-    <string name="text_updated_event">%s updated event.</string>
-    <string name="text_cancelled_event">%s cancelled event.</string>
-    <string name="text_love_comment_event">%s loved your comment in event.</string>
-    <string name="text_love_event">%s loved your event.</string>
-    <string name="text_upcoming_event">Upcoming event: %s </string>
+    <string name="text_invited_event">%s 邀请你参加活动.</string>
+    <string name="text_responded_event">%s （参与／不能参与／可能参与）活动.</string>
+    <string name="text_commented_event">%s 评论活动.</string>
+    <string name="text_also_commented_event">%s 也评论活动.</string>
+    <string name="text_updated_event">%s 更新了活动.</string>
+    <string name="text_cancelled_event">%s 取消活动.</string>
+    <string name="text_love_comment_event">%s 给了您在活动的评论一个赞.</string>
+    <string name="text_love_event">%s 给了您的活动一个赞.</string>
+    <string name="text_upcoming_event">即将到来: %s </string>
+
     <string name="text_dialog_save_draft">保存为草稿</string>
     <string name="text_empty_add_member">点击+以添加家庭成员！</string>
     <string name="text_empty_add_group">点击+以创建新群组！</string>
