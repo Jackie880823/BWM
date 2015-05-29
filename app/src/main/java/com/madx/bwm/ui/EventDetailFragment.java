@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -35,7 +34,6 @@ import com.madx.bwm.action.MessageAction;
 import com.madx.bwm.adapter.EventCommentAdapter;
 import com.madx.bwm.entity.EventCommentEntity;
 import com.madx.bwm.entity.EventEntity;
-import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.FileUtil;
@@ -410,16 +408,16 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public void onReceiveBitmapUri(Uri uri) {
                     isCommentBim = false;
-                    if(uri != null){
-                        uploadImage(uri);
-                    }
+//                    if(uri != null){
+//                        uploadImage(uri);
+//                    }
                     mUri = uri;
                     hideAllViewState();
-//                    if (mUri != null) {
-//                        String path = LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), mUri), 480, 800, false);
-//                        new CompressBitmapTask().execute(mUri);
-//                        return;
-//                    }
+                    if (mUri != null) {
+                        String path = LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), mUri), 480, 800, false);
+                        new CompressBitmapTask().execute(mUri);
+                        return;
+                    }
                 }
 
                 @Override
@@ -523,6 +521,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
                         getActivity().startActivityForResult(intent, 1);
+//                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
                     }else if(v.getId() == getParentActivity().leftButton.getId()){
                         if (isCommentBim){
                             getParentActivity().finish();
@@ -601,6 +600,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
+    /**
+     * 刷新数据
+     */
     public void bindData() {
 
         if (getParentActivity().getEventEntity() != null) {
@@ -1479,32 +1481,70 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
-     /**
-      * 打开相册
-      */
-    private void openAlbum() {
-        intent = new Intent(Intent.ACTION_PICK, null);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        startActivityForResult(intent, REQUEST_HEAD_PHOTO);
-
-    }
 
     /**
-     * 打开相机
+     * fragment 再次显示的时候刷新数据
+     * @param isVisibleToUser
      */
-    private void openCamera() {
-        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra("camerasensortype", 2);
-        // 下面这句指定调用相机拍照后的照片存储的路径
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
-                        CACHE_PIC_NAME_TEMP)));
-        // 图片质量为高
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        intent.putExtra("return-data", false);
-        startActivityForResult(intent, REQUEST_HEAD_CAMERA);
-    }
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser) {
+//            //相当于Fragment的onResume
+//            if (event != null) {
+//                bindData();
+//                requestComment();
+//            } else {
+//                new AsyncTask<Void, Void, Void>() {
+//                    @Override
+//                    protected Void doInBackground(Void... params) {
+//                        while (true) {
+//                            if (getParentActivity() != null && getParentActivity().getDataDone) {
+//                                break;
+//                            }
+//                        }
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    protected void onPostExecute(Void aVoid) {
+//                        bindData();
+//                        requestComment();
+//                    }
+//                }.execute();
+//            }
+//        } else {
+//            //相当于Fragment的onPause
+//        }
+//    }
+
+
+//     /**
+//      * 打开相册
+//      */
+//    private void openAlbum() {
+//        intent = new Intent(Intent.ACTION_PICK, null);
+//        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+//        startActivityForResult(intent, REQUEST_HEAD_PHOTO);
+//
+//    }
+//
+//    /**
+//     * 打开相机
+//     */
+//    private void openCamera() {
+//        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        intent.putExtra("camerasensortype", 2);
+//        // 下面这句指定调用相机拍照后的照片存储的路径
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+//                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
+//                        CACHE_PIC_NAME_TEMP)));
+//        // 图片质量为高
+//        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+//        intent.putExtra("return-data", false);
+//        startActivityForResult(intent, REQUEST_HEAD_CAMERA);
+//    }
 
 //    List<Uri> pickUries = new ArrayList();
 //

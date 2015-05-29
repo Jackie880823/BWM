@@ -1,5 +1,6 @@
 package com.madx.bwm.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -224,6 +225,7 @@ public class EventDetailActivity extends BaseActivity {
         if(requestCode == 1 ){
             if(resultCode == 1){
                 setResult(1);
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         }
