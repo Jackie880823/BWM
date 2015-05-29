@@ -28,9 +28,9 @@
 
 
     <color name="tab_color_normal">#EBEBF4</color>
-    <color name="tab_color_press1">#99ff66</color>
-    <color name="tab_color_press2">#66ccff</color>
-    <color name="tab_color_press3">#cc99ff</color>
+    <color name="tab_color_press1">#66ccff</color>
+    <color name="tab_color_press2">#cc99ff</color>
+    <color name="tab_color_press3">#99ff66</color>
     <color name="tab_color_press4">#cccc99</color>
     <!--add for fimily-->
     <color name="tab_color_press5">#ffcc33</color>
