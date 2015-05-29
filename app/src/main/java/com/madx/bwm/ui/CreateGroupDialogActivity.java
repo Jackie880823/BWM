@@ -118,6 +118,10 @@ public class CreateGroupDialogActivity extends BaseActivity {
         String selectMemberData = new Gson().toJson(selectUserEntityList);
         intent.putExtra("members_data", selectMemberData);
         intent.putExtra("type", 0);
+        if (selectGroupEntityList.size() > 0) {
+            intent.putExtra("groups_data", new Gson().toJson(selectGroupEntityList));
+            intent.putExtra("groupType", 1);
+        }
         startActivityForResult(intent, JUMP_SELECT_MEMBER);
     }
 
@@ -196,10 +200,19 @@ public class CreateGroupDialogActivity extends BaseActivity {
             List<UserEntity> userEntityList = new GsonBuilder().create().fromJson(members_data, new TypeToken<ArrayList<UserEntity>>() {
             }.getType());
             if (userEntityList != null && userEntityList.size() > 0) {
-                for (UserEntity userEntity : userEntityList) {
+                List<UserEntity> userList = new ArrayList<>();
+                userList.addAll(userEntityList);
+                if (selectUserList.size() > 0) {
+                    for (UserEntity userEntity : userEntityList) {
+                        if (selectUserList.contains(userEntity.getUser_id())) {
+                            userList.remove(userEntity);
+                        }
+                    }
+                }
+                for (UserEntity userEntity : userList) {
                     selectUserList.add(userEntity.getUser_id());
                 }
-                selectUserEntityList.addAll(userEntityList);
+                selectUserEntityList.addAll(userList);
             }
         }
         String groups_data = data.getStringExtra("groups_data");
@@ -210,17 +223,39 @@ public class CreateGroupDialogActivity extends BaseActivity {
         }
         if (groupEntityList != null && groupEntityList.size() > 0) {
             List<String> groupIdList = new ArrayList<>();
-            for (FamilyGroupEntity familyGroupEntity : groupEntityList) {
-                groupIdList.add(familyGroupEntity.getGroup_id());
+            List<FamilyGroupEntity> groupList = new ArrayList<>();
+            groupList.addAll(groupEntityList);
+            if (selectGroupEntityList.size() > 0) {
+                for (FamilyGroupEntity familyGroupEntity : groupEntityList) {
+                    for (FamilyGroupEntity groupEntity : selectGroupEntityList) {
+                        if (familyGroupEntity.getGroup_id().equals(groupEntity.getGroup_id())) {
+                            groupList.remove(familyGroupEntity);
+                            break;
+                        }
+                    }
+                }
             }
-            getMembersList(new Gson().toJson(groupIdList));
+            if (groupList.size() > 0) {
+                selectGroupEntityList.addAll(groupList);
+                for (FamilyGroupEntity familyGroupEntity : groupList) {
+                    groupIdList.add(familyGroupEntity.getGroup_id());
+                }
+            }
+            if (groupIdList.size() > 0) {
+                getMembersList(new Gson().toJson(groupIdList));
+            } else {
+                changeData();
+            }
         } else {
-            String memberFormat = String.format(getString(R.string.text_members_num), selectUserList.size() + "");
-            member_num.setText(memberFormat);
-            groupMembers = new Gson().toJson(selectUserList);
+            changeData();
         }
     }
 
+    private void changeData() {
+        String memberFormat = String.format(getString(R.string.text_members_num), selectUserList.size() + "");
+        member_num.setText(memberFormat);
+        groupMembers = new Gson().toJson(selectUserList);
+    }
 
     /**
      * 裁剪图片方法实现
@@ -469,9 +504,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
                         selectUserList.add(user.getUser_id());
                     }
                     selectUserEntityList.addAll(userEntityList);
-                    String memberFormat = String.format(getString(R.string.text_members_num), selectUserList.size() + "");
-                    member_num.setText(memberFormat);
-                    groupMembers = new Gson().toJson(selectUserList);
+                    changeData();
                     break;
             }
         }
@@ -482,6 +515,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
         mContext = this;
         selectUserList = new ArrayList<>();
         selectUserEntityList = new ArrayList<>();
+        selectGroupEntityList = new ArrayList<>();
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         member_num = getViewById(R.id.member_num);
         ivGroupPic = getViewById(R.id.creategroup_imageview);
