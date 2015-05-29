@@ -587,6 +587,10 @@
 
     <!--Christopher-->
 
+    <string name="text_auto_accept">自动化关系设置</string>
+    <string name="text_birthday_alert_reminder">生日提醒</string>
+    <string name="text_group_privacy">隐私</string>
+
     <string name="text_upcoming_birthdays">Upcoming birthdays</string>
     <string name="text_today_birthday">Today \'s birthday</string>
     <string name="text_today_birthday_on"> 的生日在今天!</string>
