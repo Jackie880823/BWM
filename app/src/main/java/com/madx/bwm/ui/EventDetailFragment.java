@@ -28,6 +28,7 @@ import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.action.MessageAction;
@@ -175,6 +176,18 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
+    /**
+     * 返回键监听如果图片上传完返回false 否则true
+     * @return
+     */
+    public boolean backCheck() {
+        if(!isCommentBim){
+            MessageUtil.showMessage(App.getContextInstance(), R.string.msg_date_not_commentbim_now);
+            return true;
+        }else {
+            return false;
+        }
+    }
 //    Handler handler = new Handler() {
 //        @Override
 //        public void handleMessage(Message msg) {

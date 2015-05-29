@@ -50,7 +50,21 @@ public class EventDetailActivity extends BaseActivity {
 //            rightButton.setVisibility(View.INVISIBLE);
 //        }
 
+    }
 
+    private boolean banBack;
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                Fragment fragment = getFragmentInstance();
+                if(fragment instanceof EventDetailFragment) {
+                    banBack = ((EventDetailFragment) fragment).backCheck();
+                }
+            }
+            return banBack ? banBack : super.dispatchKeyEvent(event);
+        }
+        return super.dispatchKeyEvent(event);
     }
 
     protected void titleMiddleEvent() {
@@ -59,7 +73,6 @@ public class EventDetailActivity extends BaseActivity {
         }
 
     }
-
 
     private EventEntity event;
 
@@ -151,7 +164,7 @@ public class EventDetailActivity extends BaseActivity {
         params.put("condition", jsonParamsString);
 
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-        new HttpTools(this).get(url,params,new HttpCallback() {
+        new HttpTools(this).get(url, params, new HttpCallback() {
             @Override
             public void onStart() {
 
