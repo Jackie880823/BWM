@@ -2,6 +2,7 @@
 <resources>
     <color name="app_theme_color">#bf360c</color>
     <color name="transparent_color">#00000000</color>
+    <color name="translucence_color">#22000000</color>
     <!-- for progress bar -->
     <color name="progress_color_1">#008000</color>
     <color name="progress_color_2">#FF0000</color>
@@ -27,9 +28,9 @@
 
 
     <color name="tab_color_normal">#EBEBF4</color>
-    <color name="tab_color_press1">#99ff66</color>
-    <color name="tab_color_press2">#66ccff</color>
-    <color name="tab_color_press3">#cc99ff</color>
+    <color name="tab_color_press1">#66ccff</color>
+    <color name="tab_color_press2">#cc99ff</color>
+    <color name="tab_color_press3">#99ff66</color>
     <color name="tab_color_press4">#cccc99</color>
     <!--add for fimily-->
     <color name="tab_color_press5">#ffcc33</color>

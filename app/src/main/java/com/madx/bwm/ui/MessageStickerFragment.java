@@ -2,6 +2,7 @@ package com.madx.bwm.ui;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,10 +19,12 @@ import android.widget.TextView;
 
 import com.madx.bwm.R;
 import com.madx.bwm.interfaces.StickerViewClickListener;
+import com.madx.bwm.util.AnimatedGifDrawable;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.widget.NoScrollGridView;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -239,10 +242,16 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            String iconPath = stringList.get(position);
             try {
-                viewHolder.imageView.setImageBitmap(BitmapFactory.decodeStream(mContext.getAssets().open(iconPath)));
-
+                String filePath = stringList.get(position);
+                InputStream inputStream = mContext.getAssets().open(filePath);
+                if (filePath.endsWith("gif")) {
+                    AnimatedGifDrawable animatedGifDrawable = new AnimatedGifDrawable(mContext.getResources(), 0, inputStream, null);
+                    Drawable drawable = animatedGifDrawable.getDrawable();
+                    viewHolder.imageView.setImageDrawable(drawable);
+                } else {
+                    viewHolder.imageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

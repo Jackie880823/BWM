@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -28,13 +27,13 @@ import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.action.MessageAction;
 import com.madx.bwm.adapter.EventCommentAdapter;
 import com.madx.bwm.entity.EventCommentEntity;
 import com.madx.bwm.entity.EventEntity;
-import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.FileUtil;
@@ -94,6 +93,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     private boolean isRefresh;
     private boolean isComment;
+    private boolean isCommentBim;
     private int startIndex = 0;
     private int currentPage = 1;
     private final static int offset = 20;
@@ -174,6 +174,18 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
+    /**
+     * 返回键监听如果图片上传完返回false 否则true
+     * @return
+     */
+    public boolean backCheck() {
+        if(!isCommentBim){
+            MessageUtil.showMessage(App.getContextInstance(), R.string.msg_date_not_commentbim_now);
+            return true;
+        }else {
+            return false;
+        }
+    }
 //    Handler handler = new Handler() {
 //        @Override
 //        public void handleMessage(Message msg) {
@@ -277,6 +289,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void initView() {
         isComment = true;
+        isCommentBim = true;
         if(mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getParentActivity(), R.string.text_loading);
         }
@@ -288,6 +301,17 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         rvList.setLayoutManager(llm);
 //        rvList.setHasFixedSize(true);
         initAdapter();
+        EventDetailActivity eventDetailActivity = new EventDetailActivity();
+        eventDetailActivity.setTitleLeftClick(new EventDetailActivity.TitleLeftClick() {
+            @Override
+            public void Click() {
+                if (false) {
+                    getParentActivity().finish();
+                } else {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                }
+            }
+        });
         if (NetworkUtil.isNetworkConnected(getActivity())) {
 
             progressBar = getViewById(R.id.progressBar);
@@ -383,12 +407,28 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onReceiveBitmapUri(Uri uri) {
-                    mUri = uri;
+                    isCommentBim = true;
                     hideAllViewState();
-                    if (mUri != null) {
-                        new CompressBitmapTask().execute(mUri);
-                        return;
+                    mUri = uri;
+                    if(mUri != null){
+                        String path = LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), mUri), 480, 800, false);
+                        File file = new File(path);
+                        if (file.exists()){
+                            progressBar.setVisibility(View.VISIBLE);
+                            Map<String, Object> param = new HashMap<>();
+                            param.put("content_group_id", event.getContent_group_id());
+                            param.put("comment_owner_id", MainActivity.getUser().getUser_id());
+                            param.put("content_type", "comment");
+                            param.put("file", file);
+                            param.put("photo_fullsize", "1");
+                            new uploadBimapTask().execute(param);
+                        }
                     }
+
+//                    if (mUri != null) {
+//                        new CompressBitmapTask().execute(mUri);
+//                        return;
+//                    }
                 }
 
                 @Override
@@ -492,6 +532,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
                         getActivity().startActivityForResult(intent, 1);
+//                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
+                    }else if(v.getId() == getParentActivity().leftButton.getId()){
+                        if (isCommentBim){
+                            getParentActivity().finish();
+                        }else {
+                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                        }
+
                     }
                     return false;
                 }
@@ -563,6 +611,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
+    /**
+     * 刷新数据
+     */
     public void bindData() {
 
         if (getParentActivity().getEventEntity() != null) {
@@ -812,6 +863,60 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     //发送图片
+//    class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
+//
+//        @Override
+//        protected String doInBackground(Uri... params) {
+//            if(params == null) {
+//                return null;
+//            }
+//            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
+//        }
+
+    class uploadBimapTask extends AsyncTask<Map, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Map... params) {
+
+            new HttpTools(App.getContextInstance()).upload(Constant.API_COMMENT_POST_TEXT, params[0], new HttpCallback() {
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onFinish() {
+                }
+
+                @Override
+                public void onResult(String response) {
+                    startIndex = 0;
+                    isRefresh = true;
+                    isCommentBim = true;
+                    mUri = null;
+                    requestComment();
+                    getParentActivity().setResult(Activity.RESULT_OK);
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+            return null;
+        }
+
+    }
+
     class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
 
         @Override
@@ -819,7 +924,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             if(params == null) {
                 return null;
             }
-            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
+            return LocalImageLoader.compressBitmap(App.getContextInstance(), FileUtil.getRealPathFromURI(App.getContextInstance(), params[0]), 480, 800, false);
         }
 
         @Override
@@ -841,7 +946,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("photo_fullsize", "1");
 
 
-            new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
+            new HttpTools(App.getContextInstance()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
@@ -854,6 +959,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onResult(String string) {
                     startIndex = 0;
                     isRefresh = true;
+                    isCommentBim = true;
                     mUri = null;
                     requestComment();
                     getParentActivity().setResult(Activity.RESULT_OK);
@@ -1386,58 +1492,115 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         if (!file.exists()) {
             return;
         }
-
-        /**
-         * Map<String, Object> params = new HashMap<>();
-         params.put("content_creator_id", MainActivity.getUser().getUser_id());
-         params.put("group_id", groupId);
-         params.put("content_type", "post");
-         params.put("content_group_public", "0");
-         params.put("photo_caption", "");
-         params.put("multiple", "0");
-         params.put("file", file);
-         params.put("photo_fullsize", "1");
-         messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_MESSAGE_POST_TEXT, SEND_PIC_MESSAGE);
-
-         */
         Map<String, Object> params = new HashMap<>();
         params.put("content_group_id", event.getContent_group_id());
         params.put("comment_owner_id", MainActivity.getUser().getUser_id());
         params.put("content_type", "comment");
-//        params.put("content_group_public", "0");
-//        params.put("photo_caption", "");
-//        params.put("multiple", "0");
         params.put("file", file);
         params.put("photo_fullsize", "1");
-        messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_COMMENT_POST_TEXT, SEND_PIC_MESSAGE);
+
+
+        new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onResult(String string) {
+                startIndex = 0;
+                isRefresh = true;
+                isCommentBim = true;
+                mUri = null;
+                requestComment();
+                getParentActivity().setResult(Activity.RESULT_OK);
+//                    Log.i("onResult====",string);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
     }
 
-     /**
-      * 打开相册
-      */
-    private void openAlbum() {
-        intent = new Intent(Intent.ACTION_PICK, null);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        startActivityForResult(intent, REQUEST_HEAD_PHOTO);
-
-    }
 
     /**
-     * 打开相机
+     * fragment 再次显示的时候刷新数据
+     * @param isVisibleToUser
      */
-    private void openCamera() {
-        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra("camerasensortype", 2);
-        // 下面这句指定调用相机拍照后的照片存储的路径
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
-                        CACHE_PIC_NAME_TEMP)));
-        // 图片质量为高
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        intent.putExtra("return-data", false);
-        startActivityForResult(intent, REQUEST_HEAD_CAMERA);
-    }
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser) {
+//            //相当于Fragment的onResume
+//            if (event != null) {
+//                bindData();
+//                requestComment();
+//            } else {
+//                new AsyncTask<Void, Void, Void>() {
+//                    @Override
+//                    protected Void doInBackground(Void... params) {
+//                        while (true) {
+//                            if (getParentActivity() != null && getParentActivity().getDataDone) {
+//                                break;
+//                            }
+//                        }
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    protected void onPostExecute(Void aVoid) {
+//                        bindData();
+//                        requestComment();
+//                    }
+//                }.execute();
+//            }
+//        } else {
+//            //相当于Fragment的onPause
+//        }
+//    }
+
+
+//     /**
+//      * 打开相册
+//      */
+//    private void openAlbum() {
+//        intent = new Intent(Intent.ACTION_PICK, null);
+//        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+//        startActivityForResult(intent, REQUEST_HEAD_PHOTO);
+//
+//    }
+//
+//    /**
+//     * 打开相机
+//     */
+//    private void openCamera() {
+//        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        intent.putExtra("camerasensortype", 2);
+//        // 下面这句指定调用相机拍照后的照片存储的路径
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+//                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
+//                        CACHE_PIC_NAME_TEMP)));
+//        // 图片质量为高
+//        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+//        intent.putExtra("return-data", false);
+//        startActivityForResult(intent, REQUEST_HEAD_CAMERA);
+//    }
 
 //    List<Uri> pickUries = new ArrayList();
 //

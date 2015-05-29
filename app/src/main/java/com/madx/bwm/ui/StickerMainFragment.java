@@ -108,8 +108,11 @@ public class StickerMainFragment extends Fragment {
     private void addImageList() {
         if (STICKER_NAME_LIST != null && STICKER_NAME_LIST.size() > 0) {
             for (String string : STICKER_NAME_LIST) {
+                if(null==string){
+                    continue;
+                }
                 List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(getActivity(), string);
-                if (null != stickerAllNameList) {
+                if (null != stickerAllNameList&&stickerAllNameList.size()>0) {
                     String iconPath = string + File.separator + stickerAllNameList.get(0);
                     FIRST_STICKER_LIST.add(iconPath);
                 }
@@ -118,7 +121,7 @@ public class StickerMainFragment extends Fragment {
     }
 
     private void setTabSelection(int index) {
-        if (getActivity().isFinishing() || horizontalListViewAdapter.getCount() == 0) {
+        if (getActivity()==null||getActivity().isFinishing() || horizontalListViewAdapter.getCount() == 0) {
             return;
         }
         String selectStickerName = STICKER_NAME_LIST.get(index);
