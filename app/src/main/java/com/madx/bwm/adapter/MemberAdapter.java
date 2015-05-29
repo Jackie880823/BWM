@@ -29,13 +29,14 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
     private final static int TAG_UPDATED = 4;
 
     //add，awaiting，auto-accept，added(同意)，updated(修改关系)。
-    private String[] action ={"request to add you as ", "awaiting member confirmation", "You have auto-accept as member", "accept you as member", "set you as "};
+    private String[] action ;
     private String moduleAction;
     private String memberId;
 
     public MemberAdapter(Context context, List<MemberEntity> data) {
         mContext = context;
         this.data = data;
+        action = mContext.getResources().getStringArray(R.array.member_alert);
     }
 
     @Override
