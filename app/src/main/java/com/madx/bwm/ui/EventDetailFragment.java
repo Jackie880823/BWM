@@ -407,17 +407,28 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onReceiveBitmapUri(Uri uri) {
-                    isCommentBim = false;
-//                    if(uri != null){
-//                        uploadImage(uri);
-//                    }
-                    mUri = uri;
+                    isCommentBim = true;
                     hideAllViewState();
-                    if (mUri != null) {
+                    mUri = uri;
+                    if(mUri != null){
                         String path = LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), mUri), 480, 800, false);
-                        new CompressBitmapTask().execute(mUri);
-                        return;
+                        File file = new File(path);
+                        if (file.exists()){
+                            progressBar.setVisibility(View.VISIBLE);
+                            Map<String, Object> param = new HashMap<>();
+                            param.put("content_group_id", event.getContent_group_id());
+                            param.put("comment_owner_id", MainActivity.getUser().getUser_id());
+                            param.put("content_type", "comment");
+                            param.put("file", file);
+                            param.put("photo_fullsize", "1");
+                            new uploadBimapTask().execute(param);
+                        }
                     }
+
+//                    if (mUri != null) {
+//                        new CompressBitmapTask().execute(mUri);
+//                        return;
+//                    }
                 }
 
                 @Override
@@ -861,6 +872,51 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //            }
 //            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
 //        }
+
+    class uploadBimapTask extends AsyncTask<Map, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Map... params) {
+
+            new HttpTools(App.getContextInstance()).upload(Constant.API_COMMENT_POST_TEXT, params[0], new HttpCallback() {
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onFinish() {
+                }
+
+                @Override
+                public void onResult(String response) {
+                    startIndex = 0;
+                    isRefresh = true;
+                    isCommentBim = true;
+                    mUri = null;
+                    requestComment();
+                    getParentActivity().setResult(Activity.RESULT_OK);
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+            return null;
+        }
+
+    }
+
     class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
 
         @Override
@@ -868,7 +924,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             if(params == null) {
                 return null;
             }
-            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
+            return LocalImageLoader.compressBitmap(App.getContextInstance(), FileUtil.getRealPathFromURI(App.getContextInstance(), params[0]), 480, 800, false);
         }
 
         @Override
@@ -890,7 +946,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("photo_fullsize", "1");
 
 
-            new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
+            new HttpTools(App.getContextInstance()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
