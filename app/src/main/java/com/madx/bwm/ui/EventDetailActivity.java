@@ -1,9 +1,11 @@
 package com.madx.bwm.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
@@ -49,7 +51,21 @@ public class EventDetailActivity extends BaseActivity {
 //            rightButton.setVisibility(View.INVISIBLE);
 //        }
 
+    }
 
+    private boolean banBack;
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                Fragment fragment = getFragmentInstance();
+                if(fragment instanceof EventDetailFragment) {
+                    banBack = ((EventDetailFragment) fragment).backCheck();
+                }
+            }
+            return banBack ? banBack : super.dispatchKeyEvent(event);
+        }
+        return super.dispatchKeyEvent(event);
     }
 
     protected void titleMiddleEvent() {
@@ -58,7 +74,6 @@ public class EventDetailActivity extends BaseActivity {
         }
 
     }
-
 
     private EventEntity event;
 
@@ -82,7 +97,17 @@ public class EventDetailActivity extends BaseActivity {
     }
 
     boolean changeMode;
-
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK&&event.getAction()==KeyEvent.ACTION_DOWN) {
+            if(titleLeftClick != null){
+                titleLeftClick.Click();
+            }
+            titleLeftEvent();
+            return true;
+        }
+        return super.onKeyUp(keyCode,event);
+    }
     @Override
     protected void titleLeftEvent() {
         if(commandlistener!=null)
@@ -140,7 +165,7 @@ public class EventDetailActivity extends BaseActivity {
         params.put("condition", jsonParamsString);
 
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-        new HttpTools(this).get(url,params,new HttpCallback() {
+        new HttpTools(this).get(url, params, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -200,9 +225,19 @@ public class EventDetailActivity extends BaseActivity {
         if(requestCode == 1 ){
             if(resultCode == 1){
                 setResult(1);
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public TitleLeftClick titleLeftClick;
+    public void setTitleLeftClick(TitleLeftClick titleLeftClick){
+        this.titleLeftClick = titleLeftClick;
+    }
+    public interface TitleLeftClick{
+        void Click();
+
     }
 }

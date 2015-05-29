@@ -3,6 +3,7 @@ package com.madx.bwm.adapter;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.madx.bwm.R;
+import com.madx.bwm.util.AnimatedGifDrawable;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -35,9 +38,9 @@ public class MessageHorizontalListViewAdapter extends BaseAdapter {
         this.mContext = mContext;
     }
 
-    public void addData(List<String> stickerList){
-        for(String string:stickerList){
-            if(!list.contains(string)){
+    public void addData(List<String> stickerList) {
+        for (String string : stickerList) {
+            if (!list.contains(string)) {
                 list.add(string);
             }
         }
@@ -79,7 +82,15 @@ public class MessageHorizontalListViewAdapter extends BaseAdapter {
             viewHolder.stickRelative.setBackgroundColor(Color.WHITE);
         }
         try {
-            viewHolder.imageView.setImageBitmap(BitmapFactory.decodeStream(mContext.getAssets().open(list.get(position))));
+            String filePath = list.get(position);
+            InputStream inputStream = mContext.getAssets().open(filePath);
+            if (filePath.endsWith("gif")) {
+                AnimatedGifDrawable animatedGifDrawable = new AnimatedGifDrawable(mContext.getResources(), 0, inputStream, null);
+                Drawable drawable = animatedGifDrawable.getDrawable();
+                viewHolder.imageView.setImageDrawable(drawable);
+            } else {
+                viewHolder.imageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
