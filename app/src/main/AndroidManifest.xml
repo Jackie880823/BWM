@@ -74,7 +74,10 @@
         <!-- android:name="UMENG_CHANNEL" -->
         <!-- android:value="${UMENG_CHANNEL_VALUE}" /> -->
 
-
+        <!-- gaode map -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="83390a943f5896f8210b294faec6c5a3" />
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -161,7 +164,15 @@
         <activity
             android:name=".ui.Map4BaiduActivity"
             android:noHistory="true"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <!--<activity-->
+            <!--android:name=".ui.Map4GaoDeActivity"-->
+            <!--android:noHistory="true"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:windowSoftInputMode="adjustResize"-->
+            <!--/>-->
         <activity
             android:name=".ui.InvitedStatusActivity"
             android:screenOrientation="portrait" />

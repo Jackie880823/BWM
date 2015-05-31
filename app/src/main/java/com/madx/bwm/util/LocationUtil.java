@@ -15,12 +15,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.madx.bwm.R;
 import com.madx.bwm.ui.Map4BaiduActivity;
+import com.madx.bwm.ui.Map4GoogleActivity;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +27,7 @@ import java.util.Locale;
 /**
  * Created by wing on 15/3/25.
  */
-public class LocationUtil implements LocationListener,GoogleApiClient.OnConnectionFailedListener{
+public class LocationUtil implements LocationListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static Geocoder geoCoder;
     private static LocationManager lm;
@@ -70,7 +68,7 @@ public class LocationUtil implements LocationListener,GoogleApiClient.OnConnecti
         return add;
     }
 
-    private void getCurrentLocation(FragmentActivity context){
+    private void getCurrentLocation(FragmentActivity context) {
 //        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(context)
 //                .enableAutoManage(context, 0 /* clientId */, this)
 //                .addApi(Places.GEO_DATA_API)
@@ -90,47 +88,52 @@ public class LocationUtil implements LocationListener,GoogleApiClient.OnConnecti
 //        });
 
 
-
     }
 
     /**
      * 获取地图picker Intent
+     *
      * @param context
      * @param latitude
      * @param longitude
      * @return
      */
-    public static Intent getPlacePickerIntent(Context context,double latitude,double longitude){
+    public static Intent getPlacePickerIntent(Context context, double latitude, double longitude, String name) {
         Intent intent = null;
         lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         //if gps open
 //        if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
-            //判断是用百度还是google
-            if (SystemUtil.checkPlayServices(context)) {
+        //判断是用百度还是google
+        if (SystemUtil.checkPlayServices(context)) {
 //                if(getLastKnowLocation(context)==null){
 //
 //                }
-//            intent = new Intent(context, Map4GoogleActivity.class);
-                try {
-                    PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-//                intentBuilder.setLatLngBounds(new LatLngBounds(new LatLng(latitude,longitude),new LatLng(latitude,longitude)));
-                    intent = intentBuilder.build(context);
-
-                    // Hide the pick option in the UI to prevent users from starting the picker
-                    // multiple times.
-//                showPickAction(false);
-
-                } catch (GooglePlayServicesRepairableException e) {
-                } catch (GooglePlayServicesNotAvailableException e) {
-                }
-            } else {
-                intent = new Intent(context, Map4BaiduActivity.class);
+            intent = new Intent(context, Map4GoogleActivity.class);
+            intent.putExtra("location_name", name);
+            intent.putExtra("latitude", latitude);
+            intent.putExtra("longitude", longitude);
+            //using google map picker
+//                try {
+//                    PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+////                intentBuilder.setLatLngBounds(new LatLngBounds(new LatLng(latitude,longitude),new LatLng(latitude,longitude)));
+//                    intent = intentBuilder.build(context);
+//
+//                    // Hide the pick option in the UI to prevent users from starting the picker
+//                    // multiple times.
+////                showPickAction(false);
+//
+//                } catch (GooglePlayServicesRepairableException e) {
+//                } catch (GooglePlayServicesNotAvailableException e) {
+//                }
+        } else {
+//                intent = new Intent(context, Map4GaoDeActivity.class);
+            intent = new Intent(context, Map4BaiduActivity.class);
 //        intent.putExtra("has_location", position_name.getText().toString());
-//            intent.putExtra("location_name", position_name.getText().toString());
-                intent.putExtra("latitude", latitude);
-                intent.putExtra("longitude", longitude);
-            }
+            intent.putExtra("location_name", name);
+            intent.putExtra("latitude", latitude);
+            intent.putExtra("longitude", longitude);
+        }
 //        }
         return intent;
     }
@@ -159,7 +162,7 @@ public class LocationUtil implements LocationListener,GoogleApiClient.OnConnecti
             // 这里可能会返回 null, 表示按照当前的查询条件无法获取系统最后一次更新的地理位置信息
             ret = lm.getLastKnownLocation(bestProvider);
         }
-        if(ret!=null) {
+        if (ret != null) {
             Log.i("", "getLastKnowLocation======" + ret.getProvider());
             Log.i("", "getLastKnowLocation======" + ret.getAccuracy());
             Log.i("", "getLastKnowLocation======" + ret.getBearing());
@@ -171,7 +174,7 @@ public class LocationUtil implements LocationListener,GoogleApiClient.OnConnecti
     /**
      * 打开地图导航
      */
-    public static void goNavigation(Context context,double latitude,double longitude) {
+    public static void goNavigation(Context context, double latitude, double longitude) {
 
         try {
             Intent intent;
@@ -190,6 +193,7 @@ public class LocationUtil implements LocationListener,GoogleApiClient.OnConnecti
     }
 
     private static Location currentLocation;
+
     @Override
     public void onLocationChanged(Location location) {
         currentLocation = location;

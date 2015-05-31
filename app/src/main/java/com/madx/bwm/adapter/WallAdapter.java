@@ -352,9 +352,10 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
     }
 
     private void gotoLocationSetting(WallEntity wall) {
-        if(wall.getLoc_latitude()==null||wall.getLoc_longitude()==null){
+        if(TextUtils.isEmpty(wall.getLoc_latitude())||TextUtils.isEmpty(wall.getLoc_longitude())){
             return;
         }
+
         LocationUtil.goNavigation(mContext, Double.valueOf(wall.getLoc_latitude()),Double.valueOf(wall.getLoc_longitude()));
     }
 

@@ -431,6 +431,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(location
                 , 14);
         mMap.animateCamera(cameraUpdate);
+
     }
 
     private String POSITION_GETTING = "地址正在加载...";
@@ -697,6 +698,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                     .getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
+
         }
     };
 
@@ -716,6 +718,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                 places.release();
                 return;
             }
+            firstResult = true;
             // Get the Place object from the buffer.
             final Place place = places.get(0);
 

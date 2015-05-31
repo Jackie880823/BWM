@@ -773,7 +773,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goLocationSetting() {
-        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude);
+        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude,location_desc.getText().toString());
         if(intent!=null)
             startActivityForResult(intent, GET_LOCATION);
     }

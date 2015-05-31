@@ -87,6 +87,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         if (App.getLoginedUser() == null) {
             finish();
+            return;
         }
 
         super.onCreate(savedInstanceState);

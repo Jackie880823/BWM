@@ -160,9 +160,6 @@
     <string name="text_setting_2_5">Children relationship</string>
     <string name="text_setting_2_6">Others relationship</string>
 
-    <string name="text_my_location">My Location</string>
-
-    <!-- chirstopher -->
     <string-array name="CountryCodes">
         <item>93,AF</item>
         <item>355,AL</item>
@@ -742,5 +739,6 @@
     <string name="text_empty_add_member">Tap on the + to add family member.</string>
     <string name="text_empty_add_group">Tap on the + to create group.</string>
     <string name="text_message_type_here">type message here</string>
-    <!--Christopher-->
+
+    <string name="text_my_location">My Location</string>
 </resources>
