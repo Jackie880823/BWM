@@ -73,6 +73,10 @@ public class UserEntity implements Serializable {
 
     private String join_group;
 
+    private String added_flag;
+
+    private String own_flag;
+
     public String getJoin_group() {
         return join_group;
     }
@@ -89,7 +93,6 @@ public class UserEntity implements Serializable {
         this.added_flag = added_flag;
     }
 
-    private String added_flag;
     private String dofeel_code;
     /*Update Profile Details */
 
@@ -449,7 +452,15 @@ public class UserEntity implements Serializable {
         this.friend = friend;
     }
 
-//    public AppTokenEntity getToken() {
+    public String getOwn_flag() {
+        return own_flag;
+    }
+
+    public void setOwn_flag(String own_flag) {
+        this.own_flag = own_flag;
+    }
+
+    //    public AppTokenEntity getToken() {
 //        return token;
 //    }
 //

@@ -221,7 +221,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             return  true;
         }
         if(tasks != null && tasks.size() > 0) {
-            // 图片上任务正在执行
+            // 图片上传务正在执行
             Log.i(TAG, "backCheck& tasks size: " + tasks.size());
             return true;
         } else {
