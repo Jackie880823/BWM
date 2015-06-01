@@ -228,6 +228,7 @@ public class WallEditView extends EditText implements TextWatcher {
         }
 
         Editable editable = getText();
+        String at = null;
         if(!TextUtils.isEmpty(memberText) && !TextUtils.isEmpty(groupText)) {
             String strDesc = editable.toString();
             int startMember = strDesc.indexOf(oldMemberText);
@@ -236,6 +237,7 @@ public class WallEditView extends EditText implements TextWatcher {
                 if(startMember + oldMemberText.length() == strDesc.length()) {
                     // @member 后跟着的是@group需要添加 &
                     groupText = "& " + groupText;
+                    at = memberText + groupText;
                 }
             } else {
                 int startGroup = strDesc.indexOf(oldGroupText);
@@ -243,14 +245,17 @@ public class WallEditView extends EditText implements TextWatcher {
                     if(startGroup + oldGroupText.length() == strDesc.length()) {
                         // @group 后跟着的是@member需要添加 &
                         memberText = "& " + memberText;
+                        at = groupText + memberText;
                     }
                 } else {
-                    if(startMember + oldMemberText.length() + 1 == startGroup) {
-                        // @group 后跟着的是@member需要添加 &
-                        memberText = "& " + memberText;
-                    } else if(startGroup + oldGroupText.length() + 1 == startMember) {
+                    if(startMember + oldMemberText.length() == startGroup) {
                         // @member 后跟着的是@group需要添加 &
                         groupText = "& " + groupText;
+                        at = memberText + groupText;
+                    } else if(startGroup + oldGroupText.length() == startMember) {
+                        // @group 后跟着的是@member需要添加 &
+                        memberText = "& " + memberText;
+                        at = groupText + memberText;
                     }
                 }
             }
@@ -267,6 +272,11 @@ public class WallEditView extends EditText implements TextWatcher {
         // at group transform about group text
         hasAtGroup = setDescSpan(groupText, oldGroupText, hasAtGroup, sb);
         oldGroupText = groupText;
+
+        if(!TextUtils.isEmpty(at) && hasAtGroup && hasAtMember) {
+            setDescSpan(at, at, true, sb);
+        }
+
         Log.i(TAG, "addAtDesc& 3 sb: " + sb.toString());
         this.setText(sb);
         Log.i(TAG, "addAtDesc& oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);

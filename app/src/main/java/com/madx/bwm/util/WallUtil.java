@@ -30,10 +30,6 @@ public class WallUtil {
     private Context mContext;
     private WallViewClickListener mViewClickListener;
 
-    public WallUtil(Context context) {
-        this(context, null);
-    }
-
     public WallUtil(Context context, WallViewClickListener viewClickListener) {
         this.mContext = context;
         mViewClickListener = viewClickListener;
