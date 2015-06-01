@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.madx.bwm.Constant;
+import com.madx.bwm.R;
 import com.madx.bwm.ui.BaseActivity;
 
 
@@ -23,7 +25,11 @@ public class WallMembersOrGroupsActivity extends BaseActivity {
      */
     @Override
     protected void setTitle() {
-
+        if(Constant.ACTION_SHOW_NOTIFY_GROUP.equals(getIntent().getAction())) {
+            tvTitle.setText(R.string.text_group);
+        } else if(Constant.ACTION_SHOW_NOTIFY_USER.equals(getIntent().getAction())) {
+            tvTitle.setText(R.string.text_member);
+        }
     }
 
     /**

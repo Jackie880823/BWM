@@ -2,6 +2,7 @@ package com.madx.bwm.ui;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 
 import com.madx.bwm.R;
 
@@ -30,6 +31,20 @@ public class EventNewActivity extends BaseActivity {
         tvTitle.setText(R.string.title_event_new);
     }
 
+    private boolean banBack;
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                Fragment fragment = getFragmentInstance();
+                if(fragment instanceof EventNewFragment) {
+                    banBack = ((EventNewFragment) fragment).backCheck();
+                }
+            }
+            return banBack ? banBack : super.dispatchKeyEvent(event);
+        }
+        return super.dispatchKeyEvent(event);
+    }
 
     @Override
     protected void titleRightEvent() {

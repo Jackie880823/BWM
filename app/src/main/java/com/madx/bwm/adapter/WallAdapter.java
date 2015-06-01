@@ -154,7 +154,9 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
         }
 
         String locationName = wall.getLoc_name();
-        if(!TextUtils.isEmpty(locationName)) {
+        if(TextUtils.isEmpty(locationName) || TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
+            holder.llLocation.setVisibility(View.GONE);
+        } else {
             holder.llLocation.setVisibility(View.VISIBLE);
             holder.tvLocation.setText(locationName);
             holder.llLocation.setOnClickListener(new View.OnClickListener() {
@@ -175,8 +177,6 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                     gotoLocationSetting(wall);
                 }
             });
-        } else {
-            holder.llLocation.setVisibility(View.GONE);
         }
 
     }

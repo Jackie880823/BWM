@@ -1,6 +1,8 @@
 package com.madx.bwm.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +14,15 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.ui.AddMemberWorkFlow;
+import com.madx.bwm.ui.BaseActivity;
+import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.ui.FamilyProfileActivity;
+import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.ui.MeActivity;
+import com.madx.bwm.ui.ViaIdNameActivity;
 import com.madx.bwm.widget.CircularNetworkImage;
+import com.madx.bwm.widget.MyDialog;
 
 import java.util.List;
 
@@ -26,10 +36,12 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
 
     private Context mContext;
     private List<UserEntity> mData;
+    private BaseFragment mFragment;
 
-    public WallMemberAdapter(Context context, List<UserEntity> data){
+    public WallMemberAdapter(Context context, List<UserEntity> data, BaseFragment fragment){
         mContext = context;
         mData = data;
+        mFragment = fragment;
     }
 
     public void add(List<UserEntity> data){
@@ -107,6 +119,50 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
             super(itemView);
             nivHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
             name = (TextView) itemView.findViewById(R.id.owner_name);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    final UserEntity userEntity = mData.get(position);
+                    String own = userEntity.getOwn_flag();
+                    if("1".equals(own)) {
+                        // 是自己跳转至me界面
+                        Intent intent = new Intent(mContext, MeActivity.class);
+                        mContext.startActivity(intent);
+                    } else if("0".equals(own)) {
+                        // 不是自己显示用户详情或者提示添加
+                        String added = userEntity.getAdded_flag();
+                        if("1".equals(added)) {
+                            // 已经添加为好友，显示用户详情
+                            Intent intent = new Intent(mContext, FamilyProfileActivity.class);
+                            intent.putExtra("member_id", userEntity.getUser_id());
+                            mContext.startActivity(intent);
+                        } if("0".equals(added)) {
+                            // 没有添加好友，弹出添加好友界面提示框由用户选择是否添加
+                            final MyDialog myDialog = new MyDialog(mContext, "", mContext.getString(R.string.alert_ask_add_member));
+                            myDialog.setButtonAccept(R.string.ok, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // 同意添加好友跳转至添加好友界面
+                                    Intent intent = new Intent(mContext, AddMemberWorkFlow.class);
+                                    intent.putExtra("from", MainActivity.getUser().getUser_id());
+                                    intent.putExtra("to", userEntity.getUser_id());
+                                    mFragment.startActivityForResult(intent, 10);
+                                    myDialog.dismiss();
+                                }
+                            });
+                            myDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    // 不同意添加，关闭对话框
+                                    myDialog.dismiss();
+                                }
+                            });
+                            myDialog.show();
+                        }
+                    }
+                }
+            });
         }
     }
 }
