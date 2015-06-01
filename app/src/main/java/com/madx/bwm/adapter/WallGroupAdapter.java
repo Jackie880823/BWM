@@ -120,7 +120,7 @@ public class WallGroupAdapter extends RecyclerView.Adapter<WallGroupAdapter.MGIt
                     Log.i(TAG, "onClick& position: " + position + "; group_flag = " + group_flag);
                     if("0".equals(group_flag)) {
                         // 不在此分组中弹出提示
-                        final MyDialog myDialog = new MyDialog(mContext, "", mContext.getString(R.string.alert_no_jion_group));
+                        final MyDialog myDialog = new MyDialog(mContext, "", mContext.getString(R.string.alert_no_join_group));
                         myDialog.setButtonAccept(R.string.ok, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

@@ -730,5 +730,6 @@
     <string name="text_message_type_here">type message here</string>
     <string name="waiting_upload">请等待完成上传</string>
     <string name="text_group">群组</string>
+    <string name="hint_comment_input">在些输入评论…</string>
     <!--Christopher-->
 </resources>
