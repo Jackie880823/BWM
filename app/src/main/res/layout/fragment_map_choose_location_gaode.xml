@@ -21,23 +21,28 @@
         android:orientation="horizontal">
 
 
-        <android.support.v7.widget.SearchView
+        <!--<android.support.v7.widget.SearchView-->
+            <!--android:id="@+id/search_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:iconifiedByDefault="true"-->
+            <!--android:inputType="textFilter"-->
+            <!--android:queryHint="@string/hint_search_name" />-->
+
+        <AutoCompleteTextView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:iconifiedByDefault="true"
-            android:inputType="textFilter"
-            android:layout_toLeftOf="@+id/my_location"
-            android:layout_marginRight="@dimen/default_view_margin"
-            android:queryHint="@string/hint_search_name" />
-
-        <Button
-            android:id="@+id/my_location"
-            android:layout_width="@dimen/default_small_button_width_height"
-            android:layout_height="@dimen/default_small_button_width_height"
-            android:background="@android:drawable/ic_search_category_default"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true" />
+            android:completionThreshold="1"
+            android:dropDownVerticalOffset="1.0dip"
+            android:hint="请输入关键字"
+            android:imeOptions="actionSearch"
+            android:inputType="text|textAutoComplete"
+            android:maxLength="20"
+            android:paddingRight="37.0dip"
+            android:singleLine="true"
+            style="@style/text_dark_default"
+             />
 
 
     </RelativeLayout>
@@ -53,13 +58,12 @@
 
     </android.support.v7.widget.RecyclerView>
 
-
-    <com.baidu.mapapi.map.MapView
+    <fragment
         android:layout_below="@+id/bbbar"
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true" />
+        class="com.amap.api.maps2d.SupportMapFragment" />
 
 
 </RelativeLayout>

@@ -1,9 +1,13 @@
 package com.madx.bwm.util;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import java.util.List;
 
 /**
  * Created by wing on 15/3/22.
@@ -30,6 +34,24 @@ public class SystemUtil {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 判断根据包名判断应用是否安装
+     * @param targetPackage
+     * @return
+     */
+    public static boolean isPackageExists(Context context,String targetPackage) {
+        List<ApplicationInfo> packages;
+        PackageManager pm;
+        pm = context.getPackageManager();
+        packages = pm.getInstalledApplications(0);
+        for (ApplicationInfo packageInfo : packages) {
+            if (packageInfo.packageName.equals(targetPackage)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

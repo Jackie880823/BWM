@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/online_user_list_item_textview"
+    style="@style/text_dark_default"
+    android:layout_marginBottom="20dip"
+    android:layout_marginTop="20dip"
+     >
+
+</TextView>

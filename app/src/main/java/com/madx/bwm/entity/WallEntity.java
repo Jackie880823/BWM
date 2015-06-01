@@ -13,6 +13,8 @@ public class WallEntity {
     private String file_id;
     private String loc_latitude;
     private String loc_longitude;
+    /**坐标类型*/
+    private String loc_type;
     private String loc_name;
     private String loc_caption;
     private String sticker_id;
@@ -230,5 +232,13 @@ public class WallEntity {
 
     public void setTag_member(List<UserEntity> tag_member) {
         this.tag_member = tag_member;
+    }
+
+    public String getLoc_type() {
+        return loc_type;
+    }
+
+    public void setLoc_type(String loc_type) {
+        this.loc_type = loc_type;
     }
 }
