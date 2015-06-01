@@ -331,17 +331,14 @@
         </activity>
         <activity
             android:name=".ui.more.AutoAcceptActivity"
-            android:label="@string/title_activity_auto_accept"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ui.more.BirthdayAlertActivity"
-            android:label="@string/title_activity_birthday_alert"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ui.more.GroupPrivacyActivity"
-            android:label="@string/title_activity_group_privacy"
             android:screenOrientation="portrait">
         </activity>
         <activity

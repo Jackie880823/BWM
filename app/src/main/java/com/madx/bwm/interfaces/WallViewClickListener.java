@@ -3,7 +3,7 @@ package com.madx.bwm.interfaces;
 /**
  * Created by zhuweiping on 4/28/15.
  */
-public interface ViewClickListener {
+public interface WallViewClickListener {
     /**
      * 显示Wall图片
      *
