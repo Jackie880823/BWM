@@ -1,5 +1,7 @@
 package com.madx.bwm.ui.wall;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +21,7 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.entity.WallEntity;
 import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.util.MessageUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +102,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
                     adapter = new WallGroupAdapter(getActivity(), groupEntities);
                 } else {
                     userEntities = wall.getTag_member();
-                    adapter = new WallMemberAdapter(getActivity(), userEntities);
+                    adapter = new WallMemberAdapter(getActivity(), userEntities, WallMembersOrGroupsFragment.this);
                 }
                 rvList.setAdapter(adapter);
             }
@@ -121,7 +124,31 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
         });
     }
 
-
+    /**
+     * Receive the result from a previous call to
+     * {@link #startActivityForResult(Intent, int)}.  This follows the
+     * related Activity API as described there in
+     * {@link Activity#onActivityResult(int, int, Intent)}.
+     *
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode  The integer result code returned by the child activity
+     *                    through its setResult().
+     * @param data        An Intent, which can return result data to the caller
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "onActivityResult& requestCode = " + requestCode);
+        if (resultCode == Activity.RESULT_OK) {
+            MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+            //                    startIndex = 0;
+            //                    isRefresh = true;
+            requestData();//这样直接请求???
+        } else {
+            MessageUtil.showMessage(getActivity(),R.string.msg_action_canceled);
+        }
+    }
 
     /**
      * Callback method to be invoked when an item in this AdapterView has

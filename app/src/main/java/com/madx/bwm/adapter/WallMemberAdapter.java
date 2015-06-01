@@ -2,6 +2,7 @@ package com.madx.bwm.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.madx.bwm.R;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.ui.AddMemberWorkFlow;
+import com.madx.bwm.ui.BaseActivity;
+import com.madx.bwm.ui.BaseFragment;
 import com.madx.bwm.ui.FamilyProfileActivity;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.MeActivity;
@@ -33,10 +36,12 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
 
     private Context mContext;
     private List<UserEntity> mData;
+    private BaseFragment mFragment;
 
-    public WallMemberAdapter(Context context, List<UserEntity> data){
+    public WallMemberAdapter(Context context, List<UserEntity> data, BaseFragment fragment){
         mContext = context;
         mData = data;
+        mFragment = fragment;
     }
 
     public void add(List<UserEntity> data){
@@ -142,7 +147,7 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
                                     Intent intent = new Intent(mContext, AddMemberWorkFlow.class);
                                     intent.putExtra("from", MainActivity.getUser().getUser_id());
                                     intent.putExtra("to", userEntity.getUser_id());
-                                    mContext.startActivity(intent);
+                                    mFragment.startActivityForResult(intent, 10);
                                     myDialog.dismiss();
                                 }
                             });
