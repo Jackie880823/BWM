@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -368,7 +367,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 }
 
                 String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
-                Log.i("TimeDialog===",dateDesc);
+//                Log.i("TimeDialog===",dateDesc);
                 mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis()));
 
                 date_desc.setText(dateDesc);
