@@ -73,7 +73,7 @@ public class Map4BaiduActivity extends BaseActivity implements
     private LocationManager lm = null;
     private Location myLocation;
     private static final int INTERVAL_TIME = 2000;
-    private Marker marker;
+    private Marker target;
     private boolean toLocation = true;
     private LocationClient mLocClient;
     private BaiduMap mBaiduMap;
@@ -152,7 +152,7 @@ public class Map4BaiduActivity extends BaseActivity implements
     }
 
     private void setResult(String name, LatLng latLng) {
-//        if (marker != null) {
+//        if (target != null) {
         Intent intent = new Intent();
         intent.putExtra("location_name", name);
         intent.putExtra("latitude", latLng.latitude);
@@ -195,11 +195,11 @@ public class Map4BaiduActivity extends BaseActivity implements
 
 //        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
 //            @Override
-//            public boolean onMarkerClick(Marker marker) {
+//            public boolean onMarkerClick(Marker target) {
 //                Log.i("", "onMarkerClick==========");
 //                if (poiInfos != null) {
 //                    for (PoiInfo poiInfo : poiInfos) {
-//                        if (poiInfo.location.latitude == marker.getPosition().latitude && poiInfo.location.longitude == marker.getPosition().longitude) {
+//                        if (poiInfo.location.latitude == target.getPosition().latitude && poiInfo.location.longitude == target.getPosition().longitude) {
 //                            addInfoWindow(poiInfo.location, poiInfo.name, poiInfo.address);
 //                            break;
 //                        }
@@ -290,8 +290,8 @@ public class Map4BaiduActivity extends BaseActivity implements
             hasSetLocation = true;
             LatLng latLng = new LatLng(intent.getDoubleExtra("latitude", 0), intent.getDoubleExtra("longitude", 0));
             location_name = intent.getStringExtra("location_name");
-            addTarget(latLng, location_name);
             center2myLoc(latLng,true);
+            addTarget(latLng, location_name);
         }
 
 
@@ -305,7 +305,7 @@ public class Map4BaiduActivity extends BaseActivity implements
         BitmapDescriptor bd = BitmapDescriptorFactory
                 .fromResource(R.drawable.icon_map_target);
         OverlayOptions ooA = new MarkerOptions().position(latLng).icon(bd).title(title).zIndex(5);
-        marker = (Marker) mBaiduMap.addOverlay(ooA);
+        target = (Marker) mBaiduMap.addOverlay(ooA);
 //        addInfoWindow(latLng, title, "");
     }
 
@@ -456,8 +456,8 @@ public class Map4BaiduActivity extends BaseActivity implements
 //        }
         if (result.error == SearchResult.ERRORNO.NO_ERROR) {
             mBaiduMap.clear();
-            if(marker!=null) {
-                addTarget(marker.getPosition(),location_name);
+            if(target !=null) {
+                addTarget(target.getPosition(),location_name);
             }
             PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
             mBaiduMap.setOnMarkerClickListener(overlay);
@@ -538,6 +538,7 @@ public class Map4BaiduActivity extends BaseActivity implements
     }
 
     private int load_Index = 0;
+    private boolean isInitTime;
 
     private void searchByAddress(String address) {
         searchByAddress(address, city);
@@ -566,9 +567,11 @@ public class Map4BaiduActivity extends BaseActivity implements
     @Override
     public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
 
-        mBaiduMap.clear();
-        if(marker!=null) {
-            addTarget(marker.getPosition(),location_name);
+        if(!isInitTime&& target !=null) {
+            isInitTime = false;
+            mBaiduMap.clear();
+            //把清除掉的target补回来
+            addTarget(target.getPosition(),location_name);
         }
 
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
@@ -596,13 +599,15 @@ public class Map4BaiduActivity extends BaseActivity implements
 
         BitmapDescriptor bd = BitmapDescriptorFactory.fromResource(R.drawable.icon_map_marker);
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (PoiInfo info : poiInfos) {
-            if(marker!=null&&info.location.latitude==marker.getPosition().latitude&&info.location.longitude==marker.getPosition().longitude){
-                continue;
+        if(poiInfos!=null) {
+            for (PoiInfo info : poiInfos) {
+                if (target != null && info.location.latitude == target.getPosition().latitude && info.location.longitude == target.getPosition().longitude) {
+                    continue;
+                }
+                OverlayOptions oo = new MarkerOptions().icon(bd).position(info.location);
+                mBaiduMap.addOverlay(oo);
+                builder.include(info.location);
             }
-            OverlayOptions oo = new MarkerOptions().icon(bd).position(info.location);
-            mBaiduMap.addOverlay(oo);
-            builder.include(info.location);
         }
         LatLngBounds bounds = builder.build();
         MapStatusUpdate u = MapStatusUpdateFactory.newLatLngBounds(bounds);
@@ -661,8 +666,9 @@ public class Map4BaiduActivity extends BaseActivity implements
         if (latLng == null) {
             return;
         }
+        isInitTime = searchNearby;
 //        if(searchNearby) {
-            mGeoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(new LatLng(mCurrentLantitude, mCurrentLongitude)));
+            mGeoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
             //搜索附近
 //        mPoiSearch.searchNearby(new PoiNearbySearchOption().location(latLng).keyword("饭店").pageNum(20));//一定要keyword....
 //        } else {

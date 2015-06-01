@@ -741,5 +741,5 @@
     <string name="text_message_type_here">type message here</string>
 
     <string name="text_my_location">My Location</string>
-    <string name="text_target_choose">Target Choose</string>
+    <string name="text_target_choose">Select</string>
 </resources>
