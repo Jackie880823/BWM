@@ -2,6 +2,7 @@
 <resources>
     <color name="app_theme_color">#bf360c</color>
     <color name="transparent_color">#00000000</color>
+    <color name="translucence_color">#22000000</color>
     <!-- for progress bar -->
     <color name="progress_color_1">#008000</color>
     <color name="progress_color_2">#FF0000</color>

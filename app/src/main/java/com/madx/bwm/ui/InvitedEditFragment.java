@@ -140,9 +140,9 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
     //移除重复的好友
     private static void removeDuplicate(List<UserEntity> userList) {
         for(int i = userList.size()-1;i>0;i--){
-            String item = userList.get(i).getUser_given_name().trim();
+            String item = userList.get(i).getUser_id().trim();
             for (int j=i-1;j>=0; j--){
-                if (userList.get(j).getUser_given_name().trim().equals(item)){
+                if (userList.get(j).getUser_id().trim().equals(item)){
                     userList.remove(i);
                     break;
                 }
@@ -298,37 +298,10 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
     }
 
     private void changeData(){
-        /*
-        if(members_data==null){
-            members_data = new ArrayList<>();
-        }
-
-        //排队创建者
-        if(MainActivity.getUser().getUser_id().equals(owner_id)) {
-            for (UserEntity user :  members_data) {
-                if(MainActivity.getUser().getUser_id().equals(user.getUser_id())) {
-                    members_data.remove(user);
-                    break;
-                }
-            }
-        }
-
-        adapter = new InvitedUserEditAdapter(getParentActivity(), members_data);
-        adapter.setMemberDeleteListenere(new InvitedUserEditAdapter.MemberDeleteListenere() {
-            @Override
-            public boolean remove(String userId) {
-                submitDeleteMember(userId);
-                return false;
-            }
-        });
-        rvList.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-        */
         if(userList==null){
             userList = new ArrayList<>();
         }
 //        Log.i("changeData_userList===",userList.size()+"");
-
         //排队创建者
         if(MainActivity.getUser().getUser_id().equals(owner_id)) {
             for (UserEntity user :  userList) {
@@ -454,7 +427,6 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                 }
                 changeData();
 //                Log.i("AddMembe_userList===3", userList.size() + "");
-
 //                getMembersList();
             }
 

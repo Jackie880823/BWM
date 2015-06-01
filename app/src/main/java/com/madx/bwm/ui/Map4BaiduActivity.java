@@ -62,6 +62,7 @@ import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.SuggestAddressAdapter;
+import com.madx.bwm.util.LocationUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,6 +158,7 @@ public class Map4BaiduActivity extends BaseActivity implements
         intent.putExtra("location_name", name);
         intent.putExtra("latitude", latLng.latitude);
         intent.putExtra("longitude", latLng.longitude);
+        intent.putExtra("loc_type", LocationUtil.LOCATION_TYPE_BD09LL);
         setResult(RESULT_OK, intent);
 //        }
     }
@@ -222,7 +224,7 @@ public class Map4BaiduActivity extends BaseActivity implements
         mLocClient.registerLocationListener(myListener);
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);// 打开gps
-        option.setCoorType("bd09ll"); // 设置坐标类型
+        option.setCoorType(LocationUtil.LOCATION_TYPE_BD09LL); // 设置坐标类型
         option.setScanSpan(1000);
 
         mLocClient.setLocOption(option);

@@ -30,8 +30,6 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -48,7 +46,6 @@ import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
-import com.madx.bwm.util.SystemUtil;
 import com.madx.bwm.util.UIUtil;
 import com.madx.bwm.util.animation.ViewHelper;
 import com.madx.bwm.widget.MyDialog;
@@ -214,7 +211,15 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     MyDialog myDialog;
 
+    /**
+     * 返回检测，如正在上传或有数据返回为true，表示不能禁止返回
+     * @return
+     */
     public boolean backCheck() {
+        if(rlProgress.getVisibility() == View.VISIBLE) {
+            MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
+            return  true;
+        }
         if(tasks != null && tasks.size() > 0) {
             // 图片上任务正在执行
             Log.i(TAG, "backCheck& tasks size: " + tasks.size());
@@ -456,6 +461,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     boolean hasPicContent;
     boolean hasTextContent;
+    String loc_type;
 
     private void submitWall() {
         hasTextContent = false;
@@ -508,6 +514,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         params.put("loc_name", locationDesc);
         params.put("loc_caption", "");
         params.put("sticker_group_path", "");
+        params.put("loc_type", loc_type);
 
 
         try {
@@ -614,10 +621,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     editor.clear().commit();
                     getParentActivity().setResult(Activity.RESULT_OK);
                     MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
-                    sendEmptyMessage(HIDE_PROGRESS);
                     if(getActivity() != null) {
                         getActivity().finish();
                     }
+                    sendEmptyMessage(HIDE_PROGRESS);
                     break;
                 case SHOW_PROGRESS:
                     rlProgress.setVisibility(View.VISIBLE);
@@ -799,16 +806,16 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                 case GET_LOCATION:
                     if(data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
-                        if (SystemUtil.checkPlayServices(getActivity())) {
-                            final Place place = PlacePicker.getPlace(data, getActivity());
-                            if(place!=null) {
-                                String locationName = place.getAddress().toString();
-                                location_desc.setText(locationName);
-                                latitude = place.getLatLng().latitude;
-                                longitude = place.getLatLng().longitude;
-                            }
-
-                        }else {
+//                        if (SystemUtil.checkPlayServices(getActivity())) {
+//                            final Place place = PlacePicker.getPlace(data, getActivity());
+//                            if(place!=null) {
+//                                String locationName = place.getAddress().toString();
+//                                location_desc.setText(locationName);
+//                                latitude = place.getLatLng().latitude;
+//                                longitude = place.getLatLng().longitude;
+//                            }
+//
+//                        }else {
                             String locationName = data.getStringExtra("location_name");
                             if (!TextUtils.isEmpty(locationName)) {
                                 location_desc.setText(locationName);
@@ -819,7 +826,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                                 latitude = -1000;
                                 longitude = -1000;
                             }
-                        }
+//                        }
+                        //坐标数据类型
+                        loc_type = data.getStringExtra("loc_type");
                     }
                     break;
                 case GET_MEMBERS:
