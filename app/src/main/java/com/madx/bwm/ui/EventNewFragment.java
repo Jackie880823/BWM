@@ -168,6 +168,20 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     }
 
+    /**
+     * 返回键监听
+     * @return
+     */
+    public boolean backCheck() {
+        if(isEventDate()){
+            showSaveAlert();
+            return true;
+        }else {
+            getParentActivity().finish();
+            return false;
+        }
+    }
+
     private boolean isEventDate() {
         if (!TextUtils.isEmpty(event_title.getText().toString().trim())) {
 //             Log.i("event_title=====================",event_title.getText().toString().trim());

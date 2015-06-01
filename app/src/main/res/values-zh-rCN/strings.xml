@@ -65,7 +65,7 @@
     <string name="text_going">Joined</string>
     <string name="text_maybe">Maybe</string>
     <string name="text_not_going">Declined</string>
-    <string name="text_add">Add</string>
+    <string name="text_add">发送</string>
     <string name="text_added">Added</string>
     <string name="text_awaiting">Awaiting</string>
     <string name="text_public">All Members</string>
@@ -95,7 +95,7 @@
     <string name="text_destination">Destination</string>
 
     <string name="title_pick_date_time">Event date &amp; time</string>
-    <string name="accept">Accept</string>
+    <string name="accept">确定</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
     <string name="alert_exit">Exit</string>
@@ -121,8 +121,8 @@
 
 
 
-    <string name="msg_ask_exit_app">Do you really want to sign out?</string>
-    <string name="text_yes">YES</string>
+    <string name="msg_ask_exit_app">你是否确定登出?</string>
+    <string name="text_yes">确定</string>
     <string name="text_camera">拍照</string>
     <string name="text_album">相册</string>
     <string name="title_text_miss">Miss Alert</string>
@@ -147,27 +147,10 @@
     <string name="text_sending">\t Sending &#8230;</string>
     <string name="text_waiting">\t Waiting &#8230;</string>
     <string name="text_uploading">\t Uploading &#8230;</string>
-    <string name="text_loading">\t Loading &#8230;</string>
+    <string name="text_loading">\t 加载中 &#8230;</string>
     <string name="text_search_contact">Search name here</string>
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">No contact selected</string>
-
-
-    <string name="text_setting_1_title">Birthday Alert Reminder</string>
-    <string name="text_setting_1_1">1 Day earlier</string>
-    <string name="text_setting_1_2">3 Days earlier</string>
-    <string name="text_setting_1_3">1 Week earlier</string>
-    <string name="text_setting_1_4">1 Month earlier</string>
-
-    <string name="text_setting_2_title">Auto-Accept</string>
-    <string name="text_setting_2_1">All relationship</string>
-    <string name="text_setting_2_2">Parent relationship</string>
-    <string name="text_setting_2_3">Spouse relationship</string>
-    <string name="text_setting_2_4">Sibling relationship</string>
-    <string name="text_setting_2_5">Children relationship</string>
-    <string name="text_setting_2_6">Others relationship</string>
-
-
 
     <!-- chirstopher -->
     <string-array name="CountryCodes">
@@ -454,7 +437,7 @@
     <string name="text_success">Action successful</string>
     <string name="text_error">Action failed</string>
     <string name="text_error_try_again">Action failed</string>
-    <string name="text_dialog_loading">loading...</string>
+    <string name="text_dialog_loading">加载中...</string>
     <string name="text_input_your_group_name">Input group name.</string>
     <string name="text_no_found_reduce">Your device does not support crop function</string>
     <string name="text_choose_your_group_picture">Choose your group picture.</string>
@@ -586,6 +569,23 @@
     <!--end-->
 
     <!--Christopher-->
+
+    <string name="text_setting_1_title">Birthday Alert Reminder</string>
+    <string name="text_setting_1_1">1 Day earlier</string>
+    <string name="text_setting_1_2">3 Days earlier</string>
+    <string name="text_setting_1_3">1 Week earlier</string>
+    <string name="text_setting_1_4">1 Month earlier</string>
+    <string name="text_setting_2_title">Auto-Accept</string>
+    <string name="text_setting_2_1">All relationship</string>
+    <string name="text_setting_2_2">Parent relationship</string>
+    <string name="text_setting_2_3">Spouse relationship</string>
+    <string name="text_setting_2_4">Sibling relationship</string>
+    <string name="text_setting_2_5">Children relationship</string>
+    <string name="text_setting_2_6">Others relationship</string>
+
+    <string name="text_auto_accept">自动化关系设置</string>
+    <string name="text_birthday_alert_reminder">生日提醒</string>
+    <string name="text_group_privacy">隐私</string>
 
     <string name="text_upcoming_birthdays">Upcoming birthdays</string>
     <string name="text_today_birthday">Today \'s birthday</string>
