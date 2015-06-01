@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * ������ĸ�б��listView
- * 
+ *
  *@Title:
  *@Description:
  *@Author:Justlcw
@@ -107,7 +107,7 @@ public class LetterListView extends FrameLayout
     
     /**
      * ���������б�������
-     * 
+     *
      * @param adapter {@link LetterBaseAdapter}
      * @Description:
      * @Author Justlcw
@@ -164,7 +164,7 @@ public class LetterListView extends FrameLayout
     
     /**
      * ������Ϣ {@link com.madx.bwm.widget.LetterListView.LetterHandler#handleMessage(android.os.Message)}
-     * 
+     *
      * @param msg ��Ϣ
      * @Description:
      * @Author Justlcw
@@ -222,7 +222,7 @@ public class LetterListView extends FrameLayout
         
         /**
          * ���췽��
-         * 
+         *
          * @param height view height
          */
         public LetterAdapter(int height)
@@ -292,7 +292,7 @@ public class LetterListView extends FrameLayout
         
         /**
          * ��ȡtouch��λ��
-         * 
+         *
          * @return position
          * @Description:
          * @Author Justlcw

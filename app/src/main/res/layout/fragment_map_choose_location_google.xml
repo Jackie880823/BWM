@@ -27,34 +27,41 @@
             android:id="@+id/autocomplete_places"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/btn_search"
-            android:layout_marginRight="@dimen/default_view_margin"
             android:layout_gravity="center_horizontal"
             android:hint="@string/hint_search_name"
-            android:textColor="@color/default_text_color_dark" />
+            android:textColor="@color/default_text_color_dark"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:lines="1"
+            />
 
 
-        <Button
-            android:id="@+id/btn_search"
-            android:layout_width="@dimen/default_small_button_width_height"
-            android:layout_height="@dimen/default_small_button_width_height"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@android:drawable/ic_search_category_default" />
+        <!--<Button-->
+            <!--android:id="@+id/btn_search"-->
+            <!--android:layout_width="@dimen/default_small_button_width_height"-->
+            <!--android:layout_height="@dimen/default_small_button_width_height"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:background="@android:drawable/ic_search_category_default" />-->
 
 
     </RelativeLayout>
 
-
+    <com.madx.bwm.widget.MapWrapperLayout
+        android:id="@+id/map_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/bbbar"
+        >
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/bbbar"
         tools:context=".ui.ChooseMapFragment">
 
     </fragment>
+    </com.madx.bwm.widget.MapWrapperLayout>
 
 
     <!--<LinearLayout-->

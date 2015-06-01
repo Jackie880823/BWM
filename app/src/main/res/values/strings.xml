@@ -150,9 +150,6 @@
 
 
 
-    <string name="text_my_location">My Location</string>
-
-    <!-- chirstopher -->
     <string-array name="CountryCodes">
         <item>93,AF</item>
         <item>355,AL</item>
@@ -603,8 +600,6 @@
     <string name="text_create_group_not_save">Are you sure you want to cancel ? Changes made will not be save !</string>
     <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group. Add more members now!</string>
 
-    <!--Christopher-->
-
     <string name="text_setting_1_title">Birthday Alert Reminder</string>
     <string name="text_setting_1_1">1 Day earlier</string>
     <string name="text_setting_1_2">3 Days earlier</string>
@@ -765,6 +760,9 @@
     <string name="text_empty_add_member">Tap on the + to add family member.</string>
     <string name="text_empty_add_group">Tap on the + to create group.</string>
     <string name="text_message_type_here">type message here</string>
+
+    <string name="text_my_location">My Location</string>
+    <string name="text_target_choose">Select</string>
     <string name="waiting_upload">Waiting for the upload to complete, please</string>
     <string name="alert_no_jion_group">You need to be a member of this group to see more details</string>
     <string name="alert_ask_add_member">Add Member?</string>

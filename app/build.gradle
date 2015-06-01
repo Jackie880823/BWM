@@ -10,6 +10,7 @@ android {
 
     dexOptions {
         javaMaxHeapSize "2048M"
+        incremental true
     }
 
     defaultConfig {
@@ -17,7 +18,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 1   //TODO
-        versionName "0.07" //TODO
+        versionName "0.1.0" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -130,7 +131,7 @@ dependencies {
     //    compile 'com.android.support:recyclerview-v7:+'
     //    compile 'com.android.support:cardview-v7:+'
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
-    compile fileTree(include: '*.jar', dir: 'libs')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':Volley')
     compile project(':MaterialDesign')
     compile project(':PhotoView')
@@ -147,7 +148,4 @@ dependencies {
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.j256.ormlite:ormlite-core:4.48'
-    compile 'com.android.support:support-v4:22.0.0'
-//    compile 'com.android.support:support-v4:22.0.0'
-
 }
