@@ -18,7 +18,7 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.WallCommentEntity;
 import com.madx.bwm.http.VolleyUtil;
-import com.madx.bwm.interfaces.ViewClickListener;
+import com.madx.bwm.interfaces.WallViewClickListener;
 import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.util.MyDateUtils;
@@ -314,9 +314,9 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return position;
     }
 
-    public ViewClickListener mViewClickListener;
+    public WallViewClickListener mViewClickListener;
 
-    public void setPicClickListener(ViewClickListener viewClickListener) {
+    public void setPicClickListener(WallViewClickListener viewClickListener) {
         mViewClickListener = viewClickListener;
     }
 
