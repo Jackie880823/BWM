@@ -121,6 +121,8 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
         });
     }
 
+
+
     /**
      * Callback method to be invoked when an item in this AdapterView has
      * been clicked.

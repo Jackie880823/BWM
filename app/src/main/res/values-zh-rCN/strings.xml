@@ -729,5 +729,6 @@
     <string name="text_empty_add_group">点击+以创建新群组！</string>
     <string name="text_message_type_here">type message here</string>
     <string name="waiting_upload">请等待完成上传</string>
+    <string name="text_group">群组</string>
     <!--Christopher-->
 </resources>

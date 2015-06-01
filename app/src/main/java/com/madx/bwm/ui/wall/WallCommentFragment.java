@@ -406,7 +406,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             ibAgree.setImageResource(R.drawable.love_press);
         }
 
-        if(TextUtils.isEmpty(wall.getLoc_name())) {
+        if(TextUtils.isEmpty(wall.getLoc_name()) || TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
             llLocation.setVisibility(View.GONE);
         } else {
             llLocation.setVisibility(View.VISIBLE);

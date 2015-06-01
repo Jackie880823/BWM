@@ -11,6 +11,7 @@ public class GroupEntity implements Serializable{
     private String group_name;          //"今天真好啊 :)",
     private String group_active_date;   //"2015-01-21 12:59:21",
     private String unread;              //"2",
+    private String group_flag;
 
     public String getUser_given_name() {
         return user_given_name;
@@ -64,5 +65,13 @@ public class GroupEntity implements Serializable{
 
     public void setUnread(String unread) {
         this.unread = unread;
+    }
+
+    public String getGroup_flag() {
+        return group_flag;
+    }
+
+    public void setGroup_flag(String group_flag) {
+        this.group_flag = group_flag;
     }
 }

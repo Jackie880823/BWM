@@ -25,6 +25,7 @@ import java.util.List;
 
 public class ViaIdNameActivity extends BaseActivity {
 
+    public static final String EXTRA_USER_NAME = "dis_bond_with_me_id";
 
     EditText etInfo;
     TextView tvWarning;
@@ -72,7 +73,10 @@ public class ViaIdNameActivity extends BaseActivity {
         tvRelationship = getViewById(R.id.tv_relationship);
         btnAdd = getViewById(R.id.btn_add);
 
-        etInfo.setText(new Intent().getStringExtra("dis_bondwithme_id"));
+        String name = getIntent().getStringExtra(EXTRA_USER_NAME);
+        if(!TextUtils.isEmpty(name)) {
+            etInfo.setText(name);
+        }
 
         tvRelationship.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +89,7 @@ public class ViaIdNameActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if (!TextUtils.isEmpty(etInfo.getText()) && !TextUtils.isEmpty(tvRelationship.getText()))
-                {
+                if(!TextUtils.isEmpty(etInfo.getText()) && !TextUtils.isEmpty(tvRelationship.getText())) {
                     srAddMember();
                 }
             }
@@ -105,64 +108,60 @@ public class ViaIdNameActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode)
-        {
+        switch(requestCode) {
             case 1:
-                if (resultCode == RESULT_OK)
-                {
+                if(resultCode == RESULT_OK) {
                     tvRelationship.setText(data.getStringExtra("relationship"));
                 }
         }
     }
 
-    public void srAddMember()
-    {
+    public void srAddMember() {
         tvWarning.setVisibility(View.GONE);
-//        StringRequest srAddMember = new StringRequest(Request.Method.POST, Constant.API_SEARCH_MEMBER, new Response.Listener<String>() {
-//
-//            @Override
-//            public void onResponse(String response) {
-//
-//                Log.i("","response" + response);
-//
-//                try {
-//                        JSONObject jsonObject = new JSONObject(response);
-//                        if ("Success".equals(jsonObject.getString("response_status")))
-//                        {
-//                            Toast.makeText(ViaIdNameActivity.this, "Success to add member.", Toast.LENGTH_SHORT).show();
-//                            finish();
-//                        }
-//                        else
-//                        {
-//                            tvWarning.setText("Fail to add member. try again.");
-//                            tvWarning.setVisibility(View.VISIBLE);
-//                        }
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                //TODO
-//                error.printStackTrace();
-//                Toast.makeText(ViaIdNameActivity.this, "error.", Toast.LENGTH_SHORT).show();
-//            }
-//        }) {
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                HashMap<String, String> params = new HashMap<String, String>();
-//                params.put("user_id", MainActivity.getUser().getUser_id());
-//                params.put("user_relationship_name", tvRelationship.getText().toString());
-//                params.put("search_detail", etInfo.getText().toString());
-//
-//                return params;
-//            }
-//        };
-//        VolleyUtil.addRequest2Queue(ViaIdNameActivity.this, srAddMember, "");
-
+        //        StringRequest srAddMember = new StringRequest(Request.Method.POST, Constant.API_SEARCH_MEMBER, new Response.Listener<String>() {
+        //
+        //            @Override
+        //            public void onResponse(String response) {
+        //
+        //                Log.i("","response" + response);
+        //
+        //                try {
+        //                        JSONObject jsonObject = new JSONObject(response);
+        //                        if ("Success".equals(jsonObject.getString("response_status")))
+        //                        {
+        //                            Toast.makeText(ViaIdNameActivity.this, "Success to add member.", Toast.LENGTH_SHORT).show();
+        //                            finish();
+        //                        }
+        //                        else
+        //                        {
+        //                            tvWarning.setText("Fail to add member. try again.");
+        //                            tvWarning.setVisibility(View.VISIBLE);
+        //                        }
+        //
+        //                } catch (JSONException e) {
+        //                    e.printStackTrace();
+        //                }
+        //            }
+        //        }, new Response.ErrorListener() {
+        //
+        //            @Override
+        //            public void onErrorResponse(VolleyError error) {
+        //                //TODO
+        //                error.printStackTrace();
+        //                Toast.makeText(ViaIdNameActivity.this, "error.", Toast.LENGTH_SHORT).show();
+        //            }
+        //        }) {
+        //            @Override
+        //            protected Map<String, String> getParams() throws AuthFailureError {
+        //                HashMap<String, String> params = new HashMap<String, String>();
+        //                params.put("user_id", MainActivity.getUser().getUser_id());
+        //                params.put("user_relationship_name", tvRelationship.getText().toString());
+        //                params.put("search_detail", etInfo.getText().toString());
+        //
+        //                return params;
+        //            }
+        //        };
+        //        VolleyUtil.addRequest2Queue(ViaIdNameActivity.this, srAddMember, "");
 
 
         HashMap<String, String> params = new HashMap<String, String>();
@@ -187,19 +186,16 @@ public class ViaIdNameActivity extends BaseActivity {
                 Log.i("", "response" + response);
 
                 try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        if ("Success".equals(jsonObject.getString("response_status")))
-                        {
-                            Toast.makeText(ViaIdNameActivity.this, getString(R.string.text_success_add_member), Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                        else
-                        {
-                            tvWarning.setText(getString(R.string.text_fail_add_member));
-                            tvWarning.setVisibility(View.VISIBLE);
-                        }
+                    JSONObject jsonObject = new JSONObject(response);
+                    if("Success".equals(jsonObject.getString("response_status"))) {
+                        Toast.makeText(ViaIdNameActivity.this, getString(R.string.text_success_add_member), Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        tvWarning.setText(getString(R.string.text_fail_add_member));
+                        tvWarning.setVisibility(View.VISIBLE);
+                    }
 
-                } catch (JSONException e) {
+                } catch(JSONException e) {
                     Toast.makeText(ViaIdNameActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
