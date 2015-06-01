@@ -627,7 +627,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         if (TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
             return;
         }
-        LocationUtil.goNavigation(getActivity(), Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()));
+        LocationUtil.goNavigation(getActivity(), Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()),wall.getLoc_type());
     }
 
     private void check() {
