@@ -78,7 +78,7 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
                                 "<b>"+alertGroupEntity.getAction_username()+"</b>" +  //人名
                                 "<font color=\"#000000\">"+pendingText+"</font>"+   //requested you to join the group
                                 "<b>\""+alertGroupEntity.getModule_name()+"\"</b>"));     //groupName
-
+                holder.ibOption.setVisibility(View.VISIBLE); //移除option Button
             }
             break ;
             case TAG_ADD:
