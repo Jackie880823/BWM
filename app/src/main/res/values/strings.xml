@@ -764,8 +764,9 @@
     <string name="text_my_location">My Location</string>
     <string name="text_target_choose">Select</string>
     <string name="waiting_upload">Waiting for the upload to complete, please</string>
-    <string name="alert_no_jion_group">You need to be a member of this group to see more details</string>
+    <string name="alert_no_join_group">You need to be a member of this group to see more details</string>
     <string name="alert_ask_add_member">Add Member?</string>
     <string name="text_group">Group</string>
+    <string name="hint_comment_input">Type a comments here…</string>
     <!--Christopher-->
 </resources>
