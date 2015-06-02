@@ -14,8 +14,6 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
@@ -27,7 +25,6 @@ import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
-import com.madx.bwm.util.SystemUtil;
 import com.madx.bwm.widget.DatePicker;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.MyGridViewForScroolView;
@@ -393,7 +390,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     }
 
     private void goLocationSetting() {
-        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude);
+        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude,position_name.getText().toString());
         if(intent!=null)
             startActivityForResult(intent, GET_LOCATION);
     }
@@ -405,16 +402,16 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 case GET_LOCATION:
                     if (data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
-                        if (SystemUtil.checkPlayServices(getActivity())) {
-                            final Place place = PlacePicker.getPlace(data, getActivity());
-                            if(place!=null) {
-                                String locationName = place.getAddress().toString();
-                                position_name.setText(locationName);
-                                latitude = place.getLatLng().latitude;
-                                longitude = place.getLatLng().longitude;
-                            }
-
-                        }else {
+//                        if (SystemUtil.checkPlayServices(getActivity())) {
+//                            final Place place = PlacePicker.getPlace(data, getActivity());
+//                            if(place!=null) {
+//                                String locationName = place.getAddress().toString();
+//                                position_name.setText(locationName);
+//                                latitude = place.getLatLng().latitude;
+//                                longitude = place.getLatLng().longitude;
+//                            }
+//
+//                        }else {
                             String locationName = data.getStringExtra("location_name");
                             if (!TextUtils.isEmpty(locationName)) {
                                 position_name.setText(locationName);
@@ -426,7 +423,9 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                                 latitude = -1000;
                                 longitude = -1000;
                             }
-                        }
+//                        }
+                         //坐标数据类型
+                        mEevent.setLoc_type(data.getStringExtra("loc_type"));
                     }
                     break;
                 case GET_MEMBERS:

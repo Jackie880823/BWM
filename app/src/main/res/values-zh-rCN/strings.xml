@@ -80,7 +80,7 @@
     <string name="text_wall_content_at_group_desc">\@%1$sgroups</string>
     <string name="text_today">today</string>
 
-    <string name="msg_no_map_app">Please install Google Map to proceed</string>
+    <string name="msg_no_map_app">没有可用的地图导航程序</string>
 
 
     <!-- xxhdip 取google免费最大图片 -->

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.madx.bwm.App;
 import com.madx.bwm.ui.MissListActivity;
 import com.madx.bwm.util.NotificationUtil;
 
@@ -90,6 +91,10 @@ public class JiGuangBroadcastReceiver extends BroadcastReceiver {
 
     private void processCustomMessage(Context context, Bundle bundle) {
         try {
+            if (App.getLoginedUser() == null) {
+                Log.d("","nonononono");
+                return;
+            }
             NotificationUtil.sendNotification(context, bundle,false);
         } catch (JSONException e) {
             e.printStackTrace();

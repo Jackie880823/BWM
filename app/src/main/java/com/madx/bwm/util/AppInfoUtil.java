@@ -14,6 +14,7 @@ import com.madx.bwm.Constant;
 public class AppInfoUtil {
 
     private final static String TAG = "AppInfoUtil";
+    public static final String APP_NAME = "BWM";
 
     public static String getApplicationName(Context context) {
         int stringId = context.getApplicationInfo().labelRes;
@@ -129,5 +130,7 @@ public class AppInfoUtil {
             PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_APP_VERSION, appVersion);
         }
     }
+
+
 
 }

@@ -7,16 +7,18 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
+import com.madx.bwm.App;
 import com.madx.bwm.R;
 import com.madx.bwm.ui.AlertEventActivity;
 import com.madx.bwm.ui.AlertWallActivity;
-import com.madx.bwm.ui.more.BondAlert.BigDayActivity;
 import com.madx.bwm.ui.MemberActivity;
 import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.ui.MissListActivity;
 import com.madx.bwm.ui.NewsActivity;
 import com.madx.bwm.ui.RecommendActivity;
+import com.madx.bwm.ui.more.BondAlert.BigDayActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -102,6 +104,11 @@ public class NotificationUtil {
      * @param msg
      */
     public static void sendNotification(Context context, Bundle msg,boolean isGCM) throws JSONException {
+
+        if (App.getLoginedUser() == null) {
+            Log.d("","nonononono");
+            return;
+        }
 
         PendingIntent contentIntent = getFowwordIntent(context, msg,isGCM);
 

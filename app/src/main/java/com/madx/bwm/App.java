@@ -1,9 +1,9 @@
 package com.madx.bwm;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 
 import com.android.volley.ext.tools.HttpTools;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Created by wing on 15/3/21.
  */
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     private static UserEntity user;
     private static App appContext;
