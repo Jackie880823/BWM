@@ -139,7 +139,8 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (messageGroupAdapter.getCount() > 0 && (groupListView.getLastVisiblePosition() > (messageGroupAdapter.getCount() - 5)) && !isPullData) {
+                if (messageGroupAdapter.getCount() > 0 && (groupListView.getFirstVisiblePosition() < messageGroupAdapter.getCount() - 2)
+                        && (groupListView.getLastVisiblePosition() > (messageGroupAdapter.getCount() - 5)) && !isPullData) {
                     getData(startIndex);
                     isPullData = true;
                 }
