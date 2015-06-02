@@ -49,7 +49,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         // 这里会影响子类返回键的监听事件，请谨慎处理
         Log.i(TAG, "dispatchKeyEvent& keyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
         if(event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            BaseActivity.this.finish();
+            finish();
             return true;
         }
         if(event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_MENU) {
