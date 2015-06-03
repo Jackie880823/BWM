@@ -232,7 +232,7 @@ public class WallEditView extends EditText implements TextWatcher {
         if(!TextUtils.isEmpty(memberText) && !TextUtils.isEmpty(groupText)) {
             String strDesc = editable.toString();
 
-            if(TextUtils.isEmpty(oldGroupText) && TextUtils.isEmpty(oldGroupText)) {
+            if(TextUtils.isEmpty(oldGroupText) && TextUtils.isEmpty(oldMemberText)) {
                 // @member 后跟着的是@group需要添加 &
                 groupText = "& " + groupText;
                 at = memberText + groupText;
@@ -244,6 +244,12 @@ public class WallEditView extends EditText implements TextWatcher {
                         // @group 后跟着的是@member需要添加 &
                         memberText = "& " + memberText;
                         at = groupText + memberText;
+                    }
+                } else  if(TextUtils.isEmpty(oldGroupText)) {
+                    if(startMember + oldMemberText.length() == strDesc.length()) {
+                        // @group 后跟着的是@member需要添加 &
+                        groupText = "& " + groupText;
+                        at = memberText + groupText;
                     }
                 } else {
                     if(startMember + oldMemberText.length() == startGroup) {
@@ -282,53 +288,6 @@ public class WallEditView extends EditText implements TextWatcher {
 
     private boolean setDescSpan(String desc, String oldDesc, boolean hasAt, SpannableStringBuilder ssbDesc) {
         Log.i(TAG, "addAtDesc& oldDesc: " + oldDesc + "; desc: " + desc + "; hasAt: " + hasAt);
-
-        //        int start = 0;
-        //        int end = 0;
-        //        if(TextUtils.isEmpty(desc)) {
-        //            hasAt = false;
-        //            try {
-        //                Pattern p = Pattern.compile(oldDesc);
-        //                Matcher m = p.matcher(sb.toString());
-        //                if(m.find()) {
-        //                    start = m.start();
-        //                    end = m.end();
-        //                    sb.replace(start, end, desc);
-        //                }
-        //            } catch(Exception e) {
-        //                e.printStackTrace();
-        //                return false;
-        //            }
-        //        } else {
-        //
-        //            if(hasAt) {
-        //                try {
-        //                    Pattern p = Pattern.compile(oldDesc);
-        //                    Matcher m = p.matcher(sb.toString());
-        //                    if(m.find()) {
-        //                        start = m.start();
-        //                        end = m.end();
-        //                        sb.replace(start, end, desc);
-        //                    }
-        //                } catch(Exception e) {
-        //                    e.printStackTrace();
-        //                    return false;
-        //                }
-        //            } else {
-        //                start = sb.length();
-        //                sb.append(desc);
-        //                if(start < 0) {
-        //                    start = 0;
-        //                }
-        //                end = sb.length();
-        //            }
-        //            ImageSpan is = getImageSpanForText(desc);
-        //            Log.i(TAG, "addAtDesc& start = " + start + "; end = " + end);
-        //            sb.setSpan(is, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        //
-        //            hasAt = true;
-        //        }
-        //        this.setText(sb);
 
         if(!TextUtils.isEmpty(desc)) {
             ImageSpan is = getImageSpanForText(desc);
@@ -369,11 +328,12 @@ public class WallEditView extends EditText implements TextWatcher {
             ssbDesc.append(spanStr);
         } else {
             try {
-                Pattern p = Pattern.compile(strOld);
+                // strOld最后一位有可能因输入法的原因已经被替换成"."而导致无法匹配，所以忽略最后一位字符
+                Pattern p = Pattern.compile(strOld.substring(0, strOld.length() - 1));
                 Matcher m = p.matcher(ssbDesc.toString());
                 if(m.find()) {
                     int start = m.start();
-                    int end = m.end();
+                    int end = m.end() + 1;// replace需要替换整个strOld
                     ssbDesc.replace(start, end, spanStr);
                 } else {
                     ssbDesc.append(spanStr);
