@@ -105,7 +105,7 @@
                         android:paddingRight="@dimen/_8dp"
                         android:paddingBottom="@dimen/_8dp"
                         android:gravity="right"
-                        android:text="350"
+                        android:text="300"
                         android:textSize="12.0sp" />
 
 

@@ -91,7 +91,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private String Spmemeber_date;
     private String users_date;
 
-    private static final int MAX_COUNT = 350;
+    private static final int MAX_COUNT = 300;
 
     public static EventNewFragment newInstance(String... params) {
 
@@ -210,9 +210,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 editStart--;
                 editEnd--;
             }
-            event_desc.setText(s);
-            event_desc.setSelection(editStart);
-
             // 恢复监听器
             event_desc.addTextChangedListener(mTextWatcher);
 
