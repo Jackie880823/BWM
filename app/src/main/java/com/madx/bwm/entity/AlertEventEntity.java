@@ -1,9 +1,11 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by wing on 15/4/9.
  */
-public class AlertEventEntity {
+public class AlertEventEntity implements Serializable {
     private String action_user_id;
     private String receiver_user_id;
     private String reference_id;

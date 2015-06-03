@@ -2,10 +2,12 @@ package com.madx.bwm.entity;
 
 import android.net.Uri;
 
+import java.io.Serializable;
+
 /**
  * Created by christepherzhang on 15/1/27.
  */
-public class MsgEntity {
+public class MsgEntity implements Serializable {
 
 
     private String group_id;            //: "250",

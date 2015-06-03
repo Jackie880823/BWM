@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.madx.bwm">
+    package="com.madx.bwm"
+    android:installLocation="auto"
+    >
 
     <!-- com.madx.bwm -->
 
@@ -75,13 +77,14 @@
         <!-- android:value="${UMENG_CHANNEL_VALUE}" /> -->
 
         <!-- gaode map -->
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="83390a943f5896f8210b294faec6c5a3" />
+        <!--<meta-data-->
+            <!--android:name="com.amap.api.v2.apikey"-->
+            <!--android:value="83390a943f5896f8210b294faec6c5a3" />-->
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="@string/baidu_maps_key_debug" />
+            android:value="@string/baidu_maps_key" />
+            <!--android:value="@string/baidu_maps_key_debug" />-->
 
         <service
             android:name="com.baidu.location.f"

@@ -1,9 +1,11 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by wing on 15/1/23.
  */
-public class WallCommentEntity {
+public class WallCommentEntity implements Serializable {
 
 
     private String content_group_id;
