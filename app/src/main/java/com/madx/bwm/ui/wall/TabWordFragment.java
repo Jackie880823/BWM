@@ -114,14 +114,14 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
         String memberText;
         String groupText;
         if(members != null && mMembers.size() > 0) {
-            memberText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc) + " ", mMembers.size());
+            memberText = String.format(getParentActivity().getString(R.string.text_wall_content_at_member_desc), mMembers.size());
             Log.i(TAG, "changeAtDesc& member of at description is " + memberText);
         } else {
             Log.i(TAG, "changeAtDesc& no member of at description");
             memberText = "";
         }
         if(groups != null && mGroups.size() > 0) {
-            groupText = String.format(getParentActivity().getString(R.string.text_wall_content_at_group_desc) + " ", mGroups.size());
+            groupText = String.format(getParentActivity().getString(R.string.text_wall_content_at_group_desc), mGroups.size());
             Log.i(TAG, "changeAtDesc& group of at description is " + groupText);
         } else {
             Log.i(TAG, "changeAtDesc& no group of at description");

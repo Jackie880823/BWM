@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -213,12 +214,13 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     /**
      * 返回检测，如正在上传或有数据返回为true，表示不能禁止返回
+     *
      * @return
      */
     public boolean backCheck() {
         if(rlProgress.getVisibility() == View.VISIBLE) {
             MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
-            return  true;
+            return true;
         }
         if(tasks != null && tasks.size() > 0) {
             // 图片上传务正在执行
@@ -430,7 +432,19 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                 changeTab(WALL_TAB_PICTURE);
                 break;
             case R.id.btn_feeling:
-                showChooseFeeling();
+                UIUtil.hideKeyboard(getParentActivity(), fragment1.getEditText4Content());
+                InputMethodManager imm = (InputMethodManager) getParentActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if(imm.isActive()) {
+                    imm.hideSoftInputFromWindow(fragment1.getEditText4Content().getWindowToken(), 0);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showChooseFeeling();
+                        }
+                    }, 50);
+                } else {
+                    showChooseFeeling();
+                }
                 break;
             case R.id.btn_location:
                 goLocationSetting();
@@ -453,6 +467,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
                 break;
             case R.id.btn_submit:
+                UIUtil.hideKeyboard(getParentActivity(), fragment1.getEditText4Content());
                 submitWall();
                 break;
         }
@@ -780,8 +795,8 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goLocationSetting() {
-        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude,location_desc.getText().toString());
-        if(intent!=null)
+        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, location_desc.getText().toString());
+        if(intent != null)
             startActivityForResult(intent, GET_LOCATION);
     }
 
@@ -806,27 +821,27 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                 case GET_LOCATION:
                     if(data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
-//                        if (SystemUtil.checkPlayServices(getActivity())) {
-//                            final Place place = PlacePicker.getPlace(data, getActivity());
-//                            if(place!=null) {
-//                                String locationName = place.getAddress().toString();
-//                                location_desc.setText(locationName);
-//                                latitude = place.getLatLng().latitude;
-//                                longitude = place.getLatLng().longitude;
-//                            }
-//
-//                        }else {
-                            String locationName = data.getStringExtra("location_name");
-                            if (!TextUtils.isEmpty(locationName)) {
-                                location_desc.setText(locationName);
-                                latitude = data.getDoubleExtra("latitude", 0);
-                                longitude = data.getDoubleExtra("longitude", 0);
-                            } else {
-                                location_desc.setText(null);
-                                latitude = -1000;
-                                longitude = -1000;
-                            }
-//                        }
+                        //                        if (SystemUtil.checkPlayServices(getActivity())) {
+                        //                            final Place place = PlacePicker.getPlace(data, getActivity());
+                        //                            if(place!=null) {
+                        //                                String locationName = place.getAddress().toString();
+                        //                                location_desc.setText(locationName);
+                        //                                latitude = place.getLatLng().latitude;
+                        //                                longitude = place.getLatLng().longitude;
+                        //                            }
+                        //
+                        //                        }else {
+                        String locationName = data.getStringExtra("location_name");
+                        if(!TextUtils.isEmpty(locationName)) {
+                            location_desc.setText(locationName);
+                            latitude = data.getDoubleExtra("latitude", 0);
+                            longitude = data.getDoubleExtra("longitude", 0);
+                        } else {
+                            location_desc.setText(null);
+                            latitude = -1000;
+                            longitude = -1000;
+                        }
+                        //                        }
                         //坐标数据类型
                         loc_type = data.getStringExtra("loc_type");
                     }
