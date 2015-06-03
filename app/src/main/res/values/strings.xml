@@ -768,5 +768,6 @@
     <string name="alert_ask_add_member">Add Member?</string>
     <string name="text_group">Group</string>
     <string name="hint_comment_input">Type a comments here…</string>
+    <string name="text_character_and"><![CDATA[" & "]]></string>
     <!--Christopher-->
 </resources>

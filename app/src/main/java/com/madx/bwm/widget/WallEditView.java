@@ -178,7 +178,7 @@ public class WallEditView extends EditText implements TextWatcher {
         synchronized(this) {
             if(!TextUtils.isEmpty(oldMemberText)) {
                 SpannableStringBuilder sb = new SpannableStringBuilder(s);
-                Pattern p = Pattern.compile(oldMemberText.substring(0, oldMemberText.length() -1));
+                Pattern p = Pattern.compile(oldMemberText);
                 Matcher m = p.matcher(sb.toString());
                 if(!m.find() || (m.end() == 0)) {
                     hasAtMember = false;
@@ -188,7 +188,7 @@ public class WallEditView extends EditText implements TextWatcher {
             }
             if(!TextUtils.isEmpty(oldGroupText)) {
                 SpannableStringBuilder sb = new SpannableStringBuilder(s);
-                Pattern p = Pattern.compile(oldGroupText.substring(0, oldGroupText.length() -1));
+                Pattern p = Pattern.compile(oldGroupText);
                 Matcher m = p.matcher(sb.toString());
                 if(!m.find() || (m.end() == 0)) {
                     hasAtGroup = false;
@@ -234,7 +234,7 @@ public class WallEditView extends EditText implements TextWatcher {
 
             if(TextUtils.isEmpty(oldGroupText) && TextUtils.isEmpty(oldMemberText)) {
                 // @member 后跟着的是@group需要添加 &
-                groupText = "& " + groupText;
+                groupText = getContext().getString(R.string.text_character_and) + groupText;
                 at = memberText + groupText;
             } else {
                 int startMember = strDesc.indexOf(oldMemberText);
@@ -242,23 +242,23 @@ public class WallEditView extends EditText implements TextWatcher {
                 if(TextUtils.isEmpty(oldMemberText)) {
                     if(startGroup + oldGroupText.length() == strDesc.length()) {
                         // @group 后跟着的是@member需要添加 &
-                        memberText = "& " + memberText;
+                        memberText = getContext().getString(R.string.text_character_and) + memberText;
                         at = groupText + memberText;
                     }
                 } else  if(TextUtils.isEmpty(oldGroupText)) {
                     if(startMember + oldMemberText.length() == strDesc.length()) {
                         // @group 后跟着的是@member需要添加 &
-                        groupText = "& " + groupText;
+                        groupText = getContext().getString(R.string.text_character_and) + groupText;
                         at = memberText + groupText;
                     }
                 } else {
                     if(startMember + oldMemberText.length() == startGroup) {
                         // @member 后跟着的是@group需要添加 &
-                        groupText = "& " + groupText;
+                        groupText = getContext().getString(R.string.text_character_and) + groupText;
                         at = memberText + groupText;
                     } else if(startGroup + oldGroupText.length() == startMember) {
                         // @group 后跟着的是@member需要添加 &
-                        memberText = "& " + memberText;
+                        memberText = getContext().getString(R.string.text_character_and) + memberText;
                         at = groupText + memberText;
                     }
                 }
@@ -329,11 +329,11 @@ public class WallEditView extends EditText implements TextWatcher {
         } else {
             try {
                 // strOld最后一位有可能因输入法的原因已经被替换成"."而导致无法匹配，所以忽略最后一位字符
-                Pattern p = Pattern.compile(strOld.substring(0, strOld.length() - 1));
+                Pattern p = Pattern.compile(strOld);
                 Matcher m = p.matcher(ssbDesc.toString());
                 if(m.find()) {
                     int start = m.start();
-                    int end = m.end() + 1;// replace需要替换整个strOld
+                    int end = m.end();// replace需要替换整个strOld
                     ssbDesc.replace(start, end, spanStr);
                 } else {
                     ssbDesc.append(spanStr);
