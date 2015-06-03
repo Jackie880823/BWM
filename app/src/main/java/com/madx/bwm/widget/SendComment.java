@@ -165,7 +165,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                             public void run() {
                                 showExpandFunctionView();
                             }
-                        }, 50);
+                        }, 100);
                     } else {
                         showExpandFunctionView();
                     }
@@ -183,7 +183,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                             public void run() {
                                 showStickerView();
                             }
-                        }, 50);
+                        }, 100);
                     } else {
                         showStickerView();
                     }
