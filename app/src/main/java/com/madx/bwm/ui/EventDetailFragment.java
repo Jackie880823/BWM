@@ -1216,7 +1216,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 if (TextUtils.isEmpty(event.getLoc_latitude()) || TextUtils.isEmpty(event.getLoc_longitude())) {
                     return;
                 }
-                LocationUtil.goNavigation(getActivity(), Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()));
+                LocationUtil.goNavigation(getActivity(), Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()),event.getLoc_type());
                 break;
             case R.id.option_cancel:
                 event_options.setVisibility(View.GONE);

@@ -21,6 +21,8 @@ public class EventEntity implements Serializable {
     private String text_description  ;
     private String loc_latitude  ;
     private String loc_longitude  ;
+    /**坐标类型*/
+    private String loc_type;
     private String loc_name  ;
     private String user_given_name  ;
     private String group_event_timestamp  ;
@@ -190,6 +192,18 @@ public class EventEntity implements Serializable {
     }
 
     public void setgetGroup_new_post(String group_new_post) {
+        this.group_new_post = group_new_post;
+    }
+
+    public String getLoc_type() {
+        return loc_type;
+    }
+
+    public void setLoc_type(String loc_type) {
+        this.loc_type = loc_type;
+    }
+
+    public void setGroup_new_post(String group_new_post) {
         this.group_new_post = group_new_post;
     }
 }

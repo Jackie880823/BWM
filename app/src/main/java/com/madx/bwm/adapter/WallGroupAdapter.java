@@ -1,7 +1,9 @@
 package com.madx.bwm.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,9 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.GroupEntity;
 import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.widget.CircularNetworkImage;
+import com.madx.bwm.widget.MyDialog;
 
 import java.util.List;
 
@@ -107,6 +111,33 @@ public class WallGroupAdapter extends RecyclerView.Adapter<WallGroupAdapter.MGIt
             super(itemView);
             nivHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
             name = (TextView) itemView.findViewById(R.id.owner_name);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    GroupEntity groupEntity = mData.get(position);
+                    String group_flag = groupEntity.getGroup_flag();
+                    Log.i(TAG, "onClick& position: " + position + "; group_flag = " + group_flag);
+                    if("0".equals(group_flag)) {
+                        // 不在此分组中弹出提示
+                        final MyDialog myDialog = new MyDialog(mContext, "", mContext.getString(R.string.alert_no_join_group));
+                        myDialog.setButtonAccept(R.string.ok, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                myDialog.dismiss();
+                            }
+                        });
+                        myDialog.show();
+                    } else if("1".equals(group_flag)) {
+                        // 在此分组中跳转至分组群聊界面
+                        Intent intent = new Intent(mContext, MessageChatActivity.class);
+                        intent.putExtra("type", 1);
+                        intent.putExtra("groupId", groupEntity.getGroup_id());
+                        intent.putExtra("titleName", groupEntity.getGroup_name());
+                        mContext.startActivity(intent);
+                    }
+                }
+            });
         }
     }
 }

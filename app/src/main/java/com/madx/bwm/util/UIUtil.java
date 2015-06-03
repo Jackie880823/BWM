@@ -127,4 +127,9 @@ public class UIUtil {
         imm.showSoftInput(et, InputMethodManager.SHOW_FORCED);
     }
 
+    public static int getPixelsFromDp(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int)(dp * scale + 0.5f);
+    }
+
 }

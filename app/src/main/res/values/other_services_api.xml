@@ -11,6 +11,9 @@
     <string name="jackie_baidu_maps_key_debug" templateMergeStrategy="preserve">AX8zaOuvGpvTcEwc77TWYozF</string>
 
 
+    <string name="jackie_baidu_maps_key_4_convertor" templateMergeStrategy="preserve">WkHFTQQgdIvSphGk31aAaKWu</string>
+
+
     <!-- push -->
     <string name="jiguang_api_key" templateMergeStrategy="preserve">ede70f81b87bb2a99b3f7cb1</string>
 </resources>

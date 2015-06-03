@@ -333,7 +333,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         int tagMemberCount = wall.getTag_member().size();
         int tagGroupCount = wall.getTag_group().size();
         if(tagMemberCount > 0 || tagGroupCount > 0) {
-            WallUtil wallUtil = new WallUtil(getActivity());
+            WallUtil wallUtil = new WallUtil(getActivity(), this);
             wallUtil.setSpanContent(tvContent, wall, atDescription, tagMemberCount, tagGroupCount);
         }
 
@@ -406,7 +406,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             ibAgree.setImageResource(R.drawable.love_press);
         }
 
-        if(TextUtils.isEmpty(wall.getLoc_name())) {
+        if(TextUtils.isEmpty(wall.getLoc_name()) || TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
             llLocation.setVisibility(View.GONE);
         } else {
             llLocation.setVisibility(View.VISIBLE);
@@ -627,7 +627,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         if (TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
             return;
         }
-        LocationUtil.goNavigation(getActivity(), Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()));
+        LocationUtil.goNavigation(getActivity(), Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()),wall.getLoc_type());
     }
 
     private void check() {
