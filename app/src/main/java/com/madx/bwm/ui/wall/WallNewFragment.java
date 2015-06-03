@@ -453,6 +453,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
                 break;
             case R.id.btn_submit:
+                UIUtil.hideKeyboard(getParentActivity(), fragment1.getEditText4Content());
                 submitWall();
                 break;
         }
