@@ -139,16 +139,17 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (messageGroupAdapter.getCount() > 0 && (groupListView.getLastVisiblePosition() > (messageGroupAdapter.getCount() - 5)) && !isPullData) {
-                    getData(startIndex);
-                    isPullData = true;
-                }
                 if (groupListView.getFirstVisiblePosition() == 0) {
                     groupRefreshLayout.setEnabled(true);
                     groupIb.setVisibility(View.GONE);
                 } else {
                     groupIb.setVisibility(View.VISIBLE);
                     groupRefreshLayout.setEnabled(false);
+                }
+                if (messageGroupAdapter.getCount() > 0 && (groupListView.getFirstVisiblePosition() != 0)
+                        && (groupListView.getLastVisiblePosition() > (messageGroupAdapter.getCount() - 5)) && !isPullData) {
+                    getData(startIndex);
+                    isPullData = true;
                 }
             }
         });

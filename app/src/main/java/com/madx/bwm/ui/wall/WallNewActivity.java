@@ -70,20 +70,26 @@ public class WallNewActivity extends BaseActivity {
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.i(TAG, "onKeyDown& keyCode: " + keyCode);
+        return super.onKeyDown(keyCode, event);
+    }
+
     private boolean banBack;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        Log.i(TAG, "dispatchKeyEvent& KeyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
+        Log.i(TAG, "dispatchKeyEvent& keyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
         if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if(event.getAction() == KeyEvent.ACTION_DOWN) {
                 Fragment fragment = getFragmentInstance();
                 if(fragment instanceof WallNewFragment) {
                     banBack = ((WallNewFragment) fragment).backCheck();
                 }
+                Log.i(TAG, "dispatchKeyEvent& banBack: " + banBack);
+                return banBack ? banBack : super.dispatchKeyEvent(event);
             }
-            Log.i(TAG, "dispatchKeyEvent& banBack: " + banBack);
-            return banBack ? banBack : super.dispatchKeyEvent(event);
         }
         return super.dispatchKeyEvent(event);
     }

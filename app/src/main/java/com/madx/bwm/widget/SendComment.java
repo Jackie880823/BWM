@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
@@ -57,6 +59,13 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
     private CardView cvLayout;
     private BaseActivity mActivity;
     private BaseFragment fragment;
+    private InputMethodManager imm;
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
 
     public void initViewPager(BaseActivity activity, BaseFragment fragment) {
         mActivity = activity;
@@ -106,6 +115,9 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
         ibSticker.setOnClickListener(this);
         etChat.setOnClickListener(this);
         tvSend.setOnClickListener(this);
+
+        imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
         findViewById(R.id.camera_tv).setOnClickListener(this);
         findViewById(R.id.album_tv).setOnClickListener(this);
         findViewById(R.id.location_tv).setOnClickListener(this);
@@ -146,24 +158,39 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 if(llMore.getVisibility() == View.VISIBLE) {
                     hideAllViewState();
                 } else {
-                    UIUtil.hideKeyboard(getContext(), etChat);
-                    showExpandFunctionView();
+                    if(imm.isActive()) {
+                        imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                showExpandFunctionView();
+                            }
+                        }, 50);
+                    } else {
+                        showExpandFunctionView();
+                    }
                 }
                 break;
             case R.id.ib_sticker://表情功能按钮
                 if(llSticker.getVisibility() == View.VISIBLE) {
                     hideAllViewState();
                 } else {
-                    UIUtil.hideKeyboard(getContext(), etChat);
-                    showStickerView();
+
+                    if(imm.isActive()) {
+                        imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                showStickerView();
+                            }
+                        }, 50);
+                    } else {
+                        showStickerView();
+                    }
                 }
                 break;
             case R.id.et_chat:
                 hideAllViewState();
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if(!imm.isActive()) {
-                    UIUtil.showKeyboard(getContext(), etChat);
-                }
                 break;
             case R.id.camera_tv://打开相机
 
@@ -236,8 +263,8 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
             llSticker.setVisibility(View.GONE);
             ibSticker.setImageResource(R.drawable.chat_expression_normal);
         }
-        llMore.setVisibility(View.VISIBLE);
         ibMore.setImageResource(R.drawable.chat_plus_press);
+        llMore.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -248,22 +275,21 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
             llMore.setVisibility(View.GONE);
             ibMore.setImageResource(R.drawable.chat_plus_normal);
         }
-        llSticker.setVisibility(View.VISIBLE);
         ibSticker.setImageResource(R.drawable.chat_expression_press);
+        llSticker.setVisibility(View.VISIBLE);
     }
 
     /**
      * 隐藏表、扩展功能和键盘视图
      */
     private void hideAllViewState() {
-//        UIUtil.hideKeyboard(getContext(), etChat);
         llMore.setVisibility(View.GONE);
         llSticker.setVisibility(View.GONE);
         ibMore.setImageResource(R.drawable.chat_plus_normal);
         ibSticker.setImageResource(R.drawable.chat_expression_normal);
     }
 
-    public void hideAllViewState(boolean hideKeyboard){
+    public void hideAllViewState(boolean hideKeyboard) {
         if(hideKeyboard) {
             UIUtil.hideKeyboard(getContext(), etChat);
         }
@@ -326,31 +352,31 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
      */
     public void showComments(String type, String folderName, String filName) {
         Log.i(TAG, "showComments& type: " + type);
-//        String path = null;
-//        if(Constant.Sticker_Gif.equals(type)) {
-//            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.gif";
-//            try {
-//                GifDrawable gifDrawable = new GifDrawable(mActivity.getAssets(), path);
-//                if(gifDrawable != null) {
-//                    setSendDrawable(gifDrawable);
-//                }
-//            } catch(IOException e) {
-//                e.printStackTrace();
-//            }
-//        } else if(Constant.Sticker_Png.equals(type)) {
-//            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.png";
-//            try {
-//                InputStream is = mActivity.getAssets().open(path);
-//                if(is != null) {
-//                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-//                    setSendBitmap(bitmap);
-//                    setSendBitmap(bitmap);
-//                }
-//            } catch(IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        Log.i(TAG, "showComments& path: " + path);
+        //        String path = null;
+        //        if(Constant.Sticker_Gif.equals(type)) {
+        //            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.gif";
+        //            try {
+        //                GifDrawable gifDrawable = new GifDrawable(mActivity.getAssets(), path);
+        //                if(gifDrawable != null) {
+        //                    setSendDrawable(gifDrawable);
+        //                }
+        //            } catch(IOException e) {
+        //                e.printStackTrace();
+        //            }
+        //        } else if(Constant.Sticker_Png.equals(type)) {
+        //            path = MessageChatActivity.STICKERS_NAME + File.separator + folderName + File.separator + filName + "_B.png";
+        //            try {
+        //                InputStream is = mActivity.getAssets().open(path);
+        //                if(is != null) {
+        //                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+        //                    setSendBitmap(bitmap);
+        //                    setSendBitmap(bitmap);
+        //                }
+        //            } catch(IOException e) {
+        //                e.printStackTrace();
+        //            }
+        //        }
+        //        Log.i(TAG, "showComments& path: " + path);
         if(commentListener != null) {
             commentListener.onStickerItemClick(type, folderName, filName);
             hideAllViewState(true);

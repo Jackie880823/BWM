@@ -55,8 +55,10 @@
             android:layout_marginLeft="@dimen/default_view_margin"
             android:layout_marginRight="@dimen/default_view_margin"
             android:layout_weight="1"
+            android:hint="@string/hint_comment_input"
             android:background="@drawable/et_chat_bg"
             android:maxLines="3"
+            android:maxLength="200"
             android:padding="@dimen/default_content_padding"
             android:textColor="@color/default_text_color_dark"/>
 
