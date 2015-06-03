@@ -44,7 +44,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
     private ListView userListView;
     private ImageButton userIb;
     private MySwipeRefreshLayout userRefreshLayout;
-//    private ProgressDialog mProgressDialog;
+    //    private ProgressDialog mProgressDialog;
     private MessagePrivateListAdapter privateAdapter;
     private Context mContext;
     private List<PrivateMessageEntity> userEntityList;
@@ -149,16 +149,17 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (privateAdapter.getCount() > 0 && (userListView.getLastVisiblePosition() > (privateAdapter.getCount() - 5)) && !isPullData) {
-                    getData(startIndex);
-                    isPullData = true;
-                }
                 if (userListView.getFirstVisiblePosition() == 0) {
                     userRefreshLayout.setEnabled(true);
                     userIb.setVisibility(View.GONE);
                 } else {
                     userIb.setVisibility(View.VISIBLE);
                     userRefreshLayout.setEnabled(false);
+                }
+                if (privateAdapter.getCount() > 0 && (userListView.getFirstVisiblePosition() != 0)
+                        && (userListView.getLastVisiblePosition() > (privateAdapter.getCount() - 5)) && !isPullData) {
+                    getData(startIndex);
+                    isPullData = true;
                 }
             }
         });
@@ -207,7 +208,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
 
                     @Override
                     public void onFinish() {
-                        if(vProgress!=null){
+                        if (vProgress != null) {
                             vProgress.setVisibility(View.GONE);
                         }
                     }
