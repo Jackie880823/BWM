@@ -175,10 +175,10 @@ public class WallEditView extends EditText implements TextWatcher {
         //            Log.w(TAG, "afterTextChanged& this view not show");
         //            change = TextChangeListener.CHANGE_MODE_BLACK_CHANGE;
         //        } else
-        synchronized(this){
+        synchronized(this) {
             if(!TextUtils.isEmpty(oldMemberText)) {
                 SpannableStringBuilder sb = new SpannableStringBuilder(s);
-                Pattern p = Pattern.compile(oldMemberText);
+                Pattern p = Pattern.compile(oldMemberText.substring(0, oldMemberText.length() -1));
                 Matcher m = p.matcher(sb.toString());
                 if(!m.find() || (m.end() == 0)) {
                     hasAtMember = false;
@@ -188,7 +188,7 @@ public class WallEditView extends EditText implements TextWatcher {
             }
             if(!TextUtils.isEmpty(oldGroupText)) {
                 SpannableStringBuilder sb = new SpannableStringBuilder(s);
-                Pattern p = Pattern.compile(oldGroupText);
+                Pattern p = Pattern.compile(oldGroupText.substring(0, oldGroupText.length() -1));
                 Matcher m = p.matcher(sb.toString());
                 if(!m.find() || (m.end() == 0)) {
                     hasAtGroup = false;
@@ -231,15 +231,13 @@ public class WallEditView extends EditText implements TextWatcher {
         String at = null;
         if(!TextUtils.isEmpty(memberText) && !TextUtils.isEmpty(groupText)) {
             String strDesc = editable.toString();
-            int startMember = strDesc.indexOf(oldMemberText);
 
-            if(TextUtils.isEmpty(oldGroupText)) {
-                if(startMember + oldMemberText.length() == strDesc.length()) {
-                    // @member 后跟着的是@group需要添加 &
-                    groupText = "& " + groupText;
-                    at = memberText + groupText;
-                }
+            if(TextUtils.isEmpty(oldGroupText) && TextUtils.isEmpty(oldGroupText)) {
+                // @member 后跟着的是@group需要添加 &
+                groupText = "& " + groupText;
+                at = memberText + groupText;
             } else {
+                int startMember = strDesc.indexOf(oldMemberText);
                 int startGroup = strDesc.indexOf(oldGroupText);
                 if(TextUtils.isEmpty(oldMemberText)) {
                     if(startGroup + oldGroupText.length() == strDesc.length()) {

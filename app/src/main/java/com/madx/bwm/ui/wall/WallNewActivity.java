@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.madx.bwm.R;
 import com.madx.bwm.ui.BaseActivity;
+import com.madx.bwm.util.UIUtil;
 
 /**
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
@@ -68,6 +69,12 @@ public class WallNewActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        UIUtil.hideKeyboard(this, getCurrentFocus());
+        super.onDestroy();
     }
 
     @Override
