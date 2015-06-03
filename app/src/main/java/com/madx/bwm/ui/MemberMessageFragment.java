@@ -149,17 +149,17 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (privateAdapter.getCount() > 0 && (userListView.getFirstVisiblePosition() < privateAdapter.getCount() - 2)
-                        && (userListView.getLastVisiblePosition() > (privateAdapter.getCount() - 5)) && !isPullData) {
-                    getData(startIndex);
-                    isPullData = true;
-                }
                 if (userListView.getFirstVisiblePosition() == 0) {
                     userRefreshLayout.setEnabled(true);
                     userIb.setVisibility(View.GONE);
                 } else {
                     userIb.setVisibility(View.VISIBLE);
                     userRefreshLayout.setEnabled(false);
+                }
+                if (privateAdapter.getCount() > 0 && (userListView.getFirstVisiblePosition() != 0)
+                        && (userListView.getLastVisiblePosition() > (privateAdapter.getCount() - 5)) && !isPullData) {
+                    getData(startIndex);
+                    isPullData = true;
                 }
             }
         });
