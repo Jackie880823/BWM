@@ -831,15 +831,16 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
             // Get the Place object from the buffer.
             final Place place = places.get(0);
 
-            // Format details of the place for display and show it in a TextView.
+            if(place!=null) {
+                // Format details of the place for display and show it in a TextView.
 
-            addMarker(place.getLatLng(), place.getName().toString(), place.getAddress().toString());
-            if (firstResult) {
-                firstResult = false;
-                center2Location(place.getLatLng());
-            }
+                addMarker(place.getLatLng(), place.getName().toString(), place.getAddress().toString());
+                if (firstResult) {
+                    firstResult = false;
+                    center2Location(place.getLatLng());
+                }
 
-            places.release();
+                places.release();
 
 //            // 得到输入管理对象
 //            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -847,6 +848,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 //                // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
 //                imm.hideSoftInputFromWindow(mAutocompleteView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
 //            }
+            }
         }
     };
 

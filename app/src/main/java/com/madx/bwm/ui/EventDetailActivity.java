@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
@@ -25,8 +24,6 @@ import java.util.HashMap;
  */
 public class EventDetailActivity extends BaseActivity {
 
-
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void initBottomBar() {

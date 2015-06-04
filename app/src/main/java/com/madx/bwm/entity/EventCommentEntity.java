@@ -2,10 +2,12 @@ package com.madx.bwm.entity;
 
 import android.net.Uri;
 
+import java.io.Serializable;
+
 /**
  * Created by wing on 15/1/23.
  */
-public class EventCommentEntity {
+public class EventCommentEntity implements Serializable {
 
 
     /**

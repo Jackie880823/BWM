@@ -1,9 +1,11 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by christepherzhang on 15/4/10.
  */
-public class MemberPathEntity {
+public class MemberPathEntity implements Serializable {
 
     private String user_id;
     private String member_id;

@@ -206,9 +206,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         isCommentBim = true;
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
-//        if(mProgressDialog == null) {
-//            mProgressDialog = new ProgressDialog(getParentActivity(), R.string.text_loading);
-//        }
         mContext = getParentActivity();
 //        messageAction = new MessageAction(mContext, handler);
         rvList = getViewById(R.id.rv_event_comment_list);
@@ -330,8 +327,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         String path = LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), mUri), 480, 800, false);
                         File file = new File(path);
                         if (file.exists()){
-//                            progressBar.setVisibility(View.VISIBLE);
-                            vProgress.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.VISIBLE);
+//                            vProgress.setVisibility(View.VISIBLE);
                             Map<String, Object> param = new HashMap<>();
                             param.put("content_group_id", event.getContent_group_id());
                             param.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -573,7 +570,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             if (!TextUtils.isEmpty(event.getLoc_latitude()) && !TextUtils.isEmpty(event.getLoc_longitude())) {
                 event_picture_4_location.setVisibility(View.VISIBLE);
                 VolleyUtil.initNetworkImageView(getActivity(), event_picture_4_location
-                        , String.format(Constant.MAP_API_GET_LOCATION_PIC, event.getLoc_latitude() + "," + event.getLoc_longitude(), getActivity().getString(R.string.google_map_pic_size), event.getLoc_latitude() + "," + event.getLoc_longitude())
+                        ,LocationUtil.getLocationPicUrl(mContext, event.getLoc_latitude(), event.getLoc_longitude(),event.getLoc_type())
                         , R.drawable.network_image_default, R.drawable.network_image_default);
 
                 event_picture_4_location.setOnClickListener(this);
@@ -630,8 +627,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     //发送大表情
     private void sendSticker(){
         if (NetworkUtil.isNetworkConnected(getActivity())){
-//            progressBar.setVisibility(View.VISIBLE);
-            vProgress.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+//            vProgress.setVisibility(View.VISIBLE);
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_group_id", event.getContent_group_id());
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -667,16 +664,16 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     requestComment();
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
-//                    progressBar.setVisibility(View.GONE);
-                    vProgress.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+//                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onError(Exception e) {
 //                    UIUtil.hideKeyboard(getActivity(), et_comment);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-//                    progressBar.setVisibility(View.GONE);
-                    vProgress.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+//                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override

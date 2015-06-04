@@ -1,11 +1,12 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by wing on 15/4/9.
  */
-public class ContactMessageEntity {
+public class ContactMessageEntity implements Serializable {
 
     //app owner
     private String user_id;

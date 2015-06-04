@@ -2,17 +2,24 @@ package com.madx.bwm.util;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wing on 15/3/22.
  */
 public class SystemUtil {
+    private static final String TAG = "SystemUtil";
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     /**
@@ -52,6 +59,37 @@ public class SystemUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * 收集设备参数信息
+     * @param ctx
+     */
+    public static Map<String, String> collectDeviceInfo(Context ctx) {
+        Map<String, String> infos = new HashMap<>();
+        try {
+            PackageManager pm = ctx.getPackageManager();
+            PackageInfo pi = pm.getPackageInfo(ctx.getPackageName(), PackageManager.GET_ACTIVITIES);
+            if (pi != null) {
+                String versionName = pi.versionName == null ? "null" : pi.versionName;
+                String versionCode = pi.versionCode + "";
+                infos.put("versionName", versionName);
+                infos.put("versionCode", versionCode);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "an error occured when collect package info", e);
+        }
+        Field[] fields = Build.class.getDeclaredFields();
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                infos.put(field.getName(), field.get(null).toString());
+                Log.d(TAG, field.getName() + " : " + field.get(null));
+            } catch (Exception e) {
+                Log.e(TAG, "an error occured when collect crash info", e);
+            }
+        }
+        return infos;
     }
 
 
