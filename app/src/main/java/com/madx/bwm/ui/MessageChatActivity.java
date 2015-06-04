@@ -182,7 +182,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-//                            uploadImage(uri);
+                            uploadImage(uri);
                         }
                     }).start();
                     break;
