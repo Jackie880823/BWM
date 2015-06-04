@@ -88,20 +88,22 @@ public class LoginActivity extends Activity {
         if (SystemUtil.checkPlayServices(this)) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(this);
-
+            Log.i("","1regid============="+regid);
             if (TextUtils.isEmpty(regid)) {
                 isGCM = true;
                 registerInBackground();
             }
         } else {
+            JPushInterface.init(LoginActivity.this);
             regid = AppInfoUtil.getJpushRegistrationId(this);
+            Log.i("","2regid============="+regid);
             if (TextUtils.isEmpty(regid)) {
                 isGCM = false;
                 registerInBackground();
             }
             /**极光推送*/
 //            JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
-            JPushInterface.init(this);
+
 //        JPushInterface.stopPush(getApplicationContext());
 //        JPushInterface.resumePush(getApplicationContext());
         }
@@ -140,7 +142,23 @@ public class LoginActivity extends Activity {
 
     private String doRegistration2Jpush() {
         String msg = "";
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         regid = JPushInterface.getRegistrationID(this);
+//        if(TextUtils.isEmpty(regid)){
+//            regid = JPushInterface.getRegistrationID(this);
+//        }
+        while (TextUtils.isEmpty(regid)){
+            regid = JPushInterface.getRegistrationID(this);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         msg = "Device registered, registration ID=" + regid;
         sendRegistrationIdToBackend(regid, "jpush");
         AppInfoUtil.storeRegistrationId(LoginActivity.this, regid,false);
@@ -268,10 +286,6 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        /**wing begin test gcm*/
-        initPushApi();
-        /**wing end test gcm*/
-
         UserEntity userEntity = App.getLoginedUser();
         if (userEntity != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -282,6 +296,9 @@ public class LoginActivity extends Activity {
                 App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));//init http header
             }
 
+            /**wing begin test gcm*/
+            initPushApi();
+            /**wing end test gcm*/
             finish();
             return;
         }
@@ -365,7 +382,6 @@ public class LoginActivity extends Activity {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
 
-                                Log.i("","onResult==================1"+UserEntity.class.getName());
                                 //bad response data...
                                 userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {
 
@@ -383,6 +399,10 @@ public class LoginActivity extends Activity {
 
                                     progressDialog.dismiss();
                                     btnLogin.setClickable(true);
+
+                                    /**wing begin test gcm*/
+                                    initPushApi();
+                                    /**wing end test gcm*/
                                     finish();
                                 }
 
