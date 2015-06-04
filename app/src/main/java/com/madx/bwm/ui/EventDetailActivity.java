@@ -143,10 +143,6 @@ public class EventDetailActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, R.string.text_loading);
-        }
-        mProgressDialog.show();
     }
 
     @Override
@@ -173,7 +169,6 @@ public class EventDetailActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
                 getDataDone = true;
             }
 
@@ -191,7 +186,6 @@ public class EventDetailActivity extends BaseActivity {
                 } else {
                     rightButton.setVisibility(View.INVISIBLE);
                 }
-                mProgressDialog.dismiss();
 
             }
 

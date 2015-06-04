@@ -114,6 +114,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private LinearLayout expandFunctionLinear;//加号
     private LinearLayout stickerLinear;//表情库
     private EditText etChat;
+
+    private View vProgress;
     /**
      * 扩展功能按钮
      */
@@ -186,94 +188,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             return false;
         }
     }
-//    Handler handler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            super.handleMessage(msg);
-//            switch (msg.what) {
-//                case GET_LATEST_MESSAGE:
-////                    progressDialog.dismiss();
-//                    List<MsgEntity> msgList = (List<MsgEntity>) msg.obj;
-//                    if (null == msgList || msgList.size() == 0) {
-////                        empty_message.setVisibility(View.VISIBLE);
-////                        swipeRefreshLayout.setVisibility(View.GONE);
-//                    } else {
-////                        empty_message.setVisibility(View.GONE);
-////                        swipeRefreshLayout.setVisibility(View.VISIBLE);
-////                        messageChatAdapter.addData(msgList);
-//                    }
-//                    break;
-//                case GET_SEND_OVER_MESSAGE:
-//                    List<EventCommentEntity> msgSendList = (List<EventCommentEntity>) msg.obj;
-//                    if (null != msgSendList) {
-//                        adapter.addSendData(msgSendList);
-//                    }
-//                    break;
-//                case GET_HISTORY_MESSAGE:
-//                    List<EventCommentEntity> msgHistoryList = (List<EventCommentEntity>) msg.obj;
-////                    swipeRefreshLayout.setRefreshing(false);
-//                    if (null != msgHistoryList || msgHistoryList.size() == 0) {
-//                        break;
-//                    }
-//                    indexPage++;
-//                    if (null != msgHistoryList) {
-//                        adapter.addHistoryData(msgHistoryList);
-//                    }
-//                    break;
-//                case SEN_MESSAGE_FORM_ALBUM:
-//                    //上传相册图片
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if (pickUries != null) {
-//                                for (Uri uri : pickUries) {
-//                                    uploadImage(uri);
-//                                }
-//                            }
-//                        }
-//                    }).start();
-//                    break;
-//                case SEN_MESSAGE_FORM_CAMERA:
-////                    上传相机拍照图片
-//                    EventCommentEntity msgEntity = new EventCommentEntity();
-//                    msgEntity.setSticker_type(".png");
-//                    msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-//                    msgEntity.setUri(uri);
-//                    adapter.addMsgEntity(msgEntity);
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            uploadImage(uri);
-//                        }
-//                    }).start();
-//
-//                    break;
-//                case SEND_PIC_MESSAGE:
-//                    JSONObject jsonObject = (JSONObject) msg.obj;
-//                    if (null == jsonObject) {
-//                        break;
-//                    }
-//                    try {
-//                        String postType = jsonObject.optString("postType");
-//                        if ("postPhoto".equals(postType) || "postSticker".equals(postType)) {
-////                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                case SEND_TEXT_MESSAGE:
-//                    JSONObject textJsonObject = (JSONObject) msg.obj;
-//                    try {
-//                        if ("postText".equals(textJsonObject.getString("postType"))) {
-////                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    break;
-//            }
-//        }
-//    };
 
     @Override
     public void onDestroy() {
@@ -290,9 +204,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     public void initView() {
         isComment = true;
         isCommentBim = true;
-        if(mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(getParentActivity(), R.string.text_loading);
-        }
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
+//        if(mProgressDialog == null) {
+//            mProgressDialog = new ProgressDialog(getParentActivity(), R.string.text_loading);
+//        }
         mContext = getParentActivity();
 //        messageAction = new MessageAction(mContext, handler);
         rvList = getViewById(R.id.rv_event_comment_list);
@@ -414,7 +330,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         String path = LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), mUri), 480, 800, false);
                         File file = new File(path);
                         if (file.exists()){
-                            progressBar.setVisibility(View.VISIBLE);
+//                            progressBar.setVisibility(View.VISIBLE);
+                            vProgress.setVisibility(View.VISIBLE);
                             Map<String, Object> param = new HashMap<>();
                             param.put("content_group_id", event.getContent_group_id());
                             param.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -652,7 +569,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             }
             changeIntentUI(currentStatus);
-
+            vProgress.setVisibility(View.GONE);
             if (!TextUtils.isEmpty(event.getLoc_latitude()) && !TextUtils.isEmpty(event.getLoc_longitude())) {
                 event_picture_4_location.setVisibility(View.VISIBLE);
                 VolleyUtil.initNetworkImageView(getActivity(), event_picture_4_location
@@ -713,7 +630,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     //发送大表情
     private void sendSticker(){
         if (NetworkUtil.isNetworkConnected(getActivity())){
-            progressBar.setVisibility(View.VISIBLE);
+//            progressBar.setVisibility(View.VISIBLE);
+            vProgress.setVisibility(View.VISIBLE);
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_group_id", event.getContent_group_id());
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -749,14 +667,16 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     requestComment();
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
-                    progressBar.setVisibility(View.GONE);
+//                    progressBar.setVisibility(View.GONE);
+                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onError(Exception e) {
 //                    UIUtil.hideKeyboard(getActivity(), et_comment);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    progressBar.setVisibility(View.GONE);
+//                    progressBar.setVisibility(View.GONE);
+                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -1017,6 +937,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public void onFinish() {
                     progressBar.setVisibility(View.GONE);
+//                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -1312,13 +1233,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 new HttpTools(getActivity()).delete(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
-                        mProgressDialog.setTitle(R.string.text_waiting);
-                        mProgressDialog.show();
+//                        mProgressDialog.setTitle(R.string.text_waiting);
+//                        mProgressDialog.show();
                     }
 
                     @Override
                     public void onFinish() {
-                        mProgressDialog.dismiss();
+//                        mProgressDialog.dismiss();
+                        if(vProgress!=null)
+                            vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
