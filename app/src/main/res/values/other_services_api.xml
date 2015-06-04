@@ -6,14 +6,14 @@
 
     <!--map -->
 
-    <string name="baidu_maps_key" templateMergeStrategy="preserve">zi6XivPq4UbRqyw6cdG0E6y4</string>
-    <string name="baidu_maps_key_debug" templateMergeStrategy="preserve">kGa48ap6I8sm4oQwnQAs3NUM</string>
-    <string name="jackie_baidu_maps_key_debug" templateMergeStrategy="preserve">AX8zaOuvGpvTcEwc77TWYozF</string>
+    <string name="baidu_maps_key" templateMergeStrategy="preserve" translatable="false">zi6XivPq4UbRqyw6cdG0E6y4</string>
+    <string name="baidu_maps_key_debug" templateMergeStrategy="preserve" translatable="false">kGa48ap6I8sm4oQwnQAs3NUM</string>
+    <string name="jackie_baidu_maps_key_debug" templateMergeStrategy="preserve" translatable="false">AX8zaOuvGpvTcEwc77TWYozF</string>
 
 
-    <string name="jackie_baidu_maps_key_4_convertor" templateMergeStrategy="preserve">WkHFTQQgdIvSphGk31aAaKWu</string>
+    <string name="jackie_baidu_maps_key_4_convertor" templateMergeStrategy="preserve" translatable="false">WkHFTQQgdIvSphGk31aAaKWu</string>
 
 
     <!-- push -->
-    <string name="jiguang_api_key" templateMergeStrategy="preserve">ede70f81b87bb2a99b3f7cb1</string>
+    <string name="jiguang_api_key" templateMergeStrategy="preserve" translatable="false">ede70f81b87bb2a99b3f7cb1</string>
 </resources>

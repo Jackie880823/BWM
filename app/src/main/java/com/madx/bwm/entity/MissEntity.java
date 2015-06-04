@@ -1,9 +1,11 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by wing on 15/4/9.
  */
-public class MissEntity {
+public class MissEntity implements Serializable {
     private String bond_alert_id;
     private String action_user_id;
     private String receiver_user_id;

@@ -68,8 +68,8 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
         holder.tvContent.setText(atDescription);
         Log.i(TAG, "onBindViewHolder& description: " + atDescription);
 
-        int tagMemberCount = wall.getTag_member().size();
-        int tagGroupCount = wall.getTag_group().size();
+        int tagMemberCount = wall.getTag_member()==null?0:wall.getTag_member().size();
+        int tagGroupCount = wall.getTag_member()==null?0:wall.getTag_group().size();
         if(tagMemberCount > 0 || tagGroupCount > 0) {
             // 有TAG用户或分组需要显示字符特效
             WallUtil util = new WallUtil(mContext, mViewClickListener);

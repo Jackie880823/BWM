@@ -1,9 +1,11 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by quankun on 15/5/12.
  */
-public class FamilyGroupEntity {
+public class FamilyGroupEntity implements Serializable {
     private String group_id;
     private String group_name; // group name
 

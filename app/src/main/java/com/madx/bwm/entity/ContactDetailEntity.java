@@ -1,11 +1,12 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by wing on 15/4/9.
  */
-    public class ContactDetailEntity {
+    public class ContactDetailEntity implements Serializable {
 
         private String id;
         private String displayName;
