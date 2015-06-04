@@ -27,62 +27,58 @@ android {
     }
     //代码检查
     lintOptions {
-        checkReleaseBuilds false
         abortOnError false
     }
     signingConfigs {
         debug {
             // No debug config
         }
-        release {
-            storeFile file("/Users/wing/Desktop/bwm.key")
-            storePassword KEYSTORE_PASSWORD
-            keyAlias "cn"
-            keyPassword KEY_PASSWORD
-        }
-
+//        release {
+//            storeFile file("/Users/wing/Desktop/bwm.key")
+//            storePassword KEYSTORE_PASSWORD
+//            keyAlias "cn"
+//            keyPassword KEY_PASSWORD
+//        }
+//
     }
     buildTypes {
-        debug {
-            // 显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "true"
-
-            versionNameSuffix "-debug"
-            minifyEnabled false
-            zipAlignEnabled false
-            shrinkResources false
-            signingConfig signingConfigs.debug
-        }
-        release {
-            // 不显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO 正式环境改false
-            minifyEnabled true //TODO 正式环境改true
-            zipAlignEnabled true //TODO 正式环境改true
-            // 移除无用的resource文件
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-
-            applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    def outputFile = output.outputFile
-                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                        // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
-                        def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
-                        output.outputFile = new File(outputFile.parent, fileName)
-                    }
-                }
-            }
-        }
+//        debug {
+//            // 显示Log
+//            buildConfigField "boolean", "LOG_DEBUG", "true"
+//
+//            versionNameSuffix "-debug"
+//            minifyEnabled false
+//            zipAlignEnabled false
+//            shrinkResources false
+//            signingConfig signingConfigs.debug
+//        }
+//        release {
+//            // 不显示Log
+//            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO
+//            minifyEnabled true //TODO 正式环境改true
+//            zipAlignEnabled true
+//            // 移除无用的resource文件
+//            shrinkResources true
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.release
+//
+//            applicationVariants.all { variant ->
+//                variant.outputs.each { output ->
+//                    def outputFile = output.outputFile
+//                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+//                        // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
+//                        def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+//                        output.outputFile = new File(outputFile.parent, fileName)
+//                    }
+//                }
+//            }
+//        }
 
     }
     // 多渠道打包
     productFlavors {
-        wandoujia {
-        }
-        _360 {
-
-        }
+        wandoujia {}
+        _360 {}
         baidu {}
         xiaomi {}
         tencent {}
