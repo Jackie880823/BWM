@@ -116,18 +116,10 @@
     <string name="text_sticker_store">Sticker Store</string>
 
 
-
     <string name="msg_ask_exit_app">Do you really want to sign out?</string>
     <string name="text_yes">YES</string>
     <string name="text_camera">Camera</string>
     <string name="text_album">Album</string>
-
-
-
-
-
-
-
 
 
     <string name="hint_search_name">Search by name</string>
@@ -147,7 +139,6 @@
     <string name="text_search_contact">Search name here</string>
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">No contact selected</string>
-
 
 
     <string-array name="CountryCodes">
@@ -360,7 +351,6 @@
     </string-array>
 
 
-
     <!-- xml -->
     <!-- xml -->
 
@@ -381,8 +371,6 @@
     <string name="text_gender">Gender</string>
     <string name="text_email">Email</string>
     <string name="text_region">Region</string>
-
-
 
 
     <string name="text_group_name">Group Name</string>
@@ -520,11 +508,6 @@
     <string name="text_choose_contact_information">Please select at least a contact</string>
 
 
-
-
-
-
-
     <string name="text_photos">photos</string>
     <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" ">]]></string>
     <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
@@ -532,8 +515,7 @@
     <string name="photo_position_no_arrow">%1$d/%2$d</string>
 
 
-
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="yesterday_ago">Yesterday&#160;</string>
     <string name="just_now">Just now</string>
     <string name="some_minite_ago">%d min ago</string>
@@ -551,15 +533,13 @@
     <string name="post_now">Post now</string>
 
 
-
-
     <string name="text_to_other">Recommend me to \'other\' member</string>
     <string name="text_to_me">Recommend \'Member\' to me</string>
     <string name="text_group_chat">Require confirmation to add me to Group Chat</string>
 
-    <string name="text_message_chat_post_text">posted sticker</string>
-    <string name="text_message_chat_post_photo">posted photo</string>
-    <string name="text_message_chat_post_location">posted location</string>
+    <string name="text_message_chat_post_text">[sticker]</string>
+    <string name="text_message_chat_post_photo">[photo]</string>
+    <string name="text_message_chat_post_location">[location]</string>
     <string name="title_tab_my_family">My Family</string>
 
     <string name="text_month_january">January</string>
