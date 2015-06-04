@@ -652,11 +652,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             }
             changeIntentUI(currentStatus);
-
             if (!TextUtils.isEmpty(event.getLoc_latitude()) && !TextUtils.isEmpty(event.getLoc_longitude())) {
                 event_picture_4_location.setVisibility(View.VISIBLE);
                 VolleyUtil.initNetworkImageView(getActivity(), event_picture_4_location
-                        , String.format(Constant.MAP_API_GET_LOCATION_PIC, event.getLoc_latitude() + "," + event.getLoc_longitude(), getActivity().getString(R.string.google_map_pic_size), event.getLoc_latitude() + "," + event.getLoc_longitude())
+                        ,LocationUtil.getLocationPicUrl(mContext, event.getLoc_latitude(), event.getLoc_longitude(),event.getLoc_type())
                         , R.drawable.network_image_default, R.drawable.network_image_default);
 
                 event_picture_4_location.setOnClickListener(this);

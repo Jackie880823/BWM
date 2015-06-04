@@ -15,10 +15,35 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-optimizationpasses 5
 
--printmapping out.map
--renamesourcefileattribute SourceFile
--keepattributes Exceptions,SourceFile
+#包明不混合大小写
+-dontusemixedcaseclassnames
+
+#不去忽略非公共的库类
+-dontskipnonpubliclibraryclasses
+
+ #优化  不优化输入的类文件
+-dontoptimize
+
+ #预校验
+-dontpreverify
+
+ #混淆时是否记录日志
+-verbose
+
+ # 混淆时所采用的算法
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+#保护注解
+-keepattributes *Annotation*
+
+#避免混淆泛型 如果混淆报错建议关掉
+-keepattributes Signature
+
+#-printmapping out.map
+#-renamesourcefileattribute SourceFile
+#-keepattributes Exceptions,SourceFile
 
 -keepnames class * implements java.io.Serializable
 -keepclassmembers class * implements java.io.Serializable {
@@ -33,6 +58,7 @@
 
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
+-keep public class * extends android.app.MultiDexApplication
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
@@ -82,42 +108,37 @@
 }
 
 -dontwarn android.support.**
--keep class android.support.v4.app.** { *; }
--keep interface android.support.v4.app.** { *; }
--keep class android.support.v7.app.** { *; }
--keep interface android.support.v7.app.** { *; }
-# The support library contains references to newer platform versions.
-# Don't warn about those in case this app is linking against an older
-# platform version. We know about them, and they are safe.
+#-keep class android.support.v4.app.** { *; }
+#-keep interface android.support.v4.app.** { *; }
+#-keep class android.support.v7.app.** { *; }
+#-keep interface android.support.v7.app.** { *; }
 
 
-
--dontwarn java.beans.**
--dontwarn java.awt.**
--dontwarn javax.swing.**
--keep class java.beans.** { *;}
--keep class java.awt.** { *;}
--keep class javax.swing.** { *;}
+#-dontwarn java.beans.**
+#-dontwarn java.awt.**
+#-dontwarn javax.swing.**
+#-keep class java.beans.** { *;}
+#-keep class java.awt.** { *;}
+#-keep class javax.swing.** { *;}
 
 #pinyin4j
 -dontwarn net.soureceforge.pinyin4j.**
 -dontwarn demo.**
--keep class net.sourceforge.pinyin4j.** { *;}
--keep class demo.** { *;}
+#-keep class net.sourceforge.pinyin4j.** { *;}
+#-keep class demo.** { *;}
 
 #gson
--keepattributes Signature
--keep class sun.misc.Unsafe { *; }
--keep class com.google.gson.examples.android.model.** { *; }
+#-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.examples.android.model.** { *; }
 
 #volley
--keep class com.android.volley.** {*;}
--keep class com.android.volley.toolbox.** {*;}
--keep class com.android.volley.Response$* { *; }
--keep class com.android.volley.Request$* { *; }
--keep class com.android.volley.RequestQueue$* { *; }
--keep class com.android.volley.toolbox.HurlStack$* { *; }
--keep class com.android.volley.toolbox.ImageLoader$* { *; }
+#-keep class com.android.volley.** {*;}
+#-keep class com.android.volley.toolbox.** {*;}
+#-keep class com.android.volley.Response$* { *; }
+#-keep class com.android.volley.Request$* { *; }
+#-keep class com.android.volley.RequestQueue$* { *; }
+#-keep class com.android.volley.toolbox.HurlStack$* { *; }
+#-keep class com.android.volley.toolbox.ImageLoader$* { *; }
 
 #apache http
 -dontwarn org.apache.http.entity.mime.**
@@ -128,3 +149,10 @@
 #jiguang
 -dontwarn cn.jpush.**
 -keep class cn.jpush.** { *; }
+
+#百度map
+-dontwarn com.baidu.**
+-keep class com.baidu.** { *; }
+-keep class vi.com.gdi.bgl.android.** { *; }
+
+#xmpp asmack

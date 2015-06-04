@@ -21,7 +21,6 @@ import com.madx.bwm.util.PreferencesUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-
 /**
  * Created by wing on 15/3/21.
  */
@@ -35,6 +34,10 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         appContext = this;
+        /**异常处理*/
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(getApplicationContext());
+        /**网络工具初始*/
         HttpTools.init(this);
         /**baidu map*/
         SDKInitializer.initialize(getApplicationContext());
@@ -126,5 +129,15 @@ public class App extends MultiDexApplication {
                     SQLiteHelperOrm.class);
         }
         return databaseHelper;
+    }
+
+    /**
+     * 完全退出app
+     */
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        FileUtil.clearCache(this);
+        System.exit(0);
     }
 }
