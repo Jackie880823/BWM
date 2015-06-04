@@ -218,7 +218,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
      * @return
      */
     public boolean backCheck() {
-        if(rlProgress.getVisibility() == View.VISIBLE) {
+        if(popupwindow != null && popupwindow.isShowing()) {
+            popupwindow.dismiss();
+            return true;
+        } else if(rlProgress.getVisibility() == View.VISIBLE) {
             MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
             return true;
         }
@@ -300,20 +303,21 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     /**
-     * Called when the view previously created by {@link #onCreateView} has
-     * been detached from the fragment.  The next time the fragment needs
-     * to be displayed, a new view will be created.  This is called
-     * after {@link #onStop()} and before {@link #onDestroy()}.  It is called
-     * <em>regardless</em> of whether {@link #onCreateView} returned a
-     * non-null view.  Internally it is called after the view's state has
-     * been saved but before it has been removed from its parent.
+     * Called when the Fragment is no longer started.  This is generally
+     * tied to {@link Activity#onStop() Activity.onStop} of the containing
+     * Activity's lifecycle.
      */
     @Override
-    public void onDestroyView() {
+    public void onStop() {
+        super.onStop();
+
         if(myDialog != null && myDialog.isShowing()) {
             myDialog.dismiss();
         }
-        super.onDestroyView();
+
+        if(popupwindow != null && popupwindow.isShowing()) {
+            popupwindow.dismiss();
+        }
     }
 
     /**
@@ -441,7 +445,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                         public void run() {
                             showChooseFeeling();
                         }
-                    }, 50);
+                    }, 100);
                 } else {
                     showChooseFeeling();
                 }
