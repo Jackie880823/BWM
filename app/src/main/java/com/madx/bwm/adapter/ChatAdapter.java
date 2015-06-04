@@ -27,6 +27,7 @@ import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.ui.ViewOriginalPicesActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.widget.CircularNetworkImage;
 
@@ -135,7 +136,7 @@ public class ChatAdapter extends BaseAdapter {
                 viewHolder.rightMessagePhoto = (NetworkImageView) convertView.findViewById(R.id.right_message_niv);
 
                 VolleyUtil.initNetworkImageView(context, viewHolder.rightMessagePhoto
-                        , String.format(Constant.MAP_API_GET_LOCATION_PIC, msgEntity.getLoc_latitude() + "," + msgEntity.getLoc_longitude(), context.getString(R.string.google_map_pic_size), msgEntity.getLoc_latitude() + "," + msgEntity.getLoc_longitude())
+                        , LocationUtil.getLocationPicUrl(context, msgEntity.getLoc_latitude(), msgEntity.getLoc_longitude(),msgEntity.getLoc_type())
                         , R.drawable.network_image_default, R.drawable.network_image_default);
 
                 viewHolder.rightMessagePhoto.setOnClickListener(new View.OnClickListener() {
@@ -281,7 +282,7 @@ public class ChatAdapter extends BaseAdapter {
                 viewHolder.leftMessagePhoto = (NetworkImageView) convertView.findViewById(R.id.left_message_niv);
 
                 VolleyUtil.initNetworkImageView(context, viewHolder.leftMessagePhoto
-                        , String.format(Constant.MAP_API_GET_LOCATION_PIC, msgEntity.getLoc_latitude() + "," + msgEntity.getLoc_longitude(), context.getString(R.string.google_map_pic_size), msgEntity.getLoc_latitude() + "," + msgEntity.getLoc_longitude())
+                        , LocationUtil.getLocationPicUrl(context, msgEntity.getLoc_latitude(), msgEntity.getLoc_longitude(),msgEntity.getLoc_type())
                         , R.drawable.network_image_default, R.drawable.network_image_default);
 
                 viewHolder.leftMessagePhoto.setOnClickListener(new View.OnClickListener() {

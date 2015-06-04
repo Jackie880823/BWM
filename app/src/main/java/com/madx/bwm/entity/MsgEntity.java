@@ -58,6 +58,7 @@ public class MsgEntity implements Serializable {
     private String loc_longitude;       //: "101.644756", // location coordinates longitude经度坐标
     private String loc_name;            //: "Eastin Hotel Petaling Jaya", // Location name位置名字
     private String loc_caption;         //: "",
+    private String loc_type; //坐标类型，wing add
 
     private String sticker_id;          //: null, // Sticker id
     private String sticker_group_path;  //: null, // Sticker group
@@ -549,5 +550,13 @@ public class MsgEntity implements Serializable {
 
     public void setPost_date_info(String post_date_info) {
         this.post_date_info = post_date_info;
+    }
+
+    public String getLoc_type() {
+        return loc_type;
+    }
+
+    public void setLoc_type(String loc_type) {
+        this.loc_type = loc_type;
     }
 }

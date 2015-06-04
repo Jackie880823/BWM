@@ -83,8 +83,8 @@
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="@string/baidu_maps_key" />
-            <!--android:value="@string/baidu_maps_key_debug" />-->
+            android:value="@string/baidu_maps_key_debug" />
+            <!--android:value="@string/baidu_maps_key" />-->
 
         <service
             android:name="com.baidu.location.f"
