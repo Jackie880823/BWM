@@ -1,9 +1,11 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by wing on 15/4/9.
  */
-public class RecommendEntity {
+public class RecommendEntity implements Serializable {
     private String user_id;
     private String bondwithme_id;
     private String user_surname;

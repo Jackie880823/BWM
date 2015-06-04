@@ -312,6 +312,26 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
 
     }
 
+    public static String getLocationPicUrl(Context context,String latitude,String longitude,String locationType){
+//        Log.i("", "1locationType======" + locationType);
+//        if (SystemUtil.checkPlayServices(context)) {
+//            Log.i("", "2locationType======" + locationType);
+//            if(LOCATION_TYPE_BD09LL.equals(locationType)){
+//                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
+//            }else {
+//                Log.i("", "3locationType======" + locationType);
+//                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), "");
+////                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
+//            }
+//        } else {
+//            Log.i("", "4locationType======" + locationType);
+//            return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
+//
+//        }
+//        return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
+            return "http://api.map.baidu.com/staticimage?width=400&height=300&center=116.403874,39.914889&zoom=11&markers=116.441818,39.865286&markerStyles=m,T";
+    }
+
     /**
      * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的
      *

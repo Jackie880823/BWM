@@ -29,6 +29,7 @@
             android:inputType="textFilter"
             android:layout_toLeftOf="@+id/my_location"
             android:layout_marginRight="@dimen/default_view_margin"
+            android:imeOptions="actionDone"
             android:queryHint="@string/hint_search_name" />
 
         <Button
@@ -59,6 +60,7 @@
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="true"
         android:clickable="true" />
 
 

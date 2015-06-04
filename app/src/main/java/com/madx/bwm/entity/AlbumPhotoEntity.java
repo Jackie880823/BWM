@@ -1,9 +1,11 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by quankun on 15/5/19.
  */
-public class AlbumPhotoEntity {
+public class AlbumPhotoEntity implements Serializable {
     private String group_id;
     private String content_group_id;
     private String content_group_flag;

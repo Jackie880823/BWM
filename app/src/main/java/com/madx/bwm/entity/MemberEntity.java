@@ -1,9 +1,11 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by liangzemian on 15/4/12.
  */
-public class MemberEntity {
+public class MemberEntity implements Serializable {
     private String action_user_id;
     private String receiver_user_id;
     private String reference_id;

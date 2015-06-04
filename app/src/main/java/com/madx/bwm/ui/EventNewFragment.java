@@ -3,7 +3,9 @@ package com.madx.bwm.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +59,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private EventEntity mEevent = new EventEntity();
     private GridView gvFriends;
     private TextView event_title;
-    private TextView event_desc;
+    private EditText event_desc;
+    private TextView mTextView;
     private CardView item_date;
     private TextView date_desc;
     private EditText position_name;
@@ -87,6 +90,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     String groups;
     private String Spmemeber_date;
     private String users_date;
+
+    private static final int MAX_COUNT = 300;
 
     public static EventNewFragment newInstance(String... params) {
 
@@ -121,6 +126,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
         event_title = getViewById(R.id.event_title);
         event_desc = getViewById(R.id.event_desc);
+        event_desc.addTextChangedListener(mTextWatcher);
+        event_desc.setSelection(event_desc.length());
+        mTextView =  getViewById(R.id.count);
         position_choose = getViewById(R.id.position_choose);
         item_date = getViewById(R.id.item_date);
 
@@ -177,6 +185,82 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             getParentActivity().finish();
             return false;
         }
+    }
+
+    /**
+     * 监听输入字符
+     */
+    private TextWatcher mTextWatcher = new TextWatcher() {
+
+        private int editStart;
+
+        private int editEnd;
+
+        public void afterTextChanged(Editable s) {
+            editStart = event_desc.getSelectionStart();
+            editEnd = event_desc.getSelectionEnd();
+
+            // 先去掉监听器，否则会出现栈溢出
+            event_desc.removeTextChangedListener(mTextWatcher);
+
+            // 注意这里只能每次都对整个EditText的内容求长度，不能对删除的单个字符求长度
+            // 因为是中英文混合，单个字符而言，calculateLength函数都会返回1
+            while (calculateLength(s.toString()) > MAX_COUNT) { // 当输入字符个数超过限制的大小时，进行截断操作
+                s.delete(editStart - 1, editEnd);
+                editStart--;
+                editEnd--;
+            }
+            // 恢复监听器
+            event_desc.addTextChangedListener(mTextWatcher);
+
+            setLeftCount();
+        }
+
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+
+        }
+
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+
+        }
+
+    };
+
+    /**
+     * 计算分享内容的字数，一个汉字=两个英文字母，一个中文标点=两个英文标点 注意：该函数的不适用于对单个字符进行计算，因为单个字符四舍五入后都是1
+     *
+     * @param c
+     * @return
+     */
+    private long calculateLength(CharSequence c) {
+        double len = 0;
+        for (int i = 0; i < c.length(); i++) {
+            int tmp = (int) c.charAt(i);
+            if (tmp > 0 && tmp < 127) {
+                len += 0.5;
+            } else {
+                len++;
+            }
+        }
+        return Math.round(len);
+    }
+
+    /**
+     * 刷新剩余输入字数
+     */
+    private void setLeftCount() {
+        mTextView.setText(String.valueOf((MAX_COUNT - getInputCount())));
+    }
+
+    /**
+     * 获取用户输入的分享内容字数
+     *
+     * @return
+     */
+    private long getInputCount() {
+        return calculateLength(event_desc.getText().toString());
     }
 
     private boolean isEventDate() {

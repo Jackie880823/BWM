@@ -1,11 +1,12 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by wing on 15/1/23.
  */
-public class WallEntity {
+public class WallEntity implements Serializable {
 
     private String content_creation_date;
 

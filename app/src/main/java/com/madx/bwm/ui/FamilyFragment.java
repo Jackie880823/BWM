@@ -131,7 +131,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         member.setUser_id(FAMILY_TREE);
                         memberList.add(member);
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
-                            String tree_type = memberEntity.getTree_type().trim();
+                            String tree_type = memberEntity.getTree_type();
                             if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
                                     || FAMILY_SIBLING.equals(tree_type) || FAMILY_SPOUSE.equals(tree_type)) {
                                 memberList.add(memberEntity);
