@@ -257,7 +257,6 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("","mmmmmmmmm" + "mmmmmmm");
         requestData();
     }
 }

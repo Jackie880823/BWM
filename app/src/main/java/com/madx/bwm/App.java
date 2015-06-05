@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
+import android.util.Log;
 
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.SDKInitializer;
@@ -41,6 +42,7 @@ public class App extends MultiDexApplication {
         HttpTools.init(this);
         /**baidu map*/
         SDKInitializer.initialize(getApplicationContext());
+        Log.i("","device_id=============="+AppInfoUtil.getDeviceUUID(this));
 
     }
 
@@ -110,9 +112,11 @@ public class App extends MultiDexApplication {
             PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_APP_VERSION, "");
             NotificationUtil.clearNotification(context);
 
+            //默认tab
+            PreferencesUtil.saveValue(context, "lastLeaveIndex", -1);
+            //反注册推送
+            NotificationUtil.unRegisterPush(context);
             context.finish();
-
-            PreferencesUtil.saveValue(context, "lastLeaveIndex",-1);
         }
     }
 

@@ -68,8 +68,8 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
         holder.tvContent.setText(atDescription);
         Log.i(TAG, "onBindViewHolder& description: " + atDescription);
 
-        int tagMemberCount = wall.getTag_member()==null?0:wall.getTag_member().size();
-        int tagGroupCount = wall.getTag_member()==null?0:wall.getTag_group().size();
+        int tagMemberCount = wall.getTag_member() == null ? 0 : wall.getTag_member().size();
+        int tagGroupCount = wall.getTag_member() == null ? 0 : wall.getTag_group().size();
         if(tagMemberCount > 0 || tagGroupCount > 0) {
             // 有TAG用户或分组需要显示字符特效
             WallUtil util = new WallUtil(mContext, mViewClickListener);
@@ -182,11 +182,11 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
     }
 
     private void gotoLocationSetting(WallEntity wall) {
-        if(TextUtils.isEmpty(wall.getLoc_latitude())||TextUtils.isEmpty(wall.getLoc_longitude())){
+        if(TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
             return;
         }
 
-        LocationUtil.goNavigation(mContext, Double.valueOf(wall.getLoc_latitude()),Double.valueOf(wall.getLoc_longitude()),wall.getLoc_type());
+        LocationUtil.goNavigation(mContext, Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()), wall.getLoc_type());
 
     }
 
@@ -268,21 +268,28 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
             ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
             tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
+            tvContent.setMaxLines(9);
 
             tvContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    // 字符显示超过8行，只显示到第九行
-                    if(tvContent.getLineCount() > 8) {
-                        // 字符总长度
-                        int length = tvContent.getText().length();
+                    // 字符显示超过9行，只显示到第九行
+                    int lineCount = tvContent.getLineCount();
+                    if(lineCount > 8) {
                         // 第九行只显示十个字符
-                        int lineEndIndex = tvContent.getLayout().getLineEnd(7) + 10;
-                        if(length > lineEndIndex) {
+                        int maxLineEndIndex = tvContent.getLayout().getLineEnd(8);
+                        int maxLineStartIndex = tvContent.getLayout().getLineStart(8);
+                        String sourceText = tvContent.getText().toString();
+                        if(maxLineEndIndex - maxLineStartIndex > 7) {
                             // 截取到第九行文字的第7个字符，其余字符用...替代
-                            String text = tvContent.getText().toString().substring(0, lineEndIndex - 3) + "...";
-                            tvContent.setText(text);
+                            String newText = sourceText.substring(0, maxLineStartIndex + 7) + "...";
+                            tvContent.setText(newText);
+                        } else if(lineCount > 9) {
+                                // 截取到第九行文字未满7个字符，行数超过9号，说明有换行，将换行替换成"..."
+                                String newText = sourceText.substring(0, maxLineEndIndex - 1) + "...";
+                                tvContent.setText(newText);
                         }
+
                     }
                 }
             });
