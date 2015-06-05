@@ -18,7 +18,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 1   //TODO
-        versionName "0.1.1" //TODO
+        versionName "0.1.2" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -27,6 +27,7 @@ android {
     }
     //代码检查
     lintOptions {
+        checkReleaseBuilds false //TODO release change to true
         abortOnError false
     }
     signingConfigs {
@@ -34,13 +35,13 @@ android {
         debug {
             // No debug config
         }
-//        release {
-//            storeFile file("/Users/wing/Desktop/bwm.key")
-//            storePassword KEYSTORE_PASSWORD
-//            keyAlias "cn"
-//            keyPassword KEY_PASSWORD
-//        }
-//
+        release {
+            storeFile file("/Users/wing/Desktop/bwm.key")
+            storePassword KEYSTORE_PASSWORD
+            keyAlias "cn"
+            keyPassword KEY_PASSWORD
+        }
+
     }
 //    buildTypes {
 //        debug {
@@ -58,7 +59,7 @@ android {
 //            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO 正式环境改false
 //            minifyEnabled true //TODO 正式环境改true
 //            zipAlignEnabled true //TODO 正式环境改true
-//            // 移除无用的resource文件
+//        }           // 移除无用的resource文件
 //            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            signingConfig signingConfigs.release
@@ -74,6 +75,7 @@ android {
 //                }
 //            }
 //        }
+
     // 多渠道打包
     productFlavors {
         wandoujia {}
