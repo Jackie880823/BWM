@@ -47,6 +47,7 @@ import com.madx.bwm.R;
 import com.madx.bwm.adapter.PlaceAutocompleteAdapter;
 import com.madx.bwm.db.PlacesDisplayTask;
 import com.madx.bwm.util.LocationUtil;
+import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.UIUtil;
 import com.madx.bwm.widget.MapWrapperLayout;
 import com.madx.bwm.widget.OnInfoWindowElemTouchListener;
@@ -175,6 +176,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         mAdapter = new PlaceAutocompleteAdapter(Map4GoogleActivity.this, android.R.layout.simple_list_item_1,
                 mGoogleApiClient, null, null);
         mAutocompleteView.setAdapter(mAdapter);
+
 
 
         mAutocompleteView.setOnKeyListener(new View.OnKeyListener() {
@@ -821,26 +823,27 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
             = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                // Request did not complete successfully
-                Log.e("", "Place query did not complete. Error: " + places.getStatus().toString());
-                places.release();
-                return;
-            }
-            firstResult = true;
-            // Get the Place object from the buffer.
-            final Place place = places.get(0);
-
-            if(place!=null) {
-                // Format details of the place for display and show it in a TextView.
-
-                addMarker(place.getLatLng(), place.getName().toString(), place.getAddress().toString());
-                if (firstResult) {
-                    firstResult = false;
-                    center2Location(place.getLatLng());
+            try {
+                if (!places.getStatus().isSuccess()) {
+                    // Request did not complete successfully
+                    Log.e("", "Place query did not complete. Error: " + places.getStatus().toString());
+                    places.release();
+                    return;
                 }
+                firstResult = true;
+                // Get the Place object from the buffer.
+                final Place place = places.get(0);
 
-                places.release();
+                if (place != null) {
+                    // Format details of the place for display and show it in a TextView.
+
+                    addMarker(place.getLatLng(), place.getName().toString(), place.getAddress().toString());
+                    if (firstResult) {
+                        firstResult = false;
+                        center2Location(place.getLatLng());
+                    }
+
+                    places.release();
 
 //            // 得到输入管理对象
 //            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -848,6 +851,9 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 //                // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
 //                imm.hideSoftInputFromWindow(mAutocompleteView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
 //            }
+                }
+            }catch (Exception e){
+                MessageUtil.showMessage(Map4GoogleActivity.this,R.string.location_search_error);
             }
         }
     };

@@ -18,7 +18,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 1   //TODO
-        versionName "0.1.1" //TODO
+        versionName "0.1.3" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -27,12 +27,14 @@ android {
     }
     //代码检查
     lintOptions {
+        checkReleaseBuilds false //TODO release change to true
         abortOnError false
     }
-    signingConfigs {
-        debug {
-            // No debug config
-        }
+//    signingConfigs {
+//
+//        debug {
+//            // No debug config
+//        }
 //        release {
 //            storeFile file("/Users/wing/Desktop/bwm.key")
 //            storePassword KEYSTORE_PASSWORD
@@ -40,8 +42,8 @@ android {
 //            keyPassword KEY_PASSWORD
 //        }
 //
-    }
-    buildTypes {
+//    }
+//    buildTypes {
 //        debug {
 //            // 显示Log
 //            buildConfigField "boolean", "LOG_DEBUG", "true"
@@ -54,27 +56,27 @@ android {
 //        }
 //        release {
 //            // 不显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO
+//            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO 正式环境改false
 //            minifyEnabled true //TODO 正式环境改true
-//            zipAlignEnabled true
+//            zipAlignEnabled true //TODO 正式环境改true
 //            // 移除无用的resource文件
 //            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            signingConfig signingConfigs.release
+//        }
 //
-//            applicationVariants.all { variant ->
-//                variant.outputs.each { output ->
-//                    def outputFile = output.outputFile
-//                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
-//                        // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
-//                        def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
-//                        output.outputFile = new File(outputFile.parent, fileName)
-//                    }
+//        applicationVariants.all { variant ->
+//            variant.outputs.each { output ->
+//                def outputFile = output.outputFile
+//                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+//                    // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
+//                    def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+//                    output.outputFile = new File(outputFile.parent, fileName)
 //                }
 //            }
 //        }
+//    }
 
-    }
     // 多渠道打包
     productFlavors {
         wandoujia {}

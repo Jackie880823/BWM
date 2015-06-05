@@ -33,7 +33,7 @@ public class EventDetailActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-
+        rightButton.setVisibility(View.INVISIBLE);
         title_icon.setVisibility(View.VISIBLE);
         title_icon.setImageResource(R.drawable.arrow_down);
 //        changeTitleColor(R.color.tab_color_press2);
@@ -144,7 +144,6 @@ public class EventDetailActivity extends BaseActivity {
 
     @Override
     public void requestData() {
-
         if (TextUtils.isEmpty(group_id))
             return;
 
@@ -161,7 +160,6 @@ public class EventDetailActivity extends BaseActivity {
         new HttpTools(this).get(url, params, new HttpCallback() {
             @Override
             public void onStart() {
-
             }
 
             @Override
