@@ -122,14 +122,16 @@ public class PlaceAutocompleteAdapter
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
-                // Skip the autocomplete query if no constraints are given.
-                if (constraint != null) {
-                    // Query the autocomplete API for the (constraint) search string.
-                    mResultList = getAutocomplete(constraint);
-                    if (mResultList != null) {
-                        // The API successfully returned results.
-                        results.values = mResultList;
-                        results.count = mResultList.size();
+                synchronized (results) {
+                    // Skip the autocomplete query if no constraints are given.
+                    if (constraint != null) {
+                        // Query the autocomplete API for the (constraint) search string.
+                        mResultList = getAutocomplete(constraint);
+                        if (mResultList != null) {
+                            // The API successfully returned results.
+                            results.values = mResultList;
+                            results.count = mResultList.size();
+                        }
                     }
                 }
                 return results;
@@ -137,13 +139,15 @@ public class PlaceAutocompleteAdapter
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                if (results != null && results.count > 0) {
-                    // The API returned at least one result, update the data.
-                    notifyDataSetChanged();
-                } else {
-                    // The API did not return any results, invalidate the data set.
-                    notifyDataSetInvalidated();
-                }
+                    if (results != null && results.count > 0) {
+                        // The API returned at least one result, update the data.
+//                        searchTextAutoSuggestList.clear();
+//                        searchTextAutoSuggestList = filterResults.values;
+                        notifyDataSetChanged();
+                    } else {
+                        // The API did not return any results, invalidate the data set.
+                        notifyDataSetInvalidated();
+                    }
             }
         };
         return filter;
