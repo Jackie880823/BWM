@@ -28,6 +28,7 @@ import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.ui.ViewOriginalPicesActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
+import com.madx.bwm.util.LocationUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.widget.CircularNetworkImage;
 
@@ -198,8 +199,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         if (null != msgEntity.getText_id()) {//文字
             holder.messageText.setText(msgEntity.getText_description());
         } else if (msgEntity.getLoc_id() != null) {//地图 item
-            String locUrl = String.format(Constant.MAP_API_GET_LOCATION_PIC, msgEntity.getLoc_latitude() + "," + msgEntity.getLoc_longitude(),
-                    context.getString(R.string.google_map_pic_size), msgEntity.getLoc_latitude() + "," + msgEntity.getLoc_longitude());
+            String locUrl = LocationUtil.getLocationPicUrl(context, msgEntity.getLoc_latitude(), msgEntity.getLoc_longitude(),msgEntity.getLoc_type());
             VolleyUtil.initNetworkImageView(context, holder.networkImageView
                     , locUrl, R.drawable.network_image_default, R.drawable.network_image_default);
         } else if (Constant.Sticker_Gif.equals(msgEntity.getSticker_type())) {//gif item

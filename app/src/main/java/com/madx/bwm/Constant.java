@@ -91,7 +91,8 @@ public class Constant {
     public static String Module_profile_s = "photo_profile_s";//100*100
     /*google map api*/
     /*params:1.center(x,y),2.pic size,3.mark location(x,y)*/
-    public static String MAP_API_GET_LOCATION_PIC = "http://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=14&maptype=roadmap&size=%s&markers=color:blue|label:S|%s&sensor=false";
+    public static String MAP_API_GET_LOCATION_PIC_BY_GOOGLE = "http://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=14&maptype=roadmap&size=%s&markers=color:blue|label:T|%s&sensor=false";
+    public static String MAP_API_GET_LOCATION_PIC_BY_BAIDU = "http://api.map.baidu.com/staticimage?center=%s&zoom=14&size=%s&markers=%s&markerStyles=m,T";
 
     /** more */
     public static String API_CONTACT_US = API_SERVER+"/bondwithme/index.php/api/contactUs";

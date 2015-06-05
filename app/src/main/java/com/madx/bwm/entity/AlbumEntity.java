@@ -1,11 +1,12 @@
 package com.madx.bwm.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by quankun on 15/5/19.
  */
-public class AlbumEntity {
+public class AlbumEntity implements Serializable {
     private String year;// year 年份
     private String month;// month 月份
     private List<AlbumPhotoEntity> photoList;

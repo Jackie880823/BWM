@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -83,24 +84,26 @@ public class LoginActivity extends Activity {
     String regid;
     private boolean isGCM;
 
-    private void initGCM() {
+    private void initPushApi() {
         if (SystemUtil.checkPlayServices(this)) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(this);
-
-            if (regid.isEmpty()) {
+            Log.i("","1regid============="+regid);
+            if (TextUtils.isEmpty(regid)) {
                 isGCM = true;
                 registerInBackground();
             }
         } else {
+            JPushInterface.init(LoginActivity.this);
             regid = AppInfoUtil.getJpushRegistrationId(this);
-            if (regid.isEmpty()) {
+            Log.i("","2regid============="+regid);
+            if (TextUtils.isEmpty(regid)) {
                 isGCM = false;
                 registerInBackground();
             }
             /**极光推送*/
 //            JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
-            JPushInterface.init(this);
+
 //        JPushInterface.stopPush(getApplicationContext());
 //        JPushInterface.resumePush(getApplicationContext());
         }
@@ -127,6 +130,11 @@ public class LoginActivity extends Activity {
 
             @Override
             protected void onPostExecute(String msg) {
+                if (isGCM) {
+
+                }else{
+
+                }
             }
 
         }.execute(null, null, null);
@@ -134,7 +142,23 @@ public class LoginActivity extends Activity {
 
     private String doRegistration2Jpush() {
         String msg = "";
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         regid = JPushInterface.getRegistrationID(this);
+//        if(TextUtils.isEmpty(regid)){
+//            regid = JPushInterface.getRegistrationID(this);
+//        }
+        while (TextUtils.isEmpty(regid)){
+            regid = JPushInterface.getRegistrationID(this);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         msg = "Device registered, registration ID=" + regid;
         sendRegistrationIdToBackend(regid, "jpush");
         AppInfoUtil.storeRegistrationId(LoginActivity.this, regid,false);
@@ -262,10 +286,6 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        /**wing begin test gcm*/
-        initGCM();
-        /**wing end test gcm*/
-
         UserEntity userEntity = App.getLoginedUser();
         if (userEntity != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -276,6 +296,9 @@ public class LoginActivity extends Activity {
                 App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));//init http header
             }
 
+            /**wing begin test gcm*/
+            initPushApi();
+            /**wing end test gcm*/
             finish();
             return;
         }
@@ -361,10 +384,9 @@ public class LoginActivity extends Activity {
 
                                 //bad response data...
                                 userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {
+
                                 }.getType());
-
                                 AppTokenEntity tokenEntity = gson.fromJson(jsonObject.getString("token"), AppTokenEntity.class);
-
                                 if (userList != null && userList.get(0) != null) {
                                     UserEntity userEntity = userList.get(0);//登录的用户数据
                                     App.changeLoginedUser(userEntity, tokenEntity);
@@ -375,13 +397,18 @@ public class LoginActivity extends Activity {
 
                                     startActivity(intent);
 
-                                    finish();
                                     progressDialog.dismiss();
                                     btnLogin.setClickable(true);
+
+                                    /**wing begin test gcm*/
+                                    initPushApi();
+                                    /**wing end test gcm*/
+                                    finish();
                                 }
 
                             } catch (Exception e) {
-                                MessageUtil.showMessage(LoginActivity.this, R.string.msg_action_failed);
+                                MessageUtil.showMessage(LoginActivity.this, e.getMessage());
+//                                MessageUtil.showMessage(LoginActivity.this, R.string.msg_action_failed);
                                 progressDialog.dismiss();
                                 btnLogin.setClickable(true);
                                 e.printStackTrace();

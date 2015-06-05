@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.madx.bwm.App;
 import com.madx.bwm.R;
 import com.madx.bwm.ui.AlertEventActivity;
+import com.madx.bwm.ui.AlertGroupActivity;
 import com.madx.bwm.ui.AlertWallActivity;
 import com.madx.bwm.ui.MemberActivity;
 import com.madx.bwm.ui.MessageChatActivity;
@@ -33,17 +35,8 @@ public class NotificationUtil {
     /**
      * 通知类型
      */
-    public static final String BONDALERT_WALL = "wall";
-    public static final String BONDALERT_EVENT = "event";
-    public static final String BONDALERT_BIGDAY = "bigday";
-    public static final String BONDALERT_MISS = "miss";
-    public static final String BONDALERT_NEWS = "news";
-    public static final String BONDALERT_MEMBER = "member";
-    public static final String BONDALERT_RECOMMENDED = "recommended";//TODO
-    public static final String BONDALERT_MESSAGE = "message";
-
     private enum MessageType {
-        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_NEWS("news"), BONDALERT_MEMBER("member"), BONDALERT_RECOMMENDED("recommended"), BONDALERT_MESSAGE("message");
+        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_NEWS("news"), BONDALERT_MEMBER("member"), BONDALERT_RECOMMENDED("recommended"), BONDALERT_MESSAGE("message"),BONDALERT_GROUP("group");
         private String typeName;
 
         MessageType(String typeName) {
@@ -105,10 +98,9 @@ public class NotificationUtil {
      */
     public static void sendNotification(Context context, Bundle msg,boolean isGCM) throws JSONException {
 
-        if (App.getLoginedUser() == null) {
-            Log.d("","nonononono");
-            return;
-        }
+//        if (App.getLoginedUser() == null) {
+//            return;
+//        }
 
         PendingIntent contentIntent = getFowwordIntent(context, msg,isGCM);
 
@@ -215,6 +207,10 @@ public class NotificationUtil {
                 smallIcon = R.drawable.bondalert_recommended_icon;
                 intent = new Intent(context, RecommendActivity.class);
                 break;
+            case BONDALERT_GROUP:
+                smallIcon = R.drawable.bondalert_group_icon;
+                intent = new Intent(context, AlertGroupActivity.class);
+                break;
 
         }
 
@@ -257,5 +253,43 @@ public class NotificationUtil {
     public static void clearNotification(Context context){
         getNotivficationManager(context).cancelAll();
         JPushInterface.clearAllNotifications(context);
+    }
+
+    private static final String UN_REGISTER_URL = "http://sc.bondwith.me/bondwithme/index.php/api/auth/%s";
+
+    public static void unRegisterPush(Context context){
+        if(App.getLoginedUser()!=null) {
+            new HttpTools(context).get(String.format(UN_REGISTER_URL, App.getLoginedUser().getUser_id()),null, new HttpCallback() {
+                @Override
+                public void onStart() {
+
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+
+                @Override
+                public void onResult(String response) {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+        }
     }
 }

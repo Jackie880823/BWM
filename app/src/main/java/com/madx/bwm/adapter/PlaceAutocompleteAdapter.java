@@ -93,7 +93,8 @@ public class PlaceAutocompleteAdapter
      * Sets the bounds for all subsequent queries.
      */
     public void setBounds(LatLngBounds bounds) {
-        mBounds = bounds;
+        if(bounds!=null)
+            mBounds = bounds;
     }
 
     /**

@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
+import android.util.Log;
 
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.SDKInitializer;
@@ -21,7 +22,6 @@ import com.madx.bwm.util.PreferencesUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-
 /**
  * Created by wing on 15/3/21.
  */
@@ -35,9 +35,14 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         appContext = this;
+        /**异常处理*/
+        CrashHandler crashHandler = CrashHandler.getInstance();
+        crashHandler.init(getApplicationContext());
+        /**网络工具初始*/
         HttpTools.init(this);
         /**baidu map*/
         SDKInitializer.initialize(getApplicationContext());
+        Log.i("","device_id=============="+AppInfoUtil.getDeviceUUID(this));
 
     }
 
@@ -107,9 +112,11 @@ public class App extends MultiDexApplication {
             PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_APP_VERSION, "");
             NotificationUtil.clearNotification(context);
 
+            //默认tab
+            PreferencesUtil.saveValue(context, "lastLeaveIndex", -1);
+            //反注册推送
+            NotificationUtil.unRegisterPush(context);
             context.finish();
-
-            PreferencesUtil.saveValue(context, "lastLeaveIndex",-1);
         }
     }
 
@@ -126,5 +133,15 @@ public class App extends MultiDexApplication {
                     SQLiteHelperOrm.class);
         }
         return databaseHelper;
+    }
+
+    /**
+     * 完全退出app
+     */
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        FileUtil.clearCache(this);
+        System.exit(0);
     }
 }

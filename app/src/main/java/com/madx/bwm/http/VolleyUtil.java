@@ -53,8 +53,8 @@ public class VolleyUtil {
 	private static ImageLoader getImageLoader(Context context){
 		if(mImageLoader==null){
             /**for no cache image loader*/
-//			mImageLoader = new ImageLoader(getRequestQueue(context), null);
-			mImageLoader = new ImageLoader(getRequestQueue(context), mImageCache);
+			mImageLoader = new ImageLoader(getRequestQueue(context), null);
+//			mImageLoader = new ImageLoader(getRequestQueue(context), mImageCache);
 		}
 		return mImageLoader;
 	}

@@ -135,6 +135,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:paddingBottom="@dimen/default_content_padding"
                 android:paddingLeft="@dimen/default_content_padding"
                 android:paddingRight="@dimen/default_content_padding">
@@ -230,6 +232,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"/>
+    <include layout="@layout/progress_layout"/>
 
         <!--<com.madx.bwm.widget.SendCommentView-->
             <!--android:id="@+id/comment_send"-->

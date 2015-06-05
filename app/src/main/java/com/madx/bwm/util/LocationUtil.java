@@ -15,8 +15,12 @@ import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.madx.bwm.Constant;
+import com.madx.bwm.R;
 import com.madx.bwm.ui.Map4BaiduActivity;
 import com.madx.bwm.ui.Map4GoogleActivity;
 
@@ -169,13 +173,16 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         }
         return ret;
     }
+
     //gcj02,bd09ll(百度经纬度坐标),bd09mc(百度墨卡托坐标),wgs84(gps)
     public static final String LOCATION_TYPE_GCJ02 = "gcj02";
     public static final String LOCATION_TYPE_BD09LL = "bd09ll";
-//    public static final String LOCATION_TYPE_BD09MC = "bd09mc";
+    //    public static final String LOCATION_TYPE_BD09MC = "bd09mc";
     public static final String LOCATION_TYPE_WGS84 = "wgs84";
+
     /**
      * 打开地图导航
+     *
      * @param context
      * @param latitude
      * @param longitude
@@ -189,85 +196,43 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
 //        if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
 //            openWebview4BaiduMap(context, latitude, longitude, locationType);
 //        }else {
-            Intent intent = null;
-            //14为缩放比例
-            Log.i("", "goNavigation======" + latitude + "," + longitude);
-            Log.i("", "locationType======" + locationType);
-
-//                String url = "http://api.map.baidu.com/geoconv/v1/?coords=%s&ak=%s&from=1&to=5";
-////                http://api.map.baidu.com/geoconv/v1/?coords=114.21892734521,29.575429778924;114.21892734521,29.575429778924&from=1&to=5&ak=WkHFTQQgdIvSphGk31aAaKWu
-//                String ss = context.getResources().getString(R.string.jackie_baidu_maps_key_4_convertor);
-//                Log.i("", "2url======" + String.format(url, latitude + "," + longitude, ss));
-//                new HttpTools(context).get(String.format(url, latitude + "," + longitude, ss), null, new HttpCallback() {
-//                    @Override
-//                    public void onStart() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onFinish() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onResult(String response) {
-//                        Log.i("", "onResult======" + response);
-////                        try {
-////                            JSONObject jsonObject = new JSONObject(response);
-////                            jsonObject.getJSONArray("result ");
-////                        } catch (JSONException e) {
-////                            e.printStackTrace();
-////                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(Exception e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onLoading(long count, long current) {
-//
-//                    }
-//                });
+        Intent intent = null;
+        //14为缩放比例
+        Log.i("", "goNavigation======" + latitude + "," + longitude);
+        Log.i("", "locationType======" + locationType);
 
 
-            if (SystemUtil.checkPlayServices(context)) {
-                if(LOCATION_TYPE_BD09LL.equals(locationType)){
+        if (SystemUtil.checkPlayServices(context)) {
+            if (LOCATION_TYPE_BD09LL.equals(locationType)) {
 //                if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
-                    openWebview4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
-                }else {
-                    try {
-                        String uri = String.format("geo:%f,%f?z=14&q=%f,%f", latitude, longitude, latitude, longitude);
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                        context.startActivity(intent);
-                    } catch (Exception e) {
-                        openWebview4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
-                    }
-                }
+                openWebview4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
             } else {
-                //判断没有百度地图
-                if (SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
-                    String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
-                    try {
-                        intent = Intent.getIntent(uri);
-                        intent.setAction(Intent.ACTION_VIEW);
-                        context.startActivity(intent);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        openWebview4BaiduMap(context, latitude, longitude, locationType);
-                    }
-
-                } else {
+                try {
+                    String uri = String.format("geo:%f,%f?z=14&q=%f,%f", latitude, longitude, latitude, longitude);
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    openWebview4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
+                }
+            }
+        } else {
+            //判断没有百度地图
+            if (SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
+                String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
+                try {
+                    intent = Intent.getIntent(uri);
+                    intent.setAction(Intent.ACTION_VIEW);
+                    context.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
                     openWebview4BaiduMap(context, latitude, longitude, locationType);
                 }
 
+            } else {
+                openWebview4BaiduMap(context, latitude, longitude, locationType);
             }
+
+        }
 //        }
 
 
@@ -310,6 +275,28 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    public static String getLocationPicUrl(Context context, String latitude, String longitude, String locationType) {
+        Log.i("", "1locationType======" + locationType);
+        String ssssaa = latitude + "," + longitude;
+        if (SystemUtil.checkPlayServices(context)) {
+            Log.i("", "2locationType======" + locationType);
+            if(LOCATION_TYPE_BD09LL.equals(locationType)){
+                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
+            }else {
+                Log.i("", "3locationType======" + locationType);
+                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
+//                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
+            }
+        } else {
+            Log.i("", "4locationType======" + locationType);
+            return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
+
+        }
+//        return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
+
+//        String sss = "http://api.map.baidu.com/staticimage?width=400&height=300&center=" + ssssaa + "&zoom=11&markers=" + ssssaa + "&markerStyles=m,T";
     }
 
     /**
@@ -376,5 +363,49 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         double bd_lon = z * Math.cos(theta) + 0.0065;
         double bd_lat = z * Math.sin(theta) + 0.006;
         return gg_lat + "," + gg_lon;
+    }
+
+    public static void convertLocation(Context context, String latitude, String longitude) {
+        String url = "http://api.map.baidu.com/geoconv/v1/?coords=%s&ak=%s&from=1&to=5";
+//                http://api.map.baidu.com/geoconv/v1/?coords=114.21892734521,29.575429778924;114.21892734521,29.575429778924&from=1&to=5&ak=WkHFTQQgdIvSphGk31aAaKWu
+        String ss = context.getResources().getString(R.string.jackie_baidu_maps_key_4_convertor);
+        Log.i("", "2url======" + String.format(url, latitude + "," + longitude, ss));
+        new HttpTools(context).get(String.format(url, latitude + "," + longitude, ss), null, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                Log.i("", "onResult======" + response);
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            jsonObject.getJSONArray("result ");
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 }

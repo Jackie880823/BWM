@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.madx.bwm.R;
 import com.madx.bwm.util.FileUtil;
+import com.madx.bwm.util.MessageUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -116,6 +118,7 @@ public class PicturesCacheUtil extends FileUtil {
             MediaStore.Images.Media.insertImage(context.getContentResolver(),
                     file.getAbsolutePath(), file.getName(), null);
 //            MediaStore.Images.Media.insertImage(context.getContentResolver(),bmp,"LLL","");
+            MessageUtil.showMessage(context, context.getString(R.string.saved_to_path) + file.getPath());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
