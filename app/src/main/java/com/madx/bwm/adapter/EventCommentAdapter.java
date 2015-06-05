@@ -7,7 +7,6 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,7 +96,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 //        messageChatActivity.empty_message.setVisibility(View.GONE);
         //显示聊天布局下拉刷新控件
 //        messageChatActivity.swipeRefreshLayout.setVisibility(View.VISIBLE);
-        Log.i("添加item======","");
+//        Log.i("添加item======","");
         int listSize = data.size();
         data.add(0, msgEntity);
 
@@ -108,19 +107,19 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
     @Override
     public int getItemViewType(int position) {
         EventCommentEntity myEevent = data.get(position);
-        Log.i("getItemViewType: ", "position: " + position);
+//        Log.i("getItemViewType: ", "position: " + position);
         int type = 0;
         if(!TextUtils.isEmpty(myEevent.getComment_content().trim()) && TextUtils.isEmpty(myEevent.getSticker_group_path().trim())){
-            Log.i("getItemViewType 文字====",myEevent.getComment_content().toString());
+//            Log.i("getItemViewType 文字====",myEevent.getComment_content().toString());
             type = TEXT;
         }else if(Constant.Sticker_Gif.equals(myEevent.getSticker_type())){
             type = GIF;
         }
         else if(Constant.Sticker_Png.equals(myEevent.getSticker_type())) {
-            Log.i("getItemViewType 本地图片===",myEevent.getSticker_type());
+//            Log.i("getItemViewType 本地图片===",myEevent.getSticker_type());
             type = PNG;
         }else if(myEevent.getFile_id()!= null ){
-            Log.i("getItemViewType 网络图片===",myEevent.getFile_id());
+//            Log.i("getItemViewType 网络图片===",myEevent.getFile_id());
             type = PIC;
         }
 //        else{
@@ -158,7 +157,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 //                Log.i("TEXT==========","");
                 break;
             case PIC:
-                Log.i("网络图片===","");
+//                Log.i("网络图片===","");
                  view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
 //                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_png, parent, false);
 //                Log.i("PIC==========","");
@@ -194,7 +193,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 
 //            Log.i("ece.getSticker_group_path()",ece.getSticker_group_path()+"");
             if(!TextUtils.isEmpty(ece.getComment_content().trim())){//如果文字不为空
-                Log.i("文字=====", position + "");
+//                Log.i("文字=====", position + "");
                 holder.tv_comment_content.setVisibility(View.VISIBLE);
                 holder.tv_comment_content.setText(ece.getComment_content());
 
@@ -202,7 +201,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
             if(!TextUtils.isEmpty(ece.getSticker_group_path().trim())){
                 switch (ece.getSticker_type().trim()){
                     case ".gif" :
-                        Log.i("gifImageView=====",ece.getSticker_group_path());
+//                        Log.i("gifImageView=====",ece.getSticker_group_path());
                         holder.progressBar.setVisibility(View.GONE);
                         holder.gifImageView.setVisibility(View.VISIBLE);
 //                        holder.tv_comment_content.setVisibility(View.GONE);
@@ -239,7 +238,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 
                     case ".png" :
 //                        Log.i("png=====", position+"");
-                        Log.i("pngImageView=====",ece.getSticker_group_path());
+//                        Log.i("pngImageView=====",ece.getSticker_group_path());
                         holder.progressBar.setVisibility(View.GONE);
                         holder.pngImageView.setVisibility(View.VISIBLE);
 //                        holder.tv_comment_content.setVisibility(View.GONE);
@@ -288,10 +287,10 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
             }
         if (ece.getFile_id() !=null ){//如果有图片id
 //                holder.progressBar.setVisibility(View.GONE);
-            Log.i("getFile_id===",ece.getFile_id());
+//            Log.i("getFile_id===",ece.getFile_id());
             holder.progressBar.setVisibility(View.GONE);
             holder.networkImageView.setVisibility(View.VISIBLE);
-            Log.i("显示网络大图", ece.getFile_id());
+//            Log.i("显示网络大图", ece.getFile_id());
             VolleyUtil.initNetworkImageView(mContext, holder.networkImageView, String.format(Constant.API_GET_PIC, "post_preview_m", ece.getUser_id(), ece.getFile_id()),
                         R.drawable.network_image_default, R.drawable.network_image_default);
             }
