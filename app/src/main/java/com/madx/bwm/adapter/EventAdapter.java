@@ -189,7 +189,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //                        /**取消的event不可点击*/
 //                        if(!"2".equals(data.get(getAdapterPosition()).getGroup_event_status())) {
                         itemClickListener.contentItemClick(data.get(getAdapterPosition() - otherItemCount));//回调方法
-                            //清除点击item的背景和颜色
+                        //清除点击item的背景和颜色
                         item_event.setBackgroundResource(0);
                         event_start.setVisibility(View.INVISIBLE);
                         clickitemList.add(position);

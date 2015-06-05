@@ -30,6 +30,7 @@ android {
         abortOnError false
     }
     signingConfigs {
+
         debug {
             // No debug config
         }
@@ -41,7 +42,7 @@ android {
 //        }
 //
     }
-    buildTypes {
+//    buildTypes {
 //        debug {
 //            // 显示Log
 //            buildConfigField "boolean", "LOG_DEBUG", "true"
@@ -54,9 +55,9 @@ android {
 //        }
 //        release {
 //            // 不显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO
+//            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO 正式环境改false
 //            minifyEnabled true //TODO 正式环境改true
-//            zipAlignEnabled true
+//            zipAlignEnabled true //TODO 正式环境改true
 //            // 移除无用的resource文件
 //            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -73,8 +74,6 @@ android {
 //                }
 //            }
 //        }
-
-    }
     // 多渠道打包
     productFlavors {
         wandoujia {}
