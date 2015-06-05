@@ -134,7 +134,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 } else if (v.getId() == getParentActivity().rightButton.getId()) {
                     //右边打勾按钮触发的事件的事件
                     if (isFinish){
-                        isFinish = false;
+                        isFinish = true;
                         submit();
                     }
                 }
@@ -208,6 +208,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 
                 @Override
                 public void onResult(String response) {
+                    isFinish = false;
                     Intent intent = new Intent();
                     intent.putExtra("event", mEevent);
                     getParentActivity().setResult(Activity.RESULT_OK, intent);

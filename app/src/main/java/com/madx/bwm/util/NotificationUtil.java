@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.madx.bwm.App;
 import com.madx.bwm.R;
 import com.madx.bwm.ui.AlertEventActivity;
@@ -96,9 +98,9 @@ public class NotificationUtil {
      */
     public static void sendNotification(Context context, Bundle msg,boolean isGCM) throws JSONException {
 
-        if (App.getLoginedUser() == null) {
-            return;
-        }
+//        if (App.getLoginedUser() == null) {
+//            return;
+//        }
 
         PendingIntent contentIntent = getFowwordIntent(context, msg,isGCM);
 
@@ -251,5 +253,43 @@ public class NotificationUtil {
     public static void clearNotification(Context context){
         getNotivficationManager(context).cancelAll();
         JPushInterface.clearAllNotifications(context);
+    }
+
+    private static final String UN_REGISTER_URL = "http://sc.bondwith.me/bondwithme/index.php/api/auth/%s";
+
+    public static void unRegisterPush(Context context){
+        if(App.getLoginedUser()!=null) {
+            new HttpTools(context).get(String.format(UN_REGISTER_URL, App.getLoginedUser().getUser_id()),null, new HttpCallback() {
+                @Override
+                public void onStart() {
+
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+
+                @Override
+                public void onResult(String response) {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+        }
     }
 }

@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
@@ -25,8 +24,6 @@ import java.util.HashMap;
  */
 public class EventDetailActivity extends BaseActivity {
 
-
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void initBottomBar() {
@@ -143,10 +140,6 @@ public class EventDetailActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, R.string.text_loading);
-        }
-        mProgressDialog.show();
     }
 
     @Override
@@ -173,7 +166,6 @@ public class EventDetailActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
                 getDataDone = true;
             }
 
@@ -191,7 +183,6 @@ public class EventDetailActivity extends BaseActivity {
                 } else {
                     rightButton.setVisibility(View.INVISIBLE);
                 }
-                mProgressDialog.dismiss();
 
             }
 
