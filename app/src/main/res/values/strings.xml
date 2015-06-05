@@ -749,5 +749,6 @@
     <string name="text_group">Group</string>
     <string name="hint_comment_input">Type a comments here…</string>
     <string name="text_character_and"><![CDATA[" & "]]></string>
+    <string name="saved_to_path">"Has been saved to: "</string>
     <!--Christopher-->
 </resources>
