@@ -325,8 +325,6 @@ public class ResetPasswordActivity extends BaseActivity{
                         App.changeLoginedUser(userEntity, tokenEntity);
                         Intent intent = new Intent(ResetPasswordActivity.this, MainActivity.class);
 //                                    intent.putExtra("user", userEntity);
-                        PreferencesUtil.saveValue(ResetPasswordActivity.this, "user", gson.toJson(userEntity));
-                        PreferencesUtil.saveValue(ResetPasswordActivity.this, "token", gson.toJson(tokenEntity));
 
                         startActivity(intent);
                         finish();

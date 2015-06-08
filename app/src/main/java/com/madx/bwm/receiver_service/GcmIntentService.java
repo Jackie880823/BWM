@@ -3,7 +3,6 @@ package com.madx.bwm.receiver_service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.madx.bwm.util.NotificationUtil;
@@ -61,7 +60,6 @@ public class GcmIntentService extends IntentService {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.i(TAG, "Received: " + extras.toString());
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
