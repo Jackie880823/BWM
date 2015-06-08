@@ -1,5 +1,7 @@
 package com.android.volley.ext;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,7 +36,12 @@ public class RequestInfo {
             while (iterotor.hasNext()) {
                 String key = (String) iterotor.next();
                 if (key != null) {
-                    sb.append(key).append("=").append(params.get(key)).append("&");
+                    try {
+                        /**wing modifed for encode get or delete url params*/
+                        sb.append(key).append("=").append(URLEncoder.encode(params.get(key), "utf-8")).append("&");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             if (sb.lastIndexOf("&") == sb.length() - 1) {

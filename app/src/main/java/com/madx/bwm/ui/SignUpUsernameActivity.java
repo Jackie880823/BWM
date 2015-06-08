@@ -103,12 +103,12 @@ public class SignUpUsernameActivity extends BaseActivity {
                         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                         HashMap<String, String> params = new HashMap<String, String>();
                         params.put("condition", jsonParamsString);
-                        url = UrlUtil.generateUrl(Constant.API_LOGINID_AVAILABILITY, params);
+//                        url = UrlUtil.generateUrl(Constant.API_LOGINID_AVAILABILITY, params);
 
-                        Log.d("","uuuuuurllll----" + url);
+//                        Log.d("","uuuuuurllll----" + url);
 
 
-                        new HttpTools(SignUpUsernameActivity.this).get(url, null, new HttpCallback() {
+                        new HttpTools(SignUpUsernameActivity.this).get(Constant.API_LOGINID_AVAILABILITY, params, new HttpCallback() {
                             @Override
                             public void onStart() {
 
@@ -123,16 +123,18 @@ public class SignUpUsernameActivity extends BaseActivity {
                             public void onResult(String response) {
 
                                 String responseStatus;
-
+                                Log.d("","2uuuuuurllll----" + response);
                                 try {
                                     JSONObject jsonObject = new JSONObject(response);
                                     responseStatus = jsonObject.getString("response_status");
                                     //手机注册合法性检查状态信息为Fail时
                                     if (responseStatus.equals("Fail")) {
+                                        Log.d("","3uuuuuurllll----" + response);
                                         //fail：手机号注册过的时候，展示Text，Toast。
                                         ivUserName.setImageResource(R.drawable.wrong);
                                         Toast.makeText(SignUpUsernameActivity.this, getString(R.string.text_account_already_exist), Toast.LENGTH_SHORT).show();
                                     } else {
+                                        Log.d("","4uuuuuurllll----" + response);
                                         ivUserName.setImageResource(R.drawable.correct);
                                         blnLogin = true;
 
