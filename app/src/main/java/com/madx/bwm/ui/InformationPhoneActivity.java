@@ -171,6 +171,7 @@ public class InformationPhoneActivity extends BaseActivity {
 
                 if (checkall())
                 {
+                    btnNext.setClickable(false);
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("user_surname", etLastName.getText().toString());
                     params.put("user_given_name", etFirstName.getText().toString());
@@ -194,7 +195,7 @@ public class InformationPhoneActivity extends BaseActivity {
 
                         @Override
                         public void onFinish() {
-
+                            btnNext.setClickable(true);
                         }
 
                         @Override

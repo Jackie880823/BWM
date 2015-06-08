@@ -5,20 +5,19 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,9 +105,23 @@ public class SignUpUsernameActivity extends BaseActivity {
                         params.put("condition", jsonParamsString);
                         url = UrlUtil.generateUrl(Constant.API_LOGINID_AVAILABILITY, params);
 
-                        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
+                        Log.d("","uuuuuurllll----" + url);
+
+
+                        new HttpTools(SignUpUsernameActivity.this).get(url, null, new HttpCallback() {
                             @Override
-                            public void onResponse(String response) {
+                            public void onStart() {
+
+                            }
+
+                            @Override
+                            public void onFinish() {
+
+                            }
+
+                            @Override
+                            public void onResult(String response) {
+
                                 String responseStatus;
 
                                 try {
@@ -124,19 +137,62 @@ public class SignUpUsernameActivity extends BaseActivity {
                                         blnLogin = true;
 
                                     }
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-
                             }
-                        }, new Response.ErrorListener() {
+
                             @Override
-                            public void onErrorResponse(VolleyError error) {
+                            public void onError(Exception e) {
                                 ivUserName.setImageResource(R.drawable.wrong);
                             }
+
+                            @Override
+                            public void onCancelled() {
+
+                            }
+
+                            @Override
+                            public void onLoading(long count, long current) {
+
+                            }
                         });
-                        stringRequest.setShouldCache(false);
-                        VolleyUtil.addRequest2Queue(SignUpUsernameActivity.this, stringRequest, "");
+
+
+
+//
+//                        StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
+//                            @Override
+//                            public void onResponse(String response) {
+//                                String responseStatus;
+//
+//                                try {
+//                                    JSONObject jsonObject = new JSONObject(response);
+//                                    responseStatus = jsonObject.getString("response_status");
+//                                    //手机注册合法性检查状态信息为Fail时
+//                                    if (responseStatus.equals("Fail")) {
+//                                        //fail：手机号注册过的时候，展示Text，Toast。
+//                                        ivUserName.setImageResource(R.drawable.wrong);
+//                                        Toast.makeText(SignUpUsernameActivity.this, getString(R.string.text_account_already_exist), Toast.LENGTH_SHORT).show();
+//                                    } else {
+//                                        ivUserName.setImageResource(R.drawable.correct);
+//                                        blnLogin = true;
+//
+//                                    }
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                            }
+//                        }, new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//                                ivUserName.setImageResource(R.drawable.wrong);
+//                            }
+//                        });
+//                        stringRequest.setShouldCache(false);
+//                        VolleyUtil.addRequest2Queue(SignUpUsernameActivity.this, stringRequest, "");
                     }
                     else
                     {

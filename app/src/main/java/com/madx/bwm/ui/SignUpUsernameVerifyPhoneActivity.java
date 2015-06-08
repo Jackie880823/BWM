@@ -15,22 +15,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
 
@@ -150,10 +145,27 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
 
                 if ((etPhone.getText().toString().length() != 0) && (tvCountryCode.getText().toString().length() != 0))
                 {
-                    StringRequest stringRequestVerification = new StringRequest(Request.Method.POST, Constant.API_VERIFICATION, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
 
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
+                    params.put("verification_action", "register");
+
+
+
+
+                    new HttpTools(SignUpUsernameVerifyPhoneActivity.this).post(Constant.API_VERIFICATION, params, new HttpCallback() {
+                        @Override
+                        public void onStart() {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+
+                        @Override
+                        public void onResult(String response) {
                             tvWarningPhone.setText(tvCountryCode.getText().toString() + etPhone.getText().toString());
                             llWarning.setVisibility(View.VISIBLE);
 
@@ -172,27 +184,75 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
                         }
-                    }, new Response.ErrorListener() {
+
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-                            //TODO
-                            error.printStackTrace();
+                        public void onError(Exception e) {
                             Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                         }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            HashMap<String, String> params = new HashMap<String, String>();
 
-                            params.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
-                            params.put("verification_action", "register");
-                            return params;
+                        @Override
+                        public void onCancelled() {
+
                         }
-                    };
-                    stringRequestVerification.setShouldCache(false);
-                    VolleyUtil.addRequest2Queue(SignUpUsernameVerifyPhoneActivity.this, stringRequestVerification, "");
+
+                        @Override
+                        public void onLoading(long count, long current) {
+
+                        }
+                    });
+
+
+
+
+
+
+//                    StringRequest stringRequestVerification = new StringRequest(Request.Method.POST, Constant.API_VERIFICATION, new Response.Listener<String>() {
+//                        @Override
+//                        public void onResponse(String response) {
+//
+//                            tvWarningPhone.setText(tvCountryCode.getText().toString() + etPhone.getText().toString());
+//                            llWarning.setVisibility(View.VISIBLE);
+//
+//                            try {
+//                                String responseStatus;
+//                                JSONObject jsonObject = new JSONObject(response);
+//                                responseStatus = jsonObject.getString("response_status");//申请验证码状态信息，失败也分两种情况
+//                                if (responseStatus.equals("Fail")) {
+//                                    Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_createVerification_fail), Toast.LENGTH_SHORT).show();
+//                                } else {
+//                                    time = new TimeCount(60000, 1000);//构造CountDownTimer对象
+//                                    time.start();//开始计时
+//                                    Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_createVerification_success), Toast.LENGTH_SHORT).show();
+//                                    etVerifyCode.requestFocus();
+//                                }
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            //TODO
+//                            error.printStackTrace();
+//                            Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }) {
+//                        @Override
+//                        protected Map<String, String> getParams() throws AuthFailureError {
+//                            HashMap<String, String> params = new HashMap<String, String>();
+//
+//                            params.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
+//                            params.put("verification_action", "register");
+//                            return params;
+//                        }
+//                    };
+//                    stringRequestVerification.setShouldCache(false);
+//                    VolleyUtil.addRequest2Queue(SignUpUsernameVerifyPhoneActivity.this, stringRequestVerification, "");
+
+
+
                 }
 
                 else if (tvCountryCode.getText().toString().length() == 0)
@@ -230,10 +290,21 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
                     params.put("condition", jsonParamsString);
                     url = UrlUtil.generateUrl(Constant.API_VERIFY_CODE, params);
 
-                    StringRequest stringRequestVerifyCode = new StringRequest(url, new Response.Listener<String>() {
+
+
+                    new HttpTools(SignUpUsernameVerifyPhoneActivity.this).get(url, null, new HttpCallback() {
+                        @Override
+                        public void onStart() {
+
+                        }
 
                         @Override
-                        public void onResponse(String response) {
+                        public void onFinish() {
+
+                        }
+
+                        @Override
+                        public void onResult(String response) {
                             try
                             {
                                 JSONObject jsonObject = new JSONObject(response);
@@ -260,14 +331,66 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
                                 e.printStackTrace();
                             }
                         }
-                    },new Response.ErrorListener() {
+
                         @Override
-                        public void onErrorResponse(VolleyError error) {
+                        public void onError(Exception e) {
+
+                        }
+
+                        @Override
+                        public void onCancelled() {
+
+                        }
+
+                        @Override
+                        public void onLoading(long count, long current) {
 
                         }
                     });
-                    stringRequestVerifyCode.setShouldCache(false);
-                    VolleyUtil.addRequest2Queue(SignUpUsernameVerifyPhoneActivity.this, stringRequestVerifyCode, "");
+
+
+//
+//                    StringRequest stringRequestVerifyCode = new StringRequest(url, new Response.Listener<String>() {
+//
+//                        @Override
+//                        public void onResponse(String response) {
+//                            try
+//                            {
+//                                JSONObject jsonObject = new JSONObject(response);
+//
+//                                if (jsonObject.getString("response_status").equals("Fail"))
+//                                {
+//                                    Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_verification_fail), Toast.LENGTH_SHORT).show();
+//                                }
+//                                else if (jsonObject.getString("response_status").equals("Success"))
+//                                {
+//                                    Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_verification_successful), Toast.LENGTH_SHORT).show();
+//
+//                                    Intent intent = new Intent(SignUpUsernameVerifyPhoneActivity.this, InformationUsernameActivity.class);
+//
+//                                    userEntity.setUser_phone(etPhone.getText().toString());
+//                                    userEntity.setUser_country_code(tvCountryCode.getText().toString());
+//
+//                                    intent.putExtra("userEntity", userEntity);
+//                                    startActivity(intent);
+//                                }
+//                            }
+//                            catch (JSONException e)
+//                            {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    },new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//
+//                        }
+//                    });
+//                    stringRequestVerifyCode.setShouldCache(false);
+//                    VolleyUtil.addRequest2Queue(SignUpUsernameVerifyPhoneActivity.this, stringRequestVerifyCode, "");
+
+
+
                 }
 
                 else if (tvCountryCode.getText().toString().length() == 0)

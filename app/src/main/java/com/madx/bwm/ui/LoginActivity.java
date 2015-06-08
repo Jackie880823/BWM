@@ -85,6 +85,7 @@ public class LoginActivity extends Activity {
     private boolean isGCM;
 
     private void initPushApi() {
+
         if (SystemUtil.checkPlayServices(this)) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(this);
@@ -333,27 +334,29 @@ public class LoginActivity extends Activity {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
                     return;
                 }
+                final String account = etAccount.getText().toString().trim();
+                final String password = etPassword.getText().toString().trim();
+                if(!TextUtils.isEmpty(account)&&!TextUtils.isEmpty(password)){
 
-                if ((etAccount.getText().toString().length() != 0) && (etPassword.getText().toString().length() != 0)) {
                     progressDialog.show();
                     btnLogin.setClickable(false);
 
                     HashMap<String, String> jsonParams = new HashMap<String, String>();
-                    if ((etAccount.getText().toString().length() != 0)) {
+                    if ((account.length() != 0)) {
 
                         if (TextUtils.isEmpty(tvCountryCode.getText())) {
-                            jsonParams.put("user_phone", etAccount.getText().toString());//是否可以不需要
-                            jsonParams.put("username", tvCountryCode.getText() + etAccount.getText().toString());
+                            jsonParams.put("user_phone", account);//是否可以不需要
+                            jsonParams.put("username", tvCountryCode.getText() + account);
                             jsonParams.put("login_type", "username");
                         } else {
-                            jsonParams.put("username", tvCountryCode.getText().toString() + etAccount.getText().toString());//是否可以不需要
-                            jsonParams.put("user_phone", etAccount.getText().toString());
+                            jsonParams.put("username", tvCountryCode.getText().toString() + account);//是否可以不需要
+                            jsonParams.put("user_phone", account);
                             jsonParams.put("login_type", "phone");
                         }
                     }
 
                     jsonParams.put("user_country_code", tvCountryCode.getText().toString());
-                    jsonParams.put("user_password", MD5(etPassword.getText().toString()));
+                    jsonParams.put("user_password", MD5(password));
                     jsonParams.put("user_uuid", Settings.Secure.getString(LoginActivity.this.getContentResolver(),
                             Settings.Secure.ANDROID_ID));
                     jsonParams.put("user_app_version", AppInfoUtil.getAppVersionName(LoginActivity.this));
@@ -423,7 +426,7 @@ public class LoginActivity extends Activity {
 
                             do_faile_login_linear.setVisibility(View.VISIBLE);
                             String failePrompt = tvCountryCode.getText().toString() + " "
-                                    + etAccount.getText().toString();
+                                    + account;
                             do_faile_login_tv.setText(failePrompt);
                         }
 
@@ -437,36 +440,36 @@ public class LoginActivity extends Activity {
 
                         }
                     });
-                } else if ((etAccount.getText().toString().length() == 0) && (etPassword.getText().toString().length() == 0)) {
+                } else if ((account.length() == 0) && (password.length() == 0)) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_enter_details), Toast.LENGTH_SHORT).show();
-                } else if (etAccount.getText().toString().length() == 0) {
+                } else if (account.length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
-                } else if (etPassword.getText().toString().length() == 0) {
+                } else if (password.length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
                 }
 
 
-//                if ((etAccount.getText().toString().length() != 0) && (etPassword.getText().toString().length() != 0)) {
+//                if ((account.length() != 0) && (password.length() != 0)) {
 //
 //                    progressDialog.show();
 //                    btnLogin.setClickable(false);
 //
 //                    HashMap<String, String> jsonParams = new HashMap<String, String>();
-//                    if ((etAccount.getText().toString().length() != 0)) {
+//                    if ((account.length() != 0)) {
 //
 //                        if (TextUtils.isEmpty(tvCountryCode.getText())) {
-//                            jsonParams.put("user_phone", etAccount.getText().toString());//是否可以不需要
-//                            jsonParams.put("username", tvCountryCode.getText() + etAccount.getText().toString());
+//                            jsonParams.put("user_phone", account);//是否可以不需要
+//                            jsonParams.put("username", tvCountryCode.getText() + account);
 //                            jsonParams.put("login_type", "username");
 //                        } else {
-//                            jsonParams.put("username", tvCountryCode.getText().toString() + etAccount.getText().toString());//是否可以不需要
-//                            jsonParams.put("user_phone", etAccount.getText().toString());
+//                            jsonParams.put("username", tvCountryCode.getText().toString() + account);//是否可以不需要
+//                            jsonParams.put("user_phone", account);
 //                            jsonParams.put("login_type", "phone");
 //                        }
 //                    }
 //
 //                    jsonParams.put("user_country_code", tvCountryCode.getText().toString());
-//                    jsonParams.put("user_password", MD5(etPassword.getText().toString()));
+//                    jsonParams.put("user_password", MD5(password));
 //                    jsonParams.put("user_uuid", Settings.Secure.getString(LoginActivity.this.getContentResolver(),
 //                            Settings.Secure.ANDROID_ID));
 //                    jsonParams.put("user_app_version", "1.8.0");
@@ -526,18 +529,18 @@ public class LoginActivity extends Activity {
 //                            //begin 初始化
 //                            do_faile_login_linear.setVisibility(View.VISIBLE);
 //                            String failePrompt = tvCountryCode.getText().toString() + " "
-//                                    + etAccount.getText().toString();
+//                                    + account;
 //                            do_faile_login_tv.setText(failePrompt);
 //                            //end
 //                        }
 //                    });
 //
 //                    VolleyUtil.addRequest2Queue(LoginActivity.this, stringRequestLogin, "");
-//                } else if ((etAccount.getText().toString().length() == 0) && (etPassword.getText().toString().length() == 0)) {
+//                } else if ((account.length() == 0) && (password.length() == 0)) {
 //                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_enter_details), Toast.LENGTH_SHORT).show();
-//                } else if (etAccount.getText().toString().length() == 0) {
+//                } else if (account.length() == 0) {
 //                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
-//                } else if (etPassword.getText().toString().length() == 0) {
+//                } else if (password.length() == 0) {
 //                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
 //                }
 
