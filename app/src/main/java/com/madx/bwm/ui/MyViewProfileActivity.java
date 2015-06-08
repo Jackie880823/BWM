@@ -35,7 +35,6 @@ import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.MyDateUtils;
-import com.madx.bwm.util.PreferencesUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.DatePicker;
 import com.madx.bwm.widget.MyDialog;
@@ -361,7 +360,6 @@ public class MyViewProfileActivity extends BaseActivity {
                         App.changeLoginedUser(gson.fromJson(response, UserEntity.class));
                         List userList = new ArrayList<UserEntity>();
                         userList.add(gson.fromJson(response, UserEntity.class));
-                        PreferencesUtil.saveValue(MyViewProfileActivity.this, "user", gson.toJson(gson.fromJson(response, UserEntity.class)));
                         if (!isUploadImage) {
                             Intent intent = new Intent();
                             intent.putExtra("name", etFirstName.getText().toString());

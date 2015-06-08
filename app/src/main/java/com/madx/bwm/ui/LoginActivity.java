@@ -292,7 +292,7 @@ public class LoginActivity extends Activity {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
 
-            String tokenString = PreferencesUtil.getValue(this, "token", null);
+            String tokenString = PreferencesUtil.getValue(this, Constant.HTTP_TOKEN, null);
             if (!TextUtils.isEmpty(tokenString)) {
                 App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));//init http header
             }
@@ -395,8 +395,6 @@ public class LoginActivity extends Activity {
                                     App.changeLoginedUser(userEntity, tokenEntity);
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 //                                    intent.putExtra("user", userEntity);
-                                    PreferencesUtil.saveValue(LoginActivity.this, "user", gson.toJson(userEntity));
-                                    PreferencesUtil.saveValue(LoginActivity.this, "token", gson.toJson(tokenEntity));
 
                                     startActivity(intent);
 
@@ -501,9 +499,6 @@ public class LoginActivity extends Activity {
 //                                    App.changeLoginedUser(userEntity, tokenEntity);
 //                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 ////                                    intent.putExtra("user", userEntity);
-//                                    PreferencesUtil.saveValue(LoginActivity.this, "user", gson.toJson(userEntity));
-//                                    PreferencesUtil.saveValue(LoginActivity.this, "token", gson.toJson(tokenEntity));
-//
 //                                    startActivity(intent);
 //                                    finish();
 //                                    progressDialog.dismiss();
