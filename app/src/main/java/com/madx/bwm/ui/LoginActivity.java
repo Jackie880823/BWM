@@ -364,9 +364,9 @@ public class LoginActivity extends Activity {
                     String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("condition", jsonParamsString);
-                    String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
+//                    String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
 
-                    new HttpTools(LoginActivity.this).get(url, null, new HttpCallback() {
+                    new HttpTools(LoginActivity.this).get(Constant.API_LOGIN, params, new HttpCallback() {
                         @Override
                         public void onStart() {
 
