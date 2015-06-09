@@ -15,12 +15,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
@@ -52,9 +52,7 @@ public class PersonalPictureActivity extends BaseActivity {
     TextView tvSkip;
     Button btnStartingBonding;
 
-
-
-    ProgressDialog progressDialog;
+    RelativeLayout rlProgress;
 
     UserEntity userEntity = new UserEntity();
     AppTokenEntity appTokenEntity = new AppTokenEntity();
@@ -268,7 +266,8 @@ public class PersonalPictureActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        progressDialog = new ProgressDialog(this,getString(R.string.text_loading));
+
+        rlProgress = getViewById(R.id.rl_progress);
 
         userEntity = (UserEntity) getIntent().getExtras().getSerializable("user");
         appTokenEntity = (AppTokenEntity)getIntent().getExtras().getSerializable("token");
@@ -365,8 +364,9 @@ public class PersonalPictureActivity extends BaseActivity {
             return;
         }
 
-        progressDialog.show();
+        rlProgress.setVisibility(View.VISIBLE);
         btnStartingBonding.setClickable(false);
+
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
         params.put("fileName", "PersonalPicture" + userEntity.getUser_id());
@@ -382,7 +382,7 @@ public class PersonalPictureActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 btnStartingBonding.setClickable(true);
-                progressDialog.dismiss();
+                rlProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -392,7 +392,6 @@ public class PersonalPictureActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     responseStatus = jsonObject.getString("response_status");
                     if ("Fail".equals(responseStatus)) {
-                        progressDialog.dismiss();
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_updateProPicFail), Toast.LENGTH_SHORT).show();
                     } else if ("Success".equals(responseStatus)){
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
@@ -406,12 +405,10 @@ public class PersonalPictureActivity extends BaseActivity {
                     else
                     {
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
                     }
 
                 } catch (Exception e) {
                     Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
                     e.printStackTrace();
                 }
             }
@@ -419,7 +416,6 @@ public class PersonalPictureActivity extends BaseActivity {
             @Override
             public void onError(Exception e) {
                 Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
             }
 
             @Override
@@ -447,11 +443,4 @@ public class PersonalPictureActivity extends BaseActivity {
         return super.dispatchKeyEvent(event);
     }
 
-    @Override
-    protected void onDestroy() {
-        if(progressDialog!=null){
-            progressDialog.dismiss();
-        }
-        super.onDestroy();
-    }
 }
