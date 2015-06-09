@@ -220,6 +220,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                                 //item的点击事件跳转到EventDetailActivity
 //                            requestData();
 //                            adapter.notifyDataSetChanged();
+
                                 Intent intent = new Intent(getActivity(), EventDetailActivity.class);
 //                            intent.putExtra("event", eventEntity);
                                 intent.putExtra("group_id", eventEntity.getGroup_id());
