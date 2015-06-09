@@ -148,14 +148,12 @@ public class EventDetailActivity extends BaseActivity {
             return;
 
         HashMap<String, String> jsonParams = new HashMap<String, String>();
-
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("group_id", group_id);
         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("condition", jsonParamsString);
-
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
         new HttpTools(this).get(url, params, new HttpCallback() {
             @Override

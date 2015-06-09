@@ -340,16 +340,5 @@ public class EventFragment extends BaseFragment<MainActivity> {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
     }
-    public ItemClickListener itemClickListener;
-
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
-
-    public interface ItemClickListener {
-        void topItemClick(int startIndex);
-
-
-    }
 
 }
