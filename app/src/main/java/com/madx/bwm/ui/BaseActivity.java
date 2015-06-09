@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.View;
@@ -47,7 +46,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         // 这里会影响子类返回键的监听事件，请谨慎处理
-        Log.i(TAG, "dispatchKeyEvent& keyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
+//        Log.i(TAG, "dispatchKeyEvent& keyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
         if(event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             finish();
             return true;

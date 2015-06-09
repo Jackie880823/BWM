@@ -30,7 +30,6 @@ import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
-import com.madx.bwm.action.MessageAction;
 import com.madx.bwm.adapter.EventCommentAdapter;
 import com.madx.bwm.entity.EventCommentEntity;
 import com.madx.bwm.entity.EventEntity;
@@ -102,10 +101,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     private RecyclerView rvList;
     private EventEntity event;
-    private EditText et_comment;
-    //发送按钮
-    private LinearLayout btn_submit;
-    //    private TextView btn_submit;
     int colorIntentSelected;
     private ProgressBarCircularIndeterminate progressBar;
 
@@ -124,44 +119,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
      * 表情按钮
      */
     private ImageButton stickerImageButton;
-    private TextView cameraTextView;//相机
-    private TextView albumTextView;//相册
-    private TextView locationTextView;//地图
-    private TextView videoTextView;//视频
-    private TextView contactTextView;//名片
-
-    /**
-     * 放置表情图标库的默认文件夹名称
-     */
-    public static final String STICKERS_NAME = "stickers";
-    private final static int REQUEST_GET_GROUP_NAME = 4;
-
-    /*相册和相机使用的参数*/
-    private final static int REQUEST_HEAD_PHOTO = 100;
-    private final static int REQUEST_HEAD_CAMERA = 101;
-    private final static int REQUEST_HEAD_FINAL = 102;
-
-    /**
-     * 临时文件用户裁剪
-     */
-    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
-
-    private int indexPage = 1;
-
-    public final static int GET_LATEST_MESSAGE = 0X100;
-    public final static int SEN_MESSAGE_FORM_CAMERA = 0X101;
-    public final static int SEN_MESSAGE_FORM_ALBUM = 0X102;
-    public final static int SEND_TEXT_MESSAGE = 0X103;
-    public final static int SEND_PIC_MESSAGE = 0X104;
-    public final static int GET_HISTORY_MESSAGE = 0X105;
-    public final static int GET_SEND_OVER_MESSAGE = 0X106;
-    public int INITIAL_LIMIT = 10;
-
-    public MessageAction messageAction;
 
     Intent intent;
     private Context mContext;
-    private Uri uri;//原图uri
     private Uri mUri;
 
     EventCommentEntity  stickerEntity = new EventCommentEntity();
@@ -249,12 +209,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             expandFunctionLinear = getViewById(R.id.ll_more);
             stickerLinear = getViewById(R.id.ll_sticker);
             Socontent = getViewById(R.id.content);
-
-            cameraTextView = getViewById(R.id.camera_tv);
-            albumTextView = getViewById(R.id.album_tv);
-            locationTextView = getViewById(R.id.location_tv);
-            videoTextView = getViewById(R.id.video_tv);
-            contactTextView = getViewById(R.id.contact_tv);
 
             push_date = getViewById(R.id.push_date);
             owner_name = getViewById(R.id.owner_name);
@@ -639,9 +593,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("sticker_name", stickerEntity.getSticker_name());
             params.put("sticker_type", stickerEntity.getSticker_type());
 
-
-
-
             new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
                 @Override
                 public void onStart() {
@@ -724,8 +675,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     params.put("sticker_name", "");
                     params.put("sticker_type", "");
                 }
-
-
 
                 new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
                     @Override
@@ -1230,13 +1179,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 new HttpTools(getActivity()).delete(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
-//                        mProgressDialog.setTitle(R.string.text_waiting);
-//                        mProgressDialog.show();
                     }
 
                     @Override
                     public void onFinish() {
-//                        mProgressDialog.dismiss();
                         if(vProgress!=null)
                             vProgress.setVisibility(View.GONE);
                     }
@@ -1419,7 +1365,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("file", file);
         params.put("photo_fullsize", "1");
 
-
         new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
             @Override
             public void onStart() {
@@ -1579,8 +1524,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //            }
 //        }
 //    }
-
-
 
 
 }

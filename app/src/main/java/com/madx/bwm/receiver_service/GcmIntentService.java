@@ -3,10 +3,8 @@ package com.madx.bwm.receiver_service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.madx.bwm.App;
 import com.madx.bwm.util.NotificationUtil;
 
 import org.json.JSONException;
@@ -54,15 +52,14 @@ public class GcmIntentService extends IntentService {
 //                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
                 try {
-                    if (App.getLoginedUser() == null) {
-                        Log.d("","nonononono");
-                        return;
-                    }
+//                    if (App.getLoginedUser() == null) {
+//                        Log.d("","nonononono");
+//                        return;
+//                    }
                     NotificationUtil.sendNotification(this, extras,true);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.i(TAG, "Received: " + extras.toString());
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.

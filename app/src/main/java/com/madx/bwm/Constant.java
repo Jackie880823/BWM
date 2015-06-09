@@ -14,6 +14,8 @@ public class Constant {
     public static final String GCM_PREF_APP_VERSION = "gcm_appVersion";
     public static final String JPUSH_PREF_REG_ID = "jpush_registration_id";
     public static final String JPUSH_PREF_APP_VERSION = "jpush_appVersion";
+    public static final String HTTP_TOKEN = "token";
+    public static final String LOGIN_USER = "user";
 
     public static final int ACTION_CREATE_WALL = 10;
     public static final int ACTION_UPDATE_WALL = 11;
@@ -33,8 +35,8 @@ public class Constant {
     /**
      * for api
      */
-//    public static String API_SERVER = "http://pt.bondwith.me";
-    public static String API_SERVER = "http://sc.bondwith.me";
+    public static String API_SERVER = "http://pt.bondwith.me";
+//    public static String API_SERVER = "http://sc.bondwith.me";
     public static String GET_MULTI_ORIGINALPHOTO = API_SERVER+"/bondwithme/index.php/api/multiPhoto";
 
     public static String API_WALL_MAIN = API_SERVER+"/bondwithme/index.php/api/wall";

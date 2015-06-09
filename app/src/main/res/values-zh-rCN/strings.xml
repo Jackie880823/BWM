@@ -731,5 +731,6 @@
     <string name="waiting_upload">请等待完成上传</string>
     <string name="text_group">群组</string>
     <string name="hint_comment_input">在此输入评论…</string>
+    <string name="saved_to_path">"已保存到："</string>
     <!--Christopher-->
 </resources>

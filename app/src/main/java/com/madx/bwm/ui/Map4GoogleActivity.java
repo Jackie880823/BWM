@@ -178,6 +178,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         mAutocompleteView.setAdapter(mAdapter);
 
 
+
         mAutocompleteView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {

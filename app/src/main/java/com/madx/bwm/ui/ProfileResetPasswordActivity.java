@@ -10,16 +10,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.HttpTools;
 import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -138,11 +135,25 @@ public class ProfileResetPasswordActivity extends Activity {
                     jsonParams.put("user_password", MD5(etSecPw.getText().toString()));
                     final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-                    //这个Url拼接需要换换吗？？
-                    StringRequest stringRequestUpdatePassword = new StringRequest(Request.Method.PUT, Constant.API_UPDATE_PASSWORD + MainActivity.getUser().getUser_id(), new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
 
+                    RequestInfo requestInfo = new RequestInfo();
+                    requestInfo.url = Constant.API_UPDATE_PASSWORD + MainActivity.getUser().getUser_id();
+                    requestInfo.jsonParam = jsonParamsString;
+
+
+                    new HttpTools(ProfileResetPasswordActivity.this).put(requestInfo, new HttpCallback() {
+                        @Override
+                        public void onStart() {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+
+                        @Override
+                        public void onResult(String response) {
                             try {
                                 String responseStatus;
                                 JSONObject jsonObject = new JSONObject(response);
@@ -157,26 +168,67 @@ public class ProfileResetPasswordActivity extends Activity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
                         }
-                    }, new Response.ErrorListener() {
+
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-                            //TODO
-                            error.printStackTrace();
+                        public void onError(Exception e) {
                             Toast.makeText(ProfileResetPasswordActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                         }
-                    }) {
 
                         @Override
-                        public byte[] getBody() throws AuthFailureError {
-                            return jsonParamsString.getBytes();
+                        public void onCancelled() {
+
                         }
 
-                    };
+                        @Override
+                        public void onLoading(long count, long current) {
 
-                    stringRequestUpdatePassword.setShouldCache(false);
-                    VolleyUtil.addRequest2Queue(ProfileResetPasswordActivity.this, stringRequestUpdatePassword, "");
+                        }
+                    });
+
+
+
+
+
+//                    //这个Url拼接需要换换吗？？
+//                    StringRequest stringRequestUpdatePassword = new StringRequest(Request.Method.PUT, Constant.API_UPDATE_PASSWORD + MainActivity.getUser().getUser_id(), new Response.Listener<String>() {
+//                        @Override
+//                        public void onResponse(String response) {
+//
+//                            try {
+//                                String responseStatus;
+//                                JSONObject jsonObject = new JSONObject(response);
+//                                responseStatus = jsonObject.getString("response_status");//申请验证码状态信息，失败也分两种情况
+//                                if (responseStatus.equals("Fail")) {
+//                                    Toast.makeText(ProfileResetPasswordActivity.this, getString(R.string.text_password_specified_invalid), Toast.LENGTH_SHORT).show();
+//
+//                                } else {
+//                                    Toast.makeText(ProfileResetPasswordActivity.this, getString(R.string.text_password_changed_successfully), Toast.LENGTH_SHORT).show();
+//                                    App.logout(ProfileResetPasswordActivity.this);
+//                                }
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            //TODO
+//                            error.printStackTrace();
+//                            Toast.makeText(ProfileResetPasswordActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }) {
+//
+//                        @Override
+//                        public byte[] getBody() throws AuthFailureError {
+//                            return jsonParamsString.getBytes();
+//                        }
+//
+//                    };
+//
+//                    stringRequestUpdatePassword.setShouldCache(false);
+//                    VolleyUtil.addRequest2Queue(ProfileResetPasswordActivity.this, stringRequestUpdatePassword, "");
 
                 }
                 else if (!blnOldRight)

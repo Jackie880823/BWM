@@ -180,6 +180,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         if (validateForm()) {
             progressBar.setVisibility(View.VISIBLE);
             mEevent.setEvent_member(setGetMembersIds(members_data));
+            mEevent.setLoc_name(position_name.getText().toString());
 
             if (latitude == -1000 || longitude == -1000) {
                 mEevent.setLoc_latitude("");
@@ -474,7 +475,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         intent.putExtra("owner_id", mEevent.getGroup_owner_id());
         startActivityForResult(intent, GET_MEMBERS);
     }
-
+    //??
     private void goLocationSetting() {
         Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude,position_name.getText().toString());
         if(intent!=null)
