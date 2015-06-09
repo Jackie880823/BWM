@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -58,28 +57,13 @@ public class LoginActivity extends Activity {
     private RelativeLayout ll;//方便点击修改国家区号
     private EditText etAccount;
     private EditText etPassword;
-
     private LinearLayout ivRemove;
-
-    private String user_country_code;//用户选择得到
-    private String user_phone = "";//用户输入得到
-    private String username = "";           //用户输入得到
-    private String user_password = "";      //用户输入得到
-    private String user_uuid = "";//设备号唯一？？？
-    private String login_type = "";    //根据用户账号输入的类型判断得到
-    private String user_app_version = "1.8.0";  //？？？
-    private String user_app_os = "android"; //肯定为android
-
-    //begin 添加输入错误密码或账号时的提示
     private TextView do_faile_login_tv;
     private LinearLayout do_faile_login_linear;
-    //end
-
     private List<UserEntity> userList;
+    private RelativeLayout rlProgress;
 
-    String data;
-
-    ProgressDialog progressDialog;
+    private static final int GET_COUNTRY_CODE = 1;
 
     String regid;
     private boolean isGCM;
@@ -276,11 +260,6 @@ public class LoginActivity extends Activity {
 
     }
 
-    /**
-     * wing end test gcm
-     */
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -304,8 +283,6 @@ public class LoginActivity extends Activity {
             return;
         }
 
-        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
-
         btnLogin = (Button) findViewById(R.id.login);
         tvSignUp = (LinearLayout) findViewById(R.id.ll_sign_up);
         btnForgetPassword = (TextView) findViewById(R.id.tv_forget_password);
@@ -313,12 +290,12 @@ public class LoginActivity extends Activity {
         ll = (RelativeLayout) findViewById(R.id.ll_code);
         etAccount = (EditText) findViewById(R.id.et_account);
         etPassword = (EditText) findViewById(R.id.et_password);
-
         ivRemove = (LinearLayout) findViewById(R.id.iv_move);
-
         do_faile_login_tv = (TextView) findViewById(R.id.do_faile_login_tv);
         do_faile_login_linear = (LinearLayout) findViewById(R.id.do_faile_login_linear);
+        rlProgress = (RelativeLayout)findViewById(R.id.rl_progress);
 
+        //取消国家区号
         ivRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -326,6 +303,7 @@ public class LoginActivity extends Activity {
             }
         });
 
+        //登录
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -338,7 +316,7 @@ public class LoginActivity extends Activity {
                 final String password = etPassword.getText().toString().trim();
                 if(!TextUtils.isEmpty(account)&&!TextUtils.isEmpty(password)){
 
-                    progressDialog.show();
+                    rlProgress.setVisibility(View.VISIBLE);
                     btnLogin.setClickable(false);
 
                     HashMap<String, String> jsonParams = new HashMap<String, String>();
@@ -374,7 +352,8 @@ public class LoginActivity extends Activity {
 
                         @Override
                         public void onFinish() {
-
+                            rlProgress.setVisibility(View.GONE);
+                            btnLogin.setClickable(true);
                         }
 
                         @Override
@@ -394,13 +373,7 @@ public class LoginActivity extends Activity {
                                     UserEntity userEntity = userList.get(0);//登录的用户数据
                                     App.changeLoginedUser(userEntity, tokenEntity);
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                                    intent.putExtra("user", userEntity);
-
                                     startActivity(intent);
-
-                                    progressDialog.dismiss();
-                                    btnLogin.setClickable(true);
-
                                     /**wing begin test gcm*/
                                     initPushApi();
                                     /**wing end test gcm*/
@@ -410,7 +383,6 @@ public class LoginActivity extends Activity {
                             } catch (Exception e) {
                                 MessageUtil.showMessage(LoginActivity.this, e.getMessage());
 //                                MessageUtil.showMessage(LoginActivity.this, R.string.msg_action_failed);
-                                progressDialog.dismiss();
                                 btnLogin.setClickable(true);
                                 e.printStackTrace();
                             }
@@ -419,7 +391,6 @@ public class LoginActivity extends Activity {
                         @Override
                         public void onError(Exception e) {
                             MessageUtil.showMessage(LoginActivity.this, R.string.msg_action_failed);
-                            progressDialog.dismiss();
                             btnLogin.setClickable(true);
 
                             do_faile_login_linear.setVisibility(View.VISIBLE);
@@ -445,100 +416,6 @@ public class LoginActivity extends Activity {
                 } else if (password.length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
                 }
-
-
-//                if ((account.length() != 0) && (password.length() != 0)) {
-//
-//                    progressDialog.show();
-//                    btnLogin.setClickable(false);
-//
-//                    HashMap<String, String> jsonParams = new HashMap<String, String>();
-//                    if ((account.length() != 0)) {
-//
-//                        if (TextUtils.isEmpty(tvCountryCode.getText())) {
-//                            jsonParams.put("user_phone", account);//是否可以不需要
-//                            jsonParams.put("username", tvCountryCode.getText() + account);
-//                            jsonParams.put("login_type", "username");
-//                        } else {
-//                            jsonParams.put("username", tvCountryCode.getText().toString() + account);//是否可以不需要
-//                            jsonParams.put("user_phone", account);
-//                            jsonParams.put("login_type", "phone");
-//                        }
-//                    }
-//
-//                    jsonParams.put("user_country_code", tvCountryCode.getText().toString());
-//                    jsonParams.put("user_password", MD5(password));
-//                    jsonParams.put("user_uuid", Settings.Secure.getString(LoginActivity.this.getContentResolver(),
-//                            Settings.Secure.ANDROID_ID));
-//                    jsonParams.put("user_app_version", "1.8.0");
-//                    jsonParams.put("user_app_os", "android");
-//                    String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-//                    HashMap<String, String> params = new HashMap<String, String>();
-//                    params.put("condition", jsonParamsString);
-//                    String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
-//
-//                    StringRequest stringRequestLogin = new StringRequest(url, new Response.Listener<String>() {
-//
-//                        GsonBuilder gsonb = new GsonBuilder();
-//
-//                        Gson gson = gsonb.create();
-//
-//                        @Override
-//                        public void onResponse(String response) {
-//                            try {
-//                                JSONObject jsonObject = new JSONObject(response);
-//
-//                                //bad response data...
-//                                userList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<UserEntity>>() {
-//                                }.getType());
-//
-//                                AppTokenEntity tokenEntity = gson.fromJson(jsonObject.getString("token"), AppTokenEntity.class);
-//
-//                                if (userList != null && userList.get(0) != null) {
-//                                    UserEntity userEntity = userList.get(0);//登录的用户数据
-//                                    App.changeLoginedUser(userEntity, tokenEntity);
-//                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-////                                    intent.putExtra("user", userEntity);
-//                                    startActivity(intent);
-//                                    finish();
-//                                    progressDialog.dismiss();
-//                                    btnLogin.setClickable(true);
-//                                }
-//
-//                            } catch (JSONException e) {
-//                                progressDialog.dismiss();
-//                                btnLogin.setClickable(true);
-//                                e.printStackTrace();
-//                            }finally {
-//                                progressDialog.dismiss();
-//                                btnLogin.setClickable(true);
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            Log.i("", "error=====" + error.getMessage());
-//                            progressDialog.dismiss();
-//                            btnLogin.setClickable(true);
-//                            // Toast.makeText(LoginActivity.this, "Login ID/password is incorrect. Please try again.", Toast.LENGTH_SHORT).show();
-//                            //begin 初始化
-//                            do_faile_login_linear.setVisibility(View.VISIBLE);
-//                            String failePrompt = tvCountryCode.getText().toString() + " "
-//                                    + account;
-//                            do_faile_login_tv.setText(failePrompt);
-//                            //end
-//                        }
-//                    });
-//
-//                    VolleyUtil.addRequest2Queue(LoginActivity.this, stringRequestLogin, "");
-//                } else if ((account.length() == 0) && (password.length() == 0)) {
-//                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_enter_details), Toast.LENGTH_SHORT).show();
-//                } else if (account.length() == 0) {
-//                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
-//                } else if (password.length() == 0) {
-//                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
-//                }
-
             }
         });
 
@@ -600,17 +477,15 @@ public class LoginActivity extends Activity {
         return hexValue.toString();
     }
 
-    //跳转到国家区号选择界面结束后调用
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case 1:
+            case GET_COUNTRY_CODE :
                 if (resultCode == RESULT_OK) {
                     tvCountryCode.setText(data.getStringExtra("code"));
                 }
         }
     }
-
 
     //自动获取国家区号方法
     public String GetCountryZipCode() {
@@ -630,7 +505,6 @@ public class LoginActivity extends Activity {
         }
         return CountryZipCode;
     }
-
 
     //判断字符串的是否为字母，字母true。
     public static boolean test(String s) {

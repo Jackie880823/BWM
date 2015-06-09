@@ -220,6 +220,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                                 //item的点击事件跳转到EventDetailActivity
 //                            requestData();
 //                            adapter.notifyDataSetChanged();
+
                                 Intent intent = new Intent(getActivity(), EventDetailActivity.class);
 //                            intent.putExtra("event", eventEntity);
                                 intent.putExtra("group_id", eventEntity.getGroup_id());
@@ -338,17 +339,6 @@ public class EventFragment extends BaseFragment<MainActivity> {
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
-    }
-    public ItemClickListener itemClickListener;
-
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
-
-    public interface ItemClickListener {
-        void topItemClick(int startIndex);
-
-
     }
 
 }

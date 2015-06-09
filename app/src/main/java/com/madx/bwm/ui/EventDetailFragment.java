@@ -593,9 +593,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("sticker_name", stickerEntity.getSticker_name());
             params.put("sticker_type", stickerEntity.getSticker_type());
 
-
-
-
             new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
                 @Override
                 public void onStart() {
@@ -678,8 +675,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     params.put("sticker_name", "");
                     params.put("sticker_type", "");
                 }
-
-
 
                 new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
                     @Override
@@ -1184,13 +1179,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 new HttpTools(getActivity()).delete(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
-//                        mProgressDialog.setTitle(R.string.text_waiting);
-//                        mProgressDialog.show();
                     }
 
                     @Override
                     public void onFinish() {
-//                        mProgressDialog.dismiss();
                         if(vProgress!=null)
                             vProgress.setVisibility(View.GONE);
                     }
@@ -1373,7 +1365,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("file", file);
         params.put("photo_fullsize", "1");
 
-
         new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
             @Override
             public void onStart() {
@@ -1533,8 +1524,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //            }
 //        }
 //    }
-
-
 
 
 }
