@@ -15,14 +15,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -258,10 +256,20 @@ public class ForgetPasswordActivity extends BaseActivity {
 
                     url = UrlUtil.generateUrl(Constant.API_VERIFY_CODE, params);
 
-                    StringRequest stringRequest3 = new StringRequest(url, new Response.Listener<String>() {
+
+                    new HttpTools(ForgetPasswordActivity.this).get(url, null, new HttpCallback() {
+                        @Override
+                        public void onStart() {
+
+                        }
 
                         @Override
-                        public void onResponse(String response) {
+                        public void onFinish() {
+
+                        }
+
+                        @Override
+                        public void onResult(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
 
@@ -280,20 +288,61 @@ public class ForgetPasswordActivity extends BaseActivity {
                                 e.printStackTrace();
                             }
                         }
-                    }, new Response.ErrorListener() {
+
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-                            /**
-                             * begin QK
-                             */
+                        public void onError(Exception e) {
                             Toast.makeText(ForgetPasswordActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                            /**
-                             * end
-                             */
+                        }
+
+                        @Override
+                        public void onCancelled() {
+
+                        }
+
+                        @Override
+                        public void onLoading(long count, long current) {
+
                         }
                     });
-                    stringRequest3.setShouldCache(false);
-                    VolleyUtil.addRequest2Queue(ForgetPasswordActivity.this, stringRequest3, "");
+
+
+//
+//                    StringRequest stringRequest3 = new StringRequest(url, new Response.Listener<String>() {
+//
+//                        @Override
+//                        public void onResponse(String response) {
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(response);
+//
+//                                if ((jsonObject.getString("response_status")).equals("Fail")) {
+//                                    Toast.makeText(ForgetPasswordActivity.this, "Verification fail. Try again.", Toast.LENGTH_SHORT).show();
+//                                } else {
+//                                    Toast.makeText(ForgetPasswordActivity.this, "Verification successful.", Toast.LENGTH_SHORT).show();
+//
+//                                    Intent intent = new Intent(ForgetPasswordActivity.this, ResetPasswordActivity.class);
+//
+//                                    intent.putExtra("userEntity", userEntity);
+//
+//                                    startActivity(intent);
+//                                }
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            /**
+//                             * begin QK
+//                             */
+//                            Toast.makeText(ForgetPasswordActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                            /**
+//                             * end
+//                             */
+//                        }
+//                    });
+//                    stringRequest3.setShouldCache(false);
+//                    VolleyUtil.addRequest2Queue(ForgetPasswordActivity.this, stringRequest3, "");
                 }
                 else if (etVerifyCode.getText().toString().length() == 0)
                 {
@@ -365,10 +414,22 @@ public class ForgetPasswordActivity extends BaseActivity {
     {
         String url = UrlUtil.generateUrl(Constant.API_VERIFY_CODE_FOR_FORGETPASSWORD, params);
 
-        StringRequest stringRequestVerification = new StringRequest(url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
 
+
+
+        new HttpTools(ForgetPasswordActivity.this).get(url, null, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
                 try {
                     String responseStatus;
                     JSONObject jsonObject = new JSONObject(response);
@@ -397,23 +458,78 @@ public class ForgetPasswordActivity extends BaseActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(ForgetPasswordActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled() {
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                //TODO
-                error.printStackTrace();
-                /**
-                 * begin QK
-                 */
-                Toast.makeText(ForgetPasswordActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-                /**
-                 * end
-                 */
+            public void onLoading(long count, long current) {
+
             }
         });
-        VolleyUtil.addRequest2Queue(ForgetPasswordActivity.this, stringRequestVerification, "");
+
+
+
+
+
+//
+//        StringRequest stringRequestVerification = new StringRequest(url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//
+//                try {
+//                    String responseStatus;
+//                    JSONObject jsonObject = new JSONObject(response);
+//                    responseStatus = jsonObject.getString("response_status");//申请验证码状态信息，失败也分两种情况
+//                    if (responseStatus.equals("Fail")) {
+//                        /**
+//                         * begin QK
+//                         */
+//                        Toast.makeText(ForgetPasswordActivity.this, getResources().getString(R.string.text_createVerification_fail), Toast.LENGTH_SHORT).show();
+//                        /**
+//                         * end
+//                         */
+//                    } else {
+//                        time.start();//开始计时
+//                        userId = jsonObject.getString("user_id");
+//                        userEntity.setUser_id(userId);
+//                        phoneNumber = jsonObject.getString("phone_number");
+//                        /**
+//                         * begin QK
+//                         */
+//                        Toast.makeText(ForgetPasswordActivity.this, getResources().getString(R.string.text_createVerification_success), Toast.LENGTH_SHORT).show();
+//                        /**
+//                         * end
+//                         */
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                //TODO
+//                error.printStackTrace();
+//                /**
+//                 * begin QK
+//                 */
+//                Toast.makeText(ForgetPasswordActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                /**
+//                 * end
+//                 */
+//            }
+//        });
+//        VolleyUtil.addRequest2Queue(ForgetPasswordActivity.this, stringRequestVerification, "");
     }
 
     //自动获取国家区号

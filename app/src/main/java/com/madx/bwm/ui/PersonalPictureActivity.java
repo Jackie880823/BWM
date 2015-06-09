@@ -366,6 +366,7 @@ public class PersonalPictureActivity extends BaseActivity {
         }
 
         progressDialog.show();
+        btnStartingBonding.setClickable(false);
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
         params.put("fileName", "PersonalPicture" + userEntity.getUser_id());
@@ -380,6 +381,8 @@ public class PersonalPictureActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
+                btnStartingBonding.setClickable(true);
+                progressDialog.dismiss();
             }
 
             @Override
