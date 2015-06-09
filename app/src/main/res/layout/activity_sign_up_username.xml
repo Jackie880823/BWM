@@ -42,8 +42,10 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:background="@drawable/et_round_white"
+
                     android:inputType="text"/>
             </LinearLayout>
+            <!--android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789_-.@"-->
             <!--android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789"-->
 
             <LinearLayout
@@ -92,12 +94,13 @@
                             android:inputType="textPassword"
                             android:padding="16dp"
                             android:hint="@string/text_password"
-                            android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789"
+
                             android:textColorHint="@color/default_text_color_light"
                             android:layout_marginLeft="16dp"
                             android:layout_marginRight="16dp"
                             android:background="@drawable/et_round_white"/>
                 </LinearLayout>
+            <!--android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789"-->
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -130,12 +133,13 @@
                             android:paddingTop="16dp"
                             android:paddingBottom="16dp"
                             android:hint="@string/text_re_enter_password"
-                            android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789"
+
                             android:textColorHint="@color/default_text_color_light"
                             android:layout_marginLeft="16dp"
                             android:layout_marginRight="16dp"
                             android:background="@drawable/et_round_white"/>
                 </LinearLayout>
+            <!--android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789"-->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

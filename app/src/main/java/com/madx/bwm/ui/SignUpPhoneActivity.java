@@ -147,10 +147,10 @@ public class SignUpPhoneActivity extends BaseActivity {
                     String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("condition", jsonParamsString);
-                    String url = UrlUtil.generateUrl(Constant.API_LOGINID_AVAILABILITY, params);//检查手机注册合法性检查URL
+//                    String url = UrlUtil.generateUrl(Constant.API_LOGINID_AVAILABILITY, params);//检查手机注册合法性检查URL
 
                     //手机注册合法性检查请求
-                    new HttpTools(SignUpPhoneActivity.this).get(url, null, new HttpCallback() {
+                    new HttpTools(SignUpPhoneActivity.this).get(Constant.API_LOGINID_AVAILABILITY, params, new HttpCallback() {
                         @Override
                         public void onStart() {
 

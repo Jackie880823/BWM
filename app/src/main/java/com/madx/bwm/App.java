@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
-import android.util.Log;
 
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.SDKInitializer;
@@ -42,7 +41,6 @@ public class App extends MultiDexApplication {
         HttpTools.init(this);
         /**baidu map*/
         SDKInitializer.initialize(getApplicationContext());
-        Log.i("","device_id=============="+AppInfoUtil.getDeviceUUID(this));
 
     }
 
@@ -53,7 +51,7 @@ public class App extends MultiDexApplication {
     public static void changeLoginedUser(UserEntity user) {
         if (appContext != null) {
             App.user = user;
-            PreferencesUtil.saveValue(appContext, "user", new Gson().toJson(user));
+            PreferencesUtil.saveValue(appContext, Constant.LOGIN_USER, new Gson().toJson(user));
         }
     }
 
@@ -63,6 +61,10 @@ public class App extends MultiDexApplication {
             initToken(user.getUser_login_id(), tokenEntity);
 
             changeLoginedUser(user);
+
+            Gson gson = new Gson();
+
+
 
 
         }
@@ -80,6 +82,7 @@ public class App extends MultiDexApplication {
 //            Map<String, String> headers = HttpTools.getHeaders();
 //            headers.put("Content-Type","application/json");
 //            HttpTools.initHeaders(headers);
+            PreferencesUtil.saveValue(appContext, Constant.HTTP_TOKEN, new Gson().toJson(tokenEntity));
         }
     }
 

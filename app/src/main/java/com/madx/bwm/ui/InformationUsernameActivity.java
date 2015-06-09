@@ -12,11 +12,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -24,13 +21,12 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.AppTokenEntity;
 import com.madx.bwm.entity.UserEntity;
-import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.util.NetworkUtil;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class InformationUsernameActivity extends BaseActivity {
 
@@ -189,27 +185,50 @@ public class InformationUsernameActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
+                if (!NetworkUtil.isNetworkConnected(InformationUsernameActivity.this)) {
+                    Toast.makeText(InformationUsernameActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (checkall())
                 {
-                    StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_CREATE_NEW_USER, new Response.Listener<String>() {
+                    btnNext.setClickable(false);
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put("user_surname", etLastName.getText().toString());
+                    params.put("user_given_name", etFirstName.getText().toString());
+                    params.put("user_login_id", userEntity.getUser_login_id());
+                    params.put("user_login_type", userEntity.getUser_login_type());
+                    params.put("user_password", userEntity.getUser_password());
+                    params.put("user_uuid", Settings.Secure.getString(InformationUsernameActivity.this.getContentResolver(),
+                            Settings.Secure.ANDROID_ID));
+                    params.put("user_gender", user_gender);
+                    params.put("user_country_code", userEntity.getUser_country_code());
+                    params.put("user_phone", userEntity.getUser_phone());
+                    params.put("user_tnc_read", "1");
+                    params.put("user_app_version", "1.8.0");
+                    params.put("user_app_os", "android");
 
-                        GsonBuilder gsonb = new GsonBuilder();
+                    new HttpTools(InformationUsernameActivity.this).post(Constant.API_CREATE_NEW_USER, params, new HttpCallback() {
+                        @Override
+                        public void onStart() {
 
-                        Gson gson = gsonb.create();
+                        }
 
                         @Override
-                        public void onResponse(String response) {
-                            /**
-                             * begin QK
-                             */
-                            Toast.makeText(InformationUsernameActivity.this, getResources().getString(R.string.text_sign_up_success), Toast.LENGTH_SHORT).show();
-                            /**
-                             * end
-                             */
+                        public void onFinish() {
+                            btnNext.setClickable(true);
+                        }
+
+                        @Override
+                        public void onResult(String response) {
+                            GsonBuilder gsonb = new GsonBuilder();
+                            Gson gson = gsonb.create();
+
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
 
                                 userEntity = gson.fromJson(jsonObject.getString("user"), new TypeToken<UserEntity>() {}.getType());
+
                                 AppTokenEntity tokenEntity = gson.fromJson(jsonObject.getString("token"), AppTokenEntity.class);
 
                                 if (userEntity != null ) {
@@ -218,70 +237,142 @@ public class InformationUsernameActivity extends BaseActivity {
                                     intent.putExtra("token", tokenEntity);
                                     startActivity(intent);
                                 }
+                                else
+                                {
+                                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (Exception e) {
-                                Toast.makeText(InformationUsernameActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
-                    }, new Response.ErrorListener() {
 
                         @Override
-                        public void onErrorResponse(VolleyError error) {
-                            error.printStackTrace();
-                            Toast.makeText(InformationUsernameActivity.this,getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-
+                        public void onError(Exception e) {
+                            Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
                         }
-                    }) {
+
                         @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            HashMap<String, String> params = new HashMap<String, String>();
-                            params.put("user_surname", etLastName.getText().toString());
-                            params.put("user_given_name", etFirstName.getText().toString());
-                            params.put("user_login_id", userEntity.getUser_login_id());
-                            params.put("user_login_type", userEntity.getUser_login_type());
-                            params.put("user_password", userEntity.getUser_password());
-                            params.put("user_uuid", Settings.Secure.getString(InformationUsernameActivity.this.getContentResolver(),
-                                    Settings.Secure.ANDROID_ID));
-                            params.put("user_gender", user_gender);
-                            params.put("user_country_code", userEntity.getUser_country_code());
-                            params.put("user_phone", userEntity.getUser_phone());
-                            params.put("user_tnc_read", "1");
-                            params.put("user_app_version", "1.8.0");
-                            params.put("user_app_os", "android");
+                        public void onCancelled() {
 
-                            return params;
                         }
-                    };
-                    VolleyUtil.addRequest2Queue(InformationUsernameActivity.this, stringRequestPost, "");
+
+                        @Override
+                        public void onLoading(long count, long current) {
+
+                        }
+                    });
                 }
                 else if (etFirstName.getText().toString().length() == 0)
                 {
-                    /**
-                     * begin QK
-                     */
-                    Toast.makeText(InformationUsernameActivity.this, getResources().getString(R.string.text_input_first_name), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_input_first_name), Toast.LENGTH_SHORT).show();
                 }
                 else if (etLastName.getText().toString().length() == 0)
                 {
-                    Toast.makeText(InformationUsernameActivity.this, getResources().getString(R.string.text_input_last_name), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_input_last_name), Toast.LENGTH_SHORT).show();
                 }
                 else if (!blnFM)
                 {
-                    Toast.makeText(InformationUsernameActivity.this, getResources().getString(R.string.text_choose_gender), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_choose_gender), Toast.LENGTH_SHORT).show();
                 }
                 else if (!cbAgree.isChecked())
                 {
-                    Toast.makeText(InformationUsernameActivity.this, getResources().getString(R.string.text_agree_with_terms), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_agree_with_terms), Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Toast.makeText(InformationUsernameActivity.this,getResources().getString(R.string.text_full_all_fields), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_full_all_fields), Toast.LENGTH_SHORT).show();
                 }
-                /**
-                 * end
-                 */
+
+
+
+
+//                if (checkall())
+//                {
+//                    StringRequest stringRequestPost = new StringRequest(Request.Method.POST, Constant.API_CREATE_NEW_USER, new Response.Listener<String>() {
+//
+//                        GsonBuilder gsonb = new GsonBuilder();
+//
+//                        Gson gson = gsonb.create();
+//
+//                        @Override
+//                        public void onResponse(String response) {
+//
+//                            Toast.makeText(InformationUsernameActivity.this, "Sign Up Success", Toast.LENGTH_SHORT).show();
+//
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(response);
+//
+//                                userEntity = gson.fromJson(jsonObject.getString("user"), new TypeToken<UserEntity>() {}.getType());
+//
+//                                AppTokenEntity tokenEntity = gson.fromJson(jsonObject.getString("token"), AppTokenEntity.class);
+//
+//                                if (userEntity != null ) {
+//                                    Intent intent = new Intent(InformationUsernameActivity.this, PersonalPictureActivity.class);
+//                                    intent.putExtra("user", userEntity);
+//                                    intent.putExtra("token", tokenEntity);
+//                                    startActivity(intent);
+//                                }
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//
+//                        @Override
+//                        public void onErrorResponse(VolleyError error) {
+//                            //TODO
+//                            error.printStackTrace();
+//                            Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }) {
+//                        @Override
+//                        protected Map<String, String> getParams() throws AuthFailureError {
+//                            HashMap<String, String> params = new HashMap<String, String>();
+//                            params.put("user_surname", etLastName.getText().toString());
+//                            params.put("user_given_name", etFirstName.getText().toString());
+//                            params.put("user_login_id", userEntity.getUser_login_id());
+//                            params.put("user_login_type", userEntity.getUser_login_type());
+//                            params.put("user_password", userEntity.getUser_password());
+//                            params.put("user_uuid", Settings.Secure.getString(InformationUsernameActivity.this.getContentResolver(),
+//                                    Settings.Secure.ANDROID_ID));
+//                            params.put("user_gender", user_gender);
+//                            params.put("user_country_code", userEntity.getUser_country_code());
+//                            params.put("user_phone", userEntity.getUser_phone());
+//                            params.put("user_tnc_read", "1");
+//                            params.put("user_app_version", "1.8.0");
+//                            params.put("user_app_os", "android");
+//
+//                            return params;
+//                        }
+//                    };
+//                    VolleyUtil.addRequest2Queue(InformationUsernameActivity.this, stringRequestPost, "");
+//                }
+//                else if (etFirstName.getText().toString().length() == 0)
+//                {
+//                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_input_first_name), Toast.LENGTH_SHORT).show();
+//                }
+//                else if (etLastName.getText().toString().length() == 0)
+//                {
+//                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_input_last_name), Toast.LENGTH_SHORT).show();
+//                }
+//                else if (!blnFM)
+//                {
+//                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_choose_gender), Toast.LENGTH_SHORT).show();
+//                }
+//                else if (!cbAgree.isChecked())
+//                {
+//                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_agree_with_terms), Toast.LENGTH_SHORT).show();
+//                }
+//                else
+//                {
+//                    Toast.makeText(InformationUsernameActivity.this, getString(R.string.text_full_all_fields), Toast.LENGTH_SHORT).show();
+//                }
+
+
             }
         });
+
 }
 
     @Override
