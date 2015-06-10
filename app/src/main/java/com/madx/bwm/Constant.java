@@ -35,26 +35,6 @@ public class Constant {
     /**
      * for api
      */
-<<<<<<< HEAD
-//     public static String API_SERVER = "http://pt.bondwith.me";
-   public static String API_SERVER = "http://sc.bondwith.me";
-    public static String GET_MULTI_ORIGINALPHOTO = API_SERVER+"/bondwithme/index.php/api/multiPhoto";
-
-    public static String API_WALL_MAIN = API_SERVER+"/bondwithme/index.php/api/wall";
-    public static String API_WALL_DETAIL = API_SERVER+"/bondwithme/index.php/api/wall";
-    public static String API_WALL_LOVE = API_SERVER+"/bondwithme/index.php/api/love";
-    public static String API_WALL_TEXT_POST = API_SERVER+"/bondwithme/index.php/api/posts";
-    public static String API_WALL_PIC_POST = API_SERVER+"/bondwithme/index.php/api/uploadPhoto";
-    public static String API_WALL_COMMENT_TEXT_POST = API_SERVER+"/bondwithme/index.php/api/posts";
-    public static String API_WALL_COMMENT_PIC_POST = API_SERVER+"/bondwithme/index.php/api/uploadCommentPhoto";
-    public static String API_WALL_COMMENT_LIST = API_SERVER+"/bondwithme/index.php/api/comment";
-    public static String API_WALL_COMMENT_LOVE = API_SERVER+"/bondwithme/index.php/api/love_comment";
-    public static String API_WALL_COMMENT_DELETE = API_SERVER+"/bondwithme/index.php/api/comment/%s";
-    public static String API_WALL_DELETE = API_SERVER+"/bondwithme/index.php/api/removeContent/%s";
-
-    /***/
-    public static String API_REGIST_PUSH = API_SERVER+"/bondwithme/index.php/api/pushToken";
-=======
 //    public static final String API_SERVER = "http://pt.bondwith.me";
     public static final String API_SERVER = "http://sc.bondwith.me";
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER+"/bondwithme/index.php/api/multiPhoto";
@@ -73,7 +53,6 @@ public class Constant {
 
     public static final String API_REGIST_PUSH = API_SERVER+"/bondwithme/index.php/api/pushToken";
     public static final String UN_REGISTER_URL = API_SERVER+"/bondwithme/index.php/api/auth/%s";
->>>>>>> 046dad2dc00b0eb7018b31b3879ccee4c4622f43
 
     //event
     public static final String API_EVENT_MAIN = API_SERVER+"/bondwithme/index.php/api/event";

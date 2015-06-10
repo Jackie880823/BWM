@@ -483,6 +483,9 @@ public class GroupSettingActivity extends BaseActivity {
 
     //admin and addedflag = 0
     private void showAdminDialog0(final int position) {
+        if (position > userList.size()) {
+            return;
+        }
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin0, null);
 
