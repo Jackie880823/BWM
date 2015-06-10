@@ -80,7 +80,7 @@ public class MainActivity extends BaseActivity {
     private static boolean hasUpdate;
     private static MainActivity mainActivityInstance;
     private int jumpIndex;
-    public static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
+    public static String LAST_LEAVE_INDEX = "lastLeaveIndex";
     private int leavePagerIndex = 0;
 
     @Override
@@ -313,7 +313,7 @@ public class MainActivity extends BaseActivity {
 
         mViewPager.setOffscreenPageLimit(0);
 
-
+        LAST_LEAVE_INDEX = LAST_LEAVE_INDEX + getUser().getUser_id();
         leavePagerIndex = PreferencesUtil.getValue(this, LAST_LEAVE_INDEX, 0);
         jumpIndex = getIntent().getIntExtra("jumpIndex", -1);
         if (jumpIndex != -1) {

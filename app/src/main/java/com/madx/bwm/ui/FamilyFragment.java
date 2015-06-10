@@ -88,8 +88,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     public static final String FAMILY_CHILDREN = "children";
     public static final String FAMILY_SIBLING = "sibling";
     public static final String FAMILY_SPOUSE = "spouse";
-    public static final String FAMILY_MORE_MEMBER = "More";
-    public static final String FAMILY_HIDE_MEMBER = "Hide";
+    public static final String FAMILY_MORE_MEMBER = "Everyone";
+    public static final String FAMILY_HIDE_MEMBER = "MyFamily";
 
     private LinearLayout emptyGroupLinear;
     private LinearLayout emptyMemberLinear;
