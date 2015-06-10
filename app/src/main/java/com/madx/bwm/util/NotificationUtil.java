@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.madx.bwm.App;
+import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.ui.AlertEventActivity;
 import com.madx.bwm.ui.AlertGroupActivity;
@@ -91,6 +93,7 @@ public class NotificationUtil {
         mBuilder.setTicker("测试通知来啦");
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         getNotivficationManager(context).notify(GCM_MESSAGE, mBuilder.build());
+
     }
 
     /**
@@ -132,6 +135,7 @@ public class NotificationUtil {
         }
         mBuilder.setAutoCancel(true);
         getNotivficationManager(context).notify(msgType.ordinal(), mBuilder.build());
+
     }
 
 
@@ -255,29 +259,25 @@ public class NotificationUtil {
         JPushInterface.clearAllNotifications(context);
     }
 
-    private static final String UN_REGISTER_URL = "http://sc.bondwith.me/bondwithme/index.php/api/auth/%s";
 
-    public static void unRegisterPush(Context context){
+    public static void unRegisterPush(Context context,final String userId){
         if(App.getLoginedUser()!=null) {
-            new HttpTools(context).get(String.format(UN_REGISTER_URL, App.getLoginedUser().getUser_id()),null, new HttpCallback() {
+            RequestInfo requestInfo = new RequestInfo(String.format(Constant.UN_REGISTER_URL, userId),null);
+            new HttpTools(context).put(requestInfo, new HttpCallback() {
                 @Override
                 public void onStart() {
-
                 }
 
                 @Override
                 public void onFinish() {
-
                 }
 
                 @Override
                 public void onResult(String response) {
-
                 }
 
                 @Override
                 public void onError(Exception e) {
-
                 }
 
                 @Override

@@ -56,7 +56,16 @@ public class GcmIntentService extends IntentService {
 //                        Log.d("","nonononono");
 //                        return;
 //                    }
-                    NotificationUtil.sendNotification(this, extras,true);
+
+                    String from=extras.getString("from");
+                    if(from.equals("google.com/iid"))
+                    {
+                        //related to google ... DO NOT PERFORM ANY ACTION
+                    }
+                    else {
+                        //HANDLE THE RECEIVED NOTIFICATION
+                        NotificationUtil.sendNotification(this, extras,true);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
