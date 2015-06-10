@@ -325,6 +325,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         longitude = TextUtils.isEmpty(mEevent.getLoc_longitude()) ? -1000 : Double.valueOf(mEevent.getLoc_longitude());
     }
 
+    /**
+     * 移除重复的好友
+     * @param userList
+     */
     public static void removeDuplicate(List<UserEntity> userList) {
         for (int i = 0; i < userList.size() - 1; i++) {
             for (int j = userList.size() - 1; j > i; j--) {

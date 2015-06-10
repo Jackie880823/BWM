@@ -246,6 +246,23 @@ public class GroupSettingActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 移除重复的好友
+     * @param userList
+     */
+    public static void removeDuplicate(List<UserEntity> userList) {
+        for (int i = 0; i < userList.size() - 1; i++) {
+            for (int j = userList.size() - 1; j > i; j--) {
+                if (userList.get(j).getUser_id().equals(userList.get(i).getUser_id()) ||
+                        userList.get(j).getUser_id().equals(MainActivity.getUser().getUser_id())) {
+//                    Log.i("remove===",j+"");
+                    userList.remove(j);
+                }
+
+            }
+        }
+    }
+
     @Override
     public void requestData() {
 
@@ -283,6 +300,7 @@ public class GroupSettingActivity extends BaseActivity {
                     for (UserEntity user : userList) {
                         addMemberList.add(user.getUser_id());
                     }
+                    removeDuplicate(userList);
                     GroupSettingAdapter groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
                     lvMembers.setAdapter(groupSettingAdapter);
                     tvNumMembers.setText(userList.size() + getResources().getString(R.string.text_members));
