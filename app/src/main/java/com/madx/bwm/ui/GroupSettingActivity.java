@@ -482,6 +482,11 @@ public class GroupSettingActivity extends BaseActivity {
     }
 
     //admin and addedflag = 0
+
+    /**
+     * 删除会员
+     * @param position
+     */
     private void showAdminDialog0(final int position) {
         if (position > userList.size()) {
             return;
@@ -694,6 +699,9 @@ public class GroupSettingActivity extends BaseActivity {
         if (resultCode == this.RESULT_OK) {
             switch (requestCode) {
                 case GET_MEMBERS:
+                    if(addMemberList != null && addMemberList.size() > 0){
+                        addMemberList.clear();
+                    }
                     String members = data.getStringExtra("members_data");
                     groupData = data.getStringExtra("groups_data");
                     List<UserEntity> userEntityList = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
@@ -711,7 +719,7 @@ public class GroupSettingActivity extends BaseActivity {
                         groupEntityList = new GsonBuilder().create().fromJson(groupData, new TypeToken<ArrayList<FamilyGroupEntity>>() {
                         }.getType());
                     }
-                    if (groupEntityList != null && groupEntityList.size() > 0) {
+                    if (groupEntityList != null && groupEntityList.size() > 1) {
                         familyGroupEntityList.addAll(groupEntityList);
                         List<String> groupIdList = new ArrayList<>();
                         for (FamilyGroupEntity familyGroupEntity : groupEntityList) {
@@ -721,11 +729,14 @@ public class GroupSettingActivity extends BaseActivity {
                             memberList.addAll(addMemberList);
                         }
                         getSelectMembersList(new Gson().toJson(groupIdList));
-                    } else {
-                        if (addMemberList.size() > 0) {
-                            addGroupMember(gson.toJson(addMemberList));
-                        }
                     }
+
+                    if (addMemberList.size() > 0) {
+//                        removeDuplicate(userList);
+                            addGroupMember(gson.toJson(addMemberList));
+//                            getMembersList();
+                        }
+
                     break;
 
                 /** christopher begin */
