@@ -364,7 +364,7 @@ public class SignUpPhoneActivity extends BaseActivity {
                     params.put("condition", jsonParamsString);
                     String url = UrlUtil.generateUrl(Constant.API_VERIFY_CODE, params);
 
-                    new HttpTools(SignUpPhoneActivity.this).get(url, null, new HttpCallback() {
+                    new HttpTools(SignUpPhoneActivity.this).get(Constant.API_VERIFY_CODE, params, new HttpCallback() {
                         @Override
                         public void onStart() {
 
