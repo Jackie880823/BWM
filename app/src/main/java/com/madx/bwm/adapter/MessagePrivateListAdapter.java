@@ -118,6 +118,8 @@ public class MessagePrivateListAdapter extends BaseAdapter {
             viewHolder.lastMessage.setText(mContext.getString(R.string.text_message_chat_post_photo));
         }else if(PrivateMessageEntity.POST_LOCATION.equals(type)){
             viewHolder.lastMessage.setText(mContext.getString(R.string.text_message_chat_post_location));
+        }else{
+            viewHolder.lastMessage.setText("");
         }
         viewHolder.lastData.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, userEntity.getGroup_active_date()));
         return convertView;

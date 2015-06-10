@@ -83,7 +83,7 @@
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="@string/baidu_maps_key" />
+            android:value="@string/jackie_baidu_maps_key_debug" />
             <!--android:value="@string/baidu_maps_key_debug" />-->
 
         <service
@@ -150,7 +150,7 @@
         <activity
             android:name=".ui.wall.WallNewActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
             android:name=".ui.wall.WallMembersOrGroupsActivity"
             android:screenOrientation="portrait"
