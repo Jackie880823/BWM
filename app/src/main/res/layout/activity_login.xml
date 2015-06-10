@@ -128,7 +128,6 @@
                             android:imeOptions="actionNext"
                             android:textColor="#ffffff"/>
             </LinearLayout>
-        <!--android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789_-.@"-->
         <!--android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789"-->
 
             <LinearLayout
@@ -150,14 +149,12 @@
                             android:paddingLeft="16dp"
                             android:inputType="textPassword"
                             android:hint="@string/text_password"
-
                             android:textColorHint="#f0f0f0"
                             android:textCursorDrawable="@null"
                             android:textColor="#ffffff"
                             android:imeOptions="actionDone"
                             android:singleLine="true"
                             />
-                <!--android:digits="QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm0123456789"-->
 
             </LinearLayout>
         <LinearLayout
@@ -213,6 +210,6 @@
                 />
     </LinearLayout>
 
-
+    <include layout="@layout/progress_layout"/>
 
 </RelativeLayout>

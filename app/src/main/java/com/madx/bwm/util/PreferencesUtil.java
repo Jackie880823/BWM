@@ -11,7 +11,6 @@ import com.madx.bwm.Constant;
  */
 public class PreferencesUtil {
 
-    /** TODO 如下定义各种SharedPreferences保存数据函数 */
     /**
      * 保存SharedPreferences数据库中的整型值
      *
