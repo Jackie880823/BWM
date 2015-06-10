@@ -498,7 +498,9 @@ public class GroupSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo();
-
+                if (position > userList.size()) {
+                    showAdminDialog0.dismiss();
+                }
                 HashMap<String, String> jsonParams = new HashMap<String, String>();
                 jsonParams.put("user_id", userList.get(position).getUser_id());//MainActivity
                 final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
