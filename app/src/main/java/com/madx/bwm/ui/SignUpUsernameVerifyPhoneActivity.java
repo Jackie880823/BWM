@@ -292,7 +292,7 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
 
 
 
-                    new HttpTools(SignUpUsernameVerifyPhoneActivity.this).get(url, null, new HttpCallback() {
+                    new HttpTools(SignUpUsernameVerifyPhoneActivity.this).get(Constant.API_VERIFY_CODE, params, new HttpCallback() {
                         @Override
                         public void onStart() {
 

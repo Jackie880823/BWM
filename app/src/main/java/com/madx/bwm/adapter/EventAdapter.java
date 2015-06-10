@@ -2,6 +2,7 @@ package com.madx.bwm.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,6 +86,9 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.tvUserName.setTypeface(null, Typeface.BOLD);
                 item.icon_release_date.setVisibility(View.GONE);
                 item.tvReleaseDate.setVisibility(View.GONE);
+                item.top_event.setForeground(null);
+//                item.top_event.getForeground(R.style.CardViewCanceleStyle);
+
                 if(!"0".equals(ee.getGroup_new_post())){
                     this.position = position;
 //                    //去除背景和颜色
@@ -155,6 +159,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     class VHItem extends RecyclerView.ViewHolder {
+        CardView top_event;
         TextView tvTitle;
         TextView tvUserName;
         TextView tvReleaseDate;
@@ -171,7 +176,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             super(itemView);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_event_title);
             tvUserName = (TextView) itemView.findViewById(R.id.tv_user_name);
-
+            top_event = (CardView) itemView.findViewById(R.id.top_event);
             tvReleaseDate = (TextView) itemView.findViewById(R.id.tv_release_date);
             item_unenable = (TextView) itemView.findViewById(R.id.item_unenable);
             icon_release_date = (ImageView) itemView.findViewById(R.id.icon_release_date);

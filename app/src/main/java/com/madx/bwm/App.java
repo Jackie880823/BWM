@@ -62,11 +62,6 @@ public class App extends MultiDexApplication {
 
             changeLoginedUser(user);
 
-            Gson gson = new Gson();
-
-
-
-
         }
     }
 
@@ -74,9 +69,9 @@ public class App extends MultiDexApplication {
         if (tokenEntity != null) {
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Charset", "UTF-8");
-            headers.put("X_BWM_TOKEN ", tokenEntity.getUser_token());
-            headers.put("X_BWM_USERLOGINID ", user_login_id);
-            headers.put("X_BWM_DEVID ", AppInfoUtil.getDeviceUUID(appContext));
+            headers.put("X_BWM_TOKEN", tokenEntity.getUser_token());
+            headers.put("X_BWM_USERLOGINID", user_login_id);
+            headers.put("X_BWM_DEVID", AppInfoUtil.getDeviceUUID(appContext));
             HttpTools.initHeaders(headers);
             //how to use
 //            Map<String, String> headers = HttpTools.getHeaders();
@@ -100,6 +95,9 @@ public class App extends MultiDexApplication {
 
     public static void logout(Activity context) {
 
+
+        //反注册推送
+        NotificationUtil.unRegisterPush(context,user.getUser_id());
         user = null;
         if (context != null) {
             FileUtil.clearCache(context);
@@ -114,11 +112,8 @@ public class App extends MultiDexApplication {
             PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_REG_ID, "");
             PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_APP_VERSION, "");
             NotificationUtil.clearNotification(context);
-
             //默认tab
             PreferencesUtil.saveValue(context, "lastLeaveIndex", -1);
-            //反注册推送
-            NotificationUtil.unRegisterPush(context);
             context.finish();
         }
     }
