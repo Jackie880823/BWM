@@ -35,8 +35,8 @@ public class Constant {
     /**
      * for api
      */
-    public static String API_SERVER = "http://pt.bondwith.me";
-//    public static String API_SERVER = "http://sc.bondwith.me";
+//     public static String API_SERVER = "http://pt.bondwith.me";
+   public static String API_SERVER = "http://sc.bondwith.me";
     public static String GET_MULTI_ORIGINALPHOTO = API_SERVER+"/bondwithme/index.php/api/multiPhoto";
 
     public static String API_WALL_MAIN = API_SERVER+"/bondwithme/index.php/api/wall";
