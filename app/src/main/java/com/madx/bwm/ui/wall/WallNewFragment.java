@@ -664,13 +664,13 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     private void changeTab(final int tabIndex) {
         if(currentTabIndex == tabIndex) {
+            Log.i(TAG, "changeTab& return;");
             return;
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         BaseFragment fragment = null;
         if(tabIndex == WALL_TAB_WORD) {
             fragment = fragment1;
-
             if(translateAnimation1 == null) {
                 translateAnimation1 = new TranslateAnimation(ivCursor.getWidth(), 0, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
                 translateAnimation1.setFillAfter(true);
@@ -687,11 +687,22 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             }
             ivCursor.startAnimation(translateAnimation2);
         }
+
         fragmentTransaction.replace(R.id.wall_new_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commit();
         currentTabIndex = tabIndex;
+
+        Log.i(TAG, "changeTab& tabIndex = " + tabIndex);
+
+        if(tabIndex == WALL_TAB_WORD) {
+        Log.i(TAG, "changeTab& tabIndex = WALL_TAB_WORD");
+            // 切换至输入文字的Tab，输入框获取焦点并弹出键盘
+            fragment1.getEditText4Content().requestFocus();
+            InputMethodManager imm = (InputMethodManager) getParentActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     private int checkItemIndex = -1;
@@ -875,12 +886,12 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             popupwindow.dismiss();
             return;
         } else {
-            initmPopupWindowView();
+            initPopupWindowView();
             popupwindow.showAsDropDown(getViewById(R.id.option_bar), 0, 5);
         }
     }
 
-    public void initmPopupWindowView() {
+    public void initPopupWindowView() {
         // // 获取自定义布局文件pop.xml的视图
         View customView = getActivity().getLayoutInflater().inflate(R.layout.feeling_list, null, false);
         // 创建PopupWindow实例,200,150分别是宽度和高度
