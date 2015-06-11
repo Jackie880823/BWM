@@ -58,8 +58,8 @@ android {
 //        release {
 //            // 不显示Log
 //            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO 正式环境改false
-//            minifyEnabled false //TODO 正式环境改true
-//            zipAlignEnabled false //TODO 正式环境改true
+//            minifyEnabled true //TODO 正式环境改true
+//            zipAlignEnabled true //TODO 正式环境改true
 //            // 移除无用的resource文件
 //            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -153,4 +153,5 @@ dependencies {
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.j256.ormlite:ormlite-core:4.48'
+    compile 'com.android.support:recyclerview-v7:22.1.1'
 }

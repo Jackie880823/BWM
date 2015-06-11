@@ -267,11 +267,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         String ssssaa = latitude + "," + longitude;
         if(SystemUtil.checkPlayServices(context)) {
             Log.i("", "2locationType======" + locationType);
-<<<<<<< HEAD
-            if (LOCATION_TYPE_BD09LL.equals(locationType)) {
-=======
             if(LOCATION_TYPE_BD09LL.equals(locationType)) {
->>>>>>> d746a77f3ec008fa1e2f1ff71bc7c8d6c523fea3
                 return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
             } else {
                 Log.i("", "3locationType======" + locationType);
