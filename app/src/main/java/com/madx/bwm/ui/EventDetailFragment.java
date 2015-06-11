@@ -336,7 +336,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
                 @Override
                 public boolean execute(View v) {
-                    if(vProgress.getVisibility()==View.VISIBLE){
+                    if(vProgress.getVisibility()==View.VISIBLE || "2".equals(event.getGroup_event_status())){
                         return false;
                     }
                     /*
