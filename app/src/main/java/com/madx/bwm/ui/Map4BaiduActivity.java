@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -59,6 +58,7 @@ import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
+import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.SuggestAddressAdapter;
 import com.madx.bwm.util.LocationUtil;
@@ -155,9 +155,9 @@ public class Map4BaiduActivity extends BaseActivity implements
     private void setResult(String name, LatLng latLng) {
 //        if (target != null) {
         Intent intent = new Intent();
-        intent.putExtra("location_name", name);
-        intent.putExtra("latitude", latLng.latitude);
-        intent.putExtra("longitude", latLng.longitude);
+        intent.putExtra(Constant.EXTRA_LOCATION_NAME, name);
+        intent.putExtra(Constant.EXTRA_LATITUDE, latLng.latitude);
+        intent.putExtra(Constant.EXTRA_LONGITUDE, latLng.longitude);
         intent.putExtra("loc_type", LocationUtil.LOCATION_TYPE_BD09LL);
         setResult(RESULT_OK, intent);
 //        }
@@ -327,10 +327,10 @@ public class Map4BaiduActivity extends BaseActivity implements
                 center2myLoc(false);
             }
         });
-        if (!TextUtils.isEmpty(intent.getStringExtra("location_name"))) {
+        if (!TextUtils.isEmpty(intent.getStringExtra(Constant.EXTRA_LOCATION_NAME))) {
             hasSetLocation = true;
-            LatLng latLng = new LatLng(intent.getDoubleExtra("latitude", 0), intent.getDoubleExtra("longitude", 0));
-            location_name = intent.getStringExtra("location_name");
+            LatLng latLng = new LatLng(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
+            location_name = intent.getStringExtra(Constant.EXTRA_LOCATION_NAME);
             center2myLoc(latLng,true);
             addTarget(latLng, location_name);
         }
@@ -355,25 +355,25 @@ public class Map4BaiduActivity extends BaseActivity implements
                 .fromResource(R.drawable.icon_map_marker);
         OverlayOptions ooA = new MarkerOptions().position(latLng).icon(bd).title(title).zIndex(4);
         mBaiduMap.addOverlay(ooA);
-        addInfoWindow(latLng, title, address);
+        addInfoWindow(latLng, title, address, 60);
     }
 
     int indexCount;
 
-    private InfoWindow addInfoWindow(final LatLng latLng, final String name, String address) {
+    private InfoWindow addInfoWindow(final LatLng latLng, final String name, String address, int y) {
         if(latLng==null){
             return null;
         }
         if (mBaiduMap != null && mBaiduMap.getProjection() != null) {
 
             Point p = mBaiduMap.getProjection().toScreenLocation(latLng);
-            p.y -= 60;
+            p.y -= y;
             LatLng llInfo = mBaiduMap.getProjection().fromScreenLocation(p);
 
             LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
 
             View view = inflater.inflate(R.layout.layout_map_info_item, null);
-            final TextView marker_title = (TextView) view.findViewById(R.id.marker_title);
+            TextView marker_title = (TextView) view.findViewById(R.id.marker_title);
             marker_title.setText(name);
             TextView marker_address = (TextView) view.findViewById(R.id.marker_address);
             marker_address.setText(address);
@@ -414,8 +414,8 @@ public class Map4BaiduActivity extends BaseActivity implements
                 Bundle bundle = new Bundle();
                 bundle.putString("name", arg0.getAddress());
                 bundle.putString("address", arg0.getAddress());
-                bundle.putDouble("latitude", arg0.getLocation().latitude);
-                bundle.putDouble("longitude", arg0.getLocation().longitude);
+                bundle.putDouble(Constant.EXTRA_LATITUDE, arg0.getLocation().latitude);
+                bundle.putDouble(Constant.EXTRA_LONGITUDE, arg0.getLocation().longitude);
                 message.setData(bundle);
                 mHandler.sendMessage(message);
             }
@@ -436,8 +436,8 @@ public class Map4BaiduActivity extends BaseActivity implements
                 case ADD_MARKER:
                         Bundle bundle = msg.getData();
                     if(bundle!=null) {
-//                        addTarget(new LatLng(bundle.getDouble("latitude", 0), bundle.getDouble("longitude", 0)), msg.obj.toString());
-                        LatLng latLng = new LatLng(bundle.getDouble("latitude", 0), bundle.getDouble("longitude", 0));
+//                        addTarget(new LatLng(bundle.getDouble(Constant.EXTRA_LATITUDE, 0), bundle.getDouble(Constant.EXTRA_LONGITUDE, 0)), msg.obj.toString());
+                        LatLng latLng = new LatLng(bundle.getDouble(Constant.EXTRA_LATITUDE, 0), bundle.getDouble(Constant.EXTRA_LONGITUDE, 0));
                         PoiInfo poiInfo = new PoiInfo();
                         poiInfo.location = latLng;
                         poiInfo.name = bundle.getString("name");
@@ -539,7 +539,6 @@ public class Map4BaiduActivity extends BaseActivity implements
     }
 
 
-    PopupWindow popupwindow;
     private LinearLayoutManager llm;
 
 
@@ -629,13 +628,20 @@ public class Map4BaiduActivity extends BaseActivity implements
             addTarget(target.getPosition(),location_name);
         }
 
+        String name = reverseGeoCodeResult.getAddress();
+        String address = reverseGeoCodeResult.getAddress();
+        double latitude = reverseGeoCodeResult.getLocation().latitude;
+        double longitude = reverseGeoCodeResult.getLocation().longitude;
+        LatLng latLng = new LatLng(latitude, longitude);
+        addInfoWindow(latLng, name, address, -10);
+
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 if(poiInfos!=null) {
                     for (PoiInfo poiInfo:poiInfos) {
                         if(poiInfo.location.latitude==marker.getPosition().latitude&&poiInfo.location.longitude==marker.getPosition().longitude){
-                            addInfoWindow(poiInfo.location, poiInfo.name, poiInfo.address);
+                            addInfoWindow(poiInfo.location, poiInfo.name, poiInfo.address, 60);
                             break;
                         }
                     }
@@ -711,6 +717,7 @@ public class Map4BaiduActivity extends BaseActivity implements
      * 移动到目标为中心的地点
      *
      * @param latLng
+     * @param searchNearby
      */
     private void center2myLoc(LatLng latLng, boolean searchNearby) {
         if (latLng == null) {
@@ -727,7 +734,6 @@ public class Map4BaiduActivity extends BaseActivity implements
 //            mBaiduMap.animateMapStatus(u);
 //            mBaiduMap.setMapStatus(u);
 //        }
-
     }
 
 
@@ -742,7 +748,7 @@ public class Map4BaiduActivity extends BaseActivity implements
             super.onPoiClick(index);
             try {
                 PoiInfo poi = getPoiResult().getAllPoi().get(index);
-                addInfoWindow(poi.location, poi.name, poi.address);
+                addInfoWindow(poi.location, poi.name, poi.address, 60);
 
                 // if (poi.hasCaterDetails) {
 //                mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())

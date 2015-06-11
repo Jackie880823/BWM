@@ -168,11 +168,14 @@ public class EventDetailActivity extends BaseActivity {
             @Override
             public void onResult(String response) {
                 event = new Gson().fromJson(response, EventEntity.class);
-
                 if (isCurrentUser()) {
                     rightButton.setImageResource(R.drawable.btn_edit);
                     rightButton.setVisibility(View.VISIBLE);
                     if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date()).getTime()))) {
+                        rightButton.setImageResource(R.drawable.icon_edit_press);
+                        rightButton.setEnabled(false);
+                    }
+                    if("2".equals(event.getGroup_event_status())){
                         rightButton.setImageResource(R.drawable.icon_edit_press);
                         rightButton.setEnabled(false);
                     }

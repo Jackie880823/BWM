@@ -22,7 +22,8 @@
             android:textColorHint="#ccc"
             android:background="@drawable/et_oval_white"
             android:drawablePadding="@dimen/default_view_margin"
-            android:drawableRight="@drawable/search" />
+            android:drawableRight="@drawable/search"
+            android:digits="0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
     </LinearLayout>
 
     <LinearLayout

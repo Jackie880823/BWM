@@ -14,7 +14,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bbbar"
+        android:id="@+id/search_layout_bar"
         android:layout_below="@+id/fragment_main_top"
         android:paddingLeft="@dimen/default_content_padding"
         android:paddingRight="@dimen/default_content_padding"
@@ -51,7 +51,7 @@
         android:id="@+id/address_suggest_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bbbar"
+        android:layout_below="@+id/search_layout_bar"
         android:background="@color/default_text_color_while"
         android:visibility="gone"
         >
@@ -59,7 +59,7 @@
     </android.support.v7.widget.RecyclerView>
 
     <fragment
-        android:layout_below="@+id/bbbar"
+        android:layout_below="@+id/search_layout_bar"
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
