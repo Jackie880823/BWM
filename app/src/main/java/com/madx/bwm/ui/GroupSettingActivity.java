@@ -248,6 +248,7 @@ public class GroupSettingActivity extends BaseActivity {
 
     /**
      * 移除重复的好友
+     *
      * @param userList
      */
     public static void removeDuplicate(List<UserEntity> userList) {
@@ -400,11 +401,14 @@ public class GroupSettingActivity extends BaseActivity {
 
     //admin and addedflag = 1
     private void showAdminDialog1(final int position) {
+        if (showAdminDialog1 != null&&showAdminDialog1.isShowing()) {
+            return;
+        }
+
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin1, null);
 
         showAdminDialog1 = new MyDialog(this, null, selectIntention);
-
         TextView tvRemoveUser = (TextView) selectIntention.findViewById(R.id.tv_remove_user);
         TextView tvFamilyProfile = (TextView) selectIntention.findViewById(R.id.tv_family_profile);
         TextView tvMessage = (TextView) selectIntention.findViewById(R.id.tv_message);
@@ -496,7 +500,7 @@ public class GroupSettingActivity extends BaseActivity {
                 showAdminDialog1.dismiss();
             }
         });
-        if(!showAdminDialog1.isShowing())
+        if (!showAdminDialog1.isShowing())
             showAdminDialog1.show();
     }
 
@@ -504,9 +508,13 @@ public class GroupSettingActivity extends BaseActivity {
 
     /**
      * 删除会员
+     *
      * @param position
      */
     private void showAdminDialog0(final int position) {
+        if (showAdminDialog0 != null&&showAdminDialog0.isShowing()) {
+            return;
+        }
         if (position > userList.size()) {
             return;
         }
@@ -585,11 +593,14 @@ public class GroupSettingActivity extends BaseActivity {
                 getMemberType(position);
             }
         });
-        if(!showAdminDialog0.isShowing())
+        if (!showAdminDialog0.isShowing())
             showAdminDialog0.show();
     }
 
     private void showNonAdminDialog1(final int position) {
+        if (showNonAdminDialog1 != null&&showNonAdminDialog1.isShowing()) {
+            return;
+        }
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_non_admin1, null);
 
@@ -620,12 +631,15 @@ public class GroupSettingActivity extends BaseActivity {
                 showNonAdminDialog1.dismiss();
             }
         });
-        if(!showNonAdminDialog1.isShowing())
+        if (!showNonAdminDialog1.isShowing())
             showNonAdminDialog1.show();
     }
 
     //non admin and addedflag = 0
     private void showNonAdminDialog0(final int position) {
+        if (showNonAdminDialog0 != null&&showNonAdminDialog0.isShowing()) {
+            return;
+        }
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_non_admin0, null);
         showNonAdminDialog0 = new MyDialog(this, null, selectIntention);
@@ -637,7 +651,7 @@ public class GroupSettingActivity extends BaseActivity {
                 getMemberType(position);
             }
         });
-        if(!showNonAdminDialog0.isShowing())
+        if (!showNonAdminDialog0.isShowing())
             showNonAdminDialog0.show();
     }
 
@@ -720,7 +734,7 @@ public class GroupSettingActivity extends BaseActivity {
         if (resultCode == this.RESULT_OK) {
             switch (requestCode) {
                 case GET_MEMBERS:
-                    if(addMemberList != null && addMemberList.size() > 0){
+                    if (addMemberList != null && addMemberList.size() > 0) {
                         addMemberList.clear();
                     }
                     String members = data.getStringExtra("members_data");
@@ -754,9 +768,9 @@ public class GroupSettingActivity extends BaseActivity {
 
                     if (addMemberList.size() > 0) {
 //                        removeDuplicate(userList);
-                            addGroupMember(gson.toJson(addMemberList));
+                        addGroupMember(gson.toJson(addMemberList));
 //                            getMembersList();
-                        }
+                    }
 
                     break;
 
