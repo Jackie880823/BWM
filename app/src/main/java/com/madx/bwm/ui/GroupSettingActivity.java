@@ -118,7 +118,7 @@ public class GroupSettingActivity extends BaseActivity {
         Intent intent = new Intent(GroupSettingActivity.this, InviteMemberActivity.class);
         intent.putExtra("type", 1);
         intent.putExtra("members_data", new Gson().toJson(userList));
-        intent.putExtra("groups_data", new Gson().toJson(familyGroupEntityList));
+        intent.putExtra("groups_data", "");
         startActivityForResult(intent, GET_MEMBERS);
     }
 
