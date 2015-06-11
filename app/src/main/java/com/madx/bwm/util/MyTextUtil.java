@@ -22,4 +22,23 @@ public class MyTextUtil {
             return false;
         }
     }
+
+
+    /**
+     *
+     * @param phone
+     * @return
+     */
+    public static String NoZero(String phone)
+    {
+
+        if (phone.startsWith("0", 0))
+        {
+            phone = phone.substring(1);
+            return NoZero(phone);
+        } else {
+            return phone;
+        }
+
+    }
 }

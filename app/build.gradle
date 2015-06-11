@@ -37,7 +37,7 @@ android {
 //            // No debug config
 //        }
 //        release {
-//            storeFile file("/Users/wing/Desktop/bwm.key")
+//            storeFile file(KEY_FILE_PATH)
 //            storePassword KEYSTORE_PASSWORD
 //            keyAlias "cn"
 //            keyPassword KEY_PASSWORD
