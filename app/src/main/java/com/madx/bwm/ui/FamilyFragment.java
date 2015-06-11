@@ -709,6 +709,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         tvAddNewMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //打开添加成员界面
                 startActivity(new Intent(getActivity(), AddNewMembersActivity.class));
                 showSelectDialog.dismiss();
             }

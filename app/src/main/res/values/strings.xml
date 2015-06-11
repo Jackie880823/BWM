@@ -64,7 +64,8 @@
     <string name="text_going">Joined</string>
     <string name="text_maybe">Maybe</string>
     <string name="text_not_going">Declined</string>
-    <string name="text_add">Send</string>
+    <string name="text_sened">Send</string>
+    <string name="text_add">Add</string>
     <string name="text_added">Added</string>
     <string name="text_updated">Updated</string>
     <string name="text_awaiting">Awaiting</string>
