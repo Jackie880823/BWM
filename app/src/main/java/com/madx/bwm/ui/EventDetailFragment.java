@@ -336,7 +336,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
                 @Override
                 public boolean execute(View v) {
-
+                    if(vProgress.getVisibility()==View.VISIBLE){
+                        return false;
+                    }
                     /*
                     if("2".equals(event.getGroup_event_status())){
                         return false;
@@ -546,8 +548,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         }
         switch (status) {
             case not_re:
-                if(event_options.getVisibility() == View.GONE) {
-                    event_options.setVisibility(View.VISIBLE);
+                if(!MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())){
+                    if(event_options.getVisibility() == View.GONE) {
+                        event_options.setVisibility(View.VISIBLE);
+                    }
                 }
                 break;
             case go:
@@ -561,8 +565,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 option_going.setImageResource(R.drawable.status_going_normal);
                 option_maybe.setImageResource(R.drawable.status_maybe_press);
                 option_no_going.setImageResource(R.drawable.status_not_going_normal);
-                if(event_options.getVisibility() == View.GONE) {
-                    event_options.setVisibility(View.VISIBLE);
+                if(!MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())){
+                    if(event_options.getVisibility() == View.GONE) {
+                        event_options.setVisibility(View.VISIBLE);
+                    }
                 }
                 break;
             case not_go:
