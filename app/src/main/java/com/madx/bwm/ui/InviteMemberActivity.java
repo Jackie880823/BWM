@@ -90,6 +90,7 @@ public class InviteMemberActivity extends BaseActivity {
     private String GroupSearch;
 
     List<FamilyMemberEntity> memberList;
+    List<FamilyGroupEntity> groupList;
 
     Handler handler = new Handler() {
         @Override
@@ -130,7 +131,7 @@ public class InviteMemberActivity extends BaseActivity {
                     groupEntityList = map.get("group");
                     if (groupEntityList != null) {
                         if (groupType == 1) {
-                            List<FamilyGroupEntity> groupList = new ArrayList<>();
+                            groupList = new ArrayList<>();
                             for (FamilyGroupEntity groupEntity : groupEntityList) {
                                 if (!selectGroupList.contains(groupEntity.getGroup_id())) {
                                     groupList.add(groupEntity);
@@ -227,6 +228,7 @@ public class InviteMemberActivity extends BaseActivity {
                 String etImport = etSearch.getText().toString();
                 if(TextUtils.isEmpty(etImport)){
                     memberAdapter.addNewData(memberList);
+                    groupAdapter.addData(groupList);
                 }else {
                     setSearchData(etImport);
                 }
@@ -763,12 +765,12 @@ public class InviteMemberActivity extends BaseActivity {
                 pager.setCurrentItem(0);
 //                setSearchData(MemeberSearch);
 //                memberList
-                memberAdapter.addNewData(memberList);
+//                memberAdapter.addNewData(memberList);
                 break;
             case R.id.message_group_tv:
                 pager.setCurrentItem(1);
 //                setSearchData(GroupSearch);
-                memberAdapter.addNewData(memberList);
+//                memberAdapter.addNewData(memberList);
                 break;
         }
     }
