@@ -86,6 +86,11 @@ public class InviteMemberActivity extends BaseActivity {
     private boolean isCreateNewGroup;
     private int jumpIndex = 0;
 
+    private String MemeberSearch;
+    private String GroupSearch;
+
+    List<FamilyMemberEntity> memberList;
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -99,7 +104,7 @@ public class InviteMemberActivity extends BaseActivity {
                     memberEntityList = map.get("private");
                     if (memberEntityList != null) {
                         if (type == 1) {
-                            List<FamilyMemberEntity> memberList = new ArrayList<>();
+                            memberList = new ArrayList<>();
                             for (FamilyMemberEntity memberEntity : memberEntityList) {
                                 if (!selectMemberList.contains(memberEntity.getUser_id())) {
                                     memberList.add(memberEntity);
@@ -220,13 +225,19 @@ public class InviteMemberActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String etImport = etSearch.getText().toString();
-                setSearchData(etImport);
+                if(TextUtils.isEmpty(etImport)){
+                    memberAdapter.addNewData(memberList);
+                }else {
+                    setSearchData(etImport);
+                }
             }
         });
     }
 
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
+        MemeberSearch = PinYin4JUtil.getPinyinWithMark(searchData);
+        GroupSearch = PinYin4JUtil.getPinyinWithMark(searchData);
         if (pager.getCurrentItem() == 0) {
             List<FamilyMemberEntity> familyMemberEntityList;
             if (TextUtils.isEmpty(etImport)) {
@@ -234,7 +245,8 @@ public class InviteMemberActivity extends BaseActivity {
             } else {
                 familyMemberEntityList = searchMemberList(etImport, memberEntityList);
             }
-            memberAdapter.addNewData(familyMemberEntityList);
+                memberAdapter.addNewData(familyMemberEntityList);
+
         } else {
             List<FamilyGroupEntity> familyGroupEntityList;
             if (TextUtils.isEmpty(etImport)) {
@@ -242,6 +254,7 @@ public class InviteMemberActivity extends BaseActivity {
             } else {
                 familyGroupEntityList = searchGroupList(etImport, groupEntityList);
             }
+            //刷新适配器数据
             groupAdapter.addData(familyGroupEntityList);
         }
     }
@@ -748,9 +761,14 @@ public class InviteMemberActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.message_member_tv:
                 pager.setCurrentItem(0);
+//                setSearchData(MemeberSearch);
+//                memberList
+                memberAdapter.addNewData(memberList);
                 break;
             case R.id.message_group_tv:
                 pager.setCurrentItem(1);
+//                setSearchData(GroupSearch);
+                memberAdapter.addNewData(memberList);
                 break;
         }
     }

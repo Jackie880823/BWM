@@ -499,12 +499,12 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 //                            }
 //
 //                        }else {
-                            String locationName = data.getStringExtra("location_name");
+                            String locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
                             if (!TextUtils.isEmpty(locationName)) {
                                 position_name.setText(locationName);
                                 mEevent.setLoc_name(locationName);
-                                latitude = data.getDoubleExtra("latitude", 0);
-                                longitude = data.getDoubleExtra("longitude", 0);
+                                latitude = data.getDoubleExtra(Constant.EXTRA_LATITUDE, 0);
+                                longitude = data.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0);
                             } else {
                                 position_name.setText(null);
                                 latitude = -1000;

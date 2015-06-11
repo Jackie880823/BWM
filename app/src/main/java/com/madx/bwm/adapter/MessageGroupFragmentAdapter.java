@@ -108,6 +108,8 @@ public class MessageGroupFragmentAdapter extends BaseAdapter {
             viewHolder.lastMessageContent.setText(mContext.getString(R.string.text_message_chat_post_photo));
         } else if (PrivateMessageEntity.POST_LOCATION.equals(type)) {
             viewHolder.lastMessageContent.setText(mContext.getString(R.string.text_message_chat_post_location));
+        }else{
+            viewHolder.lastMessageContent.setText("");
         }
         viewHolder.lastMessageName.setText(groupEntity.getMember_name());
         int noReadNews = 0;

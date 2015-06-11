@@ -202,4 +202,18 @@ public class Constant {
     public static final String API_GET_CHAT_MESSAGE_LIST = API_SERVER+"/bondwithme/index.php/api/messages/%s/type/%s";//获取消息成员列表
     public static final String API_GET_YEAR_ALBUM_LIST = API_SERVER+"/bondwithme/index.php/api/userAlbum";//获取my album一年的所有列表
     public static final String API_GET_MONTH_ALBUM_LIST = API_SERVER+"/bondwithme/index.php/api/userAlbumByMonth";//获取my album哪个月的所有列表
+
+    // Intent传递数据时的鍵
+    /**
+     *  地址名称
+     */
+    public static final String EXTRA_LOCATION_NAME = "location_name";
+    /**
+     * 地址纬度
+     */
+    public static final String EXTRA_LATITUDE = "latitude";
+    /**
+     * 地址经度
+     */
+    public static final String EXTRA_LONGITUDE   = "longitude";
 }

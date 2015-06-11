@@ -98,11 +98,11 @@ public class MyFamilyAdapter extends BaseAdapter {
             VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, null, R.drawable.family_tree, R.drawable.family_tree);
         } else if (FamilyFragment.FAMILY_MORE_MEMBER.equals(userId)) {
             viewHolder.textName.setText(familyMemberEntity.getUser_given_name());
-            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, null, R.drawable.family_tree, R.drawable.family_tree);
+            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, null, R.drawable.everyone_icon, R.drawable.family_tree);
 
         } else if (FamilyFragment.FAMILY_HIDE_MEMBER.equals(userId)) {
             viewHolder.textName.setText(familyMemberEntity.getUser_given_name());
-            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, null, R.drawable.family_tree, R.drawable.family_tree);
+            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, null, R.drawable.my_family, R.drawable.family_tree);
         } else {
             viewHolder.textName.setText(familyMemberEntity.getUser_given_name());
             VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile,

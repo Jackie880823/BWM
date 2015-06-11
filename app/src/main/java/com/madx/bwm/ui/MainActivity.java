@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     //以下为暂定全局变量
     private boolean hasUpdate;
     private int jumpIndex;
-    public static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
+    public static String LAST_LEAVE_INDEX = "lastLeaveIndex";
     private int leavePagerIndex = 0;
     private View red_point_1;
     private View red_point_2;
@@ -341,7 +341,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         mViewPager.setOffscreenPageLimit(0);
 
-
+        LAST_LEAVE_INDEX = LAST_LEAVE_INDEX + getUser().getUser_id();
         leavePagerIndex = PreferencesUtil.getValue(this, LAST_LEAVE_INDEX, 0);
         jumpIndex = getIntent().getIntExtra("jumpIndex", -1);
         if (jumpIndex != -1) {
