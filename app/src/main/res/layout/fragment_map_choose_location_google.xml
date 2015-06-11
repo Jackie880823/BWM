@@ -14,7 +14,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/bbbar"
+        android:id="@+id/search_layout_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/fragment_main_top"
@@ -51,7 +51,7 @@
         android:id="@+id/map_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/bbbar"
+        android:layout_below="@+id/search_layout_bar"
         >
     <fragment
         android:id="@+id/map"

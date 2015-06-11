@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.PlaceAutocompleteAdapter;
 import com.madx.bwm.db.PlacesDisplayTask;
@@ -57,6 +58,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLocationButtonClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener {
+
+    private static final String TAG = Map4GoogleActivity.class.getSimpleName();
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager lm = null;
@@ -127,9 +130,9 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
     private void setResult(String name, LatLng latLng) {
         Intent intent = new Intent();
-        intent.putExtra("location_name", name);
-        intent.putExtra("latitude", latLng.latitude);
-        intent.putExtra("longitude", latLng.longitude);
+        intent.putExtra(Constant.EXTRA_LOCATION_NAME, name);
+        intent.putExtra(Constant.EXTRA_LATITUDE, latLng.latitude);
+        intent.putExtra(Constant.EXTRA_LONGITUDE, latLng.longitude);
         setResult(RESULT_OK, intent);
     }
 
@@ -289,12 +292,12 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
-            public View getInfoWindow(final Marker marker) {
+            public View getInfoWindow(Marker marker) {
                 return null;
             }
 
             @Override
-            public View getInfoContents(final Marker marker) {
+            public View getInfoContents(Marker marker) {
                 infoTitle.setText(marker.getTitle());
                 infoSnippet.setText(marker.getSnippet());
                 infoButtonListener.setMarker(marker);
@@ -309,8 +312,12 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
         Intent intent = getIntent();
 //        if (intent.getBooleanExtra("has_location", false)) {
-        if (!TextUtils.isEmpty(intent.getStringExtra("location_name"))) {
-            setUpMapIfNeededWithLocation(intent.getDoubleExtra("latitude", 0), intent.getDoubleExtra("longitude", 0));
+        String locationName = intent.getStringExtra(Constant.EXTRA_LOCATION_NAME);
+        Log.i(TAG, "initView& locationName: " + locationName);
+
+        if (!TextUtils.isEmpty(locationName)) {
+
+            setUpMapIfNeededWithLocation(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
 
         } else {
             setUpMapIfNeededNoLocation();
@@ -440,7 +447,6 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         LatLng latLng = new LatLng(latitude, longitude);
 //        addMarker(latLng);
         center2Location(latLng);
-        new Thread(new GetAddressRunnable(latLng.latitude, latLng.longitude)).start();
 
 //        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng
 //                , 14);
@@ -512,7 +518,6 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
             } else {
                 setMyLocation(latitude, longitude);
                 center2Location(myLocation);
-                addTarget(myLocation);
 //                    setUpMap(latitude, longitude);
             }
 
@@ -533,7 +538,8 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(location
                 , 14);
         mMap.animateCamera(cameraUpdate);
-
+        addTarget(location);
+        new Thread(new GetAddressRunnable(location.latitude, location.longitude)).start();
     }
 
     private String POSITION_GETTING = "地址正在加载...";
@@ -622,9 +628,9 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         public void run() {
             String addressName = "";
             long beginTime = System.currentTimeMillis();
-            long lastTime = System.currentTimeMillis();
+            long lastTime = beginTime;
             //wait 10 second
-            while (true && lastTime - beginTime < 10 * 1000) {
+            while (lastTime - beginTime < 10 * 1000) {
                 addressName = LocationUtil.getLocationAddress(getApplicationContext(), latitude, longitude);
                 if (!"".equals(addressName)) {
                     break;
@@ -676,7 +682,6 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 //        target.setTitle(getString(R.string.text_destination));
         target.setSnippet("");
         target.setDraggable(true);
-        new Thread(new GetAddressRunnable(latLng.latitude, latLng.longitude)).start();
     }
 
     private Marker addMarker(LatLng latLng, String title, String snippet) {
