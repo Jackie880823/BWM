@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -74,7 +73,6 @@ public class LoginActivity extends Activity {
         if (SystemUtil.checkPlayServices(this)) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(this);
-            Log.i("","1regid============="+regid);
             if (TextUtils.isEmpty(regid)) {
                 isGCM = true;
                 registerInBackground();
@@ -82,7 +80,6 @@ public class LoginActivity extends Activity {
         } else {
             JPushInterface.init(LoginActivity.this);
             regid = AppInfoUtil.getJpushRegistrationId(this);
-            Log.i("","2regid============="+regid);
             if (TextUtils.isEmpty(regid)) {
                 isGCM = false;
                 registerInBackground();

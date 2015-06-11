@@ -30,7 +30,6 @@
                 android:layout_height="25dp"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/tab_family"
-
                 />
 
             <TextView
@@ -40,6 +39,16 @@
                 android:text="@string/title_tab_my_family" />
 
         </LinearLayout>
+        <TextView
+            android:id="@+id/red_point_1"
+            android:layout_alignParentRight="true"
+            style="@style/RedPoint"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginRight="@dimen/default_text_padding"
+            android:layout_marginTop="@dimen/default_text_padding"
+            android:visibility="gone"
+            />
 
     </RelativeLayout>
 
@@ -75,10 +84,20 @@
                 style="@style/text_default"
                 android:text="@string/title_tab_chat"
                 android:layout_gravity="center_horizontal"
-
                 />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/red_point_2"
+            android:layout_alignParentRight="true"
+            style="@style/RedPoint"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginRight="@dimen/default_text_padding"
+            android:layout_marginTop="@dimen/default_text_padding"
+            android:visibility="gone"
+            />
 
     </RelativeLayout>
 
@@ -115,6 +134,17 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/red_point_3"
+            android:layout_alignParentRight="true"
+            style="@style/RedPoint"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginRight="@dimen/default_text_padding"
+            android:layout_marginTop="@dimen/default_text_padding"
+            android:visibility="gone"
+            />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -149,6 +179,16 @@
                 android:text="@string/title_tab_event" />
 
         </LinearLayout>
+        <TextView
+            android:id="@+id/red_point_4"
+            android:layout_alignParentRight="true"
+            style="@style/RedPoint"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginRight="@dimen/default_text_padding"
+            android:layout_marginTop="@dimen/default_text_padding"
+            android:visibility="gone"
+            />
 
     </RelativeLayout>
 
@@ -187,6 +227,16 @@
                 android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
+        <TextView
+            android:id="@+id/red_point_5"
+            android:layout_alignParentRight="true"
+            style="@style/RedPoint"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginRight="@dimen/default_text_padding"
+            android:layout_marginTop="@dimen/default_text_padding"
+            android:visibility="gone"
+            />
 
     </RelativeLayout>
 

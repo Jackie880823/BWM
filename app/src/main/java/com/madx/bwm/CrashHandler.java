@@ -5,8 +5,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.SystemUtil;
 
 import java.io.File;
@@ -81,6 +81,14 @@ public class CrashHandler implements UncaughtExceptionHandler {
             //退出程序
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);
+
+//            Intent intent = new Intent(mContext, SSSActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//            mContext.startActivity(intent);
+
+//            android.os.Process.killProcess(android.os.Process.myPid());
+//            System.exit(0);
+
         }
     }
 
@@ -99,7 +107,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             @Override
             public void run() {
                 Looper.prepare();
-                Toast.makeText(mContext, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_LONG).show();
+                MessageUtil.showMessage(mContext, "很抱歉,程序出现异常,即将退出.");
                 Looper.loop();
             }
         }.start();

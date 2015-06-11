@@ -325,6 +325,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         longitude = TextUtils.isEmpty(mEevent.getLoc_longitude()) ? -1000 : Double.valueOf(mEevent.getLoc_longitude());
     }
 
+    /**
+     * 移除重复的好友
+     * @param userList
+     */
     public static void removeDuplicate(List<UserEntity> userList) {
         for (int i = 0; i < userList.size() - 1; i++) {
             for (int j = userList.size() - 1; j > i; j--) {
@@ -760,12 +764,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //                            }
 //
 //                        }else {
-                            String locationName = data.getStringExtra("location_name");
+                            String locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
                             if (!TextUtils.isEmpty(locationName)) {
                                 position_name.setText(locationName);
                                 mEevent.setLoc_name(locationName);
-                                latitude = data.getDoubleExtra("latitude", 0);
-                                longitude = data.getDoubleExtra("longitude", 0);
+                                latitude = data.getDoubleExtra(Constant.EXTRA_LATITUDE, 0);
+                                longitude = data.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0);
                             } else {
                                 position_name.setText(null);
                                 latitude = -1000;

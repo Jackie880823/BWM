@@ -99,6 +99,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private TextView emptyMemberTv;
     private View vProgress;
 
+    private String MemeberSearch;
+    private String GroupSearch;
+
     public static FamilyFragment newInstance(String... params) {
         return createInstance(new FamilyFragment(), params);
     }
@@ -220,21 +223,23 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     }
 
     private void setSearchData(String searchData) {
-        String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
+//        String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
+        MemeberSearch = PinYin4JUtil.getPinyinWithMark(searchData);
+        GroupSearch = PinYin4JUtil.getPinyinWithMark(searchData);
         if (pager.getCurrentItem() == 0) {
             List<FamilyMemberEntity> familyMemberEntityList;
-            if (TextUtils.isEmpty(etImport)) {
+            if (TextUtils.isEmpty(MemeberSearch)) {
                 familyMemberEntityList = memberList;
             } else {
-                familyMemberEntityList = searchMemberList(etImport, memberEntityList);
+                familyMemberEntityList = searchMemberList(MemeberSearch, memberEntityList);
             }
             memberAdapter.addNewData(familyMemberEntityList);
         } else {
             List<FamilyGroupEntity> familyGroupEntityList;
-            if (TextUtils.isEmpty(etImport)) {
+            if (TextUtils.isEmpty(GroupSearch)) {
                 familyGroupEntityList = groupEntityList;
             } else {
-                familyGroupEntityList = searchGroupList(etImport, groupEntityList);
+                familyGroupEntityList = searchGroupList(GroupSearch, groupEntityList);
             }
             groupAdapter.addData(familyGroupEntityList);
         }
@@ -893,9 +898,11 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         switch (v.getId()) {
             case R.id.message_member_tv:
                 pager.setCurrentItem(0);
+                setSearchData(null);
                 break;
             case R.id.message_group_tv:
                 pager.setCurrentItem(1);
+                setSearchData(null);
                 break;
         }
     }
