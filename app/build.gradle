@@ -13,6 +13,7 @@ android {
         incremental true
     }
 
+
     defaultConfig {
         applicationId "com.madx.bwm"
         minSdkVersion 9
@@ -36,7 +37,7 @@ android {
 //            // No debug config
 //        }
 //        release {
-//            storeFile file("/Users/wing/Desktop/bwm.key")
+//            storeFile file(KEY_FILE_PATH)
 //            storePassword KEYSTORE_PASSWORD
 //            keyAlias "cn"
 //            keyPassword KEY_PASSWORD
@@ -133,6 +134,7 @@ dependencies {
     //    compile 'com.android.support:recyclerview-v7:+'
     //    compile 'com.android.support:cardview-v7:+'
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
+    //for 突破65535的限制
     compile 'com.android.support:multidex:1.0.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':Volley')

@@ -545,6 +545,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             return;
         }
         switch (status) {
+            case not_re:
+                if(event_options.getVisibility() == View.GONE) {
+                    event_options.setVisibility(View.VISIBLE);
+                }
+                break;
             case go:
                 currentStatus = status;
                 option_going.setImageResource(R.drawable.status_going_press);
@@ -556,6 +561,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 option_going.setImageResource(R.drawable.status_going_normal);
                 option_maybe.setImageResource(R.drawable.status_maybe_press);
                 option_no_going.setImageResource(R.drawable.status_not_going_normal);
+                if(event_options.getVisibility() == View.GONE) {
+                    event_options.setVisibility(View.VISIBLE);
+                }
                 break;
             case not_go:
                 currentStatus = status;
@@ -1046,7 +1054,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     enum ResponseStatus {
-        go("1"), maybe("3"), not_go("2");
+        not_re("1"),go("1"), maybe("3"), not_go("2");
 
         private String mServerCode;
 
