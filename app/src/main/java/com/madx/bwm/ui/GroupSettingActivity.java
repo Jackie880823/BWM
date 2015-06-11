@@ -478,7 +478,8 @@ public class GroupSettingActivity extends BaseActivity {
                 showAdminDialog1.dismiss();
             }
         });
-        showAdminDialog1.show();
+        if(!showAdminDialog1.isShowing())
+            showAdminDialog1.show();
     }
 
     //admin and addedflag = 0
@@ -556,8 +557,8 @@ public class GroupSettingActivity extends BaseActivity {
                 getMemberType(position);
             }
         });
-
-        showAdminDialog0.show();
+        if(!showAdminDialog0.isShowing())
+            showAdminDialog0.show();
     }
 
     private void showNonAdminDialog1(final int position) {
@@ -591,7 +592,8 @@ public class GroupSettingActivity extends BaseActivity {
                 showNonAdminDialog1.dismiss();
             }
         });
-        showNonAdminDialog1.show();
+        if(!showNonAdminDialog1.isShowing())
+            showNonAdminDialog1.show();
     }
 
     //non admin and addedflag = 0
@@ -607,7 +609,8 @@ public class GroupSettingActivity extends BaseActivity {
                 getMemberType(position);
             }
         });
-        showNonAdminDialog0.show();
+        if(!showNonAdminDialog0.isShowing())
+            showNonAdminDialog0.show();
     }
 
     Handler handler = new Handler() {

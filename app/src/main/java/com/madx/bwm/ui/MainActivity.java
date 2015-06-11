@@ -23,6 +23,7 @@ import com.madx.bwm.adapter.MyFragmentPagerAdapter;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.ui.wall.WallNewActivity;
+import com.madx.bwm.util.NotificationUtil;
 import com.madx.bwm.util.PreferencesUtil;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * 主页Activity,包含了头部和底部，无需定义中间内容(ViewPaper)
  */
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements NotificationUtil.NotificationOtherHandle{
 
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
@@ -47,6 +48,10 @@ public class MainActivity extends BaseActivity {
      * 标题栏右边控件点击事件消息
      */
     private final static int RIGHT_CLICK_EVENT = 11;
+    /**
+     * 标题栏右边控件点击事件消息
+     */
+    private final static int SHOW_RED_POINT = 12;
 
     /**
      * The {@link android.support.v4.view.ViewPager} that will host the section contents.
@@ -77,11 +82,15 @@ public class MainActivity extends BaseActivity {
 
 
     //以下为暂定全局变量
-    private static boolean hasUpdate;
-    private static MainActivity mainActivityInstance;
+    private boolean hasUpdate;
     private int jumpIndex;
     public static final String LAST_LEAVE_INDEX = "lastLeaveIndex";
     private int leavePagerIndex = 0;
+    private View red_point_1;
+    private View red_point_2;
+    private View red_point_3;
+    private View red_point_4;
+    private View red_point_5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +100,11 @@ public class MainActivity extends BaseActivity {
         }
 
         super.onCreate(savedInstanceState);
-        mainActivityInstance = this;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -141,12 +154,12 @@ public class MainActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
-//        editor.putInt(LAST_LEAVE_INDEX, mViewPager.getCurrentItem());
     }
 
     public static UserEntity getUser() {
         if (App.getLoginedUser() == null) {
-            App.exit(mainActivityInstance);
+//            App.exit(null);
+//            getApplication().onTerminate();
         }
         return App.getLoginedUser();
     }
@@ -240,6 +253,11 @@ public class MainActivity extends BaseActivity {
                             break;
                     }
                     break;
+                case SHOW_RED_POINT:
+                    if(msg.obj!=null){
+                        setRedPoint((TabEnum)msg.obj,false);
+                    }
+                    break;
             }
 
             return false;
@@ -253,6 +271,16 @@ public class MainActivity extends BaseActivity {
     }
 
     private TitleEventListenner mTitleEventListenner;
+
+    @Override
+    public void doSomething(TabEnum tab) {
+        if(handler!=null&&tab!=currentTabEnum){
+            Message msg = handler.obtainMessage();
+            msg.what = SHOW_RED_POINT;
+            msg.obj = tab;
+            handler.sendMessage(msg);
+        }
+    }
 
 
     public interface TitleEventListenner {
@@ -319,6 +347,14 @@ public class MainActivity extends BaseActivity {
         if (jumpIndex != -1) {
             leavePagerIndex = jumpIndex;
         }
+
+        red_point_1 = getViewById(R.id.red_point_1);
+        red_point_2 = getViewById(R.id.red_point_2);
+        red_point_3 = getViewById(R.id.red_point_3);
+        red_point_4 = getViewById(R.id.red_point_4);
+        red_point_5 = getViewById(R.id.red_point_5);
+
+        NotificationUtil.setNotificationOtherHandle(this);
     }
 
     private boolean isEventFragmentDate() {
@@ -389,6 +425,7 @@ public class MainActivity extends BaseActivity {
                 tabIv1.setImageResource(R.drawable.tab_wall_select);
                 ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
                 tabTv1.setTextColor(Color.BLACK);
+                setRedPoint(TabEnum.wall,true);
                 break;
             case event:
                 setDrawable();
@@ -404,6 +441,7 @@ public class MainActivity extends BaseActivity {
                 tabIv2.setImageResource(R.drawable.tab_event_select);
                 ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_press2));
                 tabTv2.setTextColor(Color.BLACK);
+                setRedPoint(TabEnum.event, true);
                 break;
             case chat:
                 setDrawable();
@@ -420,6 +458,7 @@ public class MainActivity extends BaseActivity {
                 tabIv3.setImageResource(R.drawable.tab_message_select);
                 ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_press3));
                 tabTv3.setTextColor(Color.BLACK);
+                setRedPoint(TabEnum.chat, true);
                 break;
             case more:
                 setDrawable();
@@ -435,6 +474,7 @@ public class MainActivity extends BaseActivity {
                 tabIv4.setImageResource(R.drawable.tab_more_select);
                 ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_press4));
                 tabTv4.setTextColor(Color.BLACK);
+                setRedPoint(TabEnum.more, true);
                 break;
             case family:
                 setDrawable();
@@ -505,7 +545,8 @@ public class MainActivity extends BaseActivity {
                     public void onClick(View v) {
 //                        FileUtil.clearCache(MainActivity.this);
 //                        MainActivity.this.finish();
-                        App.exit(MainActivity.this);
+                        MainActivity.this.getApplication().onTerminate();
+//                        App.exit(MainActivity.this);
                     }
                 });
                 snackBar.show();
@@ -513,6 +554,26 @@ public class MainActivity extends BaseActivity {
             return true;
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    public void setRedPoint(TabEnum tab, boolean cancel){
+        int action = cancel?View.GONE:View.VISIBLE;
+        switch (tab){
+            case family:
+                break;
+            case chat:
+                red_point_2.setVisibility(action);
+                break;
+            case wall:
+                red_point_3.setVisibility(action);
+                break;
+            case event:
+                red_point_4.setVisibility(action);
+                break;
+            case more:
+                red_point_5.setVisibility(action);
+                break;
+        }
     }
 
     @Override
