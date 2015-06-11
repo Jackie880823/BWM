@@ -336,9 +336,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
                 @Override
                 public boolean execute(View v) {
-                    if(vProgress.getVisibility()==View.VISIBLE || "2".equals(event.getGroup_event_status())){
+                    if(vProgress.getVisibility()==View.VISIBLE ){
                         return false;
                     }
+
                     /*
                     if("2".equals(event.getGroup_event_status())){
                         return false;
@@ -385,13 +386,18 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             option_status.setVisibility(View.VISIBLE);
 
                         }
-                        if(event_options.getVisibility() == View.VISIBLE) {
+                        if("2".equals(event.getGroup_event_status())){
                             event_options.setVisibility(View.GONE);
-                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
-                        } else {
-                            event_options.setVisibility(View.VISIBLE);
-                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
+                        }else {
+                            if(event_options.getVisibility() == View.VISIBLE) {
+                                event_options.setVisibility(View.GONE);
+                                getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
+                            } else {
+                                event_options.setVisibility(View.VISIBLE);
+                                getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
+                            }
                         }
+
 
 //                        if(event.getGroup_event_status()!= "2"){
 //
