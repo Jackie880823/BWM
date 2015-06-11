@@ -177,6 +177,7 @@ public class EventDetailActivity extends BaseActivity {
                     }
                     if("2".equals(event.getGroup_event_status())){
                         rightButton.setImageResource(R.drawable.icon_edit_press);
+                        title_icon.setVisibility(View.GONE);
                         rightButton.setEnabled(false);
                     }
                 } else {
