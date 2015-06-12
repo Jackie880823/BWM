@@ -444,7 +444,7 @@
     <string name="text_fail_to_create_group">Fail to create group, please try again.</string>
     <string name="text_success_to_create_group">Group created successfully.</string>
     <string name="text_null">null</string>
-    <string name="text_please_select_username_phone">用户名或手机号，选择其一种。</string>
+    <string name="text_please_select_username_phone">用户名或手机号，选择其中一种。</string>
     <string name="text_please_choose_country_code">请选择国家区号。</string>
     <string name="text_input_username_phone">请输入用户名或手机号</string>
     <string name="text_input_username">请输入用户名</string>
@@ -475,7 +475,7 @@
     <string name="text_up_all_fields">Please fill up all fields and try again.</string>
     <string name="text_no_network">Poor Internet Connection</string>
     <string name="text_enter_details">请输入你的信息.</string>
-    <string name="text_input_phone_number">请输入你的手机号或用户名</string>
+    <string name="text_input_phone_number">请输入你的手机号</string>
     <string name="text_input_password">请输入你的密码</string>
     <string name="text_action">Action</string>
     <string name="text_family_tree">Family Tree</string>
