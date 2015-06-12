@@ -84,7 +84,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private static final int GET_DATA = 0x11;
     private MyFamilyAdapter memberAdapter;
     private FamilyGroupAdapter groupAdapter;
-    public static String FAMILY_TREE = "family_tree";
+    public static String FAMILY_TREE = "family_treely_tree\";\n" +
+            "    public static final String FAMILY_PARENT ";
     public static final String FAMILY_PARENT = "parent";
     public static final String FAMILY_CHILDREN = "children";
     public static final String FAMILY_SIBLING = "sibling";
@@ -139,15 +140,15 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         member.setUser_given_name(FAMILY_TREE);
                         member.setUser_id(FAMILY_TREE);
                         memberList.add(member);
+                        moreMemberList.add(member);
 //                        opendate.add(0,member);
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
                             String tree_type = memberEntity.getTree_type();
                             if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
                                     || FAMILY_SIBLING.equals(tree_type) || FAMILY_SPOUSE.equals(tree_type)) {
                                 memberList.add(memberEntity);
-                            } else {
-                                moreMemberList.add(memberEntity);
                             }
+                            moreMemberList.add(memberEntity);
                         }
                         FamilyMemberEntity familyMemberEntity = new FamilyMemberEntity();
                         familyMemberEntity.setUser_given_name(FAMILY_MORE_MEMBER);
@@ -224,9 +225,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void afterTextChanged(Editable s) {
                 String etImport = etSearch.getText().toString();
-                if(pager.getCurrentItem() == 0){
+                if (pager.getCurrentItem() == 0) {
                     MemeberSearch = etImport;
-                }else {
+                } else {
                     GroupSearch = etImport;
                 }
                 setSearchData(etImport);
@@ -240,26 +241,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
         if (pager.getCurrentItem() == 0) {
             List<FamilyMemberEntity> familyMemberEntityList;
-            if (TextUtils.isEmpty(etImport)) {
-//                if(memberAdapter!=null){
-//                    int size = memberAdapter.getList().size();
-//                    if(memberAdapter.getList().get(size-1).getUser_given_name()==FAMILY_HIDE_MEMBER){
-//                        familyMemberEntityList = opendate;
-//                    }else {
-//                        familyMemberEntityList = memberList;
-//                    }
-//
-//                }
-
-//                int size = memberAdapter.getList().size();
-                //如果已经展开
-                if(isopen){
-                    familyMemberEntityList = opendate;
-                }else {
-                    familyMemberEntityList = memberList;
-                }
+            if (isopen) {
+                familyMemberEntityList = searchMemberList(etImport, moreMemberList);
             } else {
-                familyMemberEntityList = searchMemberList(etImport, memberEntityList);
+                familyMemberEntityList = searchMemberList(etImport, memberList);
             }
             memberAdapter.addNewData(familyMemberEntityList);
 
@@ -276,6 +261,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     }
 
     private List<FamilyMemberEntity> searchMemberList(String name, List<FamilyMemberEntity> list) {
+        if (TextUtils.isEmpty(name)) {
+            return list;
+        }
         List<FamilyMemberEntity> results = new ArrayList();
         Pattern pattern = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
         for (FamilyMemberEntity memberEntity : list) {
@@ -371,9 +359,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 if (FamilyFragment.FAMILY_TREE.equals(userId)) {
                     getUrl();
                 } else if (FamilyFragment.FAMILY_MORE_MEMBER.equals(userId)) {
-                    isopen  = true;
+                    isopen = true;
                     int size = memberAdapter.getList().size();
-                    if(moreMemberList!=null){
+                    if (moreMemberList != null) {
                         memberAdapter.addMoreData(moreMemberList);
                     }
 //                    if(memberAdapter.getList().get(size-1).getUser_given_name()==FAMILY_MORE_MEMBER){
@@ -762,9 +750,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onClick(View v) {
                 //startActivity(new Intent(getActivity(), CreateGroupActivity.class));
-                Intent intent=new Intent(getActivity(), InviteMemberActivity.class);
-                intent.putExtra("isCreateNewGroup",true);
-                intent.putExtra("jumpIndex",0);
+                Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
+                intent.putExtra("isCreateNewGroup", true);
+                intent.putExtra("jumpIndex", 0);
                 startActivity(intent);
                 showSelectDialog.dismiss();
             }
@@ -842,7 +830,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //                                }
 //                            }
                             if (map.size() > 0) {
-                                if(isup){
+                                if (isup) {
                                     Message.obtain(handler, GET_DATA, map).sendToTarget();
                                 }
                             }
@@ -950,18 +938,18 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         switch (v.getId()) {
             case R.id.message_member_tv:
                 pager.setCurrentItem(0);
-                if (!TextUtils.isEmpty(MemeberSearch)){
+                if (!TextUtils.isEmpty(MemeberSearch)) {
                     etSearch.setText(MemeberSearch);
-                }else {
+                } else {
                     etSearch.setText("");
                 }
                 etSearch.setSelection(etSearch.length());
                 break;
             case R.id.message_group_tv:
                 pager.setCurrentItem(1);
-                if (!TextUtils.isEmpty(GroupSearch)){
+                if (!TextUtils.isEmpty(GroupSearch)) {
                     etSearch.setText(GroupSearch);
-                }else {
+                } else {
                     etSearch.setText("");
                 }
                 opendate.clear();
