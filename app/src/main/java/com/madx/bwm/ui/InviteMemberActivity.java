@@ -90,6 +90,7 @@ public class InviteMemberActivity extends BaseActivity {
     private String GroupSearch;
 
     List<FamilyMemberEntity> memberList;
+    List<FamilyGroupEntity> groupList;
 
     Handler handler = new Handler() {
         @Override
@@ -130,7 +131,7 @@ public class InviteMemberActivity extends BaseActivity {
                     groupEntityList = map.get("group");
                     if (groupEntityList != null) {
                         if (groupType == 1) {
-                            List<FamilyGroupEntity> groupList = new ArrayList<>();
+                            groupList = new ArrayList<>();
                             for (FamilyGroupEntity groupEntity : groupEntityList) {
                                 if (!selectGroupList.contains(groupEntity.getGroup_id())) {
                                     groupList.add(groupEntity);

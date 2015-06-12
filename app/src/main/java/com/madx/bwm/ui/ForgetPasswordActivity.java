@@ -196,6 +196,10 @@ public class ForgetPasswordActivity extends BaseActivity {
                     userEntity.setUser_login_id(tvCountryCode.getText().toString() + phone);
                     userEntity.setUser_login_type("phone");
                 }
+                else if ( TextUtils.isEmpty(etUsername.getText()) && TextUtils.isEmpty(etPhone.getText()) )
+                {
+                     Toast.makeText(ForgetPasswordActivity.this, getResources().getString(R.string.text_input_username_phone), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
