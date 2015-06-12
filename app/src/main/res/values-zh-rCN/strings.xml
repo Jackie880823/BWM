@@ -65,7 +65,7 @@
     <string name="text_going">Joined</string>
     <string name="text_maybe">Maybe</string>
     <string name="text_not_going">Declined</string>
-    <string name="text_add">发送</string>
+    <string name="text_add">添加</string>
     <string name="text_added">Added</string>
     <string name="text_awaiting">Awaiting</string>
     <string name="text_public">All Members</string>
@@ -391,16 +391,16 @@
     <string name="text_my_view_profile">View Profile</string>
     <string name="text_album_gallery">相册</string>
     <string name="text_wall_posting">动态</string>
-    <string name="text_reset_password">Reset Password</string>
+    <string name="text_reset_password">重设密码</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
     <string name="text_wrong_password">Invalid password, please try again.</string>
     <string name="text_not_use_special_characters">Do not use special characters. E.g ,/?!@#*$</string>
     <string name="text_back">Back</string>
-    <string name="text_old_password">Old password</string>
-    <string name="text_new_password">New Password</string>
-    <string name="text_re_enter_password">Re-enter Password</string>
-    <string name="text_create_new_password">Create A New Password</string>
+    <string name="text_old_password">旧密码</string>
+    <string name="text_new_password">新密码</string>
+    <string name="text_re_enter_password">再次输入密码</string>
+    <string name="text_create_new_password">设置新密码</string>
     <string name="text_contact_information">Contact information</string>
     <string name="text_select_contact">选择手机号码</string>
     <string name="text_select_relationship">选择关系</string>
@@ -587,8 +587,8 @@
     <string name="text_birthday_alert_reminder">生日提醒</string>
     <string name="text_group_privacy">隐私</string>
 
-    <string name="text_upcoming_birthdays">Upcoming birthdays</string>
-    <string name="text_today_birthday">Today \'s birthday</string>
+    <string name="text_upcoming_birthdays">即将到来的生日</string>
+    <string name="text_today_birthday">今天生日</string>
     <string name="text_today_birthday_on"> 的生日在今天!</string>
     <string name="text_upcoming_birthdays_on"> 的生日在</string>
     <string name="text_d">天 </string>

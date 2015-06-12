@@ -17,6 +17,7 @@ import com.madx.bwm.R;
 import com.madx.bwm.ui.AlertEventActivity;
 import com.madx.bwm.ui.AlertGroupActivity;
 import com.madx.bwm.ui.AlertWallActivity;
+import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.MemberActivity;
 import com.madx.bwm.ui.MessageChatActivity;
 import com.madx.bwm.ui.MissListActivity;
@@ -179,14 +180,17 @@ public class NotificationUtil {
             case BONDALERT_WALL:
                 smallIcon = R.drawable.bondalert_wall_icon;
                 intent = new Intent(context, AlertWallActivity.class);
+                doNotificationHandle(MainActivity.TabEnum.wall);
                 break;
             case BONDALERT_EVENT:
                 smallIcon = R.drawable.bondalert_event_icon;
                 intent = new Intent(context, AlertEventActivity.class);
+                doNotificationHandle(MainActivity.TabEnum.event);
                 break;
             case BONDALERT_MEMBER:
                 smallIcon = R.drawable.bondalert_member_icon;
                 intent = new Intent(context, MemberActivity.class);
+                doNotificationHandle(MainActivity.TabEnum.more);
                 break;
             case BONDALERT_MESSAGE:
                 smallIcon = R.drawable.bondalert_message_icon;
@@ -194,26 +198,32 @@ public class NotificationUtil {
                 intent.putExtra("type", jsonObjectExtras.getString("group_type"));
                 intent.putExtra("groupId", jsonObjectExtras.getString("group_id"));
                 intent.putExtra("titleName", jsonObjectExtras.getString("group_name"));
+                doNotificationHandle(MainActivity.TabEnum.chat);
                 break;
             case BONDALERT_MISS:
                 smallIcon = R.drawable.bondalert_miss_icon;
                 intent = new Intent(context, MissListActivity.class);
+                doNotificationHandle(MainActivity.TabEnum.more);
                 break;
             case BONDALERT_BIGDAY:
                 smallIcon = R.drawable.bondalert_bigday_icon;
                 intent = new Intent(context, BigDayActivity.class);
+                doNotificationHandle(MainActivity.TabEnum.more);
                 break;
             case BONDALERT_NEWS:
                 smallIcon = R.drawable.bondalert_news_icon;
                 intent = new Intent(context, NewsActivity.class);
+                doNotificationHandle(MainActivity.TabEnum.more);
                 break;
             case BONDALERT_RECOMMENDED:
                 smallIcon = R.drawable.bondalert_recommended_icon;
                 intent = new Intent(context, RecommendActivity.class);
+                doNotificationHandle(MainActivity.TabEnum.more);
                 break;
             case BONDALERT_GROUP:
                 smallIcon = R.drawable.bondalert_group_icon;
                 intent = new Intent(context, AlertGroupActivity.class);
+                doNotificationHandle(MainActivity.TabEnum.more);
                 break;
 
         }
@@ -259,6 +269,21 @@ public class NotificationUtil {
         JPushInterface.clearAllNotifications(context);
     }
 
+    private static void doNotificationHandle(MainActivity.TabEnum tab){
+        if(mNotificationOtherHandle!=null){
+            mNotificationOtherHandle.doSomething(tab);
+        }
+    }
+
+    private static NotificationOtherHandle mNotificationOtherHandle;
+
+    public static void setNotificationOtherHandle(NotificationOtherHandle notificationOtherHandle){
+        mNotificationOtherHandle = notificationOtherHandle;
+    }
+
+    public interface NotificationOtherHandle{
+        public void doSomething(MainActivity.TabEnum tab);
+    }
 
     public static void unRegisterPush(Context context,final String userId){
         if(App.getLoginedUser()!=null) {
