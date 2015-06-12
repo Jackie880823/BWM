@@ -466,7 +466,7 @@
     <string name="text_up_all_fields">Please fill up all fields and try again.</string>
     <string name="text_no_network">Poor Internet Connection</string>
     <string name="text_enter_details">Please enter your details.</string>
-    <string name="text_input_phone_number">Input your Phone Number / Username</string>
+    <string name="text_input_phone_number">Input your Phone Number.</string>
     <string name="text_input_password">Input your Password</string>
     <string name="text_action">Action</string>
     <string name="text_family_tree">Family Tree</string>

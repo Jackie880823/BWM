@@ -421,7 +421,7 @@ public class LoginActivity extends Activity {
                 } else if ((account.length() == 0) && (password.length() == 0)) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_enter_details), Toast.LENGTH_SHORT).show();
                 } else if (account.length() == 0) {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_username_phone), Toast.LENGTH_SHORT).show();
                 } else if (password.length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
                 }
