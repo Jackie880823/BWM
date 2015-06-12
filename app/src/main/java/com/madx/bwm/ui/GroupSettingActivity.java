@@ -302,10 +302,10 @@ public class GroupSettingActivity extends BaseActivity {
                         addMemberList.add(user.getUser_id());
                     }
                     removeDuplicate(userList);
-                    GroupSettingAdapter groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
+                    groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
                     lvMembers.setAdapter(groupSettingAdapter);
-                    tvNumMembers.setText(userList.size() + getResources().getString(R.string.text_members));
 
+                    tvNumMembers.setText(userList.size() + getResources().getString(R.string.text_members));
                 }
             }
 
@@ -325,6 +325,8 @@ public class GroupSettingActivity extends BaseActivity {
             }
         });
     }
+
+    GroupSettingAdapter groupSettingAdapter;
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -401,7 +403,7 @@ public class GroupSettingActivity extends BaseActivity {
 
     //admin and addedflag = 1
     private void showAdminDialog1(final int position) {
-        if (showAdminDialog1 != null&&showAdminDialog1.isShowing()) {
+        if (showAdminDialog1 != null && showAdminDialog1.isShowing()) {
             return;
         }
 
@@ -512,7 +514,7 @@ public class GroupSettingActivity extends BaseActivity {
      * @param position
      */
     private void showAdminDialog0(final int position) {
-        if (showAdminDialog0 != null&&showAdminDialog0.isShowing()) {
+        if (showAdminDialog0 != null && showAdminDialog0.isShowing()) {
             return;
         }
         if (position > userList.size()) {
@@ -598,7 +600,7 @@ public class GroupSettingActivity extends BaseActivity {
     }
 
     private void showNonAdminDialog1(final int position) {
-        if (showNonAdminDialog1 != null&&showNonAdminDialog1.isShowing()) {
+        if (showNonAdminDialog1 != null && showNonAdminDialog1.isShowing()) {
             return;
         }
         LayoutInflater factory = LayoutInflater.from(this);
@@ -637,7 +639,7 @@ public class GroupSettingActivity extends BaseActivity {
 
     //non admin and addedflag = 0
     private void showNonAdminDialog0(final int position) {
-        if (showNonAdminDialog0 != null&&showNonAdminDialog0.isShowing()) {
+        if (showNonAdminDialog0 != null && showNonAdminDialog0.isShowing()) {
             return;
         }
         LayoutInflater factory = LayoutInflater.from(this);
@@ -661,12 +663,12 @@ public class GroupSettingActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case GET_DATA:
-                    List<UserEntity> userList = (List<UserEntity>) msg.obj;
+                    List<UserEntity> addUserList = (List<UserEntity>) msg.obj;
                     List<UserEntity> userEntityList = new ArrayList<>();
-                    userEntityList.addAll(userList);
-                    if (memberList.size() > 0) {
-                        for (UserEntity userEntity : userList) {
-                            for (String userId : memberList) {
+                    userEntityList.addAll(addUserList);
+                    if (addMemberList.size() > 0) {
+                        for (UserEntity userEntity : addUserList) {
+                            for (String userId : addMemberList) {
                                 if (userEntity.getUser_id().equals(userId)) {
                                     userEntityList.remove(userEntity);
                                     break;
@@ -680,6 +682,7 @@ public class GroupSettingActivity extends BaseActivity {
                     if (addMemberList.size() > 0) {
                         addGroupMember(gson.toJson(addMemberList));
                     }
+
                     break;
             }
         }
@@ -705,10 +708,10 @@ public class GroupSettingActivity extends BaseActivity {
             public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-                List<UserEntity> userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                List<UserEntity> addUserList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
-                if (userList != null && userList.size() > 0) {
-                    Message.obtain(handler, GET_DATA, userList).sendToTarget();
+                if (addUserList != null && addUserList.size() > 0) {
+                    Message.obtain(handler, GET_DATA, addUserList).sendToTarget();
                 }
             }
 
@@ -749,27 +752,29 @@ public class GroupSettingActivity extends BaseActivity {
                             }
                         }
                     }
+
                     List<FamilyGroupEntity> groupEntityList = null;
                     if (null != groupData) {
                         groupEntityList = new GsonBuilder().create().fromJson(groupData, new TypeToken<ArrayList<FamilyGroupEntity>>() {
                         }.getType());
                     }
-                    if (groupEntityList != null && groupEntityList.size() > 1) {
+                    if (groupEntityList != null && groupEntityList.size() > 0) {
                         familyGroupEntityList.addAll(groupEntityList);
                         List<String> groupIdList = new ArrayList<>();
                         for (FamilyGroupEntity familyGroupEntity : groupEntityList) {
                             groupIdList.add(familyGroupEntity.getGroup_id());
                         }
-                        if (addMemberList.size() > 0) {
-                            memberList.addAll(addMemberList);
-                        }
+//                        if (addMemberList.size() > 0) {
+//                            memberList.addAll(addMemberList);
+//                        }
                         getSelectMembersList(new Gson().toJson(groupIdList));
-                    }
+                    } else {
 
-                    if (addMemberList.size() > 0) {
+                        if (addMemberList.size() > 0) {
 //                        removeDuplicate(userList);
-                        addGroupMember(gson.toJson(addMemberList));
+                            addGroupMember(gson.toJson(addMemberList));
 //                            getMembersList();
+                        }
                     }
 
                     break;
