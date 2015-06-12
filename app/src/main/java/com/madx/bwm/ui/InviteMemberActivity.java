@@ -54,6 +54,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -91,7 +92,7 @@ public class InviteMemberActivity extends BaseActivity {
 
     List<FamilyMemberEntity> memberList;
     List<FamilyGroupEntity> groupList;
-    List<FamilyGroupEntity> searchmemberList;
+    List<FamilyMemberEntity> searchmemberList = new LinkedList<>();
 
     Handler handler = new Handler() {
         @Override
@@ -110,12 +111,15 @@ public class InviteMemberActivity extends BaseActivity {
                             for (FamilyMemberEntity memberEntity : memberEntityList) {
                                 if (!selectMemberList.contains(memberEntity.getUser_id())) {
                                     memberList.add(memberEntity);
-                                } else {
+
+                                }
+                                else {
                                     if (isFirstData) {
                                         selectMemberEntityList.add(memberEntity);
                                     }
                                 }
                             }
+                            searchmemberList.addAll(memberList);
                             memberAdapter.addNewData(memberList);
                         } else {
                             for (FamilyMemberEntity memberEntity : memberEntityList) {
@@ -232,15 +236,23 @@ public class InviteMemberActivity extends BaseActivity {
 //                }else {
 //                    setSearchData(etImport);
 //                }
-                if(pager.getCurrentItem() == 0){
+
+                if (pager.getCurrentItem() == 0) {
                     MemeberSearch = etImport;
-                }else {
+                } else {
                     GroupSearch = etImport;
                 }
-                setSearchData(etImport);
+                if (!isTabChanged) {
+                    setSearchData(etImport);
+                } else {
+                    isTabChanged = false;
+                }
+
             }
         });
     }
+
+    boolean isTabChanged;
 
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
@@ -254,36 +266,37 @@ public class InviteMemberActivity extends BaseActivity {
 //            memberAdapter.addNewData(familyMemberEntityList);
             List<FamilyMemberEntity> familyMemberEntityList;
             if (TextUtils.isEmpty(MemeberSearch)) {
-                if(type==1){
-                    List<FamilyMemberEntity> memberList = new ArrayList<>();
-                    for (FamilyMemberEntity memberEntity : memberEntityList) {
-                        if (!selectMemberList.contains(memberEntity.getUser_id())) {
-                            memberList.add(memberEntity);
-                        } else {
-                            if (isFirstData) {
-                                selectMemberEntityList.add(memberEntity);
-                            }
-                        }
-                    }
+                if (type == 1) {
+//                    List<FamilyMemberEntity> memberList = new ArrayList<>();
+//                    for (FamilyMemberEntity memberEntity : searchmemberList) {
+//                        if (!selectMemberList.contains(memberEntity.getUser_id())) {
+//                            memberList.add(memberEntity);
+//                        } else {
+//                            if (isFirstData) {
+//                                selectMemberEntityList.add(memberEntity);
+//                            }
+//                        }
+//                    }
                     familyMemberEntityList = memberList;
-                }else {
+                } else {
                     familyMemberEntityList = memberEntityList;
                 }
 
             } else {
-                if(type==1){
+                if (type == 1) {
                     List<FamilyMemberEntity> memberList = new ArrayList<>();
-                    for (FamilyMemberEntity memberEntity : memberEntityList) {
-                        if (!selectMemberList.contains(memberEntity.getUser_id())) {
-                            memberList.add(memberEntity);
-                        } else {
-                            if (isFirstData) {
-                                selectMemberEntityList.add(memberEntity);
-                            }
-                        }
-                    }
-                    familyMemberEntityList = searchMemberList(MemeberSearch, memberList);
-                }else {
+//                    for (FamilyMemberEntity memberEntity : searchmemberList) {
+//                        if (!selectMemberList.contains(memberEntity.getUser_id())) {
+//                            memberList.add(memberEntity);
+//                        } else {
+//                            if (isFirstData) {
+//                                selectMemberEntityList.add(memberEntity);
+//                            }
+//                        }
+//                    }
+                    familyMemberEntityList = searchMemberList(MemeberSearch, searchmemberList);
+//                    familyMemberEntityList = searchMemberList(MemeberSearch, memberList);
+                } else {
 
                     familyMemberEntityList = searchMemberList(MemeberSearch, memberEntityList);
                 }
@@ -804,19 +817,21 @@ public class InviteMemberActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.message_member_tv:
+                isTabChanged = true;
                 pager.setCurrentItem(0);
-                if (!TextUtils.isEmpty(MemeberSearch)){
+                if (!TextUtils.isEmpty(MemeberSearch)) {
                     etSearch.setText(MemeberSearch);
-                }else {
+                } else {
                     etSearch.setText("");
                 }
                 etSearch.setSelection(etSearch.length());
                 break;
             case R.id.message_group_tv:
+                isTabChanged = true;
                 pager.setCurrentItem(1);
-                if (!TextUtils.isEmpty(GroupSearch)){
+                if (!TextUtils.isEmpty(GroupSearch)) {
                     etSearch.setText(GroupSearch);
-                }else {
+                } else {
                     etSearch.setText("");
                 }
                 etSearch.setSelection(etSearch.length());
