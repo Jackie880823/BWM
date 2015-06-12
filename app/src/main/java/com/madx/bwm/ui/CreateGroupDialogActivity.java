@@ -118,10 +118,10 @@ public class CreateGroupDialogActivity extends BaseActivity {
         String selectMemberData = new Gson().toJson(selectUserEntityList);
         intent.putExtra("members_data", selectMemberData);
         intent.putExtra("type", 0);
-        if (selectGroupEntityList.size() > 0) {
-            intent.putExtra("groups_data", new Gson().toJson(selectGroupEntityList));
-            intent.putExtra("groupType", 1);
-        }
+//        if (selectGroupEntityList.size() > 0) {
+//            intent.putExtra("groups_data", new Gson().toJson(selectGroupEntityList));
+//            intent.putExtra("groupType", 1);
+//        }
         startActivityForResult(intent, JUMP_SELECT_MEMBER);
     }
 
