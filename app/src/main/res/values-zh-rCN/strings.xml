@@ -502,7 +502,7 @@
     <string name="title_reset_password">重设密码</string>
     <string name="title_select_members">选择会员</string>
     <string name="text_awaiting_approval_member">Awaiting for approval from member.</string>
-    <string name="text_account_already_exist">Account already exist</string>
+    <string name="text_account_already_exist">账号已被使用。</string>
     <string name="text_verification_fail">Verification fail. Try again.</string>
     <string name="text_verification_successful">Verification successful.</string>
     <string name="text_choose_country_code">Please choose your Country Code</string>
