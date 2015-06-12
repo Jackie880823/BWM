@@ -91,6 +91,7 @@ public class InviteMemberActivity extends BaseActivity {
 
     List<FamilyMemberEntity> memberList;
     List<FamilyGroupEntity> groupList;
+    List<FamilyGroupEntity> searchmemberList;
 
     Handler handler = new Handler() {
         @Override
@@ -244,12 +245,50 @@ public class InviteMemberActivity extends BaseActivity {
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
         if (pager.getCurrentItem() == 0) {
+//            List<FamilyMemberEntity> familyMemberEntityList;
+//            if (TextUtils.isEmpty(etImport)) {
+//                familyMemberEntityList = memberEntityList;
+//            } else {
+//                familyMemberEntityList = searchMemberList(etImport, memberEntityList);
+//            }
+//            memberAdapter.addNewData(familyMemberEntityList);
             List<FamilyMemberEntity> familyMemberEntityList;
-            if (TextUtils.isEmpty(etImport)) {
-                familyMemberEntityList = memberEntityList;
+            if (TextUtils.isEmpty(MemeberSearch)) {
+                if(type==1){
+                    List<FamilyMemberEntity> memberList = new ArrayList<>();
+                    for (FamilyMemberEntity memberEntity : memberEntityList) {
+                        if (!selectMemberList.contains(memberEntity.getUser_id())) {
+                            memberList.add(memberEntity);
+                        } else {
+                            if (isFirstData) {
+                                selectMemberEntityList.add(memberEntity);
+                            }
+                        }
+                    }
+                    familyMemberEntityList = memberList;
+                }else {
+                    familyMemberEntityList = memberEntityList;
+                }
+
             } else {
-                familyMemberEntityList = searchMemberList(etImport, memberEntityList);
+                if(type==1){
+                    List<FamilyMemberEntity> memberList = new ArrayList<>();
+                    for (FamilyMemberEntity memberEntity : memberEntityList) {
+                        if (!selectMemberList.contains(memberEntity.getUser_id())) {
+                            memberList.add(memberEntity);
+                        } else {
+                            if (isFirstData) {
+                                selectMemberEntityList.add(memberEntity);
+                            }
+                        }
+                    }
+                    familyMemberEntityList = searchMemberList(MemeberSearch, memberList);
+                }else {
+
+                    familyMemberEntityList = searchMemberList(MemeberSearch, memberEntityList);
+                }
             }
+            //刷新适配器数据
             memberAdapter.addNewData(familyMemberEntityList);
 
         } else {
@@ -771,6 +810,7 @@ public class InviteMemberActivity extends BaseActivity {
                 }else {
                     etSearch.setText("");
                 }
+                etSearch.setSelection(etSearch.length());
                 break;
             case R.id.message_group_tv:
                 pager.setCurrentItem(1);
@@ -779,6 +819,7 @@ public class InviteMemberActivity extends BaseActivity {
                 }else {
                     etSearch.setText("");
                 }
+                etSearch.setSelection(etSearch.length());
                 break;
         }
     }
