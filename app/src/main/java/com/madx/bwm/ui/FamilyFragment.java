@@ -215,31 +215,38 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void afterTextChanged(Editable s) {
                 String etImport = etSearch.getText().toString();
-                setSearchData(etImport);
-                //etSearch.setText("");
+                if(pager.getCurrentItem() == 0){
+                    MemeberSearch = etImport;
+                }else {
+                    GroupSearch = etImport;
+                }
+//                if(etImport.length() < 1 && pager.getCurrentItem() == 0){
+//                    memberAdapter.addNewData(memberList);
+//                }else {
+                    setSearchData(etImport);
+//                }
+
             }
         });
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     private void setSearchData(String searchData) {
-//        String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
-        MemeberSearch = PinYin4JUtil.getPinyinWithMark(searchData);
-        GroupSearch = PinYin4JUtil.getPinyinWithMark(searchData);
+        String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
         if (pager.getCurrentItem() == 0) {
             List<FamilyMemberEntity> familyMemberEntityList;
-            if (TextUtils.isEmpty(MemeberSearch)) {
+            if (TextUtils.isEmpty(etImport)) {
                 familyMemberEntityList = memberList;
             } else {
-                familyMemberEntityList = searchMemberList(MemeberSearch, memberEntityList);
+                familyMemberEntityList = searchMemberList(etImport, memberEntityList);
             }
             memberAdapter.addNewData(familyMemberEntityList);
         } else {
             List<FamilyGroupEntity> familyGroupEntityList;
-            if (TextUtils.isEmpty(GroupSearch)) {
+            if (TextUtils.isEmpty(etImport)) {
                 familyGroupEntityList = groupEntityList;
             } else {
-                familyGroupEntityList = searchGroupList(GroupSearch, groupEntityList);
+                familyGroupEntityList = searchGroupList(etImport, groupEntityList);
             }
             groupAdapter.addData(familyGroupEntityList);
         }
@@ -898,11 +905,20 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         switch (v.getId()) {
             case R.id.message_member_tv:
                 pager.setCurrentItem(0);
-                setSearchData(null);
+                if (!TextUtils.isEmpty(MemeberSearch)){
+                    etSearch.setText(MemeberSearch);
+                }else {
+                    etSearch.setText("");
+                    memberAdapter.addNewData(memberList);
+                }
                 break;
             case R.id.message_group_tv:
                 pager.setCurrentItem(1);
-                setSearchData(null);
+                if (!TextUtils.isEmpty(GroupSearch)){
+                    etSearch.setText(GroupSearch);
+                }else {
+                    etSearch.setText("");
+                }
                 break;
         }
     }
