@@ -212,6 +212,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
                 for (UserEntity userEntity : userList) {
                     selectUserList.add(userEntity.getUser_id());
                 }
+
                 selectUserEntityList.addAll(userList);
             }
         }
