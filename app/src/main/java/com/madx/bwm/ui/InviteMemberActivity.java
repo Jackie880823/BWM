@@ -226,20 +226,23 @@ public class InviteMemberActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String etImport = etSearch.getText().toString();
-                if(TextUtils.isEmpty(etImport)){
-                    memberAdapter.addNewData(memberList);
-                    groupAdapter.addData(groupList);
+//                if(TextUtils.isEmpty(etImport)){
+//                    memberAdapter.addNewData(memberList);
+//                }else {
+//                    setSearchData(etImport);
+//                }
+                if(pager.getCurrentItem() == 0){
+                    MemeberSearch = etImport;
                 }else {
-                    setSearchData(etImport);
+                    GroupSearch = etImport;
                 }
+                setSearchData(etImport);
             }
         });
     }
 
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
-        MemeberSearch = PinYin4JUtil.getPinyinWithMark(searchData);
-        GroupSearch = PinYin4JUtil.getPinyinWithMark(searchData);
         if (pager.getCurrentItem() == 0) {
             List<FamilyMemberEntity> familyMemberEntityList;
             if (TextUtils.isEmpty(etImport)) {
@@ -247,7 +250,7 @@ public class InviteMemberActivity extends BaseActivity {
             } else {
                 familyMemberEntityList = searchMemberList(etImport, memberEntityList);
             }
-                memberAdapter.addNewData(familyMemberEntityList);
+            memberAdapter.addNewData(familyMemberEntityList);
 
         } else {
             List<FamilyGroupEntity> familyGroupEntityList;
@@ -763,14 +766,19 @@ public class InviteMemberActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.message_member_tv:
                 pager.setCurrentItem(0);
-//                setSearchData(MemeberSearch);
-//                memberList
-//                memberAdapter.addNewData(memberList);
+                if (!TextUtils.isEmpty(MemeberSearch)){
+                    etSearch.setText(MemeberSearch);
+                }else {
+                    etSearch.setText("");
+                }
                 break;
             case R.id.message_group_tv:
                 pager.setCurrentItem(1);
-//                setSearchData(GroupSearch);
-//                memberAdapter.addNewData(memberList);
+                if (!TextUtils.isEmpty(GroupSearch)){
+                    etSearch.setText(GroupSearch);
+                }else {
+                    etSearch.setText("");
+                }
                 break;
         }
     }

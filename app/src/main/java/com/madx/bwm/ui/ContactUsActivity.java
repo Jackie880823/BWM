@@ -76,6 +76,8 @@ public class ContactUsActivity extends BaseActivity {
 
         getViewById(R.id.subject_spinner).setOnClickListener(this);
         getViewById(R.id.btn_send_mail).setOnClickListener(this);
+
+
     }
 
     private void showSelectDialog() {

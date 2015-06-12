@@ -58,6 +58,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -79,7 +80,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private List<FamilyMemberEntity> moreMemberList;
     private List<FamilyGroupEntity> groupEntityList;
     private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
-//    private ProgressDialog mProgressDialog;
+    //    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0x11;
     private MyFamilyAdapter memberAdapter;
     private FamilyGroupAdapter groupAdapter;
@@ -101,6 +102,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     private String MemeberSearch;
     private String GroupSearch;
+    List<FamilyMemberEntity> opendate = new LinkedList<>();
 
     public static FamilyFragment newInstance(String... params) {
         return createInstance(new FamilyFragment(), params);
@@ -133,6 +135,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         member.setUser_given_name(FAMILY_TREE);
                         member.setUser_id(FAMILY_TREE);
                         memberList.add(member);
+                        opendate.add(0,member);
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
                             String tree_type = memberEntity.getTree_type();
                             if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
@@ -150,6 +153,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         familyMember.setUser_given_name(FAMILY_HIDE_MEMBER);
                         familyMember.setUser_id(FAMILY_HIDE_MEMBER);
                         moreMemberList.add(familyMember);
+                        opendate.add(familyMember);
                     }
                     memberAdapter.addNewData(memberList);
 
@@ -215,31 +219,39 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void afterTextChanged(Editable s) {
                 String etImport = etSearch.getText().toString();
+                if(pager.getCurrentItem() == 0){
+                    MemeberSearch = etImport;
+                }else {
+                    GroupSearch = etImport;
+                }
                 setSearchData(etImport);
-                //etSearch.setText("");
+
             }
         });
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     private void setSearchData(String searchData) {
-//        String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
-        MemeberSearch = PinYin4JUtil.getPinyinWithMark(searchData);
-        GroupSearch = PinYin4JUtil.getPinyinWithMark(searchData);
+        String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
         if (pager.getCurrentItem() == 0) {
             List<FamilyMemberEntity> familyMemberEntityList;
-            if (TextUtils.isEmpty(MemeberSearch)) {
-                familyMemberEntityList = memberList;
+            if (TextUtils.isEmpty(etImport)) {
+                if(memberAdapter.getCount()>2){
+                    familyMemberEntityList = opendate;
+                }else {
+                    familyMemberEntityList = memberList;
+                }
             } else {
-                familyMemberEntityList = searchMemberList(MemeberSearch, memberEntityList);
+                familyMemberEntityList = searchMemberList(etImport, memberEntityList);
             }
             memberAdapter.addNewData(familyMemberEntityList);
+
         } else {
             List<FamilyGroupEntity> familyGroupEntityList;
-            if (TextUtils.isEmpty(GroupSearch)) {
+            if (TextUtils.isEmpty(etImport)) {
                 familyGroupEntityList = groupEntityList;
             } else {
-                familyGroupEntityList = searchGroupList(GroupSearch, groupEntityList);
+                familyGroupEntityList = searchGroupList(etImport, groupEntityList);
             }
             groupAdapter.addData(familyGroupEntityList);
         }
@@ -332,17 +344,20 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 userGridView.setSelection(0);
             }
         });
-
         userGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 FamilyMemberEntity familyMemberEntity = memberAdapter.getList().get(arg2);
                 String userId = familyMemberEntity.getUser_id();
+
                 if (FamilyFragment.FAMILY_TREE.equals(userId)) {
                     getUrl();
                 } else if (FamilyFragment.FAMILY_MORE_MEMBER.equals(userId)) {
                     memberAdapter.addMoreData(moreMemberList);
+                    if(opendate.size()<3){
+                        opendate.addAll(1,memberEntityList);
+                    }
                 } else if (FamilyFragment.FAMILY_HIDE_MEMBER.equals(userId)) {
                     memberAdapter.addNewData(memberList);
                 } else {
@@ -488,44 +503,44 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //            @Override
 //            public void run() {
 //                super.run();
-                new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
-                    @Override
-                    public void onStart() {
+        new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onResult(String string) {
+                try {
+                    JSONObject jsonObject = new JSONObject(string);
+                    if ("200".equals(jsonObject.getString("response_status_code"))) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
                     }
+                } catch (JSONException e) {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
 
-                    @Override
-                    public void onFinish() {
-                    }
+            }
 
-                    @Override
-                    public void onResult(String string) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(string);
-                            if ("200".equals(jsonObject.getString("response_status_code"))) {
-                                Toast.makeText(getActivity(), getResources().getString(R.string.text_successfully_dismiss_miss), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                            e.printStackTrace();
-                        }
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+            }
 
-                    }
+            @Override
+            public void onCancelled() {
 
-                    @Override
-                    public void onError(Exception e) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    }
+            }
 
-                    @Override
-                    public void onCancelled() {
+            @Override
+            public void onLoading(long count, long current) {
 
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
+            }
+        });
 
 //            }
 //        }.start();
@@ -543,50 +558,50 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //            @Override
 //            public void run() {
 //                super.run();
-                new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
-                    @Override
-                    public void onStart() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+            @Override
+            public void onStart() {
 
-                    }
+            }
 
-                    @Override
-                    public void onFinish() {
-                        vProgress.setVisibility(View.GONE);
-                    }
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+            }
 
-                    @Override
-                    public void onResult(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            if ("Success".equals(jsonObject.getString("response_status"))) {
-                                String urlString = jsonObject.getString("filePath");
-                                if (!TextUtils.isEmpty(urlString)) {
-                                    getPdf(urlString);
-                                }
-                            } else {
-                                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                            }
-                        } catch (Exception e) {
-                            MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                            e.printStackTrace();
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if ("Success".equals(jsonObject.getString("response_status"))) {
+                        String urlString = jsonObject.getString("filePath");
+                        if (!TextUtils.isEmpty(urlString)) {
+                            getPdf(urlString);
                         }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
+                    } else {
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     }
+                } catch (Exception e) {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
+            }
 
-                    @Override
-                    public void onCancelled() {
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+            }
 
-                    }
+            @Override
+            public void onCancelled() {
 
-                    @Override
-                    public void onLoading(long count, long current) {
+            }
 
-                    }
-                });
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
 
 //            }
 //        }.start();
@@ -709,7 +724,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         tvAddNewMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //打开添加成员界面
                 startActivity(new Intent(getActivity(), AddNewMembersActivity.class));
                 showSelectDialog.dismiss();
             }
@@ -899,11 +913,21 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         switch (v.getId()) {
             case R.id.message_member_tv:
                 pager.setCurrentItem(0);
-                setSearchData(null);
+                if (!TextUtils.isEmpty(MemeberSearch)){
+                    etSearch.setText(MemeberSearch);
+                }else {
+                    etSearch.setText("");
+                }
+                etSearch.setSelection(etSearch.length());
                 break;
             case R.id.message_group_tv:
                 pager.setCurrentItem(1);
-                setSearchData(null);
+                if (!TextUtils.isEmpty(GroupSearch)){
+                    etSearch.setText(GroupSearch);
+                }else {
+                    etSearch.setText("");
+                }
+                etSearch.setSelection(etSearch.length());
                 break;
         }
     }

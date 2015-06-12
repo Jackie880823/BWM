@@ -68,6 +68,6 @@
     <color name="default_text_color_blue">#0087FF</color>
     <color name="bg_forget_password">#cc363636</color>
     <color name="default_sticker">#feb400</color><!--  65% -->
-
+    <color name="login">#3BD42E</color><!--  65% -->
 
 </resources>
