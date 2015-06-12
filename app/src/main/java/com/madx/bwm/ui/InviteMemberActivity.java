@@ -9,7 +9,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -47,7 +46,6 @@ import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.PinYin4JUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.MyDialog;
-import com.madx.bwm.widget.MySwipeRefreshLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +70,7 @@ public class InviteMemberActivity extends BaseActivity {
     private boolean isMemberRefresh, isGroupRefresh;
     private List<FamilyMemberEntity> memberEntityList;
     private List<FamilyGroupEntity> groupEntityList;
-    private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
+//    private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
     private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0x11;
     private InviteMemberAdapter memberAdapter;
@@ -360,10 +358,10 @@ public class InviteMemberActivity extends BaseActivity {
 
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
-        View userView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
+        View userView = LayoutInflater.from(mContext).inflate(R.layout.select_list_view_layout, null);
         final GridView userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
         final ImageButton userIb = (ImageButton) userView.findViewById(R.id.ib_top);
-        memberRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
+//        memberRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
         userGridView.setAdapter(memberAdapter);
         userIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -399,14 +397,14 @@ public class InviteMemberActivity extends BaseActivity {
                 }
             }
         });
-        memberRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                isMemberRefresh = true;
-                isFirstData = false;
-                requestData();
-            }
-        });
+//        memberRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                isMemberRefresh = true;
+//                isFirstData = false;
+//                requestData();
+//            }
+//        });
         userGridView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -423,10 +421,10 @@ public class InviteMemberActivity extends BaseActivity {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (userGridView.getFirstVisiblePosition() == 0) {
                     userIb.setVisibility(View.GONE);
-                    memberRefreshLayout.setEnabled(true);
+//                    memberRefreshLayout.setEnabled(true);
                 } else {
                     userIb.setVisibility(View.VISIBLE);
-                    memberRefreshLayout.setEnabled(false);
+//                    memberRefreshLayout.setEnabled(false);
                 }
             }
 
@@ -434,10 +432,10 @@ public class InviteMemberActivity extends BaseActivity {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (userGridView.getFirstVisiblePosition() == 0) {
                     userIb.setVisibility(View.GONE);
-                    memberRefreshLayout.setEnabled(true);
+//                    memberRefreshLayout.setEnabled(true);
                 } else {
                     userIb.setVisibility(View.VISIBLE);
-                    memberRefreshLayout.setEnabled(false);
+//                    memberRefreshLayout.setEnabled(false);
                 }
             }
         });
@@ -446,7 +444,7 @@ public class InviteMemberActivity extends BaseActivity {
         View groupView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
         final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
-        groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
+//        groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
         groupListView.setAdapter(groupAdapter);
         groupIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -454,15 +452,15 @@ public class InviteMemberActivity extends BaseActivity {
                 groupListView.setSelection(0);
             }
         });
-        groupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                isGroupRefresh = true;
-                isFirstData = false;
-                requestData();
-            }
-
-        });
+//        groupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                isGroupRefresh = true;
+//                isFirstData = false;
+//                requestData();
+//            }
+//
+//        });
         groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
@@ -500,10 +498,10 @@ public class InviteMemberActivity extends BaseActivity {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (groupListView.getFirstVisiblePosition() == 0) {
                     groupIb.setVisibility(View.GONE);
-                    groupRefreshLayout.setEnabled(true);
+//                    groupRefreshLayout.setEnabled(true);
                 } else {
                     groupIb.setVisibility(View.VISIBLE);
-                    groupRefreshLayout.setEnabled(false);
+//                    groupRefreshLayout.setEnabled(false);
                 }
             }
 
@@ -511,10 +509,10 @@ public class InviteMemberActivity extends BaseActivity {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (groupListView.getFirstVisiblePosition() == 0) {
                     groupIb.setVisibility(View.GONE);
-                    groupRefreshLayout.setEnabled(true);
+//                    groupRefreshLayout.setEnabled(true);
                 } else {
                     groupIb.setVisibility(View.VISIBLE);
-                    groupRefreshLayout.setEnabled(false);
+//                    groupRefreshLayout.setEnabled(false);
                 }
             }
         });
@@ -654,11 +652,11 @@ public class InviteMemberActivity extends BaseActivity {
 
     private void finishReFresh() {
         if (isMemberRefresh) {
-            memberRefreshLayout.setRefreshing(false);
+//            memberRefreshLayout.setRefreshing(false);
             isMemberRefresh = false;
         }
         if (isGroupRefresh) {
-            groupRefreshLayout.setRefreshing(false);
+//            groupRefreshLayout.setRefreshing(false);
             isGroupRefresh = false;
         }
     }
