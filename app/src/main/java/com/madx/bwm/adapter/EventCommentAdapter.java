@@ -7,6 +7,8 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,6 +156,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
         switch (viewType){
             case TEXT:
                  view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_item, parent, false);
+
 //                Log.i("TEXT==========","");
                 break;
             case PIC:

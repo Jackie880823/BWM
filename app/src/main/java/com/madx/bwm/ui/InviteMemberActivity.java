@@ -441,7 +441,7 @@ public class InviteMemberActivity extends BaseActivity {
         });
 
         mLists.add(userView);
-        View groupView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
+        View groupView = LayoutInflater.from(mContext).inflate(R.layout.select_list_view_layout, null);
         final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
 //        groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);

@@ -102,7 +102,11 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     private String MemeberSearch;
     private String GroupSearch;
+    private boolean isup;
+    private boolean isopen;
     List<FamilyMemberEntity> opendate = new LinkedList<>();
+//    FamilyMemberEntity tpfamilyMemberEntity = new FamilyMemberEntity();//Everyone
+//    FamilyMemberEntity tpfamilyMember = new FamilyMemberEntity();//MyFamily
 
     public static FamilyFragment newInstance(String... params) {
         return createInstance(new FamilyFragment(), params);
@@ -135,7 +139,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         member.setUser_given_name(FAMILY_TREE);
                         member.setUser_id(FAMILY_TREE);
                         memberList.add(member);
-                        opendate.add(0,member);
+//                        opendate.add(0,member);
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
                             String tree_type = memberEntity.getTree_type();
                             if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
@@ -153,7 +157,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         familyMember.setUser_given_name(FAMILY_HIDE_MEMBER);
                         familyMember.setUser_id(FAMILY_HIDE_MEMBER);
                         moreMemberList.add(familyMember);
-                        opendate.add(familyMember);
+//                        opendate.add(familyMember);
                     }
                     memberAdapter.addNewData(memberList);
 
@@ -167,6 +171,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     @Override
     public void initView() {
+        isup = true;
         mContext = getActivity();
         FAMILY_TREE = mContext.getString(R.string.text_new_family_tree);
         pager = getViewById(R.id.family_list_viewpager);
@@ -236,7 +241,19 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         if (pager.getCurrentItem() == 0) {
             List<FamilyMemberEntity> familyMemberEntityList;
             if (TextUtils.isEmpty(etImport)) {
-                if(memberAdapter.getCount()>2){
+//                if(memberAdapter!=null){
+//                    int size = memberAdapter.getList().size();
+//                    if(memberAdapter.getList().get(size-1).getUser_given_name()==FAMILY_HIDE_MEMBER){
+//                        familyMemberEntityList = opendate;
+//                    }else {
+//                        familyMemberEntityList = memberList;
+//                    }
+//
+//                }
+
+//                int size = memberAdapter.getList().size();
+                //如果已经展开
+                if(isopen){
                     familyMemberEntityList = opendate;
                 }else {
                     familyMemberEntityList = memberList;
@@ -354,11 +371,21 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 if (FamilyFragment.FAMILY_TREE.equals(userId)) {
                     getUrl();
                 } else if (FamilyFragment.FAMILY_MORE_MEMBER.equals(userId)) {
-                    memberAdapter.addMoreData(moreMemberList);
-                    if(opendate.size()<3){
-                        opendate.addAll(1,memberEntityList);
+                    isopen  = true;
+                    int size = memberAdapter.getList().size();
+                    if(moreMemberList!=null){
+                        memberAdapter.addMoreData(moreMemberList);
                     }
+//                    if(memberAdapter.getList().get(size-1).getUser_given_name()==FAMILY_MORE_MEMBER){
+//                        if(memberEntityList!=null){
+//                            opendate.clear();
+//                            opendate.addAll(memberAdapter.getList());
+////                            opendate.addAll(1,memberEntityList);
+//                        }
+//                    }
+
                 } else if (FamilyFragment.FAMILY_HIDE_MEMBER.equals(userId)) {
+                    isopen = false;
                     memberAdapter.addNewData(memberList);
                 } else {
                     if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
@@ -383,6 +410,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onRefresh() {
                 isMemberRefresh = true;
+                isup = false;
+                opendate.clear();
                 requestData();
             }
         });
@@ -806,8 +835,16 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                             } else {
                                 showGroupEmptyView();
                             }
+//                            if(memberAdapter=null){
+//                                int size = memberAdapter.getList().size();
+//                                if (memberAdapter.getList().get(size-1).getUser_given_name()==FAMILY_MORE_MEMBER){
+//                                    isopen  = true;
+//                                }
+//                            }
                             if (map.size() > 0) {
-                                Message.obtain(handler, GET_DATA, map).sendToTarget();
+                                if(isup){
+                                    Message.obtain(handler, GET_DATA, map).sendToTarget();
+                                }
                             }
                         } catch (JSONException e) {
                             finishReFresh();
@@ -927,6 +964,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 }else {
                     etSearch.setText("");
                 }
+                opendate.clear();
+                opendate.addAll(memberAdapter.getList());
                 etSearch.setSelection(etSearch.length());
                 break;
         }
