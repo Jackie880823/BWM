@@ -102,11 +102,19 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         return address;
     }
 
+    private static LocationListener locationListener = new LocationUtil();
     public static void setRequestLocationUpdates(Context context) {
         if(lm == null) {
             lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         }
-        lm.requestLocationUpdates(2000, 0, getCriteria(), new LocationUtil(), null);
+        lm.requestLocationUpdates(2000, 0, getCriteria(), locationListener, null);
+    }
+
+    public static void removerLocationListener() {
+        if(lm == null) {
+            return;
+        }
+        lm.removeUpdates(locationListener);
     }
 
     /**

@@ -43,8 +43,6 @@ public class App extends MultiDexApplication {
         HttpTools.init(this);
         /**baidu map*/
         SDKInitializer.initialize(getApplicationContext());
-
-
     }
 
 
