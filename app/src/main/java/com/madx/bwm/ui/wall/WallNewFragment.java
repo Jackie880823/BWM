@@ -294,6 +294,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         super.onResume();
         Log.i(TAG, "onResume");
 
+        // 监听地址更新
+        // LocationUtil.setRequestLocationUpdates(getActivity());
+
         try {
             recoverDraft();
         } catch(Exception e) {
@@ -310,6 +313,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     @Override
     public void onStop() {
         super.onStop();
+
+        // 取消地址监听
+        // LocationUtil.removerLocationListener();
 
         if(myDialog != null && myDialog.isShowing()) {
             myDialog.dismiss();

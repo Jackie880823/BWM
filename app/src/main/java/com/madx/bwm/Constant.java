@@ -35,8 +35,8 @@ public class Constant {
     /**
      * for api
      */
-//    public static final String API_SERVER = "http://pt.bondwith.me";
-    public static final String API_SERVER = "http://sc.bondwith.me";
+    public static final String API_SERVER = "http://pt.bondwith.me";
+//    public static final String API_SERVER = "http://sc.bondwith.me";
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER+"/bondwithme/index.php/api/multiPhoto";
 
     public static final String API_WALL_MAIN = API_SERVER+"/bondwithme/index.php/api/wall";
@@ -62,7 +62,7 @@ public class Constant {
     public static final String API_EVENT_POST_COMMENT = API_SERVER+"/bondwithme/index.php/api/posts";
     public static final String API_EVENT_COMMENT_PIC_POST = API_SERVER+"/bondwithme/index.php/api/uploadCommentPhoto";
     public static final String API_GET_EVENT_DETAIL = API_SERVER+"/bondwithme/index.php/api/event";
-    public static final String API_GET_EVENT_GROUP_MEMBERS = "http://dev.bondwith.me/bondwithme/index.php/api/filterGroupMember";
+    public static final String API_GET_EVENT_GROUP_MEMBERS = API_SERVER+"/bondwithme/index.php/api/filterGroupMember";
 
 
     public static final String API_EVENT_INVITED = API_SERVER+"/bondwithme/index.php/api/eventMember";

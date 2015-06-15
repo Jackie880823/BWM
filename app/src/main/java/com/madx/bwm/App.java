@@ -5,6 +5,8 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.SDKInitializer;
@@ -41,8 +43,9 @@ public class App extends MultiDexApplication {
         HttpTools.init(this);
         /**baidu map*/
         SDKInitializer.initialize(getApplicationContext());
-
     }
+
+
 
     public static App getContextInstance() {
         return appContext;
@@ -84,6 +87,10 @@ public class App extends MultiDexApplication {
     public static UserEntity getLoginedUser() {
         if (appContext != null && (user == null)) {
             user = new Gson().fromJson(PreferencesUtil.getValue(appContext, "user", null), UserEntity.class);
+            //异常情况，重新初始token
+            if(user!=null&&HttpTools.getHeaders()!=null&&TextUtils.isEmpty(HttpTools.getHeaders().get("X_BWM_TOKEN"))){
+                initToken(user.getUser_login_id(), new Gson().fromJson(PreferencesUtil.getValue(appContext, Constant.HTTP_TOKEN, ""),AppTokenEntity.class));
+            }
         }
         //test,18682116784
 //        String userString = "{'bondwithme_id':'80000698','linked':'0','owner_user_id':'0','sys_gender':'F','user_active_date':'2015-04-06 10:34:39','user_country_code':'86','user_creation_date':'2015-03-10 11:16:21','user_default_group':'0','user_emoticon':'','user_fullname':'Wing','user_gender':'M'," +
@@ -118,12 +125,14 @@ public class App extends MultiDexApplication {
         }
     }
 
-    public static void exit(Activity context) {
-        if (context != null) {
-            FileUtil.clearCache(context);
-            context.finish();
-        }
-    }
+//    public static void exit(Activity context) {
+//        if (context != null) {
+//            FileUtil.clearCache(context);
+//            context.finish();
+//        }
+//        android.os.Process.killProcess(android.os.Process.myPid());
+//        System.exit(0);
+//    }
 
     public SQLiteHelperOrm getDBHelper() {
         if (databaseHelper == null) {
@@ -139,7 +148,11 @@ public class App extends MultiDexApplication {
     @Override
     public void onTerminate() {
         super.onTerminate();
+        Log.i("","onTerminate==================");
         FileUtil.clearCache(this);
+        android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
     }
+
+
 }

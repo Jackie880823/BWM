@@ -9,7 +9,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -47,13 +46,13 @@ import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.PinYin4JUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.MyDialog;
-import com.madx.bwm.widget.MySwipeRefreshLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -71,7 +70,7 @@ public class InviteMemberActivity extends BaseActivity {
     private boolean isMemberRefresh, isGroupRefresh;
     private List<FamilyMemberEntity> memberEntityList;
     private List<FamilyGroupEntity> groupEntityList;
-    private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
+//    private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
     private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0x11;
     private InviteMemberAdapter memberAdapter;
@@ -89,6 +88,10 @@ public class InviteMemberActivity extends BaseActivity {
     private String MemeberSearch;
     private String GroupSearch;
 
+    List<FamilyMemberEntity> memberList;
+    List<FamilyGroupEntity> groupList;
+    List<FamilyMemberEntity> searchmemberList = new LinkedList<>();
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -102,16 +105,19 @@ public class InviteMemberActivity extends BaseActivity {
                     memberEntityList = map.get("private");
                     if (memberEntityList != null) {
                         if (type == 1) {
-                            List<FamilyMemberEntity> memberList = new ArrayList<>();
+                            memberList = new ArrayList<>();
                             for (FamilyMemberEntity memberEntity : memberEntityList) {
                                 if (!selectMemberList.contains(memberEntity.getUser_id())) {
                                     memberList.add(memberEntity);
-                                } else {
+
+                                }
+                                else {
                                     if (isFirstData) {
                                         selectMemberEntityList.add(memberEntity);
                                     }
                                 }
                             }
+                            searchmemberList.addAll(memberList);
                             memberAdapter.addNewData(memberList);
                         } else {
                             for (FamilyMemberEntity memberEntity : memberEntityList) {
@@ -128,7 +134,7 @@ public class InviteMemberActivity extends BaseActivity {
                     groupEntityList = map.get("group");
                     if (groupEntityList != null) {
                         if (groupType == 1) {
-                            List<FamilyGroupEntity> groupList = new ArrayList<>();
+                            groupList = new ArrayList<>();
                             for (FamilyGroupEntity groupEntity : groupEntityList) {
                                 if (!selectGroupList.contains(groupEntity.getGroup_id())) {
                                     groupList.add(groupEntity);
@@ -223,30 +229,87 @@ public class InviteMemberActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 String etImport = etSearch.getText().toString();
-                setSearchData(etImport);
+//                if(TextUtils.isEmpty(etImport)){
+//                    memberAdapter.addNewData(memberList);
+//                }else {
+//                    setSearchData(etImport);
+//                }
+
+                if (pager.getCurrentItem() == 0) {
+                    MemeberSearch = etImport;
+                } else {
+                    GroupSearch = etImport;
+                }
+                if (!isTabChanged) {
+                    setSearchData(etImport);
+                } else {
+                    isTabChanged = false;
+                }
+
             }
         });
     }
 
+    boolean isTabChanged;
+
     private void setSearchData(String searchData) {
-//        String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
-        MemeberSearch = PinYin4JUtil.getPinyinWithMark(searchData);
-        GroupSearch = PinYin4JUtil.getPinyinWithMark(searchData);
+        String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
         if (pager.getCurrentItem() == 0) {
+//            List<FamilyMemberEntity> familyMemberEntityList;
+//            if (TextUtils.isEmpty(etImport)) {
+//                familyMemberEntityList = memberEntityList;
+//            } else {
+//                familyMemberEntityList = searchMemberList(etImport, memberEntityList);
+//            }
+//            memberAdapter.addNewData(familyMemberEntityList);
             List<FamilyMemberEntity> familyMemberEntityList;
             if (TextUtils.isEmpty(MemeberSearch)) {
-                familyMemberEntityList = memberEntityList;
+                if (type == 1) {
+//                    List<FamilyMemberEntity> memberList = new ArrayList<>();
+//                    for (FamilyMemberEntity memberEntity : searchmemberList) {
+//                        if (!selectMemberList.contains(memberEntity.getUser_id())) {
+//                            memberList.add(memberEntity);
+//                        } else {
+//                            if (isFirstData) {
+//                                selectMemberEntityList.add(memberEntity);
+//                            }
+//                        }
+//                    }
+                    familyMemberEntityList = memberList;
+                } else {
+                    familyMemberEntityList = memberEntityList;
+                }
+
             } else {
-                familyMemberEntityList = searchMemberList(MemeberSearch, memberEntityList);
+                if (type == 1) {
+                    List<FamilyMemberEntity> memberList = new ArrayList<>();
+//                    for (FamilyMemberEntity memberEntity : searchmemberList) {
+//                        if (!selectMemberList.contains(memberEntity.getUser_id())) {
+//                            memberList.add(memberEntity);
+//                        } else {
+//                            if (isFirstData) {
+//                                selectMemberEntityList.add(memberEntity);
+//                            }
+//                        }
+//                    }
+                    familyMemberEntityList = searchMemberList(MemeberSearch, searchmemberList);
+//                    familyMemberEntityList = searchMemberList(MemeberSearch, memberList);
+                } else {
+
+                    familyMemberEntityList = searchMemberList(MemeberSearch, memberEntityList);
+                }
             }
+            //刷新适配器数据
             memberAdapter.addNewData(familyMemberEntityList);
+
         } else {
             List<FamilyGroupEntity> familyGroupEntityList;
-            if (TextUtils.isEmpty(GroupSearch)) {
+            if (TextUtils.isEmpty(etImport)) {
                 familyGroupEntityList = groupEntityList;
             } else {
-                familyGroupEntityList = searchGroupList(GroupSearch, groupEntityList);
+                familyGroupEntityList = searchGroupList(etImport, groupEntityList);
             }
+            //刷新适配器数据
             groupAdapter.addData(familyGroupEntityList);
         }
     }
@@ -295,10 +358,10 @@ public class InviteMemberActivity extends BaseActivity {
 
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
-        View userView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
+        View userView = LayoutInflater.from(mContext).inflate(R.layout.select_list_view_layout, null);
         final GridView userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
         final ImageButton userIb = (ImageButton) userView.findViewById(R.id.ib_top);
-        memberRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
+//        memberRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
         userGridView.setAdapter(memberAdapter);
         userIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -334,14 +397,14 @@ public class InviteMemberActivity extends BaseActivity {
                 }
             }
         });
-        memberRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                isMemberRefresh = true;
-                isFirstData = false;
-                requestData();
-            }
-        });
+//        memberRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                isMemberRefresh = true;
+//                isFirstData = false;
+//                requestData();
+//            }
+//        });
         userGridView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -358,10 +421,10 @@ public class InviteMemberActivity extends BaseActivity {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (userGridView.getFirstVisiblePosition() == 0) {
                     userIb.setVisibility(View.GONE);
-                    memberRefreshLayout.setEnabled(true);
+//                    memberRefreshLayout.setEnabled(true);
                 } else {
                     userIb.setVisibility(View.VISIBLE);
-                    memberRefreshLayout.setEnabled(false);
+//                    memberRefreshLayout.setEnabled(false);
                 }
             }
 
@@ -369,19 +432,19 @@ public class InviteMemberActivity extends BaseActivity {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (userGridView.getFirstVisiblePosition() == 0) {
                     userIb.setVisibility(View.GONE);
-                    memberRefreshLayout.setEnabled(true);
+//                    memberRefreshLayout.setEnabled(true);
                 } else {
                     userIb.setVisibility(View.VISIBLE);
-                    memberRefreshLayout.setEnabled(false);
+//                    memberRefreshLayout.setEnabled(false);
                 }
             }
         });
 
         mLists.add(userView);
-        View groupView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
+        View groupView = LayoutInflater.from(mContext).inflate(R.layout.select_list_view_layout, null);
         final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
-        groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
+//        groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
         groupListView.setAdapter(groupAdapter);
         groupIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -389,15 +452,15 @@ public class InviteMemberActivity extends BaseActivity {
                 groupListView.setSelection(0);
             }
         });
-        groupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                isGroupRefresh = true;
-                isFirstData = false;
-                requestData();
-            }
-
-        });
+//        groupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                isGroupRefresh = true;
+//                isFirstData = false;
+//                requestData();
+//            }
+//
+//        });
         groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
@@ -435,10 +498,10 @@ public class InviteMemberActivity extends BaseActivity {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (groupListView.getFirstVisiblePosition() == 0) {
                     groupIb.setVisibility(View.GONE);
-                    groupRefreshLayout.setEnabled(true);
+//                    groupRefreshLayout.setEnabled(true);
                 } else {
                     groupIb.setVisibility(View.VISIBLE);
-                    groupRefreshLayout.setEnabled(false);
+//                    groupRefreshLayout.setEnabled(false);
                 }
             }
 
@@ -446,10 +509,10 @@ public class InviteMemberActivity extends BaseActivity {
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 if (groupListView.getFirstVisiblePosition() == 0) {
                     groupIb.setVisibility(View.GONE);
-                    groupRefreshLayout.setEnabled(true);
+//                    groupRefreshLayout.setEnabled(true);
                 } else {
                     groupIb.setVisibility(View.VISIBLE);
-                    groupRefreshLayout.setEnabled(false);
+//                    groupRefreshLayout.setEnabled(false);
                 }
             }
         });
@@ -589,11 +652,11 @@ public class InviteMemberActivity extends BaseActivity {
 
     private void finishReFresh() {
         if (isMemberRefresh) {
-            memberRefreshLayout.setRefreshing(false);
+//            memberRefreshLayout.setRefreshing(false);
             isMemberRefresh = false;
         }
         if (isGroupRefresh) {
-            groupRefreshLayout.setRefreshing(false);
+//            groupRefreshLayout.setRefreshing(false);
             isGroupRefresh = false;
         }
     }
@@ -752,12 +815,24 @@ public class InviteMemberActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.message_member_tv:
+                isTabChanged = true;
                 pager.setCurrentItem(0);
-                setSearchData(null);
+                if (!TextUtils.isEmpty(MemeberSearch)) {
+                    etSearch.setText(MemeberSearch);
+                } else {
+                    etSearch.setText("");
+                }
+                etSearch.setSelection(etSearch.length());
                 break;
             case R.id.message_group_tv:
+                isTabChanged = true;
                 pager.setCurrentItem(1);
-                setSearchData(null);
+                if (!TextUtils.isEmpty(GroupSearch)) {
+                    etSearch.setText(GroupSearch);
+                } else {
+                    etSearch.setText("");
+                }
+                etSearch.setSelection(etSearch.length());
                 break;
         }
     }
