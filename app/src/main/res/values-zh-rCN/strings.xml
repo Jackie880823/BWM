@@ -38,7 +38,7 @@
     <string name="msg_no_internet">Poor internet connection</string>
     <string name="msg_load_config_successed">Loaded successfully</string>
     <string name="msg_load_config_failed">Loading failed</string>
-    <string name="msg_date_not_befort_now">Date must be later than now</string>
+    <string name="msg_date_not_befort_now">时间必须晚于现在</string>
     <string name="text_tips_title">Action</string>
     <string name="text_more">More</string>
 
@@ -75,7 +75,7 @@
     <string name="text_ask_delete">Confirm remove member?</string>
     <string name="text_add_members_successed">Add members successfully</string>
 
-    <string name="text_comments">Comments</string>
+    <string name="text_comments">评论</string>
 
     <string name="text_wall_content_at_member_desc">\@%1$smembers</string>
     <string name="text_wall_content_at_group_desc">\@%1$sgroups</string>
@@ -95,7 +95,7 @@
     <string name="text_map">Map</string>
     <string name="text_destination">Destination</string>
 
-    <string name="title_pick_date_time">Event date &amp; time</string>
+    <string name="title_pick_date_time">活动 日期 &amp; 时间</string>
     <string name="accept">确定</string>
     <string name="ok">确定</string>
     <string name="cancel">取消</string>
@@ -734,4 +734,7 @@
     <string name="hint_comment_input">在此输入评论…</string>
     <string name="saved_to_path">"已保存到："</string>
     <!--Christopher-->
+
+    <string name="morning">上午</string>
+    <string name="afternoon">下午</string>
 </resources>

@@ -753,4 +753,7 @@
     <string name="saved_to_path">"Has been saved to: "</string>
     <!--Christopher-->
     <string name="location_search_error">location search error!</string>
+    
+    <string name="morning">am</string>
+    <string name="afternoon">pm</string>
 </resources>
