@@ -14,8 +14,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.volley.ext.HttpCallback;
-import com.android.volley.ext.tools.HttpTools;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.madx.bwm.Constant;
@@ -302,22 +302,6 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
     }
 
     /**
-     * 解密成为火星坐标
-     *
-     * @param bd_lat
-     * @param bd_lon
-     * @return
-     */
-    public static String bd_decrypt(double bd_lat, double bd_lon) {
-        double x = bd_lon - 0.0065, y = bd_lat - 0.006;
-        double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
-        double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
-        double gg_lon = z * Math.cos(theta);
-        double gg_lat = z * Math.sin(theta);
-        return gg_lat + "," + gg_lon;
-    }
-
-    /**
      * 加密成为摩卡托坐标
      */
     public static String bd_encrypt(double gg_lat, double gg_lon) {
@@ -329,48 +313,25 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         return gg_lat + "," + gg_lon;
     }
 
-    public static void convertLocation(Context context, String latitude, String longitude) {
-        String url = "http://api.map.baidu.com/geoconv/v1/?coords=%s&ak=%s&from=1&to=5";
-        //                http://api.map.baidu.com/geoconv/v1/?coords=114.21892734521,29.575429778924;114.21892734521,29.575429778924&from=1&to=5&ak=WkHFTQQgdIvSphGk31aAaKWu
-        String ss = context.getResources().getString(R.string.jackie_baidu_maps_key_4_convertor);
-        Log.i("", "2url======" + String.format(url, latitude + "," + longitude, ss));
-        new HttpTools(context).get(String.format(url, latitude + "," + longitude, ss), null, new HttpCallback() {
-            @Override
-            public void onStart() {
+    public static LatLng convert2BaiduLocation(Context context, String latitude, String longitude) {
 
-            }
+        LatLng sourceLatLng = new LatLng(Double.valueOf(latitude),Double.valueOf(longitude));
+        // 将google地图、soso地图、aliyun地图、mapabc地图和amap地图// 所用坐标转换成百度坐标
+        CoordinateConverter converter = new CoordinateConverter();
+        converter.from(CoordinateConverter.CoordType.COMMON);
+        // sourceLatLng待转换坐标
+        converter.coord(sourceLatLng);
+        LatLng desLatLng = converter.convert();
 
-            @Override
-            public void onFinish() {
+        // 将GPS设备采集的原始GPS坐标转换成百度坐标
+//        CoordinateConverter converter = new CoordinateConverter();
+//        converter.from(CoordinateConverter.CoordType.GPS);
+//        // sourceLatLng待转换坐标
+//        converter.coord(sourceLatLng);
+//        LatLng desLatLng = converter.convert();
 
-            }
+        return desLatLng;
 
-            @Override
-            public void onResult(String response) {
-                Log.i("", "onResult======" + response);
-                //                        try {
-                //                            JSONObject jsonObject = new JSONObject(response);
-                //                            jsonObject.getJSONArray("result ");
-                //                        } catch (JSONException e) {
-                //                            e.printStackTrace();
-                //                        }
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
     }
 
     @Override

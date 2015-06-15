@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/my_family_linear"
+        android:orientation="vertical">
+
+            <GridView
+                android:id="@+id/family_grid_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:numColumns="3" />
+    </LinearLayout>
+
+
+    <ImageButton
+        android:id="@+id/ib_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_8dp"
+        android:layout_marginBottom="@dimen/_8dp"
+        android:src="@drawable/top"
+        android:visibility="gone"
+        android:background="@null" />
+
+    <LinearLayout
+        android:id="@+id/family_empty_linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/family_image_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/family_member_msg_empty" />
+
+        <TextView
+            android:id="@+id/family_text_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/_200dp"
+            android:layout_marginTop="@dimen/_15dp"
+            android:textSize="@dimen/_22dp"
+            android:gravity="center"
+            android:text="@string/text_empty_add_member" />
+    </LinearLayout>
+
+</RelativeLayout>

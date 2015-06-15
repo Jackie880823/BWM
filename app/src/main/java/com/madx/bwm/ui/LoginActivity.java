@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +31,7 @@ import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.AppInfoUtil;
 import com.madx.bwm.util.MessageUtil;
+import com.madx.bwm.util.MyTextUtil;
 import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.PreferencesUtil;
 import com.madx.bwm.util.SystemUtil;
@@ -73,7 +73,6 @@ public class LoginActivity extends Activity {
         if (SystemUtil.checkPlayServices(this)) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(this);
-            Log.i("","1regid============="+regid);
             if (TextUtils.isEmpty(regid)) {
                 isGCM = true;
                 registerInBackground();
@@ -81,7 +80,6 @@ public class LoginActivity extends Activity {
         } else {
             JPushInterface.init(LoginActivity.this);
             regid = AppInfoUtil.getJpushRegistrationId(this);
-            Log.i("","2regid============="+regid);
             if (TextUtils.isEmpty(regid)) {
                 isGCM = false;
                 registerInBackground();
@@ -312,8 +310,8 @@ public class LoginActivity extends Activity {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                final String account = etAccount.getText().toString().trim();
-                final String password = etPassword.getText().toString().trim();
+                String account = etAccount.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
                 if(!TextUtils.isEmpty(account)&&!TextUtils.isEmpty(password)){
 
                     rlProgress.setVisibility(View.VISIBLE);
@@ -323,11 +321,12 @@ public class LoginActivity extends Activity {
                     if ((account.length() != 0)) {
 
                         if (TextUtils.isEmpty(tvCountryCode.getText())) {
-                            jsonParams.put("user_phone", account);//是否可以不需要
+//                            jsonParams.put("user_phone", account);//是否可以不需要
                             jsonParams.put("username", tvCountryCode.getText() + account);
                             jsonParams.put("login_type", "username");
                         } else {
-                            jsonParams.put("username", tvCountryCode.getText().toString() + account);//是否可以不需要
+                            account = MyTextUtil.NoZero(account);
+//                            jsonParams.put("username", tvCountryCode.getText().toString() + account);//是否可以不需要
                             jsonParams.put("user_phone", account);
                             jsonParams.put("login_type", "phone");
                         }
@@ -393,10 +392,20 @@ public class LoginActivity extends Activity {
                             MessageUtil.showMessage(LoginActivity.this, R.string.msg_action_failed);
                             btnLogin.setClickable(true);
 
-                            do_faile_login_linear.setVisibility(View.VISIBLE);
-                            String failePrompt = tvCountryCode.getText().toString() + " "
-                                    + account;
-                            do_faile_login_tv.setText(failePrompt);
+                            if (TextUtils.isEmpty(tvCountryCode.getText())) {
+                                //用户名
+                                do_faile_login_linear.setVisibility(View.VISIBLE);
+                                String failePrompt = tvCountryCode.getText().toString() + " "
+                                        + etAccount.getText().toString();
+                                do_faile_login_tv.setText(failePrompt);
+                            } else {
+                                //手机号
+                                do_faile_login_linear.setVisibility(View.VISIBLE);
+                                String failePrompt = tvCountryCode.getText().toString() + " "
+                                        + MyTextUtil.NoZero(etAccount.getText().toString().trim());
+                                do_faile_login_tv.setText(failePrompt);
+                            }
+
                         }
 
                         @Override
@@ -412,7 +421,7 @@ public class LoginActivity extends Activity {
                 } else if ((account.length() == 0) && (password.length() == 0)) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_enter_details), Toast.LENGTH_SHORT).show();
                 } else if (account.length() == 0) {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_username_phone), Toast.LENGTH_SHORT).show();
                 } else if (password.length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
                 }
@@ -516,4 +525,7 @@ public class LoginActivity extends Activity {
             return false;
         }
     }
+
+
+
 }

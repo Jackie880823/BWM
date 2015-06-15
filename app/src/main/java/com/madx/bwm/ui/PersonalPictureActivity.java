@@ -265,12 +265,17 @@ public class PersonalPictureActivity extends BaseActivity {
     }
 
     @Override
+    protected void titleLeftEvent() {
+        super.titleLeftEvent();
+    }
+
+    @Override
     public void initView() {
 
         rlProgress = getViewById(R.id.rl_progress);
 
         userEntity = (UserEntity) getIntent().getExtras().getSerializable("user");
-        appTokenEntity = (AppTokenEntity)getIntent().getExtras().getSerializable("token");
+        appTokenEntity = (AppTokenEntity) getIntent().getExtras().getSerializable("token");
 
         App.initToken(userEntity.getUser_login_id(), appTokenEntity);
 
@@ -286,16 +291,19 @@ public class PersonalPictureActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                intent2.putExtra("android.intent.extras.CAMERA_FACING", 1);
+                intent2.putExtra("android.intent.extras.CAMERA_FACING", 1);
+
+                //调用前置摄像头
                 intent2.putExtra("camerasensortype", 2);
 
                 // 下面这句指定调用相机拍照后的照片存储的路径
-                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getCachePicFileByName(PersonalPictureActivity.this,
-                                CACHE_PIC_NAME_TEMP)));
+                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(PersonalPictureActivity.this, CACHE_PIC_NAME_TEMP)));
+
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+
                 intent2.putExtra("return-data", false);
+
                 startActivityForResult(intent2, REQUEST_HEAD_CAMERA);
             }
         });
@@ -351,8 +359,7 @@ public class PersonalPictureActivity extends BaseActivity {
 
     private void uploadImage() {
 
-        if (mCropImagedUri == null)
-        {
+        if (mCropImagedUri == null) {
             return;
         }
 
@@ -393,7 +400,7 @@ public class PersonalPictureActivity extends BaseActivity {
                     responseStatus = jsonObject.getString("response_status");
                     if ("Fail".equals(responseStatus)) {
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_updateProPicFail), Toast.LENGTH_SHORT).show();
-                    } else if ("Success".equals(responseStatus)){
+                    } else if ("Success".equals(responseStatus)) {
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(PersonalPictureActivity.this, MainActivity.class);
@@ -401,9 +408,7 @@ public class PersonalPictureActivity extends BaseActivity {
                         Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
                         App.changeLoginedUser(userEntity, appTokenEntity);//可能会传入没有数据的???
                         startActivity(mainIntent);
-                    }
-                    else
-                    {
+                    } else {
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                     }
 

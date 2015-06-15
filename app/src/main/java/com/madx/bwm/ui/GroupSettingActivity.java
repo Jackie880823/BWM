@@ -118,7 +118,7 @@ public class GroupSettingActivity extends BaseActivity {
         Intent intent = new Intent(GroupSettingActivity.this, InviteMemberActivity.class);
         intent.putExtra("type", 1);
         intent.putExtra("members_data", new Gson().toJson(userList));
-        intent.putExtra("groups_data", new Gson().toJson(familyGroupEntityList));
+        intent.putExtra("groups_data", "");
         startActivityForResult(intent, GET_MEMBERS);
     }
 
@@ -248,6 +248,7 @@ public class GroupSettingActivity extends BaseActivity {
 
     /**
      * 移除重复的好友
+     *
      * @param userList
      */
     public static void removeDuplicate(List<UserEntity> userList) {
@@ -301,10 +302,10 @@ public class GroupSettingActivity extends BaseActivity {
                         addMemberList.add(user.getUser_id());
                     }
                     removeDuplicate(userList);
-                    GroupSettingAdapter groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
+                    groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
                     lvMembers.setAdapter(groupSettingAdapter);
-                    tvNumMembers.setText(userList.size() + getResources().getString(R.string.text_members));
 
+                    tvNumMembers.setText(userList.size() + getResources().getString(R.string.text_members));
                 }
             }
 
@@ -324,6 +325,8 @@ public class GroupSettingActivity extends BaseActivity {
             }
         });
     }
+
+    GroupSettingAdapter groupSettingAdapter;
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -400,11 +403,14 @@ public class GroupSettingActivity extends BaseActivity {
 
     //admin and addedflag = 1
     private void showAdminDialog1(final int position) {
+        if (showAdminDialog1 != null && showAdminDialog1.isShowing()) {
+            return;
+        }
+
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin1, null);
 
         showAdminDialog1 = new MyDialog(this, null, selectIntention);
-
         TextView tvRemoveUser = (TextView) selectIntention.findViewById(R.id.tv_remove_user);
         TextView tvFamilyProfile = (TextView) selectIntention.findViewById(R.id.tv_family_profile);
         TextView tvMessage = (TextView) selectIntention.findViewById(R.id.tv_message);
@@ -496,16 +502,21 @@ public class GroupSettingActivity extends BaseActivity {
                 showAdminDialog1.dismiss();
             }
         });
-        showAdminDialog1.show();
+        if (!showAdminDialog1.isShowing())
+            showAdminDialog1.show();
     }
 
     //admin and addedflag = 0
 
     /**
      * 删除会员
+     *
      * @param position
      */
     private void showAdminDialog0(final int position) {
+        if (showAdminDialog0 != null && showAdminDialog0.isShowing()) {
+            return;
+        }
         if (position > userList.size()) {
             return;
         }
@@ -584,11 +595,14 @@ public class GroupSettingActivity extends BaseActivity {
                 getMemberType(position);
             }
         });
-
-        showAdminDialog0.show();
+        if (!showAdminDialog0.isShowing())
+            showAdminDialog0.show();
     }
 
     private void showNonAdminDialog1(final int position) {
+        if (showNonAdminDialog1 != null && showNonAdminDialog1.isShowing()) {
+            return;
+        }
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_non_admin1, null);
 
@@ -619,11 +633,15 @@ public class GroupSettingActivity extends BaseActivity {
                 showNonAdminDialog1.dismiss();
             }
         });
-        showNonAdminDialog1.show();
+        if (!showNonAdminDialog1.isShowing())
+            showNonAdminDialog1.show();
     }
 
     //non admin and addedflag = 0
     private void showNonAdminDialog0(final int position) {
+        if (showNonAdminDialog0 != null && showNonAdminDialog0.isShowing()) {
+            return;
+        }
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_non_admin0, null);
         showNonAdminDialog0 = new MyDialog(this, null, selectIntention);
@@ -635,7 +653,8 @@ public class GroupSettingActivity extends BaseActivity {
                 getMemberType(position);
             }
         });
-        showNonAdminDialog0.show();
+        if (!showNonAdminDialog0.isShowing())
+            showNonAdminDialog0.show();
     }
 
     Handler handler = new Handler() {
@@ -644,12 +663,12 @@ public class GroupSettingActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case GET_DATA:
-                    List<UserEntity> userList = (List<UserEntity>) msg.obj;
+                    List<UserEntity> addUserList = (List<UserEntity>) msg.obj;
                     List<UserEntity> userEntityList = new ArrayList<>();
-                    userEntityList.addAll(userList);
-                    if (memberList.size() > 0) {
-                        for (UserEntity userEntity : userList) {
-                            for (String userId : memberList) {
+                    userEntityList.addAll(addUserList);
+                    if (addMemberList.size() > 0) {
+                        for (UserEntity userEntity : addUserList) {
+                            for (String userId : addMemberList) {
                                 if (userEntity.getUser_id().equals(userId)) {
                                     userEntityList.remove(userEntity);
                                     break;
@@ -663,6 +682,7 @@ public class GroupSettingActivity extends BaseActivity {
                     if (addMemberList.size() > 0) {
                         addGroupMember(gson.toJson(addMemberList));
                     }
+
                     break;
             }
         }
@@ -688,10 +708,10 @@ public class GroupSettingActivity extends BaseActivity {
             public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-                List<UserEntity> userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                List<UserEntity> addUserList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
-                if (userList != null && userList.size() > 0) {
-                    Message.obtain(handler, GET_DATA, userList).sendToTarget();
+                if (addUserList != null && addUserList.size() > 0) {
+                    Message.obtain(handler, GET_DATA, addUserList).sendToTarget();
                 }
             }
 
@@ -717,7 +737,7 @@ public class GroupSettingActivity extends BaseActivity {
         if (resultCode == this.RESULT_OK) {
             switch (requestCode) {
                 case GET_MEMBERS:
-                    if(addMemberList != null && addMemberList.size() > 0){
+                    if (addMemberList != null && addMemberList.size() > 0) {
                         addMemberList.clear();
                     }
                     String members = data.getStringExtra("members_data");
@@ -732,28 +752,30 @@ public class GroupSettingActivity extends BaseActivity {
                             }
                         }
                     }
+
                     List<FamilyGroupEntity> groupEntityList = null;
                     if (null != groupData) {
                         groupEntityList = new GsonBuilder().create().fromJson(groupData, new TypeToken<ArrayList<FamilyGroupEntity>>() {
                         }.getType());
                     }
-                    if (groupEntityList != null && groupEntityList.size() > 1) {
+                    if (groupEntityList != null && groupEntityList.size() > 0) {
                         familyGroupEntityList.addAll(groupEntityList);
                         List<String> groupIdList = new ArrayList<>();
                         for (FamilyGroupEntity familyGroupEntity : groupEntityList) {
                             groupIdList.add(familyGroupEntity.getGroup_id());
                         }
-                        if (addMemberList.size() > 0) {
-                            memberList.addAll(addMemberList);
-                        }
+//                        if (addMemberList.size() > 0) {
+//                            memberList.addAll(addMemberList);
+//                        }
                         getSelectMembersList(new Gson().toJson(groupIdList));
-                    }
+                    } else {
 
-                    if (addMemberList.size() > 0) {
+                        if (addMemberList.size() > 0) {
 //                        removeDuplicate(userList);
                             addGroupMember(gson.toJson(addMemberList));
 //                            getMembersList();
                         }
+                    }
 
                     break;
 

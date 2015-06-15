@@ -118,10 +118,10 @@ public class CreateGroupDialogActivity extends BaseActivity {
         String selectMemberData = new Gson().toJson(selectUserEntityList);
         intent.putExtra("members_data", selectMemberData);
         intent.putExtra("type", 0);
-        if (selectGroupEntityList.size() > 0) {
-            intent.putExtra("groups_data", new Gson().toJson(selectGroupEntityList));
-            intent.putExtra("groupType", 1);
-        }
+//        if (selectGroupEntityList.size() > 0) {
+//            intent.putExtra("groups_data", new Gson().toJson(selectGroupEntityList));
+//            intent.putExtra("groupType", 1);
+//        }
         startActivityForResult(intent, JUMP_SELECT_MEMBER);
     }
 
@@ -202,16 +202,17 @@ public class CreateGroupDialogActivity extends BaseActivity {
             if (userEntityList != null && userEntityList.size() > 0) {
                 List<UserEntity> userList = new ArrayList<>();
                 userList.addAll(userEntityList);
-                if (selectUserList.size() > 0) {
-                    for (UserEntity userEntity : userEntityList) {
-                        if (selectUserList.contains(userEntity.getUser_id())) {
-                            userList.remove(userEntity);
-                        }
-                    }
-                }
+//                if (selectUserList.size() > 0) {
+//                    for (UserEntity userEntity : userEntityList) {
+//                        if (selectUserList.contains(userEntity.getUser_id())) {
+//                            userList.remove(userEntity);
+//                        }
+//                    }
+//                }
                 for (UserEntity userEntity : userList) {
                     selectUserList.add(userEntity.getUser_id());
                 }
+
                 selectUserEntityList.addAll(userList);
             }
         }
@@ -225,16 +226,16 @@ public class CreateGroupDialogActivity extends BaseActivity {
             List<String> groupIdList = new ArrayList<>();
             List<FamilyGroupEntity> groupList = new ArrayList<>();
             groupList.addAll(groupEntityList);
-            if (selectGroupEntityList.size() > 0) {
-                for (FamilyGroupEntity familyGroupEntity : groupEntityList) {
-                    for (FamilyGroupEntity groupEntity : selectGroupEntityList) {
-                        if (familyGroupEntity.getGroup_id().equals(groupEntity.getGroup_id())) {
-                            groupList.remove(familyGroupEntity);
-                            break;
-                        }
-                    }
-                }
-            }
+//            if (selectGroupEntityList.size() > 0) {
+//                for (FamilyGroupEntity familyGroupEntity : groupEntityList) {
+//                    for (FamilyGroupEntity groupEntity : selectGroupEntityList) {
+//                        if (familyGroupEntity.getGroup_id().equals(groupEntity.getGroup_id())) {
+//                            groupList.remove(familyGroupEntity);
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
             if (groupList.size() > 0) {
                 selectGroupEntityList.addAll(groupList);
                 for (FamilyGroupEntity familyGroupEntity : groupList) {
@@ -243,8 +244,6 @@ public class CreateGroupDialogActivity extends BaseActivity {
             }
             if (groupIdList.size() > 0) {
                 getMembersList(new Gson().toJson(groupIdList));
-            } else {
-                changeData();
             }
         } else {
             changeData();
