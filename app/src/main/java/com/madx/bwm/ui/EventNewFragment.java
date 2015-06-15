@@ -660,7 +660,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
     }
 
-
+    //日历
     private void showDateTimePicker() {
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View dateTimePicker = factory.inflate(R.layout.dialog_date_time_picker, null);
@@ -715,7 +715,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 date_desc.setText(dateDesc);
             }
         });
-        pickDateTimeDialog.setButtonCancel("Cancel", new View.OnClickListener() {
+        pickDateTimeDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickDateTimeDialog.dismiss();
