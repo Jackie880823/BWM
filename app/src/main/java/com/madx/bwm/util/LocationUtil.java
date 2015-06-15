@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.ui.Map4BaiduActivity;
+import com.madx.bwm.ui.Map4GoogleActivity;
 
 import java.io.IOException;
 import java.util.List;
@@ -147,7 +148,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         if(!SystemUtil.checkPlayServices(context)) {
             intent.setClass(context, Map4BaiduActivity.class);
         } else {
-            intent.setClass(context, Map4BaiduActivity.class);
+            intent.setClass(context, Map4GoogleActivity.class);
         }
         return intent;
     }
