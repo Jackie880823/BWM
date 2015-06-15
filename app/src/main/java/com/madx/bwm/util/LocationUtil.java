@@ -72,7 +72,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
      * @param longitude 经度
      * @return 返回地址信息封装对象Address
      */
-    private static Address getAddress(Context context, double latitude, double longitude) {
+    public static Address getAddress(Context context, double latitude, double longitude) {
         Log.i(TAG, "getAddress& latitude: " + latitude + "; longitude: " + longitude);
         if(latitude == 0 && longitude == 0) {
             Location location = getLastKnowLocation();
@@ -92,10 +92,6 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
             if(addresses != null && addresses.size() > 0) {
                 address = addresses.get(0);
-                int lines = address.getMaxAddressLineIndex();
-                for(int i = 0; i < lines; i++) {
-                    Log.i(TAG, "getAddress& address i: " + i + " " + address.getAddressLine(i));
-                }
             }
         } catch(IOException e) {
             e.printStackTrace();

@@ -3,6 +3,7 @@ package com.madx.bwm.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -398,7 +399,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         //                } else {
         //                    addressString = address.getAddressLine(1);
         //                }
-        //                addMarker(latLng, address.getAdminArea(), addressString);
+        //                setMarkerContent(latLng, address.getAdminArea(), addressString);
         //                Log.i("", "address====" + address.toString());
         //            }
         //
@@ -444,7 +445,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
      */
     private void setUpMap(double latitude, double longitude) {
         LatLng latLng = new LatLng(latitude, longitude);
-        //        addMarker(latLng);
+        //        setMarkerContent(latLng);
         center2Location(latLng);
 
         //        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng
@@ -494,8 +495,11 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                 @Override
                 public void onMapLongClick(LatLng latLng) {
                     toLocation = false;
-                    String address = LocationUtil.getLocationAddress(Map4GoogleActivity.this, latLng.latitude, latLng.longitude);
-                    addMarker(latLng, address, address);
+                    Address address = LocationUtil.getAddress(Map4GoogleActivity.this, latLng.latitude, latLng.longitude);
+
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
+
+                    setMarkerContent(address, marker);
                 }
             });
         }
@@ -533,9 +537,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                 case MSG_VIEW_ADDRESSNAME:
                     //获取到地址后显示在泡泡上
                     if(target != null) {
-                        target.setSnippet((String) msg.obj);
-                        target.setTitle((String) msg.obj);
-                        target.showInfoWindow();
+                        setMarkerContent((Address) msg.obj, target);
                     }
                     break;
             }
@@ -591,13 +593,13 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
         @Override
         public void run() {
-            String addressName = "";
+            Address address = null;
             long beginTime = System.currentTimeMillis();
             long lastTime = beginTime;
             //wait 10 second
             while(lastTime - beginTime < 10 * 1000) {
-                addressName = LocationUtil.getLocationAddress(getApplicationContext(), latitude, longitude);
-                if(TextUtils.isEmpty(addressName)) {
+                address = LocationUtil.getAddress(getApplicationContext(), latitude, longitude);
+                if(address == null) {
                     try {
                         Thread.sleep(200);
                     } catch(InterruptedException e) {
@@ -611,7 +613,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
             Message msg = new Message();
             msg.what = MSG_VIEW_ADDRESSNAME;
-            msg.obj = addressName;
+            msg.obj = address;
             mHandler.sendMessage(msg);
         }
     }
@@ -642,7 +644,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         }
         target = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
-        //        target = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target)));
+        //        target = mMap.setMarkerContent(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target)));
         //        target.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target));
         target.setTitle("");
         //        target.setTitle(getString(R.string.text_destination));
@@ -650,10 +652,30 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         target.setDraggable(true);
     }
 
-    private Marker addMarker(LatLng latLng, String title, String snippet) {
-        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
+    /**
+     * 设置显选择地址详细信息弹出框的内容并显示
+     * @param address  地址信息
+     * @param marker 持有弹出框的标识封装对象
+     * @return 返回持有弹出框的标识封装对象
+     */
+    private Marker setMarkerContent(Address address, Marker marker) {
+        String title;
+        String snippet;
+
+        if(address.getMaxAddressLineIndex() > 2) {
+            title = address.getAddressLine(1);
+            snippet = address.getAddressLine(0);
+        } else {
+            title = snippet = address.getAddressLine(0);
+        }
+
+        // 判空字符对像用""替代
+        title = TextUtils.isEmpty(title) ? "" : title;
+        snippet = TextUtils.isEmpty(snippet) ? "" : snippet;
+
         marker.setTitle(title);
         marker.setSnippet(snippet);
+
         marker.showInfoWindow();
 
         return marker;
@@ -742,7 +764,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     //                } else {
     //                    addressString = address.getAddressLine(1);
     //                }
-    //                Marker target = addMarker(latLng, addressString, addressString);
+    //                Marker target = setMarkerContent(latLng, addressString, addressString);
     //                builder.include(target.getPosition());
     //            }
     //            LatLngBounds bounds = builder.build();
@@ -808,7 +830,8 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                 if(place != null) {
                     // Format details of the place for display and show it in a TextView.
 
-                    addMarker(place.getLatLng(), place.getName().toString(), place.getAddress().toString());
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(place.getLatLng()));
+                    setMarkerContent(new Address(place.getLocale()), marker);
                     if(firstResult) {
                         firstResult = false;
                         center2Location(place.getLatLng());
