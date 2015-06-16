@@ -65,8 +65,8 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class EventDetailFragment extends BaseFragment<EventDetailActivity> implements View.OnClickListener {
-
-    private final static String TAG = EventDetailFragment.class.getSimpleName();
+    private static final String Tag = EventDetailFragment.class.getSimpleName();
+//    private final static String TAG = EventDetailFragment.class.getSimpleName();
 
     private ProgressDialog mProgressDialog;
 
@@ -613,7 +613,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("sticker_name", stickerEntity.getSticker_name());
             params.put("sticker_type", stickerEntity.getSticker_type());
 
-            new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
+            new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params,Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -696,7 +696,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     params.put("sticker_type", "");
                 }
 
-                new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, new HttpCallback() {
+                new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params,Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -763,7 +763,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         @Override
         protected Boolean doInBackground(Map... params) {
 
-            new HttpTools(App.getContextInstance()).upload(Constant.API_COMMENT_POST_TEXT, params[0], new HttpCallback() {
+            new HttpTools(App.getContextInstance()).upload(Constant.API_COMMENT_POST_TEXT, params[0],Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
@@ -832,7 +832,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("photo_fullsize", "1");
 
 
-            new HttpTools(App.getContextInstance()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
+            new HttpTools(App.getContextInstance()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params,Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
@@ -894,7 +894,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             String url = UrlUtil.generateUrl(Constant.API_EVENT_COMMENT, params);
 
-            new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+            new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -959,7 +959,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_EVENT_CANCEL, event.getGroup_id()), null);
 
-        new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
+        new HttpTools(getActivity()).put(requestInfo,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1013,7 +1013,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = String.format(Constant.API_EVENT_INTENT, event.getGroup_id());
         requestInfo.jsonParam = jsonParamsString;
-        new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
+        new HttpTools(getActivity()).put(requestInfo,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1141,7 +1141,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             return;
 
 
-        new HttpTools(getActivity()).get(String.format(Constant.API_EVENT_RESPONSE_INFOS, event.getGroup_id()), null, new HttpCallback() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_EVENT_RESPONSE_INFOS, event.getGroup_id()), null,Tag, new HttpCallback() {
 
             @Override
             public void onStart() {
@@ -1196,7 +1196,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_COMMENT_DELETE, commentId), null);
-                new HttpTools(getActivity()).delete(requestInfo, new HttpCallback() {
+                new HttpTools(getActivity()).delete(requestInfo,Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }
@@ -1255,7 +1255,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
         params.put("user_id", "" + MainActivity.getUser().getUser_id());
         RequestInfo requestInfo = new RequestInfo(Constant.API_EVENT_COMMENT_LOVE, params);
-        new HttpTools(getActivity()).post(requestInfo, new HttpCallback() {
+        new HttpTools(getActivity()).post(requestInfo,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1385,7 +1385,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("file", file);
         params.put("photo_fullsize", "1");
 
-        new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, new HttpCallback() {
+        new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params,Tag, new HttpCallback() {
             @Override
             public void onStart() {
             }

@@ -221,7 +221,7 @@ public class ForgetPasswordActivity extends BaseActivity {
                     url = UrlUtil.generateUrl(Constant.API_VERIFY_CODE, params);
 
 
-                    new HttpTools(ForgetPasswordActivity.this).get(url, null, new HttpCallback() {
+                    new HttpTools(ForgetPasswordActivity.this).get(url, null,this, new HttpCallback() {
                         @Override
                         public void onStart() {
 
@@ -341,7 +341,7 @@ public class ForgetPasswordActivity extends BaseActivity {
 
         Log.d("","===========" + url);
 
-        new HttpTools(ForgetPasswordActivity.this).get(url, null, new HttpCallback() {
+        new HttpTools(ForgetPasswordActivity.this).get(url, null, this, new HttpCallback() {
             @Override
             public void onStart() {
 

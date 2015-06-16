@@ -154,7 +154,7 @@ public class SignUpPhoneActivity extends BaseActivity {
 //                    String url = UrlUtil.generateUrl(Constant.API_LOGINID_AVAILABILITY, params);//检查手机注册合法性检查URL
 
                     //手机注册合法性检查请求
-                    new HttpTools(SignUpPhoneActivity.this).get(Constant.API_LOGINID_AVAILABILITY, params, new HttpCallback() {
+                    new HttpTools(SignUpPhoneActivity.this).get(Constant.API_LOGINID_AVAILABILITY, params,this, new HttpCallback() {
                         @Override
                         public void onStart() {
 
@@ -243,7 +243,7 @@ public class SignUpPhoneActivity extends BaseActivity {
                     params.put("condition", jsonParamsString);
                     String url = UrlUtil.generateUrl(Constant.API_VERIFY_CODE, params);
 
-                    new HttpTools(SignUpPhoneActivity.this).get(Constant.API_VERIFY_CODE, params, new HttpCallback() {
+                    new HttpTools(SignUpPhoneActivity.this).get(Constant.API_VERIFY_CODE, params, this,new HttpCallback() {
                         @Override
                         public void onStart() {
 
@@ -381,7 +381,7 @@ public class SignUpPhoneActivity extends BaseActivity {
         params.put("user_phone_number", tvCountryCode.getText().toString() + phone);
         params.put("verification_action", "register");
 
-        new HttpTools(SignUpPhoneActivity.this).post(Constant.API_VERIFICATION, params,new HttpCallback() {
+        new HttpTools(SignUpPhoneActivity.this).post(Constant.API_VERIFICATION, params,this,new HttpCallback() {
             @Override
             public void onStart() {
 

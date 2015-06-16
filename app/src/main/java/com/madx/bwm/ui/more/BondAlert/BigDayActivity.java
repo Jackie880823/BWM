@@ -69,7 +69,7 @@ public class BigDayActivity extends BaseActivity {
     @Override
     public void requestData() {
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_DIG_DAY, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_DIG_DAY, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
             @Override
             public void onStart() {
 

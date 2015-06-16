@@ -146,7 +146,7 @@ public class RecommendActivity extends BaseActivity {
 //        params.put("limit", "" + offSet);
 
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_RECOMMEND, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_RECOMMEND, MainActivity.getUser().getUser_id()), null, this,new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -230,7 +230,7 @@ public class RecommendActivity extends BaseActivity {
         params.put("user_relationship_name", relationShip);
         params.put("member_id", data.get(adapter.getPositionId()).getUser_id());
 
-        new HttpTools(this).post(Constant.API_ADD_MEMBER,params,new HttpCallback() {
+        new HttpTools(this).post(Constant.API_ADD_MEMBER,params,this,new HttpCallback() {
             @Override
             public void onStart() {
 

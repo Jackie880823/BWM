@@ -35,6 +35,8 @@ import cn.jpush.android.api.JPushInterface;
  */
 public class NotificationUtil {
 
+    private static final String TAG = "NotificationUtil";
+
     /**
      * 通知类型
      */
@@ -288,7 +290,7 @@ public class NotificationUtil {
     public static void unRegisterPush(Context context,final String userId){
         if(App.getLoginedUser()!=null) {
             RequestInfo requestInfo = new RequestInfo(String.format(Constant.UN_REGISTER_URL, userId),null);
-            new HttpTools(context).put(requestInfo, new HttpCallback() {
+            new HttpTools(context).put(requestInfo, TAG, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }

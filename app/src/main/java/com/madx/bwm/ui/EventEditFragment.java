@@ -50,7 +50,7 @@ import java.util.TimeZone;
  */
 public class EventEditFragment extends BaseFragment<EventEditActivity> implements View.OnClickListener {
 
-
+    private static final String Tag = EventEditFragment.class.getSimpleName();
     private MembersGridAdapter adapter;
     Gson gson = new Gson();
     private MyDialog pickDateTimeDialog;
@@ -195,7 +195,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
             requestInfo.jsonParam = gson.toJson(mEevent);
             requestInfo.url = Constant.API_EVENT_UPDATE + mEevent.getGroup_id();
 
-            new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
+            new HttpTools(getActivity()).put(requestInfo,Tag, new HttpCallback() {
 
                 @Override
                 public void onStart() {
@@ -331,7 +331,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_INVITED, params);
 
-        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 

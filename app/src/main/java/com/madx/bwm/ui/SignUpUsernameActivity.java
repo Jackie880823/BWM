@@ -106,7 +106,7 @@ public class SignUpUsernameActivity extends BaseActivity {
                         HashMap<String, String> params = new HashMap<String, String>();
                         params.put("condition", jsonParamsString);
 
-                        new HttpTools(SignUpUsernameActivity.this).get(Constant.API_LOGINID_AVAILABILITY, params, new HttpCallback() {
+                        new HttpTools(SignUpUsernameActivity.this).get(Constant.API_LOGINID_AVAILABILITY, params, this,new HttpCallback() {
                             @Override
                             public void onStart() {
 
@@ -301,7 +301,7 @@ public class SignUpUsernameActivity extends BaseActivity {
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("condition", jsonParamsString);
 
-            new HttpTools(SignUpUsernameActivity.this).get(Constant.API_LOGINID_AVAILABILITY, params, new HttpCallback() {
+            new HttpTools(SignUpUsernameActivity.this).get(Constant.API_LOGINID_AVAILABILITY, params, this,new HttpCallback() {
                 @Override
                 public void onStart() {
 

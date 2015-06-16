@@ -53,7 +53,7 @@ import java.util.TimeZone;
  * create an instance of this fragment.
  */
 public class EventNewFragment extends BaseFragment<EventNewActivity> implements View.OnClickListener {
-
+    private static final String Tag = EventNewFragment.class.getSimpleName();
     private MembersGridAdapter adapter;
     private MyDialog saveAlertDialog;
     private EventEntity mEevent = new EventEntity();
@@ -348,7 +348,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("group_list", strGroupsid);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
-        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -487,7 +487,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("event_member", gson.toJson(setGetMembersIds(userList)));
             requestInfo.params = params;
 
-            new HttpTools(getActivity()).post(requestInfo, new HttpCallback() {
+            new HttpTools(getActivity()).post(requestInfo,Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
 

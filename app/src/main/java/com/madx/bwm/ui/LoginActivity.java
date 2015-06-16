@@ -197,7 +197,7 @@ public class LoginActivity extends Activity {
         params.put("pushService", service);
         params.put("appID", AppInfoUtil.getAppPackageName(this));
         requestInfo.params = params;
-        new HttpTools(LoginActivity.this).post(requestInfo, new HttpCallback() {
+        new HttpTools(LoginActivity.this).post(requestInfo,this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -343,7 +343,7 @@ public class LoginActivity extends Activity {
                     params.put("condition", jsonParamsString);
 //                    String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
 
-                    new HttpTools(LoginActivity.this).get(Constant.API_LOGIN, params, new HttpCallback() {
+                    new HttpTools(LoginActivity.this).get(Constant.API_LOGIN, params, this, new HttpCallback() {
                         @Override
                         public void onStart() {
 

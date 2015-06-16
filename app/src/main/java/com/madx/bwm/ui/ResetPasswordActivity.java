@@ -26,7 +26,6 @@ import com.madx.bwm.R;
 import com.madx.bwm.entity.AppTokenEntity;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.util.PreferencesUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,7 +117,7 @@ public class ResetPasswordActivity extends BaseActivity{
                     requestInfo.jsonParam = jsonParamsString;
 
 
-                    new HttpTools(ResetPasswordActivity.this).put(requestInfo, new HttpCallback() {
+                    new HttpTools(ResetPasswordActivity.this).put(requestInfo, this,new HttpCallback() {
                         @Override
                         public void onStart() {
 
@@ -357,7 +356,7 @@ public class ResetPasswordActivity extends BaseActivity{
         String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
 
 
-        new HttpTools(ResetPasswordActivity.this).get(url, null, new HttpCallback() {
+        new HttpTools(ResetPasswordActivity.this).get(url, null,this, new HttpCallback() {
             @Override
             public void onStart() {
 
