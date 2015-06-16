@@ -15,7 +15,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -123,32 +122,15 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setVisibility(View.INVISIBLE);
-        //        rightTextButton.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void titleLeftEvent() {
-        //        setResult();
         super.titleLeftEvent();
     }
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-
-        //        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-        //            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-        //                setResult();
-        //            }
-        //        }
-
-        return super.dispatchKeyEvent(event);
-    }
-
-    @Override
-    protected void titleRightEvent() {
-        //        setResult();
-        //        finish();
-    }
+    protected void titleRightEvent() {}
 
     private void setResult(String name, LatLng latLng) {
         //        if (target != null) {
@@ -179,6 +161,7 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
 
         mMapView = (MapView) findViewById(R.id.map);
         mBaiduMap = mMapView.getMap();
+        // 设置普通地图资源
         mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
             @Override
@@ -694,9 +677,6 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
             }
 
         }
-
-        public void onReceivePoi(BDLocation poiLocation) {
-        }
     }
 
     /**
@@ -706,7 +686,6 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
     private void center2myLoc(boolean searchNearby) {
         LatLng latLng = new LatLng(mCurrentLantitude, mCurrentLongitude);
         center2myLoc(latLng, searchNearby);
-
     }
 
     /**
