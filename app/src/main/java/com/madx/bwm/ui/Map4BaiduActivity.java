@@ -2,7 +2,6 @@ package com.madx.bwm.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -66,8 +65,7 @@ import com.madx.bwm.util.LocationUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Map4BaiduActivity extends BaseActivity implements
-        OnGetPoiSearchResultListener, OnGetSuggestionResultListener, OnGetGeoCoderResultListener {
+public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchResultListener, OnGetSuggestionResultListener, OnGetGeoCoderResultListener {
 
     private MapView mMapView; // Might be null if Google Play services APK is not available.
     private LocationManager lm = null;
@@ -125,42 +123,42 @@ public class Map4BaiduActivity extends BaseActivity implements
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setVisibility(View.INVISIBLE);
-//        rightTextButton.setVisibility(View.VISIBLE);
+        //        rightTextButton.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void titleLeftEvent() {
-//        setResult();
+        //        setResult();
         super.titleLeftEvent();
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-//        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-//            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-//                setResult();
-//            }
-//        }
+        //        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+        //            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+        //                setResult();
+        //            }
+        //        }
 
         return super.dispatchKeyEvent(event);
     }
 
     @Override
     protected void titleRightEvent() {
-//        setResult();
-//        finish();
+        //        setResult();
+        //        finish();
     }
 
     private void setResult(String name, LatLng latLng) {
-//        if (target != null) {
+        //        if (target != null) {
         Intent intent = new Intent();
         intent.putExtra(Constant.EXTRA_LOCATION_NAME, name);
         intent.putExtra(Constant.EXTRA_LATITUDE, latLng.latitude);
         intent.putExtra(Constant.EXTRA_LONGITUDE, latLng.longitude);
         intent.putExtra("loc_type", LocationUtil.LOCATION_TYPE_BD09LL);
         setResult(RESULT_OK, intent);
-//        }
+        //        }
     }
 
     @Override
@@ -171,7 +169,7 @@ public class Map4BaiduActivity extends BaseActivity implements
     @Override
     protected Fragment getFragment() {
         return null;
-//        return  ChooseMapFragment.newInstance();
+        //        return  ChooseMapFragment.newInstance();
     }
 
     boolean hasSetLocation;
@@ -190,26 +188,26 @@ public class Map4BaiduActivity extends BaseActivity implements
 
             @Override
             public boolean onMapPoiClick(MapPoi mapPoi) {
-//                addInfoWindow(mapPoi.getPosition(), mapPoi.getName(), "");
+                //                addInfoWindow(mapPoi.getPosition(), mapPoi.getName(), "");
                 return true;
             }
         });
 
-//        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
-//            @Override
-//            public boolean onMarkerClick(Marker target) {
-//                Log.i("", "onMarkerClick==========");
-//                if (poiInfos != null) {
-//                    for (PoiInfo poiInfo : poiInfos) {
-//                        if (poiInfo.location.latitude == target.getPosition().latitude && poiInfo.location.longitude == target.getPosition().longitude) {
-//                            addInfoWindow(poiInfo.location, poiInfo.name, poiInfo.address);
-//                            break;
-//                        }
-//                    }
-//                }
-//                return false;
-//            }
-//        });
+        //        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+        //            @Override
+        //            public boolean onMarkerClick(Marker target) {
+        //                Log.i("", "onMarkerClick==========");
+        //                if (poiInfos != null) {
+        //                    for (PoiInfo poiInfo : poiInfos) {
+        //                        if (poiInfo.location.latitude == target.getPosition().latitude && poiInfo.location.longitude == target.getPosition().longitude) {
+        //                            addInfoWindow(poiInfo.location, poiInfo.name, poiInfo.address);
+        //                            break;
+        //                        }
+        //                    }
+        //                }
+        //                return false;
+        //            }
+        //        });
 
 
         mGeoCoder = GeoCoder.newInstance();
@@ -233,10 +231,10 @@ public class Map4BaiduActivity extends BaseActivity implements
 
         mBaiduMap.setOnMapLongClickListener(new BaiduMap.OnMapLongClickListener() {
             public void onMapLongClick(LatLng point) {
-//                MyLocationData.Builder dbl = new MyLocationData.Builder();
-//                dbl.latitude(point.latitude);
-//                dbl.longitude(point.longitude);
-//                MyLocationData data = dbl.build();
+                //                MyLocationData.Builder dbl = new MyLocationData.Builder();
+                //                dbl.latitude(point.latitude);
+                //                dbl.longitude(point.longitude);
+                //                MyLocationData data = dbl.build();
 
                 getLocationAddress(point);
 
@@ -258,37 +256,37 @@ public class Map4BaiduActivity extends BaseActivity implements
             @Override
             public boolean onQueryTextSubmit(String queryText) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
+                if(imm != null) {
                     // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
                     imm.hideSoftInputFromWindow(search_view.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
                 }
-//                if (search_view != null) {
-//                    searchClicked = true;
-//                    address_suggest_list.setVisibility(View.GONE);
-//                    search_view.clearFocus();
-//                    mMapView.requestFocus();
-//                    new AsyncTask<Void, Void, Void>() {
-//                        @Override
-//                        protected Void doInBackground(Void... params) {
-//                            long start = System.currentTimeMillis();
-//                            long end = System.currentTimeMillis();
-//                            while (end-start>3000&&searchClicked){
-//                                end = System.currentTimeMillis();
-//                            }
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        protected void onPostExecute(Void aVoid) {
-//                            address_suggest_list.setVisibility(View.GONE);
-//                            search_view.clearFocus();
-//                            mMapView.requestFocus();
-//                            searchByAddress(search_view.getQuery().toString());
-//                            searchClicked = false;
-//                        }
-//                    }.execute();
-//
-//                }
+                //                if (search_view != null) {
+                //                    searchClicked = true;
+                //                    address_suggest_list.setVisibility(View.GONE);
+                //                    search_view.clearFocus();
+                //                    mMapView.requestFocus();
+                //                    new AsyncTask<Void, Void, Void>() {
+                //                        @Override
+                //                        protected Void doInBackground(Void... params) {
+                //                            long start = System.currentTimeMillis();
+                //                            long end = System.currentTimeMillis();
+                //                            while (end-start>3000&&searchClicked){
+                //                                end = System.currentTimeMillis();
+                //                            }
+                //                            return null;
+                //                        }
+                //
+                //                        @Override
+                //                        protected void onPostExecute(Void aVoid) {
+                //                            address_suggest_list.setVisibility(View.GONE);
+                //                            search_view.clearFocus();
+                //                            mMapView.requestFocus();
+                //                            searchByAddress(search_view.getQuery().toString());
+                //                            searchClicked = false;
+                //                        }
+                //                    }.execute();
+                //
+                //                }
                 return true;
 
             }
@@ -296,12 +294,10 @@ public class Map4BaiduActivity extends BaseActivity implements
             @Override
             public boolean onQueryTextChange(String queryText) {
 
-                if (!TextUtils.isEmpty(queryText)) {
+                if(!TextUtils.isEmpty(queryText)) {
 
-                    mSuggestionSearch
-                            .requestSuggestion((new SuggestionSearchOption())
-                                    .keyword(queryText).city(city));
-                }else{
+                    mSuggestionSearch.requestSuggestion((new SuggestionSearchOption()).keyword(queryText).city(city));
+                } else {
                     address_suggest_list.setVisibility(View.GONE);
                 }
                 return true;
@@ -327,14 +323,13 @@ public class Map4BaiduActivity extends BaseActivity implements
                 center2myLoc(false);
             }
         });
-        if (!TextUtils.isEmpty(intent.getStringExtra(Constant.EXTRA_LOCATION_NAME))) {
+        if(!TextUtils.isEmpty(intent.getStringExtra(Constant.EXTRA_LOCATION_NAME))) {
             hasSetLocation = true;
             LatLng latLng = new LatLng(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
             location_name = intent.getStringExtra(Constant.EXTRA_LOCATION_NAME);
-            center2myLoc(latLng,true);
+            center2myLoc(latLng, true);
             addTarget(latLng, location_name);
         }
-
 
 
     }
@@ -343,40 +338,44 @@ public class Map4BaiduActivity extends BaseActivity implements
     private String city = "";
 
     private void addTarget(LatLng latLng, String title) {
-        BitmapDescriptor bd = BitmapDescriptorFactory
-                .fromResource(R.drawable.icon_map_target);
+        BitmapDescriptor bd = BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target);
         OverlayOptions ooA = new MarkerOptions().position(latLng).icon(bd).title(title).zIndex(5);
         target = (Marker) mBaiduMap.addOverlay(ooA);
-//        addInfoWindow(latLng, title, "");
+        //        addInfoWindow(latLng, title, "");
     }
 
-    private void addMarker(LatLng latLng, String title,String address) {
-        BitmapDescriptor bd = BitmapDescriptorFactory
-                .fromResource(R.drawable.icon_map_marker);
+    private void addMarker(LatLng latLng, String title, String address) {
+        BitmapDescriptor bd = BitmapDescriptorFactory.fromResource(R.drawable.icon_map_marker);
         OverlayOptions ooA = new MarkerOptions().position(latLng).icon(bd).title(title).zIndex(4);
         mBaiduMap.addOverlay(ooA);
         addInfoWindow(latLng, title, address, 60);
     }
 
-    int indexCount;
-
+    /**
+     * 设置显示弹出标识位置选择视图
+     *
+     * @param latLng  地址封装信息
+     * @param name    地址标题
+     * @param address 详细地址名称
+     * @param y       地理坐标， y 轴偏移量
+     * @return 返回弹出的视图
+     */
     private InfoWindow addInfoWindow(final LatLng latLng, final String name, String address, int y) {
-        if(latLng==null){
+        if(latLng == null) {
+            // 没有地址信息返回空
             return null;
         }
-        if (mBaiduMap != null && mBaiduMap.getProjection() != null) {
-
-            Point p = mBaiduMap.getProjection().toScreenLocation(latLng);
-            p.y -= y;
-            LatLng llInfo = mBaiduMap.getProjection().fromScreenLocation(p);
+        if(mBaiduMap != null && mBaiduMap.getProjection() != null) {
 
             LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-
             View view = inflater.inflate(R.layout.layout_map_info_item, null);
+
             TextView marker_title = (TextView) view.findViewById(R.id.marker_title);
             marker_title.setText(name);
+
             TextView marker_address = (TextView) view.findViewById(R.id.marker_address);
             marker_address.setText(address);
+
             Button btn_target = (Button) view.findViewById(R.id.btn_target);
             btn_target.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -386,14 +385,15 @@ public class Map4BaiduActivity extends BaseActivity implements
                 }
             });
 
-            InfoWindow infoWindow = new InfoWindow(view, llInfo, indexCount++);
+            InfoWindow infoWindow = new InfoWindow(view, latLng, -y);
 
+            // 弹出地址信息选择视图
             mBaiduMap.showInfoWindow(infoWindow);
 
-
             return infoWindow;
+        } else {
+            return null;
         }
-        return null;
     }
 
     private void getLocationAddress(final LatLng mLatLng) {
@@ -432,11 +432,11 @@ public class Map4BaiduActivity extends BaseActivity implements
     Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            switch (msg.what) {
+            switch(msg.what) {
                 case ADD_MARKER:
-                        Bundle bundle = msg.getData();
-                    if(bundle!=null) {
-//                        addTarget(new LatLng(bundle.getDouble(Constant.EXTRA_LATITUDE, 0), bundle.getDouble(Constant.EXTRA_LONGITUDE, 0)), msg.obj.toString());
+                    Bundle bundle = msg.getData();
+                    if(bundle != null) {
+                        //                        addTarget(new LatLng(bundle.getDouble(Constant.EXTRA_LATITUDE, 0), bundle.getDouble(Constant.EXTRA_LONGITUDE, 0)), msg.obj.toString());
                         LatLng latLng = new LatLng(bundle.getDouble(Constant.EXTRA_LATITUDE, 0), bundle.getDouble(Constant.EXTRA_LONGITUDE, 0));
                         PoiInfo poiInfo = new PoiInfo();
                         poiInfo.location = latLng;
@@ -477,26 +477,25 @@ public class Map4BaiduActivity extends BaseActivity implements
 
     public void onGetPoiResult(PoiResult result) {
         //POI搜索结果（范围检索、城市POI检索、周边检索）
-        if (result == null
-                || result.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {
+        if(result == null || result.error == SearchResult.ERRORNO.RESULT_NOT_FOUND) {
             return;
         }
 
-//        new OverlayManager(mBaiduMap);
-//
-//        // 在地图上显示PoiOverlay（将搜索到的兴趣点标注在地图上）
-//        mMapView.addOverlay(poioverlay);
-//
-//
-//        if(result.getNumPois() > 0) {
-//            // 设置其中一个搜索结果所在地理坐标为地图的中心
-//            MKPoiInfo poiInfo = result.getPoi(0);
-//            mapController.setCenter(poiInfo.pt);
-//        }
-        if (result.error == SearchResult.ERRORNO.NO_ERROR) {
+        //        new OverlayManager(mBaiduMap);
+        //
+        //        // 在地图上显示PoiOverlay（将搜索到的兴趣点标注在地图上）
+        //        mMapView.addOverlay(poioverlay);
+        //
+        //
+        //        if(result.getNumPois() > 0) {
+        //            // 设置其中一个搜索结果所在地理坐标为地图的中心
+        //            MKPoiInfo poiInfo = result.getPoi(0);
+        //            mapController.setCenter(poiInfo.pt);
+        //        }
+        if(result.error == SearchResult.ERRORNO.NO_ERROR) {
             mBaiduMap.clear();
-            if(target !=null) {
-                addTarget(target.getPosition(),location_name);
+            if(target != null) {
+                addTarget(target.getPosition(), location_name);
             }
             PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
             mBaiduMap.setOnMarkerClickListener(overlay);
@@ -504,30 +503,30 @@ public class Map4BaiduActivity extends BaseActivity implements
             overlay.addToMap();
             overlay.zoomToSpan();
 
-//            poiInfos = result.getAllPoi();
-//            if(poiInfos!=null) {
-//                for (PoiInfo info : poiInfos) {
-//                    if (target != null && info.location.latitude == target.getPosition().latitude && info.location.longitude == target.getPosition().longitude) {
-//                        continue;
-//                    }
-//                    OverlayOptions oo = new MarkerOptions().icon(bd).position(info.location);
-//                    mBaiduMap.addOverlay(oo);
-//                }
-//            }
+            //            poiInfos = result.getAllPoi();
+            //            if(poiInfos!=null) {
+            //                for (PoiInfo info : poiInfos) {
+            //                    if (target != null && info.location.latitude == target.getPosition().latitude && info.location.longitude == target.getPosition().longitude) {
+            //                        continue;
+            //                    }
+            //                    OverlayOptions oo = new MarkerOptions().icon(bd).position(info.location);
+            //                    mBaiduMap.addOverlay(oo);
+            //                }
+            //            }
 
             return;
         }
-        if (result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {
+        if(result.error == SearchResult.ERRORNO.AMBIGUOUS_KEYWORD) {
 
-//            // 当输入关键字在本市没有找到，但在其他城市找到时，返回包含该关键字信息的城市列表
-//            String strInfo = "在";
-//            for (CityInfo cityInfo : result.getSuggestCityList()) {
-//                strInfo += cityInfo.city;
-//                strInfo += ",";
-//            }
-//            strInfo += "找到结果";
-//            Toast.makeText(Map4BaiduActivity.this, strInfo, Toast.LENGTH_LONG)
-//                    .show();
+            //            // 当输入关键字在本市没有找到，但在其他城市找到时，返回包含该关键字信息的城市列表
+            //            String strInfo = "在";
+            //            for (CityInfo cityInfo : result.getSuggestCityList()) {
+            //                strInfo += cityInfo.city;
+            //                strInfo += ",";
+            //            }
+            //            strInfo += "找到结果";
+            //            Toast.makeText(Map4BaiduActivity.this, strInfo, Toast.LENGTH_LONG)
+            //                    .show();
 
             mBaiduMap.clear();
             PoiOverlay overlay = new MyPoiOverlay(mBaiduMap);
@@ -543,25 +542,26 @@ public class Map4BaiduActivity extends BaseActivity implements
 
 
     public void onGetPoiDetailResult(PoiDetailResult result) {
-//        if(result!=null) {
-//            Log.i("", "onGetPoiDetailResult=============");
-//            markerInfoWindow = addInfoWindow(result.getLocation(), result.getName(), result.getAddress());
-//        }
+        //        if(result!=null) {
+        //            Log.i("", "onGetPoiDetailResult=============");
+        //            markerInfoWindow = addInfoWindow(result.getLocation(), result.getName(), result.getAddress());
+        //        }
 
-//        if (result.error != SearchResult.ERRORNO.NO_ERROR) {
-//            Toast.makeText(this, "抱歉，未找到结果", Toast.LENGTH_SHORT)
-//                    .show();
-//        } else {
-//            Toast.makeText(this, result.getName() + ": " + result.getAddress(), Toast.LENGTH_SHORT)
-//                    .show();
-//        }
+        //        if (result.error != SearchResult.ERRORNO.NO_ERROR) {
+        //            Toast.makeText(this, "抱歉，未找到结果", Toast.LENGTH_SHORT)
+        //                    .show();
+        //        } else {
+        //            Toast.makeText(this, result.getName() + ": " + result.getAddress(), Toast.LENGTH_SHORT)
+        //                    .show();
+        //        }
     }
 
     //标识是否在搜索中
     boolean searchClicked;
+
     @Override
     public void onGetSuggestionResult(SuggestionResult res) {
-        if (res == null || res.getAllSuggestions() == null&&searchClicked) {
+        if(res == null || res.getAllSuggestions() == null && searchClicked) {
             return;
         }
         suggestions = res.getAllSuggestions();
@@ -569,12 +569,12 @@ public class Map4BaiduActivity extends BaseActivity implements
         address_suggest_list.bringToFront();
         llm = new LinearLayoutManager(this);
         address_suggest_list.setLayoutManager(llm);
-        if (suggestions == null) {
+        if(suggestions == null) {
             suggestions = new ArrayList<>();
         }
-//        if(suggestionAdapter==null) {
-            suggestionAdapter = new SuggestAddressAdapter(this, suggestions);
-            address_suggest_list.setAdapter(suggestionAdapter);
+        //        if(suggestionAdapter==null) {
+        suggestionAdapter = new SuggestAddressAdapter(this, suggestions);
+        address_suggest_list.setAdapter(suggestionAdapter);
 
         suggestionAdapter.setItemCheckListener(new SuggestAddressAdapter.ItemCheckListener() {
             @Override
@@ -585,10 +585,10 @@ public class Map4BaiduActivity extends BaseActivity implements
             }
         });
 
-//        }else{
-//            suggestionAdapter.notifyDataSetChanged();
-//        }
-//        initmPopupWindowView();
+        //        }else{
+        //            suggestionAdapter.notifyDataSetChanged();
+        //        }
+        //        initmPopupWindowView();
     }
 
     private int load_Index = 0;
@@ -601,16 +601,13 @@ public class Map4BaiduActivity extends BaseActivity implements
     private void searchByAddress(String address, String city) {
         // 得到输入管理对象
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
+        if(imm != null) {
             // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
             imm.hideSoftInputFromWindow(search_view.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
         }
         search_view.clearFocus(); // 不获取焦点
         address_suggest_list.setVisibility(View.GONE);
-        mPoiSearch.searchInCity((new PoiCitySearchOption())
-                .city(city)
-                .keyword(address)
-                .pageNum(load_Index));
+        mPoiSearch.searchInCity((new PoiCitySearchOption()).city(city).keyword(address).pageNum(load_Index));
     }
 
     @Override
@@ -621,11 +618,11 @@ public class Map4BaiduActivity extends BaseActivity implements
     @Override
     public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
 
-        if(!isInitTime&& target !=null) {
+        if(!isInitTime && target != null) {
             isInitTime = false;
             mBaiduMap.clear();
             //把清除掉的target补回来
-            addTarget(target.getPosition(),location_name);
+            addTarget(target.getPosition(), location_name);
         }
 
         String name = reverseGeoCodeResult.getAddress();
@@ -633,14 +630,14 @@ public class Map4BaiduActivity extends BaseActivity implements
         double latitude = reverseGeoCodeResult.getLocation().latitude;
         double longitude = reverseGeoCodeResult.getLocation().longitude;
         LatLng latLng = new LatLng(latitude, longitude);
-        addInfoWindow(latLng, name, address, -10);
+        addInfoWindow(latLng, name, address, 40);
 
         mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if(poiInfos!=null) {
-                    for (PoiInfo poiInfo:poiInfos) {
-                        if(poiInfo.location.latitude==marker.getPosition().latitude&&poiInfo.location.longitude==marker.getPosition().longitude){
+                if(poiInfos != null) {
+                    for(PoiInfo poiInfo : poiInfos) {
+                        if(poiInfo.location.latitude == marker.getPosition().latitude && poiInfo.location.longitude == marker.getPosition().longitude) {
                             addInfoWindow(poiInfo.location, poiInfo.name, poiInfo.address, 60);
                             break;
                         }
@@ -656,9 +653,9 @@ public class Map4BaiduActivity extends BaseActivity implements
 
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        if(poiInfos!=null) {
-            for (PoiInfo info : poiInfos) {
-                if (target != null && info.location.latitude == target.getPosition().latitude && info.location.longitude == target.getPosition().longitude) {
+        if(poiInfos != null) {
+            for(PoiInfo info : poiInfos) {
+                if(target != null && info.location.latitude == target.getPosition().latitude && info.location.longitude == target.getPosition().longitude) {
                     continue;
                 }
                 OverlayOptions oo = new MarkerOptions().icon(bd).position(info.location);
@@ -670,6 +667,7 @@ public class Map4BaiduActivity extends BaseActivity implements
         MapStatusUpdate u = MapStatusUpdateFactory.newLatLngBounds(bounds);
         mBaiduMap.animateMapStatus(u);
     }
+
     List<PoiInfo> poiInfos;
 
     /**
@@ -680,17 +678,15 @@ public class Map4BaiduActivity extends BaseActivity implements
         @Override
         public void onReceiveLocation(BDLocation location) {
             // map view 销毁后不在处理新接收的位置
-            if (location == null || mMapView == null)
+            if(location == null || mMapView == null)
                 return;
-            MyLocationData locData = new MyLocationData.Builder()
-                    .accuracy(location.getRadius())
-                            // 此处设置开发者获取到的方向信息，顺时针0-360
-                    .direction(300).latitude(location.getLatitude())
-                    .longitude(location.getLongitude()).build();
+            MyLocationData locData = new MyLocationData.Builder().accuracy(location.getRadius())
+                    // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .direction(300).latitude(location.getLatitude()).longitude(location.getLongitude()).build();
             mBaiduMap.setMyLocationData(locData);
             mCurrentLantitude = location.getLatitude();
             mCurrentLongitude = location.getLongitude();
-            if(!hasSetLocation&&isFirstLoc) {
+            if(!hasSetLocation && isFirstLoc) {
                 isFirstLoc = false;
                 center2myLoc(true);
                 city = location.getCity() == null ? "" : location.getCity();
@@ -709,7 +705,7 @@ public class Map4BaiduActivity extends BaseActivity implements
      */
     private void center2myLoc(boolean searchNearby) {
         LatLng latLng = new LatLng(mCurrentLantitude, mCurrentLongitude);
-        center2myLoc(latLng,searchNearby);
+        center2myLoc(latLng, searchNearby);
 
     }
 
@@ -720,20 +716,20 @@ public class Map4BaiduActivity extends BaseActivity implements
      * @param searchNearby
      */
     private void center2myLoc(LatLng latLng, boolean searchNearby) {
-        if (latLng == null) {
+        if(latLng == null) {
             return;
         }
         isInitTime = searchNearby;
         address_suggest_list.setVisibility(View.GONE);
-//        if(searchNearby) {
-            mGeoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
-            //搜索附近
-//        mPoiSearch.searchNearby(new PoiNearbySearchOption().location(latLng).keyword("饭店").pageNum(20));//一定要keyword....
-//        } else {
-//            MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(latLng);
-//            mBaiduMap.animateMapStatus(u);
-//            mBaiduMap.setMapStatus(u);
-//        }
+        //        if(searchNearby) {
+        mGeoCoder.reverseGeoCode(new ReverseGeoCodeOption().location(latLng));
+        //搜索附近
+        //        mPoiSearch.searchNearby(new PoiNearbySearchOption().location(latLng).keyword("饭店").pageNum(20));//一定要keyword....
+        //        } else {
+        //            MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(latLng);
+        //            mBaiduMap.animateMapStatus(u);
+        //            mBaiduMap.setMapStatus(u);
+        //        }
     }
 
 
@@ -751,10 +747,10 @@ public class Map4BaiduActivity extends BaseActivity implements
                 addInfoWindow(poi.location, poi.name, poi.address, 60);
 
                 // if (poi.hasCaterDetails) {
-//                mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())
-//                        .poiUid(poi.uid));
+                //                mPoiSearch.searchPoiDetail((new PoiDetailSearchOption())
+                //                        .poiUid(poi.uid));
                 // }
-            } catch (Exception e) {
+            } catch(Exception e) {
             }
             return true;
         }

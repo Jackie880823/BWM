@@ -16,13 +16,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -39,16 +38,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.adapter.FamilyGroupAdapter;
 import com.madx.bwm.adapter.MyFamilyAdapter;
 import com.madx.bwm.entity.FamilyGroupEntity;
 import com.madx.bwm.entity.FamilyMemberEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.PinYin4JUtil;
-import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.MySwipeRefreshLayout;
 
@@ -75,16 +73,18 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private Dialog showSelectDialog;
     private Context mContext;
     private boolean isMemberRefresh, isGroupRefresh;
-    private List<FamilyMemberEntity> memberEntityList;
-    private List<FamilyMemberEntity> memberList;
-    private List<FamilyMemberEntity> moreMemberList;
+    private List<FamilyMemberEntity> memberEntityList;//只有成员，不包括亲人
+//    private List<FamilyMemberEntity> empmemberEntityList = new LinkedList<>();
+    private List<FamilyMemberEntity> memberList;//没有展开
+    private List<FamilyMemberEntity> moreMemberList;//不包括family_tree
     private List<FamilyGroupEntity> groupEntityList;
     private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
     //    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0x11;
     private MyFamilyAdapter memberAdapter;
     private FamilyGroupAdapter groupAdapter;
-    public static String FAMILY_TREE = "family_tree";
+    public static String FAMILY_TREE = "family_treely_tree\";\n" +
+            "    public static final String FAMILY_PARENT ";
     public static final String FAMILY_PARENT = "parent";
     public static final String FAMILY_CHILDREN = "children";
     public static final String FAMILY_SIBLING = "sibling";
@@ -139,15 +139,15 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         member.setUser_given_name(FAMILY_TREE);
                         member.setUser_id(FAMILY_TREE);
                         memberList.add(member);
+                        moreMemberList.add(member);
 //                        opendate.add(0,member);
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
                             String tree_type = memberEntity.getTree_type();
                             if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
                                     || FAMILY_SIBLING.equals(tree_type) || FAMILY_SPOUSE.equals(tree_type)) {
                                 memberList.add(memberEntity);
-                            } else {
-                                moreMemberList.add(memberEntity);
                             }
+                            moreMemberList.add(memberEntity);
                         }
                         FamilyMemberEntity familyMemberEntity = new FamilyMemberEntity();
                         familyMemberEntity.setUser_given_name(FAMILY_MORE_MEMBER);
@@ -188,7 +188,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         vProgress.setVisibility(View.VISIBLE);
 
         memberAdapter = new MyFamilyAdapter(mContext, memberEntityList);
-        groupAdapter = new FamilyGroupAdapter(groupEntityList);
+        groupAdapter = new FamilyGroupAdapter(mContext,groupEntityList);
         //绑定自定义适配器
         pager.setAdapter(new FamilyPagerAdapter(initPagerView()));
         pager.setOnPageChangeListener(new MyOnPageChanger());
@@ -208,7 +208,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         });
         message_member_tv.setOnClickListener(this);
         message_group_tv.setOnClickListener(this);
-
+        //搜索框监听器
         etSearch.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -224,9 +224,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void afterTextChanged(Editable s) {
                 String etImport = etSearch.getText().toString();
-                if(pager.getCurrentItem() == 0){
+                if (pager.getCurrentItem() == 0) {
                     MemeberSearch = etImport;
-                }else {
+                } else {
                     GroupSearch = etImport;
                 }
                 setSearchData(etImport);
@@ -235,47 +235,55 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         });
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
-
+    //搜索
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
         if (pager.getCurrentItem() == 0) {
             List<FamilyMemberEntity> familyMemberEntityList;
-            if (TextUtils.isEmpty(etImport)) {
-//                if(memberAdapter!=null){
-//                    int size = memberAdapter.getList().size();
-//                    if(memberAdapter.getList().get(size-1).getUser_given_name()==FAMILY_HIDE_MEMBER){
-//                        familyMemberEntityList = opendate;
-//                    }else {
-//                        familyMemberEntityList = memberList;
-//                    }
-//
-//                }
-
-//                int size = memberAdapter.getList().size();
-                //如果已经展开
-                if(isopen){
-                    familyMemberEntityList = opendate;
-                }else {
-                    familyMemberEntityList = memberList;
-                }
+            //如果已经展开而且搜索框不为空
+            if (isopen && !TextUtils.isEmpty(etImport)) {
+//                familyMemberEntityList = searchMemberList(etImport, moreMemberList);
+//                memberAdapter.addNewData(familyMemberEntityList);
+                memberAdapter.setSerach(moreMemberList);
+                Filter filter =  memberAdapter.getFilter();
+                filter.filter(etImport);
             } else {
-                familyMemberEntityList = searchMemberList(etImport, memberEntityList);
+                if(isopen){
+                    familyMemberEntityList = searchMemberList(etImport, moreMemberList);
+                    memberAdapter.addNewData(familyMemberEntityList);
+                }else {
+                    if(TextUtils.isEmpty(etImport)){
+                        familyMemberEntityList = searchMemberList(etImport, memberList);
+                        memberAdapter.addNewData(familyMemberEntityList);
+                    }else {
+//                    familyMemberEntityList = searchMemberList(etImport, memberList);
+                        memberAdapter.setSerach(moreMemberList);
+                        Filter filter =  memberAdapter.getFilter();
+                        filter.filter(etImport);
+                    }
+                }
+
             }
-            memberAdapter.addNewData(familyMemberEntityList);
 
         } else {
             List<FamilyGroupEntity> familyGroupEntityList;
             if (TextUtils.isEmpty(etImport)) {
                 familyGroupEntityList = groupEntityList;
+                groupAdapter.addData(familyGroupEntityList);
             } else {
-                familyGroupEntityList = searchGroupList(etImport, groupEntityList);
+//                familyGroupEntityList = searchGroupList(etImport, groupEntityList);
+                Filter filter =  groupAdapter.getFilter();
+                filter.filter(etImport);
             }
-            groupAdapter.addData(familyGroupEntityList);
+
         }
 
     }
 
     private List<FamilyMemberEntity> searchMemberList(String name, List<FamilyMemberEntity> list) {
+        if (TextUtils.isEmpty(name)) {
+            return list;
+        }
         List<FamilyMemberEntity> results = new ArrayList();
         Pattern pattern = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
         for (FamilyMemberEntity memberEntity : list) {
@@ -347,6 +355,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
+//        if(empmemberEntityList != null ){
+//            empmemberEntityList.addAll(moreMemberList);
+//        }
         View userView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
         final GridView userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
         final ImageButton userIb = (ImageButton) userView.findViewById(R.id.ib_top);
@@ -371,11 +382,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 if (FamilyFragment.FAMILY_TREE.equals(userId)) {
                     getUrl();
                 } else if (FamilyFragment.FAMILY_MORE_MEMBER.equals(userId)) {
-                    isopen  = true;
+                    isopen = true;
                     int size = memberAdapter.getList().size();
-                    if(moreMemberList!=null){
-                        memberAdapter.addMoreData(moreMemberList);
-                    }
+//                    empmemberEntityList = memberAdapter.getList();
+                    memberAdapter.addMoreData(moreMemberList);
 //                    if(memberAdapter.getList().get(size-1).getUser_given_name()==FAMILY_MORE_MEMBER){
 //                        if(memberEntityList!=null){
 //                            opendate.clear();
@@ -762,9 +772,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onClick(View v) {
                 //startActivity(new Intent(getActivity(), CreateGroupActivity.class));
-                Intent intent=new Intent(getActivity(), InviteMemberActivity.class);
-                intent.putExtra("isCreateNewGroup",true);
-                intent.putExtra("jumpIndex",0);
+                Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
+                intent.putExtra("isCreateNewGroup", true);
+                intent.putExtra("jumpIndex", 0);
                 startActivity(intent);
                 showSelectDialog.dismiss();
             }
@@ -842,7 +852,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //                                }
 //                            }
                             if (map.size() > 0) {
-                                if(isup){
+                                if (isup) {
                                     Message.obtain(handler, GET_DATA, map).sendToTarget();
                                 }
                             }
@@ -885,83 +895,89 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         }
     }
 
-    class FamilyGroupAdapter extends BaseAdapter {
-        List<FamilyGroupEntity> groupList;
-
-        public FamilyGroupAdapter(List<FamilyGroupEntity> groupList) {
-            this.groupList = groupList;
-        }
-
-        public void addData(List<FamilyGroupEntity> list) {
-            if (null == list || list.size() == 0) {
-                return;
-            }
-            groupList.clear();
-            groupList.addAll(list);
-            notifyDataSetChanged();
-        }
-
-        public List<FamilyGroupEntity> getGroupList() {
-            return groupList;
-        }
-
-        @Override
-        public int getCount() {
-            return groupList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return groupList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (null == convertView) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.gridview_item_for_myfamily, null);
-                viewHolder = new ViewHolder();
-                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.myfamily_image_main);
-                viewHolder.textName = (TextView) convertView.findViewById(R.id.myfamily_name);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            FamilyGroupEntity familyGroupEntity = groupList.get(position);
-            viewHolder.textName.setText(familyGroupEntity.getGroup_name());
-            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
-                    familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
-            return convertView;
-        }
-
-        class ViewHolder {
-            CircularNetworkImage imageMain;
-            TextView textName;
-        }
-    }
+//    class FamilyGroupAdapter extends BaseAdapter implements Filterable {
+//        List<FamilyGroupEntity> groupList;
+//
+//
+//        public FamilyGroupAdapter(List<FamilyGroupEntity> groupList) {
+//            this.groupList = groupList;
+//        }
+//
+//        public void addData(List<FamilyGroupEntity> list) {
+//            if (null == list || list.size() == 0) {
+//                return;
+//            }
+//            groupList.clear();
+//            groupList.addAll(list);
+//            notifyDataSetChanged();
+//        }
+//
+//        public List<FamilyGroupEntity> getGroupList() {
+//            return groupList;
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return groupList.size();
+//        }
+//
+//        @Override
+//        public Object getItem(int position) {
+//            return groupList.get(position);
+//        }
+//
+//        @Override
+//        public long getItemId(int position) {
+//            return position;
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            ViewHolder viewHolder;
+//            if (null == convertView) {
+//                convertView = LayoutInflater.from(mContext).inflate(R.layout.gridview_item_for_myfamily, null);
+//                viewHolder = new ViewHolder();
+//                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.myfamily_image_main);
+//                viewHolder.textName = (TextView) convertView.findViewById(R.id.myfamily_name);
+//                convertView.setTag(viewHolder);
+//            } else {
+//                viewHolder = (ViewHolder) convertView.getTag();
+//            }
+//            FamilyGroupEntity familyGroupEntity = groupList.get(position);
+//            viewHolder.textName.setText(familyGroupEntity.getGroup_name());
+//            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
+//                    familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+//            return convertView;
+//        }
+//
+//        @Override
+//        public Filter getFilter() {
+//            return null;
+//        }
+//
+//        class ViewHolder {
+//            CircularNetworkImage imageMain;
+//            TextView textName;
+//        }
+//    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.message_member_tv:
                 pager.setCurrentItem(0);
-                if (!TextUtils.isEmpty(MemeberSearch)){
+                if (!TextUtils.isEmpty(MemeberSearch)) {
                     etSearch.setText(MemeberSearch);
-                }else {
+                } else {
                     etSearch.setText("");
                 }
                 etSearch.setSelection(etSearch.length());
                 break;
             case R.id.message_group_tv:
                 pager.setCurrentItem(1);
-                if (!TextUtils.isEmpty(GroupSearch)){
+                if (!TextUtils.isEmpty(GroupSearch)) {
                     etSearch.setText(GroupSearch);
-                }else {
+                } else {
                     etSearch.setText("");
                 }
                 opendate.clear();

@@ -49,15 +49,6 @@ public class TermsActivity extends BaseActivity {
         webView.loadUrl("http://bondwithme.com/bonding-terms.htm");
         webView.getSettings().setJavaScriptEnabled(true);//修复url不能跳转bug,add by wing
 
-//        webView.getSettings().setJavaScriptEnabled(true);
-//        webView.setWebChromeClient(new WebChromeClient());
-//        webView.loadUrl("http://docs.google.com/gview?embedded=true&url="+"http://sc.bondwith.me/bondwithme/download/94539275123.pdf");
-//        webView.getSettings().setJavaScriptEnabled(true);
-//        webView.loadUrl("http://www.adobe.com/devnet/acrobat/pdfs/pdf_open_parameters.pdf");
-
-//        webView.getSettings().setJavaScriptEnabled(true);
-//        String pdf = "http://sc.bondwith.me/bondwithme/download/94539275123.pdf";
-//        webView.loadUrl("http://docs.google.com/gview?embedded=true&url=" + pdf);
     }
 
     @Override

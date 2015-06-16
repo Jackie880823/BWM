@@ -66,7 +66,10 @@
 
             <TextView
                 android:id="@+id/tv_comment_content"
-                style="@style/text_dark_default"/>
+                style="@style/text_dark_default"
+                android:autoLink="web"
+                android:linksClickable="true"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
