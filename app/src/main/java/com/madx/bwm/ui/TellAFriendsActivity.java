@@ -154,7 +154,7 @@ public class TellAFriendsActivity extends BaseActivity {
             requestInfo.params = params;
             requestInfo.url = Constant.API_SHARE2FRIEND;
 
-            new HttpTools(this).post(requestInfo, new HttpCallback() {
+            new HttpTools(this).post(requestInfo, this,new HttpCallback() {
 //            new HttpTools(this).post(Constant.API_SHARE2FRIEND, params, new HttpCallback() {
                 @Override
                 public void onStart() {

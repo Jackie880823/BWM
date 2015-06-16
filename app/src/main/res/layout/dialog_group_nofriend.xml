@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/_60dp"
-        android:text="@string/text_add_new_member"
+        android:text="@string/text_create_new_group"
         android:textSize="@dimen/_18dp"
         android:background="@drawable/bg_white_gray"
         android:textColor="#333"
@@ -47,6 +47,18 @@
         android:background="@color/default_split_line"
         android:visibility="gone"/>
     <TextView
+        android:id="@+id/tv_cal"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/text_dialog_show_no"
+        android:background="@drawable/bg_white_gray"
+        android:textSize="@dimen/_18dp"
+        android:textStyle="bold"
+        android:textColor="#0066ff"
+        android:padding="@dimen/default_content_padding" />
+    <TextView
         android:id="@+id/tv_ok"
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -58,6 +70,7 @@
         android:textStyle="bold"
         android:textColor="#0066ff"
         android:padding="@dimen/default_content_padding" />
+
 
 
     </LinearLayout>

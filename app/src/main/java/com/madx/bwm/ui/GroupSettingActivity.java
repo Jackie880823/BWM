@@ -46,7 +46,7 @@ import java.util.List;
 
 public class GroupSettingActivity extends BaseActivity {
 
-
+    private static final String Tag = GroupSettingActivity.class.getSimpleName();
     private CardView llSetting;
     private CircularNetworkImage cniMain;
     private TextView tvName;
@@ -278,7 +278,7 @@ public class GroupSettingActivity extends BaseActivity {
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_GROUP_MEMBERS, params);
 
-        new HttpTools(GroupSettingActivity.this).get(url, null, new HttpCallback() {
+        new HttpTools(GroupSettingActivity.this).get(url, null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -428,7 +428,7 @@ public class GroupSettingActivity extends BaseActivity {
                 requestInfo.url = String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId);
                 requestInfo.jsonParam = jsonParamsString;
 
-                new HttpTools(GroupSettingActivity.this).put(requestInfo, new HttpCallback() {
+                new HttpTools(GroupSettingActivity.this).put(requestInfo,Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -540,7 +540,7 @@ public class GroupSettingActivity extends BaseActivity {
                 final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                 requestInfo.url = String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId);
                 requestInfo.jsonParam = jsonParamsString;
-                new HttpTools(GroupSettingActivity.this).put(requestInfo, new HttpCallback() {
+                new HttpTools(GroupSettingActivity.this).put(requestInfo,Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -693,7 +693,7 @@ public class GroupSettingActivity extends BaseActivity {
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("group_list", groupIdList);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
-        new HttpTools(mContext).get(url, null, new HttpCallback() {
+        new HttpTools(mContext).get(url, null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -813,7 +813,7 @@ public class GroupSettingActivity extends BaseActivity {
         params.put("query_on", "addGroupMember");
         params.put("group_members", strGroupMembers);
 
-        new HttpTools(GroupSettingActivity.this).post(Constant.API_GROUP_ADD_MEMBERS, params, new HttpCallback() {
+        new HttpTools(GroupSettingActivity.this).post(Constant.API_GROUP_ADD_MEMBERS, params,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -884,7 +884,7 @@ public class GroupSettingActivity extends BaseActivity {
                 requestInfo.url = String.format(Constant.API_LEAVE_GROUP, groupId);
                 requestInfo.jsonParam = jsonParamsString;
 
-                new HttpTools(GroupSettingActivity.this).put(requestInfo, new HttpCallback() {
+                new HttpTools(GroupSettingActivity.this).put(requestInfo,Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -953,7 +953,7 @@ public class GroupSettingActivity extends BaseActivity {
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.params = null;
         requestInfo.url = String.format(Constant.API_GET_MEMBER_TYPE, MainActivity.getUser().getUser_id(), userList.get(position).getUser_id());
-        new HttpTools(this).get(requestInfo, new HttpCallback() {
+        new HttpTools(this).get(requestInfo,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1019,7 +1019,7 @@ public class GroupSettingActivity extends BaseActivity {
         params.put("action_type", response_type);
         params.put("user_relationship_name", response_relationship);
 
-        new HttpTools(this).post(Constant.API_SET_RELATIONSHIP, params, new HttpCallback() {
+        new HttpTools(this).post(Constant.API_SET_RELATIONSHIP, params,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 

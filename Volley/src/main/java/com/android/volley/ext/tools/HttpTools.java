@@ -27,6 +27,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,8 +66,8 @@ public class HttpTools{
      * @param paramsMap
      * @param httpResult
      */
-    public void get(String url, Map<String, String> paramsMap, final HttpCallback httpResult) {
-        get(new RequestInfo(url, paramsMap), httpResult);
+    public void get(String url, Map<String, String> paramsMap, Object tag,final HttpCallback httpResult) {
+        get(new RequestInfo(url, paramsMap), tag,httpResult);
     }
 
     /**
@@ -77,8 +78,8 @@ public class HttpTools{
      * @param httpResult
      * @since 3.5
      */
-    public void get(RequestInfo requestInfo, final HttpCallback httpResult) {
-        sendRequest(Request.Method.GET, requestInfo, httpResult);
+    public void get(RequestInfo requestInfo, Object tag, final HttpCallback httpResult) {
+        sendRequest(Request.Method.GET,requestInfo, tag, httpResult);
     }
 
     /**
@@ -88,8 +89,8 @@ public class HttpTools{
      * @param paramsMap
      * @param httpResult
      */
-    public void post(final String url, final Map<String, String> paramsMap, final HttpCallback httpResult) {
-        post(new RequestInfo(url, paramsMap), httpResult);
+    public void post(final String url, final Map<String, String> paramsMap, Object tag,final HttpCallback httpResult) {
+        post(new RequestInfo(url, paramsMap), tag,httpResult);
     }
 
     /**
@@ -100,8 +101,8 @@ public class HttpTools{
      * @param httpResult
      * @since 3.5
      */
-    public void post(RequestInfo requestInfo, final HttpCallback httpResult) {
-        sendRequest(Request.Method.POST, requestInfo, httpResult);
+    public void post(RequestInfo requestInfo, Object tag,final HttpCallback httpResult) {
+        sendRequest(Request.Method.POST, requestInfo, tag,httpResult);
     }
 
     /**
@@ -111,8 +112,8 @@ public class HttpTools{
      * @param httpResult
      * @since 3.5
      */
-    public void delete(RequestInfo requestInfo, final HttpCallback httpResult) {
-        sendRequest(Request.Method.DELETE, requestInfo, httpResult);
+    public void delete(RequestInfo requestInfo, Object tag,final HttpCallback httpResult) {
+        sendRequest(Request.Method.DELETE, requestInfo, tag,httpResult);
     }
 
     /**
@@ -122,8 +123,8 @@ public class HttpTools{
      * @param httpResult
      * @since 3.5
      */
-    public void put(RequestInfo requestInfo, final HttpCallback httpResult) {
-        sendRequest(Request.Method.PUT, requestInfo, httpResult);
+    public void put(RequestInfo requestInfo, Object tag,final HttpCallback httpResult) {
+        sendRequest(Request.Method.PUT, requestInfo, tag ,httpResult);
     }
 
     /**
@@ -134,7 +135,7 @@ public class HttpTools{
      * @param httpResult
      * @since 3.4
      */
-    public void upload(final String url, final Map<String, Object> params, final HttpCallback httpResult) {
+    public void upload(final String url, final Map<String, Object> params, Object tag,final HttpCallback httpResult) {
         if (TextUtils.isEmpty(url)) {
             if (httpResult != null) {
                 httpResult.onStart();
@@ -231,7 +232,7 @@ public class HttpTools{
                 request.addPart(key, entry.getValue());
             }
         }
-        request.setTag(this);
+        request.setTag(tag);
         sRequestQueue.add(request);
     }
 
@@ -297,7 +298,7 @@ public class HttpTools{
         return request;
     }
 
-    private void sendRequest(final int method, final RequestInfo requestInfo, final HttpCallback httpResult) {
+    private void sendRequest(final int method, final RequestInfo requestInfo,Object tag, final HttpCallback httpResult) {
         if (sRequestQueue == null) {
             sRequestQueue = Volley.newNoCacheRequestQueue(mContext);
         }
@@ -383,14 +384,24 @@ public class HttpTools{
                 return HttpTools.getHeaders();
             }
         };
-        request.setTag(this);
+        request.setTag(tag);
         sRequestQueue.add(request);
     }
 
+    public void cancelRequestByTag(Objects tag){
+        if (sRequestQueue != null) {
+            sRequestQueue.cancelAll(tag);
+        }
+    }
 
     public void cancelAllRequest() {
         if (sRequestQueue != null) {
-            sRequestQueue.cancelAll(this);
+            sRequestQueue.cancelAll(new RequestQueue.RequestFilter() {
+                @Override
+                public boolean apply(Request<?> request) {
+                    return true;
+                }
+            });
         }
     }
 

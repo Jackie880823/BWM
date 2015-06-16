@@ -3,21 +3,17 @@ package com.madx.bwm.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.Dialog;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
@@ -26,7 +22,6 @@ import com.madx.bwm.entity.AlbumEntity;
 import com.madx.bwm.entity.AlbumPhotoEntity;
 import com.madx.bwm.http.UrlUtil;
 import com.madx.bwm.util.MessageUtil;
-import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.PickerView;
 
 import org.json.JSONArray;
@@ -41,6 +36,7 @@ import java.util.List;
  * Created by quankun on 15/5/19.
  */
 public class AlbumActivity extends BaseActivity {
+    private static final String Tag = AlbumActivity.class.getSimpleName();
     private ListView albumListView;
     private List<AlbumEntity> albumEntityList;
     private Context mContext;
@@ -174,7 +170,7 @@ public class AlbumActivity extends BaseActivity {
                 params.put("member_id", memberId);
                 params.put("year", selectYear);
                 String url = UrlUtil.generateUrl(Constant.API_GET_YEAR_ALBUM_LIST, params);
-                new HttpTools(mContext).get(url, null, new HttpCallback() {
+                new HttpTools(mContext).get(url, null,Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }

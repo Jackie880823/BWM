@@ -10,7 +10,8 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
 
     protected boolean useLazyLoad;
     protected boolean isVisible;
-    protected boolean initDone;
+    protected boolean initDone,isFinished;
+    LazyLoadTask lazyLoadTask;
     /**
      * 在这里实现Fragment数据的缓加载.
      * @param isVisibleToUser
@@ -30,14 +31,20 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
     }
 
     protected void onVisible(){
-        new LazyLoadTask().execute();
+        if(lazyLoadTask !=null){
+            lazyLoadTask.cancel(true);
+            isFinished = true;
+        }
+        lazyLoadTask = new LazyLoadTask();
+        lazyLoadTask.execute();
+
     }
 
     private class LazyLoadTask extends AsyncTask{
 
         @Override
         protected Object doInBackground(Object[] params) {
-            while (!initDone) {
+            while (!initDone&&!isFinished) {
             }
             return null;
         }
@@ -58,4 +65,12 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
 
     protected void onInvisible(){}
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(lazyLoadTask !=null){
+            lazyLoadTask.cancel(true);
+            isFinished = true;
+        }
+    }
 }

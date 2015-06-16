@@ -77,7 +77,7 @@ public class BirthdayAlertActivity extends BaseActivity {
     @Override
     public void requestData() {
 
-        new HttpTools(this).get(String.format(Constant.API_SETTING_CONFIG,MainActivity.getUser().getUser_id()),null,new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_SETTING_CONFIG,MainActivity.getUser().getUser_id()),null,this,new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -160,7 +160,7 @@ public class BirthdayAlertActivity extends BaseActivity {
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id());
 
-        new HttpTools(this).put(requestInfo,new HttpCallback() {
+        new HttpTools(this).put(requestInfo, this, new HttpCallback() {
             @Override
             public void onStart() {
 

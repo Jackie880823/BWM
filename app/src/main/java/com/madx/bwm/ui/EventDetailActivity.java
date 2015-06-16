@@ -23,7 +23,7 @@ import java.util.HashMap;
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
  */
 public class EventDetailActivity extends BaseActivity {
-
+    private static final String Tag = EventDetailActivity.class.getSimpleName();
 
     @Override
     protected void initBottomBar() {
@@ -155,7 +155,7 @@ public class EventDetailActivity extends BaseActivity {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-        new HttpTools(this).get(url, params, new HttpCallback() {
+        new HttpTools(this).get(url, params,Tag, new HttpCallback() {
             @Override
             public void onStart() {
             }
