@@ -26,7 +26,6 @@ import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.WallCommentAdapter;
@@ -67,6 +66,15 @@ import java.util.Map;
  */
 public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements WallViewClickListener, View.OnClickListener {
     private final static String TAG = WallCommentFragment.class.getSimpleName();
+
+    private static final String GET_DETAIL = TAG + "_GET_DETAIL";
+    private static final String GET_COMMENTS = TAG + "_GET_COMMENTS";
+    private static final String POST_COMMENTS = TAG + "_POST_COMMENTS";
+    private static final String POST_LOVE = TAG + "_POST_LOVE";
+    private static final String POST＿LOVE_COMMENTS = TAG + "_POST_LOVE_COMMENT";
+    private static final String UPLOAD_PIC = TAG + "_POST_PIC";
+    private static final String DELETE_COMMENT = TAG + "_DELETE_COMMENT";
+    private static final String POST_DELETE = TAG + "_POST_DELETE";
 
     private CircularNetworkImage nivHead;
     private TextView tvContent;
@@ -128,6 +136,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private String stickerType = "";
     private String stickerName = "";
     private String stickerGroupPath = "";
+    /**
+     * 网络请求工具实例
+     */
+    private HttpTools mHttpTools;
 
     public static WallCommentFragment newInstance(String... params) {
         return createInstance(new WallCommentFragment(), params);
@@ -148,7 +160,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     @Override
     public void initView() {
-
+        mHttpTools = new HttpTools(getActivity());
         try {
             content_group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
             group_id = getArguments().getString(ARG_PARAM_PREFIX + "2");
@@ -281,7 +293,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         params.put("content_group_id", content_group_id);
         params.put("user_id", MainActivity.getUser().getUser_id());
 
-        new HttpTools(getActivity()).get(Constant.API_WALL_DETAIL, params, new HttpCallback() {
+        mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, new HttpCallback() {
             @Override
             public void onStart() {
                 vProgress.setVisibility(View.VISIBLE);
@@ -428,7 +440,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         String url = UrlUtil.generateUrl(Constant.API_WALL_COMMENT_LIST, params);
 
-        new HttpTools(App.getContextInstance()).get(url, params, new HttpCallback() {
+        mHttpTools.get(url, params, GET_COMMENTS, new HttpCallback() {
             @Override
             public void onStart() {
                 progressBar.setVisibility(View.VISIBLE);
@@ -506,7 +518,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             @Override
             public void doDelete(String commentId) {
-                removeComment(commentId);
+                deleteComment(commentId);
             }
         });
         rvList.setAdapter(adapter);
@@ -537,7 +549,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         params.put("sticker_name", stickerName);
         params.put("sticker_type", stickerType);
 
-        new HttpTools(getActivity()).post(Constant.API_WALL_COMMENT_TEXT_POST, params, new HttpCallback() {
+        mHttpTools.post(Constant.API_WALL_COMMENT_TEXT_POST, params, POST_COMMENTS, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -577,7 +589,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             }
         });
-
     }
 
     /**
@@ -624,10 +635,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void gotoLocationSetting(WallEntity wall) {
-        if (TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
+        if(TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
             return;
         }
-        LocationUtil.goNavigation(getActivity(), Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()),wall.getLoc_type());
+        LocationUtil.goNavigation(getActivity(), Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()), wall.getLoc_type());
     }
 
     private void check() {
@@ -648,15 +659,15 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 loving = false;
 
                 if(TextUtils.isEmpty(wall.getLove_id())) {
-                    doLove(wall, false);
+                    postLove(wall, false);
                 } else {
-                    doLove(wall, true);
+                    postLove(wall, true);
                 }
             }
         }).start();
     }
 
-    private void doLove(WallEntity wallEntity, boolean love) {
+    private void postLove(WallEntity wallEntity, boolean love) {
 
         HashMap<String, String> params = new HashMap<>();
         params.put("content_id", wallEntity.getContent_id());
@@ -665,7 +676,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         RequestInfo requestInfo = new RequestInfo(Constant.API_WALL_LOVE, params);
 
-        new HttpTools(getParentActivity()).post(requestInfo, new HttpCallback() {
+        mHttpTools.post(requestInfo, POST_LOVE, new HttpCallback() {
             @Override
             public void onStart() {
                 Log.i(TAG, "onStart");
@@ -728,7 +739,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             params.put("photo_fullsize", "1");
 
 
-            new HttpTools(getActivity()).upload(Constant.API_WALL_COMMENT_PIC_POST, params, new HttpCallback() {
+            mHttpTools.upload(Constant.API_WALL_COMMENT_PIC_POST, params, UPLOAD_PIC, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
@@ -768,7 +779,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         params.put("comment_id", commentEntity.getComment_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
         params.put("user_id", "" + MainActivity.getUser().getUser_id());
-        new HttpTools(getActivity()).post(Constant.API_WALL_COMMENT_LOVE, params, new HttpCallback() {
+        mHttpTools.post(Constant.API_WALL_COMMENT_LOVE, params, POST＿LOVE_COMMENTS, new HttpCallback() {
             @Override
             public void onStart() {
                 getParentActivity().setResult(Activity.RESULT_OK);
@@ -796,13 +807,13 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         });
     }
 
-    private void removeComment(final String commentId) {
+    private void deleteComment(final String commentId) {
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_comment_del));
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_COMMENT_DELETE, commentId), null);
-                new HttpTools(getActivity()).delete(requestInfo, new HttpCallback() {
+                mHttpTools.delete(requestInfo, DELETE_COMMENT, new HttpCallback() {
                     @Override
                     public void onStart() {
                         vProgress.setVisibility(View.VISIBLE);
@@ -891,7 +902,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             public void onClick(View v) {
 
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, content_group_id), null);
-                new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
+                mHttpTools.put(requestInfo, POST_DELETE, new HttpCallback() {
                     @Override
                     public void onStart() {
                         vProgress.setVisibility(View.VISIBLE);

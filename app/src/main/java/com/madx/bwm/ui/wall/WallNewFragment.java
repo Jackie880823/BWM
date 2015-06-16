@@ -74,7 +74,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
      */
-    private final static String TAG = WallNewFragment.class.getSimpleName();
+    private static final String TAG = WallNewFragment.class.getSimpleName();
+
+    private static final String POST_WALL = TAG + "_POST_WALL";
+    private static final String UPLOAD_PIC = TAG + "_UPLOAD_PIC";
 
     public static final String PREFERENCE_NAME = "SAVE_DRAFT";
     public static final String PREFERENCE_KEY_IS_SAVE = "IS_SAVE";
@@ -565,7 +568,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.params = params;
         requestInfo.url = Constant.API_WALL_TEXT_POST;
-        new HttpTools(App.getContextInstance()).post(requestInfo, new HttpCallback() {
+        new HttpTools(App.getContextInstance()).post(requestInfo, POST_WALL, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -775,7 +778,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         params.put("multiple", multiple ? "1" : "0");
 
 
-        new HttpTools(App.getContextInstance()).upload(Constant.API_WALL_PIC_POST, params, new HttpCallback() {
+        new HttpTools(App.getContextInstance()).upload(Constant.API_WALL_PIC_POST, params, UPLOAD_PIC, new HttpCallback() {
             @Override
             public void onStart() {
             }

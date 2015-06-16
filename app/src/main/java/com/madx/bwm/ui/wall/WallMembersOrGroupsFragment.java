@@ -39,6 +39,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
 
     private final static String TAG = WallMembersOrGroupsFragment.class.getSimpleName();
 
+    private final static String GET_DETAIL = TAG + "_GET_DETAIL";
 
     private String content_group_id;
     private String user_id;
@@ -82,7 +83,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
         pparams.put("content_group_id", content_group_id);
         pparams.put("user_id", MainActivity.getUser().getUser_id());
 
-        new HttpTools(getActivity()).get(Constant.API_WALL_DETAIL, pparams, new HttpCallback() {
+        new HttpTools(getActivity()).get(Constant.API_WALL_DETAIL, pparams, GET_DETAIL, new HttpCallback() {
 
             @Override
             public void onStart() {
