@@ -5,7 +5,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -57,7 +56,6 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
                         vProgress = getViewById(R.id.rl_progress);
                     }
                     vProgress.setVisibility(View.VISIBLE);
-                    Log.i("", "SHOW_WAITTING================");
                     break;
                 case HIDE_WAITTING:
                     vProgress.setVisibility(View.GONE);
@@ -88,7 +86,6 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
     @Override
     public void initView() {
 
-        Log.i("", "initView===================");
 //        iv_pic = (PhotoView) getViewById(R.id.iv_pic);
 //        btn_save_2_local = (RelativeLayout) getViewById(R.id.btn_save_2_local);
 //        btn_save_2_local.setOnClickListener(new View.OnClickListener() {

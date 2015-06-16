@@ -155,7 +155,7 @@ public class App extends MultiDexApplication {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        Log.i("","onTerminate==================");
+        new HttpTools(this).cancelAllRequest();
         FileUtil.clearCache(this);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
