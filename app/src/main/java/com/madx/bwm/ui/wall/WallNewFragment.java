@@ -431,7 +431,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).commit();
     }
 
-    private boolean allRange = true;
+    private boolean allRange = false;
 
     @Override
     public void onClick(View v) {
