@@ -319,7 +319,31 @@ public class InviteMemberActivity extends BaseActivity {
         }
         return results;
     }
+    private void shoeGroupNoFriendDialog(){
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_group_nofriend, null);
+        final Dialog shoeGroupNoFriendDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.test_group_friend));
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        TextView cancelCal = (TextView) selectIntention.findViewById(R.id.tv_cal);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shoeGroupNoFriendDialog.dismiss();
+            }
+        });
+        cancelCal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shoeGroupNoFriendDialog.dismiss();
+                return;
+            }
+        });
+        shoeGroupNoFriendDialog.show();
 
+
+    }
     private void showNoFriendDialog() {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
@@ -450,16 +474,22 @@ public class InviteMemberActivity extends BaseActivity {
 //                if (selectGroupList.contains(groupId)) {
 //                    return;
 //                }
-                CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
-                if (selectItem.isChecked()) {
-                    selectItem.setChecked(false);
-                    groupAdapter.removeSelectData(groupId);
-                    selectGroupEntityList.remove(groupEntity);
-                } else {
-                    selectItem.setChecked(true);
-                    groupAdapter.addSelectData(groupId);
-                    selectGroupEntityList.add(groupEntity);
+                if(false){
+                    shoeGroupNoFriendDialog();
+//                    return;
+                }else {
+                    CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
+                    if (selectItem.isChecked()) {
+                        selectItem.setChecked(false);
+                        groupAdapter.removeSelectData(groupId);
+                        selectGroupEntityList.remove(groupEntity);
+                    } else {
+                        selectItem.setChecked(true);
+                        groupAdapter.addSelectData(groupId);
+                        selectGroupEntityList.add(groupEntity);
+                    }
                 }
+
             }
         });
         groupListView.setOnTouchListener(new View.OnTouchListener() {
@@ -641,88 +671,6 @@ public class InviteMemberActivity extends BaseActivity {
         }
     }
 
-//    class FamilyGroupAdapter extends BaseAdapter {
-//        List<FamilyGroupEntity> groupList;
-//        List<String> searchGroupList;
-//
-//        public FamilyGroupAdapter(List<FamilyGroupEntity> groupList, List<String> searchGroupList) {
-//            this.groupList = groupList;
-//            this.searchGroupList = searchGroupList;
-//        }
-//
-//        public void addData(List<FamilyGroupEntity> list) {
-//            if (null == list || list.size() == 0) {
-//                return;
-//            }
-//            groupList.clear();
-//            groupList.addAll(list);
-//            notifyDataSetChanged();
-//        }
-//
-//        public void addSelectData(String userId) {
-//            if (!searchGroupList.contains(userId)) {
-//                searchGroupList.add(userId);
-//                notifyDataSetChanged();
-//            }
-//        }
-//
-//        public void removeSelectData(String userId) {
-//            if (searchGroupList.contains(userId)) {
-//                searchGroupList.remove(userId);
-//                notifyDataSetChanged();
-//            }
-//        }
-//
-//        public List<FamilyGroupEntity> getGroupList() {
-//            return groupList;
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return groupList.size();
-//        }
-//
-//        @Override
-//        public Object getItem(int position) {
-//            return groupList.get(position);
-//        }
-//
-//        @Override
-//        public long getItemId(int position) {
-//            return position;
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent) {
-//            ViewHolder viewHolder;
-//            if (null == convertView) {
-//                convertView = LayoutInflater.from(mContext).inflate(R.layout.gridview_item_for_creategroup, null);
-//                viewHolder = new ViewHolder();
-//                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.creategroup_image_main);
-//                viewHolder.imageRight = (CheckBox) convertView.findViewById(R.id.creategroup_image_right);
-//                viewHolder.textName = (TextView) convertView.findViewById(R.id.creategroup_name);
-//                convertView.setTag(viewHolder);
-//            } else {
-//                viewHolder = (ViewHolder) convertView.getTag();
-//            }
-//            FamilyGroupEntity familyGroupEntity = groupList.get(position);
-//            if (null != searchGroupList && searchGroupList.contains(familyGroupEntity.getGroup_id())) {
-//                viewHolder.imageRight.setChecked(true);
-//            } else {
-//                viewHolder.imageRight.setChecked(false);
-//            }
-//            viewHolder.textName.setText(familyGroupEntity.getGroup_name());
-//            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
-//                    familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
-//            return convertView;
-//        }
-//
-//        class ViewHolder {
-//            CircularNetworkImage imageMain;
-//            CheckBox imageRight;
-//            TextView textName;
-//        }
-//    }
 
     @Override
     protected void initTitleBar() {

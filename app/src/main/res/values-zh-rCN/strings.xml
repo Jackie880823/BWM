@@ -737,4 +737,6 @@
 
     <string name="morning">上午</string>
     <string name="afternoon">下午</string>
+
+    <string name="test_group_friend">群组存在成员不是好友，是否添加？</string>
 </resources>
