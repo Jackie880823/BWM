@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.android.volley.toolbox.DownloadRequest;
 import com.madx.bwm.R;
 import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.util.LocalImageLoader;
@@ -52,13 +53,14 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
                     mHandler.sendEmptyMessage(HIDE_WAITTING);
                     break;
                 case SHOW_WAITTING:
-                    if(vProgress == null) {
+                    if (vProgress == null) {
                         vProgress = getViewById(R.id.rl_progress);
                     }
                     vProgress.setVisibility(View.VISIBLE);
+                    Log.i("", "SHOW_WAITTING================");
                     break;
                 case HIDE_WAITTING:
-                     vProgress.setVisibility(View.GONE);
+                    vProgress.setVisibility(View.GONE);
                     break;
             }
         }
@@ -71,6 +73,13 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
             iv_pic.getDrawable().setCallback(null);
             iv_pic = null;
         }
+        if (downloadRequest != null) {
+            downloadRequest.cancel();
+        }
+        if (vProgress != null) {
+            vProgress.setVisibility(View.GONE);
+        }
+        clearCache();
         super.onDestroy();
     }
 
@@ -79,7 +88,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
     @Override
     public void initView() {
 
-        Log.i("", "initView===================" );
+        Log.i("", "initView===================");
 //        iv_pic = (PhotoView) getViewById(R.id.iv_pic);
 //        btn_save_2_local = (RelativeLayout) getViewById(R.id.btn_save_2_local);
 //        btn_save_2_local.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +148,6 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
     }
 
 
-
     @Override
     public boolean getUserVisibleHint() {
 
@@ -157,16 +165,11 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 
     }
 
+
     private void clearCache() {
         if (bitmapCache != null) {
             bitmapCache.recycle();
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        clearCache();
     }
 
     @Override
@@ -175,10 +178,12 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
         clearCache();
     }
 
+
+    DownloadRequest downloadRequest;
+
     @Override
     protected void lazyLoad() {
 
-        mHandler.sendEmptyMessage(SHOW_WAITTING);
         pic_url = getArguments().getString("pic_url");
         iv_pic = (PhotoView) getViewById(R.id.iv_pic);
         btn_save_2_local = (RelativeLayout) getViewById(R.id.btn_save_2_local);
@@ -188,22 +193,24 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
                 if (bitmapCache != null && !bitmapCache.isRecycled()) {
                     try {
                         PicturesCacheUtil.saveImageToGallery(getActivity(), bitmapCache, "wall");
-                    }catch (Exception e){
-                        MessageUtil.showMessage(getActivity(),R.string.msg_action_failed);
+                    } catch (Exception e) {
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     }
                 }
             }
         });
         if (!TextUtils.isEmpty(pic_url)) {
-
-            Log.i("", "lazyLoad===================" + pic_url);
-            if(getActivity() == null || getActivity().isFinishing()) {
+            if (getActivity() == null || getActivity().isFinishing()) {
                 return;
             }
+            if (downloadRequest != null) {
+                downloadRequest.cancel();
+            }
 
-            new HttpTools(getActivity()).download(pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
+            downloadRequest = new HttpTools(getActivity()).download(pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
                 @Override
                 public void onStart() {
+                    mHandler.sendEmptyMessage(SHOW_WAITTING);
                     iv_pic.setImageResource(R.drawable.network_image_default);
                 }
 
@@ -231,7 +238,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 
                 @Override
                 public void onCancelled() {
-
+                    iv_pic.setImageResource(R.drawable.network_image_default);
                 }
 
                 @Override

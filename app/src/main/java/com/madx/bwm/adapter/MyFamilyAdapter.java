@@ -146,14 +146,15 @@ public class MyFamilyAdapter extends BaseAdapter implements Filterable {
 
     public void setSerach(List<FamilyMemberEntity> list){
         this.serachList = list;
-        FamilyMemberEntity member = new FamilyMemberEntity();
-        member.setUser_given_name("family_tree");
-        member.setUser_id("family_tree");
-        FamilyMemberEntity familyMember = new FamilyMemberEntity();
-        familyMember.setUser_given_name("MyFamily");
-        familyMember.setUser_id("MyFamily");
-        serachList.remove(member);
-        serachList.remove(familyMember);
+//        FamilyMemberEntity member = new FamilyMemberEntity();
+//        member.setUser_given_name("family_tree");
+//        member.setUser_id("family_tree");
+//        FamilyMemberEntity familyMember = new FamilyMemberEntity();
+//        familyMember.setUser_given_name("MyFamily");
+//        familyMember.setUser_id("MyFamily");
+//        serachList.remove(member);
+//        serachList.remove(familyMember);
+
     }
     @Override
     public Filter getFilter() {
@@ -186,6 +187,10 @@ public class MyFamilyAdapter extends BaseAdapter implements Filterable {
                     if(-1 != userName.toLowerCase().indexOf(filterString)){
                         mList.add(memberEntity);
                     }
+//                    if(-1 !=userName.toLowerCase().indexOf("family_tree") ||
+//                            -1 != userName.toLowerCase().indexOf("MyFamily")){
+//                        mList.remove(memberEntity);
+//                    }
                 }
                 results.values = mList;
                 results.count = mList.size();
