@@ -50,8 +50,6 @@ public class App extends MultiDexApplication {
             //32 bit cpu
             SDKInitializer.initialize(getApplicationContext());
         }
-
-
     }
 
 

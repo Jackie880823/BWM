@@ -3,7 +3,7 @@ package com.madx.bwm.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Criteria;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -76,8 +76,8 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
     private PlaceAutocompleteAdapter mAdapter;
     private Button btn_search;
-//    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-//            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
+    //    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
+    //            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
 
 
     MapWrapperLayout mapWrapperLayout;
@@ -101,31 +101,31 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setVisibility(View.INVISIBLE);
-//        rightTextButton.setVisibility(View.VISIBLE);
+        //        rightTextButton.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void titleLeftEvent() {
-//        setResult();
+        //        setResult();
         super.titleLeftEvent();
     }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-//        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-//            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-//                setResult();
-//            }
-//        }
+        //        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+        //            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+        //                setResult();
+        //            }
+        //        }
 
         return super.dispatchKeyEvent(event);
     }
 
     @Override
     protected void titleRightEvent() {
-//        setResult();
-//        finish();
+        //        setResult();
+        //        finish();
     }
 
     private void setResult(String name, LatLng latLng) {
@@ -144,7 +144,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     @Override
     protected Fragment getFragment() {
         return null;
-//        return  ChooseMapFragment.newInstance();
+        //        return  ChooseMapFragment.newInstance();
     }
 
     Geocoder geocoder;
@@ -158,7 +158,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                if(target !=null) {
+                if(target != null) {
                     target.hideInfoWindow();
                 }
             }
@@ -170,29 +170,23 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
         geocoder = new Geocoder(this, Locale.getDefault());
         mAutocompleteView = getViewById(R.id.autocomplete_places);
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, 0 /* clientId */, this)
-                .addApi(Places.GEO_DATA_API)
-                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(this).enableAutoManage(this, 0 /* clientId */, this).addApi(Places.GEO_DATA_API).build();
         // Register a listener that receives callbacks when a suggestion has been selected
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
-        mAdapter = new PlaceAutocompleteAdapter(Map4GoogleActivity.this, android.R.layout.simple_list_item_1,
-                mGoogleApiClient, null, null);
+        mAdapter = new PlaceAutocompleteAdapter(Map4GoogleActivity.this, android.R.layout.simple_list_item_1, mGoogleApiClient, null, null);
         mAutocompleteView.setAdapter(mAdapter);
-
 
 
         mAutocompleteView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-//                if(keyCode==KeyEvent.KEYCODE_SEARCH){
-                if(keyCode==KeyEvent.KEYCODE_ENTER){
+                //                if(keyCode==KeyEvent.KEYCODE_SEARCH){
+                if(keyCode == KeyEvent.KEYCODE_ENTER) {
                     ArrayList<PlaceAutocompleteAdapter.PlaceAutocomplete> results = mAdapter.getmResultList();
-                    if (results != null) {
+                    if(results != null) {
                         firstResult = true;
-                        for (PlaceAutocompleteAdapter.PlaceAutocomplete place : results) {
-                            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                                    .getPlaceById(mGoogleApiClient, place.placeId.toString());
+                        for(PlaceAutocompleteAdapter.PlaceAutocomplete place : results) {
+                            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, place.placeId.toString());
                             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
                         }
                         hideSoftInputWindow();
@@ -201,66 +195,66 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                 return false;
             }
         });
-//        btn_search = getViewById(R.id.btn_search);
-//        btn_search.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                try {
-////                    searchByAddress(mAutocompleteView.getText().toString());
-////                } catch (IOException e) {
-////                    e.printStackTrace();
-////                }
-//                ArrayList<PlaceAutocompleteAdapter.PlaceAutocomplete> results = mAdapter.getmResultList();
-//                if (results != null) {
-//                    firstResult = true;
-//                    for (PlaceAutocompleteAdapter.PlaceAutocomplete place : results) {
-//                        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-//                                .getPlaceById(mGoogleApiClient, place.placeId.toString());
-//                        placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-//                    }
-//                }
-////                getAutocomplete(mAutocompleteView.getText().toString());
-//            }
-//        });
-//        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String queryText) {
-//
-//                // 得到输入管理对象
-//                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                if (imm != null) {
-//                    // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
-//                    imm.hideSoftInputFromWindow(search_view.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
-//                }
-//                search_view.clearFocus(); // 不获取焦点
-//                mAutocompleteView.setVisibility(View.VISIBLE);
-//
-//                if (search_view != null) {
-//                    if (!TextUtils.isEmpty(queryText)) {
-//                        try {
-//                            searchByAddress(search_view.getQuery().toString());
-//
-//
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//                return true;
-//
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String queryText) {
-//
-//                if (!TextUtils.isEmpty(queryText)) {
-////                    mSuggestionSearch
-////                            .requestSuggestion((new SuggestionSearchOption())
-////                                    .keyword(queryText).city(city));
-//                }
-//                return true;
-//            }
-//        });
+        //        btn_search = getViewById(R.id.btn_search);
+        //        btn_search.setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View v) {
+        ////                try {
+        ////                    searchByAddress(mAutocompleteView.getText().toString());
+        ////                } catch (IOException e) {
+        ////                    e.printStackTrace();
+        ////                }
+        //                ArrayList<PlaceAutocompleteAdapter.PlaceAutocomplete> results = mAdapter.getmResultList();
+        //                if (results != null) {
+        //                    firstResult = true;
+        //                    for (PlaceAutocompleteAdapter.PlaceAutocomplete place : results) {
+        //                        PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+        //                                .getPlaceById(mGoogleApiClient, place.placeId.toString());
+        //                        placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+        //                    }
+        //                }
+        ////                getAutocomplete(mAutocompleteView.getText().toString());
+        //            }
+        //        });
+        //        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        //            @Override
+        //            public boolean onQueryTextSubmit(String queryText) {
+        //
+        //                // 得到输入管理对象
+        //                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        //                if (imm != null) {
+        //                    // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
+        //                    imm.hideSoftInputFromWindow(search_view.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
+        //                }
+        //                search_view.clearFocus(); // 不获取焦点
+        //                mAutocompleteView.setVisibility(View.VISIBLE);
+        //
+        //                if (search_view != null) {
+        //                    if (!TextUtils.isEmpty(queryText)) {
+        //                        try {
+        //                            searchByAddress(search_view.getQuery().toString());
+        //
+        //
+        //                        } catch (IOException e) {
+        //                            e.printStackTrace();
+        //                        }
+        //                    }
+        //                }
+        //                return true;
+        //
+        //            }
+        //
+        //            @Override
+        //            public boolean onQueryTextChange(String queryText) {
+        //
+        //                if (!TextUtils.isEmpty(queryText)) {
+        ////                    mSuggestionSearch
+        ////                            .requestSuggestion((new SuggestionSearchOption())
+        ////                                    .keyword(queryText).city(city));
+        //                }
+        //                return true;
+        //            }
+        //        });
 
         // MapWrapperLayout initialization
         // 39 - default target height
@@ -278,9 +272,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         // Setting custom OnTouchListener which deals with the pressed state
         // so it shows up
         new ColorDrawable(getResources().getColor(R.color.tab_color_normal));
-        this.infoButtonListener = new OnInfoWindowElemTouchListener(infoButton,
-                new ColorDrawable(getResources().getColor(R.color.btn_bg_color_gray_normal)),
-                new ColorDrawable(getResources().getColor(R.color.btn_bg_color_gray_press))) {
+        this.infoButtonListener = new OnInfoWindowElemTouchListener(infoButton, new ColorDrawable(getResources().getColor(R.color.btn_bg_color_gray_normal)), new ColorDrawable(getResources().getColor(R.color.btn_bg_color_gray_press))) {
             @Override
             protected void onClickConfirmed(View v, Marker marker) {
                 // Here we can perform some action triggered after clicking the button
@@ -311,24 +303,22 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
 
         Intent intent = getIntent();
-//        if (intent.getBooleanExtra("has_location", false)) {
+        //        if (intent.getBooleanExtra("has_location", false)) {
         String locationName = intent.getStringExtra(Constant.EXTRA_LOCATION_NAME);
         Log.i(TAG, "initView& locationName: " + locationName);
 
-        if (!TextUtils.isEmpty(locationName)) {
-
+        if(!TextUtils.isEmpty(locationName)) {
             setUpMapIfNeededWithLocation(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
-
         } else {
             setUpMapIfNeededNoLocation();
         }
 
     }
 
-    private void hideSoftInputWindow(){
+    private void hideSoftInputWindow() {
         // 得到输入管理对象
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
+        if(imm != null) {
             // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
             imm.hideSoftInputFromWindow(mAutocompleteView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
         }
@@ -347,14 +337,14 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
         googlePlacesUrl.append("&input=" + searchText);
         googlePlacesUrl.append("&sensor=true");
-//        googlePlacesUrl.append("&key=" + "AIzaSyDT_b4XSfwPPIuTTugObeZFi2Wo9M1UBVM");
+        //        googlePlacesUrl.append("&key=" + "AIzaSyDT_b4XSfwPPIuTTugObeZFi2Wo9M1UBVM");
         googlePlacesUrl.append("&key=" + getString(R.string.google_maps_place_key));
 
-//        GooglePlacesReadTask googlePlacesReadTask = new GooglePlacesReadTask();
-//        Object[] toPass = new Object[2];
-//        toPass[0] = mMap;
-//        toPass[1] = googlePlacesUrl.toString();
-//        googlePlacesReadTask.execute(toPass);
+        //        GooglePlacesReadTask googlePlacesReadTask = new GooglePlacesReadTask();
+        //        Object[] toPass = new Object[2];
+        //        toPass[0] = mMap;
+        //        toPass[1] = googlePlacesUrl.toString();
+        //        googlePlacesReadTask.execute(toPass);
 
         new HttpTools(this).get(googlePlacesUrl.toString(), null, new HttpCallback() {
             @Override
@@ -393,32 +383,32 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         });
 
 
-//        List<Address> addresses = geocoder.getFromLocationName(searchText, MAX_SEARCH_RESULT);
-//        if (addresses.size() > 0) {
-//
-//            LatLng firstLatLng = null;
-//            for (Address address : addresses) {
-//                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-//                if (firstLatLng == null) {
-//                    firstLatLng = latLng;
-//                }
-//                int maxLine = address.getMaxAddressLineIndex();
-//                String addressString;
-//                if (maxLine >= 2) {
-//                    addressString = address.getAddressLine(1) + address.getAddressLine(2);
-//                } else {
-//                    addressString = address.getAddressLine(1);
-//                }
-//                addMarker(latLng, address.getAdminArea(), addressString);
-//                Log.i("", "address====" + address.toString());
-//            }
-//
-//
-//            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(firstLatLng
-//                    , 14);
-//
-//            mMap.animateCamera(cameraUpdate);
-//        }
+        //        List<Address> addresses = geocoder.getFromLocationName(searchText, MAX_SEARCH_RESULT);
+        //        if (addresses.size() > 0) {
+        //
+        //            LatLng firstLatLng = null;
+        //            for (Address address : addresses) {
+        //                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+        //                if (firstLatLng == null) {
+        //                    firstLatLng = latLng;
+        //                }
+        //                int maxLine = address.getMaxAddressLineIndex();
+        //                String addressString;
+        //                if (maxLine >= 2) {
+        //                    addressString = address.getAddressLine(1) + address.getAddressLine(2);
+        //                } else {
+        //                    addressString = address.getAddressLine(1);
+        //                }
+        //                setMarkerContent(latLng, address.getAdminArea(), addressString);
+        //                Log.i("", "address====" + address.toString());
+        //            }
+        //
+        //
+        //            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(firstLatLng
+        //                    , 14);
+        //
+        //            mMap.animateCamera(cameraUpdate);
+        //        }
     }
 
     @Override
@@ -429,6 +419,16 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    /**
+     * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
+     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 地图关闭取消注册的地址改变的监听
+        lm.removeUpdates(myLocationListener);
     }
 
     @Override
@@ -445,41 +445,13 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
      */
     private void setUpMap(double latitude, double longitude) {
         LatLng latLng = new LatLng(latitude, longitude);
-//        addMarker(latLng);
+        //        setMarkerContent(latLng);
         center2Location(latLng);
 
-//        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng
-//                , 14);
-//                , getResources().getInteger(R.integer.map_zoom_initial));
-//        mMap.animateCamera(cameraUpdate);
-    }
-
-    private String getBestProvider(Context context) {
-        Criteria criteria = getCriteria();
-        // 这里可能返回 null, 地理位置信息服务未开启
-        return lm.getBestProvider(criteria, true);
-    }
-
-    public Location getLastKnowLocation(Context context) {
-        Location ret = null;
-        String bestProvider = getBestProvider(context);
-        if (TextUtils.isEmpty(bestProvider)) {
-            // 这里可能会返回 null, 表示按照当前的查询条件无法获取系统最后一次更新的地理位置信息
-            ret = lm.getLastKnownLocation(bestProvider);
-        }
-        return ret;
-    }
-
-
-    public Criteria getCriteria() {
-        Criteria c = new Criteria();
-        c.setAccuracy(Criteria.ACCURACY_FINE);          //设置查询精度,(Criteria.ACCURACY_COARSE...)
-        c.setSpeedRequired(false);                      //设置是否要求速度
-        c.setCostAllowed(false);                        //设置是否允许产生费用
-        c.setBearingRequired(false);                    //设置是否需要得到方向
-        c.setAltitudeRequired(false);                   //设置是否需要得到海拔高度
-        c.setPowerRequirement(Criteria.POWER_LOW);      //设置允许的电池消耗级别
-        return c;
+        //        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng
+        //                , 14);
+        //                , getResources().getInteger(R.integer.map_zoom_initial));
+        //        mMap.animateCamera(cameraUpdate);
     }
 
     /**
@@ -500,33 +472,34 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
         // Do a null check to confirm that we have not already instantiated the map.
 
-        if (mMap != null) {
+        if(mMap != null) {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.setMyLocationEnabled(true);
 
-            if (!hasLocation) {
-                if (!TextUtils.isEmpty(getBestProvider(this))) {
-                    Location location = getLastKnowLocation(this);
-                    if (location == null) {
-                        lm.requestLocationUpdates(INTERVAL_TIME, 0, getCriteria(), myLocationListener, null);
-                    } else {
-//                            setUpMap(myLocation.getLatitude(), myLocation.getLongitude());
-                        setMyLocation(location.getLatitude(), location.getLongitude());
-                        center2Location(myLocation);
-                    }
+            if(!hasLocation) {
+                Location location = LocationUtil.getLastKnowLocation();
+                if(location == null) {
+                    lm.requestLocationUpdates(INTERVAL_TIME, 0, LocationUtil.getCriteria(), myLocationListener, null);
+                } else {
+                    //                            setUpMap(myLocation.getLatitude(), myLocation.getLongitude());
+                    setMyLocation(location.getLatitude(), location.getLongitude());
+                    center2Location(myLocation);
                 }
             } else {
                 setMyLocation(latitude, longitude);
                 center2Location(myLocation);
-//                    setUpMap(latitude, longitude);
+                //                    setUpMap(latitude, longitude);
             }
 
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
                     toLocation = false;
-                    String address =LocationUtil.getLocationAddress(Map4GoogleActivity.this, latLng.latitude, latLng.longitude);
-                    addMarker(latLng, address, address);
+                    Address address = LocationUtil.getAddress(Map4GoogleActivity.this, latLng.latitude, latLng.longitude);
+
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
+
+                    setMarkerContent(address, marker);
                 }
             });
         }
@@ -535,8 +508,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     }
 
     private void center2Location(LatLng location) {
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(location
-                , 14);
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(location, 14);
         mMap.animateCamera(cameraUpdate);
         addTarget(location);
         new Thread(new GetAddressRunnable(location.latitude, location.longitude)).start();
@@ -548,26 +520,24 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
+            switch(msg.what) {
                 case MSG_VIEW_LONGPRESS://处理长按时间返回位置信息{
-//                    overlayitem = new OverlayItem(locPoint, "地址名称",
-//                            "正在地址加载...");
-//                    if (mLongPressOverlay.size() > 0) {
-//                        mLongPressOverlay.removeOverlay(0);
-//                    }
-//                    popView.setVisibility(View.GONE);
-//                    mLongPressOverlay.addOverlay(overlayitem);
-//                    mLongPressOverlay.setFocus(overlayitem);
-//                    mapOverlays.add(mLongPressOverlay);
-//                    mMapCtrl.animateTo(locPoint);
-//                    mapView.invalidate();
+                    //                    overlayitem = new OverlayItem(locPoint, "地址名称",
+                    //                            "正在地址加载...");
+                    //                    if (mLongPressOverlay.size() > 0) {
+                    //                        mLongPressOverlay.removeOverlay(0);
+                    //                    }
+                    //                    popView.setVisibility(View.GONE);
+                    //                    mLongPressOverlay.addOverlay(overlayitem);
+                    //                    mLongPressOverlay.setFocus(overlayitem);
+                    //                    mapOverlays.add(mLongPressOverlay);
+                    //                    mMapCtrl.animateTo(locPoint);
+                    //                    mapView.invalidate();
                     break;
                 case MSG_VIEW_ADDRESSNAME:
                     //获取到地址后显示在泡泡上
-                    if (target != null) {
-                        target.setSnippet((String) msg.obj);
-                        target.setTitle((String) msg.obj);
-                        target.showInfoWindow();
+                    if(target != null) {
+                        setMarkerContent((Address) msg.obj, target);
                     }
                     break;
             }
@@ -582,30 +552,27 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e("", "onConnectionFailed: ConnectionResult.getErrorCode() = "
-                + connectionResult.getErrorCode());
+        Log.e("", "onConnectionFailed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
 
         // TODO(Developer): Check error code and notify the user of error state and resolution.
-        Toast.makeText(this,
-                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(), Toast.LENGTH_SHORT).show();
     }
 
     private Marker tempMarker;
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-//        try {
-//            if (this.tempMarker != null && target != tempMarker) {
-//                tempMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
-//            }
-//            target.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target));
-//            this.target = target;
-//            tempMarker = target;
-//        } catch (Exception e) {
-//
-//        }
-        if(marker!=null){
+        //        try {
+        //            if (this.tempMarker != null && target != tempMarker) {
+        //                tempMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
+        //            }
+        //            target.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target));
+        //            this.target = target;
+        //            tempMarker = target;
+        //        } catch (Exception e) {
+        //
+        //        }
+        if(marker != null) {
             marker.showInfoWindow();
         }
         return false;
@@ -626,26 +593,27 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
         @Override
         public void run() {
-            String addressName = "";
+            Address address = null;
             long beginTime = System.currentTimeMillis();
             long lastTime = beginTime;
             //wait 10 second
-            while (lastTime - beginTime < 10 * 1000) {
-                addressName = LocationUtil.getLocationAddress(getApplicationContext(), latitude, longitude);
-                if (!"".equals(addressName)) {
+            while(lastTime - beginTime < 10 * 1000) {
+                address = LocationUtil.getAddress(getApplicationContext(), latitude, longitude);
+                if(address == null) {
+                    try {
+                        Thread.sleep(200);
+                    } catch(InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    lastTime = System.currentTimeMillis();
+                } else {
                     break;
                 }
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                lastTime = System.currentTimeMillis();
             }
 
             Message msg = new Message();
             msg.what = MSG_VIEW_ADDRESSNAME;
-            msg.obj = addressName;
+            msg.obj = address;
             mHandler.sendMessage(msg);
         }
     }
@@ -656,7 +624,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
     private void setUpMapIfNeededWithLocation(double latitude, double longitude) {
         setUpMapIfNeeded(true, latitude, longitude);
-        if (mAdapter != null) {
+        if(mAdapter != null) {
             mAdapter.setBounds(new LatLngBounds(myLocation, myLocation));
         }
     }
@@ -667,27 +635,47 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
      * @param latLng
      */
     private void addTarget(LatLng latLng) {
-//        mMap.clear();
-        if (target != null) {
+        //        mMap.clear();
+        if(target != null) {
             target.remove();
         }
-        if (this.tempMarker != null) {
+        if(this.tempMarker != null) {
             tempMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
         }
         target = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
-//        target = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target)));
-//        target.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target));
+        //        target = mMap.setMarkerContent(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target)));
+        //        target.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target));
         target.setTitle("");
-//        target.setTitle(getString(R.string.text_destination));
+        //        target.setTitle(getString(R.string.text_destination));
         target.setSnippet("");
         target.setDraggable(true);
     }
 
-    private Marker addMarker(LatLng latLng, String title, String snippet) {
-        Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
+    /**
+     * 设置显选择地址详细信息弹出框的内容并显示
+     * @param address  地址信息
+     * @param marker 持有弹出框的标识封装对象
+     * @return 返回持有弹出框的标识封装对象
+     */
+    private Marker setMarkerContent(Address address, Marker marker) {
+        String title;
+        String snippet;
+
+        if(address.getMaxAddressLineIndex() > 2) {
+            title = address.getAddressLine(1);
+            snippet = address.getAddressLine(0);
+        } else {
+            title = snippet = address.getAddressLine(0);
+        }
+
+        // 判空字符对像用""替代
+        title = TextUtils.isEmpty(title) ? "" : title;
+        snippet = TextUtils.isEmpty(snippet) ? "" : snippet;
+
         marker.setTitle(title);
         marker.setSnippet(snippet);
+
         marker.showInfoWindow();
 
         return marker;
@@ -695,15 +683,18 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
     private void setMyLocation(double latitude, double longitude) {
         myLocation = new LatLng(latitude, longitude);
-        if (mAdapter != null) {
+        if(mAdapter != null) {
             mAdapter.setBounds(new LatLngBounds(myLocation, myLocation));
         }
     }
 
+    /**
+     * 地址改变监听事件
+     */
     public class MyLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
-            if (toLocation) {
+            if(toLocation) {
                 toLocation = false;
                 setMyLocation(location.getLatitude(), location.getLongitude());
                 setUpMap(location.getLatitude(), location.getLongitude());
@@ -730,59 +721,59 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     /**
      *  An AsyncTask class for accessing the GeoCoding Web Service
      */
-//    private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
-//
-//        @Override
-//        protected List<Address> doInBackground(String... locationName) {
-//            // Creating an instance of Geocoder class
-//            Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
-//
-//            List<Address> addresses = null;
-//
-//            try {
-//                // Getting a maximum of 3 Address that matches the input text
-//                addresses = geocoder.getFromLocationName(locationName[0], MAX_SEARCH_RESULT);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return addresses;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<Address> addresses) {
-//
-//            if (addresses == null || addresses.size() == 0) {
-//                Toast.makeText(getBaseContext(), "No Location found", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            mMap.clear();
-//            addTarget(myLocation);
-//
-////            LatLng firstLatLng = null;
-//            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//            for (Address address : addresses) {
-//                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-////                if (firstLatLng == null) {
-////                    firstLatLng = latLng;
-////                    center2Location(firstLatLng);
-////                }
-//                int maxLine = address.getMaxAddressLineIndex();
-//                String addressString;
-//                if (maxLine >= 2) {
-//                    addressString = address.getAddressLine(1) + address.getAddressLine(2);
-//                } else {
-//                    addressString = address.getAddressLine(1);
-//                }
-//                Marker target = addMarker(latLng, addressString, addressString);
-//                builder.include(target.getPosition());
-//            }
-//            LatLngBounds bounds = builder.build();
-//            int padding = 10; // offset from edges of the map in pixels
-//            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-//            mMap.animateCamera(cu);
-//
-//        }
-//    }
+    //    private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
+    //
+    //        @Override
+    //        protected List<Address> doInBackground(String... locationName) {
+    //            // Creating an instance of Geocoder class
+    //            Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
+    //
+    //            List<Address> addresses = null;
+    //
+    //            try {
+    //                // Getting a maximum of 3 Address that matches the input text
+    //                addresses = geocoder.getFromLocationName(locationName[0], MAX_SEARCH_RESULT);
+    //            } catch (IOException e) {
+    //                e.printStackTrace();
+    //            }
+    //            return addresses;
+    //        }
+    //
+    //        @Override
+    //        protected void onPostExecute(List<Address> addresses) {
+    //
+    //            if (addresses == null || addresses.size() == 0) {
+    //                Toast.makeText(getBaseContext(), "No Location found", Toast.LENGTH_SHORT).show();
+    //            }
+    //
+    //            mMap.clear();
+    //            addTarget(myLocation);
+    //
+    ////            LatLng firstLatLng = null;
+    //            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+    //            for (Address address : addresses) {
+    //                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+    ////                if (firstLatLng == null) {
+    ////                    firstLatLng = latLng;
+    ////                    center2Location(firstLatLng);
+    ////                }
+    //                int maxLine = address.getMaxAddressLineIndex();
+    //                String addressString;
+    //                if (maxLine >= 2) {
+    //                    addressString = address.getAddressLine(1) + address.getAddressLine(2);
+    //                } else {
+    //                    addressString = address.getAddressLine(1);
+    //                }
+    //                Marker target = setMarkerContent(latLng, addressString, addressString);
+    //                builder.include(target.getPosition());
+    //            }
+    //            LatLngBounds bounds = builder.build();
+    //            int padding = 10; // offset from edges of the map in pixels
+    //            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+    //            mMap.animateCamera(cu);
+    //
+    //        }
+    //    }
 
     /**
      * Listener that handles selections from suggestions from the AutoCompleteTextView that
@@ -793,8 +784,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
      * @see com.google.android.gms.location.places.GeoDataApi#getPlaceById(com.google.android.gms.common.api.GoogleApiClient,
      * String...)
      */
-    private AdapterView.OnItemClickListener mAutocompleteClickListener
-            = new AdapterView.OnItemClickListener() {
+    private AdapterView.OnItemClickListener mAutocompleteClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             /*
@@ -809,8 +799,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
              Issue a request to the Places Geo Data API to retrieve a Place object with additional
               details about the place.
               */
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById(mGoogleApiClient, placeId);
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
             hideSoftInputWindow();
@@ -824,12 +813,11 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
      * Callback for results from a Places Geo Data API query that shows the first place result in
      * the details view on screen.
      */
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(PlaceBuffer places) {
             try {
-                if (!places.getStatus().isSuccess()) {
+                if(!places.getStatus().isSuccess()) {
                     // Request did not complete successfully
                     Log.e("", "Place query did not complete. Error: " + places.getStatus().toString());
                     places.release();
@@ -839,26 +827,27 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                 // Get the Place object from the buffer.
                 final Place place = places.get(0);
 
-                if (place != null) {
+                if(place != null) {
                     // Format details of the place for display and show it in a TextView.
 
-                    addMarker(place.getLatLng(), place.getName().toString(), place.getAddress().toString());
-                    if (firstResult) {
+                    Marker marker = mMap.addMarker(new MarkerOptions().position(place.getLatLng()));
+                    setMarkerContent(new Address(place.getLocale()), marker);
+                    if(firstResult) {
                         firstResult = false;
                         center2Location(place.getLatLng());
                     }
 
                     places.release();
 
-//            // 得到输入管理对象
-//            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//            if (imm != null) {
-//                // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
-//                imm.hideSoftInputFromWindow(mAutocompleteView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
-//            }
+                    //            // 得到输入管理对象
+                    //            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    //            if (imm != null) {
+                    //                // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
+                    //                imm.hideSoftInputFromWindow(mAutocompleteView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
+                    //            }
                 }
-            }catch (Exception e){
-                MessageUtil.showMessage(Map4GoogleActivity.this,R.string.location_search_error);
+            } catch(Exception e) {
+                MessageUtil.showMessage(Map4GoogleActivity.this, R.string.location_search_error);
             }
         }
     };

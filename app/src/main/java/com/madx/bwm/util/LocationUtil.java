@@ -25,28 +25,24 @@ import com.madx.bwm.ui.Map4GoogleActivity;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by wing on 15/3/25.
  */
 public class LocationUtil implements LocationListener, GoogleApiClient.OnConnectionFailedListener {
+    //gcj02,bd09ll(百度经纬度坐标),bd09mc(百度墨卡托坐标),wgs84(gps)
+    public static final String LOCATION_TYPE_GCJ02 = "gcj02";
+    public static final String LOCATION_TYPE_BD09LL = "bd09ll";
+    //    public static final String LOCATION_TYPE_BD09MC = "bd09mc";
+    public static final String LOCATION_TYPE_WGS84 = "wgs84";
     private final static String TAG = LocationUtil.class.getSimpleName();
-
+    private static final String BAIDU_MAP_APP_PACKAGE = "com.baidu.BaiduMap";
     private static Geocoder geoCoder;
     private static LocationManager lm;
     private static double lat = 31.22997;
     private static double lon = 121.640756;
     public static double x_pi = lat * lon / 180.0;
-    private static final String BAIDU_MAP_APP_PACKAGE = "com.baidu.BaiduMap";
-
-
-    private static Geocoder getGeoCoder(Context context) {
-        if(geoCoder == null) {
-            geoCoder = new Geocoder(context, Locale.getDefault());
-        }
-        return geoCoder;
-    }
+    private static Location currentLocation;
 
     /**
      * 通过经纬度获取地址
@@ -54,45 +50,68 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
      * @return 返回地址名称
      */
     public static String getLocationAddress(Context context, double latitude, double longitude) {
-        String add = "";
-        Geocoder geoCoder = getGeoCoder(context);
-        try {
-            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-            if(addresses != null && addresses.size() > 0) {
-                Address address = addresses.get(0);
-                int maxLine = address.getMaxAddressLineIndex();
-                if(maxLine >= 2) {
-                    add = address.getAddressLine(1) + address.getAddressLine(2);
-                } else {
-                    add = address.getAddressLine(1);
-                }
+        String add = null;
+        Address address = getAddress(context, latitude, longitude);
+        if(address != null) {
+            int maxLine = address.getMaxAddressLineIndex();
+            if(maxLine >= 2) {
+                add = address.getAddressLine(1);
+            } else {
+                add = address.getAddressLine(0);
             }
-        } catch(IOException e) {
-            add = "";
-            e.printStackTrace();
         }
         Log.i(TAG, "getLocationAddress& address: " + add);
         return add;
     }
 
-    private static Locale getLocale(Context context, double latitude, double longitude) {
+    /**
+     * 根据经纬度获取地址信息
+     *
+     * @param context   上下文
+     * @param latitude  纬度
+     * @param longitude 经度
+     * @return 返回地址信息封装对象Address
+     */
+    public static Address getAddress(Context context, double latitude, double longitude) {
+        Log.i(TAG, "getAddress& latitude: " + latitude + "; longitude: " + longitude);
         if(latitude == 0 && longitude == 0) {
             Location location = getLastKnowLocation();
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+            if(location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
         }
-        Locale locale = null;
-        Geocoder geoCoder = getGeoCoder(context);
+        Address address = null;
+
+        // 判断地址编码器是否为空
+        if(geoCoder == null) {
+            geoCoder = new Geocoder(context);
+        }
+
         try {
             List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
             if(addresses != null && addresses.size() > 0) {
-                Address address = addresses.get(0);
-                locale = address.getLocale();
+                address = addresses.get(0);
             }
         } catch(IOException e) {
             e.printStackTrace();
         }
-        return locale;
+        return address;
+    }
+
+    private static LocationListener locationListener = new LocationUtil();
+    public static void setRequestLocationUpdates(Context context) {
+        if(lm == null) {
+            lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        }
+        lm.requestLocationUpdates(2000, 0, getCriteria(), locationListener, null);
+    }
+
+    public static void removerLocationListener() {
+        if(lm == null) {
+            return;
+        }
+        lm.removeUpdates(locationListener);
     }
 
     /**
@@ -106,21 +125,26 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
      */
     public static Intent getPlacePickerIntent(Context context, double latitude, double longitude, String name) {
         Intent intent = new Intent();
-        lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        //if gps open
-        //        if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        if(lm == null) {
+            lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        }
+
+//        if(currentLocation != null) {
+//            Address address = getAddress(context, currentLocation.getLatitude(), currentLocation.getLongitude());
+//            if(address != null) {
+//                Log.i(TAG, "getPlacePickerIntent& locale: country: " + address.getCountryName());
+//            }
+//        }
 
         intent.putExtra(Constant.EXTRA_LOCATION_NAME, name);
         intent.putExtra(Constant.EXTRA_LATITUDE, latitude);
         intent.putExtra(Constant.EXTRA_LONGITUDE, longitude);
 
-//        String country = getLocale(context, latitude, longitude).getCountry();
-//        Log.i(TAG, "getPlacePickerIntent& country: " + country);
         //判断是用百度还是google
-        if(SystemUtil.checkPlayServices(context)) {
-            intent.setClass(context, Map4GoogleActivity.class);
-        } else {
+        if(!SystemUtil.checkPlayServices(context)) {
             intent.setClass(context, Map4BaiduActivity.class);
+        } else {
+            intent.setClass(context, Map4GoogleActivity.class);
         }
         return intent;
     }
@@ -128,7 +152,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
     /**
      * @return
      */
-    private static String getBestProvider() {
+    public static String getBestProvider() {
         Criteria criteria = getCriteria();
         // 这里可能返回 null, 地理位置信息服务未开启
         return lm.getBestProvider(criteria, true);
@@ -136,6 +160,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
 
     /**
      * 获取位置提供器
+     *
      * @return 位置提供器
      */
     public static Criteria getCriteria() {
@@ -150,23 +175,15 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
     }
 
     public static Location getLastKnowLocation() {
-        Location ret = null;
+        Location ret;
         String bestProvider = getBestProvider();
-        if(TextUtils.isEmpty(bestProvider)) {
-            // 这里可能会返回 null, 表示按照当前的查询条件无法获取系统最后一次更新的地理位置信息
-            ret = lm.getLastKnownLocation(bestProvider);
-        }
+        // 这里可能会返回 null, 表示按照当前的查询条件无法获取系统最后一次更新的地理位置信息
+        ret = lm.getLastKnownLocation(bestProvider);
         return ret;
     }
 
-    //gcj02,bd09ll(百度经纬度坐标),bd09mc(百度墨卡托坐标),wgs84(gps)
-    public static final String LOCATION_TYPE_GCJ02 = "gcj02";
-    public static final String LOCATION_TYPE_BD09LL = "bd09ll";
-    //    public static final String LOCATION_TYPE_BD09MC = "bd09mc";
-    public static final String LOCATION_TYPE_WGS84 = "wgs84";
-
     /**
-     * 打开地图导航
+     * 打开地图导航找到指定的地址
      *
      * @param context
      * @param latitude
@@ -176,28 +193,30 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
     public static void goNavigation(Context context, double latitude, double longitude, String locationType) {
 
         if(TextUtils.isEmpty(locationType)) {
+            // 地址类型为空
             locationType = LOCATION_TYPE_GCJ02;
         }
         //        if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
-        //            openWebview4BaiduMap(context, latitude, longitude, locationType);
+        //            openWebView4BaiduMap(context, latitude, longitude, locationType);
         //        }else {
-        Intent intent = null;
+        Intent intent;
         //14为缩放比例
         Log.i("", "goNavigation======" + latitude + "," + longitude);
         Log.i("", "locationType======" + locationType);
 
 
+        // 判断是否有谷歌服务
         if(SystemUtil.checkPlayServices(context)) {
             if(LOCATION_TYPE_BD09LL.equals(locationType)) {
                 //                if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
-                openWebview4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
+                openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
             } else {
                 try {
                     String uri = String.format("geo:%f,%f?z=14&q=%f,%f", latitude, longitude, latitude, longitude);
                     intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                     context.startActivity(intent);
                 } catch(Exception e) {
-                    openWebview4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
+                    openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
                 }
             }
         } else {
@@ -210,11 +229,11 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
                     context.startActivity(intent);
                 } catch(Exception e) {
                     e.printStackTrace();
-                    openWebview4BaiduMap(context, latitude, longitude, locationType);
+                    openWebView4BaiduMap(context, latitude, longitude, locationType);
                 }
 
             } else {
-                openWebview4BaiduMap(context, latitude, longitude, locationType);
+                openWebView4BaiduMap(context, latitude, longitude, locationType);
             }
 
         }
@@ -223,43 +242,13 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
 
     }
 
-    private static void openWebview4BaiduMap(Context context, double latitude, double longitude, String locationType) {
+    private static void openWebView4BaiduMap(Context context, double latitude, double longitude, String locationType) {
         String uri = "http://api.map.baidu.com/geocoder?location=%s&coord_type=%s&output=html&src=%s";
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         Uri content_url = Uri.parse(String.format(uri, (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME));
         intent.setData(content_url);
         context.startActivity(intent);
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    private static Location currentLocation;
-
-    @Override
-    public void onLocationChanged(Location location) {
-        currentLocation = location;
-        //        if(currentLocation.getProvider()){
-        //
-        //        }
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
     }
 
     public static String getLocationPicUrl(Context context, String latitude, String longitude, String locationType) {
@@ -347,6 +336,32 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
 //        LatLng desLatLng = converter.convert();
 
         return desLatLng;
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i(TAG, "onLocationChanged()& latitude: " + location.getLatitude() + "; longitude: " + location.getLongitude());
+        currentLocation = location;
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
 
     }
 }
