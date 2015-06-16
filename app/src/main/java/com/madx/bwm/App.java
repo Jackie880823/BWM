@@ -41,8 +41,15 @@ public class App extends MultiDexApplication {
         crashHandler.init(getApplicationContext());
         /**网络工具初始*/
         HttpTools.init(this);
+        Log.i("", "MultiDexApplication==============" + System.getProperty("os.arch"));
+        //TODO for baidu not support 64 bit cpu
         /**baidu map*/
-        SDKInitializer.initialize(getApplicationContext());
+        if(System.getProperty("os.arch").contains("64")){
+            //64bit cpu
+        }else{
+            //32 bit cpu
+            SDKInitializer.initialize(getApplicationContext());
+        }
 
 
     }

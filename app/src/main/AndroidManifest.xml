@@ -84,8 +84,8 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="@string/baidu_maps_key" />
-            <!--android:value="@string/jackie_baidu_maps_key_debug" />-->
             <!--android:value="@string/baidu_maps_key_debug" />-->
+            <!--android:value="@string/jackie_baidu_maps_key_debug" />-->
 
         <service
             android:name="com.baidu.location.f"
@@ -116,7 +116,11 @@
 
         <service
             android:name=".receiver_service.GcmIntentService"
-            android:enabled="true" />
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".ui.LoginActivity"
