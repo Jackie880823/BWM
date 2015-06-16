@@ -65,7 +65,7 @@ public class NewsInfoActivity extends BaseActivity {
 
     @Override
     public void requestData() {
-        new HttpTools(this).get(String.format(newUrl, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+        new HttpTools(this).get(String.format(newUrl, MainActivity.getUser().getUser_id()), null,this, new HttpCallback() {
             @Override
             public void onStart() {
 

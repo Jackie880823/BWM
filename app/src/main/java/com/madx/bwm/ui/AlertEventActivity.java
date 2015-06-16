@@ -30,6 +30,8 @@ import java.util.Map;
  */
 public class AlertEventActivity extends BaseActivity {
 
+    private static final String TAG = "AlertEventActivity";
+
     ProgressDialog mProgressDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
@@ -136,7 +138,7 @@ public class AlertEventActivity extends BaseActivity {
         params.put("limit",""+ offset);
 
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_EVENT, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_EVENT, MainActivity.getUser().getUser_id()), params, this, new HttpCallback() {
             @Override
             public void onStart() {
 

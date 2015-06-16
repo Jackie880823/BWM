@@ -135,7 +135,7 @@ public class NewsActivity extends BaseActivity {
         params.put("limit",""+offSet);
 
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_NEWS, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_NEWS, MainActivity.getUser().getUser_id()), params,this, new HttpCallback() {
             @Override
             public void onStart() {
 

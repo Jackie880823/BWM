@@ -153,7 +153,7 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
 
 
 
-                    new HttpTools(SignUpUsernameVerifyPhoneActivity.this).post(Constant.API_VERIFICATION, params, new HttpCallback() {
+                    new HttpTools(SignUpUsernameVerifyPhoneActivity.this).post(Constant.API_VERIFICATION, params, this,new HttpCallback() {
                         @Override
                         public void onStart() {
 
@@ -292,7 +292,7 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
 
 
 
-                    new HttpTools(SignUpUsernameVerifyPhoneActivity.this).get(Constant.API_VERIFY_CODE, params, new HttpCallback() {
+                    new HttpTools(SignUpUsernameVerifyPhoneActivity.this).get(Constant.API_VERIFY_CODE, params, this,new HttpCallback() {
                         @Override
                         public void onStart() {
 

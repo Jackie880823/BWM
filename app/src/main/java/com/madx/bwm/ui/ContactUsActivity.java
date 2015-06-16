@@ -142,7 +142,7 @@ public class ContactUsActivity extends BaseActivity {
             params.put("subject", subject_text);
             params.put("body", mail_content_text);
             params.put("email", mail_from_text);
-            new HttpTools(this).post(Constant.API_CONTACT_US, params, new HttpCallback() {
+            new HttpTools(this).post(Constant.API_CONTACT_US, params,this, new HttpCallback() {
                 @Override
                 public void onStart() {
 

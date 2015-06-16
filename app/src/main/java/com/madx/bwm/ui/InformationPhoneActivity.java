@@ -187,7 +187,7 @@ public class InformationPhoneActivity extends BaseActivity {
                     params.put("user_app_version", "1.8.0");
                     params.put("user_app_os", "android");
 
-                    new HttpTools(InformationPhoneActivity.this).post(Constant.API_CREATE_NEW_USER, params, new HttpCallback() {
+                    new HttpTools(InformationPhoneActivity.this).post(Constant.API_CREATE_NEW_USER, params,this, new HttpCallback() {
                         @Override
                         public void onStart() {
 
