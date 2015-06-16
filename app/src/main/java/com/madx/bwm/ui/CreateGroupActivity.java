@@ -45,7 +45,7 @@ import java.util.List;
 
 
 public class CreateGroupActivity extends BaseActivity {
-
+    private static final String Tag = CreateGroupActivity.class.getSimpleName();
     private List<UserEntity> userList = new ArrayList();
     private List<GroupEntity> groupList = new ArrayList();
     private List<UserEntity> searchUserList = new ArrayList<>();//好友
@@ -231,7 +231,7 @@ public class CreateGroupActivity extends BaseActivity {
     public void requestData() {
 
         new HttpTools(CreateGroupActivity.this).get(String.format(Constant.API_GET_EVERYONE,
-                MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+                MainActivity.getUser().getUser_id()), null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 

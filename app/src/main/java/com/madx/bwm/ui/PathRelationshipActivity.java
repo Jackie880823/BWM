@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PathRelationshipActivity extends BaseActivity {
-
+    private static final String Tag = PathRelationshipActivity.class.getSimpleName();
     String memberId;
     String relationship;
     String fam_nickname;
@@ -149,7 +149,7 @@ public class PathRelationshipActivity extends BaseActivity {
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_PATH_RELATIONSHIP, params);
 
-        new HttpTools(PathRelationshipActivity.this).get(url, null, new HttpCallback() {
+        new HttpTools(PathRelationshipActivity.this).get(url, null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -243,7 +243,7 @@ public class PathRelationshipActivity extends BaseActivity {
         requestInfo.url = String.format(Constant.API_UPDATE_RELATIONSHIP_NICKNAME, MainActivity.getUser().getUser_id());
         requestInfo.jsonParam = jsonParamsString;
 
-        new HttpTools(PathRelationshipActivity.this).put(requestInfo, new HttpCallback() {
+        new HttpTools(PathRelationshipActivity.this).put(requestInfo,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 

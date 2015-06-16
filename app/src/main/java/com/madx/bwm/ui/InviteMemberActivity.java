@@ -60,6 +60,7 @@ import java.util.regex.Pattern;
  * Created by quankun on 15/5/12.
  */
 public class InviteMemberActivity extends BaseActivity {
+    private static final String Tag = InviteMemberActivity.class.getSimpleName();
     private EditText etSearch;
     private ViewPager pager;
     private TextView message_member_tv;
@@ -474,6 +475,7 @@ public class InviteMemberActivity extends BaseActivity {
 //                if (selectGroupList.contains(groupId)) {
 //                    return;
 //                }
+                //如果group里面有不是好友的成员
                 if(false){
                     shoeGroupNoFriendDialog();
 //                    return;
@@ -603,7 +605,7 @@ public class InviteMemberActivity extends BaseActivity {
             @Override
             public void run() {
                 super.run();
-                new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+                new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null,Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }

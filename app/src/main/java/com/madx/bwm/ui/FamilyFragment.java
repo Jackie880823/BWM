@@ -66,6 +66,7 @@ import java.util.regex.Pattern;
  * Created by quankun on 15/5/12.
  */
 public class FamilyFragment extends BaseFragment<MainActivity> implements View.OnClickListener {
+    private static final String Tag = FamilyFragment.class.getSimpleName();
     private EditText etSearch;
     private ViewPager pager;
     private TextView message_member_tv;
@@ -91,6 +92,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     public static final String FAMILY_SPOUSE = "spouse";
     public static final String FAMILY_MORE_MEMBER = "Everyone";
     public static final String FAMILY_HIDE_MEMBER = "MyFamily";
+
 
     private LinearLayout emptyGroupLinear;
     private LinearLayout emptyMemberLinear;
@@ -542,7 +544,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //            @Override
 //            public void run() {
 //                super.run();
-        new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
+        new HttpTools(getActivity()).put(requestInfo,Tag, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -597,7 +599,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //            @Override
 //            public void run() {
 //                super.run();
-        new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -800,7 +802,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void run() {
                 super.run();
-                new HttpTools(getActivity()).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+                new HttpTools(getActivity()).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null,Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }
