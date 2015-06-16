@@ -157,7 +157,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                 return;
             }
 
-            new HttpTools(getActivity()).get(request_url, null, new HttpCallback() {
+            new HttpTools(getActivity()).get(request_url, null, this, new HttpCallback() {
                 @Override
                 public void onStart() {
 
