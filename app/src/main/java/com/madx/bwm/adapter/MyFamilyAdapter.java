@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,19 +17,25 @@ import com.madx.bwm.R;
 import com.madx.bwm.entity.FamilyMemberEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.ui.FamilyFragment;
+import com.madx.bwm.util.PinYin4JUtil;
+import com.madx.bwm.util.ToDc;
 import com.madx.bwm.widget.CircularNetworkImage;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by quankun on 15/5/12.
  */
-public class MyFamilyAdapter extends BaseAdapter {
+public class MyFamilyAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
     private List<FamilyMemberEntity> list;
+    private List<FamilyMemberEntity> serachList;
+
+    private PersonFilter filter;
 
     public MyFamilyAdapter(Context mContext, List<FamilyMemberEntity> list) {
         this.list = list;
@@ -134,6 +142,62 @@ public class MyFamilyAdapter extends BaseAdapter {
             }
         }
         return convertView;
+    }
+
+    public void setSerach(List<FamilyMemberEntity> list){
+        this.serachList = list;
+        FamilyMemberEntity member = new FamilyMemberEntity();
+        member.setUser_given_name("family_tree");
+        member.setUser_id("family_tree");
+        FamilyMemberEntity familyMember = new FamilyMemberEntity();
+        familyMember.setUser_given_name("MyFamily");
+        familyMember.setUser_id("MyFamily");
+        serachList.remove(member);
+        serachList.remove(familyMember);
+    }
+    @Override
+    public Filter getFilter() {
+        if (filter == null) {
+            filter = new PersonFilter(serachList);
+        }
+        return filter;
+    }
+    //自定义Filer类
+    private class PersonFilter extends Filter{
+
+        private List<FamilyMemberEntity> original;
+
+        public PersonFilter(List<FamilyMemberEntity> list) {
+            this.original = list;
+        }
+        //该方法在子线程中执行
+        //自定义的过滤规则
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            if(constraint == null || constraint.length() == 0){
+                results.values = original;//原始数据
+                results.count = original.size();
+            }else {
+                List<FamilyMemberEntity> mList = new ArrayList<FamilyMemberEntity>();
+                String filterString = ToDc.ToDBC(constraint.toString().trim().toLowerCase());
+                for(FamilyMemberEntity memberEntity : original){
+                    String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getUser_given_name());
+                    if(-1 != userName.toLowerCase().indexOf(filterString)){
+                        mList.add(memberEntity);
+                    }
+                }
+                results.values = mList;
+                results.count = mList.size();
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            list = (List<FamilyMemberEntity>)results.values;
+            notifyDataSetChanged();
+        }
     }
 
     static class ViewHolder {
