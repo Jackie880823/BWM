@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,17 +15,22 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.FamilyMemberEntity;
 import com.madx.bwm.http.VolleyUtil;
+import com.madx.bwm.util.PinYin4JUtil;
+import com.madx.bwm.util.ToDc;
 import com.madx.bwm.widget.CircularNetworkImage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by quankun on 15/5/19.
  */
-public class InviteMemberAdapter extends BaseAdapter {
+public class InviteMemberAdapter extends BaseAdapter implements Filterable {
     private List<FamilyMemberEntity> list;
+    private List<FamilyMemberEntity> serchList;
     private Context mContext;
     private List<String> stringList;
+    private PersonFilter filter;
 
     public InviteMemberAdapter(Context mContext, List<FamilyMemberEntity> list, List<String> stringList) {
         this.mContext = mContext;
@@ -35,6 +42,9 @@ public class InviteMemberAdapter extends BaseAdapter {
         return list;
     }
 
+    public void setSerchList(List<FamilyMemberEntity> list){
+        this.serchList = list;
+    }
     public void addNewData(List<FamilyMemberEntity> newList) {
         list.clear();
         if (null != newList && newList.size() > 0) {
@@ -104,6 +114,48 @@ public class InviteMemberAdapter extends BaseAdapter {
             viewHolder.imageRight.setChecked(false);
         }
         return convertView;
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (filter == null) {
+            filter = new PersonFilter(serchList);
+        }
+        return filter;
+    }
+    private class PersonFilter extends Filter{
+
+        private List<FamilyMemberEntity> original;
+        public PersonFilter(List<FamilyMemberEntity> list) {
+            this.original = list;
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            if(constraint == null || constraint.length() == 0){
+                results.values = original;//原始数据
+                results.count = original.size();
+            }else {
+                List<FamilyMemberEntity> mList = new ArrayList<FamilyMemberEntity>();
+                String filterString = ToDc.ToDBC(constraint.toString().trim().toLowerCase());
+                for(FamilyMemberEntity memberEntity : original){
+                    String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getUser_given_name());
+                    if(-1 != userName.toLowerCase().indexOf(filterString)){
+                        mList.add(memberEntity);
+                    }
+                }
+                results.values = mList;
+                results.count = mList.size();
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            list = (List<FamilyMemberEntity>)results.values;
+            notifyDataSetChanged();
+        }
     }
 
     static class ViewHolder {

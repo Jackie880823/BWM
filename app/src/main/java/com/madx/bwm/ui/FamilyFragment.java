@@ -16,13 +16,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -39,16 +38,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.adapter.FamilyGroupAdapter;
 import com.madx.bwm.adapter.MyFamilyAdapter;
 import com.madx.bwm.entity.FamilyGroupEntity;
 import com.madx.bwm.entity.FamilyMemberEntity;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.util.PinYin4JUtil;
-import com.madx.bwm.widget.CircularNetworkImage;
 import com.madx.bwm.widget.MyDialog;
 import com.madx.bwm.widget.MySwipeRefreshLayout;
 
@@ -75,9 +73,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private Dialog showSelectDialog;
     private Context mContext;
     private boolean isMemberRefresh, isGroupRefresh;
-    private List<FamilyMemberEntity> memberEntityList;
-    private List<FamilyMemberEntity> memberList;
-    private List<FamilyMemberEntity> moreMemberList;
+    private List<FamilyMemberEntity> memberEntityList;//只有成员，不包括亲人
+//    private List<FamilyMemberEntity> empmemberEntityList = new LinkedList<>();
+    private List<FamilyMemberEntity> memberList;//没有展开
+    private List<FamilyMemberEntity> moreMemberList;//不包括family_tree
     private List<FamilyGroupEntity> groupEntityList;
     private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
     //    private ProgressDialog mProgressDialog;
@@ -189,7 +188,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         vProgress.setVisibility(View.VISIBLE);
 
         memberAdapter = new MyFamilyAdapter(mContext, memberEntityList);
-        groupAdapter = new FamilyGroupAdapter(groupEntityList);
+        groupAdapter = new FamilyGroupAdapter(mContext,groupEntityList);
         //绑定自定义适配器
         pager.setAdapter(new FamilyPagerAdapter(initPagerView()));
         pager.setOnPageChangeListener(new MyOnPageChanger());
@@ -209,7 +208,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         });
         message_member_tv.setOnClickListener(this);
         message_group_tv.setOnClickListener(this);
-
+        //搜索框监听器
         etSearch.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -236,26 +235,47 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         });
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
-
+    //搜索
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
         if (pager.getCurrentItem() == 0) {
             List<FamilyMemberEntity> familyMemberEntityList;
-            if (isopen) {
-                familyMemberEntityList = searchMemberList(etImport, moreMemberList);
+            //如果已经展开而且搜索框不为空
+            if (isopen && !TextUtils.isEmpty(etImport)) {
+//                familyMemberEntityList = searchMemberList(etImport, moreMemberList);
+//                memberAdapter.addNewData(familyMemberEntityList);
+                memberAdapter.setSerach(moreMemberList);
+                Filter filter =  memberAdapter.getFilter();
+                filter.filter(etImport);
             } else {
-                familyMemberEntityList = searchMemberList(etImport, memberList);
+                if(isopen){
+                    familyMemberEntityList = searchMemberList(etImport, moreMemberList);
+                    memberAdapter.addNewData(familyMemberEntityList);
+                }else {
+                    if(TextUtils.isEmpty(etImport)){
+                        familyMemberEntityList = searchMemberList(etImport, memberList);
+                        memberAdapter.addNewData(familyMemberEntityList);
+                    }else {
+//                    familyMemberEntityList = searchMemberList(etImport, memberList);
+                        memberAdapter.setSerach(moreMemberList);
+                        Filter filter =  memberAdapter.getFilter();
+                        filter.filter(etImport);
+                    }
+                }
+
             }
-            memberAdapter.addNewData(familyMemberEntityList);
 
         } else {
             List<FamilyGroupEntity> familyGroupEntityList;
             if (TextUtils.isEmpty(etImport)) {
                 familyGroupEntityList = groupEntityList;
+                groupAdapter.addData(familyGroupEntityList);
             } else {
-                familyGroupEntityList = searchGroupList(etImport, groupEntityList);
+//                familyGroupEntityList = searchGroupList(etImport, groupEntityList);
+                Filter filter =  groupAdapter.getFilter();
+                filter.filter(etImport);
             }
-            groupAdapter.addData(familyGroupEntityList);
+
         }
 
     }
@@ -335,6 +355,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
+//        if(empmemberEntityList != null ){
+//            empmemberEntityList.addAll(moreMemberList);
+//        }
         View userView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
         final GridView userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
         final ImageButton userIb = (ImageButton) userView.findViewById(R.id.ib_top);
@@ -361,9 +384,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 } else if (FamilyFragment.FAMILY_MORE_MEMBER.equals(userId)) {
                     isopen = true;
                     int size = memberAdapter.getList().size();
-                    if (moreMemberList != null) {
-                        memberAdapter.addMoreData(moreMemberList);
-                    }
+//                    empmemberEntityList = memberAdapter.getList();
+                    memberAdapter.addMoreData(moreMemberList);
 //                    if(memberAdapter.getList().get(size-1).getUser_given_name()==FAMILY_MORE_MEMBER){
 //                        if(memberEntityList!=null){
 //                            opendate.clear();
@@ -873,65 +895,71 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         }
     }
 
-    class FamilyGroupAdapter extends BaseAdapter {
-        List<FamilyGroupEntity> groupList;
-
-        public FamilyGroupAdapter(List<FamilyGroupEntity> groupList) {
-            this.groupList = groupList;
-        }
-
-        public void addData(List<FamilyGroupEntity> list) {
-            if (null == list || list.size() == 0) {
-                return;
-            }
-            groupList.clear();
-            groupList.addAll(list);
-            notifyDataSetChanged();
-        }
-
-        public List<FamilyGroupEntity> getGroupList() {
-            return groupList;
-        }
-
-        @Override
-        public int getCount() {
-            return groupList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return groupList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (null == convertView) {
-                convertView = LayoutInflater.from(mContext).inflate(R.layout.gridview_item_for_myfamily, null);
-                viewHolder = new ViewHolder();
-                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.myfamily_image_main);
-                viewHolder.textName = (TextView) convertView.findViewById(R.id.myfamily_name);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            FamilyGroupEntity familyGroupEntity = groupList.get(position);
-            viewHolder.textName.setText(familyGroupEntity.getGroup_name());
-            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
-                    familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
-            return convertView;
-        }
-
-        class ViewHolder {
-            CircularNetworkImage imageMain;
-            TextView textName;
-        }
-    }
+//    class FamilyGroupAdapter extends BaseAdapter implements Filterable {
+//        List<FamilyGroupEntity> groupList;
+//
+//
+//        public FamilyGroupAdapter(List<FamilyGroupEntity> groupList) {
+//            this.groupList = groupList;
+//        }
+//
+//        public void addData(List<FamilyGroupEntity> list) {
+//            if (null == list || list.size() == 0) {
+//                return;
+//            }
+//            groupList.clear();
+//            groupList.addAll(list);
+//            notifyDataSetChanged();
+//        }
+//
+//        public List<FamilyGroupEntity> getGroupList() {
+//            return groupList;
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return groupList.size();
+//        }
+//
+//        @Override
+//        public Object getItem(int position) {
+//            return groupList.get(position);
+//        }
+//
+//        @Override
+//        public long getItemId(int position) {
+//            return position;
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//            ViewHolder viewHolder;
+//            if (null == convertView) {
+//                convertView = LayoutInflater.from(mContext).inflate(R.layout.gridview_item_for_myfamily, null);
+//                viewHolder = new ViewHolder();
+//                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.myfamily_image_main);
+//                viewHolder.textName = (TextView) convertView.findViewById(R.id.myfamily_name);
+//                convertView.setTag(viewHolder);
+//            } else {
+//                viewHolder = (ViewHolder) convertView.getTag();
+//            }
+//            FamilyGroupEntity familyGroupEntity = groupList.get(position);
+//            viewHolder.textName.setText(familyGroupEntity.getGroup_name());
+//            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
+//                    familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+//            return convertView;
+//        }
+//
+//        @Override
+//        public Filter getFilter() {
+//            return null;
+//        }
+//
+//        class ViewHolder {
+//            CircularNetworkImage imageMain;
+//            TextView textName;
+//        }
+//    }
 
     @Override
     public void onClick(View v) {

@@ -756,4 +756,6 @@
     
     <string name="morning">am</string>
     <string name="afternoon">pm</string>
+
+    <string name="test_group_friend">There are not friends in the group,or not?</string>
 </resources>
