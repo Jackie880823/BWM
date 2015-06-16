@@ -71,6 +71,7 @@ public class GroupNameSettingActivity extends BaseActivity {
     Boolean isUploadImageSuccess = false;
 
     ProgressDialog progressDialog;
+    private String TAG;
 
     @Override
     public int getLayout() {
@@ -112,7 +113,7 @@ public class GroupNameSettingActivity extends BaseActivity {
     public void initView() {
 
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
-
+        TAG = this.getClass().getSimpleName();
         civGroupPic = getViewById(R.id.iv_pic);
         etGroupName = getViewById(R.id.et_group_name);
 
@@ -325,7 +326,7 @@ public class GroupNameSettingActivity extends BaseActivity {
         params.put("group_id", groupId);
         params.put("file", file);
 
-        new HttpTools(this).upload(Constant.API_UPLOAD_GROUP_PHOTO, params, new HttpCallback() {
+        new HttpTools(this).upload(Constant.API_UPLOAD_GROUP_PHOTO, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -397,7 +398,7 @@ public class GroupNameSettingActivity extends BaseActivity {
         requestInfo.url = String.format(Constant.API_UPDATE_GROUP_NAME, groupId);
         requestInfo.jsonParam = jsonParamsString;
 
-        new HttpTools(GroupNameSettingActivity.this).put(requestInfo, new HttpCallback() {
+        new HttpTools(GroupNameSettingActivity.this).put(requestInfo, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
