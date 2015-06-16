@@ -53,6 +53,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
+    private static final String Tag = FamilyProfileFragment.class.getSimpleName();
     private String useId;//本人Id，这个将来是全局变量
     private String memberId;//本人的memberId
     private CircularNetworkImage cniMain;
@@ -201,6 +202,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlAlbumGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //
                 Intent intent = new Intent(getActivity(), AlbumActivity.class);
                 intent.putExtra("member_id", memberId);
                 startActivity(intent);
@@ -225,7 +227,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         params.put("from_user_id", MainActivity.getUser().getUser_id());
         params.put("to_user_id", memberId);
         params.put("to_user_fullname", userEntity.getUser_given_name());
-        new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params, new HttpCallback() {
+        new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params,Tag, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -278,7 +280,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_MEMBER_PROFILE_DETAIL, params);
 
-        new HttpTools(getActivity()).get(url, params, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, params,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
