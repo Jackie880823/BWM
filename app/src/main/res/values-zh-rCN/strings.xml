@@ -7,12 +7,14 @@
     <string name="title_tab_event">活动</string>
     <string name="title_tab_more">更多</string>
     <string name="action_settings">设置</string>
+
     <string name="msg_google_service_not_found">No valid Google Play Services APK found</string>
 
-    <string name="title_event_detail">Detail</string>
+    <string name="title_event_detail">详情</string>
     <string name="title_wall_comment">评论</string>
     <string name="title_event_new">新建活动</string>
     <string name="title_event_edit">Event Edit</string>
+    <string name="title_wall_new">Post</string>
     <string name="title_map_choose_location">Choose location</string>
     <string name="title_invited_status">被邀请的会员</string>
     <string name="title_birthday_alert">Birthday Alerts</string>
@@ -26,11 +28,6 @@
     <string name="text_hint_event_position">活动的地点</string>
     <string name="text_hint_event_date">选择日期&amp;时间</string>
     <string name="text_canceled">已取消</string>
-    <string name="draft_tips_title">保存为草稿</string>
-    <string name="draft_ask_save">您要保存为草稿吗?</string>
-    <string name="msg_date_not_commentbim_now">评论没有发送完成</string>
-    <string name="event_accept">YES</string>
-    <string name="event_cancel">NO</string>
     <string name="msg_action_successed">Action successful</string>
     <string name="msg_action_canceled">Action canceled</string>
     <string name="msg_action_failed">Action failed</string>
@@ -39,14 +36,17 @@
     <string name="msg_load_config_successed">Loaded successfully</string>
     <string name="msg_load_config_failed">Loading failed</string>
     <string name="msg_date_not_befort_now">时间必须晚于现在</string>
+    <string name="draft_tips_title">保存为草稿</string>
+    <string name="draft_ask_save">您要保存为草稿吗?</string>
+    <string name="msg_date_not_commentbim_now">评论没有发送完成</string>
+    <string name="event_accept">YES</string>
+    <string name="event_cancel">NO</string>
     <string name="text_tips_title">Action</string>
     <string name="text_more">More</string>
-
     <string name="alert_text_title_null">Title cannot be empty</string>
     <string name="alert_text_desc_null">Content cannot be empty</string>
     <string name="alert_text_location_null">Location cannot be empty</string>
     <string name="alert_text_date_null">Please choose an event date</string>
-
     <string name="title_message_myfamily">My Family</string>
     <string name="title_message_creategroup">New Group</string>
     <string name="alert_comment_null">评论内容不能为空</string>
@@ -55,7 +55,6 @@
     <string name="alert_wall_del">您确定要删除？</string>
     <string name="alert_wall_del_photo_title">删除图片</string>
     <string name="alert_wall_del_photo">您确定要删除？</string>
-
 
     <string name="text_word">Text</string>
     <string name="text_picture">Picture</string>
@@ -67,14 +66,14 @@
     <string name="text_not_going">Declined</string>
     <string name="text_sened">发送</string>
     <string name="text_add">添加</string>
-    <string name="text_added">Added</string>
-    <string name="text_awaiting">Awaiting</string>
+    <string name="text_added">已添加</string>
+    <string name="text_updated">更新</string>
+    <string name="text_awaiting">待回复</string>
     <string name="text_public">All Members</string>
     <string name="text_private">Private</string>
     <string name="text_like_desc">Like</string>
     <string name="text_ask_delete">Confirm remove member?</string>
     <string name="text_add_members_successed">发送评论成功</string>
-
     <string name="text_comments">评论</string>
 
     <string name="text_wall_content_at_member_desc">\@%1$smembers</string>
@@ -87,14 +86,12 @@
     <!-- xxhdip 取google免费最大图片 -->
     <string name="google_map_pic_size">640x640</string>
 
-
     <!--<string name="text_location">地理位置</string>-->
     <!--<string name="text_tag">do what</string>-->
     <!--<string name="text_face">图标</string>-->
     <string name="text_send">发送</string>
     <string name="text_map">Map</string>
-    <string name="text_destination">Destination</string>
-
+    <string name="text_destination">目的地</string>
     <string name="title_pick_date_time">活动 日期 &amp; 时间</string>
     <string name="accept">确定</string>
     <string name="ok">确定</string>
@@ -106,10 +103,9 @@
     <string name="np_number_picker_increment_button">Increment</string>
     <string name="np_number_picker_decrement_button">Decrement</string>
 
-
     <!-- about -->
 
-    <string name="text_about_terms">Terms</string>
+    <string name="text_about_terms">条款</string>
     <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
@@ -121,17 +117,10 @@
     <string name="text_sticker_store">Sticker Store</string>
 
 
-
     <string name="msg_ask_exit_app">你是否确定登出?</string>
     <string name="text_yes">确定</string>
     <string name="text_camera">拍照</string>
     <string name="text_album">相册</string>
-    <string name="title_text_miss">Miss Alert</string>
-
-
-
-
-
 
 
     <string name="hint_search_name">Search by name</string>
@@ -141,16 +130,15 @@
         <!--<item>Suggestion &amp; Feedback</item>-->
         <!--<item>Report a Problem</item>-->
     <!--</array>-->
-    <string name="mail_subject_1">General Inquiry</string>
-    <string name="mail_subject_2">Suggestion &amp; Feedback</string>
-    <string name="mail_subject_3">Report a Problem</string>
-
+    <string name="mail_subject_1">询问</string>
+    <string name="mail_subject_2">意见 &amp; 反馈</string>
+    <string name="mail_subject_3">汇报</string>
     <string name="text_sending">\t Sending &#8230;</string>
     <string name="text_waiting">\t Waiting &#8230;</string>
     <string name="text_uploading">\t Uploading &#8230;</string>
     <string name="text_loading">\t 加载中 &#8230;</string>
     <string name="text_search_contact">Search name here</string>
-    <string name="text_relationship">Relationship</string>
+    <string name="text_relationship">关系</string>
     <string name="msg_no_contact_select">No contact selected</string>
 
     <!-- chirstopher -->
@@ -364,9 +352,6 @@
     </string-array>
 
 
-
-
-
     <!--xml-->
     <!--xml-->
 
@@ -374,6 +359,7 @@
     <string name="text_ID_name">通过伴我玩账号 / 用户名字</string>
     <string name="text_QR">Add via Q.R Code</string>
     <string name="text_location">地点</string>
+    <string name="msg_not_open_gps">Please open location service!</string>
     <string name="text_stickers">表情</string>
     <string name="text_video">录音</string>
     <string name="text_contact">联系人</string>
@@ -386,9 +372,12 @@
     <string name="text_gender">Gender</string>
     <string name="text_email">Email</string>
     <string name="text_region">Region</string>
+
+
     <string name="text_group_name">Group Name</string>
     <string name="text_members">Members</string>
     <string name="text_leave_group">Leave Group</string>
+
     <string name="text_my_view_profile">View Profile</string>
     <string name="text_album_gallery">相册</string>
     <string name="text_wall_posting">动态</string>
@@ -424,16 +413,17 @@
 
 
     <!--begin-->
+    <!--Bond Alert界面-->
 
     <string name="title_add_new_members">添加新会员</string>
     <string name="title_album_gallery">Album gallery</string>
+
     <string name="title_group_setting">Group Setting</string>
     <string name="title_group_info">Group Info</string>
-    <string name="title_me">Me</string>
-    <string name="title_my_profile">My Profile</string>
+
+    <string name="title_me">我</string>
+    <string name="title_my_profile">查看我的资料</string>
     <string name="title_path_relationship">Path &amp; Relationship</string>
-
-
     <string name="text_no_album_gallery">No album gallery</string>
     <string name="text_success">Action successful</string>
     <string name="text_error">Action failed</string>
@@ -486,7 +476,6 @@
     <string name="text_input_name_gender">Please input your name and gender.</string>
     <string name="text_fail_update_information">Fail to update your information. try again.</string>
     <string name="text_success_update_information">Successfully updated your information.</string>
-
     <string name="text_update_proPicFail">Action failed</string>
     <string name="text_updateProPicSuccess">Action Successful</string>
     <string name="text_wrong_data">Birthday must greater than today</string>
@@ -499,10 +488,12 @@
     <string name="text_full_all_fields">Please fill up and check all fields.</string>
     <string name="text_success_add_member">Add member successfully.</string>
     <string name="text_fail_add_member">Add member failed. Try again.</string>
-    <string name="title_select_relationship">Select Relationship</string>
+    <string name="title_select_relationship">设置关系</string>
     <string name="title_reset_password">重设密码</string>
     <string name="title_select_members">选择会员</string>
     <string name="text_awaiting_approval_member">Awaiting for approval from member.</string>
+
+
     <string name="text_account_already_exist">账号已被使用。</string>
     <string name="text_verification_fail">Verification fail. Try again.</string>
     <string name="text_verification_successful">Verification successful.</string>
@@ -524,6 +515,7 @@
     <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" ">]]></string>
     <string name="photo_position_no_arrow">%1$d/%2$d</string>
 
+
 <!-- TODO: Remove or change this placeholder text -->
     <string name="yesterday_ago">昨天&#160;</string>
     <string name="just_now">Just now</string>
@@ -531,7 +523,26 @@
     <string name="some_hour_ago">%d 小时前</string>
     <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_select_multiple_photos">SelectMultiplePhotosActivity</string>
+    <string name="title_select_photos">Select Photos</string>
+
+    <!-- end -->
+
+    <string name="select_too_many">"have select photos count is %d"</string>
+    <string name="text_nearest">nearest</string>
+    <string name="start_a_now">Start a new</string>
+    <string name="post_now">Post now</string>
+
+
+    <string name="text_to_other">Recommend me to \'other\' member</string>
+    <string name="text_to_me">Recommend \'Member\' to me</string>
+    <string name="text_group_chat">Require confirmation to add me to Group Chat</string>
+
+    <string name="text_message_chat_post_text">[sticker]</string>
+    <string name="text_message_chat_post_photo">[photo]</string>
+    <string name="text_message_chat_post_location">[location]</string>
     <string name="title_tab_my_family">我的家庭</string>
+
     <string name="text_month_january">January</string>
     <string name="text_month_february">February</string>
     <string name="text_month_march">March</string>
@@ -544,6 +555,9 @@
     <string name="text_month_october">October</string>
     <string name="text_month_november">November</string>
     <string name="text_month_december">December</string>
+
+    <string name="title_activity_big_day">BigDayActivity</string>
+
     <string name="text_album_no_pic">NO IMAGE FOUND</string>
     <string name="title_via_contact">Via Contact</string>
     <string name="text_personal_msg">私信</string>
@@ -553,11 +567,11 @@
     <string name="text_select_relation">关系</string>
     <string name="text_member_add">已加入会员</string>
     <string name="text_members_num">%s members</string>
-    <string name="wall_comments">评论</string>
     <string name="family_search">搜索</string>
     <string name="text_dialog_ok">好的</string>
     <string name="text_all_field_compulsory">请填满所有空格。</string>
     <string name="text_pending_approval">待允许</string>
+    <string name="wall_comments">评论</string>
     <string name="text_new_member">会员</string>
     <string name="text_new_group">群组</string>
     <string name="text_new_family_tree">家谱</string>
@@ -566,28 +580,26 @@
     <string name="text_dialog_show_no">取消</string>
     <string name="text_create_group_not_save">确定取消？资料将不被保存。</string>
     <string name="text_create_group_members_least_two">你必须拥有两个或以上的会员以创建新群组。添加新会员吧</string>
-    <!--end-->
-
-    <!--Christopher-->
 
     <string name="text_setting_1_title">Birthday Alert Reminder</string>
-    <string name="text_setting_1_1">1 Day earlier</string>
-    <string name="text_setting_1_2">3 Days earlier</string>
-    <string name="text_setting_1_3">1 Week earlier</string>
-    <string name="text_setting_1_4">1 Month earlier</string>
+    <string name="text_setting_1_1">1天前</string>
+    <string name="text_setting_1_2">3天前</string>
+    <string name="text_setting_1_3">1个星期前</string>
+    <string name="text_setting_1_4">1个月前</string>
+
     <string name="text_setting_2_title">Auto-Accept</string>
-    <string name="text_setting_2_1">All relationship</string>
-    <string name="text_setting_2_2">Parent relationship</string>
-    <string name="text_setting_2_3">Spouse relationship</string>
-    <string name="text_setting_2_4">Sibling relationship</string>
-    <string name="text_setting_2_5">Children relationship</string>
-    <string name="text_setting_2_6">Others relationship</string>
+    <string name="text_setting_2_1">所有关系</string>
+    <string name="text_setting_2_2">父母</string>
+    <string name="text_setting_2_3">伴侣</string>
+    <string name="text_setting_2_4">兄弟姐妹</string>
+    <string name="text_setting_2_5">孩子</string>
+    <string name="text_setting_2_6">其他</string>
 
     <string name="text_auto_accept">自动化关系设置</string>
     <string name="text_birthday_alert_reminder">生日提醒</string>
     <string name="text_group_privacy">隐私</string>
 
-    <string name="text_upcoming_birthdays">即将到来的生日</string>
+    <string name="text_upcoming_birthdays">生日即将来临</string>
     <string name="text_today_birthday">今天生日</string>
     <string name="text_today_birthday_on"> 的生日在今天!</string>
     <string name="text_upcoming_birthdays_on"> 的生日在</string>
@@ -654,6 +666,7 @@
     <string name="text_phone_number">手机号</string>
 
     <!-- sign up phone password 界面 -->
+    <string name="title_activity_sign_up_phone_password">SignUpPhonePasswordActivity</string>
     <string name="text_sign_up_phone_password_warning">不少于6位</string>
 
     <!-- sign up phone information 界面 -->
@@ -661,6 +674,7 @@
     <string name="text_sign_up_phone_information_agree_warning">我同意此法律条款.</string>
 
     <!-- sign up username 界面 -->
+    <string name="title_activity_sign_up_username_verify_phone">SignUpUsernameVerifyPhoneActivity</string>
     <string name="text_sign_up_username_warning">不少于5位.</string>
 
     <!-- forget password 界面 -->
@@ -723,16 +737,22 @@
     <string name="text_love_comment_event">%s 给了您在活动的评论一个赞.</string>
     <string name="text_love_event">%s 给了您的活动一个赞.</string>
     <string name="text_upcoming_event">即将到来: %s </string>
-
     <string name="text_dialog_save_draft">保存为草稿</string>
     <string name="text_empty_add_member">点击+以添加家庭成员！</string>
     <string name="text_empty_add_group">点击+以创建新群组！</string>
     <string name="text_message_type_here">type message here</string>
+
+    <string name="text_my_location">My Location</string>
+    <string name="text_target_choose">Select</string>
     <string name="waiting_upload">请等待完成上传</string>
+    <string name="alert_no_join_group">You need to be a member of this group to see more details</string>
+    <string name="alert_ask_add_member">Add Member?</string>
     <string name="text_group">群组</string>
     <string name="hint_comment_input">在此输入评论…</string>
+    <string name="text_character_and"><![CDATA[" & "]]></string>
     <string name="saved_to_path">"已保存到："</string>
     <!--Christopher-->
+    <string name="location_search_error">location search error!</string>
 
     <string name="morning">上午</string>
     <string name="afternoon">下午</string>

@@ -69,8 +69,9 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
+    private String TAG;
 
-    MessageGroupAdapter messageGroupAdapter ;
+    MessageGroupAdapter messageGroupAdapter;
 
     LinearLayout mNumLayout;
 
@@ -83,7 +84,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
     public void initView() {
         mPager = getViewById(R.id.viewpager);
         listView = getViewById(R.id.message_listView);
-
+        TAG = this.getClass().getSimpleName();
         mTop = getViewById(R.id.ib_top);
         mSv = getViewById(R.id.sv);
         progressBar = getViewById(R.id.watting_progressBar);
@@ -161,7 +162,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                 }
 
                 groupEntityList.clear();
-                messageGroupAdapter = new MessageGroupAdapter(getActivity(),  groupEntityList);
+                messageGroupAdapter = new MessageGroupAdapter(getActivity(), groupEntityList);
                 listView.setAdapter(messageGroupAdapter);
                 messageGroupAdapter.notifyDataSetChanged();
                 requestData();
@@ -188,7 +189,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
         requestInfo.params = params;
         requestInfo.url = String.format(Constant.API_MESSAGE_MAIN, MainActivity.getUser().getUser_id());
 
-        new HttpTools(getActivity()).get(requestInfo, new HttpCallback() {
+        new HttpTools(getActivity()).get(requestInfo, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -216,7 +217,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
                     finishReFresh();
 
-                    messageGroupAdapter = new MessageGroupAdapter(getActivity(),  groupEntityList);
+                    messageGroupAdapter = new MessageGroupAdapter(getActivity(), groupEntityList);
                     listView.setAdapter(messageGroupAdapter);
 //                    messageGroupAdapter.notifyDataSetChanged();
 
@@ -265,7 +266,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
                         LinearLayout.LayoutParams mLayoutParams = new LinearLayout.LayoutParams(20, 20);
                         mLayoutParams.leftMargin = 10;
                         mLayoutParams.topMargin = 10;
-                        mNumLayout.addView(tv,mLayoutParams);
+                        mNumLayout.addView(tv, mLayoutParams);
                     }
 
                     mPager.setCurrentItem(0);
@@ -282,10 +283,10 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
             @Override
             public void onError(Exception e) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    if (isRefresh) {
-                        finishReFresh();
-                    }
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                if (isRefresh) {
+                    finishReFresh();
+                }
             }
 
             @Override
@@ -298,7 +299,6 @@ public class MessageFragment extends BaseFragment<MainActivity> {
 
             }
         });
-
 
 
         /**旧请求*/
@@ -415,14 +415,13 @@ public class MessageFragment extends BaseFragment<MainActivity> {
         @Override
         public void onPageSelected(int arg0) {
 
-            if(tv != null){
+            if (tv != null) {
                 tv.setBackgroundResource(R.drawable.bg_num_gray_message);
             }
 
-            TextView currentBt = (TextView)mNumLayout.getChildAt(arg0);
-            if (currentBt == null)
-            {
-                return ;
+            TextView currentBt = (TextView) mNumLayout.getChildAt(arg0);
+            if (currentBt == null) {
+                return;
             }
             currentBt.setBackgroundResource(R.drawable.bg_num_gray_press_message);
             tv = currentBt;
@@ -437,8 +436,6 @@ public class MessageFragment extends BaseFragment<MainActivity> {
         @Override
         public void onPageScrollStateChanged(int arg0) {
         }
-
-
 
 
     }
@@ -479,7 +476,6 @@ public class MessageFragment extends BaseFragment<MainActivity> {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
     }
-
 
 
 }
