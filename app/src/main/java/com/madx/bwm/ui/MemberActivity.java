@@ -44,7 +44,6 @@ public class MemberActivity extends BaseActivity {
     private MemberAdapter adapter;
     private RecyclerView rvList;
     private LinearLayoutManager llm;
-    private String TAG;
 
     public int getLayout() {
         return R.layout.activity_news;
@@ -88,7 +87,7 @@ public class MemberActivity extends BaseActivity {
         llm = new LinearLayoutManager(this);
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
-        TAG = this.getClass().getSimpleName();
+
         initAdapter();//为空 为什么要做这步？？？
 
         swipeRefreshLayout = getViewById(R.id.swipe_refresh_layout);
@@ -138,7 +137,7 @@ public class MemberActivity extends BaseActivity {
 //        params.put("start", "" + startIndex);
 //        params.put("limit", "" + offset);
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_MEMEBER, MainActivity.getUser().getUser_id()), null, TAG, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_MEMEBER, MainActivity.getUser().getUser_id()), null, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -204,15 +203,15 @@ public class MemberActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
+        switch (requestCode){
             case ADD_MEMBER:
                 if (resultCode == RESULT_OK) {
-                    MessageUtil.showMessage(this, R.string.msg_action_successed);
+                    MessageUtil.showMessage(this,R.string.msg_action_successed);
 //                    startIndex = 0;
 //                    isRefresh = true;
                     requestData();//这样直接请求???
                 } else {
-                    MessageUtil.showMessage(this, R.string.msg_action_canceled);
+                    MessageUtil.showMessage(this,R.string.msg_action_canceled);
                 }
                 break;
         }
@@ -271,7 +270,7 @@ public class MemberActivity extends BaseActivity {
         Map<String, String> params = new HashMap<>();
         params.put("member_id", memberId);
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
-        new HttpTools(this).put(requestInfo, TAG, new HttpCallback() {
+        new HttpTools(this).put(requestInfo, new HttpCallback() {
             @Override
             public void onStart() {
 

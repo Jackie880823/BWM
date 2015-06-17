@@ -68,7 +68,6 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
     private ProgressDialog mProgressDialog;
     static List<String> STICKER_NAME_LIST = new ArrayList<>();
     static List<String> FIRST_STICKER_LIST = new ArrayList<>();
-    private String TAG;
 
     public static MessageListFragment newInstance(String... params) {
 
@@ -109,7 +108,6 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
     @Override
     public void initView() {
         mContext = getActivity();
-        TAG = mContext.getClass().getSimpleName();
         pager = getViewById(R.id.message_list_viewpager);
         message_member_tv = getViewById(R.id.message_member_tv);
         message_group_tv = getViewById(R.id.message_group_tv);
@@ -274,7 +272,7 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
                 intent.putExtra("type", 1);
                 intent.putExtra("groupId", messageGroupAdapter.getmGroupList().get(arg2).getGroup_id());
                 intent.putExtra("titleName", messageGroupAdapter.getmGroupList().get(arg2).getGroup_name());
-                // intent.putExtra("groupEntity", messageGroupAdapter.getmGroupList().get(arg2));
+               // intent.putExtra("groupEntity", messageGroupAdapter.getmGroupList().get(arg2));
                 arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);//服务器会消除。本地直接直接消除。
                 startActivity(intent);
             }
@@ -413,7 +411,7 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
             @Override
             public void run() {
                 super.run();
-                new HttpTools(getActivity()).get(requestInfo, TAG, new HttpCallback() {
+                new HttpTools(getActivity()).get(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }

@@ -432,61 +432,61 @@
     </string-array>
 
     <array name="relationship_item">
-        <item>妈妈</item>
-        <item>爸爸</item>
-        <item>老婆</item>
-        <item>老公</item>
-        <item>姐妹</item>
-        <item>兄弟</item>
-        <item>女儿</item>
-        <item>儿子</item>
-        <item>婆婆</item>
-        <item>公公</item>
-        <item>孙女</item>
-        <item>孙子</item>
-        <item>叔祖</item>
-        <item>叔祖母</item>
-        <item>侄孙女</item>
-        <item>侄孙子</item>
-        <item>太公</item>
-        <item>太婆</item>
-        <item>太侄孙女</item>
-        <item>太侄孙子</item>
-        <item>叔叔</item>
-        <item>第一代堂表兄妹</item>
-        <item>第二代堂表兄妹</item>
-        <item>堂表兄弟姊妹</item>
-        <item>外甥女</item>
-        <item>外甥</item>
-        <item>岳母</item>
-        <item>岳父</item>
-        <item>阿姨</item>
-        <item>叔叔</item>
-        <item>弟媳</item>
-        <item>姐夫，妹夫</item>
-        <item>儿媳妇</item>
-        <item>女婿</item>
-        <item>姻堂表兄妹</item>
-        <item>姻外甥女</item>
-        <item>姻外甥</item>
-        <item>未婚妻</item>
-        <item>未婚夫</item>
-        <item>前妻</item>
-        <item>前夫</item>
-        <item>干妈</item>
-        <item>干爹</item>
-        <item>干姐妹</item>
-        <item>干哥弟</item>
-        <item>干女儿</item>
-        <item>干儿子</item>
-        <item>后母</item>
-        <item>后父</item>
-        <item>后姐妹</item>
-        <item>后哥弟</item>
-        <item>后女儿</item>
-        <item>后儿子</item>
-        <item>其他亲戚</item>
-        <item>伴侣</item>
-        <item>朋友</item>
+        <item>Mother</item>
+        <item>Father</item>
+        <item>Wife</item>
+        <item>Husband</item>
+        <item>Sister</item>
+        <item>Brother</item>
+        <item>Daughter</item>
+        <item>Son</item>
+        <item>Grandma</item>
+        <item>Grandpa</item>
+        <item>Granddaughter</item>
+        <item>Grandson</item>
+        <item>Granduncle</item>
+        <item>Grandaunt</item>
+        <item>Grandniece</item>
+        <item>Grandnephew</item>
+        <item>Great Grandma</item>
+        <item>Great Grandpa</item>
+        <item>Great Grandniece</item>
+        <item>Great Grandnephew</item>
+        <item>Uncle</item>
+        <item>First Cousin</item>
+        <item>Second Cousin</item>
+        <item>Cousin</item>
+        <item>Niece</item>
+        <item>Nephew</item>
+        <item>Mother-in-law</item>
+        <item>Father-in-law</item>
+        <item>Aunty-in-law</item>
+        <item>Uncle-in-law</item>
+        <item>Sister-in-law</item>
+        <item>Brother-in-law</item>
+        <item>Daughter-in-law</item>
+        <item>Son-in-law</item>
+        <item>Cousin-in-law</item>
+        <item>Niece-in-Law</item>
+        <item>Nephew-in-Law</item>
+        <item>Fiancee</item>
+        <item>Fiance</item>
+        <item>Ex-wife</item>
+        <item>Ex-husband</item>
+        <item>Godmother</item>
+        <item>Godfather</item>
+        <item>Godsister</item>
+        <item>Godbrother</item>
+        <item>Goddaughter</item>
+        <item>Godson</item>
+        <item>Stepmother</item>
+        <item>NieStepfatherce</item>
+        <item>Stepsister</item>
+        <item>Stepbrother</item>
+        <item>Stepdaughter</item>
+        <item>Stepson</item>
+        <item>Other Relative</item>
+        <item>Partners</item>
+        <item>Friend</item>
     </array>
 </resources>
