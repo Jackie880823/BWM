@@ -118,6 +118,7 @@ public class PicturesCacheUtil extends FileUtil {
             MediaStore.Images.Media.insertImage(context.getContentResolver(),
                     file.getAbsolutePath(), file.getName(), null);
 //            MediaStore.Images.Media.insertImage(context.getContentResolver(),bmp,"LLL","");
+            //照片下载完提示下载位置
             MessageUtil.showMessage(context, context.getString(R.string.saved_to_path) + file.getPath());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
