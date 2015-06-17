@@ -346,7 +346,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         //        toPass[1] = googlePlacesUrl.toString();
         //        googlePlacesReadTask.execute(toPass);
 
-        new HttpTools(this).get(googlePlacesUrl.toString(), null, new HttpCallback() {
+        new HttpTools(this).get(googlePlacesUrl.toString(), null, this, new HttpCallback() {
             @Override
             public void onStart() {
 
