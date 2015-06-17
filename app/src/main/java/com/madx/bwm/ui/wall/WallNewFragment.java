@@ -177,7 +177,6 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         fragment1 = new TabWordFragment();
 
         fragment2 = new TabPictureFragment();
-
         fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.wall_new_container, fragment1);

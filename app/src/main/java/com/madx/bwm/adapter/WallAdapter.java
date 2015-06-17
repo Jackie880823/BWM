@@ -66,8 +66,13 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
         final WallEntity wall = data.get(position);
         VolleyUtil.initNetworkImageView(mContext, holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wall.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
-        String atDescription = TextUtils.isEmpty(wall.getText_description()) ? "" : wall.getText_description();
-        holder.tvContent.setText(atDescription);
+        String atDescription = wall.getText_description();
+        if(TextUtils.isEmpty(atDescription)) {
+            holder.tvContent.setVisibility(View.GONE);
+        } else {
+            holder.tvContent.setVisibility(View.VISIBLE);
+            holder.tvContent.setText(atDescription);
+        }
         Log.i(TAG, "onBindViewHolder& description: " + atDescription);
 
         int tagMemberCount = wall.getTag_member() == null ? 0 : wall.getTag_member().size();
@@ -287,9 +292,9 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                             String newText = sourceText.substring(0, maxLineStartIndex + 7) + "...";
                             tvContent.setText(newText);
                         } else if(lineCount > 9) {
-                                // 截取到第九行文字未满7个字符，行数超过9号，说明有换行，将换行替换成"..."
-                                String newText = sourceText.substring(0, maxLineEndIndex - 1) + "...";
-                                tvContent.setText(newText);
+                            // 截取到第九行文字未满7个字符，行数超过9号，说明有换行，将换行替换成"..."
+                            String newText = sourceText.substring(0, maxLineEndIndex - 1) + "...";
+                            tvContent.setText(newText);
                         }
 
                     }
