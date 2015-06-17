@@ -51,6 +51,7 @@ public class TabWordFragment extends BaseFragment<WallNewActivity> {
     @Override
     public void initView() {
 
+        getViewById(R.id.wall_text_content).requestFocus();
         WallEditView text_content = getViewById(R.id.wall_text_content);
         text_content.setTextChangeListener(new WallEditView.TextChangeListener() {
             int lastChange = CHANGE_MODE_NORMAL;
