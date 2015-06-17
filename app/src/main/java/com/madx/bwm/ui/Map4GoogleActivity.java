@@ -59,7 +59,7 @@ import java.util.Locale;
 
 public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLocationButtonClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener {
 
-    private static final String TAG = "Map4GoogleActivity";
+    private static final String TAG = Map4GoogleActivity.class.getSimpleName();
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager lm = null;
