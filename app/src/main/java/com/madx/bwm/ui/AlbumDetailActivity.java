@@ -57,6 +57,7 @@ public class AlbumDetailActivity extends BaseActivity {
     private final int LEFT_SCROLL = 1;
     private int nowSelectIndex = 0;
     private LinearLayoutManager linearLayoutManager;
+    private String TAG;
 
     @Override
     public int getLayout() {
@@ -126,6 +127,7 @@ public class AlbumDetailActivity extends BaseActivity {
     @Override
     public void initView() {
         mContext = this;
+        TAG = mContext.getClass().getSimpleName();
         Intent intent = getIntent();
         year = intent.getStringExtra("year");
         month = intent.getStringExtra("month");
@@ -234,7 +236,7 @@ public class AlbumDetailActivity extends BaseActivity {
                 params.put("start", 20 * startIndex + "");
                 params.put("limit", "20");
                 String url = UrlUtil.generateUrl(Constant.API_GET_MONTH_ALBUM_LIST, params);
-                new HttpTools(mContext).get(url, null, new HttpCallback() {
+                new HttpTools(mContext).get(url, null, TAG, new HttpCallback() {
 
                     @Override
                     public void onStart() {
