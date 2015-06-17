@@ -44,16 +44,15 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
     private InvitedUserEditAdapter adapter;
     private String group_id;
     private String owner_id;
-    public List<UserEntity> members_data;
+    public List<UserEntity> members_data ;
     private final static int GET_MEMBERS = 1;
     private Gson gson = new Gson();
 
     private boolean isRefresh;
 
     public List<GroupEntity> at_groups_data = new ArrayList<>();//群组
-    public List<UserEntity> tempuserList = new ArrayList();
-    public List<UserEntity> userList;
-    private String TAG;
+    public List<UserEntity>  tempuserList = new ArrayList();
+    public List<UserEntity>  userList ;
 
     public static InvitedEditFragment newInstance(String... params) {
 
@@ -72,11 +71,13 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
     }
 
 
+
+
     @Override
     public void initView() {
 
         rvList = getViewById(R.id.rv_users);
-        TAG = this.getClass().getSimpleName();
+
         LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
@@ -99,7 +100,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
 
         group_id = getArguments().getString(ARG_PARAM_PREFIX + 1);
         owner_id = getArguments().getString(ARG_PARAM_PREFIX + 2);
-        String members = getArguments() == null ? null : getArguments().getString(ARG_PARAM_PREFIX + 0);
+        String members = getArguments()==null?null:getArguments().getString(ARG_PARAM_PREFIX + 0);
 //        members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
 //        }.getType());
         userList = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
@@ -136,27 +137,25 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
 
 
     }
-
     //移除重复的好友
     private static void removeDuplicate(List<UserEntity> userList) {
-        for (int i = userList.size() - 1; i > 0; i--) {
+        for(int i = userList.size()-1;i>0;i--){
             String item = userList.get(i).getUser_id().trim();
-            for (int j = i - 1; j >= 0; j--) {
-                if (userList.get(j).getUser_id().trim().equals(item)) {
+            for (int j=i-1;j>=0; j--){
+                if (userList.get(j).getUser_id().trim().equals(item)){
                     userList.remove(i);
                     break;
                 }
             }
         }
     }
+    private void  getMembersList(final String strGroupsid){
 
-    private void getMembersList(final String strGroupsid) {
-
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("user_id", MainActivity.getUser().getUser_id());
-        params.put("group_list", strGroupsid);
+        HashMap<String,String> params = new HashMap<String,String>();
+        params.put("user_id",MainActivity.getUser().getUser_id());
+        params.put("group_list",strGroupsid);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
-        new HttpTools(getActivity()).get(url, null, TAG, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -261,13 +260,12 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         */
 
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            switch (requestCode) {
+        if(resultCode==Activity.RESULT_OK){
+            switch (requestCode){
                 case GET_MEMBERS:
-                    if (data != null) {
+                    if(data!=null) {
                         String members = data.getStringExtra("members_data");//获取好友选择页面传来到好友数据
                         members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                         }.getType());
@@ -280,13 +278,14 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                         //TODO show waitting
 //                        submitAddMember(members);
                         List memberList = new ArrayList();
-                        for (int i = 0; i < at_groups_data.size(); i++) {
+                        for (int i = 0; i < at_groups_data.size(); i++){
                             memberList.add(at_groups_data.get(i).getGroup_id());
                         }
-                        if (memberList.size() != 0) {
+                        if(memberList.size() != 0){
 //                            Log.i("groupsid====", gson.toJson(memberList));
                             getMembersList(gson.toJson(memberList));
-                        } else {
+                        }
+                        else {
                             userList.addAll(members_data);
                         }
                         submitAddMember(members);
@@ -298,15 +297,15 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         }
     }
 
-    private void changeData() {
-        if (userList == null) {
+    private void changeData(){
+        if(userList==null){
             userList = new ArrayList<>();
         }
 //        Log.i("changeData_userList===",userList.size()+"");
         //排队创建者
-        if (MainActivity.getUser().getUser_id().equals(owner_id)) {
-            for (UserEntity user : userList) {
-                if (MainActivity.getUser().getUser_id().equals(user.getUser_id())) {
+        if(MainActivity.getUser().getUser_id().equals(owner_id)) {
+            for (UserEntity user :  userList) {
+                if(MainActivity.getUser().getUser_id().equals(user.getUser_id())) {
                     userList.remove(user);
                     break;
                 }
@@ -335,7 +334,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         requestInfo.jsonParam = jsonParamsString;
         requestInfo.url = String.format(Constant.API_EVENT_REMOVE_MEMBER, group_id);
 
-        new HttpTools(getActivity()).put(requestInfo, TAG, new HttpCallback() {
+        new HttpTools(getActivity()).put(requestInfo,new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -354,10 +353,10 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                     JSONObject jsonObject = new JSONObject(response);
 
                     if (("200").equals(jsonObject.getString("response_status_code"))) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                        MessageUtil.showMessage(getActivity(),R.string.msg_action_successed);
 //                        getMembersList();
-                        for (UserEntity user : userList) {
-                            if (user.getUser_id().equals(userId)) {
+                        for (UserEntity user:userList){
+                            if(user.getUser_id().equals(userId)){
                                 userList.remove(user);
                                 break;
                             }
@@ -365,7 +364,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                         adapter.notifyDataSetChanged();
 
                     } else {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                        MessageUtil.showMessage(getActivity(),R.string.msg_action_failed);
 
                     }
                 } catch (JSONException e) {
@@ -380,7 +379,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
 
             @Override
             public void onCancelled() {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                MessageUtil.showMessage(getActivity(),R.string.msg_action_failed);
             }
 
             @Override
@@ -389,12 +388,10 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
             }
         });
     }
+    private void submitAddMember(final String members){
 
-    private void submitAddMember(final String members) {
-
-        final List<UserEntity> new_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
-        }.getType());
-        if (new_members_data == null || new_members_data.isEmpty()) {
+        final List<UserEntity> new_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+        if(new_members_data==null||new_members_data.isEmpty()){
             return;
         }
 
@@ -407,7 +404,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = Constant.API_EVENT_ADD_MEMBERS;
         requestInfo.params = params;
-        new HttpTools(getActivity()).post(requestInfo, TAG, new HttpCallback() {
+        new HttpTools(getActivity()).post(requestInfo,new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -425,7 +422,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                 userList.addAll(new_members_data);
 //                Log.i("AddMembe_userList===2", userList.size() + "");
                 removeDuplicate(userList);
-                if (isRefresh) {
+                if(isRefresh){
                     isRefresh = false;
                 }
                 changeData();

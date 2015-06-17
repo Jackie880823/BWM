@@ -52,7 +52,6 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
     private LinearLayout emptyGroupMessageLinear;
     private ImageView emptyGroupMessageIv;
     private TextView emptyGroupMessageTv;
-    private String TAG;
 
     public static GroupMessageFragment newInstance(String... params) {
         return createInstance(new GroupMessageFragment());
@@ -86,7 +85,6 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
     @Override
     public void initView() {
         mContext = getActivity();
-        TAG = mContext.getClass().getSimpleName();
         groupListView = getViewById(R.id.message_listView);
         groupIb = getViewById(R.id.ib_top);
         groupRefreshLayout = getViewById(R.id.swipe_refresh_layout);
@@ -198,7 +196,7 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
             @Override
             public void run() {
                 super.run();
-                new HttpTools(getActivity()).get(requestInfo, TAG, new HttpCallback() {
+                new HttpTools(getActivity()).get(requestInfo, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }

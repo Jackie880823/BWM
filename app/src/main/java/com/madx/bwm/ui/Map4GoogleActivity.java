@@ -59,7 +59,7 @@ import java.util.Locale;
 
 public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLocationButtonClickListener, GoogleApiClient.OnConnectionFailedListener, GoogleMap.OnMarkerClickListener {
 
-    private static final String TAG = "Map4GoogleActivity";
+    private static final String TAG = Map4GoogleActivity.class.getSimpleName();
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private LocationManager lm = null;
@@ -158,7 +158,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                if (target != null) {
+                if(target != null) {
                     target.hideInfoWindow();
                 }
             }
@@ -181,11 +181,11 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 //                if(keyCode==KeyEvent.KEYCODE_SEARCH){
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                if(keyCode == KeyEvent.KEYCODE_ENTER) {
                     ArrayList<PlaceAutocompleteAdapter.PlaceAutocomplete> results = mAdapter.getmResultList();
-                    if (results != null) {
+                    if(results != null) {
                         firstResult = true;
-                        for (PlaceAutocompleteAdapter.PlaceAutocomplete place : results) {
+                        for(PlaceAutocompleteAdapter.PlaceAutocomplete place : results) {
                             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, place.placeId.toString());
                             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
                         }
@@ -307,7 +307,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         String locationName = intent.getStringExtra(Constant.EXTRA_LOCATION_NAME);
         Log.i(TAG, "initView& locationName: " + locationName);
 
-        if (!TextUtils.isEmpty(locationName)) {
+        if(!TextUtils.isEmpty(locationName)) {
             setUpMapIfNeededWithLocation(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
         } else {
             setUpMapIfNeededNoLocation();
@@ -318,7 +318,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     private void hideSoftInputWindow() {
         // 得到输入管理对象
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
+        if(imm != null) {
             // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
             imm.hideSoftInputFromWindow(mAutocompleteView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
         }
@@ -346,7 +346,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         //        toPass[1] = googlePlacesUrl.toString();
         //        googlePlacesReadTask.execute(toPass);
 
-        new HttpTools(this).get(googlePlacesUrl.toString(), null, TAG, new HttpCallback() {
+        new HttpTools(this).get(googlePlacesUrl.toString(), null, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -472,13 +472,13 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
         // Do a null check to confirm that we have not already instantiated the map.
 
-        if (mMap != null) {
+        if(mMap != null) {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.setMyLocationEnabled(true);
 
-            if (!hasLocation) {
+            if(!hasLocation) {
                 Location location = LocationUtil.getLastKnowLocation();
-                if (location == null) {
+                if(location == null) {
                     lm.requestLocationUpdates(INTERVAL_TIME, 0, LocationUtil.getCriteria(), myLocationListener, null);
                 } else {
                     //                            setUpMap(myLocation.getLatitude(), myLocation.getLongitude());
@@ -520,7 +520,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
+            switch(msg.what) {
                 case MSG_VIEW_LONGPRESS://处理长按时间返回位置信息{
                     //                    overlayitem = new OverlayItem(locPoint, "地址名称",
                     //                            "正在地址加载...");
@@ -536,7 +536,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                     break;
                 case MSG_VIEW_ADDRESSNAME:
                     //获取到地址后显示在泡泡上
-                    if (target != null) {
+                    if(target != null) {
                         setMarkerContent((Address) msg.obj, target);
                     }
                     break;
@@ -572,7 +572,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         //        } catch (Exception e) {
         //
         //        }
-        if (marker != null) {
+        if(marker != null) {
             marker.showInfoWindow();
         }
         return false;
@@ -597,12 +597,12 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
             long beginTime = System.currentTimeMillis();
             long lastTime = beginTime;
             //wait 10 second
-            while (lastTime - beginTime < 10 * 1000) {
+            while(lastTime - beginTime < 10 * 1000) {
                 address = LocationUtil.getAddress(getApplicationContext(), latitude, longitude);
-                if (address == null) {
+                if(address == null) {
                     try {
                         Thread.sleep(200);
-                    } catch (InterruptedException e) {
+                    } catch(InterruptedException e) {
                         e.printStackTrace();
                     }
                     lastTime = System.currentTimeMillis();
@@ -624,7 +624,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
     private void setUpMapIfNeededWithLocation(double latitude, double longitude) {
         setUpMapIfNeeded(true, latitude, longitude);
-        if (mAdapter != null) {
+        if(mAdapter != null) {
             mAdapter.setBounds(new LatLngBounds(myLocation, myLocation));
         }
     }
@@ -636,10 +636,10 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
      */
     private void addTarget(LatLng latLng) {
         //        mMap.clear();
-        if (target != null) {
+        if(target != null) {
             target.remove();
         }
-        if (this.tempMarker != null) {
+        if(this.tempMarker != null) {
             tempMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
         }
         target = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
@@ -654,16 +654,15 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
     /**
      * 设置显选择地址详细信息弹出框的内容并显示
-     *
-     * @param address 地址信息
-     * @param marker  持有弹出框的标识封装对象
+     * @param address  地址信息
+     * @param marker 持有弹出框的标识封装对象
      * @return 返回持有弹出框的标识封装对象
      */
     private Marker setMarkerContent(Address address, Marker marker) {
         String title;
         String snippet;
 
-        if (address.getMaxAddressLineIndex() > 2) {
+        if(address.getMaxAddressLineIndex() > 2) {
             title = address.getAddressLine(1);
             snippet = address.getAddressLine(0);
         } else {
@@ -684,7 +683,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
     private void setMyLocation(double latitude, double longitude) {
         myLocation = new LatLng(latitude, longitude);
-        if (mAdapter != null) {
+        if(mAdapter != null) {
             mAdapter.setBounds(new LatLngBounds(myLocation, myLocation));
         }
     }
@@ -695,7 +694,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     public class MyLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location location) {
-            if (toLocation) {
+            if(toLocation) {
                 toLocation = false;
                 setMyLocation(location.getLatitude(), location.getLongitude());
                 setUpMap(location.getLatitude(), location.getLongitude());
@@ -818,7 +817,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         @Override
         public void onResult(PlaceBuffer places) {
             try {
-                if (!places.getStatus().isSuccess()) {
+                if(!places.getStatus().isSuccess()) {
                     // Request did not complete successfully
                     Log.e("", "Place query did not complete. Error: " + places.getStatus().toString());
                     places.release();
@@ -828,12 +827,12 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                 // Get the Place object from the buffer.
                 final Place place = places.get(0);
 
-                if (place != null) {
+                if(place != null) {
                     // Format details of the place for display and show it in a TextView.
 
                     Marker marker = mMap.addMarker(new MarkerOptions().position(place.getLatLng()));
                     setMarkerContent(new Address(place.getLocale()), marker);
-                    if (firstResult) {
+                    if(firstResult) {
                         firstResult = false;
                         center2Location(place.getLatLng());
                     }
@@ -847,7 +846,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                     //                imm.hideSoftInputFromWindow(mAutocompleteView.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
                     //            }
                 }
-            } catch (Exception e) {
+            } catch(Exception e) {
                 MessageUtil.showMessage(Map4GoogleActivity.this, R.string.location_search_error);
             }
         }

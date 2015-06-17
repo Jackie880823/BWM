@@ -26,7 +26,7 @@ import java.util.List;
 public class AlbumGalleryActivity extends BaseActivity {
 
     String memberId;
-    private String TAG;
+
     public List<PhotoEntity> data = new ArrayList<>();//所有照片数据
 
     public List<PhotoEntity> dataCache = new ArrayList<>();//每个月临时存储的list
@@ -69,7 +69,7 @@ public class AlbumGalleryActivity extends BaseActivity {
     @Override
     public void initView() {
         memberId = getIntent().getStringExtra("member_id");
-        TAG = this.getClass().getSimpleName();
+
         lv = getViewById(R.id.lv);
     }
 
@@ -83,7 +83,7 @@ public class AlbumGalleryActivity extends BaseActivity {
         params.put("start", "0");
         String url = UrlUtil.generateUrl(Constant.API_ALBUM_GALLERY, params);
 
-        new HttpTools(AlbumGalleryActivity.this).get(url, null, TAG, new HttpCallback() {
+        new HttpTools(AlbumGalleryActivity.this).get(url, null, new HttpCallback() {
             @Override
             public void onStart() {
 
