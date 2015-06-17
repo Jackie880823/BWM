@@ -223,10 +223,14 @@ public class PathRelationshipActivity extends BaseActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-            setResult(RESULT_OK);
-            finish();
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                titleLeftEvent();
+            }
+            return true;
+        } else {
+            return super.dispatchKeyEvent(event);
         }
-        return super.dispatchKeyEvent(event);
+
     }
 
 
@@ -286,6 +290,6 @@ public class PathRelationshipActivity extends BaseActivity {
 
             }
         });
-
     }
+
 }
