@@ -8,8 +8,6 @@
         android:id="@+id/iv_pic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:maxHeight="1000dp"
-        android:maxWidth="1000dp"
         android:scaleType="centerInside"
         android:src="@drawable/network_image_default"/>
 

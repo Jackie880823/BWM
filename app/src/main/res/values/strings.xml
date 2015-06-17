@@ -64,7 +64,8 @@
     <string name="text_going">Joined</string>
     <string name="text_maybe">Maybe</string>
     <string name="text_not_going">Declined</string>
-    <string name="text_add">Send</string>
+    <string name="text_sened">Send</string>
+    <string name="text_add">Add</string>
     <string name="text_added">Added</string>
     <string name="text_updated">Updated</string>
     <string name="text_awaiting">Awaiting</string>
@@ -465,7 +466,7 @@
     <string name="text_up_all_fields">Please fill up all fields and try again.</string>
     <string name="text_no_network">Poor Internet Connection</string>
     <string name="text_enter_details">Please enter your details.</string>
-    <string name="text_input_phone_number">Input your Phone Number / Username</string>
+    <string name="text_input_phone_number">Input your Phone Number.</string>
     <string name="text_input_password">Input your Password</string>
     <string name="text_action">Action</string>
     <string name="text_family_tree">Family Tree</string>
@@ -752,4 +753,9 @@
     <string name="saved_to_path">"Has been saved to: "</string>
     <!--Christopher-->
     <string name="location_search_error">location search error!</string>
+    
+    <string name="morning">am</string>
+    <string name="afternoon">pm</string>
+
+    <string name="test_group_friend">There are not friends in the group,or not?</string>
 </resources>

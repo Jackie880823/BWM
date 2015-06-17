@@ -39,6 +39,7 @@ import java.util.List;
  */
 public class EventFragment extends BaseFragment<MainActivity> {
 
+    private static final String Tag = EventFragment.class.getSimpleName();
 //    private ProgressDialog mProgressDialog;
 
     public static EventFragment newInstance(String... params) {
@@ -169,7 +170,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_MAIN, params);
 
-        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -216,7 +217,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
                         @Override
                         public void contentItemClick(EventEntity eventEntity) {
-                            if("1".equals(eventEntity.getGroup_event_status())){
+//                            if("1".equals(eventEntity.getGroup_event_status())){
                                 //item的点击事件跳转到EventDetailActivity
 //                            requestData();
 //                            adapter.notifyDataSetChanged();
@@ -226,7 +227,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                                 intent.putExtra("group_id", eventEntity.getGroup_id());
                                 startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
 //                            requestData();
-                            }
+//                            }
 
                         }
                     });
@@ -276,7 +277,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
         params.put("limit", offset + "");
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_MAIN, params);
-        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 

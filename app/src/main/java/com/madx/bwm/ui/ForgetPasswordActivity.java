@@ -196,6 +196,10 @@ public class ForgetPasswordActivity extends BaseActivity {
                     userEntity.setUser_login_id(tvCountryCode.getText().toString() + phone);
                     userEntity.setUser_login_type("phone");
                 }
+                else if ( TextUtils.isEmpty(etUsername.getText()) && TextUtils.isEmpty(etPhone.getText()) )
+                {
+                     Toast.makeText(ForgetPasswordActivity.this, getResources().getString(R.string.text_input_username_phone), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -217,7 +221,7 @@ public class ForgetPasswordActivity extends BaseActivity {
                     url = UrlUtil.generateUrl(Constant.API_VERIFY_CODE, params);
 
 
-                    new HttpTools(ForgetPasswordActivity.this).get(url, null, new HttpCallback() {
+                    new HttpTools(ForgetPasswordActivity.this).get(url, null,this, new HttpCallback() {
                         @Override
                         public void onStart() {
 
@@ -337,7 +341,7 @@ public class ForgetPasswordActivity extends BaseActivity {
 
         Log.d("","===========" + url);
 
-        new HttpTools(ForgetPasswordActivity.this).get(url, null, new HttpCallback() {
+        new HttpTools(ForgetPasswordActivity.this).get(url, null, this, new HttpCallback() {
             @Override
             public void onStart() {
 

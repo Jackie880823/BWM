@@ -23,7 +23,7 @@ import java.util.HashMap;
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
  */
 public class EventDetailActivity extends BaseActivity {
-
+    private static final String Tag = EventDetailActivity.class.getSimpleName();
 
     @Override
     protected void initBottomBar() {
@@ -155,7 +155,7 @@ public class EventDetailActivity extends BaseActivity {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-        new HttpTools(this).get(url, params, new HttpCallback() {
+        new HttpTools(this).get(url, params,Tag, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -168,12 +168,16 @@ public class EventDetailActivity extends BaseActivity {
             @Override
             public void onResult(String response) {
                 event = new Gson().fromJson(response, EventEntity.class);
-
                 if (isCurrentUser()) {
                     rightButton.setImageResource(R.drawable.btn_edit);
                     rightButton.setVisibility(View.VISIBLE);
                     if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date()).getTime()))) {
                         rightButton.setImageResource(R.drawable.icon_edit_press);
+                        rightButton.setEnabled(false);
+                    }
+                    if("2".equals(event.getGroup_event_status())){
+                        rightButton.setImageResource(R.drawable.icon_edit_press);
+                        title_icon.setVisibility(View.GONE);
                         rightButton.setEnabled(false);
                     }
                 } else {

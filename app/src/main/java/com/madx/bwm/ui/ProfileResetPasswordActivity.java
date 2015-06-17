@@ -141,7 +141,7 @@ public class ProfileResetPasswordActivity extends Activity {
                     requestInfo.jsonParam = jsonParamsString;
 
 
-                    new HttpTools(ProfileResetPasswordActivity.this).put(requestInfo, new HttpCallback() {
+                    new HttpTools(ProfileResetPasswordActivity.this).put(requestInfo,  this, new HttpCallback() {
                         @Override
                         public void onStart() {
 

@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -74,7 +73,6 @@ public class LoginActivity extends Activity {
         if (SystemUtil.checkPlayServices(this)) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(this);
-            Log.i("","1regid============="+regid);
             if (TextUtils.isEmpty(regid)) {
                 isGCM = true;
                 registerInBackground();
@@ -82,7 +80,6 @@ public class LoginActivity extends Activity {
         } else {
             JPushInterface.init(LoginActivity.this);
             regid = AppInfoUtil.getJpushRegistrationId(this);
-            Log.i("","2regid============="+regid);
             if (TextUtils.isEmpty(regid)) {
                 isGCM = false;
                 registerInBackground();
@@ -200,7 +197,7 @@ public class LoginActivity extends Activity {
         params.put("pushService", service);
         params.put("appID", AppInfoUtil.getAppPackageName(this));
         requestInfo.params = params;
-        new HttpTools(LoginActivity.this).post(requestInfo, new HttpCallback() {
+        new HttpTools(LoginActivity.this).post(requestInfo,this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -346,7 +343,7 @@ public class LoginActivity extends Activity {
                     params.put("condition", jsonParamsString);
 //                    String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
 
-                    new HttpTools(LoginActivity.this).get(Constant.API_LOGIN, params, new HttpCallback() {
+                    new HttpTools(LoginActivity.this).get(Constant.API_LOGIN, params, this, new HttpCallback() {
                         @Override
                         public void onStart() {
 
@@ -424,7 +421,7 @@ public class LoginActivity extends Activity {
                 } else if ((account.length() == 0) && (password.length() == 0)) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_enter_details), Toast.LENGTH_SHORT).show();
                 } else if (account.length() == 0) {
-                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_phone_number), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_username_phone), Toast.LENGTH_SHORT).show();
                 } else if (password.length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
                 }

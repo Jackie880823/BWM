@@ -62,7 +62,7 @@ public class Constant {
     public static final String API_EVENT_POST_COMMENT = API_SERVER+"/bondwithme/index.php/api/posts";
     public static final String API_EVENT_COMMENT_PIC_POST = API_SERVER+"/bondwithme/index.php/api/uploadCommentPhoto";
     public static final String API_GET_EVENT_DETAIL = API_SERVER+"/bondwithme/index.php/api/event";
-    public static final String API_GET_EVENT_GROUP_MEMBERS = "http://dev.bondwith.me/bondwithme/index.php/api/filterGroupMember";
+    public static final String API_GET_EVENT_GROUP_MEMBERS = API_SERVER+"/bondwithme/index.php/api/filterGroupMember";
 
 
     public static final String API_EVENT_INVITED = API_SERVER+"/bondwithme/index.php/api/eventMember";
@@ -202,4 +202,18 @@ public class Constant {
     public static final String API_GET_CHAT_MESSAGE_LIST = API_SERVER+"/bondwithme/index.php/api/messages/%s/type/%s";//获取消息成员列表
     public static final String API_GET_YEAR_ALBUM_LIST = API_SERVER+"/bondwithme/index.php/api/userAlbum";//获取my album一年的所有列表
     public static final String API_GET_MONTH_ALBUM_LIST = API_SERVER+"/bondwithme/index.php/api/userAlbumByMonth";//获取my album哪个月的所有列表
+
+    // Intent传递数据时的鍵
+    /**
+     *  地址名称
+     */
+    public static final String EXTRA_LOCATION_NAME = "location_name";
+    /**
+     * 地址纬度
+     */
+    public static final String EXTRA_LATITUDE = "latitude";
+    /**
+     * 地址经度
+     */
+    public static final String EXTRA_LONGITUDE   = "longitude";
 }

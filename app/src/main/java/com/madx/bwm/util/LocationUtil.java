@@ -11,12 +11,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.volley.ext.HttpCallback;
-import com.android.volley.ext.tools.HttpTools;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.madx.bwm.Constant;
@@ -26,77 +25,93 @@ import com.madx.bwm.ui.Map4GoogleActivity;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by wing on 15/3/25.
  */
 public class LocationUtil implements LocationListener, GoogleApiClient.OnConnectionFailedListener {
-
+    //gcj02,bd09ll(百度经纬度坐标),bd09mc(百度墨卡托坐标),wgs84(gps)
+    public static final String LOCATION_TYPE_GCJ02 = "gcj02";
+    public static final String LOCATION_TYPE_BD09LL = "bd09ll";
+    //    public static final String LOCATION_TYPE_BD09MC = "bd09mc";
+    public static final String LOCATION_TYPE_WGS84 = "wgs84";
+    private final static String TAG = LocationUtil.class.getSimpleName();
+    private static final String BAIDU_MAP_APP_PACKAGE = "com.baidu.BaiduMap";
     private static Geocoder geoCoder;
     private static LocationManager lm;
     private static double lat = 31.22997;
     private static double lon = 121.640756;
     public static double x_pi = lat * lon / 180.0;
-    private static final String BAIDU_MAP_APP_PACKAGE = "com.baidu.BaiduMap";
-
-
-    private static Geocoder getGeocoder(Context context) {
-        if (geoCoder == null) {
-            geoCoder = new Geocoder(context,
-                    Locale.getDefault());
-        }
-        return geoCoder;
-    }
+    private static Location currentLocation;
 
     /**
      * 通过经纬度获取地址
      *
-     * @return
+     * @return 返回地址名称
      */
     public static String getLocationAddress(Context context, double latitude, double longitude) {
-        String add = "";
-        Geocoder geoCoder = getGeocoder(context);
-        try {
-            List<Address> addresses = geoCoder.getFromLocation(
-                    latitude, longitude, 1);
-            if (addresses != null && addresses.size() > 0) {
-                Address address = addresses.get(0);
-                int maxLine = address.getMaxAddressLineIndex();
-                if (maxLine >= 2) {
-                    add = address.getAddressLine(1) + address.getAddressLine(2);
-                } else {
-                    add = address.getAddressLine(1);
-                }
+        String add = null;
+        Address address = getAddress(context, latitude, longitude);
+        if(address != null) {
+            int maxLine = address.getMaxAddressLineIndex();
+            if(maxLine >= 2) {
+                add = address.getAddressLine(1);
+            } else {
+                add = address.getAddressLine(0);
             }
-        } catch (IOException e) {
-            add = "";
-            e.printStackTrace();
         }
-
+        Log.i(TAG, "getLocationAddress& address: " + add);
         return add;
     }
 
-    private void getCurrentLocation(FragmentActivity context) {
-//        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(context)
-//                .enableAutoManage(context, 0 /* clientId */, this)
-//                .addApi(Places.GEO_DATA_API)
-//                .build();
-//        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-//                .getCurrentPlace(mGoogleApiClient, null);
-//        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-//            @Override
-//            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-//                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-//                    Log.i("", String.format("Place '%s' has likelihood: %g",
-//                            placeLikelihood.getPlace().getName(),
-//                            placeLikelihood.getLikelihood()));
-//                }
-//                likelyPlaces.release();
-//            }
-//        });
+    /**
+     * 根据经纬度获取地址信息
+     *
+     * @param context   上下文
+     * @param latitude  纬度
+     * @param longitude 经度
+     * @return 返回地址信息封装对象Address
+     */
+    public static Address getAddress(Context context, double latitude, double longitude) {
+        Log.i(TAG, "getAddress& latitude: " + latitude + "; longitude: " + longitude);
+        if(latitude == 0 && longitude == 0) {
+            Location location = getLastKnowLocation();
+            if(location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        }
+        Address address = null;
 
+        // 判断地址编码器是否为空
+        if(geoCoder == null) {
+            geoCoder = new Geocoder(context);
+        }
 
+        try {
+            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+            if(addresses != null && addresses.size() > 0) {
+                address = addresses.get(0);
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        return address;
+    }
+
+    private static LocationListener locationListener = new LocationUtil();
+    public static void setRequestLocationUpdates(Context context) {
+        if(lm == null) {
+            lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        }
+        lm.requestLocationUpdates(2000, 0, getCriteria(), locationListener, null);
+    }
+
+    public static void removerLocationListener() {
+        if(lm == null) {
+            return;
+        }
+        lm.removeUpdates(locationListener);
     }
 
     /**
@@ -105,54 +120,49 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
      * @param context
      * @param latitude
      * @param longitude
+     * @param name
      * @return
      */
     public static Intent getPlacePickerIntent(Context context, double latitude, double longitude, String name) {
-        Intent intent = null;
-        lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        //if gps open
-//        if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER) || lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+        Intent intent = new Intent();
+        if(lm == null) {
+            lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        }
+
+//        if(currentLocation != null) {
+//            Address address = getAddress(context, currentLocation.getLatitude(), currentLocation.getLongitude());
+//            if(address != null) {
+//                Log.i(TAG, "getPlacePickerIntent& locale: country: " + address.getCountryName());
+//            }
+//        }
+
+        intent.putExtra(Constant.EXTRA_LOCATION_NAME, name);
+        intent.putExtra(Constant.EXTRA_LATITUDE, latitude);
+        intent.putExtra(Constant.EXTRA_LONGITUDE, longitude);
 
         //判断是用百度还是google
-        if (SystemUtil.checkPlayServices(context)) {
-//                if(getLastKnowLocation(context)==null){
-//
-//                }
-            intent = new Intent(context, Map4GoogleActivity.class);
-            intent.putExtra("location_name", name);
-            intent.putExtra("latitude", latitude);
-            intent.putExtra("longitude", longitude);
-            //using google map picker
-//                try {
-//                    PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
-////                intentBuilder.setLatLngBounds(new LatLngBounds(new LatLng(latitude,longitude),new LatLng(latitude,longitude)));
-//                    intent = intentBuilder.build(context);
-//
-//                    // Hide the pick option in the UI to prevent users from starting the picker
-//                    // multiple times.
-////                showPickAction(false);
-//
-//                } catch (GooglePlayServicesRepairableException e) {
-//                } catch (GooglePlayServicesNotAvailableException e) {
-//                }
+        if(!SystemUtil.checkPlayServices(context)) {
+            intent.setClass(context, Map4BaiduActivity.class);
         } else {
-//                intent = new Intent(context, Map4GaoDeActivity.class);
-            intent = new Intent(context, Map4BaiduActivity.class);
-//        intent.putExtra("has_location", position_name.getText().toString());
-            intent.putExtra("location_name", name);
-            intent.putExtra("latitude", latitude);
-            intent.putExtra("longitude", longitude);
+            intent.setClass(context, Map4GoogleActivity.class);
         }
-//        }
         return intent;
     }
 
-    private static String getBestProvider(Context context) {
+    /**
+     * @return
+     */
+    public static String getBestProvider() {
         Criteria criteria = getCriteria();
         // 这里可能返回 null, 地理位置信息服务未开启
         return lm.getBestProvider(criteria, true);
     }
 
+    /**
+     * 获取位置提供器
+     *
+     * @return 位置提供器
+     */
     public static Criteria getCriteria() {
         Criteria c = new Criteria();
         c.setAccuracy(Criteria.ACCURACY_FINE);          //设置查询精度,(Criteria.ACCURACY_COARSE...)
@@ -164,24 +174,16 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         return c;
     }
 
-    public static Location getLastKnowLocation(Context context) {
-        Location ret = null;
-        String bestProvider = getBestProvider(context);
-        if (TextUtils.isEmpty(bestProvider)) {
-            // 这里可能会返回 null, 表示按照当前的查询条件无法获取系统最后一次更新的地理位置信息
-            ret = lm.getLastKnownLocation(bestProvider);
-        }
+    public static Location getLastKnowLocation() {
+        Location ret;
+        String bestProvider = getBestProvider();
+        // 这里可能会返回 null, 表示按照当前的查询条件无法获取系统最后一次更新的地理位置信息
+        ret = lm.getLastKnownLocation(bestProvider);
         return ret;
     }
 
-    //gcj02,bd09ll(百度经纬度坐标),bd09mc(百度墨卡托坐标),wgs84(gps)
-    public static final String LOCATION_TYPE_GCJ02 = "gcj02";
-    public static final String LOCATION_TYPE_BD09LL = "bd09ll";
-    //    public static final String LOCATION_TYPE_BD09MC = "bd09mc";
-    public static final String LOCATION_TYPE_WGS84 = "wgs84";
-
     /**
-     * 打开地图导航
+     * 打开地图导航找到指定的地址
      *
      * @param context
      * @param latitude
@@ -190,55 +192,57 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
      */
     public static void goNavigation(Context context, double latitude, double longitude, String locationType) {
 
-        if (TextUtils.isEmpty(locationType)) {
+        if(TextUtils.isEmpty(locationType)) {
+            // 地址类型为空
             locationType = LOCATION_TYPE_GCJ02;
         }
-//        if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
-//            openWebview4BaiduMap(context, latitude, longitude, locationType);
-//        }else {
-        Intent intent = null;
+        //        if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
+        //            openWebView4BaiduMap(context, latitude, longitude, locationType);
+        //        }else {
+        Intent intent;
         //14为缩放比例
         Log.i("", "goNavigation======" + latitude + "," + longitude);
         Log.i("", "locationType======" + locationType);
 
 
-        if (SystemUtil.checkPlayServices(context)) {
-            if (LOCATION_TYPE_BD09LL.equals(locationType)) {
-//                if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
-                openWebview4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
+        // 判断是否有谷歌服务
+        if(SystemUtil.checkPlayServices(context)) {
+            if(LOCATION_TYPE_BD09LL.equals(locationType)) {
+                //                if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
+                openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
             } else {
                 try {
                     String uri = String.format("geo:%f,%f?z=14&q=%f,%f", latitude, longitude, latitude, longitude);
                     intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                     context.startActivity(intent);
-                } catch (Exception e) {
-                    openWebview4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
+                } catch(Exception e) {
+                    openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
                 }
             }
         } else {
             //判断没有百度地图
-            if (SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
+            if(SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
                 String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
                 try {
                     intent = Intent.getIntent(uri);
                     intent.setAction(Intent.ACTION_VIEW);
                     context.startActivity(intent);
-                } catch (Exception e) {
+                } catch(Exception e) {
                     e.printStackTrace();
-                    openWebview4BaiduMap(context, latitude, longitude, locationType);
+                    openWebView4BaiduMap(context, latitude, longitude, locationType);
                 }
 
             } else {
-                openWebview4BaiduMap(context, latitude, longitude, locationType);
+                openWebView4BaiduMap(context, latitude, longitude, locationType);
             }
 
         }
-//        }
+        //        }
 
 
     }
 
-    private static void openWebview4BaiduMap(Context context, double latitude, double longitude, String locationType) {
+    private static void openWebView4BaiduMap(Context context, double latitude, double longitude, String locationType) {
         String uri = "http://api.map.baidu.com/geocoder?location=%s&coord_type=%s&output=html&src=%s";
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
@@ -247,19 +251,103 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         context.startActivity(intent);
     }
 
+    public static String getLocationPicUrl(Context context, String latitude, String longitude, String locationType) {
+        Log.i("", "1locationType======" + locationType);
+        String ssssaa = latitude + "," + longitude;
+        if(SystemUtil.checkPlayServices(context)) {
+            Log.i("", "2locationType======" + locationType);
+            if(LOCATION_TYPE_BD09LL.equals(locationType)) {
+                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
+            } else {
+                Log.i("", "3locationType======" + locationType);
+                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
+                //                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
+            }
+        } else {
+            Log.i("", "4locationType======" + locationType);
+            return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
+
+        }
+        //        return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
+
+        //        String sss = "http://api.map.baidu.com/staticimage?width=400&height=300&center=" + ssssaa + "&zoom=11&markers=" + ssssaa + "&markerStyles=m,T";
+    }
+
+    /**
+     * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的
+     *
+     * @param context
+     * @return true 表示开启
+     */
+    public static boolean isOPen(final Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        // 通过GPS卫星定位，定位级别可以精确到街（通过24颗卫星定位，在室外和空旷的地方定位准确、速度快）
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        // 通过WLAN或移动网络(3G/2G)确定的位置（也称作AGPS，辅助GPS定位。主要用于在室内或遮盖物（建筑群或茂密的深林等）密集的地方定位）
+        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return gps || network;
+
+    }
+
+    /**
+     * 强制帮用户打开 GPS
+     *
+     * @param context
+     */
+    public static final void openGPS(Context context) {
+        Intent GPSIntent = new Intent();
+        GPSIntent.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
+        GPSIntent.addCategory("android.intent.category.ALTERNATIVE");
+        GPSIntent.setData(Uri.parse("custom:3"));
+        try {
+            PendingIntent.getBroadcast(context, 0, GPSIntent, 0).send();
+        } catch(PendingIntent.CanceledException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 加密成为摩卡托坐标
+     */
+    public static String bd_encrypt(double gg_lat, double gg_lon) {
+        double x = gg_lon, y = gg_lat;
+        double z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi);
+        double theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * x_pi);
+        double bd_lon = z * Math.cos(theta) + 0.0065;
+        double bd_lat = z * Math.sin(theta) + 0.006;
+        return gg_lat + "," + gg_lon;
+    }
+
+    public static LatLng convert2BaiduLocation(Context context, String latitude, String longitude) {
+
+        LatLng sourceLatLng = new LatLng(Double.valueOf(latitude),Double.valueOf(longitude));
+        // 将google地图、soso地图、aliyun地图、mapabc地图和amap地图// 所用坐标转换成百度坐标
+        CoordinateConverter converter = new CoordinateConverter();
+        converter.from(CoordinateConverter.CoordType.COMMON);
+        // sourceLatLng待转换坐标
+        converter.coord(sourceLatLng);
+        LatLng desLatLng = converter.convert();
+
+        // 将GPS设备采集的原始GPS坐标转换成百度坐标
+//        CoordinateConverter converter = new CoordinateConverter();
+//        converter.from(CoordinateConverter.CoordType.GPS);
+//        // sourceLatLng待转换坐标
+//        converter.coord(sourceLatLng);
+//        LatLng desLatLng = converter.convert();
+
+        return desLatLng;
+
+    }
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
 
-    private static Location currentLocation;
-
     @Override
     public void onLocationChanged(Location location) {
+        Log.i(TAG, "onLocationChanged()& latitude: " + location.getLatitude() + "; longitude: " + location.getLongitude());
         currentLocation = location;
-//        if(currentLocation.getProvider()){
-//
-//        }
     }
 
     @Override
@@ -275,137 +363,5 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
     @Override
     public void onProviderDisabled(String provider) {
 
-    }
-
-    public static String getLocationPicUrl(Context context, String latitude, String longitude, String locationType) {
-        Log.i("", "1locationType======" + locationType);
-        String ssssaa = latitude + "," + longitude;
-        if (SystemUtil.checkPlayServices(context)) {
-            Log.i("", "2locationType======" + locationType);
-            if(LOCATION_TYPE_BD09LL.equals(locationType)){
-                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
-            }else {
-                Log.i("", "3locationType======" + locationType);
-                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
-//                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
-            }
-        } else {
-            Log.i("", "4locationType======" + locationType);
-            return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
-
-        }
-//        return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
-
-//        String sss = "http://api.map.baidu.com/staticimage?width=400&height=300&center=" + ssssaa + "&zoom=11&markers=" + ssssaa + "&markerStyles=m,T";
-    }
-
-    /**
-     * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的
-     *
-     * @param context
-     * @return true 表示开启
-     */
-    public static final boolean isOPen(final Context context) {
-        LocationManager locationManager
-                = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        // 通过GPS卫星定位，定位级别可以精确到街（通过24颗卫星定位，在室外和空旷的地方定位准确、速度快）
-        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        // 通过WLAN或移动网络(3G/2G)确定的位置（也称作AGPS，辅助GPS定位。主要用于在室内或遮盖物（建筑群或茂密的深林等）密集的地方定位）
-        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (gps || network) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 强制帮用户打开GPS
-     *
-     * @param context
-     */
-    public static final void openGPS(Context context) {
-        Intent GPSIntent = new Intent();
-        GPSIntent.setClassName("com.android.settings",
-                "com.android.settings.widget.SettingsAppWidgetProvider");
-        GPSIntent.addCategory("android.intent.category.ALTERNATIVE");
-        GPSIntent.setData(Uri.parse("custom:3"));
-        try {
-            PendingIntent.getBroadcast(context, 0, GPSIntent, 0).send();
-        } catch (PendingIntent.CanceledException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 解密成为火星坐标
-     *
-     * @param bd_lat
-     * @param bd_lon
-     * @return
-     */
-    public static String bd_decrypt(double bd_lat, double bd_lon) {
-        double x = bd_lon - 0.0065, y = bd_lat - 0.006;
-        double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
-        double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
-        double gg_lon = z * Math.cos(theta);
-        double gg_lat = z * Math.sin(theta);
-        return gg_lat + "," + gg_lon;
-    }
-
-    /**
-     * 加密成为摩卡托坐标
-     */
-    public static String bd_encrypt(double gg_lat, double gg_lon) {
-        double x = gg_lon, y = gg_lat;
-        double z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * x_pi);
-        double theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * x_pi);
-        double bd_lon = z * Math.cos(theta) + 0.0065;
-        double bd_lat = z * Math.sin(theta) + 0.006;
-        return gg_lat + "," + gg_lon;
-    }
-
-    public static void convertLocation(Context context, String latitude, String longitude) {
-        String url = "http://api.map.baidu.com/geoconv/v1/?coords=%s&ak=%s&from=1&to=5";
-//                http://api.map.baidu.com/geoconv/v1/?coords=114.21892734521,29.575429778924;114.21892734521,29.575429778924&from=1&to=5&ak=WkHFTQQgdIvSphGk31aAaKWu
-        String ss = context.getResources().getString(R.string.jackie_baidu_maps_key_4_convertor);
-        Log.i("", "2url======" + String.format(url, latitude + "," + longitude, ss));
-        new HttpTools(context).get(String.format(url, latitude + "," + longitude, ss), null, new HttpCallback() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-
-            @Override
-            public void onResult(String response) {
-                Log.i("", "onResult======" + response);
-//                        try {
-//                            JSONObject jsonObject = new JSONObject(response);
-//                            jsonObject.getJSONArray("result ");
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
     }
 }

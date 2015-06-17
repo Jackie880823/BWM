@@ -37,6 +37,8 @@ import java.util.List;
 public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
     private static final String TAG = WallAdapter.class.getSimpleName();
 
+    private static final String POST_LOVE = TAG + "_POST_LOVE";
+
     private Context mContext;
     private List<WallEntity> data;
 
@@ -383,7 +385,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
 
             RequestInfo requestInfo = new RequestInfo(Constant.API_WALL_LOVE, params);
 
-            new HttpTools(mContext).post(requestInfo, new HttpCallback() {
+            new HttpTools(mContext).post(requestInfo, POST_LOVE, new HttpCallback() {
                 @Override
                 public void onStart() {
 

@@ -53,7 +53,7 @@ import java.util.TimeZone;
  * create an instance of this fragment.
  */
 public class EventNewFragment extends BaseFragment<EventNewActivity> implements View.OnClickListener {
-
+    private static final String Tag = EventNewFragment.class.getSimpleName();
     private MembersGridAdapter adapter;
     private MyDialog saveAlertDialog;
     private EventEntity mEevent = new EventEntity();
@@ -325,6 +325,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         longitude = TextUtils.isEmpty(mEevent.getLoc_longitude()) ? -1000 : Double.valueOf(mEevent.getLoc_longitude());
     }
 
+    /**
+     * 移除重复的好友
+     * @param userList
+     */
     public static void removeDuplicate(List<UserEntity> userList) {
         for (int i = 0; i < userList.size() - 1; i++) {
             for (int j = userList.size() - 1; j > i; j--) {
@@ -344,7 +348,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("group_list", strGroupsid);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
-        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -483,7 +487,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("event_member", gson.toJson(setGetMembersIds(userList)));
             requestInfo.params = params;
 
-            new HttpTools(getActivity()).post(requestInfo, new HttpCallback() {
+            new HttpTools(getActivity()).post(requestInfo,Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -656,7 +660,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
     }
 
-
+    //日历
     private void showDateTimePicker() {
         LayoutInflater factory = LayoutInflater.from(getActivity());
         final View dateTimePicker = factory.inflate(R.layout.dialog_date_time_picker, null);
@@ -711,7 +715,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 date_desc.setText(dateDesc);
             }
         });
-        pickDateTimeDialog.setButtonCancel("Cancel", new View.OnClickListener() {
+        pickDateTimeDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickDateTimeDialog.dismiss();
@@ -760,12 +764,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //                            }
 //
 //                        }else {
-                            String locationName = data.getStringExtra("location_name");
+                            String locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
                             if (!TextUtils.isEmpty(locationName)) {
                                 position_name.setText(locationName);
                                 mEevent.setLoc_name(locationName);
-                                latitude = data.getDoubleExtra("latitude", 0);
-                                longitude = data.getDoubleExtra("longitude", 0);
+                                latitude = data.getDoubleExtra(Constant.EXTRA_LATITUDE, 0);
+                                longitude = data.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0);
                             } else {
                                 position_name.setText(null);
                                 latitude = -1000;

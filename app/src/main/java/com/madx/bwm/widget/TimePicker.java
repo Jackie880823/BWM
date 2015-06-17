@@ -87,10 +87,10 @@ public class TimePicker extends FrameLayout implements OnClickListener {
 			hourPicker.setValue(mCalendar.get(Calendar.HOUR));
 			if (mCalendar.get(Calendar.AM_PM) == Calendar.PM) {
 				isAm = false;
-				timeSwitcher.setText("pm");
+				timeSwitcher.setText(getResources().getString(R.string.afternoon));
 			} else {
 				isAm = true;
-				timeSwitcher.setText("am");
+				timeSwitcher.setText(getResources().getString(R.string.morning));
 			}
 
 			timeSwitcher.setVisibility(View.VISIBLE);
@@ -113,7 +113,7 @@ public class TimePicker extends FrameLayout implements OnClickListener {
 			time = hourPicker.getValue() + ":" + minPicker.getValue();
 		} else {
 			time = hourPicker.getValue() + ":" + minPicker.getValue() + " "
-					+ (isAm ? "am" : "pm");
+					+ (isAm ? getResources().getString(R.string.morning) : getResources().getString(R.string.afternoon));
 
 		}
 		return time;
@@ -144,10 +144,10 @@ public class TimePicker extends FrameLayout implements OnClickListener {
 
 		if (isAm) {
 			mCalendar.roll(Calendar.HOUR, -12);
-			timeSwitcher.setText("am");
+			timeSwitcher.setText(getResources().getString(R.string.morning));
 		} else {
 			mCalendar.roll(Calendar.HOUR, 12);
-			timeSwitcher.setText("pm");
+			timeSwitcher.setText(getResources().getString(R.string.afternoon));
 		}
 
 	}

@@ -3,14 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/default_content_bg"
-    tools:context="com.example.christepherzhang.myapplication.MyFamilyActivity">
-    <!-- android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"-->
+    android:background="@color/default_content_bg">
 
     <LinearLayout
         android:id="@+id/search_linear"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/fragment_main_top"
+            layout="@layout/title_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" />
 
         <EditText
             android:id="@+id/et_search"
@@ -24,7 +30,7 @@
             android:background="@drawable/et_oval_white"
             android:drawablePadding="@dimen/default_view_margin"
             android:drawableRight="@drawable/search"
-            />
+            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
     </LinearLayout>
 
     <LinearLayout
@@ -64,8 +70,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:textSize="@dimen/_13dp"
-                android:textColor="#666"
                 android:layout_marginTop="@dimen/_1dp"
+                android:textColor="#666"
                 android:layout_marginBottom="@dimen/_1dp"
                 android:layout_marginRight="@dimen/_1dp"
                 android:background="@drawable/message_group_normal_shap"
@@ -93,7 +99,5 @@
             android:background="@android:color/white" />
 
     </LinearLayout>
-
-    <include layout="@layout/progress_layout"/>
 
 </RelativeLayout>

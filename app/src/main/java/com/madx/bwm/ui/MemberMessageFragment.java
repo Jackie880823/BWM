@@ -55,6 +55,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
     private ImageView emptyMemberMessageIv;
     private TextView emptyMemberMessageTv;
     private View vProgress;
+    private String TAG;
 
     public static MemberMessageFragment newInstance(String... params) {
 
@@ -89,6 +90,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
     @Override
     public void initView() {
         mContext = getActivity();
+        TAG = mContext.getClass().getSimpleName();
         userListView = getViewById(R.id.message_listView);
         userIb = getViewById(R.id.ib_top);
         userRefreshLayout = getViewById(R.id.swipe_refresh_layout);
@@ -201,7 +203,7 @@ public class MemberMessageFragment extends BaseFragment<MainActivity> {
             @Override
             public void run() {
                 super.run();
-                new HttpTools(getActivity()).get(requestInfo, new HttpCallback() {
+                new HttpTools(getActivity()).get(requestInfo, TAG, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }

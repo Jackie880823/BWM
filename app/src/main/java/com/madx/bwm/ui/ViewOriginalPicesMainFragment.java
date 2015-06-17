@@ -157,7 +157,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                 return;
             }
 
-            new HttpTools(getActivity()).get(request_url, null, new HttpCallback() {
+            new HttpTools(getActivity()).get(request_url, null, this, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -220,25 +220,25 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
      */
     private void initViewPaper(int dataIndex) {
         //        setViewPaperItems(dataIndex);
-        if (data != null && !data.isEmpty()) {
-            int count = data.size();
-            for (int i = 0; i < count; i++) {
-                fragments.add(generatePicFragment(data.get(i)));
-            }
-            viewPaperAdapter.notifyDataSetChanged();
+            if (data != null && !data.isEmpty()) {
+                int count = data.size();
+                for (int i = 0; i < count; i++) {
+                    fragments.add(generatePicFragment(data.get(i)));
+                }
+                viewPaperAdapter.notifyDataSetChanged();
 
-            tvIndexOfList.setVisibility(View.VISIBLE);
-            String text = null;
-            if (count == 1) {
-                text = getActivity().getString(R.string.photo_position_no_arrow);
+                tvIndexOfList.setVisibility(View.VISIBLE);
+                String text = null;
+                if (count == 1) {
+                    text = getActivity().getString(R.string.photo_position_no_arrow);
+                } else {
+                    text = getString(R.string.photo_position_right_arrow);
+                }
+                tvIndexOfList.setText(String.format(text, dataIndex + 1, count));
             } else {
-                text = getActivity().getString(R.string.photo_position_right_arrow);
+                //
+                tvIndexOfList.setVisibility(View.GONE);
             }
-            tvIndexOfList.setText(String.format(text, dataIndex + 1, count));
-        } else {
-            //
-            tvIndexOfList.setVisibility(View.GONE);
-        }
     }
 
     private Fragment generatePicFragment(PhotoEntity photoEntity) {

@@ -74,7 +74,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
      */
-    private final static String TAG = WallNewFragment.class.getSimpleName();
+    private static final String TAG = WallNewFragment.class.getSimpleName();
+
+    private static final String POST_WALL = TAG + "_POST_WALL";
+    private static final String UPLOAD_PIC = TAG + "_UPLOAD_PIC";
 
     public static final String PREFERENCE_NAME = "SAVE_DRAFT";
     public static final String PREFERENCE_KEY_IS_SAVE = "IS_SAVE";
@@ -294,6 +297,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         super.onResume();
         Log.i(TAG, "onResume");
 
+        // 监听地址更新
+        // LocationUtil.setRequestLocationUpdates(getActivity());
+
         try {
             recoverDraft();
         } catch(Exception e) {
@@ -310,6 +316,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     @Override
     public void onStop() {
         super.onStop();
+
+        // 取消地址监听
+        // LocationUtil.removerLocationListener();
 
         if(myDialog != null && myDialog.isShowing()) {
             myDialog.dismiss();
@@ -422,7 +431,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).commit();
     }
 
-    private boolean allRange = true;
+    private boolean allRange = false;
 
     @Override
     public void onClick(View v) {
@@ -559,7 +568,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.params = params;
         requestInfo.url = Constant.API_WALL_TEXT_POST;
-        new HttpTools(App.getContextInstance()).post(requestInfo, new HttpCallback() {
+        new HttpTools(App.getContextInstance()).post(requestInfo, POST_WALL, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -769,7 +778,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         params.put("multiple", multiple ? "1" : "0");
 
 
-        new HttpTools(App.getContextInstance()).upload(Constant.API_WALL_PIC_POST, params, new HttpCallback() {
+        new HttpTools(App.getContextInstance()).upload(Constant.API_WALL_PIC_POST, params, UPLOAD_PIC, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -846,11 +855,11 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                         //                            }
                         //
                         //                        }else {
-                        String locationName = data.getStringExtra("location_name");
+                        String locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
                         if(!TextUtils.isEmpty(locationName)) {
                             location_desc.setText(locationName);
-                            latitude = data.getDoubleExtra("latitude", 0);
-                            longitude = data.getDoubleExtra("longitude", 0);
+                            latitude = data.getDoubleExtra(Constant.EXTRA_LATITUDE, 0);
+                            longitude = data.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0);
                         } else {
                             location_desc.setText(null);
                             latitude = -1000;

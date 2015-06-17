@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ViaContactMainActivity extends BaseActivity {
-
+    private static final String Tag = ViaContactMainActivity.class.getSimpleName();
     TextView tvSelectContact;
     TextView tvRelationship;
     EditText etMessage;
@@ -152,7 +152,7 @@ public class ViaContactMainActivity extends BaseActivity {
                     params.put("userPhoneList", gson.toJson(dataNumber));
 
 
-                    new HttpTools(ViaContactMainActivity.this).post(Constant.API_ADD_MEMBER_THROUGH_CONTACT, params, new HttpCallback() {
+                    new HttpTools(ViaContactMainActivity.this).post(Constant.API_ADD_MEMBER_THROUGH_CONTACT, params,Tag, new HttpCallback() {
                         @Override
                         public void onStart() {
 

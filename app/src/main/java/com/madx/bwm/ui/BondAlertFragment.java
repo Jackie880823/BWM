@@ -124,7 +124,9 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
 
     public void getNum()
     {
-        new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_MODULES_COUNT,MainActivity.getUser().getUser_id()), null, new HttpCallback() {
+
+
+        new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_MODULES_COUNT,MainActivity.getUser().getUser_id()), null,this, new HttpCallback() {
             @Override
             public void onStart() {
                 mProgressDialog.show();
