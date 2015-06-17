@@ -80,7 +80,7 @@
             android:paddingTop="@dimen/_12dp"
             android:src="@drawable/btn_add"
             android:textSize="@dimen/_20dp"
-            android:text="Year"/>
+            android:text="@string/year"/>
     </LinearLayout>
 
     <RelativeLayout
