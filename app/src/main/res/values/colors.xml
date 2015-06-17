@@ -70,4 +70,6 @@
     <color name="default_sticker">#feb400</color><!--  65% -->
     <color name="login">#3BD42E</color><!--  65% -->
 
+    <color name="Year">#000000</color><!--  65% -->
+
 </resources>

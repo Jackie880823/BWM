@@ -49,7 +49,7 @@ public class AddMemberWorkFlow extends Activity {
         requestInfo.params = null;
         requestInfo.url = String.format(Constant.API_GET_MEMBER_TYPE, from, to);
 
-        new HttpTools(this).get(requestInfo, new HttpCallback() {
+        new HttpTools(this).get(requestInfo, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -124,7 +124,7 @@ public class AddMemberWorkFlow extends Activity {
         params.put("action_type", add_flag);
         params.put("user_relationship_name", response_relationship);
 
-        new HttpTools(this).post(Constant.API_SET_RELATIONSHIP, params, new HttpCallback() {
+        new HttpTools(this).post(Constant.API_SET_RELATIONSHIP,params, this, new HttpCallback() {
             @Override
             public void onStart() {
 

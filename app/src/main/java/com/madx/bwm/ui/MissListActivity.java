@@ -143,7 +143,7 @@ public class MissListActivity extends BaseActivity {
         params.put("start", "" + startIndex);
         params.put("limit",""+offSet);
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_LIST, MainActivity.getUser().getUser_id()), params, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_LIST, MainActivity.getUser().getUser_id()), params, this,new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -233,7 +233,7 @@ public class MissListActivity extends BaseActivity {
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
         requestInfo.url = String.format(Constant.API_UPDATE_MISS, MainActivity.getUser().getUser_id());
 
-        new HttpTools(this).put(requestInfo, new HttpCallback() {
+        new HttpTools(this).put(requestInfo, this, new HttpCallback() {
             @Override
             public void onStart() {
 

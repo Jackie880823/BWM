@@ -197,8 +197,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/default_view_margin"
                 android:layout_toRightOf="@+id/btn_notify"
-                android:background="@drawable/post_rang_all"
-                android:text="@string/text_all"
+                android:background="@drawable/post_rang_private"
+                android:text="@string/text_private"
                 android:textColor="@android:color/white"/>
 
 

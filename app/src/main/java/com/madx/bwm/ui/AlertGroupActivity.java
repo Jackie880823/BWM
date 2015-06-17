@@ -160,7 +160,7 @@ public class AlertGroupActivity extends BaseActivity{
         requestInfo.url = String.format(Constant.API_BONDALERT_GROUP_CONFIRM,alertGroupEntity.getModule_id());
 
         //上传“同意加入Group”的参数
-        new HttpTools(this).put(requestInfo, new HttpCallback() {
+        new HttpTools(this).put(requestInfo, this,new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -207,7 +207,7 @@ public class AlertGroupActivity extends BaseActivity{
         Log.i("TAG_reject_GroupID","alertGroupEntity.getModule_id()========="+alertGroupEntity.getModule_id());
         Log.i("TAG_requestInfo.url","requestInfo.url========="+requestInfo.url);
         //上传“拒绝加入Group”的参数
-        new HttpTools(this).put(requestInfo, new HttpCallback() {
+        new HttpTools(this).put(requestInfo,this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -246,7 +246,7 @@ public class AlertGroupActivity extends BaseActivity{
 
     @Override
     public void requestData() {
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_GROUP, MainActivity.getUser().getUser_id()),null,new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_GROUP, MainActivity.getUser().getUser_id()),null,this,new HttpCallback() {
             @Override
             public void onStart() {
 

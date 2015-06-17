@@ -47,6 +47,11 @@ import java.util.Map;
  */
 public class WallFragment extends BaseFragment<MainActivity> implements WallViewClickListener {
 
+    private static final String TAG = WallFragment.class.getSimpleName();
+
+    private static final String GET_WALL = TAG + "_GET_WALL";
+    private static final String PUT_REMOVE = TAG + "_PUT_REMOVE";
+
 
     public static WallFragment newInstance(String... params) {
         return createInstance(new WallFragment(), params);
@@ -175,7 +180,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         }
 
         String url = UrlUtil.generateUrl(Constant.API_WALL_MAIN, params);
-        new HttpTools(getActivity()).get(url, params, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, params, GET_WALL, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -321,7 +326,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
             public void onClick(View v) {
 
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, content_group_id), null);
-                new HttpTools(getActivity()).put(requestInfo, new HttpCallback() {
+                new HttpTools(getActivity()).put(requestInfo, PUT_REMOVE, new HttpCallback() {
                     @Override
                     public void onStart() {
                         vProgress.setVisibility(View.VISIBLE);

@@ -38,6 +38,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected ImageView title_icon;                          //头部栏的标题
     protected ImageButton rightButton;             //头部栏的右边按钮
     protected LinearLayout bottom;             //底部栏的布局
+    protected TextView yearButton;
     //    protected TextView rightTextButton;
 
     Fragment fragment;
@@ -161,10 +162,12 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         tvTitle = getViewById(R.id.tv_title);
         title_icon = getViewById(R.id.title_icon);
         rightButton = getViewById(R.id.ib_top_button_right);
+        yearButton = getViewById(R.id.ib_top_button_right_year);
         //        rightTextButton = getViewById(R.id.ib_top_text_right);
         getViewById(R.id.tv_top_title).setOnClickListener(this);
         leftButton.setOnClickListener(this);
         rightButton.setOnClickListener(this);
+        yearButton.setOnClickListener(this);
         //        rightTextButton.setOnClickListener(this);
         setTitle();
 
@@ -211,6 +214,9 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
                 break;
             case R.id.msg_bar:
                 goNetworkSetting();
+                break;
+            case R.id.ib_top_button_right_year:
+                titleRightEvent();
                 break;
             default:
                 //                super.onClick(v);

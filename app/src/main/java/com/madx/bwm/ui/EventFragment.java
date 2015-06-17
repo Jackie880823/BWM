@@ -39,6 +39,7 @@ import java.util.List;
  */
 public class EventFragment extends BaseFragment<MainActivity> {
 
+    private static final String Tag = EventFragment.class.getSimpleName();
 //    private ProgressDialog mProgressDialog;
 
     public static EventFragment newInstance(String... params) {
@@ -169,7 +170,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_MAIN, params);
 
-        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -276,7 +277,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
         params.put("limit", offset + "");
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_MAIN, params);
-        new HttpTools(getActivity()).get(url, null, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 

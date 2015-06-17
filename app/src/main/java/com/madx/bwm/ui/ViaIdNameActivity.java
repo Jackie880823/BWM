@@ -24,9 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ViaIdNameActivity extends BaseActivity {
-
     public static final String EXTRA_USER_NAME = "dis_bond_with_me_id";
-
+    private static final String Tag = ViaIdNameActivity.class.getSimpleName();
     EditText etInfo;
     TextView tvWarning;
     TextView tvRelationship;
@@ -169,7 +168,7 @@ public class ViaIdNameActivity extends BaseActivity {
         params.put("user_relationship_name", tvRelationship.getText().toString());
         params.put("search_detail", etInfo.getText().toString());
 
-        new HttpTools(this).post(Constant.API_ADD_SEARCH_MEMBER, params, new HttpCallback() {
+        new HttpTools(this).post(Constant.API_ADD_SEARCH_MEMBER, params,Tag, new HttpCallback() {
             @Override
             public void onStart() {
 

@@ -381,7 +381,7 @@ public class PersonalPictureActivity extends BaseActivity {
         params.put("file", file);
         params.put("user_id", userEntity.getUser_id());
 
-        new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, new HttpCallback() {
+        new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, this,new HttpCallback() {
             @Override
             public void onStart() {
             }
