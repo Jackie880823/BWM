@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -266,6 +267,18 @@ public class AlbumActivity extends BaseActivity {
                 });
             }
         }.start();
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                titleLeftEvent();
+            }
+            return true;
+        } else {
+            return super.dispatchKeyEvent(event);
+        }
     }
 
     @Override
