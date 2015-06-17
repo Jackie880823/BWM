@@ -69,6 +69,18 @@
             android:layout_gravity="right|center_vertical"
             android:background="@null"
             android:src="@drawable/btn_add" />
+        <TextView
+            android:id="@+id/ib_top_button_right_year"
+            android:visibility="gone"
+            android:layout_width="@dimen/default_button_width_height"
+            android:layout_height="@dimen/default_button_width_height"
+            android:layout_gravity="right|center_vertical"
+            android:background="@null"
+            android:textColor="@color/Year"
+            android:paddingTop="@dimen/_12dp"
+            android:src="@drawable/btn_add"
+            android:textSize="@dimen/_20dp"
+            android:text="Year"/>
     </LinearLayout>
 
     <RelativeLayout
