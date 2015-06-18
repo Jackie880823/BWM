@@ -80,7 +80,7 @@ public class PicturesCacheUtil extends FileUtil {
      */
     private static String getSavePicPath(Context context) {
         if (save_pic_path == null) {
-            save_pic_path = getSavePath(context) + PIC_DIR_NAME;
+            save_pic_path = getSavePath(context,true) + PIC_DIR_NAME;
         }
 
         File dir = new File(save_pic_path);

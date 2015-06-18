@@ -21,21 +21,36 @@ public class FileUtil {
 
     private static File path;
     private final static String CACHE_DIR_NAME = "/cache";
+    private static File appPath;
 
-    protected static File getSavePath(Context context) {
-        if(path==null) {
-            if (hasSDCard()) { // SD card
-                path = new File(getSDCardPath() + "/" + AppInfoUtil.getApplicationName(context));
-                path.mkdir();
-            } else {
-                path = Environment.getDataDirectory();
+    /**
+     * 获取保存路径
+     * @param context
+     * @param isOutPath 是否保存在app内(沙盒)
+     * @return
+     */
+    protected static File getSavePath(Context context,boolean isOutPath) {
+
+        if(isOutPath) {
+            if (path == null) {
+                if (hasSDCard()) { // SD card
+                    path = new File(getSDCardPath() + "/" + AppInfoUtil.getApplicationName(context));
+                    path.mkdir();
+                } else {
+                    path = Environment.getDataDirectory();
+                }
             }
+            return path;
+        }else{
+            if(appPath==null){
+                appPath  = context.getFilesDir();
+            }
+            return appPath;
         }
-        return path;
     }
 
     public static String getCacheFilePath(Context context) {
-        File f = getSavePath(context);
+        File f = getSavePath(context,true);
 
         f = new File(f.getAbsolutePath()+CACHE_DIR_NAME);
         if(!f.exists()){
@@ -94,7 +109,7 @@ public class FileUtil {
      * @param context
      */
     public static void clearCache(Context context){
-        File fileRoot = getSavePath(context);
+        File fileRoot = getSavePath(context,true);
         File[] cacheFiles = fileRoot.listFiles();
         for(File file : cacheFiles){
             file.delete();
