@@ -170,6 +170,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
                             selectImageUirListener.onChange(itemUri, true);
                         }
                     } else {
+                        //照片下载完的提示
                         MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
                     }
                 }

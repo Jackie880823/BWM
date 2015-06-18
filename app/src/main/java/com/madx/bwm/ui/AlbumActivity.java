@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -46,6 +48,7 @@ public class AlbumActivity extends BaseActivity {
     private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0X11;
     private LinearLayout no_image_linear;
+    private TextView textView;
 
     public AlbumActivity() {
     }
@@ -59,6 +62,12 @@ public class AlbumActivity extends BaseActivity {
     protected void initBottomBar() {
 
     }
+    @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+        rightButton.setVisibility(View.GONE);
+        yearButton.setVisibility(View.VISIBLE);
+    }
 
     @Override
     protected void setTitle() {
@@ -69,7 +78,7 @@ public class AlbumActivity extends BaseActivity {
     protected void titleRightEvent() {
         showSelectDialog();
     }
-
+    //选择年dialog
     private void showSelectDialog() {
         final View selectIntention = LayoutInflater.from(mContext).inflate(R.layout.dialog_album_select_year, null);
         final PickerView year_pv = (PickerView) selectIntention.findViewById(R.id.select_year_picker_view);
@@ -258,6 +267,18 @@ public class AlbumActivity extends BaseActivity {
                 });
             }
         }.start();
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
+            if (event.getAction() == KeyEvent.ACTION_UP) {
+                titleLeftEvent();
+            }
+            return true;
+        } else {
+            return super.dispatchKeyEvent(event);
+        }
     }
 
     @Override

@@ -9,10 +9,11 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.madx.bwm.widget.ViewPagerFixed xmlns:android="http://schemas.android.com/apk/res/android"
-                                            android:id="@+id/view_paper"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"/>
+        <com.madx.bwm.widget.ViewPagerFixed
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/view_paper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <TextView
             android:id="@+id/tv_index_count"

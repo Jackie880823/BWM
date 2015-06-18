@@ -2,19 +2,11 @@ package com.madx.bwm.ui;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.madx.bwm.R;
 import com.madx.bwm.entity.UserEntity;
-import com.madx.bwm.widget.CircularNetworkImage;
 
 import java.util.ArrayList;
 import java.util.List;

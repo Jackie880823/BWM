@@ -58,6 +58,7 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
     private String group_id;
     private String owner_id;
     private static final int ADD_MEMBER = 10;
+    private String TAG;
 
     @Override
     public void initView() {
@@ -70,7 +71,7 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
 
-
+        TAG = this.getClass().getSimpleName();
     }
 
     public List<UserEntity> data = new ArrayList<UserEntity>();
@@ -100,7 +101,7 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
 
         String url = UrlUtil.generateUrl(Constant.API_EVENT_INVITED, params);
 
-        new HttpTools(getActivity()).get(url,null,new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 

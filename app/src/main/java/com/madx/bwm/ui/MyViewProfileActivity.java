@@ -94,6 +94,7 @@ public class MyViewProfileActivity extends BaseActivity {
     Uri mCropImagedUri;
     private String imagePath;
     private Context mContext;
+    private String TAG;
     /**
      * 头像缓存文件名称
      */
@@ -181,6 +182,7 @@ public class MyViewProfileActivity extends BaseActivity {
     public void initView() {
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         mContext = this;
+        TAG = mContext.getClass().getSimpleName();
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
         tvName1 = getViewById(R.id.tv_name1);
@@ -335,7 +337,7 @@ public class MyViewProfileActivity extends BaseActivity {
         requestInfo.url = String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id());
         requestInfo.jsonParam = jsonParamsString;
 
-        new HttpTools(MyViewProfileActivity.this).put(requestInfo, new HttpCallback() {
+        new HttpTools(MyViewProfileActivity.this).put(requestInfo, TAG, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -637,7 +639,7 @@ public class MyViewProfileActivity extends BaseActivity {
         params.put("user_id", MainActivity.getUser().getUser_id());
 
 
-        new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, new HttpCallback() {
+        new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 

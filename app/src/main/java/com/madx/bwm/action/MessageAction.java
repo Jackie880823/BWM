@@ -33,13 +33,12 @@ public class MessageAction {
 
     private Context mContext;
     private Handler mHandler;
-
+    private String TAG;
 
     public MessageAction(Context mContext, Handler handler) {
         this.mContext = mContext;
         this.mHandler = handler;
-
-
+        TAG = mContext.getClass().getSimpleName();
     }
 
     public void doRequest(String requestWay, Map paramsMap, String url, int handlerWhat) {
@@ -75,7 +74,7 @@ public class MessageAction {
     }
 
     private void uploadFileMessage(Map params, String url, final int handlerWhat) {
-        new HttpTools(mContext).upload(url, params, new HttpCallback() {
+        new HttpTools(mContext).upload(url, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -115,7 +114,7 @@ public class MessageAction {
     }
 
     private void sendChatMessage(Map params, String url, final int handlerWhat) {
-        new HttpTools(mContext).post(url, params, new HttpCallback() {
+        new HttpTools(mContext).post(url, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -151,7 +150,7 @@ public class MessageAction {
     }
 
     private void getChatMessage(Map params, String url, final int handlerWhat) {
-        new HttpTools(mContext).get(url, null, new HttpCallback() {
+        new HttpTools(mContext).get(url, null, TAG, new HttpCallback() {
             @Override
             public void onStart() {
             }
