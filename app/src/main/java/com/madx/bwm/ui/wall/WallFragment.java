@@ -221,7 +221,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     if(data.size() <= 0) {
                         flWallStartUp.setVisibility(View.VISIBLE);
                         if(TextUtils.isEmpty(member_id)) {
-                            tvPostNow.setText(R.string.start_a_new);
+                            tvPostNow.setText(R.string.post_now);
                             tvStartNew.setVisibility(View.VISIBLE);
                             vArrowPointer.setVisibility(View.VISIBLE);
                         } else {
