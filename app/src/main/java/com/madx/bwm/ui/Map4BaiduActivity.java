@@ -105,6 +105,28 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
     }
 
     @Override
+    public void requestData() {
+
+    }
+
+    @Override
+    protected void onPause() {
+        mMapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        mMapView.onResume();
+        super.onResume();
+        // 开启定位功能
+        mBaiduMap.setMyLocationEnabled(true);
+        if(!mLocClient.isStarted()) {
+            mLocClient.start();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
 
         mPoiSearch.destroy();
@@ -243,33 +265,6 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
                     // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
                     imm.hideSoftInputFromWindow(search_view.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
                 }
-                //                if (search_view != null) {
-                //                    searchClicked = true;
-                //                    address_suggest_list.setVisibility(View.GONE);
-                //                    search_view.clearFocus();
-                //                    mMapView.requestFocus();
-                //                    new AsyncTask<Void, Void, Void>() {
-                //                        @Override
-                //                        protected Void doInBackground(Void... params) {
-                //                            long start = System.currentTimeMillis();
-                //                            long end = System.currentTimeMillis();
-                //                            while (end-start>3000&&searchClicked){
-                //                                end = System.currentTimeMillis();
-                //                            }
-                //                            return null;
-                //                        }
-                //
-                //                        @Override
-                //                        protected void onPostExecute(Void aVoid) {
-                //                            address_suggest_list.setVisibility(View.GONE);
-                //                            search_view.clearFocus();
-                //                            mMapView.requestFocus();
-                //                            searchByAddress(search_view.getQuery().toString());
-                //                            searchClicked = false;
-                //                        }
-                //                    }.execute();
-                //
-                //                }
                 return true;
 
             }
@@ -433,25 +428,6 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
             return false;
         }
     });
-
-
-    @Override
-    public void requestData() {
-
-    }
-
-    @Override
-    protected void onPause() {
-        mMapView.onPause();
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        mMapView.onResume();
-        super.onResume();
-    }
-
 
     @Override
     public void onFragmentInteraction(Uri uri) {
