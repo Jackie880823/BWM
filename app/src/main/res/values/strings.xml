@@ -759,4 +759,7 @@
 
     <string name="test_group_friend">There are not friends in the group,or not?</string>
     <string name="text_no_data">No data!</string>
+    <string name="year">Year</string>
+    <string name="text_new_everyone">Everyone</string>
+    <string name="text_new_myfamily">My Family</string>
 </resources>

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -136,6 +139,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            bindData();
+            requestComment();
+        }
+    };
     /**
      * 返回键监听如果图片上传完返回false 否则true
      * @return
@@ -460,31 +471,31 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (event != null) {
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(event != null){
             bindData();
             requestComment();
-        } else {
-            new AsyncTask<Void, Void, Void>() {
+        }else {
+            Thread thread = new Thread(new Runnable() {
                 @Override
-                protected Void doInBackground(Void... params) {
-                    while (true) {
-                        if (getParentActivity() != null && getParentActivity().getDataDone) {
-                            break;
+                public void run() {
+                    while (true){
+                        try {
+                            Thread.sleep(100);
+                            if (getParentActivity() != null && getParentActivity().getDataDone) {
+                                Message.obtain(handler).sendToTarget();
+                                break;
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
                         }
                     }
-                    return null;
-                }
 
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    bindData();
-                    requestComment();
                 }
-            }.execute();
+            });
+            thread.start();
         }
-
     }
 
     /**
@@ -510,7 +521,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ;
+
             } else {
                 going_count.setText(event.getTotal_yes());
             }
