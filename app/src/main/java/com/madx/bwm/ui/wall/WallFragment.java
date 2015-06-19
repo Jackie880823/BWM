@@ -75,9 +75,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     }
 
     private FrameLayout flWallStartUp;
-    private View vArrowPointer;
-    private TextView tvStartNew;
-    private TextView tvPostNow;
+    private TextView tvNoData;
 
     private RecyclerView rvList;
     private WallAdapter adapter;
@@ -100,9 +98,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         }
 
         flWallStartUp = getViewById(R.id.wall_start_up);
-        vArrowPointer = getViewById(R.id.ll_arrow_pointer);
-        tvStartNew = getViewById(R.id.tv_start_new);
-        tvPostNow = getViewById(R.id.tv_post_now);
+        tvNoData = getViewById(R.id.tv_no_data);
 
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
@@ -219,18 +215,18 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         adapter.add(data);
                     }
                     if(data.size() <= 0) {
-                        flWallStartUp.setVisibility(View.VISIBLE);
                         if(TextUtils.isEmpty(member_id)) {
-                            tvPostNow.setText(R.string.start_a_new);
-                            tvStartNew.setVisibility(View.VISIBLE);
-                            vArrowPointer.setVisibility(View.VISIBLE);
+                            tvNoData.setVisibility(View.GONE);
+                            flWallStartUp.setVisibility(View.VISIBLE);
                         } else {
-                            tvPostNow.setText(R.string.text_no_data);
-                            tvStartNew.setVisibility(View.INVISIBLE);
-                            vArrowPointer.setVisibility(View.GONE);
+                            tvNoData.setVisibility(View.VISIBLE);
+                            flWallStartUp.setVisibility(View.GONE);
                         }
+                        swipeRefreshLayout.setVisibility(View.GONE);
                     } else {
+                        swipeRefreshLayout.setVisibility(View.VISIBLE);
                         flWallStartUp.setVisibility(View.GONE);
+                        tvNoData.setVisibility(View.GONE);
                     }
                     loading = false;
                 } catch(Exception e) {
