@@ -74,14 +74,24 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private Dialog showSelectDialog;
     private Context mContext;
     private boolean isMemberRefresh, isGroupRefresh;
+    /**
+     * 只有成员，不包括亲人
+     */
     private List<FamilyMemberEntity> memberEntityList;//只有成员，不包括亲人
 //    private List<FamilyMemberEntity> empmemberEntityList = new LinkedList<>();
+    /**
+     * 没有展开
+     */
     private List<FamilyMemberEntity> memberList;//没有展开
+    /**
+     * 不包括family_tree
+     */
     private List<FamilyMemberEntity> moreMemberList;//不包括family_tree
     private List<FamilyGroupEntity> groupEntityList;
     private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
     //    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0x11;
+    private static final int GET_OP = 0x19;
     private MyFamilyAdapter memberAdapter;
     private FamilyGroupAdapter groupAdapter;
     public static String FAMILY_TREE = "family_treely_tree\";\n" +
@@ -163,6 +173,49 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     memberAdapter.addNewData(memberList);
 
                     groupEntityList = map.get("group");
+                    groupAdapter.addData(groupEntityList);
+                    break;
+                case GET_OP:
+                    Map<String, List> opmap = (Map<String, List>) msg.obj;
+                    if (memberEntityList != null) {
+                        memberEntityList.clear();
+                    }
+                    if (memberList != null) {
+                        memberList.clear();
+                    }
+                    if (moreMemberList != null) {
+                        moreMemberList.clear();
+                    }
+
+                    memberEntityList = opmap.get("private");
+                    if (memberEntityList != null && memberEntityList.size() > 0) {
+                        FamilyMemberEntity member = new FamilyMemberEntity();
+                        member.setUser_given_name(FAMILY_TREE);
+                        member.setUser_id(FAMILY_TREE);
+                        memberList.add(member);
+                        moreMemberList.add(member);
+//                        opendate.add(0,member);
+                        for (FamilyMemberEntity memberEntity : memberEntityList) {
+                            String tree_type = memberEntity.getTree_type();
+                            if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
+                                    || FAMILY_SIBLING.equals(tree_type) || FAMILY_SPOUSE.equals(tree_type)) {
+                                memberList.add(memberEntity);
+                            }
+                            moreMemberList.add(memberEntity);
+                        }
+                        FamilyMemberEntity familyMemberEntity = new FamilyMemberEntity();
+                        familyMemberEntity.setUser_given_name(FAMILY_MORE_MEMBER);
+                        familyMemberEntity.setUser_id(FAMILY_MORE_MEMBER);
+                        memberList.add(familyMemberEntity);
+                        FamilyMemberEntity familyMember = new FamilyMemberEntity();
+                        familyMember.setUser_given_name(FAMILY_HIDE_MEMBER);
+                        familyMember.setUser_id(FAMILY_HIDE_MEMBER);
+                        moreMemberList.add(familyMember);
+//                        opendate.add(familyMember);
+                    }
+                    memberAdapter.addNewData(moreMemberList);
+
+                    groupEntityList = opmap.get("group");
                     groupAdapter.addData(groupEntityList);
                     break;
             }
@@ -855,7 +908,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //                                }
 //                            }
                             if (map.size() > 0) {
-                                if (isup) {
+                                if(isopen){
+                                    Message.obtain(handler, GET_OP, map).sendToTarget();
+                                }else {
                                     Message.obtain(handler, GET_DATA, map).sendToTarget();
                                 }
                             }
@@ -963,6 +1018,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //            TextView textName;
 //        }
 //    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        requestData();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public void onClick(View v) {
