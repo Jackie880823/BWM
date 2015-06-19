@@ -75,6 +75,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     }
 
     private FrameLayout flWallStartUp;
+    private View vArrowPointer;
     private TextView tvStartNew;
     private TextView tvPostNow;
 
@@ -99,6 +100,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         }
 
         flWallStartUp = getViewById(R.id.wall_start_up);
+        vArrowPointer = getViewById(R.id.ll_arrow_pointer);
         tvStartNew = getViewById(R.id.tv_start_new);
         tvPostNow = getViewById(R.id.tv_post_now);
 
@@ -218,15 +220,17 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     }
                     if(data.size() <= 0) {
                         flWallStartUp.setVisibility(View.VISIBLE);
+                        if(TextUtils.isEmpty(member_id)) {
+                            tvPostNow.setText(R.string.start_a_new);
+                            tvStartNew.setVisibility(View.VISIBLE);
+                            vArrowPointer.setVisibility(View.VISIBLE);
+                        } else {
+                            tvPostNow.setText(R.string.text_no_data);
+                            tvStartNew.setVisibility(View.INVISIBLE);
+                            vArrowPointer.setVisibility(View.GONE);
+                        }
                     } else {
                         flWallStartUp.setVisibility(View.GONE);
-                        if(TextUtils.isEmpty(member_id)) {
-                            tvStartNew.setText(R.string.start_a_new);
-                            tvPostNow.setVisibility(View.VISIBLE);
-                        } else {
-                            tvStartNew.setText(R.string.text_no_data);
-                            tvPostNow.setVisibility(View.GONE);
-                        }
                     }
                     loading = false;
                 } catch(Exception e) {
