@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -74,6 +75,9 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     }
 
     private FrameLayout flWallStartUp;
+    private TextView tvStartNew;
+    private TextView tvPostNow;
+
     private RecyclerView rvList;
     private WallAdapter adapter;
     private MySwipeRefreshLayout swipeRefreshLayout;
@@ -95,6 +99,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         }
 
         flWallStartUp = getViewById(R.id.wall_start_up);
+        tvStartNew = getViewById(R.id.tv_start_new);
+        tvPostNow = getViewById(R.id.tv_post_now);
 
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
@@ -214,6 +220,13 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         flWallStartUp.setVisibility(View.VISIBLE);
                     } else {
                         flWallStartUp.setVisibility(View.GONE);
+                        if(TextUtils.isEmpty(member_id)) {
+                            tvStartNew.setText(R.string.start_a_new);
+                            tvPostNow.setVisibility(View.VISIBLE);
+                        } else {
+                            tvStartNew.setText(R.string.text_no_data);
+                            tvPostNow.setVisibility(View.GONE);
+                        }
                     }
                     loading = false;
                 } catch(Exception e) {
