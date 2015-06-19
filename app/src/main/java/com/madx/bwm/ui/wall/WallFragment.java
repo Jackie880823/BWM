@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -74,6 +75,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     }
 
     private FrameLayout flWallStartUp;
+    private TextView tvNoData;
+
     private RecyclerView rvList;
     private WallAdapter adapter;
     private MySwipeRefreshLayout swipeRefreshLayout;
@@ -95,6 +98,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         }
 
         flWallStartUp = getViewById(R.id.wall_start_up);
+        tvNoData = getViewById(R.id.tv_no_data);
 
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
@@ -211,9 +215,18 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         adapter.add(data);
                     }
                     if(data.size() <= 0) {
-                        flWallStartUp.setVisibility(View.VISIBLE);
+                        if(TextUtils.isEmpty(member_id)) {
+                            tvNoData.setVisibility(View.GONE);
+                            flWallStartUp.setVisibility(View.VISIBLE);
+                        } else {
+                            tvNoData.setVisibility(View.VISIBLE);
+                            flWallStartUp.setVisibility(View.GONE);
+                        }
+                        swipeRefreshLayout.setVisibility(View.GONE);
                     } else {
+                        swipeRefreshLayout.setVisibility(View.VISIBLE);
                         flWallStartUp.setVisibility(View.GONE);
+                        tvNoData.setVisibility(View.GONE);
                     }
                     loading = false;
                 } catch(Exception e) {

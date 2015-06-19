@@ -16,13 +16,13 @@ import java.util.List;
 public class FeelingAdapter extends RecyclerView.Adapter<FeelingAdapter.VHItem> {
     private Context mContext;
     private List<String> data;
-    private String[] feelingDesces;
+//    private String[] feelingDesces;
 
 
     public FeelingAdapter(Context context, List<String> data) {
         mContext = context;
         this.data = data;
-        feelingDesces = context.getResources().getStringArray(R.array.feeling_desc);
+//        feelingDesces = context.getResources().getStringArray(R.array.feeling_desc);
     }
 
     @Override
@@ -38,8 +38,8 @@ public class FeelingAdapter extends RecyclerView.Adapter<FeelingAdapter.VHItem> 
         String iconPath = data.get(position);
         try {
             holder.iv_feel_icon.setImageBitmap(BitmapFactory.decodeStream(mContext.getAssets().open(iconPath)));
-            if (feelingDesces != null)
-                holder.tv_feel_desc.setText(feelingDesces[position]);
+//            if (feelingDesces != null)
+//                holder.tv_feel_desc.setText(feelingDesces[position]);
             if (checkIndex == position) {
                 holder.checked_icon.setVisibility(View.VISIBLE);
             } else {

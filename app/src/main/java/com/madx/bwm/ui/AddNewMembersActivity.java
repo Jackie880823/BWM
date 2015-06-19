@@ -1,5 +1,6 @@
 package com.madx.bwm.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -47,6 +48,15 @@ public class AddNewMembersActivity extends BaseActivity {
     }
 
     @Override
+    protected void titleLeftEvent() {
+//        if(commandlistener!=null)
+//            commandlistener.execute(leftButton);
+        setResult(Activity.RESULT_OK);
+        finish();
+
+    }
+
+    @Override
     protected Fragment getFragment() {
         return null;
     }
@@ -75,6 +85,8 @@ public class AddNewMembersActivity extends BaseActivity {
             }
         });
     }
+
+
 
     @Override
     public void requestData() {
