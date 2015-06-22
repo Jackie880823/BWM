@@ -7,7 +7,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -48,7 +47,11 @@ public class FileUtil {
             return appPath;
         }
     }
-
+    /**
+     * 获取全局缓存目录路径
+     * @param context
+     * @return
+     */
     public static String getCacheFilePath(Context context) {
         File f = getSavePath(context,true);
 
@@ -60,17 +63,11 @@ public class FileUtil {
         return f.getAbsolutePath();
     }
 
-    public static Bitmap loadFromFile(String filename) {
-        try {
-            File f = new File(filename);
-            if (!f.exists()) { return null; }
-            Bitmap tmp = BitmapFactory.decodeFile(filename);
-            return tmp;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
+    /**
+     * 保存bitmap到文件
+     * @param filename 保存的路径
+     * @param bmp
+     */
     public static void saveToFile(String filename,Bitmap bmp) {
         try {
             FileOutputStream out = new FileOutputStream(filename);
@@ -80,15 +77,30 @@ public class FileUtil {
         } catch(Exception e) {}
     }
 
+    /**
+     * 判断是否有sd卡
+     * @return
+     */
     public static boolean hasSDCard() {
         String status = Environment.getExternalStorageState();
         return status.equals(Environment.MEDIA_MOUNTED);
     }
+
+    /**
+     * 获取sd卡路径
+     * @return
+     */
     public static String getSDCardPath() {
         File path = Environment.getExternalStorageDirectory();
         return path.getAbsolutePath();
     }
 
+    /**
+     * 获取uri的真实url
+     * @param context
+     * @param contentURI
+     * @return
+     */
     public static String getRealPathFromURI(Context context,Uri contentURI) {
         String result;
         Cursor cursor = context.getContentResolver().query(contentURI, null, null, null, null);
@@ -109,10 +121,12 @@ public class FileUtil {
      * @param context
      */
     public static void clearCache(Context context){
-        File fileRoot = getSavePath(context,true);
-        File[] cacheFiles = fileRoot.listFiles();
-        for(File file : cacheFiles){
-            file.delete();
+        File fileRoot = new File(getCacheFilePath(context));
+        if(fileRoot!=null) {
+            File[] cacheFiles = fileRoot.listFiles();
+            for (File file : cacheFiles) {
+                file.delete();
+            }
         }
     }
 
