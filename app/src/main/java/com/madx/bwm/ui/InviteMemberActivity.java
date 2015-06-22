@@ -406,15 +406,19 @@ public class InviteMemberActivity extends BaseActivity {
                     return;
                 } else {
                     CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
-                    if (selectItem.isChecked()) {
-                        selectItem.setChecked(false);
-                        memberAdapter.removeSelectData(userId);
-                        selectMemberEntityList.remove(familyMemberEntity);
-                    } else {
-                        selectItem.setChecked(true);
-                        memberAdapter.addSelectData(userId);
-                        selectMemberEntityList.add(familyMemberEntity);
-                    }
+                    selectItem.setChecked(true);
+                    memberAdapter.addSelectData(userId);
+                    selectMemberEntityList.add(familyMemberEntity);
+
+//                    if (selectItem.isChecked()) {
+//                        selectItem.setChecked(false);
+//                        memberAdapter.removeSelectData(userId);
+//                        selectMemberEntityList.remove(familyMemberEntity);
+//                    } else {
+//                        selectItem.setChecked(true);
+//                        memberAdapter.addSelectData(userId);
+//                        selectMemberEntityList.add(familyMemberEntity);
+//                    }
                 }
             }
         });

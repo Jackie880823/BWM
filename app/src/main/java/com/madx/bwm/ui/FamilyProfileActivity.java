@@ -1,5 +1,6 @@
 package com.madx.bwm.ui;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -37,6 +38,12 @@ public class FamilyProfileActivity extends BaseActivity {
     }
 
     @Override
+    public void finish() {
+        setResult(RESULT_OK);
+        super.finish();
+    }
+
+    @Override
     protected Fragment getFragment() {
         return FamilyProfileFragment.newInstance();
     }
@@ -60,6 +67,7 @@ public class FamilyProfileActivity extends BaseActivity {
     protected void titleLeftEvent() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
+            setResult(RESULT_OK);
         } else {
             super.titleLeftEvent();
         }
@@ -75,5 +83,17 @@ public class FamilyProfileActivity extends BaseActivity {
         } else {
             return super.dispatchKeyEvent(event);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        switch (requestCode) {
+//            case 1:
+                if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
+                }
+//        }
+//        setResult(RESULT_OK);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
