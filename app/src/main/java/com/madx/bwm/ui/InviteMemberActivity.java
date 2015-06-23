@@ -53,8 +53,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by quankun on 15/5/12.
@@ -295,31 +293,6 @@ public class InviteMemberActivity extends BaseActivity {
         }
     }
 
-    private List<FamilyMemberEntity> searchMemberList(String name, List<FamilyMemberEntity> list) {
-        List<FamilyMemberEntity> results = new ArrayList();
-        Pattern pattern = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
-        for (FamilyMemberEntity memberEntity : list) {
-            String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getUser_given_name());
-            Matcher matcher = pattern.matcher(userName);
-            if (matcher.find()) {
-                results.add(memberEntity);
-            }
-        }
-        return results;
-    }
-
-    private List<FamilyGroupEntity> searchGroupList(String name, List<FamilyGroupEntity> list) {
-        List<FamilyGroupEntity> results = new ArrayList();
-        Pattern pattern = Pattern.compile(name, Pattern.CASE_INSENSITIVE);
-        for (FamilyGroupEntity memberEntity : list) {
-            String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getGroup_name()).toLowerCase();
-            Matcher matcher = pattern.matcher(userName);
-            if (matcher.find()) {
-                results.add(memberEntity);
-            }
-        }
-        return results;
-    }
     private void shoeGroupNoFriendDialog(final View arg1, final String groupId, final FamilyGroupEntity groupEntity){
         final LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_group_nofriend, null);
@@ -406,19 +379,15 @@ public class InviteMemberActivity extends BaseActivity {
                     return;
                 } else {
                     CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
-                    selectItem.setChecked(true);
-                    memberAdapter.addSelectData(userId);
-                    selectMemberEntityList.add(familyMemberEntity);
-
-//                    if (selectItem.isChecked()) {
-//                        selectItem.setChecked(false);
-//                        memberAdapter.removeSelectData(userId);
-//                        selectMemberEntityList.remove(familyMemberEntity);
-//                    } else {
-//                        selectItem.setChecked(true);
-//                        memberAdapter.addSelectData(userId);
-//                        selectMemberEntityList.add(familyMemberEntity);
-//                    }
+                    if (selectItem.isChecked()) {
+                        selectItem.setChecked(false);
+                        memberAdapter.removeSelectData(userId);
+                        selectMemberEntityList.remove(familyMemberEntity);
+                    } else {
+                        selectItem.setChecked(true);
+                        memberAdapter.addSelectData(userId);
+                        selectMemberEntityList.add(familyMemberEntity);
+                    }
                 }
             }
         });
@@ -469,8 +438,6 @@ public class InviteMemberActivity extends BaseActivity {
         View groupView = LayoutInflater.from(mContext).inflate(R.layout.select_list_view_layout, null);
         final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
-//        final CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
-
 //        groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
         groupListView.setAdapter(groupAdapter);
         groupIb.setOnClickListener(new View.OnClickListener() {
@@ -496,7 +463,7 @@ public class InviteMemberActivity extends BaseActivity {
                 String groupId = groupEntity.getGroup_id();
                 //如果group里面有不是好友的成员
                 if("0".equals(groupEntity.getFriend_flag())){
-                    shoeGroupNoFriendDialog(arg1,groupId,groupEntity);
+                    shoeGroupNoFriendDialog(arg1, groupId, groupEntity);
                 }else {
                     CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
                     if (selectItem.isChecked()) {

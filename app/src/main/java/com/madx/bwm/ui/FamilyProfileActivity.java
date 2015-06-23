@@ -93,7 +93,6 @@ public class FamilyProfileActivity extends BaseActivity {
                     setResult(RESULT_OK);
                 }
 //        }
-//        setResult(RESULT_OK);
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -216,7 +216,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlWallPosting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //
+                //聊天fragment
                 FragmentManager fm = getParentActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 Fragment f = WallFragment.newInstance(memberId);
@@ -325,15 +325,4 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         });
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        switch (requestCode) {
-//            case 1:
-//                if (resultCode == getActivity().RESULT_OK) {
-//                    requestData();
-//                }
-//        }
-//        setResult(RESULT_OK);
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
 }
