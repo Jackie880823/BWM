@@ -79,8 +79,14 @@ public class PathRelationshipActivity extends BaseActivity {
 
     @Override
     protected void titleLeftEvent() {
-        setResult(RESULT_OK);
+//        setResult(RESULT_OK);
         super.titleLeftEvent();
+    }
+
+    @Override
+    public void finish() {
+        setResult(RESULT_OK);
+        super.finish();
     }
 
     @Override
@@ -131,6 +137,7 @@ public class PathRelationshipActivity extends BaseActivity {
         llRelationship.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //选择关系
                 Intent intent = new Intent(PathRelationshipActivity.this, RelationshipActivity.class);
                 startActivityForResult(intent, 1);
             }
@@ -215,9 +222,11 @@ public class PathRelationshipActivity extends BaseActivity {
             case 1:
                 if (resultCode == RESULT_OK) {
                     tvRelationship.setText(data.getStringExtra("relationship"));
+                    setResult(RESULT_OK);
                     updateRelationship();
                 }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

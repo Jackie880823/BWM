@@ -76,8 +76,9 @@ public class RelationshipActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 intent.putExtra("relationship", data.get(position));
 //                Log.d("", "data---->" + data.get(position));
-                result = RESULT_OK;
+        result = RESULT_OK;
 //                setResult(result, intent);
+//                setResult(RESULT_OK);
                 finish();
             }
         });

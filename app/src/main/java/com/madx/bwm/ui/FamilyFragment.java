@@ -467,7 +467,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         }
                         Intent intent = new Intent(getActivity(), FamilyProfileActivity.class);
                         intent.putExtra("member_id", familyMemberEntity.getUser_id());
-                        startActivity(intent);
+//                        startActivity(intent);
+                        startActivityForResult(intent,1);
                     }
                 }
             }
@@ -1021,7 +1022,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        requestData();
+        switch (requestCode) {
+            case 1:
+                if (resultCode == -1) {
+                    requestData();
+                }
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
