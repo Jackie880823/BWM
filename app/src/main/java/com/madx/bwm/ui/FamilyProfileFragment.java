@@ -155,6 +155,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             @Override
             public void onClick(View v) {
                 if (userEntity != null) {
+                    //用户详情界面
                     Intent intent1 = new Intent(getActivity(), FamilyViewProfileActivity.class);
                     intent1.putExtra("userEntity", userEntity);
                     startActivity(intent1);
@@ -166,6 +167,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             @Override
             public void onClick(View v) {
                 if (userEntity != null) {
+                    //聊天界面
                     Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
                     intent2.putExtra("type", 0);
                     intent2.putExtra("groupId", userEntity.getGroup_id());
@@ -189,12 +191,14 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             @Override
             public void onClick(View v) {
                 if (userEntity != null) {
+                    //关系界面
                     Intent intent = new Intent(getActivity(), PathRelationshipActivity.class);
                     intent.putExtra("member_id", memberId);
                     intent.putExtra("relationship", userEntity.getTree_type_name());
                     intent.putExtra("fam_nickname", userEntity.getFam_nickname());
                     intent.putExtra("member_status", userEntity.getUser_status());
-                    startActivityForResult(intent, 0);
+//                    startActivityForResult(intent, 0);
+                    startActivityForResult(intent, 1);
                 }
             }
         });
@@ -202,7 +206,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlAlbumGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //
+                //相册界面
                 Intent intent = new Intent(getActivity(), AlbumActivity.class);
                 intent.putExtra("member_id", memberId);
                 startActivity(intent);
@@ -212,6 +216,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlWallPosting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //聊天fragment
                 FragmentManager fm = getParentActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 Fragment f = WallFragment.newInstance(memberId);
@@ -320,13 +325,4 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case 0:
-                if (resultCode == getActivity().RESULT_OK) {
-                    requestData();
-                }
-        }
-    }
 }
