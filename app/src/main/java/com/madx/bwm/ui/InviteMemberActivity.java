@@ -306,15 +306,9 @@ public class InviteMemberActivity extends BaseActivity {
             public void onClick(View v) {
                 shoeGroupNoFriendDialog.dismiss();
                 CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
-                if (selectItem.isChecked()) {
-                    selectItem.setChecked(false);
-                    groupAdapter.removeSelectData(groupId);
-                    selectGroupEntityList.remove(groupEntity);
-                } else {
                     selectItem.setChecked(true);
                     groupAdapter.addSelectData(groupId);
                     selectGroupEntityList.add(groupEntity);
-                }
             }
         });
         cancelCal.setOnClickListener(new View.OnClickListener() {
