@@ -22,7 +22,7 @@ public class WallNewActivity extends BaseActivity {
     @Override
     protected void setTitle() {
 
-        tvTitle.setText(R.string.title_wall_new);
+        tvTitle.setText(R.string.title_diary_new);
     }
 
     /**

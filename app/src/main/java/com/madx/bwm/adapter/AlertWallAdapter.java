@@ -55,13 +55,13 @@ public class AlertWallAdapter extends RecyclerView.Adapter<AlertWallAdapter.VHIt
         String moduleAction = alertWallEntity.getModule_action();
         SpannableString msp=null;
         if ("postText".equalsIgnoreCase(moduleAction)) {
-            moduleAction = mContext.getString(R.string.text_wall_posted_to_wall);
+            moduleAction = mContext.getString(R.string.text_diary_posted_to_diary);
         } else if ("tag".equalsIgnoreCase(moduleAction)) {
-            moduleAction = mContext.getString(R.string.text_wall_tagged_you_in_post);
+            moduleAction = mContext.getString(R.string.text_diary_tagged_you_in_post);
         } else if ("comment".equalsIgnoreCase(moduleAction)) {
             String postOwner = alertWallEntity.getPostowner_username();
             if (TextUtils.isEmpty(postOwner)) {
-                moduleAction = mContext.getString(R.string.text_wall_commented_on_your_post);
+                moduleAction = mContext.getString(R.string.text_diary_commented_on_your_post);
             } else {
                 moduleAction = "also commented on " + postOwner + " post";
                 msp = new SpannableString(moduleAction);
@@ -70,11 +70,11 @@ public class AlertWallAdapter extends RecyclerView.Adapter<AlertWallAdapter.VHIt
                 msp.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), moduleAction.length() - postOwner.length() - 5, moduleAction.length() - 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         } else if ("loveComment".equalsIgnoreCase(moduleAction)) {
-            moduleAction = mContext.getString(R.string.text_wall_loved_your_comment);
+            moduleAction = mContext.getString(R.string.text_diary_loved_your_comment);
         } else if ("love".equalsIgnoreCase(moduleAction)) {
-            moduleAction = mContext.getString(R.string.text_wall_loved_your_post);
+            moduleAction = mContext.getString(R.string.text_diary_loved_your_post);
         } else if ("postText".equalsIgnoreCase(moduleAction)) {
-            moduleAction = mContext.getString(R.string.text_wall_posted_to_wall);
+            moduleAction = mContext.getString(R.string.text_diary_posted_to_diary);
         }
         if(TextUtils.isEmpty(msp)){
             holder.content_action.setText(moduleAction);

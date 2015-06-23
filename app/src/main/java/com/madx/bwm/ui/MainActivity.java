@@ -197,7 +197,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.title_tab_wall);
+        tvTitle.setText(R.string.title_tab_diary);
     }
 
     @Override
@@ -415,7 +415,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 setDrawable();
                 //ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
                 changeTitleColor(R.color.tab_color_press1);
-                changeTitle(R.string.title_tab_wall);
+                changeTitle(R.string.title_tab_diary);
 //                ivTab0.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
 //                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
 //                ivTab3.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));

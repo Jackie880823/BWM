@@ -228,7 +228,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         isup = true;
         mContext = getActivity();
         FAMILY_MORE_MEMBER = mContext.getString(R.string.text_new_everyone);
-        FAMILY_HIDE_MEMBER = mContext.getString(R.string.text_new_myfamily);
+        FAMILY_HIDE_MEMBER = mContext.getString(R.string.text_new_family);
         FAMILY_TREE = mContext.getString(R.string.text_new_family_tree);
         pager = getViewById(R.id.family_list_viewpager);
         message_member_tv = getViewById(R.id.message_member_tv);
@@ -993,10 +993,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //        public View getView(int position, View convertView, ViewGroup parent) {
 //            ViewHolder viewHolder;
 //            if (null == convertView) {
-//                convertView = LayoutInflater.from(mContext).inflate(R.layout.gridview_item_for_myfamily, null);
+//                convertView = LayoutInflater.from(mContext).inflate(R.layout.gridview_item_for_family, null);
 //                viewHolder = new ViewHolder();
-//                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.myfamily_image_main);
-//                viewHolder.textName = (TextView) convertView.findViewById(R.id.myfamily_name);
+//                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.family_image_main);
+//                viewHolder.textName = (TextView) convertView.findViewById(R.id.family_name);
 //                convertView.setTag(viewHolder);
 //            } else {
 //                viewHolder = (ViewHolder) convertView.getTag();

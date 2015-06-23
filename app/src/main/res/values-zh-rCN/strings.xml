@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">BWM</string>
-    <string name="title_tab_wall">动态</string>
+    <string name="title_tab_diary">动态</string>
     <string name="title_tab_chat">信息</string>
     <string name="title_tab_event">活动</string>
     <string name="title_tab_more">更多</string>
@@ -11,10 +11,10 @@
     <string name="msg_google_service_not_found">No valid Google Play Services APK found</string>
 
     <string name="title_event_detail">详情</string>
-    <string name="title_wall_comment">评论</string>
+    <string name="title_diary_comment">评论</string>
     <string name="title_event_new">新建活动</string>
     <string name="title_event_edit">Event Edit</string>
-    <string name="title_wall_new">Post</string>
+    <string name="title_diary_new">Post</string>
     <string name="title_map_choose_location">Choose location</string>
     <string name="title_invited_status">被邀请的会员</string>
     <string name="title_birthday_alert">Birthday Alerts</string>
@@ -47,14 +47,14 @@
     <string name="alert_text_desc_null">Content cannot be empty</string>
     <string name="alert_text_location_null">Location cannot be empty</string>
     <string name="alert_text_date_null">Please choose an event date</string>
-    <string name="title_message_myfamily">My Family</string>
+    <string name="title_message_family">family</string>
     <string name="title_message_creategroup">New Group</string>
     <string name="alert_comment_null">评论内容不能为空</string>
     <string name="alert_comment_del">您确定要删除这条评论？</string>
-    <string name="alert_wall_del_title">删除张贴</string>
-    <string name="alert_wall_del">您确定要删除？</string>
-    <string name="alert_wall_del_photo_title">删除图片</string>
-    <string name="alert_wall_del_photo">您确定要删除？</string>
+    <string name="alert_diary_del_title">删除张贴</string>
+    <string name="alert_diary_del">您确定要删除？</string>
+    <string name="alert_diary_del_photo_title">删除图片</string>
+    <string name="alert_diary_del_photo">您确定要删除？</string>
 
     <string name="text_word">Text</string>
     <string name="text_picture">Picture</string>
@@ -76,8 +76,8 @@
     <string name="text_add_members_successed">发送评论成功</string>
     <string name="text_comments">评论</string>
 
-    <string name="text_wall_content_at_member_desc">\@%1$smembers</string>
-    <string name="text_wall_content_at_group_desc">\@%1$sgroups</string>
+    <string name="text_diary_content_at_member_desc">\@%1$smembers</string>
+    <string name="text_diary_content_at_group_desc">\@%1$sgroups</string>
     <string name="text_today">today</string>
 
     <string name="msg_no_map_app">没有可用的地图导航程序</string>
@@ -111,7 +111,7 @@
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
 
 
-    <string name="text_my_family">My Family</string>
+    <string name="text_my_family">family</string>
 
 
     <string name="text_sticker_store">Sticker Store</string>
@@ -380,7 +380,7 @@
 
     <string name="text_my_view_profile">View Profile</string>
     <string name="text_album_gallery">相册</string>
-    <string name="text_wall_posting">动态</string>
+    <string name="text_diary_posting">动态</string>
     <string name="text_reset_password">重设密码</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
@@ -397,10 +397,10 @@
     <string name="text_personal_message">Personal message. \nMax is 30 characters.</string>
     <string name="text_warning_invaild_id_name">Invaild ID / Username, please try again</string>
     <string name="hint_id_accout">加入伴我玩账号 / 用户名字</string>
-    <string name="text_remove_user">Remove User</string>
+    <string name="text_remove_user">Remove Member</string>
     <string name="text_add_member">Add Member?</string>
-    <string name="text_view_profile">View User\'s Profile</string>
-    <string name="text_message_user">Message User</string>
+    <string name="text_view_profile">View Member\'s Profile</string>
+    <string name="text_message_user">Message Member</string>
     <string name="text_add_new_member">添加家庭成员</string>
     <string name="text_create_new_group">创建新群组</string>
     <string name="text_view_profile_family">View Profile</string>
@@ -521,7 +521,7 @@
     <string name="just_now">Just now</string>
     <string name="some_minite_ago">%d 分钟前</string>
     <string name="some_hour_ago">%d 小时前</string>
-    <string name="title_activity_wall_members_or_groups">WallMembersOrGroupsActivity</string>
+    <string name="title_activity_diary_members_or_groups">DiaryMembersOrGroupsActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_select_multiple_photos">SelectMultiplePhotosActivity</string>
     <string name="title_select_photos">Select Photos</string>
@@ -571,7 +571,7 @@
     <string name="text_dialog_ok">好的</string>
     <string name="text_all_field_compulsory">请填满所有空格。</string>
     <string name="text_pending_approval">待允许</string>
-    <string name="wall_comments">评论</string>
+    <string name="diary_comments">评论</string>
     <string name="text_new_member">会员</string>
     <string name="text_new_group">群组</string>
     <string name="text_new_family_tree">家谱</string>
@@ -608,12 +608,12 @@
 
     <string name="text_miss_you">想念你</string>
 
-    <!--wall-->
-    <string name="text_wall_posted_to_wall">加了1项新动态</string>
-    <string name="text_wall_tagged_you_in_post">在一项张贴标签您</string>
-    <string name="text_wall_commented_on_your_post">评论您的张贴</string>
-    <string name="text_wall_loved_your_comment">给了您的评论1个赞</string>
-    <string name="text_wall_loved_your_post">给了您的张贴1个赞</string>
+    <!--diary-->
+    <string name="text_diary_posted_to_diary">加了1项新动态</string>
+    <string name="text_diary_tagged_you_in_post">在一项张贴标签您</string>
+    <string name="text_diary_commented_on_your_post">评论您的张贴</string>
+    <string name="text_diary_loved_your_comment">给了您的评论1个赞</string>
+    <string name="text_diary_loved_your_post">给了您的张贴1个赞</string>
 
     <!--Alert Group-->
     <string name="text_pending">&#160;邀请您加入群组</string>
@@ -698,7 +698,7 @@
     <string name="text_item_remove">删除</string>
 
     <string name="title_bond_alert">伴通告</string>
-    <string name="title_wall_alert">动态通告</string>
+    <string name="title_diary_alert">动态通告</string>
     <string name="title_event_alert">活动通告</string>
     <string name="title_big_day_alert">大日子通告</string>
     <string name="title_miss_alert">想念通告</string>
@@ -708,8 +708,8 @@
     <string name="title_group_alert">群组通告</string>
 
     <string name="text_bond_alert">伴通告</string>
-    <!--Wall-->
-    <string name="text_bond_alert_wall">动态</string>
+    <!--Diary-->
+    <string name="text_bond_alert_diary">动态</string>
     <!--Event-->
     <string name="text_bond_alert_event">活动</string>
     <string name="text_big_day">大日子</string>
@@ -761,5 +761,5 @@
     <string name="text_no_data">无数据！</string>
     <string name="year">年</string>
     <string name="text_new_everyone">所有会员</string>
-    <string name="text_new_myfamily">我的家庭</string>
+    <string name="text_new_family">我的家庭</string>
 </resources>

@@ -51,7 +51,7 @@ public class WallUtil {
 
         String strMember = "";
         if(tagMemberCount > 0) {
-            strMember = String.format(mContext.getString(R.string.text_wall_content_at_member_desc), tagMemberCount);
+            strMember = String.format(mContext.getString(R.string.text_diary_content_at_member_desc), tagMemberCount);
 
             // 文字特殊效果设置
             SpannableString ssMember = new SpannableString(strMember);
@@ -77,7 +77,7 @@ public class WallUtil {
 
         String strGroup = "";
         if(tagGroupCount > 0) {
-            strGroup = String.format(mContext.getString(R.string.text_wall_content_at_group_desc), tagGroupCount);
+            strGroup = String.format(mContext.getString(R.string.text_diary_content_at_group_desc), tagGroupCount);
             // 文字特殊效果设置
             SpannableString ssGroup = new SpannableString(strGroup);
 

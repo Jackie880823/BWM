@@ -30,7 +30,7 @@ public class WallCommentActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.title_wall_comment);
+        tvTitle.setText(R.string.title_diary_comment);
     }
 
     @Override
