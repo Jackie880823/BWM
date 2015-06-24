@@ -47,7 +47,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         // 这里会影响子类返回键的监听事件，请谨慎处理
-//        Log.i(TAG, "dispatchKeyEvent& keyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
+        //        Log.i(TAG, "dispatchKeyEvent& keyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
         if(event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             finish();
             return true;
@@ -186,6 +186,14 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         }
     }
 
+    /**
+     * 返回当前Action Bar的颜色值
+     *
+     * @return - 颜色值
+     */
+    public int getActionBarColor() {
+        return currentColor;
+    }
 
     protected abstract Fragment getFragment();
 

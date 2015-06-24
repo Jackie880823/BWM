@@ -223,7 +223,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         if(popupwindow != null && popupwindow.isShowing()) {
             popupwindow.dismiss();
             return true;
-        } else if(rlProgress.getVisibility() == View.VISIBLE) {
+        } else if(rlProgress != null && rlProgress.getVisibility() == View.VISIBLE) {
             MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
             return true;
         }
