@@ -88,8 +88,8 @@
     <string name="msg_ask_save">Do you want to save as draft?</string>
 
     <!-- date time picker :no use for now-->
-    <string name="np_number_picker_increment_button">Increment</string>
-    <string name="np_number_picker_decrement_button">Decrement</string>
+    <!--<string name="np_number_picker_increment_button">Increment</string>-->
+    <!--<string name="np_number_picker_decrement_button">Decrement</string>-->
 
     <!-- about -->
 
