@@ -1,6 +1,7 @@
 package com.madx.bwm.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -130,34 +131,38 @@ public class LocalImagesAdapter extends BaseAdapter {
 
     /**
      * 通过Uir列中positio项的uri异步获取缩略图，并加载传入的imageVie中
-     * @param imageView
-     *          －  显示图片的ImageVie视图
+     *
+     * @param imageView －  显示图片的ImageVie视图
      * @param position
      */
     private void loadLocalBitmap(ImageView imageView, int position) {
         if(position < mDatas.size()) {
             Uri uri = mDatas.get(position);
-            if(cancelPotentialWork(uri, imageView)) {
-                AsyncLoadBitmapTask task = new AsyncLoadBitmapTask(mContext, imageView, columnWidthHeight);
-                imageView.setTag(task);
-                task.execute(uri);
+            Bitmap bitmap = AsyncLoadBitmapTask.getBitmap4MemoryMap(uri);
+            if(bitmap == null) {
+                // map中还没有获取这个uri的图片，从手机内丰中加载
+                if(cancelPotentialWork(uri, imageView)) {
+                    AsyncLoadBitmapTask task = new AsyncLoadBitmapTask(mContext, imageView, columnWidthHeight);
+                    imageView.setTag(task);
+                    task.execute(uri);
+                }
+            } else {
+                imageView.setImageBitmap(bitmap);
             }
         }
     }
 
     /**
      * 比较是否在加载同一个Uri,不同取消并取消上一次的加载
-     * @param uri
-     *          - 将要加载的uri
-     * @param imageView
-     *          - 显示图片的视图
-     * @return
-     *          - false: 取消加载; true: 取消了加载
+     *
+     * @param uri       - 将要加载的uri
+     * @param imageView - 显示图片的视图
+     * @return - false: 取消加载; true: 取消了加载
      */
-    private boolean cancelPotentialWork(Uri uri, ImageView imageView){
+    private boolean cancelPotentialWork(Uri uri, ImageView imageView) {
         AsyncLoadBitmapTask task = getLoadBitmapTask(imageView);
         boolean result = true;
-        if(task != null){
+        if(task != null) {
             AsyncTask.Status status = task.getStatus();
             switch(status) {
                 case PENDING:
@@ -188,7 +193,7 @@ public class LocalImagesAdapter extends BaseAdapter {
         if(imageView != null) {
             Object tag = imageView.getTag();
             if(tag instanceof AsyncLoadBitmapTask) {
-                return (AsyncLoadBitmapTask)tag;
+                return (AsyncLoadBitmapTask) tag;
             }
         }
         return null;
