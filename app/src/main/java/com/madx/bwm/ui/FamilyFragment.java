@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -144,16 +145,20 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     if (moreMemberList != null) {
                         moreMemberList.clear();
                     }
+                    //所有的成员包括亲人、好友、等待回复
                     memberEntityList = map.get("private");
+                    Log.i("member_size===",memberEntityList.size()+"");
                     if (memberEntityList != null && memberEntityList.size() > 0) {
-                        FamilyMemberEntity member = new FamilyMemberEntity();
+                        FamilyMemberEntity member = new FamilyMemberEntity();//family_tree
                         member.setUser_given_name(FAMILY_TREE);
                         member.setUser_id(FAMILY_TREE);
                         memberList.add(member);
                         moreMemberList.add(member);
 //                        opendate.add(0,member);
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
+                            //成员的关系
                             String tree_type = memberEntity.getTree_type();
+                            Log.i("tree_type===",memberEntity.getTree_type());
                             if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
                                     || FAMILY_SIBLING.equals(tree_type) || FAMILY_SPOUSE.equals(tree_type)) {
                                 memberList.add(memberEntity);
@@ -228,7 +233,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         isup = true;
         mContext = getActivity();
         FAMILY_MORE_MEMBER = mContext.getString(R.string.text_new_everyone);
-        FAMILY_HIDE_MEMBER = mContext.getString(R.string.text_new_myfamily);
+        FAMILY_HIDE_MEMBER = mContext.getString(R.string.text_new_family);
         FAMILY_TREE = mContext.getString(R.string.text_new_family_tree);
         pager = getViewById(R.id.family_list_viewpager);
         message_member_tv = getViewById(R.id.message_member_tv);
@@ -544,6 +549,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
+                //群组聊天
                 Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                 intent.putExtra("type", 1);
                 intent.putExtra("groupId", groupAdapter.getGroupList().get(arg2).getGroup_id());
@@ -994,10 +1000,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //        public View getView(int position, View convertView, ViewGroup parent) {
 //            ViewHolder viewHolder;
 //            if (null == convertView) {
-//                convertView = LayoutInflater.from(mContext).inflate(R.layout.gridview_item_for_myfamily, null);
+//                convertView = LayoutInflater.from(mContext).inflate(R.layout.gridview_item_for_family, null);
 //                viewHolder = new ViewHolder();
-//                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.myfamily_image_main);
-//                viewHolder.textName = (TextView) convertView.findViewById(R.id.myfamily_name);
+//                viewHolder.imageMain = (CircularNetworkImage) convertView.findViewById(R.id.family_image_main);
+//                viewHolder.textName = (TextView) convertView.findViewById(R.id.family_name);
 //                convertView.setTag(viewHolder);
 //            } else {
 //                viewHolder = (ViewHolder) convertView.getTag();

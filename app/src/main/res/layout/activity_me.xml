@@ -160,7 +160,7 @@
                                     android:layout_centerVertical="true"
                                     android:layout_toRightOf="@+id/iv_wp"
                                     android:layout_marginLeft="@dimen/default_view_margin"
-                                    android:text="@string/text_wall_posting"
+                                    android:text="@string/text_diary_posting"
                                     android:textSize="@dimen/text_medium_size"/>
                                 <ImageView
                                     android:layout_width="wrap_content"

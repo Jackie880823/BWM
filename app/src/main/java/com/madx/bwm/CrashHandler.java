@@ -4,8 +4,8 @@ package com.madx.bwm;
 import android.content.Context;
 import android.os.Environment;
 import android.os.Looper;
-import android.util.Log;
 
+import com.madx.bwm.util.LogUtil;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.util.SystemUtil;
 
@@ -76,7 +76,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                Log.e(TAG, "error : ", e);
+                LogUtil.e(TAG, "error : ", e);
             }
             //退出程序
             android.os.Process.killProcess(android.os.Process.myPid());
@@ -162,7 +162,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             }
             return fileName;
         } catch (Exception e) {
-            Log.e(TAG, "an error occured while writing file...", e);
+            LogUtil.e(TAG, "an error occured while writing file...");
         }
         return null;
     }

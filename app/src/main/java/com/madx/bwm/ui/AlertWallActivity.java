@@ -53,7 +53,7 @@ public class AlertWallActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.title_wall_alert);
+        tvTitle.setText(R.string.title_diary_alert);
     }
 
     @Override

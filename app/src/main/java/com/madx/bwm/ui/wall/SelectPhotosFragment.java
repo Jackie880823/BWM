@@ -21,6 +21,7 @@ import android.widget.ListView;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.LocalImagesAdapter;
 import com.madx.bwm.ui.BaseFragment;
+import com.madx.bwm.util.AsyncLoadBitmapTask;
 import com.madx.bwm.util.MessageUtil;
 import com.madx.bwm.widget.CustomGridView;
 
@@ -53,7 +54,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     ArrayList<Uri> mImageUriList = new ArrayList();
 
     /**
-     *已经选择的图Ur列表
+     * 已经选择的图Ur列表
      */
     ArrayList<Uri> mSelectedImageUris = new ArrayList();
     /**
@@ -140,7 +141,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
                 // 关闭目录选择列表
                 mDrawerLayout.closeDrawer(mDrawerList);
 
-                if(curLoaderPosition != position){
+                if(curLoaderPosition != position) {
                     curLoaderPosition = position;
                     // 加载选中目录下的图片
                     loadLocalImageOrder(curLoaderPosition);
@@ -192,6 +193,17 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     @Override
     public void requestData() {
 
+    }
+
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // 清除存入Map中的图片
+        AsyncLoadBitmapTask.clearBitmaps();
     }
 
     /**

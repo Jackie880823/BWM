@@ -79,7 +79,7 @@ public class HttpTools{
      * @since 3.5
      */
     public void get(RequestInfo requestInfo, Object tag, final HttpCallback httpResult) {
-        sendRequest(Request.Method.GET,requestInfo, tag, httpResult);
+        sendRequest(Request.Method.GET, requestInfo, tag, httpResult);
     }
 
     /**
@@ -90,7 +90,7 @@ public class HttpTools{
      * @param httpResult
      */
     public void post(final String url, final Map<String, String> paramsMap, Object tag,final HttpCallback httpResult) {
-        post(new RequestInfo(url, paramsMap), tag,httpResult);
+        post(new RequestInfo(url, paramsMap), tag, httpResult);
     }
 
     /**
@@ -102,7 +102,7 @@ public class HttpTools{
      * @since 3.5
      */
     public void post(RequestInfo requestInfo, Object tag,final HttpCallback httpResult) {
-        sendRequest(Request.Method.POST, requestInfo, tag,httpResult);
+        sendRequest(Request.Method.POST, requestInfo, tag, httpResult);
     }
 
     /**
@@ -299,6 +299,104 @@ public class HttpTools{
     }
 
     private void sendRequest(final int method, final RequestInfo requestInfo,Object tag, final HttpCallback httpResult) {
+        if (sRequestQueue == null) {
+            sRequestQueue = Volley.newNoCacheRequestQueue(mContext);
+        }
+        if (httpResult != null) {
+            httpResult.onStart();
+        }
+        if (requestInfo == null || TextUtils.isEmpty(requestInfo.url)) {
+            if (httpResult != null) {
+                httpResult.onError(new Exception("url can not be empty!"));
+                httpResult.onFinish();
+            }
+            return;
+        }
+        switch (method) {
+            case Request.Method.GET:
+                requestInfo.url = requestInfo.getFullUrl();
+                VolleyLog.d("volley", "get->" + requestInfo.url);
+                break;
+            case Request.Method.DELETE:
+                requestInfo.url = requestInfo.getFullUrl();
+                VolleyLog.d("volley", "delete->" + requestInfo.url);
+                break;
+
+            default:
+                break;
+        }
+        final StringRequest request = new StringRequest(method, requestInfo.url, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                if (httpResult != null) {
+                    httpResult.onResult(response);
+                    httpResult.onFinish();
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (httpResult != null) {
+                    httpResult.onError(error);
+                    httpResult.onFinish();
+                }
+            }
+        }, new Response.LoadingListener() {
+
+            @Override
+            public void onLoading(long count, long current) {
+                if (httpResult != null) {
+                    httpResult.onLoading(count, current);
+                }
+            }
+        }) {
+
+            @Override
+            public void cancel() {
+                super.cancel();
+                if (httpResult != null) {
+                    httpResult.onCancelled();
+                }
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+//                if (method == Request.Method.POST ) {
+                if (method == Request.Method.POST || method == Request.Method.PUT) {
+                    return requestInfo.params;
+                }
+
+                return super.getParams();
+            }
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                if(requestInfo.jsonParam!=null){
+                    return requestInfo.jsonParam.getBytes();
+                }
+                return super.getBody();
+            }
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                return HttpTools.getHeaders();
+            }
+        };
+        request.setTag(tag);
+        sRequestQueue.add(request);
+    }
+
+    /**
+     * TODO
+     * @param method
+     * @param requestInfo
+     * @param tag
+     * @param httpResult
+     * @param updateCache
+     */
+    private void sendRequest(final int method, final RequestInfo requestInfo,Object tag, final HttpCallback httpResult,boolean updateCache) {
         if (sRequestQueue == null) {
             sRequestQueue = Volley.newNoCacheRequestQueue(mContext);
         }
