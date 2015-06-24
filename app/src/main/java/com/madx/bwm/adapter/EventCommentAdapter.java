@@ -7,8 +7,6 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -162,7 +160,6 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
             case PIC:
 //                Log.i("网络图片===","");
                  view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
-//                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_png, parent, false);
 //                Log.i("PIC==========","");
                 break;
             case GIF:
@@ -220,11 +217,6 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 //                            Log.i("显示GIF======",gifFilePath);
                                 holder.gifImageView.setImageDrawable(gifDrawable);
                                 holder.gifImageView.setVisibility(View.VISIBLE);
-//                    if ("true".equals(msgEntity.getIsNate())) {
-//                        holder.progressBar.setVisibility(View.VISIBLE);
-//                    } else {
-//                        holder.progressBar.setVisibility(View.GONE);
-//                    }
                             } else {
                                 String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
                                         ece.getSticker_name(), stickerGroupPathGig, ece.getSticker_type());

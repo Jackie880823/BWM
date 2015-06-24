@@ -131,7 +131,6 @@
             android:fillViewport="true">
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -140,7 +139,6 @@
                 android:paddingBottom="@dimen/default_content_padding"
                 android:paddingLeft="@dimen/default_content_padding"
                 android:paddingRight="@dimen/default_content_padding">
-
 
                 <include
                     layout="@layout/event_detail_top"
@@ -196,8 +194,7 @@
                                 android:layout_height="20dp"
                                 android:layout_alignParentRight="true"
                                 android:background="@color/bg_progressBar"
-                                android:layout_centerVertical="true"
-                                />
+                                android:layout_centerVertical="true" />
 
                         </RelativeLayout>
 
