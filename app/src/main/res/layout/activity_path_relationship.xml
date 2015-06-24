@@ -34,8 +34,7 @@
                         android:orientation="vertical">
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                >
+                                android:layout_height="wrap_content">
                                     <TextView
                                         android:id="@+id/tv"
                                         android:layout_width="wrap_content"
@@ -55,8 +54,7 @@
                                         android:paddingBottom="@dimen/default_content_padding"
                                         android:textSize="@dimen/text_large_size"
                                         android:singleLine="true"
-                                        android:text=""
-                                        />
+                                        android:text="" />
                                     <ImageView
                                         android:id="@+id/iv"
                                         android:layout_width="wrap_content"
