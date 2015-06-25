@@ -153,7 +153,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
      */
     public boolean backCheck() {
         if(!isCommentBim){
-            MessageUtil.showMessage(App.getContextInstance(), R.string.msg_date_not_commentbim_now);
+//            MessageUtil.showMessage(App.getContextInstance(), R.string.msg_date_not_commentbim_now);
             return true;
         }else {
             return false;
@@ -192,7 +192,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 if (false) {
                     getParentActivity().finish();
                 } else {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+//                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
                 }
             }
         });
@@ -424,7 +424,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         if (isCommentBim){
                             getParentActivity().finish();
                         }else {
-                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+//                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
                         }
 
                     }
