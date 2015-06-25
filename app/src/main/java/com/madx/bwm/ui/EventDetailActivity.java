@@ -50,21 +50,6 @@ public class EventDetailActivity extends BaseActivity {
 
     }
 
-    private boolean banBack;
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            if(event.getAction() == KeyEvent.ACTION_DOWN) {
-                Fragment fragment = getFragmentInstance();
-                if(fragment instanceof EventDetailFragment) {
-                    banBack = ((EventDetailFragment) fragment).backCheck();
-                }
-            }
-            return banBack ? banBack : super.dispatchKeyEvent(event);
-        }
-        return super.dispatchKeyEvent(event);
-    }
-
     protected void titleMiddleEvent() {
         if (commandlistener != null) {
             commandlistener.execute(tvTitle);
