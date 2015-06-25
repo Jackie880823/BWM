@@ -147,18 +147,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             requestComment();
         }
     };
-    /**
-     * 返回键监听如果图片上传完返回false 否则true
-     * @return
-     */
-    public boolean backCheck() {
-        if(!isCommentBim){
-            MessageUtil.showMessage(App.getContextInstance(), R.string.msg_date_not_commentbim_now);
-            return true;
-        }else {
-            return false;
-        }
-    }
 
     @Override
     public void onDestroy() {
@@ -200,20 +188,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             progressBar = getViewById(R.id.progressBar);
 
-
-//            et_comment = getViewById(R.id.et_comment);
-//            btn_submit = getViewById(R.id.btn_submit);
-
-//            btn_submit.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (TextUtils.isEmpty(et_comment.getText())) {
-//                        MessageUtil.showMessage(getActivity(), R.string.alert_comment_null);
-//                    } else {
-//                        sendComment();
-//                    }
-//                }
-//            });
             etChat = getViewById(R.id.et_chat);
             expandFunctionButton = getViewById(R.id.ib_more);
             stickerImageButton = getViewById(R.id.ib_sticker);
@@ -304,10 +278,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         }
                     }
 
-//                    if (mUri != null) {
-//                        new CompressBitmapTask().execute(mUri);
-//                        return;
-//                    }
                 }
 
                 @Override
@@ -351,41 +321,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         return false;
                     }
 
-                    /*
-                    if("2".equals(event.getGroup_event_status())){
-                        return false;
-                    }else {
-                        if (R.id.tv_title == v.getId()) {
-                            if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
-
-                                option_cancel.setVisibility(View.VISIBLE);
-                                option_status.setVisibility(View.GONE);
-
-                            } else {
-                                option_cancel.setVisibility(View.GONE);
-                                option_status.setVisibility(View.VISIBLE);
-
-                            }
-                            if(event_options.getVisibility() == View.VISIBLE) {
-                                    event_options.setVisibility(View.GONE);
-                                    getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
-                            } else {
-                                    event_options.setVisibility(View.VISIBLE);
-                                    getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
-                            }
-
-//                        if(event.getGroup_event_status()!= "2"){
-//
-//                        }
-
-                        } else if (R.id.ib_top_button_right == v.getId()) {
-                            intent = new Intent(getParentActivity(), EventEditActivity.class);
-                            intent.putExtra("event", event);
-                            getActivity().startActivityForResult(intent, 1);
-                        }
-                    }
-                    */
-
                     if (R.id.tv_title == v.getId()) {
                         if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
 
@@ -408,11 +343,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                                 getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
                             }
                         }
-
-
-//                        if(event.getGroup_event_status()!= "2"){
-//
-//                        }
 
                     } else if (R.id.ib_top_button_right == v.getId()) {
                         //打开编辑页面
@@ -600,20 +530,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     RelativeLayout event_options;
     RelativeLayout option_status;
     LinearLayout option_cancel;
-    //    TextView option_cancel;
     ImageView option_no_going;
     ImageView option_maybe;
     ImageView option_going;
-//    LinearLayout option_no_going;
-//    LinearLayout option_maybe;
-//    LinearLayout option_going;
     public EventCommentAdapter adapter;
 
     //发送大表情
     private void sendSticker(){
         if (NetworkUtil.isNetworkConnected(getActivity())){
             progressBar.setVisibility(View.VISIBLE);
-//            vProgress.setVisibility(View.VISIBLE);
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_group_id", event.getContent_group_id());
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -759,16 +684,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
-    //发送图片
-//    class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
-//
-//        @Override
-//        protected String doInBackground(Uri... params) {
-//            if(params == null) {
-//                return null;
-//            }
-//            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
-//        }
 
     class uploadBimapTask extends AsyncTask<Map, Void, Boolean> {
         @Override

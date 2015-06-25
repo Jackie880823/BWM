@@ -122,16 +122,16 @@
         </LinearLayout>
     </RelativeLayout>
 
-        <ScrollView
+    <!-- com/madx/bwm/widget/OverScrollView.java-->
+        <com.madx.bwm.widget.OverScrollView
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/comment_bar"
             android:layout_below="@+id/event_options"
             android:fillViewport="true">
-
+<!--android:fastScrollEnabled="true"-->
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -226,7 +226,7 @@
 
             </LinearLayout>
 
-        </ScrollView>
+        </com.madx.bwm.widget.OverScrollView>
     <com.madx.bwm.widget.SendComment
         android:id="@+id/send_comment"
         android:layout_width="match_parent"
