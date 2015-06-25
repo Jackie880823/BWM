@@ -208,6 +208,16 @@
         <activity
             android:name=".ui.more.SettingActivity"
             android:screenOrientation="portrait" />
+        <!-- More StickerStore相关的Activity-->
+        <activity
+            android:name=".ui.more.sticker.StickerStoreActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.more.sticker.MyStickerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.more.sticker.StickerDetailActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.TellAFriendsActivity"
             android:screenOrientation="portrait" />
