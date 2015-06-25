@@ -19,6 +19,10 @@ public class OverScrollView extends ScrollView {
     private static final float ELASTICITY_COEFFICIENT = 0.25f;
 
     /**
+     * 是否开启回弹
+     */
+    private static final boolean isElastic = false;
+    /**
      * 无弹性滚动状态
      */
     private static final int NO_OVERSCROLL_STATE = 0;
@@ -220,78 +224,82 @@ public class OverScrollView extends ScrollView {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (isRecord) {
-                    final int activePointerIndex = ev.findPointerIndex(mActivePointerId);
-                    if (activePointerIndex == -1) {
-                        break;
+                //是否开启回弹
+                if(isElastic){
+                    if (isRecord) {
+                        final int activePointerIndex = ev.findPointerIndex(mActivePointerId);
+                        if (activePointerIndex == -1) {
+                            break;
+                        }
+                        final float y = ev.getY(activePointerIndex);
+                        // 滚动距离
+                        int deltaY = (int) (mLastMotionY - y);
+                        // 记录新的触摸位置
+                        mLastMotionY = y;
+
+                        if(Math.abs(overScrollDistance) >= OVERSCROLL_MAX_HEIGHT && overScrollDistance * deltaY > 0){
+                            deltaY = 0;
+                        }
+
+                        //如果滚动到ScrollView自身滚动边界，直接调用自身滚动
+                        if(overScrollDistance *(overScrollDistance + deltaY) < 0){
+                            mContentLayout.smoothScrollToNormal();
+                            overScrollDistance = 0;
+                            break;
+                        }
+
+                        // 如果处于ScrollView滚动状态，直接调用ScrollView自身滚动
+                        if((!isOnBottom() && overScrollDistance > 0) || (!isOnTop() && overScrollDistance < 0)){
+                            mContentLayout.smoothScrollToNormal();
+                            overScrollDistance = 0;
+                            break;
+                        }
+
+                        if(overScrollDistance * deltaY > 0){
+                            deltaY = (int) (deltaY * ELASTICITY_COEFFICIENT);
+                        }
+
+                        if(overScrollDistance == 0){
+                            deltaY = (int) (deltaY * ELASTICITY_COEFFICIENT * 0.5f);
+                        }
+
+                        if(overScrollDistance == 0 && deltaY == 0){
+                            break;
+                        }
+
+                        //检测最终滚动距离，最大为20
+                        if(Math.abs(deltaY) > 20){
+                            deltaY = deltaY > 0 ? 20 : -20;
+                        }
+
+                        // 记录滚动总距离
+                        overScrollDistance += deltaY;
+
+                        if(isOnTop() && overScrollDistance > 0 && !isOnBottom()){
+                            overScrollDistance = 0;
+                            break;
+                        }
+
+                        if(isOnBottom() && overScrollDistance < 0 && !isOnTop()){
+                            overScrollDistance = 0;
+                            break;
+                        }
+
+                        // 滚动视图
+                        mContentLayout.smoothScrollBy(0, deltaY);
+
+                        if(mOverScrollTinyListener != null){
+                            mOverScrollTinyListener.scrollDistance(deltaY, overScrollDistance);
+                        }
+                        return true;
+
                     }
-
-
-                    final float y = ev.getY(activePointerIndex);
-                    // 滚动距离
-                    int deltaY = (int) (mLastMotionY - y);
-                    // 记录新的触摸位置
-                    mLastMotionY = y;
-
-                    if(Math.abs(overScrollDistance) >= OVERSCROLL_MAX_HEIGHT && overScrollDistance * deltaY > 0){
-                        deltaY = 0;
-                    }
-
-                    //如果滚动到ScrollView自身滚动边界，直接调用自身滚动
-                    if(overScrollDistance *(overScrollDistance + deltaY) < 0){
-                        mContentLayout.smoothScrollToNormal();
-                        overScrollDistance = 0;
-                        break;
-                    }
-
-                    // 如果处于ScrollView滚动状态，直接调用ScrollView自身滚动
-                    if((!isOnBottom() && overScrollDistance > 0) || (!isOnTop() && overScrollDistance < 0)){
-                        mContentLayout.smoothScrollToNormal();
-                        overScrollDistance = 0;
-                        break;
-                    }
-
-                    if(overScrollDistance * deltaY > 0){
-                        deltaY = (int) (deltaY * ELASTICITY_COEFFICIENT);
-                    }
-
-                    if(overScrollDistance == 0){
-                        deltaY = (int) (deltaY * ELASTICITY_COEFFICIENT * 0.5f);
-                    }
-
-                    if(overScrollDistance == 0 && deltaY == 0){
-                        break;
-                    }
-
-                    //检测最终滚动距离，最大为20
-                    if(Math.abs(deltaY) > 20){
-                        deltaY = deltaY > 0 ? 20 : -20;
-                    }
-
-                    // 记录滚动总距离
-                    overScrollDistance += deltaY;
-
-                    if(isOnTop() && overScrollDistance > 0 && !isOnBottom()){
-                        overScrollDistance = 0;
-                        break;
-                    }
-
-                    if(isOnBottom() && overScrollDistance < 0 && !isOnTop()){
-                        overScrollDistance = 0;
-                        break;
-                    }
-
-                    // 滚动视图
-                    mContentLayout.smoothScrollBy(0, deltaY);
-
-                    if(mOverScrollTinyListener != null){
-                        mOverScrollTinyListener.scrollDistance(deltaY, overScrollDistance);
-                    }
-                    return true;
                 }
+
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+                //回弹移动
                 mContentLayout.smoothScrollToNormal();
                 overScrollTrigger();
                 // 重置滑动总距离

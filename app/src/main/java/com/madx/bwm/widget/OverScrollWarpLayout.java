@@ -29,7 +29,6 @@ public class OverScrollWarpLayout extends LinearLayout {
         this.setOrientation(LinearLayout.VERTICAL);
         // 初始化平滑滚动器
         mScroller = new android.widget.Scroller(getContext(), new OvershootInterpolator(OVERSHOOT_TENSION));
-        mScroller = new android.widget.Scroller(getContext());
     }
 
     /**
@@ -43,14 +42,22 @@ public class OverScrollWarpLayout extends LinearLayout {
         mScroller = new android.widget.Scroller(getContext(), new OvershootInterpolator(OVERSHOOT_TENSION));
     }
 
-    // 调用此方法滚动到目标位置
+    /**
+     * 滚动到目标位置
+     * @param fx
+     * @param fy
+     */
     public void smoothScrollTo(int fx, int fy) {
         int dx = fx - mScroller.getFinalX();
         int dy = fy - mScroller.getFinalY();
         smoothScrollBy(dx, dy);
     }
 
-    // 调用此方法设置滚动的相对偏移
+    /**
+     * 设置滚动的相对偏移
+     * @param dx
+     * @param dy
+     */
     public void smoothScrollBy(int dx, int dy) {
 
         // 设置mScroller的滚动偏移量
