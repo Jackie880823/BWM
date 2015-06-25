@@ -1,6 +1,7 @@
 package com.madx.bwm.ui.wall;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -38,13 +39,15 @@ public class SelectPhotosActivity extends BaseActivity {
         }
 
         @Override
-        public void onDrawerOpened() {
-            leftButton.setImageResource(R.drawable.back_normal);
+        public void onDrawerOpened(Drawable drawable) {
+            leftButton.setImageDrawable(drawable);
+//            leftButton.setImageResource(R.drawable.back_normal);
         }
 
         @Override
-        public void onDrawerClose() {
-            leftButton.setImageResource(R.drawable.text_title_seletor);
+        public void onDrawerClose(Drawable drawable) {
+            leftButton.setImageDrawable(drawable);
+//            leftButton.setImageResource(R.drawable.text_title_seletor);
         }
     };
 

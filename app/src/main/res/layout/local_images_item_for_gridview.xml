@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"/>
-    <CheckBox
+    <com.gc.materialdesign.views.CheckBox
         android:id="@+id/select_image_right"
         style="@style/CustomCheckboxTheme"
         android:layout_width="@dimen/_20dp"
