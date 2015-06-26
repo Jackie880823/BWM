@@ -89,7 +89,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     /**
      * 放置表情图标库的默认文件夹名称
      */
-    public static final String STICKERS_NAME = "stickers";
+
     private final static int REQUEST_GET_GROUP_NAME = 4;
 
     /*相册和相机使用的参数*/

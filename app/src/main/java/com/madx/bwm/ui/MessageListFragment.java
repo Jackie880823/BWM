@@ -146,10 +146,10 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
 
     private void addStickerList() {
         try {
-            List<String> pathList = FileUtil.getAllFilePathsFromAssets(mContext, MessageChatActivity.STICKERS_NAME);
+            List<String> pathList = FileUtil.getAllFilePathsFromAssets(mContext, MainActivity.STICKERS_NAME);
             if (null != pathList) {
                 for (String string : pathList) {
-                    STICKER_NAME_LIST.add(MessageChatActivity.STICKERS_NAME + File.separator + string);
+                    STICKER_NAME_LIST.add(MainActivity.STICKERS_NAME + File.separator + string);
                 }
             }
         } catch (Exception e) {

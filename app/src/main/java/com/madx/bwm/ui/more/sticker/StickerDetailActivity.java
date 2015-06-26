@@ -24,6 +24,7 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.StickerGroupAdapter;
 import com.madx.bwm.adapter.StickerItemAdapter;
+import com.madx.bwm.dao.LocalStickerInfoDao;
 import com.madx.bwm.entity.LocalStickerInfo;
 import com.madx.bwm.entity.StickerGroupEntity;
 import com.madx.bwm.entity.StickerItemEntity;
@@ -201,7 +202,7 @@ public class StickerDetailActivity extends BaseActivity {
                         stickerInfo.setVersion(stickerGroupEntity.getVersion());
                         stickerInfo.setType(stickerGroupEntity.getType());
                         stickerInfo.setPosition(position);
-                        stickerDao.create(stickerInfo);
+                        LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
                         Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
 
                     } catch (SQLException e) {
@@ -215,7 +216,7 @@ public class StickerDetailActivity extends BaseActivity {
             public void onResult(String response) {
                 File zipFile = new File(target);
                 try {
-                    ZipUtils.unZipFile(zipFile, FileUtil.getCacheFilePath(StickerDetailActivity.this));
+                    ZipUtils.unZipFile(zipFile, MainActivity.STICKERS_NAME);
                     zipFile.delete();
                 } catch (Exception e) {
                     e.printStackTrace();

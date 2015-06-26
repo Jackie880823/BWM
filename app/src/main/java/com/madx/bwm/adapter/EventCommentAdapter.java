@@ -210,7 +210,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                             stickerGroupPathGig = stickerGroupPathGig.replace("/", "");
                         }
                         try {
-                            String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPathGig + File.separator + ece.getSticker_name() + "_B.gif";
+                            String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPathGig + File.separator + ece.getSticker_name() + "_B.gif";
                             GifDrawable gifDrawable = new GifDrawable(mContext.getAssets(), gifFilePath);
                             if (gifDrawable != null) {
 //                            Log.i("gifFilePath=====", gifFilePath);
@@ -251,7 +251,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                             }
 
                             try {
-                                String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPathPng + File.separator + ece.getSticker_name() + "_B.png";
+                                String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPathPng + File.separator + ece.getSticker_name() + "_B.png";
                                 InputStream is = mContext.getAssets().open(pngFileName);
                                 if (is != null) {
                                     holder.pngImageView.setVisibility(View.VISIBLE);
