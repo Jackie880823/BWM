@@ -317,7 +317,7 @@ public class OverScrollView extends ScrollView {
     }
 
     /**
-     * 功能描述: 防止出现pointerIndex out of range异常<br>
+     * 功能描述: 防止出现pointerIndex out of range异常
      *
      * @param ev
      */
@@ -348,9 +348,8 @@ public class OverScrollView extends ScrollView {
     }
 
     /**
-     * 功能描述:初始化滚动视图 <br>
-     * <br>
-     * <strong>策略:</strong> 获取ScrollView的子视图并添加到自定义的{@link OverScrollWarpLayout}滚动视图中
+     * 功能描述:初始化滚动视图
+     * 策略:获取ScrollView的子视图并添加到自定义的{@link OverScrollWarpLayout}滚动视图中
      * 将滚动视图添加到ScrollView作为子视图
      */
     private void initOverScrollLayout() {
@@ -373,7 +372,7 @@ public class OverScrollView extends ScrollView {
     }
 
     /**
-     * 功能描述:设置是否可以弹性滚动 <br>
+     * 功能描述:设置是否可以弹性滚动
      *
      * @param isOverScroll
      */
@@ -382,7 +381,7 @@ public class OverScrollView extends ScrollView {
     }
 
     /**
-     * 功能描述: 设置是否使用惯性<br>
+     * 功能描述: 设置是否使用惯性
      *
      * @param isInertance
      */
@@ -397,7 +396,7 @@ public class OverScrollView extends ScrollView {
     }
 
     /**
-     * 功能描述: 获取弹性状态<br>
+     * 功能描述: 获取弹性状态
      *
      * @return
      */
@@ -407,7 +406,7 @@ public class OverScrollView extends ScrollView {
     }
 
     /**
-     * 功能描述: 刷新弹性滚动状态<br>
+     * 功能描述: 刷新弹性滚动状态
      */
     private void invalidateState(){
 
@@ -456,7 +455,7 @@ public class OverScrollView extends ScrollView {
     }
 
     /**
-     * 功能描述: 设置OverScroll滚动监听器<br>
+     * 功能描述: 设置OverScroll滚动监听器
      *
      * @param listener
      */
@@ -465,7 +464,7 @@ public class OverScrollView extends ScrollView {
     }
 
     /**
-     * 功能描述: 设置OverScroll滚动监听器<br>
+     * 功能描述: 设置OverScroll滚动监听器
      *
      * @param listener
      */
@@ -474,7 +473,7 @@ public class OverScrollView extends ScrollView {
     }
 
     /**
-     * 功能描述: 设置Scroll滚动监听器<br>
+     * 功能描述: 设置Scroll滚动监听器
      *
      * @param listener
      */
@@ -536,8 +535,6 @@ public class OverScrollView extends ScrollView {
     /**
      * 当OverScroll超出一定值时，调用此监听
      *
-     * @author King
-     * @since 2014-4-9 下午4:36:29
      */
     public interface OverScrollListener {
 
@@ -555,8 +552,6 @@ public class OverScrollView extends ScrollView {
 
     /**
      * 每当OverScroll时，都能触发的监听
-     * @author King
-     * @since 2014-4-9 下午4:39:06
      */
     public interface OverScrollTinyListener{
 
@@ -574,10 +569,8 @@ public class OverScrollView extends ScrollView {
     }
 
     /**
-     * 普通滚动监听器<br>
+     * 普通滚动监听器
      * overScroll距离为0切无惯性时调用
-     *
-     * @author king
      *
      */
     public interface OnScrollListener{
