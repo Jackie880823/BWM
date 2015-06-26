@@ -1,6 +1,7 @@
 package com.madx.bwm.ui;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MessageHorizontalListViewAdapter;
 import com.madx.bwm.interfaces.StickerViewClickListener;
+import com.madx.bwm.ui.more.sticker.StickerStoreActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.widget.HorizontalListView;
 
@@ -38,6 +41,7 @@ public class StickerMainFragment extends Fragment {
     private MessageStickerFragment fragment = null;
     private ProgressBarCircularIndeterminate progress;
     private MessageHorizontalListViewAdapter horizontalListViewAdapter;
+    private LinearLayout layout;
     static List<String> STICKER_NAME_LIST = new ArrayList<>();
     static List<String> FIRST_STICKER_LIST = new ArrayList<>();
 
@@ -53,6 +57,7 @@ public class StickerMainFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_sticker_main, null);
         horizontalListView = (HorizontalListView) rootView.findViewById(R.id.sticker_listView);
         progress = (ProgressBarCircularIndeterminate) rootView.findViewById(R.id.progress_bar);
+        layout = (LinearLayout) rootView.findViewById(R.id.sticker_setting_linear);
         if (STICKER_NAME_LIST.size() == 0) {
             progress.setVisibility(View.VISIBLE);
             horizontalListViewAdapter = new MessageHorizontalListViewAdapter(new ArrayList<String>(), getActivity());
@@ -89,6 +94,12 @@ public class StickerMainFragment extends Fragment {
                 horizontalListViewAdapter.notifyDataSetChanged();
             }
         });
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), StickerStoreActivity.class));
+            }
+        });
         return rootView;
     }
 
@@ -108,11 +119,11 @@ public class StickerMainFragment extends Fragment {
     private void addImageList() {
         if (STICKER_NAME_LIST != null && STICKER_NAME_LIST.size() > 0) {
             for (String string : STICKER_NAME_LIST) {
-                if(null==string){
+                if (null == string) {
                     continue;
                 }
                 List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(getActivity(), string);
-                if (null != stickerAllNameList&&stickerAllNameList.size()>0) {
+                if (null != stickerAllNameList && stickerAllNameList.size() > 0) {
                     String iconPath = string + File.separator + stickerAllNameList.get(0);
                     FIRST_STICKER_LIST.add(iconPath);
                 }
@@ -121,7 +132,7 @@ public class StickerMainFragment extends Fragment {
     }
 
     private void setTabSelection(int index) {
-        if (getActivity()==null||getActivity().isFinishing() || horizontalListViewAdapter.getCount() == 0) {
+        if (getActivity() == null || getActivity().isFinishing() || horizontalListViewAdapter.getCount() == 0) {
             return;
         }
         String selectStickerName = STICKER_NAME_LIST.get(index);
