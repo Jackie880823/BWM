@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal">
 
-            <com.madx.bwm.widget.CircularNetworkImage
+            <com.bondwithme.BondWithMe.widget.CircularNetworkImage
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:id="@+id/message_member_image_main"

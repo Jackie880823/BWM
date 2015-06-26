@@ -133,7 +133,6 @@
     <string name="text_male">男性</string>
     <string name="text_female">女性</string>
     <string name="text_wrong_password">不允许为该密码，请重新设置。</string>
-    <string name="text_not_use_special_characters">Do not use special characters. E.g ,/?!@#*$</string>
     <string name="text_back">返回</string>
     <string name="text_old_password">旧密码</string>
     <string name="text_new_password">新密码</string>

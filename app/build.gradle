@@ -15,11 +15,11 @@ android {
 
 
     defaultConfig {
-        applicationId "com.madx.bwm"
+        applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 1   //TODO
-        versionName "0.1.6" //TODO
+        versionName "1.0.1" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -114,7 +114,7 @@ android {
 //                javaexec {
 ////                    println "Triggering customer build for flavor " + flavor.name
 ////                    classpath += files("libs/my-jarfile.jar")
-//                    main = "com.madx.bwm.db.DatabaseConfigUtil"
+//                    main = "com.bondwithme.BondWithMe.db.DatabaseConfigUtil"
 ////                    args flavor.name, variant.versionName
 //                }
 ////                println "Done building customer for flavor " + flavor.name

@@ -4,7 +4,7 @@
     android:orientation="vertical">
 
     <!--
-    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com/madx/bwm/widget/SendCommentView.java
+    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com.bondwithme.BondWithMe/widget/SendCommentView.java
     -->
     <!-- 隐藏的选项 -->
     <RelativeLayout
@@ -122,8 +122,8 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <!-- com/madx/bwm/widget/OverScrollView.java-->
-        <com.madx.bwm.widget.OverScrollView
+    <!-- com.bondwithme.BondWithMe/widget/OverScrollView.java-->
+        <com.bondwithme.BondWithMe.widget.OverScrollView
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -226,29 +226,29 @@
 
             </LinearLayout>
 
-        </com.madx.bwm.widget.OverScrollView>
-    <com.madx.bwm.widget.SendComment
+        </com.bondwithme.BondWithMe.widget.OverScrollView>
+    <com.bondwithme.BondWithMe.widget.SendComment
         android:id="@+id/send_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"/>
     <include layout="@layout/progress_layout"/>
 
-        <!--<com.madx.bwm.widget.SendCommentView-->
+        <!--<com.bondwithme.BondWithMe.widget.SendCommentView-->
             <!--android:id="@+id/comment_send"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_alignParentBottom="true">-->
-        <!--</com.madx.bwm.widget.SendCommentView>-->
+        <!--</com.bondwithme.BondWithMe.widget.SendCommentView>-->
 
 
     <!--<include layout="@layout/comment_bar" />-->
-    <!--<com.madx.bwm.widget.SendCommentView-->
+    <!--<com.bondwithme.BondWithMe.widget.SendCommentView-->
         <!--android:id="@+id/comment_bar"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:orientation="vertical">-->
 
-    <!--</com.madx.bwm.widget.SendCommentView>-->
+    <!--</com.bondwithme.BondWithMe.widget.SendCommentView>-->
 
 </RelativeLayout>

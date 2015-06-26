@@ -133,7 +133,6 @@
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
     <string name="text_wrong_password">Invalid password. Please try again.</string>
-    <string name="text_not_use_special_characters">Do not use special characters. E.g ,/?!@#*$</string>
     <string name="text_back">Back</string>
     <string name="text_old_password">Old password</string>
     <string name="text_new_password">New Password</string>
