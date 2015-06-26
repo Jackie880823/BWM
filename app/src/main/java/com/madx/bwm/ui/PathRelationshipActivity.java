@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -50,7 +49,7 @@ public class PathRelationshipActivity extends BaseActivity {
                     "Uncle","First Cousin","Second Cousin","Cousin","Niece","Nephew","Mother-in-law","Father-in-law","Aunty-in-law","Uncle-in-law",
                     "Sister-in-law","Brother-in-law","Daughter-in-law","Son-in-law","Cousin-in-law","Niece-in-Law","Nephew-in-Law","Fiancee","Fiance","Ex-wife",
                     "Ex-husband","Godmother","Godfather","Godsister","Godbrother","Goddaughter","Godson","Stepmother","NieStepfatherce","Stepsister",
-                    "Stepbrother","Stepdaughter","Stepson","Other Relative","Partners","Friend"};
+                    "Stepbrother","Stepdaughter","Stepson","Other Relative","Partners","Colleague","Friend"};
 
     LinearLayout llRelationship;
 
@@ -195,12 +194,6 @@ public class PathRelationshipActivity extends BaseActivity {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
 
-                Log.d("", "!!!!!!!!" + response);
-//                if ("[]".equals(response))
-//                {
-//                    Toast.makeText(PathRelationshipActivity.this, "", Toast.LENGTH_SHORT).show();
-//                    finish();
-//                }
                 pathList = gson.fromJson(response, new TypeToken<ArrayList<MemberPathEntity>>() {
                 }.getType());
 
@@ -341,122 +334,4 @@ public class PathRelationshipActivity extends BaseActivity {
         });
     }
 
-//    private String selectRelationship(String relationship){
-//        switch (relationship){
-//            case "妈妈":
-//                break;
-//            case "爸爸":
-//                break;
-//            case "老婆":
-//                break;
-//            case "老公":
-//                break;
-//            case "姐妹":
-//                break;
-//            case "兄弟":
-//                break;
-//            case "女儿":
-//                break;
-//            case "儿子":
-//                break;
-//            case "婆婆":
-//                break;
-//            case "公公":
-//                break;
-//            case "孙女":
-//                break;
-//            case "孙子":
-//                break;
-//            case "叔祖":
-//                break;
-//            case "叔祖母":
-//                break;
-//            case "侄孙女":
-//                break;
-//            case "侄孙子":
-//                break;
-//            case "太公":
-//                break;
-//            case "太婆":
-//                break;
-//
-//            case "太侄孙女":
-//                break;
-//            case "太侄孙子":
-//                break;
-//            case "叔叔":
-//                break;
-//            case "第一代堂表兄妹":
-//                break;
-//            case "第二代堂表兄妹":
-//                break;
-//            case "堂表兄弟姊妹":
-//                break;
-//            case "外甥女":
-//                break;
-//            case "外甥":
-//                break;
-//            case "岳母":
-//                break;
-//            case "岳父":
-//                break;
-//            case "阿姨":
-//                break;
-//            case "弟媳":
-//                break;
-//            case "姐夫，妹夫":
-//                break;
-//            case "儿媳妇":
-//                break;
-//            case "女婿":
-//                break;
-//            case "姻堂表兄妹":
-//                break;
-//            case "姻外甥女":
-//                break;
-//            case "姻外甥":
-//                break;
-//
-//
-//            case "未婚妻":
-//                break;
-//            case "未婚夫":
-//                break;
-//            case "前妻":
-//                break;
-//            case "前夫":
-//                break;
-//            case "干妈":
-//                break;
-//            case "干爹":
-//                break;
-//            case "干姐妹":
-//                break;
-//            case "干哥弟":
-//                break;
-//            case "干女儿":
-//                break;
-//            case "干儿子":
-//                break;
-//            case "后母":
-//                break;
-//            case "后父":
-//                break;
-//            case "后姐妹":
-//                break;
-//            case "后哥弟":
-//                break;
-//            case "后女儿":
-//                break;
-//            case "后儿子":
-//                break;
-//            case "其他亲戚":
-//                break;
-//            case "伴侣":
-//                break;
-//            case "朋友":
-//                break;
-//        }
-//        return null;
-//    }
 }
