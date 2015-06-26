@@ -165,7 +165,7 @@ public class ChatAdapter extends BaseAdapter {
                 } else//sticker
                 {
                     try {
-                        String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.png";
+                        String pngFileName = MainActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.png";
                         InputStream is = context.getAssets().open(pngFileName);
                         if (is != null) {
                             Bitmap bitmap = BitmapFactory.decodeStream(is);
@@ -189,7 +189,7 @@ public class ChatAdapter extends BaseAdapter {
                 viewHolder.rightMessageGif = (GifImageView) convertView.findViewById(R.id.right_message_gif);
                 ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) convertView.findViewById(R.id.right_progress_bar);
                 try {
-                    String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.gif";
+                    String gifFilePath = MainActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.gif";
                     GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
                     if (gifDrawable != null) {
                         viewHolder.rightMessageGif.setImageDrawable(gifDrawable);
@@ -304,7 +304,7 @@ public class ChatAdapter extends BaseAdapter {
                 ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) convertView.findViewById(R.id.left_progress_bar);
 
                 try {
-                    String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.png";
+                    String pngFileName = MainActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.png";
                     InputStream is = context.getAssets().open(pngFileName);
                     if (is != null) {
                         Bitmap bitmap = BitmapFactory.decodeStream(is);
@@ -329,7 +329,7 @@ public class ChatAdapter extends BaseAdapter {
                 ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) convertView.findViewById(R.id.left_progress_bar);
 
                 try {
-                    String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.gif";
+                    String gifFilePath = MainActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.gif";
                     GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
                     if (gifDrawable != null) {
                         viewHolder.leftMessageGif.setImageDrawable(gifDrawable);

@@ -99,7 +99,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     stickerGroupPath = stickerGroupPath.replace("/", "");
                 }
                 try {
-                    String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.gif";
+                    String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.gif";
                     GifDrawable gifDrawable = new GifDrawable(mContext.getAssets(), gifFilePath);
                     if(gifDrawable != null) {
                         iv.setImageDrawable(gifDrawable);
@@ -124,7 +124,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
 
                 try {
-                    String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.png";
+                    String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.png";
                     InputStream is = mContext.getAssets().open(pngFileName);
                     if(is != null) {
                         Bitmap bitmap = BitmapFactory.decodeStream(is);

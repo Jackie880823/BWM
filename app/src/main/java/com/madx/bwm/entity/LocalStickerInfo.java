@@ -1,9 +1,14 @@
 package com.madx.bwm.entity;
 
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.madx.bwm.ui.MainActivity;
 
-import java.io.Serializable;import java.lang.Override;import java.lang.String;
+import java.io.Serializable;
+import java.lang.Override;
+import java.lang.String;
 
 /**
  * 本地的sticker Info
@@ -11,6 +16,7 @@ import java.io.Serializable;import java.lang.Override;import java.lang.String;
  */
 @DatabaseTable(tableName = "sticker_info")
 public class LocalStickerInfo implements Serializable {
+    public static final String LOGIN_USER_ID=MainActivity.getUser().getUser_id();
     @DatabaseField(generatedId = true)
     private int id;
     @DatabaseField
@@ -20,11 +26,21 @@ public class LocalStickerInfo implements Serializable {
     @DatabaseField
     private String sticker_name;         //icon name
     @DatabaseField
-    private String version;              //sticker group version
+    private String version;         //sticker group version
     @DatabaseField
     private String type;                //picture type
     @DatabaseField
     private int position;               //sticker group position
+    @DatabaseField
+    private String loginUserId;
+
+    public String getLoginUserId() {
+        return loginUserId;
+    }
+
+    public void setLoginUserId() {
+        this.loginUserId = MainActivity.getUser().getUser_id();
+    }
 
     public LocalStickerInfo() {
     }

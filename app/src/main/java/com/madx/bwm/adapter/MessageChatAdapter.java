@@ -204,12 +204,13 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     , locUrl, R.drawable.network_image_default, R.drawable.network_image_default);
         } else if (Constant.Sticker_Gif.equals(msgEntity.getSticker_type())) {//gif item
             holder.progressBar.setVisibility(View.GONE);
+            holder.gifImageView.setImageDrawable(null);
             String stickerGroupPath = msgEntity.getSticker_group_path();
             if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                 stickerGroupPath = stickerGroupPath.replace("/", "");
             }
             try {
-                String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.gif";
+                String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.gif";
                 GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
                 if (gifDrawable != null) {
                     holder.gifImageView.setImageDrawable(gifDrawable);
@@ -231,6 +232,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             }
         } else if (Constant.Sticker_Png.equals(msgEntity.getSticker_type())) {//Png
             holder.pngImageView.setImageResource(R.drawable.network_image_default);
+            holder.pngImageView.setImageDrawable(null);
             holder.progressBar.setVisibility(View.GONE);
             if (msgEntity.getUri() != null)//直接显示在ListView,相册和相机
             {
@@ -248,7 +250,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
                 try {
                     //拼接大图路径
-                    String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.png";
+                    String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.png";
                     InputStream is = context.getAssets().open(pngFileName);//得到数据流
                     if (is != null) {//如果有图片直接显示，否则网络下载
                         Bitmap bitmap = BitmapFactory.decodeStream(is);//将流转化成Bitmap对象
