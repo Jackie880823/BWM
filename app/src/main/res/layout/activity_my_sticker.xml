@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <ScrollView
+        android:id="@+id/sc_my_sticker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_main_top"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/tv_download_stickers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/_28dp"
+                android:paddingBottom="@dimen/_13dp"
+                android:paddingLeft="@dimen/_10dp"
+                android:text="@string/download_stickers"/>
+
+            <View style="@style/split_line_default"
+                android:layout_below="@+id/tv_download_stickers"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_my_sticker"
+                android:layout_below="@+id/tv_download_stickers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

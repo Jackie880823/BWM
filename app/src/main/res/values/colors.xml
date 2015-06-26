@@ -72,4 +72,5 @@
 
     <color name="Year">#000000</color><!--  65% -->
 
+    <color name="drawer_arrow_color">#000000</color>
 </resources>

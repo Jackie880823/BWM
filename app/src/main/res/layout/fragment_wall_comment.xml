@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <com.madx.bwm.widget.OverScrollView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
             </android.support.v7.widget.CardView>
         </LinearLayout>
 
-    </ScrollView>
+    </com.madx.bwm.widget.OverScrollView>
 
     <com.madx.bwm.widget.SendComment
         android:id="@+id/send_comment"
