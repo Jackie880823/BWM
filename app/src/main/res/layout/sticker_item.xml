@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    >
+
+    <RelativeLayout
+        android:id="@+id/item_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_content_padding"
+        >
+
+        <ImageView
+            android:id="@+id/iv_news_ticker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/new_sticker"
+            android:visibility="invisible" />
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/iv_sticker"
+            android:layout_width="@dimen/_72dp"
+            android:layout_height="@dimen/_72dp"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/tv_sticker_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/iv_sticker"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:layout_toLeftOf="@+id/status"
+            android:gravity="center_vertical"
+            android:text="Frosty Man"
+            android:layout_centerVertical="true"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:id="@+id/status"
+            android:layout_width="@dimen/_100dp"
+            android:layout_height="@dimen/_36dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true">
+
+            <TextView
+                android:id="@+id/tv_download"
+                style="@style/text_button_default"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_member_add_bg"
+                android:gravity="center"
+                android:text="@string/download"
+                android:textSize="12sp"
+                />
+
+            <ImageView
+                android:id="@+id/iv_exist"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ok_press" />
+
+            <ProgressBar
+                android:id="@+id/pb_download"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_18dp"
+                android:padding="@dimen/_1dp"
+                android:max="100"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_centerVertical="true"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <View style="@style/split_line_default" />
+</LinearLayout>

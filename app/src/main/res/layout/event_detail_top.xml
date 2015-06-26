@@ -20,8 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/default_view_margin"
-                android:paddingRight="@dimen/default_view_margin"
-                >
+                android:paddingRight="@dimen/default_view_margin">
 
                 <com.madx.bwm.widget.CircularNetworkImage
                     android:id="@+id/owner_head"
@@ -40,26 +39,22 @@
                         android:id="@+id/event_title"
                         style="@style/text_title_default"
                         android:textColor="@color/default_text_color_dark"
-                        android:textStyle="bold"
-                         />
+                        android:textStyle="bold" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/default_view_margin"
-                        >
+                        android:layout_marginTop="@dimen/default_view_margin">
 
                         <TextView
                             android:id="@+id/owner_name"
-                            style="@style/text_light_default"
-                             />
+                            style="@style/text_light_default" />
 
 
                         <TextView
                             android:id="@+id/push_date"
                             style="@style/text_light_default"
-                            android:layout_alignParentRight="true"
-                            />
+                            android:layout_alignParentRight="true" />
 
                     </RelativeLayout>
 
@@ -81,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/default_content_padding">
+                android:paddingBottom="@dimen/_10dp">
 
 
                 <TextView

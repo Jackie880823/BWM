@@ -118,6 +118,14 @@ public class Constant {
     public static final String API_BONDALERT_GROUP_CONFIRM = API_SERVER+"/bondwithme/index.php/api/confirmJoinGroup/%s";
     public static final String API_BONDALERT_GROUP_REJECT = API_SERVER+"/bondwithme/index.php/api/rejectJoinGroup/%s";
 
+    /**Api for sticker store*/
+    public static final String API_STICKERSTORE_FIRST_STICKER = API_SERVER+"/bondwithme/index.php/api/sticker_l/%s/fid/%s/fpath/%s/ftype/%s";
+    public static final String API_STICKER_GROUP = API_SERVER+"/bondwithme/index.php/api/stickerGroupList";
+    public static final String API_STICKER_ITEM = API_SERVER+"/bondwithme/index.php/api/stickerItemList";
+    public static final String API_STICKER_BANNER = API_SERVER+"/bondwithme/index.php/api/stickerBanner";
+    public static final String API_STICKER_BANNER_PIC = API_SERVER+"/bondwithme/images/%s";
+    public static final String API_STICKER_ZIP = API_SERVER+"/bondwithme/index.php/api/sticker_zip/%s/fpath/%s";
+    public static final String API_STICKER_UPDATE = API_SERVER+"/bondwithme/index.php/api/stickerCheckUpdate";
 
 
     /*christopher*/

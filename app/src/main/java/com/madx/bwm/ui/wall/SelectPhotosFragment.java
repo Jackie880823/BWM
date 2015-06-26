@@ -1,7 +1,9 @@
 package com.madx.bwm.ui.wall;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,10 +16,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.CursorAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.gc.materialdesign.views.CheckBox;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.LocalImagesAdapter;
 import com.madx.bwm.ui.BaseFragment;
@@ -47,6 +50,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      */
     private CustomGridView mGvShowPhotos;
     private DrawerLayout mDrawerLayout;
+    private DrawerArrowDrawable drawerArrowDrawable;
+    private float offset;
+    private boolean flipped;
     private HashMap<String, ArrayList<Uri>> mImageUris = new HashMap<>();
     /**
      * 当前显示的图片的Ur列表
@@ -112,20 +118,46 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy).loadInBackground();
         getLoaderManager().initLoader(loaderCounter++, null, this);
 
+        final Resources resources = getResources();
+        drawerArrowDrawable = new DrawerArrowDrawable(resources);
+        drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.drawer_arrow_color));
+        ImageButton imageButton = getParentActivity().getViewById(R.id.ib_top_button_left);
+        imageButton.setImageDrawable(drawerArrowDrawable);
+
         mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
+                offset = slideOffset;
 
+                // Sometimes slideOffset ends up so close to but not quite 1 or 0.
+                if(slideOffset >= .995) {
+                    flipped = true;
+                    drawerArrowDrawable.setFlip(flipped);
+                } else if(slideOffset <= .005) {
+                    flipped = false;
+                    drawerArrowDrawable.setFlip(flipped);
+                }
+
+                drawerArrowDrawable.setParameter(offset);
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                selectImageUirListener.onDrawerOpened();
+                drawerArrowDrawable = new DrawerArrowDrawable(resources, true);
+                drawerArrowDrawable.setParameter(offset);
+                drawerArrowDrawable.setFlip(flipped);
+                drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.drawer_arrow_color));
+                selectImageUirListener.onDrawerOpened(drawerArrowDrawable);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                selectImageUirListener.onDrawerClose();
+                drawerArrowDrawable = new DrawerArrowDrawable(resources, false);
+                drawerArrowDrawable.setParameter(offset);
+                drawerArrowDrawable.setFlip(flipped);
+                drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.drawer_arrow_color));
+                selectImageUirListener.onDrawerClose(drawerArrowDrawable);
             }
 
             @Override
@@ -153,10 +185,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 CheckBox check = (CheckBox) view.findViewById(R.id.select_image_right);
-                Log.i(TAG, "onItemClick " + check.isChecked());
+                Log.i(TAG, "onItemClick " + check.isCheck());
 
                 Uri itemUri = mImageUriList.get(position);
-                if(check.isChecked()) {
+                if(check.isCheck()) {
                     check.setChecked(false);
                     mSelectedImageUris.remove(itemUri);
                     //
@@ -272,7 +304,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             mImageUriList.addAll(mImageUris.get(bucket));
             Log.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
             if(localImagesAdapter == null) {
-                localImagesAdapter = new LocalImagesAdapter(getActivity(), mImageUriList);
+                localImagesAdapter = new LocalImagesAdapter(getActivity(), mImageUriList, getParentActivity().getActionBarColor());
                 localImagesAdapter.setSelectedImages(mSelectedImageUris);
                 mGvShowPhotos.setAdapter(localImagesAdapter);
                 localImagesAdapter.setColumnWidthHeight(mGvShowPhotos.getColumnWidth());
@@ -361,9 +393,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     public interface SelectImageUirChangeListener {
         void onChange(Uri imageUri, boolean isAdd);
 
-        void onDrawerOpened();
+        void onDrawerOpened(Drawable drawable);
 
-        void onDrawerClose();
+        void onDrawerClose(Drawable drawable);
     }
 
 }

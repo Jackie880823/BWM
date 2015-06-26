@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 
+import com.gc.materialdesign.views.CheckBox;
 import com.madx.bwm.R;
 import com.madx.bwm.util.AsyncLoadBitmapTask;
 
@@ -36,9 +36,12 @@ public class LocalImagesAdapter extends BaseAdapter {
 
     private int columnWidthHeight;
 
-    public LocalImagesAdapter(Context context, List<Uri> datas) {
+    private int mColor = -1;
+
+    public LocalImagesAdapter(Context context, List<Uri> datas, int color) {
         mContext = context;
         mDatas = datas;
+        mColor = color;
     }
 
     public void setColumnWidthHeight(int columnWidthHeight) {
@@ -113,6 +116,10 @@ public class LocalImagesAdapter extends BaseAdapter {
             holder = new HolderView();
             holder.iv = (ImageView) convertView.findViewById(R.id.iv_pic);
             holder.check = (CheckBox) convertView.findViewById(R.id.select_image_right);
+            if(mColor != -1) {
+                // 需要修改颜色
+                holder.check.setBackgroundColor(mColor);
+            }
             convertView.setTag(holder);
         } else {
             holder = (HolderView) convertView.getTag();

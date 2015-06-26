@@ -27,6 +27,15 @@ import java.util.regex.Pattern;
 public class WallUtil {
     private static final String TAG = WallUtil.class.getSimpleName();
 
+    /**
+     * @群组的正则表达
+     */
+    public static final String AT_GROUPS = "@%1$sgroups";
+    /**
+     * @用户的正则表达
+     */
+    public static final String AT_MEMBER = "@%1$smembers";
+
     private Context mContext;
     private WallViewClickListener mViewClickListener;
 
@@ -72,7 +81,8 @@ public class WallUtil {
             ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
             ssMember.setSpan(colorSpan, 0, ssMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            setSpecialText(ssb, strMember, ssMember);
+            String target = String.format(AT_MEMBER, tagMemberCount);
+            setSpecialText(ssb, target, ssMember);
         }
 
         String strGroup = "";
@@ -97,8 +107,11 @@ public class WallUtil {
             // 设置文字的前景色为蓝色
             ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
             ssGroup.setSpan(colorSpan, 0, ssGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            setSpecialText(ssb, strGroup, ssGroup);
+
+            String target = String.format(AT_GROUPS, tagGroupCount);
+            setSpecialText(ssb, target, ssGroup);
         }
+
         setClickNormal(ssb, strMember, strGroup, wall);
         tvContent.setText(ssb);
     }
@@ -145,11 +158,11 @@ public class WallUtil {
         int startGroup = description.indexOf(strGroup);
         int endGroup = startGroup + strGroup.length();
         if(endGroup == endMember) {
+            // @群组和用户结束所在的位置相等说明没有任何@可以不做处理
             Log.w(TAG, "setClickNormal& no action");
             return;
         } else {
 
-            // 普通文字的点击事件，跳转到评论详情
             int length = description.length();
             if(startMember > startGroup | TextUtils.isEmpty(strMember)) {
                 Log.i(TAG, "setClickNormal& group first");
@@ -157,10 +170,12 @@ public class WallUtil {
                 setSpecialText(ssb, wallEntity, description, 0, startGroup);
 
                 if(endGroup < startMember) {
+                    Log.i(TAG, "setClickNormal& split 4 part");
                     setSpecialText(ssb, wallEntity, description, endGroup, startMember);
 
                     setSpecialText(ssb, wallEntity, description, endMember, length);
                 } else {
+                    Log.i(TAG, "setClickNormal& split 1 part");
                     setSpecialText(ssb, wallEntity, description, endGroup, length);
                 }
             } else {
@@ -169,10 +184,12 @@ public class WallUtil {
                 setSpecialText(ssb, wallEntity, description, 0, startMember);
 
                 if(endMember < startGroup) {
+                    Log.i(TAG, "setClickNormal& split 4 part");
                     setSpecialText(ssb, wallEntity, description, endMember, startGroup);
 
                     setSpecialText(ssb, wallEntity, description, endGroup, length);
                 } else {
+                    Log.i(TAG, "setClickNormal& split 1 part");
                     setSpecialText(ssb, wallEntity, description, endMember, length);
                 }
             }
@@ -202,8 +219,6 @@ public class WallUtil {
                 Log.i(TAG, "setClickNormal& onClick");
                 if(mViewClickListener != null) {
                     mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
-                } else {
-
                 }
             }
 
