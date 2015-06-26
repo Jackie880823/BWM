@@ -22,23 +22,31 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.android.volley.toolbox.DownloadRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.j256.ormlite.dao.Dao;
+import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.StickerGroupAdapter;
 import com.madx.bwm.adapter.StickerPagerAdapter;
+import com.madx.bwm.entity.LocalStickerInfo;
 import com.madx.bwm.entity.StickerBannerEntity;
 import com.madx.bwm.entity.StickerGroupEntity;
 import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.ui.BaseActivity;
 import com.madx.bwm.ui.MainActivity;
+import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.MessageUtil;
+import com.madx.bwm.util.ZipUtils;
 import com.madx.bwm.widget.FullyLinearLayoutManager;
 
+import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +62,8 @@ public class StickerStoreActivity extends BaseActivity {
     private static final String GET_STICKER_GROUP = TAG + "GET_STICKER_GROUP";
     private static final String GET_STICKER_BANNER = TAG + "GET_STICKER_BANNER";
     public static final String ACTION_UPDATE = "ACTION_UPDATE_FROM_STICKER_STORE";
+    public static final String FINISHED = "finished";
+
 
     ProgressDialog mProgressDialog;
 
@@ -67,6 +77,10 @@ public class StickerStoreActivity extends BaseActivity {
     private  List<StickerBannerEntity> dataStickerBanner = new ArrayList<>();
     private final int AUTO_PLAY = 1;
     private ScrollView scrollView;
+    int finished;
+    boolean isLoading;
+    int positionFromStickerDetail;
+
 
 
     @Override
@@ -179,8 +193,114 @@ public class StickerStoreActivity extends BaseActivity {
     /**sticker group Adapter*/
     private void initAdapter() {
         StickerGroupAdapter adapter = new StickerGroupAdapter(this,dataStickerGroup);
+        adapter.setItemClickListener(new StickerGroupAdapter.ItemClickListener() {
+            @Override
+            public void itemClick(StickerGroupEntity stickerGroupEntity, int position) {
+                Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
+                intent.putExtra(StickerGroupAdapter.STICKER_GROUP, dataStickerGroup.get(position));
+                intent.putExtra(StickerGroupAdapter.POSITION, position);
+                intent.putExtra(FINISHED, finished);
+                intent.putExtra("positionFromStickerDetail",positionFromStickerDetail);
+                startActivity(intent);
+
+
+
+            }
+        });
+        adapter.setDownloadClickListener(new StickerGroupAdapter.DownloadClickListener() {
+            @Override
+            public void downloadClick(StickerGroupEntity stickerGroupEntity, int position) {
+                StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
+                ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
+                TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
+                tvDownload.setVisibility(View.INVISIBLE);
+                pbDownload.setVisibility(View.VISIBLE);
+                downloadZip(holder,position);
+            }
+        });
+
+
+
+
         recyclerViewList.setAdapter(adapter);
 
+    }
+
+    /**下载sticker Group zip*/
+    private void downloadZip(final StickerGroupAdapter.VHItem holder,final int position) {
+        final ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
+        final ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
+        final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
+        String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
+        final String target = FileUtil.getCacheFilePath(this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
+        DownloadRequest download = new HttpTools(this).download(urlString, target, true, new HttpCallback() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+                pbDownload.setVisibility(View.INVISIBLE);
+                pbDownload.setProgress(0);
+                ivExist.setVisibility(View.VISIBLE);
+
+                //插入sticker info
+                try {
+                    Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+                    LocalStickerInfo stickerInfo = new LocalStickerInfo();
+                    stickerInfo.setName(stickerGroupEntity.getName());
+                    stickerInfo.setPath(stickerGroupEntity.getPath());
+                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
+                    stickerInfo.setVersion(stickerGroupEntity.getVersion());
+                    stickerInfo.setType(stickerGroupEntity.getType());
+                    stickerInfo.setPosition(position);
+                    stickerDao.create(stickerInfo);
+
+                    Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                File zipFile = new File(target);
+                //解压
+                try {
+                    ZipUtils.unZipFile(zipFile, FileUtil.getCacheFilePath(StickerStoreActivity.this));
+                    zipFile.delete();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                //更新item中的进度条
+                finished = (int) (current * 100 / count);
+                pbDownload.setProgress(finished);
+
+
+                //发广播更新StickerDetailActivity的progressbar
+                Intent intent = new Intent(StickerStoreActivity.ACTION_UPDATE);
+                intent.putExtra(FINISHED,finished);
+                intent.putExtra(StickerGroupAdapter.POSITION,position);
+                sendBroadcast(intent);
+
+            }
+        });
     }
 
 
@@ -329,8 +449,8 @@ public class StickerStoreActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(StickerDetailActivity.ACTION_UPDATE.equals(intent.getAction())){
-                int finishedFromStickerDetail = intent.getIntExtra("finished",0);
-                int positionFromStickerDetail = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
+                finished = intent.getIntExtra(FINISHED,0);
+                positionFromStickerDetail = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
                 Log.i(TAG,"=======positionFromStickerDetail========"+positionFromStickerDetail);
                 StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(positionFromStickerDetail);
                 ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
@@ -338,8 +458,8 @@ public class StickerStoreActivity extends BaseActivity {
                 TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
                 tvDownload.setVisibility(View.INVISIBLE);
                 pbDownload.setVisibility(View.VISIBLE);
-                pbDownload.setProgress(finishedFromStickerDetail);
-                if (finishedFromStickerDetail == 100){
+                pbDownload.setProgress(finished);
+                if (finished == 100){
                     pbDownload.setVisibility(View.INVISIBLE);
                     ivExist.setVisibility(View.VISIBLE);
                 }
