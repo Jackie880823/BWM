@@ -489,4 +489,12 @@
     <string name="year">年</string>
     <string name="text_new_everyone">所有会员</string>
     <string name="text_new_family">我的家庭</string>
+
+    <string name="text_sticker_store">Stickies Store</string>
+    <string name="download_stickers">Downloaded Stickies</string>
+    <string name="inside_download">Download</string>
+    <string name="remove">Remove</string>
+    <string name="download">DOWNLOAD</string>
+    <string name="my_sticker">My Stickies</string>
+    <string name="free">Free</string>
 </resources>
