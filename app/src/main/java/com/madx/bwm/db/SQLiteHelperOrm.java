@@ -8,6 +8,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.madx.bwm.App;
 import com.madx.bwm.R;
+import com.madx.bwm.entity.LocalStickerInfo;
 import com.madx.bwm.entity.OrmEntityDemo;
 
 public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
@@ -35,6 +36,7 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 		//TODO
 		try {
 			TableUtils.createTable(connectionSource, OrmEntityDemo.class);
+            TableUtils.createTable(connectionSource, LocalStickerInfo.class);
 		} catch (java.sql.SQLException e) {
 			e.printStackTrace();
 		}
