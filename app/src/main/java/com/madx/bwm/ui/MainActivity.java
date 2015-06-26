@@ -20,19 +20,29 @@ import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.MyFragmentPagerAdapter;
+import com.madx.bwm.dao.LocalStickerInfoDao;
+import com.madx.bwm.entity.LocalStickerInfo;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.ui.wall.WallNewActivity;
+import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.NotificationUtil;
 import com.madx.bwm.util.PreferencesUtil;
+import com.madx.bwm.util.ZipUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * 主页Activity,包含了头部和底部，无需定义中间内容(ViewPaper)
  */
-public class MainActivity extends BaseActivity implements NotificationUtil.NotificationOtherHandle{
+public class MainActivity extends BaseActivity implements NotificationUtil.NotificationOtherHandle {
 
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
@@ -91,6 +101,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private View red_point_3;
     private View red_point_4;
     private View red_point_5;
+    public static String STICKERS_NAME = "stickers";
+    public static String IS_FIRST_LOGIN = "firstLogin";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,8 +266,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                     }
                     break;
                 case SHOW_RED_POINT:
-                    if(msg.obj!=null){
-                        setRedPoint((TabEnum)msg.obj,false);
+                    if (msg.obj != null) {
+                        setRedPoint((TabEnum) msg.obj, false);
                     }
                     break;
             }
@@ -274,7 +286,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     public void doSomething(TabEnum tab) {
-        if(handler!=null&&tab!=currentTabEnum){
+        if (handler != null && tab != currentTabEnum) {
             Message msg = handler.obtainMessage();
             msg.what = SHOW_RED_POINT;
             msg.obj = tab;
@@ -305,8 +317,33 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     }
 
+
     @Override
     public void initView() {
+        STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
+
+        boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
+        if (isFirstLogin) {
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        List<String> pathList = FileUtil.getAllFilePathsFromAssets(MainActivity.this, "stickers");
+                        if (null != pathList) {
+                            for (String string : pathList) {
+                                String filePath = "stickers" + File.separator + string;
+                                ZipUtils.unZip(MainActivity.this,filePath,STICKERS_NAME);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+            PreferencesUtil.saveValue(this, IS_FIRST_LOGIN, false);
+        }
+
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
 //        WallFragment wallFragment = WallFragment.newInstance();
@@ -425,7 +462,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 tabIv1.setImageResource(R.drawable.tab_wall_select);
                 ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_press1));
                 tabTv1.setTextColor(Color.BLACK);
-                setRedPoint(TabEnum.wall,true);
+                setRedPoint(TabEnum.wall, true);
                 break;
             case event:
                 setDrawable();
@@ -556,9 +593,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         return super.dispatchKeyEvent(event);
     }
 
-    public void setRedPoint(TabEnum tab, boolean cancel){
-        int action = cancel?View.GONE:View.VISIBLE;
-        switch (tab){
+    public void setRedPoint(TabEnum tab, boolean cancel) {
+        int action = cancel ? View.GONE : View.VISIBLE;
+        switch (tab) {
             case family:
                 break;
             case chat:

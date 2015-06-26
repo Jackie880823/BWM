@@ -21,6 +21,7 @@ import com.j256.ormlite.dao.Dao;
 import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
+import com.madx.bwm.dao.LocalStickerInfoDao;
 import com.madx.bwm.entity.LocalStickerInfo;
 import com.madx.bwm.entity.StickerGroupEntity;
 import com.madx.bwm.http.VolleyUtil;
@@ -143,7 +144,8 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
                     stickerInfo.setVersion(stickerGroupEntity.getVersion());
                     stickerInfo.setType(stickerGroupEntity.getType());
                     stickerInfo.setPosition(position);
-                    stickerDao.create(stickerInfo);
+                    LocalStickerInfoDao.getInstance(mContext).addOrUpdate(stickerInfo);
+                    //stickerDao.create(stickerInfo);
 
                     Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
 
@@ -158,7 +160,8 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
             public void onResult(String response) {
                 File zipFile = new File(target);
                 try {
-                    ZipUtils.unZipFile(zipFile, FileUtil.getCacheFilePath(mContext));
+                    ZipUtils.unZipFile(zipFile, MainActivity.STICKERS_NAME);
+
                     zipFile.delete();
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -11,10 +11,14 @@ import com.madx.bwm.R;
 import com.madx.bwm.entity.LocalStickerInfo;
 import com.madx.bwm.entity.OrmEntityDemo;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 
     private static final String DB_NAME = "bwm.db";
     private static final int DB_VERSION = 1;
+    private static SQLiteHelperOrm helper = null;
+    private static final AtomicInteger usageCounter = new AtomicInteger(0);
 
 	public SQLiteHelperOrm(Context context) {
 //		super(context, App.DB_NAME, null,
@@ -53,4 +57,19 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 		// Log.e("SQLiteHelperOrm", "onUpgrade", e);
 		// }
 	}
+
+    public static synchronized SQLiteHelperOrm getHelper(Context paramContext) {
+        try {
+            if (helper == null) {
+                synchronized (SQLiteHelperOrm.class) {
+                    helper = new SQLiteHelperOrm(paramContext);
+                }
+            }
+            usageCounter.incrementAndGet();
+            SQLiteHelperOrm localExpertsTaskListDatabaseHelper = helper;
+            return localExpertsTaskListDatabaseHelper;
+        } finally {
+        }
+    }
+
 }
