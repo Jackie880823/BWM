@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.madx.bwm.R;
+import com.madx.bwm.util.WallUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -245,7 +246,7 @@ public class WallEditView extends EditText implements TextWatcher {
                         memberText = getContext().getString(R.string.text_character_and) + memberText;
                         at = groupText + memberText;
                     }
-                } else  if(TextUtils.isEmpty(oldGroupText)) {
+                } else if(TextUtils.isEmpty(oldGroupText)) {
                     if(startMember + oldMemberText.length() == strDesc.length()) {
                         // @group 后跟着的是@member需要添加 &
                         groupText = getContext().getString(R.string.text_character_and) + groupText;
@@ -268,17 +269,17 @@ public class WallEditView extends EditText implements TextWatcher {
         SpannableStringBuilder sb = new SpannableStringBuilder(editable.toString());
         Log.i(TAG, "addAtDesc& 1 sb: " + sb.toString());
         // at member transform about member text
-        hasAtMember = setDescSpan(memberText, oldMemberText, hasAtMember, sb);
+        hasAtMember = setDescSpan(memberText, oldMemberText, sb);
         oldMemberText = memberText;
 
         Log.i(TAG, "addAtDesc& 2 sb: " + sb.toString());
 
         // at group transform about group text
-        hasAtGroup = setDescSpan(groupText, oldGroupText, hasAtGroup, sb);
+        hasAtGroup = setDescSpan(groupText, oldGroupText, sb);
         oldGroupText = groupText;
 
         if(!TextUtils.isEmpty(at) && hasAtGroup && hasAtMember) {
-            setDescSpan(at, at, true, sb);
+            setDescSpan(at, at, sb);
         }
 
         Log.i(TAG, "addAtDesc& 3 sb: " + sb.toString());
@@ -286,17 +287,16 @@ public class WallEditView extends EditText implements TextWatcher {
         Log.i(TAG, "addAtDesc& oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
     }
 
-    private boolean setDescSpan(String desc, String oldDesc, boolean hasAt, SpannableStringBuilder ssbDesc) {
-        Log.i(TAG, "addAtDesc& oldDesc: " + oldDesc + "; desc: " + desc + "; hasAt: " + hasAt);
+    private boolean setDescSpan(String desc, String oldDesc, SpannableStringBuilder ssbDesc) {
+        Log.i(TAG, "addAtDesc& oldDesc: " + oldDesc + "; desc: " + desc);
 
         if(!TextUtils.isEmpty(desc)) {
             ImageSpan is = getImageSpanForText(desc);
             SpannableString spanStr = new SpannableString(desc);
             spanStr.setSpan(is, 0, desc.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             setSpecialText(ssbDesc, oldDesc, spanStr);
-            hasAt = true;
+            return true;
         } else {
-            hasAt = false;
             try {
                 int start;
                 int end;
@@ -312,8 +312,8 @@ public class WallEditView extends EditText implements TextWatcher {
                 return false;
             }
 
+            return false;
         }
-        return hasAt;
     }
 
     /**
@@ -347,13 +347,53 @@ public class WallEditView extends EditText implements TextWatcher {
 
     public String getRelText() {
         String text = getText().toString();
-        //        if(!TextUtils.isEmpty(oldMemberText)) {
-        //            text = text.replace(oldMemberText, "");
-        //        }
-        //        if(!TextUtils.isEmpty(oldGroupText)) {
-        //            text = text.replace(oldGroupText, "");
-        //        }
+        int numberMembers = getNumbers(oldMemberText);
+        if(numberMembers != 0) {
+            String replaceMember = String.format(WallUtil.AT_MEMBER, numberMembers);
+            text = replaceAt(text, oldMemberText, replaceMember);
+        }
+
+        int numbersGroups = getNumbers(oldGroupText);
+        if(numberMembers != 0) {
+            String replaceGroup = String.format(WallUtil.AT_GROUPS, numbersGroups);
+            text = replaceAt(text, oldGroupText, replaceGroup);
+        }
+        Log.i(TAG, "getRelText& text: " + text);
         return text;
+    }
+
+    /**
+     * 将{@code text}中包含的字符{@code target}替换成{@code replacement}.
+     * @param text
+     * @param target
+     * @param replacement
+     * @return
+     */
+    private String replaceAt(String text, String target, String replacement){
+        String strAnd = getContext().getString(R.string.text_character_and);
+        if(!TextUtils.isEmpty(target)) {
+            if(target.contains(strAnd)) {
+                text = text.replace(target, strAnd + replacement);
+            } else {
+                text = text.replace(target, replacement);
+            }
+        }
+        return text;
+    }
+
+    /**
+     * 截取字符串中的数字，若没有返回空字符串
+     *
+     * @param content
+     * @return
+     */
+    private int getNumbers(String content) {
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(content);
+        while(matcher.find()) {
+            return Integer.valueOf(matcher.group(0));
+        }
+        return 0;
     }
 
     /**
