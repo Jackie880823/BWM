@@ -50,8 +50,6 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
     String urlString = null;
     public static final String POSITION = "position";
     private int finished;
-
-
     public static final String STICKER_GROUP = "STICKER_GROUP";
 
     public StickerGroupAdapter(Context mContext, List<StickerGroupEntity> dataStickerGroup) {
@@ -104,14 +102,14 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
             e.printStackTrace();
         }
 
-        //下载sticker zip
-        holder.tvDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.tvDownload.setVisibility(View.INVISIBLE);
-                downloadZip(holder,position);
-            }
-        });
+//        //下载sticker zip      写在了StickerStoreActivity
+//        holder.tvDownload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                holder.tvDownload.setVisibility(View.INVISIBLE);
+//                downloadZip(holder,position);
+//            }
+//        });
 
     }
 
@@ -218,15 +216,53 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, StickerDetailActivity.class);
-                    intent.putExtra(STICKER_GROUP, dataStickerGroup.get(getAdapterPosition()));
-                    intent.putExtra(POSITION, getAdapterPosition());
-                    mContext.startActivity(intent);
+                    if (itemClickListener != null && dataStickerGroup != null){
+                        itemClickListener.itemClick(stickerGroupEntity,getAdapterPosition());
 
+                    }
                 }
             });
+            tvDownload.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (downloadClickListener != null && dataStickerGroup != null){
+                        downloadClickListener.downloadClick(stickerGroupEntity,getAdapterPosition());
+                    }
+                }
+            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(mContext, StickerDetailActivity.class);
+//                    intent.putExtra(STICKER_GROUP, dataStickerGroup.get(getAdapterPosition()));
+//                    intent.putExtra(POSITION, getAdapterPosition());
+//                    mContext.startActivity(intent);
+//
+//                }
+//            });
         }
 
 
     }
+
+    public ItemClickListener itemClickListener;
+    public DownloadClickListener downloadClickListener;
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public void setDownloadClickListener(DownloadClickListener downloadClickListener) {
+        this.downloadClickListener = downloadClickListener;
+    }
+    public interface ItemClickListener {
+        void itemClick(StickerGroupEntity stickerGroupEntity, int position);
+
+    }
+    public interface DownloadClickListener {
+        void downloadClick(StickerGroupEntity stickerGroupEntity, int position);
+
+    }
+
+
 }
