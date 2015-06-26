@@ -217,7 +217,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.more.sticker.StickerDetailActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
+
         <activity
             android:name=".ui.TellAFriendsActivity"
             android:screenOrientation="portrait" />

@@ -41,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.madx.bwm.R.color.btn_bg_color_gray_normal;
+import static com.madx.bwm.R.color.default_unenable_item_bg;
 
 /**
  * Created by heweidong on 15/6/14.
@@ -133,11 +134,15 @@ public class StickerDetailActivity extends BaseActivity {
         registerReceiver(mReceiver, filter);
 
 
-
     }
 
     private void initDownloadView() {
         List<LocalStickerInfo> data = new ArrayList<>();
+
+        if (finished > 0){
+            tvDownload.setVisibility(View.INVISIBLE);
+            pbProgress.setProgress(finished);
+        }
 
         try {       //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
             Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
@@ -169,7 +174,7 @@ public class StickerDetailActivity extends BaseActivity {
                 pbProgress.setProgress(0);
                 tvDownload.setVisibility(View.VISIBLE);
                 tvDownload.setText("Downloaded");
-                tvDownload.setBackgroundColor(btn_bg_color_gray_normal);
+                tvDownload.setBackgroundColor(default_unenable_item_bg);
                 tvDownload.setEnabled(false);
 
                 //插入sticker info

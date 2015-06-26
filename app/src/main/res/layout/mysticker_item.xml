@@ -33,8 +33,9 @@
             android:textSize="15sp"
             android:gravity="center"
             android:padding="@dimen/_5dp"
+            android:textColor="@color/default_text_color_while"
             android:background="@drawable/btn_member_awiting"
-            android:textColor="@color/default_text_color_while"/>
+            />
     </RelativeLayout>
 
     <View style="@style/split_line_default" />

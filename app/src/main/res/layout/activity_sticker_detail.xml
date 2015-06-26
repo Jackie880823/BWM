@@ -22,8 +22,8 @@
 
                 <com.android.volley.toolbox.NetworkImageView
                     android:id="@+id/iv_inside_sticker"
-                    android:layout_width="@dimen/_100dp"
-                    android:layout_height="@dimen/_100dp"
+                    android:layout_width="@dimen/_150dp"
+                    android:layout_height="@dimen/_150dp"
                     android:layout_marginTop="@dimen/_18dp"
                     android:layout_marginLeft="@dimen/_20dp"
                     />
@@ -64,7 +64,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:textColor="#ff2bff1d"
                     android:layout_toRightOf="@id/tv_price"
                     android:layout_alignBottom="@+id/tv_price"
                     />
@@ -78,7 +77,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_40dp"
                         android:background="@drawable/btn_member_add_bg"
-                        android:textColor="@color/default_text_color_while"
                         android:text="@string/inside_download"
                         android:textSize="20sp"
                         android:layout_margin="@dimen/_15dp"
