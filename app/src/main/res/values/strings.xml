@@ -479,8 +479,6 @@
     <string name="text_new_everyone">Everyone</string>
     <string name="text_new_family">Family</string>
 
-    <!--Stickies Store-->
-
     <string name="text_sticker_store">Stickies Store</string>
     <string name="download_stickers">Downloaded Stickies</string>
     <string name="inside_download">Download</string>
