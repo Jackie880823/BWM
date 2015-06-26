@@ -156,3 +156,13 @@
 -keep class vi.com.gdi.bgl.android.** { *; }
 
 #xmpp asmack
+
+#Only if the above haven't fixed then, go with keeping your db class files and its members.
+#In your case, that would be
+
+#entity
+-dontwarn com.madx.bwm.entity.**
+-keep class com.madx.bwm.entity.**
+-keepclassmembers class com.madx.bwm.entity.** { *; }
+-keep class com.madx.bwm.db.SQLiteHelperOrm
+-keepclassmembers class com.madx.bwm.db.SQLiteHelperOrm { *; }
