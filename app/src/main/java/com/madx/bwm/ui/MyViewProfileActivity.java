@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.gc.materialdesign.widgets.Dialog;
 import com.gc.materialdesign.widgets.ProgressDialog;
@@ -30,7 +31,6 @@ import com.madx.bwm.R;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.PicturesCacheUtil;
 import com.madx.bwm.http.UrlUtil;
-import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.MessageUtil;
@@ -178,6 +178,8 @@ public class MyViewProfileActivity extends BaseActivity {
         return null;
     }
 
+    String headUrl;
+    BitmapTools mBitmapTools;
     @Override
     public void initView() {
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
@@ -202,8 +204,10 @@ public class MyViewProfileActivity extends BaseActivity {
         etEmail = getViewById(R.id.et_email);
         etRegion = getViewById(R.id.et_region);
 
-        VolleyUtil.initNetworkImageView(MyViewProfileActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile,
-                MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
+
+        mBitmapTools = new BitmapTools(this);
+        mBitmapTools.display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
         etFirstName.setText(MainActivity.getUser().getUser_given_name());
         etLastName.setText(MainActivity.getUser().getUser_surname());
@@ -661,6 +665,12 @@ public class MyViewProfileActivity extends BaseActivity {
                         progressDialog.dismiss();
 
                     } else {
+                        /**wing modify 20150625 begin*/
+                        //清除缓存
+                        mBitmapTools.clearMemoryCache();
+                        mBitmapTools.clearDiskCache(null);
+                        /**wing modify 20150625 end*/
+
                         progressDialog.dismiss();
                         Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
                         isUploadImageSuccess = true;
