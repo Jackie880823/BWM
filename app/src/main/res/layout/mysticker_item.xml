@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_80dp">
+
+        <ImageView
+            android:id="@+id/iv_my_sticker"
+            android:layout_width="@dimen/_64dp"
+            android:layout_height="@dimen/_64dp"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/default_content_padding"
+            />
+        <TextView
+            android:id="@+id/tv_sticker_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_my_sticker"
+            android:layout_marginLeft="@dimen/default_content_padding"
+            />
+        <TextView
+            android:id="@+id/tv_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_10dp"
+            android:text="@string/remove"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:padding="@dimen/_5dp"
+            android:textColor="@color/default_text_color_while"
+            android:background="@drawable/btn_member_awiting"
+            />
+    </RelativeLayout>
+
+    <View style="@style/split_line_default" />
+</LinearLayout>
