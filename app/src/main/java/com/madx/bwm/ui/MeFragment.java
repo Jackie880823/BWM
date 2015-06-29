@@ -13,10 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.PhotoEntity;
-import com.madx.bwm.http.VolleyUtil;
 import com.madx.bwm.ui.wall.WallFragment;
 import com.madx.bwm.widget.CircularNetworkImage;
 
@@ -52,6 +52,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
         this.layoutId = R.layout.me_fragment;
     }
 
+    String headUrl;
     @Override
     public void initView() {
         cniMain = getViewById(R.id.cni_main);
@@ -63,7 +64,9 @@ public class MeFragment extends BaseFragment<MeActivity> {
         rlAlbumGallery = getViewById(R.id.rl_album_gallery);
         rlWallPosting = getViewById(R.id.rl_wall_posting);
 
-        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
+        new BitmapTools(getActivity()).display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
+//        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
 //        tvTitle.setText(MainActivity.getUser().getUser_given_name());
         tvId1.setText("ID:" + MainActivity.getUser().getDis_bondwithme_id());
@@ -157,7 +160,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
 //                        }
 //                    }).start();
 
-                    initView();
+//                    initView();
                 }
                 break;
 

@@ -8,6 +8,7 @@ import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
@@ -36,6 +37,8 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         appContext = this;
+        /**图片工具*/
+        BitmapTools.init(this);
         /**异常处理*/
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
