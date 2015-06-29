@@ -203,6 +203,22 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
             if (downloadRequest != null) {
                 downloadRequest.cancel();
             }
+            mHandler.sendEmptyMessage(SHOW_WAITTING);
+            iv_pic.setImageResource(R.drawable.network_image_default);
+//            VolleyUtil.loadImage(getActivity(), pic_url, new ImageLoader.ImageListener() {
+//                @Override
+//                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+//                    PicturesCacheUtil.saveToCachePic(getActivity(),response.getBitmap());
+//                    bitmapCache = response.getBitmap();
+//                    iv_pic.setImageBitmap(bitmapCache);
+//                    mHandler.sendEmptyMessage(HIDE_WAITTING);
+//                }
+//
+//                @Override
+//                public void onErrorResponse(VolleyError error) {
+//                    mHandler.sendEmptyMessage(HIDE_WAITTING);
+//                }
+//            });
 
             downloadRequest = new HttpTools(getActivity()).download(pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
                 @Override
