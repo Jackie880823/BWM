@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import com.madx.bwm.R;
 import com.madx.bwm.util.AnimatedGifDrawable;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -83,7 +85,8 @@ public class MessageHorizontalListViewAdapter extends BaseAdapter {
         }
         try {
             String filePath = list.get(position);
-            InputStream inputStream = mContext.getAssets().open(filePath);
+            File file = new File(filePath);
+            InputStream inputStream = new FileInputStream(file);//mContext.getAssets().open(filePath);
             if (filePath.endsWith("gif")) {
                 AnimatedGifDrawable animatedGifDrawable = new AnimatedGifDrawable(mContext.getResources(), 0, inputStream, null);
                 Drawable drawable = animatedGifDrawable.getDrawable();

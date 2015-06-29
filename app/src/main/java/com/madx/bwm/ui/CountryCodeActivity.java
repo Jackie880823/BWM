@@ -20,14 +20,22 @@ import com.madx.bwm.R;
 import com.madx.bwm.adapter.LetterBaseListAdapter;
 import com.madx.bwm.widget.LetterListView;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class CountryCodeActivity extends BaseActivity {
-    String[] dataArray =new String[]{};
+    String[] dataArray = new String[]{};
 
 
     @Override
@@ -67,11 +75,16 @@ public class CountryCodeActivity extends BaseActivity {
     protected Fragment getFragment() {
         return null;
     }
+
     TestAdapter ataaa2;
     Boolean isSearch = false;
+
     @Override
     public void initView() {
-        dataArray=getResources().getStringArray(R.array.country_code);
+
+
+        dataArray = getResources().getStringArray(R.array.country_code);
+        Arrays.sort(dataArray, new ComparatorPinYin());
         final LetterListView letterListView = (LetterListView) findViewById(R.id.letterListView);
 
         final EditText etSearch = (EditText) findViewById(R.id.et_search);
@@ -94,13 +107,10 @@ public class CountryCodeActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (TextUtils.isEmpty(etSearch.getText()))
-                {
+                if (TextUtils.isEmpty(etSearch.getText())) {
                     isSearch = false;
                     letterListView.setAdapter(ataaa);
-                }
-                else
-                {
+                } else {
                     List<NameValuePair> dataList = new ArrayList<NameValuePair>();
 
                     for (int i = 0; i < dataArray.length; i++) {
@@ -153,8 +163,7 @@ public class CountryCodeActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
                                     long arg3) {
 
-                if (isSearch)
-                {
+                if (isSearch) {
                     //				Log.i("", "1----"+((TextView)arg1).getText());
                     if (ataaa2.getItemViewType(arg2) == 1) {
                         // String text = ((TextView) arg1).getText().toString();
@@ -172,9 +181,7 @@ public class CountryCodeActivity extends BaseActivity {
                             finish();
                         }
                     }
-                }
-                else
-                {
+                } else {
                     //				Log.i("", "1----"+((TextView)arg1).getText());
                     if (ataaa.getItemViewType(arg2) == 1) {
                         // String text = ((TextView) arg1).getText().toString();
@@ -318,5 +325,82 @@ public class CountryCodeActivity extends BaseActivity {
             TextView country_code_tv;
         }
         //end
+    }
+
+    public class PinyinComparator implements Comparator<Object> {
+        /**
+         * 比较两个字符串
+         */
+        public int compare(Object o1, Object o2) {
+            String[] name1 = (String[]) o1;
+            String[] name2 = (String[]) o2;
+            String str1 = getPingYin(name1[0]);
+            String str2 = getPingYin(name2[0]);
+            int flag = str1.compareTo(str2);
+            return flag;
+        }
+
+        /**
+         * 将字符串中的中文转化为拼音,其他字符不变
+         *
+         * @param inputString
+         * @return
+         */
+        public String getPingYin(String inputString) {
+            HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
+            format.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+            format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+            format.setVCharType(HanyuPinyinVCharType.WITH_V);
+
+            char[] input = inputString.trim().toCharArray();// 把字符串转化成字符数组
+            String output = "";
+
+            try {
+                for (int i = 0; i < input.length; i++) {
+                    // \\u4E00是unicode编码，判断是不是中文
+                    if (java.lang.Character.toString(input[i]).matches(
+                            "[\\u4E00-\\u9FA5]+")) {
+                        // 将汉语拼音的全拼存到temp数组
+                        String[] temp = PinyinHelper.toHanyuPinyinStringArray(
+                                input[i], format);
+                        // 取拼音的第一个读音
+                        output += temp[0];
+                    }
+                    // 大写字母转化成小写字母
+                    else if (input[i] > 'A' && input[i] < 'Z') {
+                        output += java.lang.Character.toString(input[i]);
+                        output = output.toLowerCase();
+                    }
+                    output += java.lang.Character.toString(input[i]);
+                }
+            } catch (Exception e) {
+                Log.e("Exception", e.toString());
+            }
+            return output;
+        }
+    }
+
+    static class ComparatorPinYin implements Comparator<String> {
+        @Override
+        public int compare(String o1, String o2) {
+            return ToPinYinString(o1).compareTo(ToPinYinString(o2));
+        }
+
+        private String ToPinYinString(String str) {
+
+            StringBuilder sb = new StringBuilder();
+            String[] arr = null;
+
+            for (int i = 0; i < str.length(); i++) {
+                arr = PinyinHelper.toHanyuPinyinStringArray(str.charAt(i));
+                if (arr != null && arr.length > 0) {
+                    for (String string : arr) {
+                        sb.append(string);
+                    }
+                }
+            }
+
+            return sb.toString();
+        }
     }
 }
