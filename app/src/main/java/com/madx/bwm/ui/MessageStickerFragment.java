@@ -24,6 +24,7 @@ import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.widget.NoScrollGridView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
     public static final int SHOW_NUM = 6;
     private String type;
     private List<String> stickerPathList;
-    private String stickerFileName;
+    //private String stickerFileName;
 
 
     @Override
@@ -61,9 +62,9 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
         mContext = getActivity();
         mPager = getViewById(R.id.viewpager);
         mNumLayout = getViewById(R.id.fragment_sticker_linear);
-        if (null != selectStickerName && selectStickerName.indexOf(File.separator) != -1) {
-            stickerFileName = selectStickerName.substring(selectStickerName.lastIndexOf(File.separator) + 1);
-        }
+//        if (null != selectStickerName && selectStickerName.indexOf(File.separator) != -1) {
+//            stickerFileName = selectStickerName.substring(selectStickerName.lastIndexOf(File.separator) + 1);
+//        }
         stickerPathList = getBitmapPathList();
         count = (stickerPathList.size() % SHOW_NUM) == 0 ? (stickerPathList.size() / SHOW_NUM) : (stickerPathList.size() / SHOW_NUM + 1);
         List<NoScrollGridView> mLists = init(stickerPathList);
@@ -148,15 +149,27 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
     }
 
     private List<String> getBitmapPathList() {
-        List<String> fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), selectStickerName);
         List<String> filePaths = new ArrayList<>();
-        if (fileNames != null) {
-            for (String name : fileNames) {
-                if (name.contains(SHOW_KIND)) {
-                    filePaths.add(selectStickerName + "/" + name);
+        String path = MainActivity.STICKERS_NAME + File.separator + selectStickerName;
+        File file = new File(path);
+        File[] files = file.listFiles();
+        if (null != files && files.length > 0) {
+            for(File file1:files){
+                String filePath=file1.getAbsolutePath();
+                if(filePath.substring(filePath.lastIndexOf(File.separator) + 1).contains(SHOW_KIND)){
+                    filePaths.add(filePath);
                 }
             }
         }
+//        List<String> fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), selectStickerName);
+//        List<String> filePaths = new ArrayList<>();
+//        if (fileNames != null) {
+//            for (String name : fileNames) {
+//                if (name.contains(SHOW_KIND)) {
+//                    filePaths.add(selectStickerName + "/" + name);
+//                }
+//            }
+//        }
         return filePaths;
     }
 
@@ -185,7 +198,7 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
                         Sticker_name = fileName.substring(fileName.lastIndexOf(File.separator) + 1, fileName.lastIndexOf("_"));
                     }
                     if (mViewClickListener != null) {
-                        mViewClickListener.showComments(type, stickerFileName, Sticker_name);
+                        mViewClickListener.showComments(type, selectStickerName, Sticker_name);
                     }
                 }
             });
@@ -244,7 +257,9 @@ public class MessageStickerFragment extends BaseFragment<MainActivity> {
             }
             try {
                 String filePath = stringList.get(position);
-                InputStream inputStream = mContext.getAssets().open(filePath);
+//                InputStream inputStream = mContext.getAssets().open(filePath);
+                File file = new File(filePath);
+                InputStream inputStream = new FileInputStream(file);
                 if (filePath.endsWith("gif")) {
                     AnimatedGifDrawable animatedGifDrawable = new AnimatedGifDrawable(mContext.getResources(), 0, inputStream, null);
                     Drawable drawable = animatedGifDrawable.getDrawable();

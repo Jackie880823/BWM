@@ -28,7 +28,7 @@ public class FileUtil {
      * @param isOutPath 是否保存在app内(沙盒)
      * @return
      */
-    protected static File getSavePath(Context context,boolean isOutPath) {
+    public static File getSavePath(Context context,boolean isOutPath) {
 
         if(isOutPath) {
             if (path == null) {

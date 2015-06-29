@@ -115,6 +115,7 @@
     <string name="msg_no_contact_select">No contact selected</string>
 
 
+
     <string name="text_via_contact">Via Contact</string>
     <string name="text_ID_name">Via BondWithMe ID / Username</string>
     <string name="text_QR">Add via Q.R Code</string>
@@ -490,8 +491,6 @@
     <string name="year">Year</string>
     <string name="text_new_everyone">Everyone</string>
     <string name="text_new_family">Family</string>
-
-    <!--Stickies Store-->
 
     <string name="text_sticker_store">Stickies Store</string>
     <string name="download_stickers">Downloaded Stickies</string>
