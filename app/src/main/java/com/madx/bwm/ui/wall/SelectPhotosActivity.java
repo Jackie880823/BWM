@@ -22,17 +22,17 @@ public class SelectPhotosActivity extends BaseActivity {
 
     private SelectPhotosFragment.SelectImageUirChangeListener listener = new SelectPhotosFragment.SelectImageUirChangeListener() {
         @Override
-        public void onChange(Uri imageUri, boolean isAdd) {
+        public void onChange(ArrayList<Uri> mSelectedImageUris) {
             boolean multi = getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
             if(multi) {
-                if(isAdd) {
-                    mSelectedImages.add(imageUri);
-                } else if(mSelectedImages.contains(imageUri)) {
-                    mSelectedImages.remove(imageUri);
-                }
+                mSelectedImages = mSelectedImageUris;
             } else {
+                Uri uri = null;
+                if(mSelectedImages!=null){
+                    uri = mSelectedImages.get(0);
+                }
                 Intent intent = new Intent();
-                intent.setData(imageUri);
+                intent.setData(uri);
                 setResult(RESULT_OK, intent);
                 finish();
             }

@@ -184,27 +184,57 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         mGvShowPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
                 CheckBox check = (CheckBox) view.findViewById(R.id.select_image_right);
                 Log.i(TAG, "onItemClick " + check.isCheck());
 
-//                Uri itemUri = mImageUriList.get(position);
+                Uri itemUri = mImageUriList.get(position);
                 if(check.isCheck()) {
                     check.setChecked(false);
-//                    mSelectedImageUris.remove(itemUri);
+                    mSelectedImageUris.remove(itemUri);
                     //
-
+                    if(selectImageUirListener != null) {
+                        selectImageUirListener.onChange(mSelectedImageUris);
+                    }
                 } else {
                     if(mSelectedImageUris.size() < residue) {
                         check.setChecked(true);
-//                        mSelectedImageUris.add(itemUri);
+                        mSelectedImageUris.add(itemUri);
+                        if(selectImageUirListener != null) {
+                            selectImageUirListener.onChange(mSelectedImageUris);
+                        }
                     } else {
                         //照片下载完的提示
                         MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
                     }
                 }
 
-
             }
+
+
+
+//                CheckBox check = (CheckBox) view.findViewById(R.id.select_image_right);
+//                Log.i(TAG, "onItemClick " + check.isCheck());
+//
+////                Uri itemUri = mImageUriList.get(position);
+//                if(check.isCheck()) {
+//                    check.setChecked(false);
+////                    mSelectedImageUris.remove(itemUri);
+//                    //
+//
+//                } else {
+//                    if(mSelectedImageUris.size() < residue) {
+//                        check.setChecked(true);
+////                        mSelectedImageUris.add(itemUri);
+//                    } else {
+//                        //照片下载完的提示
+//                        MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
+//                    }
+//                }
+//
+//
+//            }
         });
     }
 

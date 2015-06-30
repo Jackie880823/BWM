@@ -109,7 +109,7 @@ public class LocalImagesAdapter extends BaseAdapter {
      * @return A View corresponding to the data at the specified position.
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         HolderView holder;
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.local_images_item_for_gridview, null);
@@ -127,12 +127,24 @@ public class LocalImagesAdapter extends BaseAdapter {
         holder.iv.setImageResource(R.drawable.network_image_default);
         loadLocalBitmap(holder.iv, position);
 
+        holder.check.setOncheckListener(new CheckBox.OnCheckListener() {
+            @Override
+            public void onCheck(boolean check) {
+                if (mCheckBoxStatusListener != null) {
+                    mCheckBoxStatusListener.onChange(check, position);
+                }
+            }
+        });
+
         if(mSelectImages != null && mSelectImages.contains(mDatas.get(position))) {
             // 当前图片已被选中
             holder.check.setChecked(true);
         } else {
             holder.check.setChecked(false);
         }
+
+
+
         return convertView;
     }
 
@@ -209,6 +221,16 @@ public class LocalImagesAdapter extends BaseAdapter {
     class HolderView {
         ImageView iv;
         CheckBox check;
+    }
+
+    private CheckBoxStatusListener mCheckBoxStatusListener;
+
+    public void setCheckBoxStatusListener(CheckBoxStatusListener checkBoxStatusListener) {
+        this.mCheckBoxStatusListener = checkBoxStatusListener;
+    }
+
+    public interface CheckBoxStatusListener {
+        void onChange(boolean isAdd, int index);
     }
 
 }
