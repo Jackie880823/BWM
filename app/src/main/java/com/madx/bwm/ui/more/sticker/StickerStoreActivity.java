@@ -28,12 +28,11 @@ import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.j256.ormlite.dao.Dao;
-import com.madx.bwm.App;
 import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.adapter.StickerGroupAdapter;
 import com.madx.bwm.adapter.StickerPagerAdapter;
+import com.madx.bwm.dao.LocalStickerInfoDao;
 import com.madx.bwm.entity.LocalStickerInfo;
 import com.madx.bwm.entity.StickerBannerEntity;
 import com.madx.bwm.entity.StickerGroupEntity;
@@ -134,7 +133,6 @@ public class StickerStoreActivity extends BaseActivity {
         mProgressDialog.show();
 
         scrollView = getViewById(R.id.sc_sticker_store);
-
         vp = getViewById(R.id.viewpager_sticker);
 
 
@@ -151,6 +149,7 @@ public class StickerStoreActivity extends BaseActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(StickerDetailActivity.ACTION_UPDATE);
         filter.addAction(MyStickerActivity.ACTION_UPDATE);
+        filter.addAction(StickerStoreActivity.ACTION_UPDATE);
         registerReceiver(mReceiver, filter);
 
     }
@@ -173,6 +172,7 @@ public class StickerStoreActivity extends BaseActivity {
             addView(i, view,stickerGroupEntity,position);
             views.add(view);
         }
+        mProgressDialog.dismiss();
         stickerPagerAdapter = new StickerPagerAdapter(views);
         vp.setAdapter(stickerPagerAdapter);
 
@@ -246,7 +246,6 @@ public class StickerStoreActivity extends BaseActivity {
 
                 //插入sticker info
                 try {
-                    Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
                     LocalStickerInfo stickerInfo = new LocalStickerInfo();
                     stickerInfo.setName(stickerGroupEntity.getName());
                     stickerInfo.setPath(stickerGroupEntity.getPath());
@@ -254,11 +253,10 @@ public class StickerStoreActivity extends BaseActivity {
                     stickerInfo.setVersion(stickerGroupEntity.getVersion());
                     stickerInfo.setType(stickerGroupEntity.getType());
                     stickerInfo.setPosition(position);
-                    stickerDao.create(stickerInfo);
-
+                    LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
                     Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
 
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -270,7 +268,7 @@ public class StickerStoreActivity extends BaseActivity {
                 File zipFile = new File(target);
                 //解压
                 try {
-                    ZipUtils.unZipFile(zipFile, FileUtil.getCacheFilePath(StickerStoreActivity.this));
+                    ZipUtils.unZipFile(zipFile,MainActivity.STICKERS_NAME);
                     zipFile.delete();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -293,7 +291,7 @@ public class StickerStoreActivity extends BaseActivity {
                 pbDownload.setProgress(finished);
 
 
-                //发广播更新StickerDetailActivity的progressbar
+                //发广播更新progressbar
                 Intent intent = new Intent(StickerStoreActivity.ACTION_UPDATE);
                 intent.putExtra(FINISHED,finished);
                 intent.putExtra(StickerGroupAdapter.POSITION,position);
@@ -407,7 +405,6 @@ public class StickerStoreActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
 
             }
 
@@ -470,9 +467,37 @@ public class StickerStoreActivity extends BaseActivity {
                 TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
                 ivExist.setVisibility(View.INVISIBLE);
                 tvDownload.setVisibility(View.VISIBLE);
+            }else if (StickerStoreActivity.ACTION_UPDATE.equals(intent.getAction())){
+                int position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
+                finished = intent.getIntExtra(FINISHED,0);
+                StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
+                Log.i(TAG, "==========position========" + position);
+                Log.i(TAG, "==========recyclerViewList========" + recyclerViewList);
+                Log.i(TAG, "==========holder========" + holder);
+                if ( holder!= null){
+                    ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
+                    ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
+                    TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
+                    tvDownload.setVisibility(View.INVISIBLE);
+                    pbDownload.setVisibility(View.VISIBLE);
+                    pbDownload.setProgress(finished);
+                    if (finished == 100){
+                        pbDownload.setVisibility(View.INVISIBLE);
+                        ivExist.setVisibility(View.VISIBLE);
+                    }
+                }
+
             }
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        if(mReceiver!=null){
+            unregisterReceiver(mReceiver);
+        }
+        super.onDestroy();
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {

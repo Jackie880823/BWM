@@ -63,11 +63,10 @@ public class MyStickerActivity extends BaseActivity {
         try {
             Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
             data = stickerDao.queryForAll();
-            Log.i(TAG,"==============data==========="+data.size());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if(data.size() > 0){
+        if(data!=null && data.size() > 0){
             rvList = (RecyclerView) getViewById(R.id.rv_my_sticker);
             llm = new FullyLinearLayoutManager(this);
             rvList.setLayoutManager(llm);

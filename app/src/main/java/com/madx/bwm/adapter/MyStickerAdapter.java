@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,11 +17,15 @@ import com.j256.ormlite.dao.Dao;
 import com.madx.bwm.App;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.LocalStickerInfo;
+import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.ui.more.sticker.MyStickerActivity;
+import com.madx.bwm.util.AnimatedGifDrawable;
 import com.madx.bwm.util.FileUtil;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.lang.Integer;import java.lang.Override;import java.lang.String;import java.sql.SQLException;
 import java.util.List;
 
@@ -48,17 +53,44 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
     public void onBindViewHolder(final MyStickerAdapter.VHItem holder, final int position) {
         final LocalStickerInfo stickerInfo = data.get(position);
 
-        //设置sticker icon                                        /FamilyWishes/1_B.gif
-        String picPath = FileUtil.getCacheFilePath(mContext)+"/"+stickerInfo.getPath()+"/"+stickerInfo.getSticker_name()+stickerInfo.getType();
-        Bitmap bmp = BitmapFactory.decodeFile(picPath);
-        holder.ivMySticker.setImageBitmap(bmp);
+        //设置sticker icon                                        /FamilyWishes
+        String path = MainActivity.STICKERS_NAME + File.separator + stickerInfo.getPath();
+        File file = new File(path);
+        File[] files = file.listFiles();
+        if (null != files && files.length > 0) {
+            for (File file1 : files) {
+                String filePath = file1.getAbsolutePath();
+                if (filePath.substring(filePath.lastIndexOf(File.separator) + 1).contains("B")) {
+                    try {
+                        File f = new File(filePath);
+                        InputStream inputStream = new FileInputStream(f);//mContext.getAssets().open(filePath);
+                        if (filePath.endsWith("gif")) {
+                            AnimatedGifDrawable animatedGifDrawable = new AnimatedGifDrawable(mContext.getResources(), 0, inputStream, null);
+                            Drawable drawable = animatedGifDrawable.getDrawable();
+                            holder.ivMySticker.setImageDrawable(drawable);
+                        } else {
+                            holder.ivMySticker.setImageBitmap(BitmapFactory.decodeStream(inputStream));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //FIRST_STICKER_LIST.add(filePath);
+                    break;
+                }
+            }
+
+        }
+
+//        String picPath = MainActivity.STICKERS_NAME+"/"+stickerInfo.getPath()+"/"+stickerInfo.getSticker_name()+stickerInfo.getType();
+//        Bitmap bmp = BitmapFactory.decodeFile(picPath);
+//        holder.ivMySticker.setImageBitmap(bmp);
 
         holder.tvName.setText(stickerInfo.getName());
         holder.tvRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean deleted = false;
-                File f = new File(FileUtil.getCacheFilePath(mContext)+"/"+stickerInfo.getPath());
+                File f = new File(MainActivity.STICKERS_NAME +"/"+stickerInfo.getPath());
                 deleted = deleteDirectory(f);
                 if (deleted){
                     try {
@@ -69,7 +101,7 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
                     }
                     //发广播更新StickerStoreActivity的DOWNLOAD or √
                     Intent intent = new Intent(MyStickerActivity.ACTION_UPDATE);
-                    intent.putExtra("position",stickerInfo.getPosition());
+                    intent.putExtra("path",stickerInfo.getPath());
                     mContext.sendBroadcast(intent);
 
                     int position = data.indexOf(stickerInfo);

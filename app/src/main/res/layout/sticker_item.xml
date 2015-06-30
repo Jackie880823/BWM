@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
 
     >
+    <ImageView
+        android:id="@+id/iv_news_ticker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/new_sticker"
+        android:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/item_content"
@@ -13,12 +19,7 @@
         android:padding="@dimen/default_content_padding"
         >
 
-        <ImageView
-            android:id="@+id/iv_news_ticker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/new_sticker"
-            android:visibility="invisible" />
+
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/iv_sticker"
@@ -79,4 +80,4 @@
     </RelativeLayout>
 
     <View style="@style/split_line_default" />
-</LinearLayout>
+</RelativeLayout>

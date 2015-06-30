@@ -1,15 +1,24 @@
 package com.madx.bwm.ui.more.sticker;
 
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -58,7 +67,6 @@ public class StickerDetailActivity extends BaseActivity {
     private int position;
     public static final String ACTION_UPDATE = "ACTION_UPDATE_FROM_STICKER_DETAIL";
     int finished;
-    private final int UPDATE_PROGRESSBAR =1;
 
 
     @Override
@@ -100,17 +108,19 @@ public class StickerDetailActivity extends BaseActivity {
         position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
         finished = intent.getIntExtra("finished",0);
         int loadingPosition = intent.getIntExtra("positionFromStickerDetail",0);
-
+        LogUtil.i(TAG,"============loadingPosition======"+loadingPosition);
 
         NetworkImageView insideSticker = getViewById(R.id.iv_inside_sticker);
         TextView insideStickerName = getViewById(R.id.tv_inside_sticker_name);
+        TextView desc = getViewById(R.id.tv_description);
+        desc.setText("sticker_type: "+stickerGroupEntity.getType());
         TextView price = getViewById(R.id.price);
         tvDownload = getViewById(R.id.tv_inside_download);
         gvSticker = getViewById(R.id.gv_sticker);
         pbProgress = getViewById(R.id.pb_download);
 
         LogUtil.i("","finished==============="+finished);
-        if(finished>0 && finished<100 && position ==loadingPosition) {
+        if(finished>0 && finished<100 && position == loadingPosition) {
             tvDownload.setVisibility(View.INVISIBLE);
             pbProgress.setVisibility(View.VISIBLE);
             pbProgress.setProgress(finished);
@@ -194,7 +204,6 @@ public class StickerDetailActivity extends BaseActivity {
 
                     //插入sticker info
                     try {
-                        Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
                         LocalStickerInfo stickerInfo = new LocalStickerInfo();
                         stickerInfo.setName(stickerGroupEntity.getName());
                         stickerInfo.setPath(stickerGroupEntity.getPath());
@@ -203,15 +212,12 @@ public class StickerDetailActivity extends BaseActivity {
                         stickerInfo.setType(stickerGroupEntity.getType());
                         stickerInfo.setPosition(position);
                         LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
-                        Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
-
-                    } catch (SQLException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
             }
-
             @Override
             public void onResult(String response) {
                 File zipFile = new File(target);
@@ -249,8 +255,18 @@ public class StickerDetailActivity extends BaseActivity {
         });
     }
 
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void initAdapter() {
         adapter = new StickerItemAdapter(this,data,stickerGroupEntity);
+
+//        gvSticker.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                return false;
+//            }
+//        });
+
         gvSticker.setAdapter(adapter);
 
     }

@@ -499,6 +499,7 @@
     <string name="download">DOWNLOAD</string>
     <string name="my_sticker">My Stickies</string>
     <string name="free">Free</string>
+    <string name="price">Price: </string>
 
 
 </resources>
