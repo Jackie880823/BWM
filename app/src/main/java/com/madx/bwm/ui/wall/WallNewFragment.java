@@ -759,6 +759,13 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         }
     }
 
+    /**
+     * @param path
+     * @param contentId
+     * @param index
+     * @param multiple
+     * @param lastPic
+     */
     private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
         File f = new File(path);
         if(!f.exists()) {
