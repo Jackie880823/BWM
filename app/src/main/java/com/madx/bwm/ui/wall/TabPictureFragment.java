@@ -72,7 +72,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     private String imagePath;
     private CustomGridView gvPictures;
     private PickPicAdapter adapter;
-    private LinkedList<Map<String, Bitmap>> datas = new LinkedList<>();
+    private LinkedList<Map<String, Bitmap>> mDatas = new LinkedList<>();
     private int columnWidthHeight;
 
     public TabPictureFragment() {
@@ -126,7 +126,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
         gvPictures = getViewById(R.id.gv_pictures);
 
-        adapter = new PickPicAdapter(getActivity(), datas, R.layout.picture_item_for_gridview, new String[]{"pic_resId",}, new int[]{R.id.iv_pic});
+        adapter = new PickPicAdapter(getActivity(), mDatas, R.layout.picture_item_for_gridview, new String[]{"pic_resId",}, new int[]{R.id.iv_pic});
 
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
@@ -167,7 +167,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
     @Override
     public void onClick(View v) {
-        int residue = MAX_SELECT - datas.size();
+        int residue = MAX_SELECT - mDatas.size();
         if(residue <= 0) {
             MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), MAX_SELECT));
             return;
@@ -203,7 +203,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     private void addDataAndNotify(Bitmap uri) {
         Map<String, Bitmap> map = new HashMap<>();
         map.put("pic_resId", uri);
-        datas.add(map);
+        mDatas.add(map);
         adapter.notifyDataSetChanged();
     }
 
@@ -303,7 +303,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
             for(int i = 0; i < count; i++) {
                 Map<String, Bitmap> map = new HashMap<>();
                 map.put("pic_resId", uris.get(i));
-                datas.add(map);
+                mDatas.add(map);
             }
             adapter.notifyDataSetChanged();
         }
@@ -346,7 +346,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                     break;
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    int residue = MAX_SELECT - datas.size();
+                    int residue = MAX_SELECT - mDatas.size();
                     if(residue <= 0) {
                         MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), MAX_SELECT));
                         return;
@@ -420,11 +420,12 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         List<Bitmap> miniThumbnailUris = new ArrayList<>();
         if(uris != null) {
             // 已经有图片和将要加载的图片的总和不能大于最大的限定数
-            if(datas.size() >= MAX_SELECT) {
+            if(mDatas.size() >= MAX_SELECT) {
                 // 已经达到最大选择图片数无需再加载
+
                 return null;
             }
-            int count = uris.size() + datas.size() > MAX_SELECT ? MAX_SELECT - datas.size() : uris.size();
+            int count = uris.size() + mDatas.size() > MAX_SELECT ? MAX_SELECT - mDatas.size() : uris.size();
             for(int i = 0; i < count; i++) {
                 if(columnWidthHeight == 0) {
                     columnWidthHeight = gvPictures.getColumnWidth();
