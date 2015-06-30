@@ -146,14 +146,6 @@ public class MyFamilyAdapter extends BaseAdapter implements Filterable {
 
     public void setSerach(List<FamilyMemberEntity> list){
         this.serachList = list;
-//        FamilyMemberEntity member = new FamilyMemberEntity();
-//        member.setUser_given_name("family_tree");
-//        member.setUser_id("family_tree");
-//        FamilyMemberEntity familyMember = new FamilyMemberEntity();
-//        familyMember.setUser_given_name("MyFamily");
-//        familyMember.setUser_id("MyFamily");
-//        serachList.remove(member);
-//        serachList.remove(familyMember);
 
     }
     @Override
@@ -175,6 +167,7 @@ public class MyFamilyAdapter extends BaseAdapter implements Filterable {
         //自定义的过滤规则
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            boolean isZh;
             FilterResults results = new FilterResults();
             if(constraint == null || constraint.length() == 0){
                 results.values = original;//原始数据
@@ -182,15 +175,22 @@ public class MyFamilyAdapter extends BaseAdapter implements Filterable {
             }else {
                 List<FamilyMemberEntity> mList = new ArrayList<FamilyMemberEntity>();
                 String filterString = ToDc.ToDBC(constraint.toString().trim().toLowerCase());
+//                char[] chars = filterString.toCharArray();
+//                //如果输入的是中文，则直接搜索中文，否则中文转换成拼音
+//                if(isCnorZh(chars[0])){
+//                    isZh = true;
+//                }else {
+//
+//                }
                 for(FamilyMemberEntity memberEntity : original){
                     String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getUser_given_name());
-                    if(-1 != userName.toLowerCase().indexOf(filterString)){
-                        mList.add(memberEntity);
+                    if(userName.equals("Family") || userName.equals("Family Tree")){
+                        continue;
+                    }else {
+                        if(-1 != userName.toLowerCase().indexOf(filterString)) {
+                            mList.add(memberEntity);
+                        }
                     }
-//                    if(-1 !=userName.toLowerCase().indexOf("family_tree") ||
-//                            -1 != userName.toLowerCase().indexOf("MyFamily")){
-//                        mList.remove(memberEntity);
-//                    }
                 }
                 results.values = mList;
                 results.count = mList.size();
@@ -205,6 +205,12 @@ public class MyFamilyAdapter extends BaseAdapter implements Filterable {
         }
     }
 
+    private boolean isCnorZh(char c){
+        if((c >= 0x0391 && c <= 0xFFE5)  //中文字符
+                || (c>=0x0000 && c<=0x00FF))   //英文字符
+            return false;
+        return true;
+    }
     static class ViewHolder {
         CircularNetworkImage imageMain;
         ImageView imageLeft;
