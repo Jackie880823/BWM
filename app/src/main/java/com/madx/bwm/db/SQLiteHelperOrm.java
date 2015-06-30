@@ -21,18 +21,18 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
     private static final AtomicInteger usageCounter = new AtomicInteger(0);
 
 	public SQLiteHelperOrm(Context context) {
-//		super(context, App.DB_NAME, null,
-//		App.DB_VERSION,R.raw.ormlite_config);
 		super(context, DB_NAME, null,
-                DB_VERSION, R.raw.ormlite_config);
+		DB_VERSION, R.raw.ormlite_config);
+//		super(context, DB_NAME, null,
+//				DB_VERSION);
 
 	}
 
 	public SQLiteHelperOrm() {
-//		super(App.getContextInstance(), DB_NAME, null,
-//		App.DB_VERSION,R.raw.ormlite_config);
 		super(App.getContextInstance(), DB_NAME, null,
-                DB_VERSION, R.raw.ormlite_config);
+		DB_VERSION, R.raw.ormlite_config);
+//		super(App.getContextInstance(), DB_NAME, null,
+//				DB_VERSION);
 	}
 
 	@Override
