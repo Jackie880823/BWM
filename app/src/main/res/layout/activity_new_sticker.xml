@@ -10,7 +10,12 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#ffffff" />
-
+    <LinearLayout
+        android:id="@+id/fragment_sticker_linear"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/_15dp"
+        android:gravity="center"
+        android:orientation="horizontal"></LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
