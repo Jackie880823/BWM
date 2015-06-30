@@ -37,7 +37,7 @@ import java.util.Set;
 /**
  * @author Jackie Zhu
  */
-public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> implements LoaderManager.LoaderCallbacks<Void> {
+public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> implements LoaderManager.LoaderCallbacks<Void>,LocalImagesAdapter.CheckBoxStatusListener {
 
     private static final String TAG = SelectPhotosFragment.class.getSimpleName();
 
@@ -187,26 +187,22 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
                 CheckBox check = (CheckBox) view.findViewById(R.id.select_image_right);
                 Log.i(TAG, "onItemClick " + check.isCheck());
 
-                Uri itemUri = mImageUriList.get(position);
+//                Uri itemUri = mImageUriList.get(position);
                 if(check.isCheck()) {
                     check.setChecked(false);
-                    mSelectedImageUris.remove(itemUri);
+//                    mSelectedImageUris.remove(itemUri);
                     //
-                    if(selectImageUirListener != null) {
-                        selectImageUirListener.onChange(itemUri, false);
-                    }
+
                 } else {
                     if(mSelectedImageUris.size() < residue) {
                         check.setChecked(true);
-                        mSelectedImageUris.add(itemUri);
-                        if(selectImageUirListener != null) {
-                            selectImageUirListener.onChange(itemUri, true);
-                        }
+//                        mSelectedImageUris.add(itemUri);
                     } else {
                         //照片下载完的提示
                         MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
                     }
                 }
+
 
             }
         });
@@ -307,6 +303,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
                 localImagesAdapter = new LocalImagesAdapter(getActivity(), mImageUriList, getParentActivity().getActionBarColor());
                 localImagesAdapter.setSelectedImages(mSelectedImageUris);
                 mGvShowPhotos.setAdapter(localImagesAdapter);
+                localImagesAdapter.setCheckBoxStatusListener(this);
                 localImagesAdapter.setColumnWidthHeight(mGvShowPhotos.getColumnWidth());
             } else {
                 localImagesAdapter.notifyDataSetChanged();
@@ -390,8 +387,23 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         this.selectImageUirListener = selectImageUirListener;
     }
 
+    @Override
+    public void onChange(boolean isAdd, int index) {
+        if(!isAdd) {
+            mSelectedImageUris.remove(mImageUriList.get(index));
+            //
+        } else {
+            if(mSelectedImageUris.size() < residue) {
+                mSelectedImageUris.add(mImageUriList.get(index));
+            }
+        }
+        if(selectImageUirListener != null) {
+            selectImageUirListener.onChange(mSelectedImageUris);
+        }
+    }
+
     public interface SelectImageUirChangeListener {
-        void onChange(Uri imageUri, boolean isAdd);
+        void onChange(ArrayList<Uri> mSelectedImageUris);
 
         void onDrawerOpened(Drawable drawable);
 
