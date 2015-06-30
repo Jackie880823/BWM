@@ -301,7 +301,7 @@ public class GroupSettingActivity extends BaseActivity {
                     for (UserEntity user : userList) {
                         addMemberList.add(user.getUser_id());
                     }
-                    removeDuplicate(userList);
+                   // removeDuplicate(userList);
                     groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
                     lvMembers.setAdapter(groupSettingAdapter);
 
