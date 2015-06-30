@@ -15,7 +15,9 @@ public class StickerGroupEntity implements Serializable {
     private String version;                // sticker version表情包版本
     private String download_condition;     // download condition表情包下载条件
     private String condition_type;         // 表情包下载条件分类 （以后用）
-    private String downloadable;           // 表情包下载权限 （0-没权限，1-可以下载） ＊
+    private String sticker_new;            // 表情包新的状态     "1"
+    private String expiry_time;            // 表情包截止时间   "0"
+    private String downloadable;           // 表情包下载权限 （0-没权限，1-可以下载）
 
     public String getDownloadable() {
         return downloadable;
@@ -101,5 +103,37 @@ public class StickerGroupEntity implements Serializable {
         this.condition_type = condition_type;
     }
 
+    public String getSticker_new() {
+        return sticker_new;
+    }
 
+    public void setSticker_new(String sticker_new) {
+        this.sticker_new = sticker_new;
+    }
+
+    public String getExpiry_time() {
+        return expiry_time;
+    }
+
+    public void setExpiry_time(String expiry_time) {
+        this.expiry_time = expiry_time;
+    }
+
+    @Override
+    public String toString() {
+        return "StickerGroupEntity{" +
+                "first_sticker='" + first_sticker + '\'' +
+                ", path='" + path + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", total='" + total + '\'' +
+                ", price='" + price + '\'' +
+                ", version='" + version + '\'' +
+                ", download_condition='" + download_condition + '\'' +
+                ", condition_type='" + condition_type + '\'' +
+                ", sticker_new='" + sticker_new + '\'' +
+                ", expiry_time='" + expiry_time + '\'' +
+                ", downloadable='" + downloadable + '\'' +
+                '}';
+    }
 }

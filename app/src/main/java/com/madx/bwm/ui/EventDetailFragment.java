@@ -180,13 +180,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 if (false) {
                     getParentActivity().finish();
                 } else {
-//                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
                 }
             }
         });
         if (NetworkUtil.isNetworkConnected(getActivity())) {
 
-            progressBar = getViewById(R.id.event_detail_progress_bar);
+            progressBar = getViewById(R.id.progressBar);
 
             etChat = getViewById(R.id.et_chat);
             expandFunctionButton = getViewById(R.id.ib_more);
@@ -354,7 +354,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         if (isCommentBim){
                             getParentActivity().finish();
                         }else {
-//                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
                         }
 
                     }

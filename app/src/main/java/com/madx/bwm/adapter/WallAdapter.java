@@ -132,6 +132,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                 holder.iv_mood.setVisibility(View.GONE);
             }
         } catch(Exception e) {
+            e.printStackTrace();
             holder.iv_mood.setVisibility(View.GONE);
         }
 

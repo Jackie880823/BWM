@@ -6,13 +6,14 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.madx.bwm.db.SQLiteHelperOrm;
 import com.madx.bwm.entity.LocalStickerInfo;
-import com.madx.bwm.ui.MainActivity;
 import com.madx.bwm.util.FileUtil;
 
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by quankun on 15/6/26.
@@ -59,9 +60,9 @@ public class LocalStickerInfoDao {
             return;
         }
         try {
-            stickerInfo.setLoginUserId(MainActivity.getUser().getUser_id());
+            stickerInfo.setLoginUserId();
             QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
-            queryBuilder.where().eq("loginUserId", MainActivity.getUser().getUser_id()).and().eq("path", stickerInfo.getPath());
+            queryBuilder.where().eq("loginUserId", LocalStickerInfo.LOGIN_USER_ID).and().eq("path", stickerInfo.getPath());
             List<LocalStickerInfo> localList = queryBuilder.query();
             if ((localList != null) && (localList.size() > 0)) {
                 //stickerInfoDao.update(stickerInfo);
@@ -76,7 +77,7 @@ public class LocalStickerInfoDao {
     public List<String> queryAllSticker() {
         List<String> list = new ArrayList<>();
         try {
-            List<LocalStickerInfo> localList = stickerInfoDao.queryForEq("loginUserId", MainActivity.getUser().getUser_id());
+            List<LocalStickerInfo> localList = stickerInfoDao.queryForEq("loginUserId", LocalStickerInfo.LOGIN_USER_ID);
             if (null != localList && localList.size() > 0) {
                 for (LocalStickerInfo stickerInfo : localList) {
                     String name = stickerInfo.getPath();

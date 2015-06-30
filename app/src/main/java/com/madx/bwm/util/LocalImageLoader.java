@@ -448,13 +448,15 @@ public class LocalImageLoader {
      * @return
      */
     public final static String compressBitmap(Context context, String srcPath, int rqsW, int rqsH, boolean isDelSrc) {
+        // 获取图片缓存目录
+        String cacheFilePath = PicturesCacheUtil.getCacheFilePath(context);
+        if(srcPath.contains(cacheFilePath)) {
+            // 传入的图片目录包含缓存的目录说明图片是缓存图片，无需压缩返回当前图片路径
+            return srcPath;
+        }
+
         Bitmap bitmap;
-        //        try {
-        //            bitmap = BitmapFactory.decodeFile(srcPath);
-        //        }catch (Exception e){
-        //            //out of memery
         bitmap = compressBitmap(srcPath, rqsW, rqsH);
-        //        }
         File srcFile = new File(srcPath);
         String desPath = PicturesCacheUtil.getCachePicPath(context);
         int degree = readPictureDegree(srcPath);

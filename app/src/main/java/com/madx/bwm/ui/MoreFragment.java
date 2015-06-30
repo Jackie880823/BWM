@@ -161,7 +161,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                 break;
             case R.id.btn_sign_out:
                 if (myDialog == null) {
-                    myDialog = new MyDialog(getActivity(), R.string.text_tips_title, R.string.msg_ask_exit_app);
+                    myDialog = new MyDialog(getActivity(), R.string.alert_exit, R.string.msg_ask_exit_app);
                     myDialog.setCanceledOnTouchOutside(false);
                     myDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
                         @Override

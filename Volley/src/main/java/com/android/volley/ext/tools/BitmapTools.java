@@ -1,5 +1,9 @@
 package com.android.volley.ext.tools;
 
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -25,13 +29,10 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
-
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.List;
 /**
  * 图片加载工具类
  * BitmapTools
+ * chenbo
  * 2014年8月8日 下午4:12:39
  * @version 3.4
  */

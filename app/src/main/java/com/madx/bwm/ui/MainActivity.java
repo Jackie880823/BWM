@@ -257,7 +257,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                             // TODO
                             break;
                         case chat:
-                            //mViewPager.setCurrentItem(0);
+                            mViewPager.setCurrentItem(0);
                             //startActivity(new Intent(MainActivity.this, MainActivity.class));
                             break;
                         case more:
@@ -489,7 +489,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //                ivTab1.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
 //                ivTab2.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
 //                ivTab4.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                leftButton.setVisibility(View.INVISIBLE);
+                leftButton.setVisibility(View.VISIBLE);
                 leftButton.setImageResource(R.drawable.btn_family);
                 rightButton.setVisibility(View.VISIBLE);
                 tabIv3.setImageResource(R.drawable.tab_message_select);

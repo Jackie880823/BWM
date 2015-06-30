@@ -612,7 +612,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private void showSaveAlert() {
         if (saveAlertDialog == null) {
-            saveAlertDialog = new MyDialog(getActivity(), getString(R.string.text_tips_title), getString(R.string.draft_ask_save));
+            saveAlertDialog = new MyDialog(getActivity(), getString(R.string.draft_tips_title), getString(R.string.draft_ask_save));
             saveAlertDialog.setButtonAccept(getString(R.string.event_accept), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

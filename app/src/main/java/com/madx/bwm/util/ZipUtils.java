@@ -142,9 +142,9 @@ public class ZipUtils {
         LocalStickerInfo stickerInfo = new LocalStickerInfo();
         stickerInfo.setName(zipFileName);
         stickerInfo.setPath(zipFileName);
-        stickerInfo.setSticker_name("");
+        stickerInfo.setSticker_name("1_B");
         stickerInfo.setVersion("1");
-        stickerInfo.setType("");
+        stickerInfo.setType(".gif");
         stickerInfo.setPosition(1);
         LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
     }

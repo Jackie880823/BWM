@@ -68,17 +68,13 @@ public class FileUtil {
      * @param filename 保存的路径
      * @param bmp
      */
-    public static String saveToFile(String filename,Bitmap bmp) {
+    public static void saveToFile(String filename,Bitmap bmp) {
         try {
             FileOutputStream out = new FileOutputStream(filename);
             bmp.compress(CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
-        } catch(Exception e) {
-            return null;
-        }
-
-        return filename;
+        } catch(Exception e) {}
     }
 
     /**

@@ -57,7 +57,7 @@ public class PickPicAdapter extends SimpleAdapter{
             @Override
             public void onClick(View v) {
                 if(mRemoveAlertDialog == null){ //没有被实例化，先实例化
-                    mRemoveAlertDialog = new MyDialog(view.getContext(), R.string.text_tips_title, R.string.alert_diary_del_photo);
+                    mRemoveAlertDialog = new MyDialog(view.getContext(), R.string.alert_diary_del_photo_title, R.string.alert_diary_del_photo);
 
                     mRemoveAlertDialog.setButtonAccept(R.string.ok, acceptClick);
 

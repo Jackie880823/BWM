@@ -19,7 +19,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 1   //TODO
-        versionName "0.1.6" //TODO
+        versionName "0.1.4" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -39,7 +39,7 @@ android {
 //        release {
 //            storeFile file(KEY_FILE_PATH)
 //            storePassword KEYSTORE_PASSWORD
-//            keyAlias KEYSTORE_ALIAS
+//            keyAlias "cn"
 //            keyPassword KEY_PASSWORD
 //        }
 //
