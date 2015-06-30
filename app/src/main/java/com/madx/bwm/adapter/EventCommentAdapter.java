@@ -29,6 +29,7 @@ import com.madx.bwm.widget.CircularNetworkImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -211,7 +212,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                         }
                         try {
                             String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPathGig + File.separator + ece.getSticker_name() + "_B.gif";
-                            GifDrawable gifDrawable = new GifDrawable(mContext.getAssets(), gifFilePath);
+                            GifDrawable gifDrawable = new GifDrawable(gifFilePath);
                             if (gifDrawable != null) {
 //                            Log.i("gifFilePath=====", gifFilePath);
 //                            Log.i("显示GIF======",gifFilePath);
@@ -222,7 +223,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                                         ece.getSticker_name(), stickerGroupPathGig, ece.getSticker_type());
                                 downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
                             }
-                        } catch (IOException e) {
+                        } catch (Exception e) {
                             String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
                                     ece.getSticker_name(), stickerGroupPathGig, ece.getSticker_type());
                             downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
@@ -252,16 +253,17 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 
                             try {
                                 String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPathPng + File.separator + ece.getSticker_name() + "_B.png";
-                                InputStream is = mContext.getAssets().open(pngFileName);
-                                if (is != null) {
+//                                InputStream is = mContext.getAssets().open(pngFileName);
+//                                InputStream is = new FileInputStream(new File(pngFileName));
+//                                if (is != null) {
                                     holder.pngImageView.setVisibility(View.VISIBLE);
-                                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                                    Bitmap bitmap = BitmapFactory.decodeFile(pngFileName);
                                     holder.pngImageView.setImageBitmap(bitmap);
-                                } else {
-                                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPathPng, Constant.Sticker_Png);
-                                    downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
-                                }
-                            } catch (IOException e) {
+//                                } else {
+//                                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPathPng, Constant.Sticker_Png);
+//                                    downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+//                                }
+                            } catch (Exception e) {
                                 //本地没有png的时候，从服务器下载
                                 String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPathPng, Constant.Sticker_Png);
                                 downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);

@@ -26,6 +26,7 @@ import com.madx.bwm.util.NetworkUtil;
 import com.madx.bwm.widget.CircularNetworkImage;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -100,7 +101,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
                 try {
                     String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.gif";
-                    GifDrawable gifDrawable = new GifDrawable(mContext.getAssets(), gifFilePath);
+                    GifDrawable gifDrawable = new GifDrawable(gifFilePath);
                     if(gifDrawable != null) {
                         iv.setImageDrawable(gifDrawable);
                         //                    if ("true".equals(comment.getIsNate())) {
@@ -125,15 +126,16 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 try {
                     String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.png";
-                    InputStream is = mContext.getAssets().open(pngFileName);
-                    if(is != null) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                    InputStream is = mContext.getAssets().open(pngFileName);
+                    //InputStream is = new FileInputStream(new File(pngFileName));
+                   // if(is != null) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(pngFileName);//BitmapFactory.decodeStream(is);
                         iv.setImageBitmap(bitmap);
-                    } else {
-                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-                        downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
-                    }
-                } catch(IOException e) {
+//                    } else {
+//                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+//                        downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
+//                    }
+                } catch(Exception e) {
                     //本地没有png的时候，从服务器下载
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
                     downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
