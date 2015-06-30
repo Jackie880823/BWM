@@ -487,4 +487,7 @@
     <string name="download">DOWNLOAD</string>
     <string name="my_sticker">My Stickies</string>
     <string name="free">Free</string>
+
+    <string name="text_post_and">现在</string>
+    <string name="text_event_now">创建一个</string>
 </resources>

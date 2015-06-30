@@ -486,5 +486,6 @@
     <string name="my_sticker">My Stickies</string>
     <string name="free">Free</string>
 
-
+    <string name="text_post_and">Post and</string>
+    <string name="text_event_now">Event now</string>
 </resources>

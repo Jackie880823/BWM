@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardPreventCornerOverlap="false"
-    style="@style/CardViewClickStyle"
-    >
+    style="@style/CardViewClickStyle">
     <!-- style="@style/CardViewClickStyle"-->
     <!-- android:background="@drawable/event_ui_new"-->
     <!-- android:padding="@dimen/default_content_padding"-->
