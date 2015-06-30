@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.gc.materialdesign.views.CheckBox;
 import com.madx.bwm.R;
+import com.madx.bwm.ui.wall.SelectPhotosFragment;
 import com.madx.bwm.util.AsyncLoadBitmapTask;
 
 import java.util.List;
@@ -33,6 +34,8 @@ public class LocalImagesAdapter extends BaseAdapter {
      * 已经选中的图片
      */
     private List<Uri> mSelectImages;
+
+    private SelectPhotosFragment.SelectImageUirChangeListener mListener;
 
     private int columnWidthHeight;
 
@@ -90,6 +93,10 @@ public class LocalImagesAdapter extends BaseAdapter {
         mSelectImages = selectedImages;
     }
 
+    public void setListener(SelectPhotosFragment.SelectImageUirChangeListener listener) {
+        this.mListener = listener;
+    }
+
     /**
      * Get a View that displays the data at the specified position in the data set. You can either
      * create a View manually or inflate it from an XML layout file. When the View is inflated, the
@@ -109,7 +116,7 @@ public class LocalImagesAdapter extends BaseAdapter {
      * @return A View corresponding to the data at the specified position.
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         HolderView holder;
         if(convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.local_images_item_for_gridview, null);
@@ -133,11 +140,27 @@ public class LocalImagesAdapter extends BaseAdapter {
         } else {
             holder.check.setChecked(false);
         }
+        holder.check.setOncheckListener(new CheckBox.OnCheckListener() {
+            @Override
+            public void onCheck(boolean check) {
+                Log.i(TAG, "onCheck& check: " + check);
+                Uri uri = mDatas.get(position);
+                if(mListener != null) {
+                    mListener.onChange(uri, check);
+                }
+                if(check) {
+                    mSelectImages.add(uri);
+                } else {
+                    mSelectImages.remove(uri);
+                }
+            }
+        });
+
         return convertView;
     }
 
     /**
-     * 通过Uir列中positio项的uri异步获取缩略图，并加载传入的imageVie中
+     * 通过Uir列中{@code position}项的uri异步获取缩略图，并加载传入的imageVie中
      *
      * @param imageView －  显示图片的ImageVie视图
      * @param position

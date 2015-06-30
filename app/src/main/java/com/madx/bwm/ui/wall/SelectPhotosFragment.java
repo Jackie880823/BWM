@@ -306,6 +306,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             if(localImagesAdapter == null) {
                 localImagesAdapter = new LocalImagesAdapter(getActivity(), mImageUriList, getParentActivity().getActionBarColor());
                 localImagesAdapter.setSelectedImages(mSelectedImageUris);
+                localImagesAdapter.setListener(selectImageUirListener);
                 mGvShowPhotos.setAdapter(localImagesAdapter);
                 localImagesAdapter.setColumnWidthHeight(mGvShowPhotos.getColumnWidth());
             } else {
@@ -390,6 +391,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         this.selectImageUirListener = selectImageUirListener;
     }
 
+    /**
+     * 选中图片改变监听
+     */
     public interface SelectImageUirChangeListener {
         void onChange(Uri imageUri, boolean isAdd);
 

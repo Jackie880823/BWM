@@ -57,6 +57,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +111,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private final static int GET_LOCATION = 1;
     private final static int GET_MEMBERS = 2;
 
-    private final static String PATH_PREFIX = "feeling";
+    public final static String PATH_PREFIX = "feeling";
     private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
 
     private ImageView ivCursor;
@@ -192,6 +194,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         btn_submit = getViewById(R.id.btn_submit);
         location_desc = getViewById(R.id.location_desc);
 
+        iv_feeling.setOnClickListener(this);
         btn_feeling.setOnClickListener(this);
         btn_notify.setOnClickListener(this);
         btn_share_option.setOnClickListener(this);
@@ -444,6 +447,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                 changeTab(WALL_TAB_PICTURE);
                 break;
             case R.id.btn_feeling:
+            case R.id.iv_feeling:
                 UIUtil.hideKeyboard(getParentActivity(), fragment1.getEditText4Content());
                 InputMethodManager imm = (InputMethodManager) getParentActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if(imm.isActive()) {
@@ -925,6 +929,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         llm = new LinearLayoutManager(getParentActivity());
         feeling_icons.setLayoutManager(llm);
         fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), PATH_PREFIX);
+        // 对文件进行按首字的大小排序
+        SortComparator compartor = new SortComparator();
+        Collections.sort(fileNames, compartor);
         List<String> filePaths = new ArrayList<>();
         if(fileNames != null) {
             for(String name : fileNames) {
@@ -961,5 +968,36 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         return ids;
     }
 
+    /**
+     * 对字符串按首字母排序按首字母排序，并忽略大小字的排序规则
+     */
+    class SortComparator implements Comparator<String>{
 
+        /**
+         * Compares the two specified objects to determine their relative ordering. The ordering
+         * implied by the return value of this method for all possible pairs of
+         * {@code (lhs, rhs)} should form an <i>equivalence relation</i>.
+         * This means that
+         * <ul>
+         * <li>{@code compare(a,a)} returns zero for all {@code a}</li>
+         * <li>the sign of {@code compare(a,b)} must be the opposite of the sign of {@code
+         * compare(b,a)} for all pairs of (a,b)</li>
+         * <li>From {@code compare(a,b) > 0} and {@code compare(b,c) > 0} it must
+         * follow {@code compare(a,c) > 0} for all possible combinations of {@code
+         * (a,b,c)}</li>
+         * </ul>
+         *
+         * @param lhs an {@code Object}.
+         * @param rhs a second {@code Object} to compare with {@code lhs}.
+         * @return an integer < 0 if {@code lhs} is less than {@code rhs}, 0 if they are
+         * equal, and > 0 if {@code lhs} is greater than {@code rhs}.
+         * @throws ClassCastException if objects are not of the correct type.
+         */
+        @Override
+        public int compare(String lhs, String rhs) {
+            String str1 = lhs.substring(0, 1).toUpperCase();
+            String str2 = lhs.substring(0, 1).toUpperCase();
+            return str1.compareTo(str2);
+        }
+    }
 }
