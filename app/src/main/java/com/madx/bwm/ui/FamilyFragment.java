@@ -73,6 +73,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private TextView message_member_tv;
     private TextView message_group_tv;
     private Dialog showSelectDialog;
+    private Dialog showAddDialog;
     private Context mContext;
     private boolean isMemberRefresh, isGroupRefresh;
     /**
@@ -256,7 +257,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         getParentActivity().setFamilyCommandListener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
-                showSelectDialog();
+                showAddDialog();
 //                Intent intent = new Intent();
 //                if (pager.getCurrentItem() == 0) {
 //                    intent.setClass(getActivity(), AddNewMembersActivity.class);
@@ -373,7 +374,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private void showNoFriendDialog() {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        if(showSelectDialog == null){
+            showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        }
         TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
         tv_no_member.setText(getString(R.string.text_pending_approval));
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
@@ -383,7 +386,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 showSelectDialog.dismiss();
             }
         });
-        showSelectDialog.show();
+        if(!showSelectDialog.isShowing()){
+            showSelectDialog.show();
+        }
     }
 
     private void showMemberEmptyView() {
@@ -815,11 +820,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         }
     }
 
-    private void showSelectDialog() {
+    private void showAddDialog() {
         LayoutInflater factory = LayoutInflater.from(getActivity());
         View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
-
-        showSelectDialog = new MyDialog(getParentActivity(), null, selectIntention);
+        if(showAddDialog == null){
+            showAddDialog = new MyDialog(getParentActivity(), null, selectIntention);
+        }
         TextView tvAddNewMember = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         TextView tvCreateNewGroup = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
@@ -827,7 +833,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), AddNewMembersActivity.class));
-                showSelectDialog.dismiss();
+                showAddDialog.dismiss();
             }
         });
 
@@ -839,16 +845,18 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 intent.putExtra("isCreateNewGroup", true);
                 intent.putExtra("jumpIndex", 0);
                 startActivity(intent);
-                showSelectDialog.dismiss();
+                showAddDialog.dismiss();
             }
         });
         cancelTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSelectDialog.dismiss();
+                showAddDialog.dismiss();
             }
         });
-        showSelectDialog.show();
+        if(!showAddDialog.isShowing()){
+            showAddDialog.show();
+        }
     }
 
     @Override

@@ -85,6 +85,9 @@ public class InviteMemberActivity extends BaseActivity {
     private String MemeberSearch;
     private String GroupSearch;
 
+    private Dialog shoeGroupNoFriendDialog;
+    private Dialog showSelectDialog;
+
     List<FamilyMemberEntity> memberList;
     List<FamilyGroupEntity> groupList;
     List<FamilyMemberEntity> searchmemberList = new LinkedList<>();
@@ -296,7 +299,9 @@ public class InviteMemberActivity extends BaseActivity {
     private void shoeGroupNoFriendDialog(final View arg1, final String groupId, final FamilyGroupEntity groupEntity){
         final LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_group_nofriend, null);
-        final Dialog shoeGroupNoFriendDialog = new MyDialog(mContext, null, selectIntention);
+        if(shoeGroupNoFriendDialog == null){
+            shoeGroupNoFriendDialog = new MyDialog(mContext, null, selectIntention);
+        }
         TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
         tv_no_member.setText(getString(R.string.test_group_friend));
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);//确定
@@ -324,14 +329,17 @@ public class InviteMemberActivity extends BaseActivity {
                 return;
             }
         });
-        shoeGroupNoFriendDialog.show();
-
+        if (!shoeGroupNoFriendDialog.isShowing()){
+            shoeGroupNoFriendDialog.show();
+        }
 
     }
     private void showNoFriendDialog() {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        if(showSelectDialog == null){
+            showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        }
         TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
         tv_no_member.setText(getString(R.string.text_pending_approval));
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
@@ -341,7 +349,9 @@ public class InviteMemberActivity extends BaseActivity {
                 showSelectDialog.dismiss();
             }
         });
-        showSelectDialog.show();
+        if (!showSelectDialog.isShowing()){
+            showSelectDialog.show();
+        }
     }
 
     private List<View> initPagerView() {

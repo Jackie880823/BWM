@@ -169,7 +169,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         }
 
         // initView
-        progressBar = getViewById(R.id.progressBar);
+        progressBar = getViewById(R.id.wall_comment_progress_bar);
         vProgress = getViewById(R.id.rl_progress);
         scrollView = getViewById(R.id.content);
         rvList = getViewById(R.id.rv_wall_comment_list);
@@ -896,7 +896,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     @Override
     public void remove(final String content_group_id) {
 
-        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.alert_diary_del_title), getActivity().getString(R.string.alert_diary_del));
+        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
