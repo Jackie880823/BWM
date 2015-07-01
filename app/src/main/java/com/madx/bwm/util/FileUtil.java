@@ -3,6 +3,7 @@ package com.madx.bwm.util;
 /**
  * Created by wing on 15/3/22.
  */
+
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -25,7 +26,7 @@ public class FileUtil {
     /**
      * 获取保存路径
      * @param context
-     * @param isOutPath 是否保存在app内(沙盒)
+     * @param isOutPath 是否保存在app外(沙盒)
      * @return
      */
     public static File getSavePath(Context context,boolean isOutPath) {
@@ -39,13 +40,16 @@ public class FileUtil {
                     path = Environment.getDataDirectory();
                 }
             }
+            LogUtil.d("","2getSavePath=========="+appPath);
             return path;
         }else{
             if(appPath==null){
                 appPath  = context.getFilesDir();
             }
+            LogUtil.d("","1getSavePath=========="+appPath);
             return appPath;
         }
+
     }
     /**
      * 获取全局缓存目录路径
@@ -103,7 +107,8 @@ public class FileUtil {
      */
     public static String getRealPathFromURI(Context context,Uri contentURI) {
         String result;
-        Cursor cursor = context.getContentResolver().query(contentURI, null, null, null, null);
+        String[] proj = { MediaStore.Images.ImageColumns.DATA };
+        Cursor cursor = context.getContentResolver().query(contentURI, proj, null, null, null);
         if (cursor == null) { // Source is Dropbox or other similar local file path
             result = contentURI.getPath();
         } else {
