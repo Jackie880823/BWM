@@ -10,19 +10,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.madx.bwm.R;
+import com.madx.bwm.ui.wall.WallNewFragment;
 
 import java.util.List;
 
 public class FeelingAdapter extends RecyclerView.Adapter<FeelingAdapter.VHItem> {
+
     private Context mContext;
     private List<String> data;
-//    private String[] feelingDesces;
+    //    private String[] feelingDesces;
 
 
     public FeelingAdapter(Context context, List<String> data) {
         mContext = context;
         this.data = data;
-//        feelingDesces = context.getResources().getStringArray(R.array.feeling_desc);
+        //        feelingDesces = context.getResources().getStringArray(R.array.feeling_desc);
     }
 
     @Override
@@ -38,16 +40,33 @@ public class FeelingAdapter extends RecyclerView.Adapter<FeelingAdapter.VHItem> 
         String iconPath = data.get(position);
         try {
             holder.iv_feel_icon.setImageBitmap(BitmapFactory.decodeStream(mContext.getAssets().open(iconPath)));
-//            if (feelingDesces != null)
-//                holder.tv_feel_desc.setText(feelingDesces[position]);
+            //            if (feelingDesces != null)
+            //                holder.tv_feel_desc.setText(feelingDesces[position]);
             if (checkIndex == position) {
                 holder.checked_icon.setVisibility(View.VISIBLE);
             } else {
                 holder.checked_icon.setVisibility(View.GONE);
             }
+            // 获得表情文件名
+            String name = iconPath.substring(WallNewFragment.PATH_PREFIX.length() + 1, iconPath.indexOf(".")).replace("-", " ");
+            // 首字母大写
+            name = chgFirst(name);
+            holder.tv_feel_desc.setText(name);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 功能:将一个字符串的首字母大字
+     * @param text String源字符串
+     * @return String 返回新字符串
+     */
+    private String chgFirst(String text) {
+        char[] temp = text.toCharArray();
+
+        temp[0] = text.toUpperCase().charAt(0);
+        return new String(temp);
     }
 
 
