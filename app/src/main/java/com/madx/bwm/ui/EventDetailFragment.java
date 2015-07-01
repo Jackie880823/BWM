@@ -186,7 +186,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         });
         if (NetworkUtil.isNetworkConnected(getActivity())) {
 
-            progressBar = getViewById(R.id.progressBar);
+            progressBar = getViewById(R.id.event_detail_progress_bar);
 
             etChat = getViewById(R.id.et_chat);
             expandFunctionButton = getViewById(R.id.ib_more);
