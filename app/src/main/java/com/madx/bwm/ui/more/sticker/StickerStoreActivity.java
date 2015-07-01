@@ -333,7 +333,7 @@ public class StickerStoreActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-//        data = dataStickerGroup;
+        data = dataStickerGroup;
     }
 
     //    private Handler handler = new Handler() {
