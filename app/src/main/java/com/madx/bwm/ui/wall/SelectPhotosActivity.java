@@ -28,8 +28,8 @@ public class SelectPhotosActivity extends BaseActivity {
                 mSelectedImages = mSelectedImageUris;
             } else {
                 Uri uri = null;
-                if(mSelectedImages!=null){
-                    uri = mSelectedImages.get(0);
+                if(mSelectedImageUris!=null){
+                    uri = mSelectedImageUris.get(0);
                 }
                 Intent intent = new Intent();
                 intent.setData(uri);
