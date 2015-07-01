@@ -709,7 +709,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         Log.i(TAG, "changeTab& tabIndex = " + tabIndex);
 
         if(tabIndex == WALL_TAB_WORD) {
-        Log.i(TAG, "changeTab& tabIndex = WALL_TAB_WORD");
+            Log.i(TAG, "changeTab& tabIndex = WALL_TAB_WORD");
             // 切换至输入文字的Tab，输入框获取焦点并弹出键盘
             fragment1.getEditText4Content().requestFocus();
             InputMethodManager imm = (InputMethodManager) getParentActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
