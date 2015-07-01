@@ -996,7 +996,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         @Override
         public int compare(String lhs, String rhs) {
             String str1 = lhs.substring(0, 1).toUpperCase();
-            String str2 = lhs.substring(0, 1).toUpperCase();
+            String str2 = rhs.substring(0, 1).toUpperCase();
             return str1.compareTo(str2);
         }
     }
