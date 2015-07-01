@@ -321,27 +321,10 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                 // 如果是直接从相册获取
                 case REQUEST_HEAD_PHOTO:
                     if(data != null) {
-                        List<Uri> pickUries = new ArrayList();
-                        //                        if(SDKUtil.IS_JB) {
-                        //                            ClipData clipData = data.getClipData();
-                        //                            if(clipData != null) {
-                        //                                int size = clipData.getItemCount();
-                        //                                for(int i = 0; i < size; i++) {
-                        //                                    Uri uri = clipData.getItemAt(i).getUri();
-                        //                                    pickUries.add(uri);
-                        //                                    Log.i(TAG, "uri: " + uri.toString());
-                        //                                }
-                        //                            } else {
-                        //                                Log.i(TAG, "uri: " + data.getData().toString());
-                        //                                pickUries.add(data.getData());
-                        //                            }
-                        //                        } else {
-                        //                            Log.i(TAG, "uri: " + data.getData().toString());
-                        //                            pickUries.add(data.getData());
-                        //                        }
-                        pickUries = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
-                        addDataAndNotify(getMiniThumbnailUri(pickUries));
-                        uris.addAll(pickUries);
+                        ArrayList pickUris;
+                        pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
+                        addDataAndNotify(getMiniThumbnailUri(pickUris));
+                        uris.addAll(pickUris);
                     }
                     break;
                 // 如果是调用相机拍照时
