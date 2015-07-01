@@ -10,9 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="@dimen/activity_vertical_margin"
-
-            >
+            android:paddingTop="@dimen/activity_vertical_margin">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -62,8 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:id="@+id/btn_me"
@@ -158,8 +155,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:id="@+id/btn_setting"
@@ -189,8 +185,7 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:visibility="visible"
-                    >
+                    android:visibility="visible">
 
                     <RelativeLayout
                         android:id="@+id/btn_sticker_store"
@@ -222,7 +217,7 @@
                     android:orientation="vertical">
 
                     <RelativeLayout
-                        android:id="@+id/btn_about_us"
+                        android:id="@+id/btn_archive"
                         android:layout_width="@dimen/default_user_head_width_height"
                         android:layout_height="@dimen/default_user_head_width_height"
                         android:background="@drawable/circular_bg_blue"
@@ -232,14 +227,14 @@
                             android:layout_width="@dimen/default_small_button_width_height"
                             android:layout_height="@dimen/default_small_button_width_height"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/more_about_us" />
+                            android:src="@drawable/more_archive" />
                     </RelativeLayout>
 
                     <TextView
                         style="@style/text_dark_default"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/default_view_margin"
-                        android:text="@string/text_about_us" />
+                        android:text="@string/text_archive" />
 
                 </LinearLayout>
 
@@ -283,15 +278,41 @@
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:orientation="horizontal">
 
-
                 <LinearLayout
-
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/btn_about_us"
+                        android:layout_width="@dimen/default_user_head_width_height"
+                        android:layout_height="@dimen/default_user_head_width_height"
+                        android:background="@drawable/circular_bg_blue"
+                        android:clickable="true">
+
+                        <ImageView
+                            android:layout_width="@dimen/default_small_button_width_height"
+                            android:layout_height="@dimen/default_small_button_width_height"
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/more_about_us" />
+                    </RelativeLayout>
+
+                    <TextView
+                        style="@style/text_dark_default"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/default_view_margin"
+                        android:text="@string/text_about_us" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:id="@+id/btn_contact_us"
@@ -316,7 +337,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -345,8 +365,16 @@
 
                 </LinearLayout>
 
-                <LinearLayout
 
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:orientation="horizontal">
+
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -374,7 +402,13 @@
                         android:text="@string/text_sign_out" />
 
                 </LinearLayout>
-
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+                </LinearLayout>
 
 
             </LinearLayout>

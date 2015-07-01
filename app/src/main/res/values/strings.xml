@@ -488,4 +488,12 @@
 
     <string name="text_post_and">Post and</string>
     <string name="text_event_now">Event now</string>
+
+    <!-- archive-->
+    <string name="text_archive">Archive</string>
+    <string name="text_group_posting">Group Posting</string>
+    <string name="text_private_posting">Private Posting</string>
+    <string name="text_archive_comment">Comment</string>
+    <string name="text_member_list">Member List</string>
+
 </resources>

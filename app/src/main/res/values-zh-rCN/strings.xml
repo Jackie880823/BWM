@@ -490,4 +490,8 @@
 
     <string name="text_post_and">现在</string>
     <string name="text_event_now">创建一个</string>
+
+    <string name="text_archive">Archive</string>
+    <string name="text_group_posting">Group Posting</string>
+    <string name="text_private_posting">Private Posting</string>
 </resources>
