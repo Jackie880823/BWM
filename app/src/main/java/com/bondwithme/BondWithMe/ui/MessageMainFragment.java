@@ -1,20 +1,48 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import com.gc.materialdesign.widgets.Dialog;
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.adapter.MessageGroupFragmentAdapter;
+import com.bondwithme.BondWithMe.adapter.MessagePrivateListAdapter;
+import com.bondwithme.BondWithMe.entity.GroupMessageEntity;
+import com.bondwithme.BondWithMe.entity.PrivateMessageEntity;
+import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.MslToast;
+import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
+import com.gc.materialdesign.widgets.Dialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,11 +50,9 @@ import java.util.List;
  */
 public class MessageMainFragment extends BaseFragment<MainActivity> implements View.OnClickListener {
     private ViewPager pager;
-    private MyFragmentPageAdapter mAdapter;
     private TextView message_member_tv;
     private TextView message_group_tv;
     private Dialog showSelectDialog;
-    private List<Fragment> fragmentList;
 
     public static MessageMainFragment newInstance(String... params) {
 
@@ -40,17 +66,13 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 
     @Override
     public void initView() {
+        mContext = getActivity();
+        TAG = mContext.getClass().getSimpleName();
         pager = getViewById(R.id.message_list_viewpager);
         message_member_tv = getViewById(R.id.message_member_tv);
         message_group_tv = getViewById(R.id.message_group_tv);
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        fragmentList = new ArrayList<>();
-        fragmentList.add(MemberMessageFragment.newInstance());
-        fragmentList.add(GroupMessageFragment.newInstance());
-        //初始化自定义适配器
-        mAdapter = new MyFragmentPageAdapter(fm, fragmentList);
         //绑定自定义适配器
-        pager.setAdapter(mAdapter);
+        pager.setAdapter(new FamilyPagerAdapter(initPagerView()));
         pager.setOnPageChangeListener(new MyOnPageChanger());
         getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
             @Override
@@ -129,9 +151,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             @Override
             public void onClick(View v) {
                 //startActivity(new Intent(getActivity(), CreateGroupActivity.class));
-                Intent intent=new Intent(getActivity(), InviteMemberActivity.class);
-                intent.putExtra("isCreateNewGroup",true);
-                intent.putExtra("jumpIndex",1);
+                Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
+                intent.putExtra("isCreateNewGroup", true);
+                intent.putExtra("jumpIndex", 1);
                 startActivity(intent);
                 showSelectDialog.dismiss();
             }
@@ -150,22 +172,449 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 
     }
 
-    class MyFragmentPageAdapter extends FragmentStatePagerAdapter {
-        private List<Fragment> fragments;
+    private ListView userListView;
+    private ImageButton userIb;
+    private MySwipeRefreshLayout userRefreshLayout;
+    private MessagePrivateListAdapter privateAdapter;
+    private Context mContext;
+    private List<PrivateMessageEntity> userEntityList;
+    private boolean isUserRefresh = false;
+    private int startIndex = 1;
+    private boolean isPullData = false;
+    private LinearLayout emptyMemberMessageLinear;
+    private ImageView emptyMemberMessageIv;
+    private TextView emptyMemberMessageTv;
+    private View vProgress;
+    private ListView groupListView;
+    private ImageButton groupIb;
+    private MySwipeRefreshLayout groupRefreshLayout;
+    private MessageGroupFragmentAdapter messageGroupAdapter;
+    private List<GroupMessageEntity> userEntityListGroup;
+    private boolean isGroupRefresh = false;
+    private int startIndexGroup = 1;
+    private boolean isPullDataGroup = false;
+    private LinearLayout emptyGroupMessageLinear;
+    private ImageView emptyGroupMessageIv;
+    private TextView emptyGroupMessageTv;
+    private String TAG;
 
-        public MyFragmentPageAdapter(FragmentManager fm, List<Fragment> fragments) {
-            super(fm);
-            this.fragments = fragments;
+
+    private List<View> initPagerView() {
+        List<View> mLists = new ArrayList<>();
+        View userView = LayoutInflater.from(mContext).inflate(R.layout.message_list_view_layout, null);
+        userListView = (ListView) userView.findViewById(R.id.message_listView);
+        userIb = (ImageButton) userView.findViewById(R.id.ib_top);
+        userRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
+        emptyMemberMessageLinear = (LinearLayout) userView.findViewById(R.id.message_main_empty_linear);
+        emptyMemberMessageIv = (ImageView) userView.findViewById(R.id.message_main_image_empty);
+        emptyMemberMessageTv = (TextView) userView.findViewById(R.id.message_main_text_empty);
+        vProgress = userView.findViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
+        userEntityList = new ArrayList<>();
+        privateAdapter = new MessagePrivateListAdapter(mContext, userEntityList);
+        userListView.setAdapter(privateAdapter);
+        userIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userListView.setSelection(0);
+            }
+        });
+        userRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!NetworkUtil.isNetworkConnected(getActivity())) {
+                    MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+                    userRefreshLayout.setRefreshing(false);
+                    return;
+                }
+                startIndex = 1;
+                isUserRefresh = true;
+                getData(0);
+            }
+
+        });
+
+        userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int arg2, long arg3) {
+                arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);
+                Intent intent = new Intent(getActivity(), MessageChatActivity.class);
+                intent.putExtra("type", 0);
+                intent.putExtra("groupId", privateAdapter.getmUserEntityList().get(arg2).getGroup_id());
+                intent.putExtra("titleName", privateAdapter.getmUserEntityList().get(arg2).getUser_given_name());
+                startActivity(intent);
+            }
+        });
+
+        userListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (userListView.getFirstVisiblePosition() == 0) {
+                    userIb.setVisibility(View.GONE);
+                } else {
+                    userIb.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userListView.getFirstVisiblePosition() == 0) {
+                    userRefreshLayout.setEnabled(true);
+                    userIb.setVisibility(View.GONE);
+                } else {
+                    userIb.setVisibility(View.VISIBLE);
+                    userRefreshLayout.setEnabled(false);
+                }
+                if (privateAdapter.getCount() > 0 && (userListView.getFirstVisiblePosition() != 0)
+                        && (userListView.getLastVisiblePosition() > (privateAdapter.getCount() - 5)) && !isPullData) {
+                    getData(startIndex);
+                    isPullData = true;
+                }
+            }
+        });
+        getData(0);
+
+        mLists.add(userView);
+        View groupView = LayoutInflater.from(mContext).inflate(R.layout.message_list_view_layout, null);
+        groupListView = (ListView) groupView.findViewById(R.id.message_listView);
+        groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
+        groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
+        emptyGroupMessageLinear = (LinearLayout) groupView.findViewById(R.id.message_main_empty_linear);
+        emptyGroupMessageIv = (ImageView) groupView.findViewById(R.id.message_main_image_empty);
+        emptyGroupMessageTv = (TextView) groupView.findViewById(R.id.message_main_text_empty);
+        userEntityListGroup = new ArrayList<>();
+        messageGroupAdapter = new MessageGroupFragmentAdapter(mContext, userEntityListGroup);
+        groupListView.setAdapter(messageGroupAdapter);
+        groupIb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                groupListView.setSelection(0);
+            }
+        });
+        groupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!NetworkUtil.isNetworkConnected(getActivity())) {
+                    MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+                    groupRefreshLayout.setRefreshing(false);
+                    return;
+                }
+                startIndexGroup = 1;
+                isGroupRefresh = true;
+                getDataGroup(0);
+            }
+
+        });
+        groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int arg2, long arg3) {
+                Intent intent = new Intent(getActivity(), MessageChatActivity.class);
+                intent.putExtra("type", 1);
+                intent.putExtra("groupId", messageGroupAdapter.getmGroupList().get(arg2).getGroup_id());
+                intent.putExtra("titleName", messageGroupAdapter.getmGroupList().get(arg2).getGroup_name());
+                arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);//服务器会消除。本地直接直接消除。
+                startActivity(intent);
+            }
+        });
+        groupListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (groupListView.getFirstVisiblePosition() == 0) {
+                    groupIb.setVisibility(View.GONE);
+                } else {
+                    groupIb.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (groupListView.getFirstVisiblePosition() == 0) {
+                    groupRefreshLayout.setEnabled(true);
+                    groupIb.setVisibility(View.GONE);
+                } else {
+                    groupIb.setVisibility(View.VISIBLE);
+                    groupRefreshLayout.setEnabled(false);
+                }
+                if (messageGroupAdapter.getCount() > 0 && (groupListView.getFirstVisiblePosition() != 0)
+                        && (groupListView.getLastVisiblePosition() > (messageGroupAdapter.getCount() - 5)) && !isPullDataGroup) {
+                    getDataGroup(startIndexGroup);
+                    isPullDataGroup = true;
+                }
+            }
+        });
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getDataGroup(0);
+            }
+        }, 1500);
+        mLists.add(groupView);
+        return mLists;
+    }
+
+    private void getData(int beginIndex) {
+        if (!NetworkUtil.isNetworkConnected(getActivity())) {
+            MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+            userFinishReFresh();
+            return;
+        }
+        final RequestInfo requestInfo = new RequestInfo();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("limit", "20");
+        int start = beginIndex * 20;
+        params.put("start", start + "");
+        requestInfo.params = params;
+        requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "member");
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                new HttpTools(getActivity()).get(requestInfo, TAG, new HttpCallback() {
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        if (vProgress != null) {
+                            vProgress.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onResult(String response) {
+                        userFinishReFresh();
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
+                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                            showMemberEmptyView();
+                        }
+                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+                            showMemberEmptyView();
+                        }
+                        Gson gson = new GsonBuilder().create();
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            List<PrivateMessageEntity> userList = gson.fromJson(jsonObject.getString("member"), new TypeToken<ArrayList<PrivateMessageEntity>>() {
+                            }.getType());
+                            String totalUnread = jsonObject.optString("totalUnread", "0");//私聊的消息总共有多少未读
+                            if (isPullData) {
+                                startIndex++;
+                                isPullData = false;
+                                Message.obtain(handler, GET_PULL_DATA, userList).sendToTarget();
+                            } else {
+                                if (null == userList || userList.size() == 0) {
+                                    showMemberEmptyView();
+                                } else {
+                                    hideMemberEmptyView();
+                                }
+                                Message.obtain(handler, GET_NEW_DATA, userList).sendToTarget();
+                            }
+                        } catch (JSONException e) {
+                            if (isPullData) {
+                                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                            } else {
+                                showMemberEmptyView();
+                            }
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                        userFinishReFresh();
+                    }
+
+                    @Override
+                    public void onCancelled() {
+
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+            }
+        }.start();
+    }
+
+    private static final int GET_NEW_DATA = 0x11;
+    private static final int GET_PULL_DATA = 0x12;
+    private static final int GET_NEW_DATA_GROUP = 0x13;
+    private static final int GET_PULL_DATA_GROUP = 0x14;
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case GET_NEW_DATA:
+                    List<PrivateMessageEntity> userEntityList1 = (List<PrivateMessageEntity>) msg.obj;
+                    privateAdapter.NewUserEntityData(userEntityList1);
+                    break;
+                case GET_PULL_DATA:
+                    List<PrivateMessageEntity> userEntityListPull1 = (List<PrivateMessageEntity>) msg.obj;
+                    privateAdapter.AddUserEntityData(userEntityListPull1);
+                    break;
+                case GET_NEW_DATA_GROUP:
+                    List<GroupMessageEntity> userEntityList = (List<GroupMessageEntity>) msg.obj;
+                    messageGroupAdapter.NewGroupEntityData(userEntityList);
+                    break;
+                case GET_PULL_DATA_GROUP:
+                    List<GroupMessageEntity> userEntityListPull = (List<GroupMessageEntity>) msg.obj;
+                    messageGroupAdapter.AddGroupEntityData(userEntityListPull);
+                    break;
+            }
+
+        }
+    };
+
+    private void groupFinishReFresh() {
+        if (isGroupRefresh) {
+            groupRefreshLayout.setRefreshing(false);
+            isGroupRefresh = false;
+        }
+    }
+
+    private void showGroupEmptyView() {
+        emptyGroupMessageLinear.setVisibility(View.VISIBLE);
+        emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
+        emptyGroupMessageTv.setText("");
+    }
+
+    private void hideGroupEmptyView() {
+        emptyGroupMessageLinear.setVisibility(View.GONE);
+    }
+
+    private void getDataGroup(int beginIndex) {
+        if (!NetworkUtil.isNetworkConnected(getActivity())) {
+            MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+            groupFinishReFresh();
+            return;
+        }
+
+        final RequestInfo requestInfo = new RequestInfo();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("limit", "20");
+        int start = beginIndex * 20;
+        params.put("start", start + "");
+        requestInfo.params = params;
+        requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "group");
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                new HttpTools(getActivity()).get(requestInfo, TAG, new HttpCallback() {
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                    }
+
+                    @Override
+                    public void onResult(String response) {
+                        groupFinishReFresh();
+                        Gson gson = new GsonBuilder().create();
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            List<GroupMessageEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<GroupMessageEntity>>() {
+                            }.getType());
+
+                            if (isPullDataGroup) {
+                                startIndexGroup++;
+                                isPullDataGroup = false;
+                                Message.obtain(handler, GET_PULL_DATA_GROUP, groupList).sendToTarget();
+                            } else {
+                                if (null == groupList || groupList.size() == 0) {
+                                    showGroupEmptyView();
+                                } else {
+                                    hideGroupEmptyView();
+                                }
+                                Message.obtain(handler, GET_NEW_DATA_GROUP, groupList).sendToTarget();
+                            }
+                        } catch (JSONException e) {
+                            if (isPullDataGroup) {
+                                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                            } else {
+                                showGroupEmptyView();
+                            }
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                        groupFinishReFresh();
+                    }
+
+                    @Override
+                    public void onCancelled() {
+
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+            }
+        }.start();
+    }
+
+    private void userFinishReFresh() {
+        if (isUserRefresh) {
+            userRefreshLayout.setRefreshing(false);
+            isUserRefresh = false;
+        }
+    }
+
+    private void showMemberEmptyView() {
+        emptyMemberMessageLinear.setVisibility(View.VISIBLE);
+        emptyMemberMessageIv.setImageResource(R.drawable.message_member_empty);
+        emptyMemberMessageTv.setText("");
+    }
+
+    private void hideMemberEmptyView() {
+        emptyMemberMessageLinear.setVisibility(View.GONE);
+    }
+
+    class FamilyPagerAdapter extends PagerAdapter {
+
+        private List<View> mLists;
+
+        public FamilyPagerAdapter(List<View> array) {
+            this.mLists = array;
         }
 
         @Override
         public int getCount() {
-            return fragments.size();
+            return mLists.size();
         }
 
         @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+        @Override
+        public Object instantiateItem(View arg0, int arg1) {
+            ((ViewPager) arg0).addView(mLists.get(arg1));
+            return mLists.get(arg1);
+        }
+
+        @Override
+        public void destroyItem(View arg0, int arg1, Object arg2) {
+            ((ViewPager) arg0).removeView((View) arg2);
         }
     }
 }

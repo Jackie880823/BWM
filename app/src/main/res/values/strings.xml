@@ -93,10 +93,10 @@
 
     <!-- about -->
 
-    <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you  and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
+    <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
-    <string name="msg_ask_exit_app">Do you really want to sign out?</string>
+    <string name="msg_ask_exit_app">Do you really want to log out?</string>
     <string name="text_yes">YES</string>
     <string name="text_camera">Camera</string>
     <string name="text_album">Album</string>
@@ -501,5 +501,5 @@
     <string name="free">Free</string>
     <string name="price">Price: </string>
 
-
+    <string name="text_admin">Admin</string>
 </resources>

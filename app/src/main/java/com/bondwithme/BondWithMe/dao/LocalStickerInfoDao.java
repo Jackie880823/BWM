@@ -27,7 +27,7 @@ public class LocalStickerInfoDao {
     }
 
     public String getSavePath() {
-        File bootFile = FileUtil.getSavePath(mContext, true);
+        File bootFile = FileUtil.getSavePath(mContext, false);
         String filePath = bootFile.getAbsolutePath();
         filePath = filePath + File.separator + STICKER_FILE_PATH_NAME;
         File file = new File(filePath);
