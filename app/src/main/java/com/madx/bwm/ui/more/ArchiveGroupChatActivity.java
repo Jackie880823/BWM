@@ -23,6 +23,12 @@ public class ArchiveGroupChatActivity extends BaseActivity implements View.OnCli
     }
 
     @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+        rightButton.setImageResource(R.drawable.btn_group_setting);
+    }
+
+    @Override
     protected void setTitle() {
         tvTitle.setText(R.string.text_archive);
 

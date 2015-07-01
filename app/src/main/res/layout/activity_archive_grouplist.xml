@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/text_group_posting"
+            android:text="Group1"
             android:textSize="@dimen/text_medium_size"
             android:textColor="@color/primary_dark_material_dark"
             />
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/text_private_posting"
+            android:text="Group2"
             android:textSize="@dimen/text_medium_size"
             android:textColor="@color/primary_dark_material_dark"
             />
@@ -70,5 +70,32 @@
         android:background="@color/default_split_line"
         android:layout_gravity="center"/>
 
+    <RelativeLayout
+        android:id="@+id/rl_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_gray"
+        android:padding="@dimen/default_content_padding">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Group3"
+            android:textSize="@dimen/text_medium_size"
+            android:textColor="@color/primary_dark_material_dark"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/profile_right"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_split_line"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

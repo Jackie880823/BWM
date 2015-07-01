@@ -4,10 +4,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/default_text_color_while"
+    android:background="@color/default_content_bg"
     tools:context="com.madx.bwm.ui.more.MoreSettingActivity">
 
     <include
-        layout="@layout/archive_chat_top"
-        />
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+    <include
+        layout="@layout/archive_chat_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <!--<LinearLayout-->
+        <!--android:id="@+id/search_linear"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingLeft="@dimen/_3dp"-->
+        <!--android:paddingRight="@dimen/_3dp">-->
+
+        <!--<EditText-->
+            <!--android:id="@+id/et_search"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="@dimen/default_content_padding"-->
+            <!--android:padding="@dimen/default_content_padding"-->
+            <!--android:singleLine="true"-->
+            <!--android:hint="@string/family_search"-->
+            <!--android:textColorHint="#ccc"-->
+            <!--android:background="@drawable/et_oval_white"-->
+            <!--android:drawablePadding="@dimen/default_view_margin"-->
+            <!--android:drawableRight="@drawable/search" />-->
+    <!--</LinearLayout>-->
+    <View style="@style/split_line_default" />
+    <include
+        android:id="@+id/chat_top"
+        layout="@layout/archive_chat_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
