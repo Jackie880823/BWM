@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BWM</string>
+    <string name="app_name">BondWthMe</string>
     <string name="title_tab_diary">Diary</string>
     <string name="title_tab_event">Event</string>
     <string name="title_tab_chat">Message</string>

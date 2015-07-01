@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/default_content_bg"
-    tools:context="com.madx.bwm.ui.GroupSettingActivity">
+    tools:context="com.bondwithme.BondWithMe.ui.GroupSettingActivity">
 
     <include
         android:id="@+id/fragment_main_top"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.madx.bwm.widget.CircularNetworkImage
+            <com.bondwithme.BondWithMe.widget.CircularNetworkImage
                 android:id="@+id/cni_main"
                 android:layout_width="100dp"
                 android:layout_height="100dp"

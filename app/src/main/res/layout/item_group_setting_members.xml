@@ -8,7 +8,7 @@
     android:paddingBottom="5dp"
     android:background="@drawable/bg_white_gray"
     android:layout_gravity="center">
-        <com.madx.bwm.widget.CircularNetworkImage
+        <com.bondwithme.BondWithMe.widget.CircularNetworkImage
             android:id="@+id/cni_main"
             android:layout_width="60dp"
             android:layout_height="60dp"
