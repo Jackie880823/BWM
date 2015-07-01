@@ -4,14 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/default_content_bg">
-    <LinearLayout
-        android:id="@+id/search_linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/_3dp"
-        android:paddingRight="@dimen/_3dp">
-
-        <EditText
+    <!-- <EditText
             android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,7 +15,28 @@
             android:textColorHint="#ccc"
             android:background="@drawable/et_oval_white"
             android:drawablePadding="@dimen/default_view_margin"
+            android:drawableRight="@drawable/search" />-->
+    <LinearLayout
+        android:id="@+id/search_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/_13dp"
+        android:paddingRight="@dimen/_13dp"
+        android:paddingTop="@dimen/default_content_padding"
+        android:paddingBottom="@dimen/_3dp">
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/default_content_padding"
+            android:singleLine="true"
+            android:hint="@string/family_search"
+            android:textColorHint="#ccc"
+            android:background="@drawable/et_oval_white"
+            android:drawablePadding="@dimen/default_view_margin"
             android:drawableRight="@drawable/search" />
     </LinearLayout>
+    <!--<View style="@style/split_line_default" />-->
 </LinearLayout>
 

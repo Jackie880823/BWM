@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="Group1"
+            android:text="BMW_Group"
             android:textSize="@dimen/text_medium_size"
             android:textColor="@color/primary_dark_material_dark"
             />
@@ -52,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="Group2"
+            android:text="Ming Dinasty"
             android:textSize="@dimen/text_medium_size"
             android:textColor="@color/primary_dark_material_dark"
             />
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="Group3"
+            android:text="Grease Monkees only"
             android:textSize="@dimen/text_medium_size"
             android:textColor="@color/primary_dark_material_dark"
             />

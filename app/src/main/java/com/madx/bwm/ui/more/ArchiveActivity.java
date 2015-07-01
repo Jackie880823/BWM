@@ -63,20 +63,16 @@ public class ArchiveActivity extends BaseActivity implements View.OnClickListene
         switch (v.getId())
         {
             case R.id.rl_1:
-                starttest();
+                startActivity(new Intent(ArchiveActivity.this,GroupListActivity.class));
                 break;
             case R.id.rl_2:
-                starttest();
+                startActivity(new Intent(ArchiveActivity.this,PrivateListActivity.class));
                 break;
             default:
                 super.onClick(v);
                 break;
         }
 
-    }
-    private void starttest(){
-        Intent intent = new Intent(ArchiveActivity.this,GroupListActivity.class);
-        startActivity(intent);
     }
     @Override
     public void requestData() {

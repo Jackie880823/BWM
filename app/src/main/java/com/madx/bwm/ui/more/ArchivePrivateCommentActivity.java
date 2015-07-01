@@ -23,6 +23,12 @@ public class ArchivePrivateCommentActivity extends BaseActivity implements View.
     }
 
     @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+        rightButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
     protected void setTitle() {
         tvTitle.setText(R.string.text_archive_comment);
 

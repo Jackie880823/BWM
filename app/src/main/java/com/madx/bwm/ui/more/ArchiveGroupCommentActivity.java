@@ -15,11 +15,18 @@ public class ArchiveGroupCommentActivity extends BaseActivity implements View.On
     @Override
     public int getLayout() {
         return R.layout.activity_more_archive_groupcomment;
+//        return R.layout.activity_more_archive_groupchat;
     }
 
     @Override
     protected void initBottomBar() {
 
+    }
+
+    @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+        rightButton.setVisibility(View.INVISIBLE);
     }
 
     @Override

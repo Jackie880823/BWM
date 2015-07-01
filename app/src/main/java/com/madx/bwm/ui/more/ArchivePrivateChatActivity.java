@@ -1,7 +1,9 @@
 package com.madx.bwm.ui.more;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.View;
 
 import com.madx.bwm.R;
@@ -11,6 +13,7 @@ import com.madx.bwm.ui.BaseActivity;
  * Created by liangzemian on 15/6/30.
  */
 public class ArchivePrivateChatActivity extends BaseActivity implements View.OnClickListener{
+    private CardView c1;
 
     @Override
     public int getLayout() {
@@ -20,6 +23,12 @@ public class ArchivePrivateChatActivity extends BaseActivity implements View.OnC
     @Override
     protected void initBottomBar() {
 
+    }
+
+    @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+        rightButton.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -39,9 +48,27 @@ public class ArchivePrivateChatActivity extends BaseActivity implements View.OnC
 
     @Override
     public void initView() {
+        c1 = getViewById(R.id.top_event);
+        c1.setOnClickListener(this);
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.top_event:
+                starttest();
+                break;
+            default:
+                super.onClick(v);
+                break;
+        }
+        super.onClick(v);
+    }
+    private void  starttest(){
+        Intent intent = new Intent(ArchivePrivateChatActivity.this,ArchivePrivateCommentActivity.class);
+        startActivity(intent);
+    }
     @Override
     public void requestData() {
 
