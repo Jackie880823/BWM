@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,35 +20,72 @@ public class SelectPhotosActivity extends BaseActivity {
 
     private SelectPhotosFragment fragment;
     private List<Uri> mSelectedImages = new ArrayList();
+    private boolean multi;
+    private int residue;
 
     private SelectPhotosFragment.SelectImageUirChangeListener listener = new SelectPhotosFragment.SelectImageUirChangeListener() {
+
+        /**
+         * 添加图片{@code imageUri}到选择列表
+         *
+         * @param imageUri -   需要添加的图片uri
+         * @return -   true:   添加成功；
+         * -   false:  添加失败；
+         */
         @Override
-        public void onChange(Uri imageUri, boolean isAdd) {
-            boolean multi = getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        public boolean addUri(Uri imageUri) {
+            // 添加结果成功与否的返回值，默认不成功
+            boolean result = false;
             if(multi) {
-                if(isAdd) {
-                    mSelectedImages.add(imageUri);
-                } else if(mSelectedImages.contains(imageUri)) {
-                    mSelectedImages.remove(imageUri);
+                if(mSelectedImages.size() < residue) {
+                    // 没有超过限制的图片数量可以继续添加并返回添加结果的返回值
+                    result = mSelectedImages.add(imageUri);
+                } else {
+                    // 提示用户添加的图片超过限制的数量
+                    MessageUtil.showMessage(SelectPhotosActivity.this, String.format(SelectPhotosActivity.this.getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
                 }
             } else {
+                // 不是同时添加多张图片，添加完成关闭当前Activity
                 Intent intent = new Intent();
                 intent.setData(imageUri);
                 setResult(RESULT_OK, intent);
                 finish();
+                result = true;
             }
+            return result;
         }
 
+        /**
+         * 从列表中删除图片{@code imageUri}
+         *
+         * @param imageUri -   需要删除的图片uri
+         * @return -   true:   删除成功；
+         * -   false:  删除失败；
+         */
+        @Override
+        public boolean removeUri(Uri imageUri) {
+            // 返回删除结果成功与否的值
+            return mSelectedImages.remove(imageUri);
+        }
+
+        /**
+         * 打开了左侧的目录列表并设置标题栏左侧图标为{@code drawable}
+         *
+         * @param drawable
+         */
         @Override
         public void onDrawerOpened(Drawable drawable) {
             leftButton.setImageDrawable(drawable);
-//            leftButton.setImageResource(R.drawable.back_normal);
         }
 
+        /**
+         * 关闭了左侧的目录列表并设置标题栏左侧图标为{@code drawable}
+         *
+         * @param drawable
+         */
         @Override
         public void onDrawerClose(Drawable drawable) {
             leftButton.setImageDrawable(drawable);
-//            leftButton.setImageResource(R.drawable.text_title_seletor);
         }
     };
 
@@ -99,6 +137,10 @@ public class SelectPhotosActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        // 是否为同时添加多张图片
+        Intent intent = getIntent();
+        multi = intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        residue = intent.getIntExtra(TabPictureFragment.RESIDUE, 0);
         fragment.setSelectImageUirListener(listener);
     }
 

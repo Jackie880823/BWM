@@ -25,7 +25,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.LocalImagesAdapter;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.AsyncLoadBitmapTask;
-import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
 
 import java.io.File;
@@ -71,7 +70,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     private Cursor imageCursor;
     private int loaderCounter = 1;
 
-    private int residue;
     /**
      * 本地图片显示adapter
      */
@@ -107,7 +105,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
     @Override
     public void initView() {
-        residue = getParentActivity().getIntent().getIntExtra(TabPictureFragment.RESIDUE, TabPictureFragment.MAX_SELECT);
         mDrawerList = getViewById(R.id.lv_images_titles);
         mGvShowPhotos = getViewById(R.id.gv_select_photo);
         mDrawerLayout = getViewById(R.id.drawer_layout);
@@ -189,25 +186,26 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
                 Uri itemUri = mImageUriList.get(position);
                 if(check.isCheck()) {
-                    check.setChecked(false);
-                    mSelectedImageUris.remove(itemUri);
-                    //
                     if(selectImageUirListener != null) {
-                        selectImageUirListener.onChange(itemUri, false);
+                        // 从列表中已经选中的图片
+                        boolean result = selectImageUirListener.removeUri(itemUri);
+                        check.setChecked(!result);
+                        if(result) {
+                            // 删除成功当前选择的列表也需要删除
+                            mSelectedImageUris.remove(itemUri);
+                        }
                     }
                 } else {
-                    if(mSelectedImageUris.size() < residue) {
-                        check.setChecked(true);
-                        mSelectedImageUris.add(itemUri);
-                        if(selectImageUirListener != null) {
-                            selectImageUirListener.onChange(itemUri, true);
+                    if(selectImageUirListener != null) {
+                        // 添加图片到选中列表
+                        boolean result = selectImageUirListener.addUri(itemUri);
+                        check.setChecked(result);
+                        if(result) {
+                            // 添加成功当前列表也需要添加
+                            mSelectedImageUris.add(itemUri);
                         }
-                    } else {
-                        //照片下载完的提示
-                        MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
                     }
                 }
-
             }
         });
     }
@@ -395,10 +393,36 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      * 选中图片改变监听
      */
     public interface SelectImageUirChangeListener {
-        void onChange(Uri imageUri, boolean isAdd);
+        /**
+         * 添加图片{@code imageUri}到选择列表
+         *
+         * @param imageUri -   需要添加的图片uri
+         * @return -   true:   添加成功；
+         * -   false:  添加失败；
+         */
+        boolean addUri(Uri imageUri);
 
+        /**
+         * 从列表中删除图片{@code imageUri}
+         *
+         * @param imageUri -   需要删除的图片uri
+         * @return -   true:   删除成功；
+         * -   false:  删除失败；
+         */
+        boolean removeUri(Uri imageUri);
+
+        /**
+         * 打开了左侧的目录列表并设置标题栏左侧图标为{@code drawable}
+         *
+         * @param drawable
+         */
         void onDrawerOpened(Drawable drawable);
 
+        /**
+         * 关闭了左侧的目录列表并设置标题栏左侧图标为{@code drawable}
+         *
+         * @param drawable
+         */
         void onDrawerClose(Drawable drawable);
     }
 
