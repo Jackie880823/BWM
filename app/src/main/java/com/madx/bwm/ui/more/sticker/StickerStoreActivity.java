@@ -75,6 +75,7 @@ public class StickerStoreActivity extends BaseActivity {
     private LinearLayoutManager llm;
     private  List<StickerGroupEntity> dataStickerGroup = new ArrayList<>();
     private  List<StickerBannerEntity> dataStickerBanner = new ArrayList<>();
+    private  List<StickerGroupEntity> data = new ArrayList<>();
     private final int AUTO_PLAY = 1;
     private ScrollView scrollView;
     int finished;
@@ -327,10 +328,17 @@ public class StickerStoreActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        data = dataStickerGroup;
 //        handler.sendEmptyMessageDelayed(AUTO_PLAY, 4000);
     }
 
-//    private Handler handler = new Handler() {
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        data = dataStickerGroup;
+    }
+
+    //    private Handler handler = new Handler() {
 //        @Override
 //        public void handleMessage(Message msg) {
 //            switch (msg.what){
@@ -464,7 +472,8 @@ public class StickerStoreActivity extends BaseActivity {
                     ivExist.setVisibility(View.VISIBLE);
                 }
             }else if (MyStickerActivity.ACTION_UPDATE.equals(intent.getAction())){
-                int position = intent.getIntExtra("position",0);
+                String path = intent.getStringExtra("path");
+                int position = getPosition(path, data);
                 StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
                 ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
                 TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
