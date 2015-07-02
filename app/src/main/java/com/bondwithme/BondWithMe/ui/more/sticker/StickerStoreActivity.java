@@ -36,6 +36,7 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
@@ -67,7 +68,6 @@ public class StickerStoreActivity extends BaseActivity {
     private ViewPager vp;
     private StickerPagerAdapter stickerPagerAdapter;
     private List<View> views;
-    private LayoutInflater inflater;
     private RecyclerView recyclerViewList;
     private LinearLayoutManager llm;
     private  List<StickerGroupEntity> dataStickerGroup = new ArrayList<>();
@@ -76,7 +76,6 @@ public class StickerStoreActivity extends BaseActivity {
     private final int AUTO_PLAY = 1;
     private ScrollView scrollView;
     int finished;
-    boolean isLoading;
     int positionFromStickerDetail;
 
 
@@ -256,7 +255,7 @@ public class StickerStoreActivity extends BaseActivity {
                     Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LogUtil.e(TAG,"插入sticker info",e);
                 }
 
 
@@ -454,17 +453,20 @@ public class StickerStoreActivity extends BaseActivity {
             if(StickerDetailActivity.ACTION_UPDATE.equals(intent.getAction())){
                 finished = intent.getIntExtra(FINISHED,0);
                 positionFromStickerDetail = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
-                Log.i(TAG,"=======positionFromStickerDetail========"+positionFromStickerDetail);
+                Log.i(TAG, "=======positionFromStickerDetail========" + positionFromStickerDetail);
                 StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(positionFromStickerDetail);
-                ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
-                ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
-                TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
-                tvDownload.setVisibility(View.INVISIBLE);
-                pbDownload.setVisibility(View.VISIBLE);
-                pbDownload.setProgress(finished);
-                if (finished == 100){
-                    pbDownload.setVisibility(View.INVISIBLE);
-                    ivExist.setVisibility(View.VISIBLE);
+                if ( holder!= null){
+                    ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
+                    ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
+                    TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
+                    tvDownload.setVisibility(View.INVISIBLE);
+                    pbDownload.setVisibility(View.VISIBLE);
+                    pbDownload.setProgress(finished);
+                    if (finished == 100){
+                        pbDownload.setVisibility(View.INVISIBLE);
+                        ivExist.setVisibility(View.VISIBLE);
+                    }
+
                 }
             }else if (MyStickerActivity.ACTION_UPDATE.equals(intent.getAction())){
                 String path = intent.getStringExtra("path");

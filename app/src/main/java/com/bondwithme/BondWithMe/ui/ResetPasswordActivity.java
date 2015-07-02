@@ -224,7 +224,7 @@ public class ResetPasswordActivity extends BaseActivity{
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus == false) {
-                    if ((etFstPw.getText().toString().length() > 7) && (etFstPw.getText().toString().length() < 17)) {
+                    if ((etFstPw.getText().toString().length() > 5) && (etFstPw.getText().toString().length() < 17)) {
                         ivFst.setImageResource(R.drawable.correct);
                         blnPasswordNum = true;
                     } else {
