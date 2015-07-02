@@ -44,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.bondwithme.BondWithMe.R.color.default_unenable_item_bg;
 
 
 public class StickerDetailActivity extends BaseActivity {
@@ -100,7 +99,6 @@ public class StickerDetailActivity extends BaseActivity {
         position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
         finished = intent.getIntExtra("finished",0);
         int loadingPosition = intent.getIntExtra("positionFromStickerDetail",0);
-        LogUtil.i(TAG, "============loadingPosition======" + loadingPosition);
 
         NetworkImageView insideSticker = getViewById(R.id.iv_inside_sticker);
         TextView insideStickerName = getViewById(R.id.tv_inside_sticker_name);
@@ -111,7 +109,6 @@ public class StickerDetailActivity extends BaseActivity {
         gvSticker = getViewById(R.id.gv_sticker);
         pbProgress = getViewById(R.id.pb_download);
 
-        LogUtil.i("","finished==============="+finished);
         if(finished>0 && finished<100 && position == loadingPosition) {
             tvDownload.setVisibility(View.INVISIBLE);
             pbProgress.setVisibility(View.VISIBLE);
@@ -164,7 +161,7 @@ public class StickerDetailActivity extends BaseActivity {
             Log.i(TAG,"==========data.size============="+data.size());
             if(data.size() > 0){
                 tvDownload.setText("Downloaded");
-                tvDownload.setBackgroundColor(default_unenable_item_bg);
+                tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                 tvDownload.setEnabled(false);
             }
         } catch (SQLException e) {
@@ -191,7 +188,7 @@ public class StickerDetailActivity extends BaseActivity {
                     pbProgress.setProgress(0);
                     tvDownload.setVisibility(View.VISIBLE);
                     tvDownload.setText("Downloaded");
-                    tvDownload.setBackgroundColor(default_unenable_item_bg);
+                    tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                     tvDownload.setEnabled(false);
 
                     //插入sticker info
@@ -324,7 +321,7 @@ public class StickerDetailActivity extends BaseActivity {
                         pbProgress.setVisibility(View.INVISIBLE);
                         tvDownload.setVisibility(View.VISIBLE);
                         tvDownload.setText("Downloaded");
-                        tvDownload.setBackgroundColor(default_unenable_item_bg);
+                        tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                         tvDownload.setEnabled(false);
                     }
 
@@ -341,7 +338,7 @@ public class StickerDetailActivity extends BaseActivity {
                         pbProgress.setVisibility(View.INVISIBLE);
                         tvDownload.setVisibility(View.VISIBLE);
                         tvDownload.setText("Downloaded");
-                        tvDownload.setBackgroundColor(default_unenable_item_bg);
+                        tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                         tvDownload.setEnabled(false);
                     }
 

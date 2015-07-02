@@ -454,17 +454,20 @@ public class StickerStoreActivity extends BaseActivity {
             if(StickerDetailActivity.ACTION_UPDATE.equals(intent.getAction())){
                 finished = intent.getIntExtra(FINISHED,0);
                 positionFromStickerDetail = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
-                Log.i(TAG,"=======positionFromStickerDetail========"+positionFromStickerDetail);
+                Log.i(TAG, "=======positionFromStickerDetail========" + positionFromStickerDetail);
                 StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(positionFromStickerDetail);
-                ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
-                ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
-                TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
-                tvDownload.setVisibility(View.INVISIBLE);
-                pbDownload.setVisibility(View.VISIBLE);
-                pbDownload.setProgress(finished);
-                if (finished == 100){
-                    pbDownload.setVisibility(View.INVISIBLE);
-                    ivExist.setVisibility(View.VISIBLE);
+                if ( holder!= null){
+                    ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
+                    ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
+                    TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
+                    tvDownload.setVisibility(View.INVISIBLE);
+                    pbDownload.setVisibility(View.VISIBLE);
+                    pbDownload.setProgress(finished);
+                    if (finished == 100){
+                        pbDownload.setVisibility(View.INVISIBLE);
+                        ivExist.setVisibility(View.VISIBLE);
+                    }
+
                 }
             }else if (MyStickerActivity.ACTION_UPDATE.equals(intent.getAction())){
                 String path = intent.getStringExtra("path");
