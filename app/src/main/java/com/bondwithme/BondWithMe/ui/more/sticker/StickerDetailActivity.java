@@ -160,7 +160,7 @@ public class StickerDetailActivity extends BaseActivity {
             data = stickerDao.queryForEq("name",stickerGroupEntity.getName());
             Log.i(TAG,"==========data.size============="+data.size());
             if(data.size() > 0){
-                tvDownload.setText("Downloaded");
+                tvDownload.setText(getResources().getString(R.string.Downloaded));
                 tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                 tvDownload.setEnabled(false);
             }
@@ -187,7 +187,7 @@ public class StickerDetailActivity extends BaseActivity {
                     pbProgress.setVisibility(View.INVISIBLE);
                     pbProgress.setProgress(0);
                     tvDownload.setVisibility(View.VISIBLE);
-                    tvDownload.setText("Downloaded");
+                    tvDownload.setText(getResources().getString(R.string.Downloaded));
                     tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                     tvDownload.setEnabled(false);
 
@@ -320,7 +320,7 @@ public class StickerDetailActivity extends BaseActivity {
                     if (finished == 100){
                         pbProgress.setVisibility(View.INVISIBLE);
                         tvDownload.setVisibility(View.VISIBLE);
-                        tvDownload.setText("Downloaded");
+                        tvDownload.setText(getResources().getString(R.string.Downloaded));
                         tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                         tvDownload.setEnabled(false);
                     }
@@ -337,7 +337,7 @@ public class StickerDetailActivity extends BaseActivity {
                     if (finished == 100){
                         pbProgress.setVisibility(View.INVISIBLE);
                         tvDownload.setVisibility(View.VISIBLE);
-                        tvDownload.setText("Downloaded");
+                        tvDownload.setText(getResources().getString(R.string.Downloaded));
                         tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                         tvDownload.setEnabled(false);
                     }
