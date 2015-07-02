@@ -1,9 +1,11 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
@@ -19,10 +21,6 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -34,7 +32,12 @@ import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.SystemUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
@@ -99,8 +102,9 @@ public class LoginActivity extends Activity {
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void registerInBackground() {
-        new AsyncTask<Void, Void, String>() {
+        AsyncTask task = new AsyncTask<Void, Void, String>() {
 
             @Override
             protected String doInBackground(Void... params) {
@@ -120,7 +124,13 @@ public class LoginActivity extends Activity {
                 }
             }
 
-        }.execute(null, null, null);
+        };
+        //for not work in down 11
+        if(SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+        } else {
+            task.execute(null, null, null);
+        }
     }
 
     private String doRegistration2Jpush() {
@@ -236,9 +246,10 @@ public class LoginActivity extends Activity {
 //        finishByNoPlayService();
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void finishByNoPlayService() {
-        if (!SystemUtil.checkPlayServices(this)) {
-            new AsyncTask<Void, Void, Void>() {
+        if(!SystemUtil.checkPlayServices(this)) {
+            AsyncTask task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
                     try {
@@ -253,7 +264,13 @@ public class LoginActivity extends Activity {
                 protected void onPostExecute(Void aVoid) {
                     finish();
                 }
-            }.execute();
+            };
+            //for not work in down 11
+            if(SDKUtil.IS_HONEYCOMB) {
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+            } else {
+                task.execute();
+            }
         }
 
     }

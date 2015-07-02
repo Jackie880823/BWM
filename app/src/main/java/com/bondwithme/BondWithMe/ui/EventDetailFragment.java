@@ -1,10 +1,12 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,11 +27,6 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.gc.materialdesign.widgets.ProgressDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -44,11 +41,17 @@ import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.SendComment;
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.gc.materialdesign.widgets.ProgressDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -257,6 +260,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     sendSticker();
                 }
 
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
                 @Override
                 public void onReceiveBitmapUri(Uri uri) {
                     isCommentBim = true;
@@ -274,7 +278,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             param.put("content_type", "comment");
                             param.put("file", file);
                             param.put("photo_fullsize", "1");
-                            new uploadBimapTask().execute(param);
+                            uploadBimapTask task = new uploadBimapTask();
+                            //for not work in down 11
+                            if(SDKUtil.IS_HONEYCOMB) {
+                                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, param);
+                            } else {
+                                task.execute(param);
+                            }
                         }
                     }
 
