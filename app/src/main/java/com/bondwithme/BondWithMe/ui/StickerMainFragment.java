@@ -1,168 +1,370 @@
 package com.bondwithme.BondWithMe.ui;
 
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.adapter.MessageHorizontalListViewAdapter;
+import com.bondwithme.BondWithMe.adapter.StickerHorizontalRecyclerAdapter;
+import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
-import com.bondwithme.BondWithMe.util.FileUtil;
-import com.bondwithme.BondWithMe.widget.HorizontalListView;
+import com.bondwithme.BondWithMe.util.AnimatedGifDrawable;
+import com.bondwithme.BondWithMe.widget.NoScrollGridView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Created by quankun on 15/5/12.
- */
-public class StickerMainFragment extends Fragment {
-    private StickerViewClickListener stickerViewClickListener;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    private View rootView;
-    private HorizontalListView horizontalListView;
-    private MessageStickerFragment fragment = null;
-    private ProgressBarCircularIndeterminate progress;
-    private MessageHorizontalListViewAdapter horizontalListViewAdapter;
+public class StickerMainFragment extends BaseFragment<MainActivity> {
+    private Context mContext;
+    private ViewPager viewPager;
+    private RecyclerView recyclerView;
     private LinearLayout layout;
-    List<String> STICKER_NAME_LIST = new ArrayList<>();
-    List<String> FIRST_STICKER_LIST = new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager;
+    private StickerHorizontalRecyclerAdapter recyclerAdapter;
+    private LinkedHashMap<String, List<String>> STICKER_LIST_MAP = new LinkedHashMap<>();
+    private LinkedHashMap<String, Integer> stickerMap = new LinkedHashMap<>();
+    private LinearLayout mNumLayout;
+    public static final int SHOW_NUM = 6;
+    private StickerViewPagerAdapter adapter;
+    private static final int CLICK_POSITION = 0X11;
+    private static final int GET_DATA = 0X12;
+    private LinkedHashMap<Integer, String> positionMap = new LinkedHashMap<>();
+    private int lastPage;
 
-    public void setPicClickListener(StickerViewClickListener viewClickListener) {
-        stickerViewClickListener = viewClickListener;
+    private void setPage(String clickName, int position) {
+        mNumLayout.removeAllViews();
+        List<Integer> list = new ArrayList<>();
+        for (Integer key : positionMap.keySet()) {
+            if (clickName.equals(positionMap.get(key))) {
+                list.add(key);
+            }
+        }
+        boolean isLeft = false;
+        if (position == list.get(0)) {
+            isLeft = true;
+        }
+        int count = list.size();
+        for (int i = 0; i < count; i++) {
+            TextView tv = new TextView(mContext);
+            if (isLeft && i == 0) {
+                tv.setBackgroundResource(R.drawable.bg_num_gray_press_message);
+            } else if (!isLeft && i == count - 1) {
+                tv.setBackgroundResource(R.drawable.bg_num_gray_press_message);
+            } else {
+                tv.setBackgroundResource(R.drawable.bg_num_gray_message);
+            }
+            LinearLayout.LayoutParams mLayoutParams = new LinearLayout.LayoutParams(20, 20);
+            mLayoutParams.leftMargin = 10;
+            mNumLayout.addView(tv, mLayoutParams);
+        }
+        viewPager.setOnPageChangeListener(new MyOnPageChanger());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (null == inflater) {
-            return null;
-        }
-        rootView = inflater.inflate(R.layout.fragment_sticker_main, null);
-        horizontalListView = (HorizontalListView) rootView.findViewById(R.id.sticker_listView);
-        progress = (ProgressBarCircularIndeterminate) rootView.findViewById(R.id.progress_bar);
-        layout = (LinearLayout) rootView.findViewById(R.id.sticker_setting_linear);
+    public void setLayoutId() {
+        layoutId = R.layout.activity_new_sticker;
+    }
 
-        STICKER_NAME_LIST = LocalStickerInfoDao.getInstance(getActivity()).queryAllSticker();
-        for (String entry : STICKER_NAME_LIST) {
-            String path = MainActivity.STICKERS_NAME + File.separator + entry;
-            File file = new File(path);
-            File[] files = file.listFiles();
-            if (null != files && files.length > 0) {
-                for (File file1 : files) {
-                    String filePath = file1.getAbsolutePath();
-                    if (filePath.substring(filePath.lastIndexOf(File.separator) + 1).contains("B")) {
-                        FIRST_STICKER_LIST.add(filePath);
-                        break;
+    Thread myThread = new Thread() {
+        @Override
+        public void run() {
+            super.run();
+            List<String> stickerList = LocalStickerInfoDao.getInstance(mContext).queryAllSticker();
+            for (String string : stickerList) {
+                String path = MainActivity.STICKERS_NAME + File.separator + string;
+                File file = new File(path);
+                File[] files = file.listFiles();
+                if (null != files && files.length > 0) {
+                    List<String> list = new ArrayList<>();
+                    for (File file1 : files) {
+                        String filePath = file1.getAbsolutePath();
+                        if (filePath.substring(filePath.lastIndexOf(File.separator) + 1).contains("B")) {
+                            list.add(filePath);
+                        }
                     }
+                    STICKER_LIST_MAP.put(string, list);
                 }
-
             }
+            handler.sendEmptyMessage(GET_DATA);
         }
-//        if (STICKER_NAME_LIST.size() == 0) {
-//            progress.setVisibility(View.VISIBLE);
-//            horizontalListViewAdapter = new MessageHorizontalListViewAdapter(new ArrayList<String>(), getActivity());
-//            new AsyncTask<Void, Void, Void>() {
-//                @Override
-//                protected Void doInBackground(Void... params) {
-//                    addStickerList();
-//                    addImageList();
-//                    return null;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(Void aVoid) {
-//                    super.onPostExecute(aVoid);
-//                    progress.setVisibility(View.GONE);
-//                    horizontalListViewAdapter = new MessageHorizontalListViewAdapter(FIRST_STICKER_LIST, getActivity());
-//                    horizontalListView.setAdapter(horizontalListViewAdapter);
-//                    setTabSelection(0);
-//                }
-//
-//            }.execute();
-//        } else {
-        progress.setVisibility(View.GONE);
-        horizontalListViewAdapter = new MessageHorizontalListViewAdapter(FIRST_STICKER_LIST, getActivity());
-//        }
+    };
 
-        horizontalListView.setAdapter(horizontalListViewAdapter);
-        setTabSelection(0);
-        horizontalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                setTabSelection(position);
-                horizontalListViewAdapter.setChoosePosition(position);
-                horizontalListViewAdapter.notifyDataSetChanged();
-            }
-        });
+    @Override
+    public void initView() {
+        mContext = getActivity();
+        viewPager = getViewById(R.id.viewpager);
+        recyclerView = getViewById(R.id.sticker_recyclerView);
+        layout = getViewById(R.id.sticker_setting_linear);
+        mNumLayout = getViewById(R.id.fragment_sticker_linear);
+        linearLayoutManager = new LinearLayoutManager(mContext);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), StickerStoreActivity.class));
             }
         });
-        return rootView;
+        myThread.start();
     }
 
-    private void addStickerList() {
-        try {
-            List<String> pathList = FileUtil.getAllFilePathsFromAssets(getActivity(), MainActivity.STICKERS_NAME);
-            if (null != pathList) {
-                for (String string : pathList) {
-                    STICKER_NAME_LIST.add(MainActivity.STICKERS_NAME + File.separator + string);
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case CLICK_POSITION:
+                    String name = (String) msg.obj;
+                    setPage(name, stickerMap.get(name));
+                    viewPager.setCurrentItem(stickerMap.get(name));
+                    break;
+                case GET_DATA:
+                    recyclerAdapter = new StickerHorizontalRecyclerAdapter(STICKER_LIST_MAP, mContext, linearLayoutManager);
+                    recyclerView.setAdapter(recyclerAdapter);
+                    recyclerAdapter.setPicClickListener(new StickerHorizontalRecyclerAdapter.StickerItemClickListener() {
+                        @Override
+                        public void showOriginalPic(String positionName) {
+                            Message.obtain(handler, CLICK_POSITION, positionName).sendToTarget();
+                        }
+                    });
+                    List<NoScrollGridView> mLists = init();
+                    adapter = new StickerViewPagerAdapter(mLists);
+                    viewPager.setAdapter(adapter);
+                    setPage(recyclerAdapter.getFirstStickerName(), 0);
+                    break;
+            }
+        }
+    };
+
+    @Override
+    public void requestData() {
+
+    }
+
+    class MyOnPageChanger implements ViewPager.OnPageChangeListener {
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+        }
+
+        @Override
+        public void onPageSelected(int arg0) {
+            String nowName = positionMap.get(arg0);
+            String lastName = positionMap.get(lastPage);
+            if (lastName.equals(nowName)) {
+                List<Integer> list = new ArrayList<>();
+                for (Integer key : positionMap.keySet()) {
+                    if (nowName.equals(positionMap.get(key))) {
+                        list.add(key);
+                    }
+                }
+                for (int i = 0; i < list.size(); i++) {
+                    TextView currentBt = (TextView) mNumLayout.getChildAt(i);
+                    if (currentBt == null) {
+                        return;
+                    }
+                    if (arg0 == list.get(i)) {
+                        currentBt.setBackgroundResource(R.drawable.bg_num_gray_press_message);
+                    } else {
+                        currentBt.setBackgroundResource(R.drawable.bg_num_gray_message);
+                    }
+                }
+            } else {
+                setPage(nowName, arg0);
+                recyclerAdapter.setScrollPosition(nowName);
+            }
+            lastPage = arg0;
+        }
+
+    }
+
+    class StickerViewPagerAdapter extends PagerAdapter {
+        private List<NoScrollGridView> mLists;
+
+        public StickerViewPagerAdapter(List<NoScrollGridView> array) {
+            this.mLists = array;
+        }
+
+        public void setNewData(List<NoScrollGridView> array) {
+            if (array != null && array.size() > 0) {
+                mLists.clear();
+                mLists.addAll(array);
+                notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return mLists.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+
+            return arg0 == arg1;
+        }
+
+        @Override
+        public Object instantiateItem(View arg0, int arg1) {
+            ((ViewPager) arg0).addView(mLists.get(arg1));
+            return mLists.get(arg1);
+        }
+
+        @Override
+        public void destroyItem(View arg0, int arg1, Object arg2) {
+            ((ViewPager) arg0).removeView((View) arg2);
+        }
+
+    }
+
+    private int getCount(int length) {
+        return (length % SHOW_NUM) == 0 ? (length / SHOW_NUM) : (length / SHOW_NUM + 1);
+    }
+
+    private List<NoScrollGridView> init() {
+        List<NoScrollGridView> mLists = new ArrayList<>();
+        int page = 0;
+        int position = 0;
+        for (Map.Entry<String, List<String>> entry : STICKER_LIST_MAP.entrySet()) {
+            List<String> list = entry.getValue();
+            if (null != list && list.size() > 0) {
+                stickerMap.put(entry.getKey(), page);
+                int count = getCount(list.size());
+                page += count;
+                NoScrollGridView gv;
+                for (int i = 0; i < count; i++) {
+                    positionMap.put(position, entry.getKey());
+                    position++;
+                    gv = new NoScrollGridView(mContext);
+                    final StickerGridViewAdapter gridViewAdapter = new StickerGridViewAdapter(mContext, list, i);
+                    gv.setAdapter(gridViewAdapter);
+                    gv.setGravity(Gravity.CENTER);
+                    gv.setClickable(true);
+                    gv.setFocusable(true);
+                    gv.setNumColumns(SHOW_NUM / 2);
+                    gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                            String fileName = (String) gridViewAdapter.getItem(arg2);//.get(stickerNameId);
+                            String selectStickerName = fileName.substring(0, fileName.lastIndexOf(File.separator));
+                            selectStickerName = selectStickerName.substring(selectStickerName.lastIndexOf(File.separator) + 1);
+                            String type = ".gif";
+                            if (fileName.indexOf(".") != -1) {
+                                type = fileName.substring(fileName.lastIndexOf("."));
+                            }
+                            String sticker_name = "";
+                            if (fileName.indexOf("_") != -1) {
+                                sticker_name = fileName.substring(fileName.lastIndexOf(File.separator) + 1, fileName.lastIndexOf("_"));
+                            }
+                            if (mViewClickListener != null) {
+                                mViewClickListener.showComments(type, selectStickerName, sticker_name);
+                            }
+                        }
+                    });
+                    mLists.add(gv);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        return mLists;
     }
 
-    private void addImageList() {
-        if (STICKER_NAME_LIST != null && STICKER_NAME_LIST.size() > 0) {
-            for (String string : STICKER_NAME_LIST) {
-                if (null == string) {
-                    continue;
-                }
-                List<String> stickerAllNameList = FileUtil.getAllFilePathsFromAssets(getActivity(), string);
-                if (null != stickerAllNameList && stickerAllNameList.size() > 0) {
-                    String iconPath = string + File.separator + stickerAllNameList.get(0);
-                    FIRST_STICKER_LIST.add(iconPath);
-                }
+    public StickerViewClickListener mViewClickListener;
+
+    public void setPicClickListener(StickerViewClickListener viewClickListener) {
+        mViewClickListener = viewClickListener;
+    }
+
+    class StickerGridViewAdapter extends BaseAdapter {
+        private List<String> stringList = new ArrayList<>();
+        private Context mContext;
+
+        public StickerGridViewAdapter(Context mContext, List<String> list, int spot) {
+            this.mContext = mContext;
+            int i = spot * SHOW_NUM;
+            int end = i + SHOW_NUM;
+            while ((i < list.size()) && (i < end)) {
+                stringList.add(list.get(i));
+                i++;
             }
         }
-    }
 
-    private void setTabSelection(int index) {
-        if (getActivity() == null || getActivity().isFinishing() || horizontalListViewAdapter.getCount() == 0) {
-            return;
+        @Override
+        public int getCount() {
+            return stringList.size();
         }
-        String selectStickerName = STICKER_NAME_LIST.get(index);
-        // 开启一个Fragment事务
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragment = new MessageStickerFragment();//selectStickerName, MessageChatActivity.this, groupId);
-        Bundle bundle = new Bundle();
-        bundle.putString("selectStickerName", selectStickerName);
-        fragment.setArguments(bundle);
-        fragment.setPicClickListener(stickerViewClickListener);
-        transaction.replace(R.id.message_frame, fragment);
-        transaction.setTransition(FragmentTransaction.TRANSIT_NONE);
-        transaction.addToBackStack(null);
-        transaction.commitAllowingStateLoss();
+
+        @Override
+        public Object getItem(int position) {
+            return stringList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.fragment_sticker_imageview, null);
+                viewHolder.imageView = (ImageView) convertView.findViewById(R.id.sticker_imageView);
+                AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, (int) mContext.getResources().getDimension(R.dimen._90dp));
+                convertView.setLayoutParams(layoutParams);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            try {
+                String filePath = stringList.get(position);
+//                InputStream inputStream = mContext.getAssets().open(filePath);
+                File file = new File(filePath);
+                InputStream inputStream = new FileInputStream(file);
+                if (filePath.endsWith("gif")) {
+                    AnimatedGifDrawable animatedGifDrawable = new AnimatedGifDrawable(mContext.getResources(), 0, inputStream, null);
+                    Drawable drawable = animatedGifDrawable.getDrawable();
+                    viewHolder.imageView.setImageDrawable(drawable);
+                } else {
+                    viewHolder.imageView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return convertView;
+        }
+
+        class ViewHolder {
+            ImageView imageView;
+        }
     }
 }
