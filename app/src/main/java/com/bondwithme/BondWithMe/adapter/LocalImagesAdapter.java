@@ -1,9 +1,11 @@
 package com.bondwithme.BondWithMe.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +13,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.gc.materialdesign.views.CheckBox;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosFragment;
 import com.bondwithme.BondWithMe.util.AsyncLoadBitmapTask;
+import com.bondwithme.BondWithMe.util.SDKUtil;
+import com.gc.materialdesign.views.CheckBox;
 
 import java.util.List;
 
@@ -178,6 +181,7 @@ public class LocalImagesAdapter extends BaseAdapter {
      * @param imageView －  显示图片的ImageVie视图
      * @param position
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void loadLocalBitmap(ImageView imageView, int position) {
         if(position < mDatas.size()) {
             Uri uri = mDatas.get(position);
@@ -187,7 +191,12 @@ public class LocalImagesAdapter extends BaseAdapter {
                 if(cancelPotentialWork(uri, imageView)) {
                     AsyncLoadBitmapTask task = new AsyncLoadBitmapTask(mContext, imageView, columnWidthHeight);
                     imageView.setTag(task);
-                    task.execute(uri);
+                    //for not work in down 11
+                    if (SDKUtil.IS_HONEYCOMB) {
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
+                    } else {
+                        task.execute(uri);
+                    }
                 }
             } else {
                 imageView.setImageBitmap(bitmap);

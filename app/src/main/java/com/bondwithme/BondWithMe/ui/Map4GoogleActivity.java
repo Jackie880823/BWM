@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -9,6 +10,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +30,7 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -357,13 +361,20 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
             }
 
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onResult(String response) {
-                PlacesDisplayTask placesDisplayTask = new PlacesDisplayTask();
+                PlacesDisplayTask task = new PlacesDisplayTask();
                 Object[] toPass = new Object[2];
                 toPass[0] = mMap;
                 toPass[1] = response;
-                placesDisplayTask.execute(toPass);
+
+                //for not work in down 11
+                if (SDKUtil.IS_HONEYCOMB) {
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, toPass);
+                } else {
+                    task.execute(toPass);
+                }
             }
 
             @Override
