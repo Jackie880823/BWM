@@ -78,7 +78,7 @@ public class AlertGroupActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        if (mProgressDialog == null) {
+        if(mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this, R.string.text_loading);
         }
         mProgressDialog.show();
@@ -101,7 +101,7 @@ public class AlertGroupActivity extends BaseActivity {
     }
 
     private void initAdapter() {
-        AlertGroupAdapter adapter = new AlertGroupAdapter(this,data);
+        AlertGroupAdapter adapter = new AlertGroupAdapter(this, data);
 
         adapter.setItemClickListener(new AlertGroupAdapter.ItemClickListener() {
             @Override
@@ -114,9 +114,9 @@ public class AlertGroupActivity extends BaseActivity {
     }
 
     private void showOptionDialog(final AlertGroupEntity alertGroupEntity) {
-        String dialogTitle = this.getResources().getString(R.string.text_dialog_title);//Dialog title
+        String dialogTitle = this.getResources().getString(R.string.text_tips_title);//Dialog title
         LayoutInflater factory = LayoutInflater.from(this);
-        final View optionIntention = factory.inflate(R.layout.dialog_bond_alert_group,null);
+        final View optionIntention = factory.inflate(R.layout.dialog_bond_alert_group, null);
         showOptionDialog = new MyDialog(this, dialogTitle, optionIntention);
         showOptionDialog.setCanceledOnTouchOutside(false);
         showOptionDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
@@ -148,18 +148,17 @@ public class AlertGroupActivity extends BaseActivity {
     }
 
 
-
     private void confirmJoinGroup(AlertGroupEntity alertGroupEntity) {
         mProgressDialog.show();
         Map<String, String> params = new HashMap<>();
         RequestInfo requestInfo = new RequestInfo();
-        params.put("receiver_user_id",alertGroupEntity.getReceiver_user_id());
-        params.put("action_user_id",alertGroupEntity.getAction_user_id());
+        params.put("receiver_user_id", alertGroupEntity.getReceiver_user_id());
+        params.put("action_user_id", alertGroupEntity.getAction_user_id());
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
-        requestInfo.url = String.format(Constant.API_BONDALERT_GROUP_CONFIRM,alertGroupEntity.getModule_id());
+        requestInfo.url = String.format(Constant.API_BONDALERT_GROUP_CONFIRM, alertGroupEntity.getModule_id());
 
         //上传“同意加入Group”的参数
-        new HttpTools(this).put(requestInfo, this,new HttpCallback() {
+        new HttpTools(this).put(requestInfo, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -179,7 +178,7 @@ public class AlertGroupActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(AlertGroupActivity.this,R.string.msg_action_failed);
+                MessageUtil.showMessage(AlertGroupActivity.this, R.string.msg_action_failed);
                 e.printStackTrace();
 
             }
@@ -199,14 +198,14 @@ public class AlertGroupActivity extends BaseActivity {
         mProgressDialog.show();
         Map<String, String> params = new HashMap<>();
         RequestInfo requestInfo = new RequestInfo();
-        params.put("receiver_user_id",alertGroupEntity.getReceiver_user_id());
-        params.put("action_user_id",alertGroupEntity.getAction_user_id());
+        params.put("receiver_user_id", alertGroupEntity.getReceiver_user_id());
+        params.put("action_user_id", alertGroupEntity.getAction_user_id());
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
-        requestInfo.url = String.format(Constant.API_BONDALERT_GROUP_REJECT,alertGroupEntity.getModule_id());
-        Log.i("TAG_reject_GroupID","alertGroupEntity.getModule_id()========="+alertGroupEntity.getModule_id());
-        Log.i("TAG_requestInfo.url","requestInfo.url========="+requestInfo.url);
+        requestInfo.url = String.format(Constant.API_BONDALERT_GROUP_REJECT, alertGroupEntity.getModule_id());
+        Log.i("TAG_reject_GroupID", "alertGroupEntity.getModule_id()=========" + alertGroupEntity.getModule_id());
+        Log.i("TAG_requestInfo.url", "requestInfo.url=========" + requestInfo.url);
         //上传“拒绝加入Group”的参数
-        new HttpTools(this).put(requestInfo,this, new HttpCallback() {
+        new HttpTools(this).put(requestInfo, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -221,13 +220,13 @@ public class AlertGroupActivity extends BaseActivity {
             @Override
             public void onResult(String response) {
 
-                MessageUtil.showMessage(AlertGroupActivity.this,R.string.msg_action_successed);
+                MessageUtil.showMessage(AlertGroupActivity.this, R.string.msg_action_successed);
                 requestData();
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(AlertGroupActivity.this,R.string.msg_action_failed);
+                MessageUtil.showMessage(AlertGroupActivity.this, R.string.msg_action_failed);
 
             }
 
@@ -245,7 +244,7 @@ public class AlertGroupActivity extends BaseActivity {
 
     @Override
     public void requestData() {
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_GROUP, MainActivity.getUser().getUser_id()),null,this,new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_BONDALERT_GROUP, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -261,8 +260,7 @@ public class AlertGroupActivity extends BaseActivity {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
 
-                data = gson.fromJson(string, new TypeToken<ArrayList<AlertGroupEntity>>() {
-                }.getType());
+                data = gson.fromJson(string, new TypeToken<ArrayList<AlertGroupEntity>>() {}.getType());
 
                 initAdapter();
 
@@ -272,7 +270,7 @@ public class AlertGroupActivity extends BaseActivity {
             public void onError(Exception e) {
                 e.printStackTrace();
                 MessageUtil.showMessage(AlertGroupActivity.this, R.string.msg_action_failed);
-                if (isRefresh) {
+                if(isRefresh) {
                     finishReFresh();
                 }
             }

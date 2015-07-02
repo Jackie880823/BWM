@@ -1,9 +1,11 @@
 package com.bondwithme.BondWithMe.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,9 +22,9 @@ import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.io.File;
@@ -148,8 +150,9 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      *
      * @param path
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void downloadAsyncTask(final GifImageView gifImageView, final String path, final String type, final int defaultResource) {
-        new AsyncTask<String, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
 
             @Override
             protected byte[] doInBackground(String... params) {
@@ -190,7 +193,13 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             }
 
-        }.execute(new String[]{});
+        };
+        //for not work in down 11
+        if (SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+        } else {
+            task.execute(new String[]{});
+        }
 
     }
 

@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
@@ -30,7 +31,9 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -334,8 +337,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
      *
      * @param path
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void downloadAsyncTask(final ProgressBarCircularIndeterminate progressBar, final GifImageView gifImageView, final String path, final int defaultResource) {
-        new AsyncTask<String, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
             @Override
             protected byte[] doInBackground(String... params) {
                 return getImageByte(path);
@@ -368,12 +372,18 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
             }
 
-        }.execute(new String[]{});
+        };
+        //for not work in down 11
+        if(SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+        } else {
+            task.execute(new String[]{});
+        }
 
     }
 
     public void downloadPngAsyncTask(final ProgressBarCircularIndeterminate progressBar, final ImageView imageView, final String path, final int defaultResource) {
-        new AsyncTask<String, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
 
             @Override
             protected byte[] doInBackground(String... params) {
@@ -407,7 +417,14 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
             }
 
-        }.execute(new String[]{});
+        };
+
+        //for not work in down 11
+        if(SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+        } else {
+            task.execute(new String[]{});
+        }
 
     }
 

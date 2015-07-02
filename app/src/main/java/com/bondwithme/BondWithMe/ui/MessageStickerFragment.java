@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.util.AnimatedGifDrawable;
-import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.widget.NoScrollGridView;
 
 import java.io.File;

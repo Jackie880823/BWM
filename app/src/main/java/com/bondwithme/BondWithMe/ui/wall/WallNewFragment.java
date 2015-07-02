@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
@@ -31,6 +33,7 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -582,6 +585,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
             }
 
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onResult(String response) {
                 try {
@@ -599,11 +603,21 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                                 if(index == count - 1) {
                                     CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
                                     tasks.add(task);
-                                    task.execute(pic_content.get(index));
+                                    //for not work in down 11
+                                    if(SDKUtil.IS_HONEYCOMB) {
+                                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, pic_content.get(index));
+                                    } else {
+                                        task.execute(pic_content.get(index));
+                                    }
                                 } else {
                                     CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, false);
                                     tasks.add(task);
-                                    task.execute(pic_content.get(index));
+                                    //for not work in down 11
+                                    if(SDKUtil.IS_HONEYCOMB) {
+                                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, pic_content.get(index));
+                                    } else {
+                                        task.execute(pic_content.get(index));
+                                    }
                                 }
                             }
                         }
