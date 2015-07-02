@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BondWthMe</string>
+    <string name="app_name">BWM</string>
     <string name="title_tab_diary">Diary</string>
-    <string name="title_tab_event">Event</string>
     <string name="title_tab_chat">Message</string>
+    <string name="title_tab_event">Event</string>
     <string name="title_tab_more">More</string>
 
     <!--<string name="msg_google_service_not_found">No valid Google Play Services APK found</string>-->
 
-    <string name="title_event_detail">Detail</string>
+    <string name="title_event_detail">Details</string>
     <string name="title_diary_comment">Comments</string>
     <string name="title_event_new">New Event</string>
-    <string name="title_event_edit">Event Edit</string>
+    <string name="title_event_edit">Modify event</string>
     <string name="title_diary_new">Post</string>
-    <string name="title_map_choose_location">Choose location</string>
-    <string name="title_invited_status">Invited Participants</string>
+    <string name="title_map_choose_location">Location</string>
+    <string name="title_invited_status">Invited Members</string>
     <string name="title_birthday_title">%1$s%2$s birthday is coming !</string>
     <string name="title_birthday_title_prefix1">and others</string>
     <string name="title_birthday_title_prefix2">\'s</string>
@@ -24,45 +24,41 @@
     <string name="text_hint_event_content">Event content</string>
     <string name="text_hint_event_position">Event location</string>
     <string name="text_hint_event_date">Choose a date</string>
-    <string name="text_canceled">Canceled</string>
+    <string name="text_canceled">Cancelled</string>
     <string name="msg_action_successed">Action successful</string>
-    <string name="msg_action_canceled">Action canceled</string>
+    <string name="msg_action_canceled">Action Cancelled</string>
     <string name="msg_action_failed">Action failed</string>
     <string name="msg_no_content">You cannot submit an empty posting!</string>
     <string name="msg_no_internet">Poor internet connection</string>
     <string name="msg_load_config_successed">Loaded successfully</string>
     <string name="msg_load_config_failed">Loading failed</string>
-    <string name="msg_date_not_befort_now">Date must be later than now</string>
-    <string name="draft_tips_title">Save as Draft</string>
-    <string name="draft_ask_save">Do you want to save as draft for next event?</string>
-    <string name="msg_date_not_commentbim_now">The comments did not send complete</string>
+    <string name="msg_date_not_befort_now">Date must be greater than now</string>
+    <string name="draft_ask_save">Do you want to save as draft?</string>
     <string name="event_accept">YES</string>
     <string name="event_cancel">NO</string>
-    <string name="text_tips_title">Action</string>
+    <string name="text_tips_title">Tips</string>
     <string name="alert_text_title_null">Title cannot be empty</string>
     <string name="alert_text_desc_null">Content cannot be empty</string>
     <string name="alert_text_location_null">Location cannot be empty</string>
     <string name="alert_text_date_null">Please choose an event date</string>
     <string name="title_message_creategroup">New Group</string>
     <string name="alert_comment_del">Are you sure you want to delete this comment?</string>
-    <string name="alert_diary_del_title">Delete Post</string>
     <string name="alert_diary_del">Are you sure you want to delete this post?</string>
-    <string name="alert_diary_del_photo_title">Delete Photo</string>
     <string name="alert_diary_del_photo">Delete this photo?</string>
 
     <string name="text_word">Text</string>
     <string name="text_photo">Photo</string>
     <string name="text_invited_members">Invited Members</string>
     <string name="text_all">All</string>
-    <string name="text_going">Joined</string>
+    <string name="text_going">Join</string>
     <string name="text_maybe">Maybe</string>
-    <string name="text_not_going">Declined</string>
+    <string name="text_not_going">Not Going</string>
     <string name="text_add">Add</string>
     <string name="text_added">Added</string>
     <string name="text_updated">Updated</string>
     <string name="text_awaiting">Awaiting</string>
     <string name="text_private">Private</string>
-    <string name="text_like_desc">Like</string>
+    <string name="text_like_desc">Love</string>
     <string name="text_ask_delete">Confirm remove member?</string>
     <string name="text_comments">Comments</string>
 
@@ -84,16 +80,11 @@
     <string name="accept">Accept</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="alert_exit">Exit</string>
     <string name="msg_ask_save">Do you want to save as draft?</string>
-
-    <!-- date time picker -->
-    <!--<string name="np_number_picker_increment_button">Increment</string>-->
-    <!--<string name="np_number_picker_decrement_button">Decrement</string>-->
 
     <!-- about -->
 
-    <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
+    <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you  and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
     <string name="msg_ask_exit_app">Do you really want to log out?</string>
@@ -114,13 +105,11 @@
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">No contact selected</string>
 
-
-
     <string name="text_via_contact">Via Contact</string>
     <string name="text_ID_name">Via BondWithMe ID / Username</string>
     <string name="text_QR">Add via Q.R Code</string>
     <string name="text_location">Location</string>
-    <string name="text_stickers">Stickers</string>
+    <string name="text_stickers">Stickies</string>
     <string name="text_video">Video</string>
     <string name="text_contact">Contact</string>
     <string name="text_done">Done</string>
@@ -143,8 +132,7 @@
     <string name="text_reset_password">Reset Password</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
-    <string name="text_wrong_password">Invalid password, please try again.</string>
-    <string name="text_not_use_special_characters">Do not use special characters. E.g ,/?!@#*$</string>
+    <string name="text_wrong_password">Invalid password. Please try again.</string>
     <string name="text_back">Back</string>
     <string name="text_old_password">Old password</string>
     <string name="text_new_password">New Password</string>
@@ -154,7 +142,7 @@
     <string name="text_select_relationship">Select relationship</string>
     <string name="text_warning_invaild_id_name">Invaild ID / Username, please try again</string>
     <string name="hint_id_accout">Insert ID / Username</string>
-    <string name="text_remove_user">Remove User</string>
+    <string name="text_remove_user">Remove Member</string>
     <string name="text_add_member">Add Member?</string>
     <string name="text_view_profile">View Member\'s Profile</string>
     <string name="text_message_user">Message Member</string>
@@ -185,7 +173,6 @@
     <string name="text_no_found_reduce">Your device does not support crop function</string>
     <string name="text_choose_your_group_picture">Choose your group picture.</string>
     <string name="text_fail_to_create_group">Fail to create group, please try again.</string>
-    <string name="text_null">null</string>
     <string name="text_please_select_username_phone">Please select only username or phone number</string>
     <string name="text_please_choose_country_code">Please choose your Country Code</string>
     <string name="text_input_username_phone">Please input your username or phone number</string>
@@ -211,25 +198,25 @@
     <string name="text_input_first_name">Please input your First Name</string>
     <string name="text_input_last_name">Please input your Last Name</string>
     <string name="text_choose_gender">Please choose your gender</string>
-    <string name="text_agree_with_terms">Please agree with the Terms &amp; Condition.</string>
+    <string name="text_agree_with_terms">Please agree with the Terms &amp; Privacy.</string>
     <string name="text_no_network">Poor Internet Connection</string>
     <string name="text_enter_details">Please enter your details.</string>
     <string name="text_input_phone_number">Input your Phone Number.</string>
     <string name="text_input_password">Input your Password</string>
-    <string name="text_successfully_dismiss_miss">Miss Accepted</string>
+    <string name="text_successfully_dismiss_miss">Miss Received</string>
     <string name="text_input_name_gender">Please input your name and gender.</string>
     <string name="text_fail_update_information">Fail to update your information. try again.</string>
     <string name="text_success_update_information">Successfully updated your information.</string>
     <string name="text_update_proPicFail">Action failed</string>
     <string name="text_updateProPicSuccess">Action Successful</string>
-    <string name="text_wrong_data">Birthday must greater than today</string>
+    <string name="text_wrong_data">Birthday should NOT be a future date</string>
     <string name="successfully_update_relationship">Relationship updated Successfully .</string>
     <string name="fail_update_relationship">Fail to update relationship. Please try again.</string>
     <string name="text_updateProPicFail">Fail to update photo, try again or skip</string>
     <string name="text_password_specified_invalid">Password specified is invalid. Try again.</string>
     <string name="text_password_changed_successfully">Password changed successfully, Login again.</string>
     <string name="text_old_password_wrong">Old password is incorrect.</string>
-    <string name="text_full_all_fields">Please fill up and check all fields.</string>
+    <string name="text_full_all_fields">Please fill up ALL fields and try again.</string>
     <string name="text_success_add_member">Add member successfully.</string>
     <string name="text_fail_add_member">Add member failed. Try again.</string>
     <string name="title_select_relationship">Select Relationship</string>
@@ -263,8 +250,8 @@
 
     <!-- end -->
 
-    <string name="select_too_many">"have select photos count is %d"</string>
-    <string name="text_nearest">nearest</string>
+    <string name="select_too_many">have select photos count is %d</string>
+    <string name="text_nearest">recent</string>
     <string name="start_a_new">Start a new</string>
     <string name="post_now">Post now</string>
 
@@ -273,7 +260,7 @@
     <string name="text_to_me">Recommend \'Member\' to me</string>
     <string name="text_group_chat">Require confirmation to add me to Group Chat</string>
 
-    <string name="text_message_chat_post_text">[sticker]</string>
+    <string name="text_message_chat_post_text">[stickies]</string>
     <string name="text_message_chat_post_photo">[photo]</string>
     <string name="text_message_chat_post_location">[location]</string>
     <string name="title_tab_my_family">Family</string>
@@ -292,7 +279,7 @@
     <string name="text_month_december">December</string>
 
 
-    <string name="text_album_no_pic">NO IMAGE FOUND</string>
+    <string name="text_album_no_pic">NO PHOTO FOUND</string>
     <string name="title_via_contact">Via Contact</string>
     <string name="text_personal_msg">PERSONAL MESSAGE</string>
     <string name="text_send_invitation_to">SEND INVITATION TO:</string>
@@ -303,12 +290,12 @@
     <string name="text_members_num">%s members</string>
     <string name="family_search">Search</string>
     <string name="text_dialog_ok">OK</string>
-    <string name="text_all_field_compulsory">All fields are compulsory</string>
+    <string name="text_all_field_compulsory">Please fill up ALL fields and try again.</string>
     <string name="text_pending_approval">Pending approval.</string>
     <string name="diary_comments">Comments</string>
     <string name="text_new_member">MEMBER</string>
     <string name="text_new_group">GROUP</string>
-    <string name="text_new_family_tree">family_tree</string>
+    <string name="text_new_family_tree">Family Tree</string>
     <string name="text_group_name_here">Type group name here</string>
     <string name="text_dialog_no">NO</string>
     <string name="text_dialog_show_no">NO</string>
@@ -337,7 +324,7 @@
     <string name="text_today_birthday">Today \'s birthday</string>
     <string name="text_today_birthday_on"> birthday is today!</string>
     <string name="text_upcoming_birthdays_on"> birthday is on</string>
-    <string name="text_d">d </string>
+    <string name="text_d">day </string>
     <string name="text_left">left</string>
 
     <string name="text_miss_you">miss you</string>
@@ -356,7 +343,6 @@
     <string name="text_reject_dec">&#160;declined</string>
     <string name="text_reject_invite">&#160;your invite to&#160;</string>
     <string name="text_reject_group">&#160;group</string>
-    <string name="text_dialog_title">Action</string>
     <string name="text_item_accept">Accept</string>
     <string name="text_item_decline">Decline</string>
 
@@ -403,8 +389,8 @@
     <string name="text_sign_up_phone_password_warning">Min 6 characters (alpha numeric)</string>
 
     <!-- sign up phone information 界面 -->
-    <string name="text_sign_up_phone_information_name_warning">We encourage you to use your real name for easier member recommendation</string>
-    <string name="text_sign_up_phone_information_agree_warning">I agree with the Terms &amp; Condition.</string>
+    <string name="text_sign_up_phone_information_name_warning">We encourage to use real name for better member recommendation</string>
+    <string name="text_sign_up_phone_information_agree_warning">I agree with the Terms &amp; Privacy.</string>
 
     <!-- sign up username 界面 -->
     <string name="text_sign_up_username_warning">Contains at least 5 alpha numeric characters.</string>
@@ -456,8 +442,8 @@
     <string name="text_setting">Settings</string>
     <string name="text_about_us">About Us</string>
     <string name="text_contact_us">Contact Us</string>
-    <string name="text_terms">Terms</string>
-    <string name="text_sign_out">Sign Out</string>
+    <string name="text_terms">Terms and Privacy</string>
+    <string name="text_sign_out">Log Out</string>
 
     <string name="text_invited_event">%s invited you to event.</string>
     <string name="text_responded_event">%s responded for event.</string>
@@ -480,13 +466,13 @@
     <string name="text_group">Group</string>
     <string name="hint_comment_input">Type a comments here…</string>
     <string name="text_character_and"><![CDATA[" & "]]></string>
-    <string name="saved_to_path">"Has been saved to: "</string>
+    <string name="saved_to_path">Has been saved to: </string>
     <string name="location_search_error">location search error!</string>
-    
+
     <string name="morning">am</string>
     <string name="afternoon">pm</string>
 
-    <string name="test_group_friend">There are not friends in the group,or not?</string>
+    <string name="test_group_friend">Some group members are still not connected to you.Only connected members will be added.</string>
     <string name="text_no_data">No data!</string>
     <string name="year">Year</string>
     <string name="text_new_everyone">Everyone</string>

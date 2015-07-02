@@ -1,6 +1,10 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.annotation.TargetApi;
 import android.os.AsyncTask;
+import android.os.Build;
+
+import com.bondwithme.BondWithMe.util.SDKUtil;
 
 /**
  * 懒加载fragment 基类
@@ -30,13 +34,20 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
         }
     }
 
-    protected void onVisible(){
-        if(lazyLoadTask !=null){
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    protected void onVisible() {
+        if(lazyLoadTask != null) {
             lazyLoadTask.cancel(true);
             isFinished = true;
         }
         lazyLoadTask = new LazyLoadTask();
-        lazyLoadTask.execute();
+
+        //for not work in down 11
+        if(SDKUtil.IS_HONEYCOMB) {
+            lazyLoadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+        } else {
+            lazyLoadTask.execute();
+        }
 
     }
 

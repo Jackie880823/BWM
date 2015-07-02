@@ -70,7 +70,6 @@ public class StickerItemAdapter extends BaseAdapter{
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
         if(convertView == null){
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.sticker_item_for_grid,null);
@@ -91,6 +90,7 @@ public class StickerItemAdapter extends BaseAdapter{
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();
+
         }
         StickerItemEntity stickerItemEntity = data.get(position);
         Log.i(TAG,"stickerItemEntity============="+stickerItemEntity.toString());
@@ -244,11 +244,8 @@ public class StickerItemAdapter extends BaseAdapter{
     }
 
 
-    public class ViewHolder{
-        NetworkImageView ivStickerItem;
+    class ViewHolder{
+        private NetworkImageView ivStickerItem;
 
-        public ViewHolder() {
-            super();
-        }
     }
 }
