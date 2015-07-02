@@ -487,7 +487,9 @@
     <string name="download">DOWNLOAD</string>
     <string name="my_sticker">My Stickies</string>
     <string name="free">Free</string>
-    <string name="price">Price: </string>
+    <string name="price">Price:&#160;</string>
 
     <string name="text_admin">管理员</string>
+
+    <string name="Downloaded">Downloaded</string>
 </resources>
