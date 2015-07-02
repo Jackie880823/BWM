@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical">
 
-        <com.madx.bwm.widget.CircularNetworkImage
+        <com.bondwithme.BondWithMe.widget.CircularNetworkImage
             android:id="@+id/owner_head"
             android:layout_width="@dimen/default_user_head_width_height"
             android:layout_height="@dimen/default_user_head_width_height"/>/>

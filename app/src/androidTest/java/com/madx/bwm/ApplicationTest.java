@@ -1,4 +1,4 @@
-package com.madx.bwm;
+package com.bondwithme.BondWithMe;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

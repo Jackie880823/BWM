@@ -2,7 +2,7 @@
 # generated on 2015/06/26 05:04:25
 #
 # --table-start--
-dataClass=com.madx.bwm.entity.OrmEntityDemo
+dataClass=com.bondwithme.BondWithMe.entity.OrmEntityDemo
 tableName=orm_entity_demos
 # --table-fields-start--
 # --field-start--
@@ -22,7 +22,7 @@ fieldName=registerDate
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.madx.bwm.entity.LocalStickerInfo
+dataClass=com.bondwithme.BondWithMe.entity.LocalStickerInfo
 tableName=sticker_info
 # --table-fields-start--
 # --field-start--

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_content_bg"
-    tools:context="com.madx.bwm.ui.PersonalPictureActivity">
+    tools:context="com.bondwithme.BondWithMe.ui.PersonalPictureActivity">
 
     <include
         android:id="@+id/fragment_main_top"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <com.madx.bwm.widget.CircularImageView
+    <com.bondwithme.BondWithMe.widget.CircularImageView
         android:id="@+id/iv_personal_picture"
         android:layout_below="@id/fragment_main_top"
         android:layout_width="160dp"

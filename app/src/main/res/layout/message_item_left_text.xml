@@ -6,7 +6,7 @@
     android:paddingTop="@dimen/_10dp"
     android:paddingBottom="@dimen/_10dp">
 
-    <com.madx.bwm.widget.CircularNetworkImage
+    <com.bondwithme.BondWithMe.widget.CircularNetworkImage
         android:id="@+id/message_icon_image"
         app:border="false"
         android:layout_width="@dimen/_50dp"

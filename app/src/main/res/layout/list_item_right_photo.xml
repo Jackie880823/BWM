@@ -10,7 +10,7 @@
 
     >
 
-    <com.madx.bwm.widget.CircularNetworkImage
+    <com.bondwithme.BondWithMe.widget.CircularNetworkImage
         android:id="@+id/right_iv"
         android:layout_width="50dp"
         android:layout_height="50dp"

@@ -4,10 +4,10 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:background="@color/default_text_color_while"-->
     <!--android:orientation="vertical"-->
-    <!--tools:context="com.madx.bwm.ui.TabWordFragment">-->
+    <!--tools:context="com.bondwithme.BondWithMe.ui.TabWordFragment">-->
 
 
-    <com.madx.bwm.widget.WallEditView
+    <com.bondwithme.BondWithMe.widget.WallEditView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/wall_text_content"
         android:layout_width="match_parent"
