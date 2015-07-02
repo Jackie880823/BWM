@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,19 +18,54 @@ import com.madx.bwm.util.AnimatedGifDrawable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by quankun on 15/6/30.
  */
 public class StickerHorizontalRecyclerAdapter extends RecyclerView.Adapter<StickerHorizontalRecyclerAdapter.VHItem> {
-    private List<List<String>> list;
+    private List<String> list = new ArrayList<>();
+    private List<String> stickerNameList = new ArrayList<>();
     private Context mContext;
     private int clickPosition;
+    private LinearLayoutManager linearLayoutManager;
 
-    public StickerHorizontalRecyclerAdapter(List<List<String>> list, Context mContext) {
-        this.list = list;
+    public StickerHorizontalRecyclerAdapter(TreeMap<String, List<String>> map, Context mContext, LinearLayoutManager linearLayoutManager) {
+        if (null != map && map.size() > 0) {
+            for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+                List<String> listString = entry.getValue();
+                String name = entry.getKey();
+                if (listString != null && listString.size() > 0) {
+                    list.add(listString.get(0));
+                    stickerNameList.add(name);
+                }
+            }
+        }
         this.mContext = mContext;
+        this.linearLayoutManager = linearLayoutManager;
+    }
+
+    public void setScrollPosition(String positionName) {
+        int lastPosition = clickPosition;
+        for (int i = 0; i < stickerNameList.size(); i++) {
+            if (stickerNameList.get(i).equals(positionName)) {
+                clickPosition = i;
+                break;
+            }
+        }
+        notifyItemChanged(lastPosition);
+        notifyItemChanged(clickPosition);
+        linearLayoutManager.scrollToPosition(clickPosition);
+    }
+
+    public String getFirstStickerName() {
+        if (stickerNameList.size() > 0) {
+            return stickerNameList.get(0);
+        }
+        return "";
     }
 
     @Override
@@ -40,7 +76,7 @@ public class StickerHorizontalRecyclerAdapter extends RecyclerView.Adapter<Stick
 
     @Override
     public void onBindViewHolder(StickerHorizontalRecyclerAdapter.VHItem holder, int position) {
-        String firstStickerPath = list.get(position).get(0);
+        String firstStickerPath = list.get(position);
         if (clickPosition == position) {
             holder.stickRelative.setBackgroundColor(Color.GRAY);
         } else {
@@ -83,7 +119,7 @@ public class StickerHorizontalRecyclerAdapter extends RecyclerView.Adapter<Stick
                     notifyItemChanged(lastPosition);
                     notifyItemChanged(clickPosition);
                     if (mViewClickListener != null) {
-                        mViewClickListener.showOriginalPic(position);
+                        mViewClickListener.showOriginalPic(stickerNameList.get(position));
                     }
                 }
             });
@@ -91,7 +127,7 @@ public class StickerHorizontalRecyclerAdapter extends RecyclerView.Adapter<Stick
     }
 
     public interface StickerItemClickListener {
-        public void showOriginalPic(int position);
+        public void showOriginalPic(String positionName);
     }
 
     public StickerItemClickListener mViewClickListener;

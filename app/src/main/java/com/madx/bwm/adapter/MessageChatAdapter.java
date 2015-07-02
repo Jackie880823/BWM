@@ -30,6 +30,7 @@ import com.madx.bwm.ui.ViewOriginalPicesActivity;
 import com.madx.bwm.util.FileUtil;
 import com.madx.bwm.util.LocalImageLoader;
 import com.madx.bwm.util.LocationUtil;
+import com.madx.bwm.util.LogUtil;
 import com.madx.bwm.util.MyDateUtils;
 import com.madx.bwm.widget.CircularNetworkImage;
 
@@ -226,8 +227,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             } catch (Exception e) {
                 String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
                         msgEntity.getSticker_name(), stickerGroupPath, msgEntity.getSticker_type());
+                Log.i("stickerUrl", stickerUrl);
                 downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
-                e.printStackTrace();
+                LogUtil.e("", "插入sticker info", e);
             }
         } else if (Constant.Sticker_Png.equals(msgEntity.getSticker_type())) {//Png
             holder.pngImageView.setImageResource(R.drawable.network_image_default);
@@ -250,20 +252,22 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     //拼接大图路径
                     String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.png";
                     //InputStream is = context.getAssets().open(pngFileName);//得到数据流
-                    Log.i("stickerPath",pngFileName);
+                    Log.i("stickerPath", pngFileName);
 //                    InputStream is = new FileInputStream(new File(pngFileName));//得到数据流
 //                    if (is != null) {//如果有图片直接显示，否则网络下载
-                        Bitmap bitmap = BitmapFactory.decodeFile(pngFileName);//.decodeStream(is);//将流转化成Bitmap对象
+                    Bitmap bitmap = BitmapFactory.decodeFile(pngFileName);//.decodeStream(is);//将流转化成Bitmap对象
+                    if (bitmap != null) {
                         holder.pngImageView.setImageBitmap(bitmap);//显示图片
-//                    } else {
-//                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-//                        downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
-//                    }
+                    } else {
+                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+                        downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+                    }
                 } catch (Exception e) {
                     //本地没有png的时候，从服务器下载
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+                    Log.i("stickerUrl", stickerUrl);
                     downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
-                    e.printStackTrace();
+                    LogUtil.e("", "插入sticker info", e);
                 }
             }
         } else if (msgEntity.getFile_id() != null) {
