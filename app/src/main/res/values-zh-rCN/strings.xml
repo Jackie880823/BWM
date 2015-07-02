@@ -403,7 +403,9 @@
     <string name="text_username">用户名</string>
 
     <!-- reset password 界面 -->
-    <string name="text_reset_password_warning">包含8-16位字符（字母或数字）</string>
+
+    <string name="text_reset_password_warning">包含6-16位字符（字母或数字）</string>
+
 
     <string name="hint_mail">你的邮址</string>
     <string name="hint_subject">关于</string>
