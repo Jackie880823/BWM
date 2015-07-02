@@ -87,12 +87,13 @@
                     <ProgressBar
                         android:id="@+id/pb_download"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40dp"
+                        android:layout_height="@dimen/_20dp"
                         android:layout_margin="@dimen/_15dp"
                         android:max="100"
                         style="@android:style/Widget.ProgressBar.Horizontal"
                         android:layout_centerVertical="true"
                         android:visibility="invisible"
+                        android:progressDrawable="@drawable/progress_bar_sticker"
                         />
 
 

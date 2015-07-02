@@ -75,6 +75,18 @@ public class VolleyUtil {
 	}
 
 
+    /**
+     * @Description 对NetworkImageView控件进入初始化
+     * @date 2014-11-14 下午3:30:16
+     * @param context
+     * @param networkImageView
+     * @param url
+     */
+    public static void initNetworkImageView(Context context,NetworkImageView networkImageView,String url){
+        networkImageView.setImageUrl(url,getImageLoader(context));
+    }
+
+
 	/**
 	 * @Description 从网络加载图片,内部使用缓存
 	 * @date 2014-11-14 下午2:53:51
