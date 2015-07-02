@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.dao;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
@@ -21,6 +22,9 @@ public class LocalStickerInfoDao {
     private static LocalStickerInfoDao stickerInfoDaoInstance;
     private Context mContext;
     private static final String STICKER_FILE_PATH_NAME = "Sticker";
+    private static final String DEF_FIRST_STICKER = "Raya_Greeting";
+    private static final String DEF_SECOND_STICKER = "Eggplant";
+    private static final String DEF_THREAD_STICKER = "LittleGG";
 
     public LocalStickerInfoDao(Context mContext) {
         this.mContext = mContext;
@@ -72,14 +76,39 @@ public class LocalStickerInfoDao {
         }
     }
 
+    public boolean hasDownloadSticker(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return false;
+        }
+        try {
+            QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
+            queryBuilder.where().eq("loginUserId", LocalStickerInfo.LOGIN_USER_ID).and().eq("path", path);
+            List<LocalStickerInfo> localList = queryBuilder.query();
+            if ((localList != null) && (localList.size() > 0)) {
+                //stickerInfoDao.update(stickerInfo);
+                return true;
+            }
+        } catch (SQLException localSQLException) {
+            localSQLException.printStackTrace();
+        }
+        return false;
+    }
+
     public List<String> queryAllSticker() {
         List<String> list = new ArrayList<>();
         try {
             List<LocalStickerInfo> localList = stickerInfoDao.queryForEq("loginUserId", LocalStickerInfo.LOGIN_USER_ID);
             if (null != localList && localList.size() > 0) {
+                list.add(DEF_FIRST_STICKER);
+                list.add(DEF_SECOND_STICKER);
+                list.add(DEF_THREAD_STICKER);
                 for (LocalStickerInfo stickerInfo : localList) {
                     String name = stickerInfo.getPath();
-                    list.add(name);
+                    if (DEF_FIRST_STICKER.equalsIgnoreCase(name) || DEF_SECOND_STICKER.equalsIgnoreCase(name) || DEF_THREAD_STICKER.equalsIgnoreCase(name)) {
+                        continue;
+                    } else {
+                        list.add(name);
+                    }
                 }
             }
         } catch (SQLException e) {

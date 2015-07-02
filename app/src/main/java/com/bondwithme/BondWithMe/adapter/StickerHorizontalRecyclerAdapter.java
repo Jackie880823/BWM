@@ -12,16 +12,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.madx.bwm.R;
-import com.madx.bwm.util.AnimatedGifDrawable;
+import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.util.AnimatedGifDrawable;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Created by quankun on 15/6/30.
@@ -33,7 +33,7 @@ public class StickerHorizontalRecyclerAdapter extends RecyclerView.Adapter<Stick
     private int clickPosition;
     private LinearLayoutManager linearLayoutManager;
 
-    public StickerHorizontalRecyclerAdapter(TreeMap<String, List<String>> map, Context mContext, LinearLayoutManager linearLayoutManager) {
+    public StickerHorizontalRecyclerAdapter(LinkedHashMap<String, List<String>> map, Context mContext, LinearLayoutManager linearLayoutManager) {
         if (null != map && map.size() > 0) {
             for (Map.Entry<String, List<String>> entry : map.entrySet()) {
                 List<String> listString = entry.getValue();

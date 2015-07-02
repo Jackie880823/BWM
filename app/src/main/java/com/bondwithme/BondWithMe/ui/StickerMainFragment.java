@@ -1,8 +1,8 @@
 package com.bondwithme.BondWithMe.ui;
 
+
 import android.content.Context;
 import android.content.Intent;
-<<<<<<< HEAD:app/src/main/java/com/madx/bwm/ui/StickerMainFragment.java
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -12,10 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
-=======
-import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
->>>>>>> 8317af270247ec16ec0f00b357a3b7f0d98388e4:app/src/main/java/com/bondwithme/BondWithMe/ui/StickerMainFragment.java
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,35 +22,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-<<<<<<< HEAD:app/src/main/java/com/madx/bwm/ui/StickerMainFragment.java
-import com.madx.bwm.R;
-import com.madx.bwm.adapter.AlbumDetailAdapter;
-import com.bondwithme.BondWithMe.adapter.StickerHorizontalRecyclerAdapter;
-import com.madx.bwm.dao.LocalStickerInfoDao;
-import com.madx.bwm.entity.AlbumPhotoEntity;
-import com.madx.bwm.interfaces.StickerViewClickListener;
-import com.madx.bwm.ui.BaseFragment;
-import com.madx.bwm.ui.MainActivity;
-import com.madx.bwm.ui.more.sticker.StickerStoreActivity;
-import com.madx.bwm.util.AnimatedGifDrawable;
-import com.madx.bwm.widget.NoScrollGridView;
-=======
-import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.adapter.StickerHorizontalRecyclerAdapter;
+import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
->>>>>>> 8317af270247ec16ec0f00b357a3b7f0d98388e4:app/src/main/java/com/bondwithme/BondWithMe/ui/StickerMainFragment.java
+import com.bondwithme.BondWithMe.util.AnimatedGifDrawable;
+import com.bondwithme.BondWithMe.widget.NoScrollGridView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-<<<<<<< HEAD:app/src/main/java/com/madx/bwm/ui/StickerMainFragment.java
 import java.util.Map;
-import java.util.TreeMap;
-=======
->>>>>>> 8317af270247ec16ec0f00b357a3b7f0d98388e4:app/src/main/java/com/bondwithme/BondWithMe/ui/StickerMainFragment.java
 
 public class StickerMainFragment extends BaseFragment<MainActivity> {
     private Context mContext;
@@ -63,11 +45,15 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
     private LinearLayout layout;
     private LinearLayoutManager linearLayoutManager;
     private StickerHorizontalRecyclerAdapter recyclerAdapter;
-    private static TreeMap<String, List<String>> STICKER_LIST_MAP = new TreeMap<>();
-    private TreeMap<String, Integer> stickerMap = new TreeMap<>();
+    private LinkedHashMap<String, List<String>> STICKER_LIST_MAP = new LinkedHashMap<>();
+    private LinkedHashMap<String, Integer> stickerMap = new LinkedHashMap<>();
     private LinearLayout mNumLayout;
     public static final int SHOW_NUM = 6;
     private StickerViewPagerAdapter adapter;
+    private static final int CLICK_POSITION = 0X11;
+    private static final int GET_DATA = 0X12;
+    private LinkedHashMap<Integer, String> positionMap = new LinkedHashMap<>();
+    private int lastPage;
 
     private void setPage(String clickName, int position) {
         mNumLayout.removeAllViews();
@@ -143,15 +129,8 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                 startActivity(new Intent(getActivity(), StickerStoreActivity.class));
             }
         });
-        if (STICKER_LIST_MAP.size() == 0) {
-            myThread.start();
-        } else {
-            handler.sendEmptyMessage(GET_DATA);
-        }
+        myThread.start();
     }
-
-    private static final int CLICK_POSITION = 0X11;
-    private static final int GET_DATA = 0X12;
 
     Handler handler = new Handler() {
         @Override
@@ -270,9 +249,6 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
         return (length % SHOW_NUM) == 0 ? (length / SHOW_NUM) : (length / SHOW_NUM + 1);
     }
 
-    private TreeMap<Integer, String> positionMap = new TreeMap<>();
-    private int lastPage;
-
     private List<NoScrollGridView> init() {
         List<NoScrollGridView> mLists = new ArrayList<>();
         int page = 0;
@@ -321,7 +297,6 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
         return mLists;
     }
 
-<<<<<<< HEAD:app/src/main/java/com/madx/bwm/ui/StickerMainFragment.java
     public StickerViewClickListener mViewClickListener;
 
     public void setPicClickListener(StickerViewClickListener viewClickListener) {
@@ -391,23 +366,5 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
         class ViewHolder {
             ImageView imageView;
         }
-=======
-    private void setTabSelection(int index) {
-        if (getActivity() == null || getActivity().isFinishing() || horizontalListViewAdapter.getCount() == 0) {
-            return;
-        }
-        String selectStickerName = STICKER_NAME_LIST.get(index);
-        // 开启一个Fragment事务
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragment = new MessageStickerFragment();//selectStickerName, MessageChatActivity.this, groupId);
-        Bundle bundle = new Bundle();
-        bundle.putString("selectStickerName", selectStickerName);
-        fragment.setArguments(bundle);
-        fragment.setPicClickListener(stickerViewClickListener);
-        transaction.replace(R.id.message_frame, fragment);
-        transaction.setTransition(FragmentTransaction.TRANSIT_NONE);
-        transaction.addToBackStack(null);
-        transaction.commitAllowingStateLoss();
->>>>>>> 8317af270247ec16ec0f00b357a3b7f0d98388e4:app/src/main/java/com/bondwithme/BondWithMe/ui/StickerMainFragment.java
     }
 }

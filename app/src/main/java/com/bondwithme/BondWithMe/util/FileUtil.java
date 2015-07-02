@@ -31,7 +31,7 @@ public class FileUtil {
      */
     public static File getSavePath(Context context,boolean isOutPath) {
 
-        if(!isOutPath) {
+        if(isOutPath) {
             if (path == null) {
                 if (hasSDCard()) { // SD card
                     path = new File(getSDCardPath() + "/" + AppInfoUtil.getApplicationName(context));
