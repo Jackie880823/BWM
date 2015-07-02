@@ -416,7 +416,7 @@
     <string name="text_username">用户名</string>
 
     <!-- reset password 界面 -->
-    <string name="text_reset_password_warning">Contain 8~16 alpha numeric characters</string>
+    <string name="text_reset_password_warning">Contain 6~16 alpha numeric characters</string>
 
     <string name="hint_mail">你的邮址</string>
     <string name="hint_subject">关于</string>

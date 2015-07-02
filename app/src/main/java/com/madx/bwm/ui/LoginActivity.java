@@ -7,7 +7,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -197,7 +199,7 @@ public class LoginActivity extends Activity {
         params.put("pushService", service);
         params.put("appID", AppInfoUtil.getAppPackageName(this));
         requestInfo.params = params;
-        new HttpTools(LoginActivity.this).post(requestInfo,this, new HttpCallback() {
+        new HttpTools(LoginActivity.this).post(requestInfo, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -292,6 +294,31 @@ public class LoginActivity extends Activity {
         do_faile_login_tv = (TextView) findViewById(R.id.do_faile_login_tv);
         do_faile_login_linear = (LinearLayout) findViewById(R.id.do_faile_login_linear);
         rlProgress = (RelativeLayout)findViewById(R.id.rl_progress);
+
+        tvCountryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(tvCountryCode.getText().toString()))
+                {
+                    ivRemove.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+
+                    ivRemove.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
         //取消国家区号
         ivRemove.setOnClickListener(new View.OnClickListener() {
