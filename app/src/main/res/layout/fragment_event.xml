@@ -1,4 +1,4 @@
-<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--tools:context="com.madx.bwm.ui.EventFragment"--><!--android:fillViewport="true"--><!-->-->
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--tools:context="com.bondwithme.BondWithMe.ui.EventFragment"--><!--android:fillViewport="true"--><!-->-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             android:src="@drawable/arrow_pointer"/>
     </LinearLayout>
     </FrameLayout>
-    <com.madx.bwm.widget.MySwipeRefreshLayout
+    <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
 
 
         </LinearLayout>
-    </com.madx.bwm.widget.MySwipeRefreshLayout>
+    </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
 
     <include layout="@layout/progress_layout"/>
 

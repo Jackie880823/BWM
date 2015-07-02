@@ -22,7 +22,7 @@
                 android:paddingLeft="@dimen/default_view_margin"
                 android:paddingRight="@dimen/default_view_margin">
 
-                <com.madx.bwm.widget.CircularNetworkImage
+                <com.bondwithme.BondWithMe.widget.CircularNetworkImage
                     android:id="@+id/owner_head"
                     android:layout_width="@dimen/default_user_head_width_height"
                     android:layout_height="@dimen/default_user_head_width_height"

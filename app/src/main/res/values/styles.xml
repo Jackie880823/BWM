@@ -1,4 +1,4 @@
-<resources xmlns:app="http://schemas.android.com/apk/com.madx.bwm">
+<resources xmlns:app="http://schemas.android.com/apk/com.bondwithme.BondWithMe">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -76,8 +76,8 @@
     </style>
 
     <style name="user_header_base">
-        <item name="com.madx.bwm:border_color">@color/default_text_color_light</item>
-        <item name="com.madx.bwm:border_width">1dp</item>
+        <item name="com.bondwithme.BondWithMe:border_color">@color/default_text_color_light</item>
+        <item name="com.bondwithme.BondWithMe:border_width">1dp</item>
     </style>
 
     <style name="user_header_normal" parent="user_header_base">

@@ -26,7 +26,7 @@
          />
         <!--android:contentDescription="@string/np_number_picker_increment_button" />-->
 
-    <view class="com.madx.bwm.widget.NumberPicker$CustomEditText"
+    <view class="com.bondwithme.BondWithMe.widget.NumberPicker$CustomEditText"
         android:id="@+id/numberpicker_input" android:visibility="invisible"
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content"

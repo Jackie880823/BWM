@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_content_bg"
-    tools:context="com.madx.bwm.ui.ChatActivity"
+    tools:context="com.bondwithme.BondWithMe.ui.ChatActivity"
     android:orientation="vertical">
 
     <include
