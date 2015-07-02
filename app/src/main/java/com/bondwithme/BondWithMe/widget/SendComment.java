@@ -73,12 +73,16 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
         if(mActivity.isFinishing()) {
             return;
         }
+    }
+
+    public void commitAllowingStateLoss(){
+
         // 开启一个Fragment事务
-        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = mActivity.getSupportFragmentManager().beginTransaction();
         StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
         mainFragment.setPicClickListener(this);
         transaction.replace(R.id.sticker_message_fragment, mainFragment);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.addToBackStack(null);
         transaction.commitAllowingStateLoss();
     }

@@ -874,6 +874,21 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         }
     }
 
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally
+     * tied to {@link Activity#onResume() Activity.onResume} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(sendCommentView != null) {
+            sendCommentView.commitAllowingStateLoss();
+        }
+    }
+
     @Override
     public void onDestroy() {
         vProgress.setVisibility(View.GONE);
