@@ -317,7 +317,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         sendTextView = getViewById(R.id.btn_send);
         empty_message = getViewById(R.id.no_message_data_linear);
 
-        initViewPager();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -328,8 +327,19 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         });
     }
 
-    private void initViewPager() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initViewPager();
+            }
+        }, 50);
 
+    }
+
+    private void initViewPager() {
         if (isFinishing()) {
             return;
         }
@@ -338,7 +348,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
         mainFragment.setPicClickListener(this);
         transaction.replace(R.id.sticker_message_fragment, mainFragment);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.addToBackStack(null);
         transaction.commitAllowingStateLoss();
     }
