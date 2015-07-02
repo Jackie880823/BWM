@@ -114,7 +114,7 @@ public class AlertGroupActivity extends BaseActivity {
     }
 
     private void showOptionDialog(final AlertGroupEntity alertGroupEntity) {
-        String dialogTitle = this.getResources().getString(R.string.text_dialog_title);//Dialog title
+        String dialogTitle = this.getResources().getString(R.string.text_tips_title);//Dialog title
         LayoutInflater factory = LayoutInflater.from(this);
         final View optionIntention = factory.inflate(R.layout.dialog_bond_alert_group, null);
         showOptionDialog = new MyDialog(this, dialogTitle, optionIntention);

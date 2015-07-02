@@ -180,11 +180,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         eventDetailActivity.setTitleLeftClick(new EventDetailActivity.TitleLeftClick() {
             @Override
             public void Click() {
-                if (false) {
+//                if (false) {
                     getParentActivity().finish();
-                } else {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
-                }
+//                } else {
+//                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+//                }
             }
         });
         if (NetworkUtil.isNetworkConnected(getActivity())) {
@@ -361,11 +361,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         getActivity().startActivityForResult(intent, 1);
 //                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
                     }else if(v.getId() == getParentActivity().leftButton.getId()){
-                        if (isCommentBim){
+//                        if (isCommentBim){
                             getParentActivity().finish();
-                        }else {
-                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
-                        }
+//                        }else {
+//                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+//                        }
 
                     }
                     return false;

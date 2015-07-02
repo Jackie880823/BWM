@@ -231,7 +231,7 @@ public class MyViewProfileActivity extends BaseActivity {
         } else if ("M".equals(MainActivity.getUser().getUser_gender())) {
             tvGender.setText(getResources().getString(R.string.text_male));
         } else {
-            tvGender.setText(getResources().getString(R.string.text_null));
+            tvGender.setText(null);
         }
 
         etEmail.setText(MainActivity.getUser().getUser_email());
