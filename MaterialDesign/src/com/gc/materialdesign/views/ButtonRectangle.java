@@ -1,8 +1,5 @@
 package com.gc.materialdesign.views;
 
-import com.gc.materialdesign.R;
-import com.gc.materialdesign.utils.Utils;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,6 +8,9 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.gc.materialdesign.R;
+import com.gc.materialdesign.utils.Utils;
 
 public class ButtonRectangle extends Button {
 	
@@ -70,7 +70,8 @@ public class ButtonRectangle extends Button {
 //			value = attrs.getAttributeValue(ANDROIDXML,"paddingBottom");
 //			paddingBottom = (value == null) ? paddingBottom : (int) Float.parseFloat(value.replace("dip", ""));
 //		}
-		
+
+
 		
 		// Set text button
 		String text = null;
@@ -96,6 +97,22 @@ public class ButtonRectangle extends Button {
 ////					params.setMargins(paddingLeft, paddingTop, paddingRight, paddingRight);
 //					textView.setLayoutParams(params);
 			
+		}
+
+		/**
+		 * 设置textSize
+		 */
+		String textSize = null;
+		textResource = attrs.getAttributeResourceValue(ANDROIDXML, "textSize",-1);
+		if(textResource != -1){
+			textSize = getResources().getString(textResource);
+		}else{
+			textSize = attrs.getAttributeValue(ANDROIDXML, "textSize");
+		}
+
+		if (text != null && textSize != null) {
+			textSize = textSize.substring(0, textSize.length() - 2);//12sp->12
+			textButton.setTextSize(Float.parseFloat(textSize));
 		}
 		
 		rippleSpeed = attrs.getAttributeFloatValue(MATERIALDESIGNXML,

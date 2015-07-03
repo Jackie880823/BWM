@@ -225,4 +225,12 @@ public class Constant {
      * 地址经度
      */
     public static final String EXTRA_LONGITUDE   = "longitude";
+
+    public static final String HAS_LOGED_IN = "has_loged_in";
+
+    public static final String LOGIN_TYPE_PHONE = "phone";
+    public static final String LOGIN_TYPE_USERNAME = "username";
+    public static final String USER_APP_OS = "android";
+
+
 }

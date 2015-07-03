@@ -284,4 +284,85 @@
         <!-- Customize your theme here. -->
     </style>
 
+
+
+    <style name="et_start_default" >
+        <item name="android:layout_width"> match_parent </item>
+        <item name="android:layout_height"> wrap_content </item>
+        <item name="android:padding"> @dimen/default_content_padding </item>
+        <item name="android:background">@drawable/bg_stroke_corners_gray</item>
+        <item name="android:singleLine"> true </item>
+
+    </style>
+
+    <style name="et_start_username" parent="et_start_default">
+        <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
+        <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
+        <item name="android:textSize"> @dimen/text_medium_size</item>
+        <item name="android:inputType">text</item>
+        <item name="android:hint">@string/text_start_username</item>
+    </style>
+
+    <style name="et_start_code" parent="et_start_default">
+        <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
+        <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
+        <item name="android:textSize"> @dimen/text_medium_size</item>
+        <item name="android:hint">@string/text_code</item>
+    </style>
+
+    <style name="et_start_phone" parent="et_start_default">
+        <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
+        <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
+        <item name="android:textSize"> @dimen/text_medium_size</item>
+        <item name="android:inputType">phone</item>
+        <item name="android:digits">0123456789</item>
+        <item name="android:hint">@string/text_start_phone_number</item>
+    </style>
+
+    <style name="et_start_password" parent="et_start_default">
+        <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
+        <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
+        <item name="android:textSize"> @dimen/text_medium_size</item>
+        <item name="android:inputType">textPassword</item>
+        <item name="android:hint">@string/text_start_password</item>
+    </style>
+
+
+
+    <style name="tv_btn_start_default">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/default_content_padding</item>
+        <item name="android:layout_marginRight">@dimen/default_content_padding</item>
+        <item name="android:layout_marginLeft">@dimen/default_content_padding</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/text_medium_size</item>
+    </style>
+
+    <style name="tv_btn_start_green" parent="tv_btn_start_default">
+        <item name="android:background">@drawable/bg_green</item>
+        <item name="android:textColor">@color/default_text_color_while</item>
+    </style>
+
+    <style name="tv_btn_start_white" parent="tv_btn_start_default">
+        <!-- TODO-->
+    </style>
+
+
+
+
+    <style name="tv_start_default">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_start_light_small" parent="tv_start_default">
+        <item name="android:textColor">@color/default_text_color_light</item>
+        <item name="android:textSize">@dimen/text_small_size</item>
+    </style>
+
+
+
 </resources>

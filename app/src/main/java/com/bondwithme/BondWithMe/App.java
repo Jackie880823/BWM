@@ -10,16 +10,16 @@ import android.util.Log;
 
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.SDKInitializer;
-import com.google.gson.Gson;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.ui.LoginActivity;
+import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.google.gson.Gson;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -116,7 +116,7 @@ public class App extends MultiDexApplication {
         if (context != null) {
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
-            Intent intent = new Intent(context, LoginActivity.class);
+            Intent intent = new Intent(context, StartActivity.class);
             ComponentName cn = intent.getComponent();
             Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
             context.startActivity(mainIntent);

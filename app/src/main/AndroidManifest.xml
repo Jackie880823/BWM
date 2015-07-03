@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+
         package="com.bondwithme.BondWithMe"
-        android:installLocation="auto"
-    >
+        android:installLocation="auto">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -67,44 +67,53 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
 
         <!-- 友盟统计 -->
         <!-- <meta-data -->
         <!-- android:name="UMENG_CHANNEL" -->
         <!-- android:value="${UMENG_CHANNEL_VALUE}" /> -->
 
+
         <!-- gaode map -->
+
         <!--<meta-data-->
         <!--android:name="com.amap.api.v2.apikey"-->
         <!--android:value="83390a943f5896f8210b294faec6c5a3" />-->
+
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="@string/baidu_maps_key" />
+
         <!--android:value="@string/baidu_maps_key_debug" />-->
         <!--android:value="@string/jackie_baidu_maps_key_debug" />-->
+
 
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote"></service>
+            android:process=":remote" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <!--<meta-data-->
         <!--android:name="com.google.android.maps.v2.API_KEY"-->
         <!--android:value="@string/google_maps_key" />-->
 
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
 
         <!-- gcm receiver -->
         <receiver
+
             android:name="com.bondwithme.BondWithMe.receiver_service.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
+
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
@@ -121,10 +130,12 @@
         </service>
 
         <activity
-            android:name="com.bondwithme.BondWithMe.ui.LoginActivity"
+
+            android:name="com.bondwithme.BondWithMe.ui.start.StartActivity"
+
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -137,8 +148,9 @@
             android:name="com.bondwithme.BondWithMe.ui.MainActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            />
+
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
         <activity
             android:name="com.bondwithme.BondWithMe.ui.EventDetailActivity"
             android:screenOrientation="portrait"
@@ -147,9 +159,11 @@
             android:name="com.bondwithme.BondWithMe.ui.EventNewActivity"
             android:screenOrientation="portrait" />
         <activity
+
             android:name="com.bondwithme.BondWithMe.ui.wall.WallCommentActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" />
+
         <activity
             android:name="com.bondwithme.BondWithMe.ui.wall.WallNewActivity"
             android:screenOrientation="portrait"
@@ -178,6 +192,7 @@
         <!--android:screenOrientation="portrait"-->
         <!--android:windowSoftInputMode="adjustResize"-->
         <!--/>-->
+
         <activity
             android:name="com.bondwithme.BondWithMe.ui.InvitedStatusActivity"
             android:screenOrientation="portrait" />
@@ -199,14 +214,14 @@
         <activity
             android:name="com.bondwithme.BondWithMe.ui.ContactUsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"/>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name="com.bondwithme.BondWithMe.ui.AboutUsActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.bondwithme.BondWithMe.ui.more.SettingActivity"
             android:screenOrientation="portrait" />
-        <!-- More StickerStore相关的Activity-->
+        <!-- More StickerStore相关的Activity -->
         <activity
             android:name="com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity"
             android:screenOrientation="portrait" />
@@ -214,10 +229,10 @@
             android:name="com.bondwithme.BondWithMe.ui.more.sticker.MyStickerActivity"
             android:screenOrientation="portrait" />
         <activity
+
             android:name="com.bondwithme.BondWithMe.ui.more.sticker.StickerDetailActivity"
             android:screenOrientation="portrait"
             />
-
         <activity
             android:name="com.bondwithme.BondWithMe.ui.TellAFriendsActivity"
             android:screenOrientation="portrait" />
@@ -245,7 +260,6 @@
             android:name="com.bondwithme.BondWithMe.ui.NewsInfoActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-
         <activity
             android:name="com.bondwithme.BondWithMe.ui.AddMemberWorkFlow"
             android:screenOrientation="portrait" />
@@ -261,13 +275,14 @@
             android:name="com.bondwithme.BondWithMe.ui.AlertGroupActivity"
             android:screenOrientation="portrait" />
 
-
         <!-- christopher -->
 
         <activity
+
             android:name="com.bondwithme.BondWithMe.ui.CreateGroupActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:screenOrientation="portrait" />
+
         <activity
             android:name="com.bondwithme.BondWithMe.ui.CreateGroupDialogActivity"
             android:screenOrientation="portrait" />
@@ -356,6 +371,7 @@
 
 
 
+
         <activity android:name="com.bondwithme.BondWithMe.ui.more.MoreSettingActivity" >
         </activity>
         <activity
@@ -374,6 +390,7 @@
             android:name="com.bondwithme.BondWithMe.ui.InviteMemberActivity"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"
             android:screenOrientation="portrait" />
+
         <activity
             android:name="com.bondwithme.BondWithMe.ui.AlbumActivity"
             android:screenOrientation="portrait" />
@@ -386,7 +403,7 @@
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
@@ -398,13 +415,13 @@
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!-- Required SDK 核心功能 -->
         <service
             android:name="cn.jpush.android.service.PushService"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTER" />
                 <action android:name="cn.jpush.android.intent.REPORT" />
@@ -416,8 +433,8 @@
         <!-- Required SDK核心功能 -->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
-            android:enabled="true">
-            <intent-filter android:priority="1000">
+            android:enabled="true" >
+            <intent-filter android:priority="1000" >
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
                 <!-- Required  显示通知栏 -->
                 <category android:name="com.bondwithme.BondWithMe" />
@@ -461,17 +478,32 @@
 
         <!-- Required  . Enable it you can get statistics data with channel -->
 
-        <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
-        <meta-data android:name="JPUSH_APPKEY" android:value="@string/jiguang_api_key" /> <!--  </>值来自开发者平台取得的AppKey-->
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="developer-default" />
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="@string/jiguang_api_key" /> <!-- </>值来自开发者平台取得的AppKey -->
 
 
         <!-- 全局网络状态监听广播接收器 -->
+
         <receiver android:name="com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver">
             <intent-filter >
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
                 <!--<action android:name="android.net.wifi.WIFI_STATE_CHANGED">-->
+
             </intent-filter>
         </receiver>
+
+        <!-- <activity -->
+        <!-- android:name=".ui.login.Login2ndActivity"> -->
+        <!-- </activity> -->
+        <activity
+            android:name=".ui.start.LogInUsernameActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+        </activity>
     </application>
 
 </manifest>

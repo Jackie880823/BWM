@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/login"
+    android:background="@color/btn_gradient_color_green_normal"
     tools:context="com.bondwithme.BondWithMe.ui.LoginActivity">
     <!--android:background="@drawable/login_background"-->
     <LinearLayout

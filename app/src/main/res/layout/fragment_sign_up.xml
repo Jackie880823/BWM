@@ -1,0 +1,130 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_text_color_while"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.bondwithme.BondWithMe.ui.start.SignUpPhoneFragment">
+
+        <include
+            layout="@layout/country_code_layout"
+            android:id="@+id/country_code_layout"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:layout_below="@+id/country_code_layout">
+            <EditText
+                style="@style/et_start_phone"
+                android:id="@+id/et_phone_number"
+                android:nextFocusDown="@+id/et_password"
+                android:imeOptions="actionNext" />
+            <TextView
+                style="@style/tv_start_light_small"
+                android:id="@+id/tv_phone_number_prompt"
+                android:layout_below="@+id/et_phone_number"
+                android:layout_alignLeft="@+id/et_phone_number"
+                android:layout_marginLeft="@dimen/default_content_padding"
+                android:textColor="@color/stroke_color_red_wrong"
+                android:visibility="gone"
+                android:text="@string/text_phone_number_exist"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/rl_password"
+            android:layout_below="@+id/rl_phone_number"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <EditText
+                    style="@style/et_start_password"
+                    android:id="@+id/et_password"
+                    android:imeOptions="actionDone" />
+                <TextView
+                    style="@style/tv_start_light_small"
+                    android:id="@+id/tv_password_prompt"
+                    android:layout_below="@+id/et_password"
+                    android:visibility="gone"
+                    android:layout_alignLeft="@+id/et_password"
+                    android:layout_marginLeft="@dimen/default_content_padding"
+                    android:text="@string/text_least5_prompt"/>
+        </RelativeLayout>
+
+        <!--<TextView-->
+            <!--style="@style/tv_btn_start_green"-->
+            <!--android:id="@+id/tv_btn_sign_up"-->
+            <!--android:layout_below="@+id/rl_password"-->
+            <!--android:layout_marginTop="@dimen/default_view_margin"-->
+            <!--android:text="@string/text_start_sign_up"-->
+            <!--/>-->
+
+        <com.gc.materialdesign.views.ButtonRectangle
+            android:id="@+id/br_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_large_size"
+            android:text="@string/text_start_sign_up"
+            android:layout_below="@+id/rl_password"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:layout_marginRight="@dimen/default_view_margin"
+            app:rippleSpeed="50"
+            android:background="@color/btn_bg_color_green_normal"
+            app:rippleColor="@color/btn_gradient_color_green_press"
+            app:clickAfterRipple="true"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/br_sign_up"
+            android:gravity="center">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"></View>
+                <TextView
+                    style="@style/tv_start_light_small"
+                    android:id="@+id/tv_terms"
+                    android:layout_weight="5"
+                    android:layout_width="0dp"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:textSize="@dimen/text_small_size"
+                    />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"></View>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:gravity="center">
+                <TextView
+                    style="@style/tv_start_light_small"
+                    android:text="@string/text_start_or_register_with"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/sign_in_username"
+                    />
+
+                <TextView
+                    style="@style/tv_start_light_small"
+                    android:text="@string/text_start_username"
+                    />
+        </LinearLayout>
+</RelativeLayout>

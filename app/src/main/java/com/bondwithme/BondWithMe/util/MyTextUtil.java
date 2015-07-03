@@ -1,16 +1,20 @@
 package com.bondwithme.BondWithMe.util;
 
+import android.text.TextUtils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class MyTextUtil {
 
-    private MyTextUtil() {}
+    private MyTextUtil() {
+    }
 
 
     /**
      * 检查字符是否为空格，/r ,/n等无意义内容
+     *
      * @return
      */
     public static boolean isInvalidText(String text) {
@@ -25,20 +29,26 @@ public class MyTextUtil {
 
 
     /**
-     *
      * @param phone
      * @return
      */
-    public static String NoZero(String phone)
-    {
+    public static String NoZero(String phone) {
 
-        if (phone.startsWith("0", 0))
-        {
+        if (phone.startsWith("0", 0)) {
             phone = phone.substring(1);
             return NoZero(phone);
         } else {
             return phone;
         }
 
+    }
+
+    public static boolean checkEmptyInputText(String... str) {
+        for (int i = 0; i < str.length; i++) {
+            if (TextUtils.isEmpty(str[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 }
