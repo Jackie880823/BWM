@@ -137,7 +137,7 @@ public class TellAFriendsActivity extends BaseActivity {
 
     private void sendContact() {
         if (validateForm()) {
-            mProgressDialog = new ProgressDialog(this, R.string.text_waiting);
+            mProgressDialog = new ProgressDialog(this, getString(R.string.text_waiting));
             mProgressDialog.show();
 
             ContactMessageEntity messageEntity = generateMessage("");

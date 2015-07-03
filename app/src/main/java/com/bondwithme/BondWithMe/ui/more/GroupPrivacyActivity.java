@@ -65,7 +65,7 @@ public class GroupPrivacyActivity extends BaseActivity {
     @Override
     public void initView() {
 
-        mProgressDialog = new ProgressDialog(this,R.string.text_loading);
+        mProgressDialog = new ProgressDialog(this,getString(R.string.text_loading));
         mProgressDialog.show();
 
         cbTO = getViewById(R.id.cb_to_other);

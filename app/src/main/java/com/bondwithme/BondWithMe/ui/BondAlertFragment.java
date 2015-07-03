@@ -62,7 +62,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     @Override
     public void initView() {
 
-        mProgressDialog = new ProgressDialog(getActivity(), R.string.text_loading);
+        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
         getViewById(R.id.btn_alert_miss).setOnClickListener(this);
         getViewById(R.id.btn_alert_bigday).setOnClickListener(this);
         getViewById(R.id.btn_alert_wall).setOnClickListener(this);

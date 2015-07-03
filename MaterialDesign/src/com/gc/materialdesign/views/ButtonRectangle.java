@@ -1,9 +1,7 @@
 package com.gc.materialdesign.views;
 
-import com.gc.materialdesign.R;
-import com.gc.materialdesign.utils.Utils;
-
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -11,6 +9,9 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.gc.materialdesign.R;
+import com.gc.materialdesign.utils.Utils;
 
 public class ButtonRectangle extends Button {
 	
@@ -38,7 +39,7 @@ public class ButtonRectangle extends Button {
 	
 	// Set atributtes of XML to View
 	protected void setAttributes(AttributeSet attrs){
-		
+
 		//Set background Color
 		// Color by resource
 		int bacgroundColor = attrs.getAttributeResourceValue(ANDROIDXML,"background",-1);
@@ -51,7 +52,7 @@ public class ButtonRectangle extends Button {
 			if (background != -1)
 				setBackgroundColor(background);
 		}
-		
+
 		// Set Padding
 		String value = attrs.getAttributeValue(ANDROIDXML,"padding");
 //		if(value != null){
@@ -70,8 +71,8 @@ public class ButtonRectangle extends Button {
 //			value = attrs.getAttributeValue(ANDROIDXML,"paddingBottom");
 //			paddingBottom = (value == null) ? paddingBottom : (int) Float.parseFloat(value.replace("dip", ""));
 //		}
-		
-		
+
+
 		// Set text button
 		String text = null;
 		int textResource = attrs.getAttributeResourceValue(ANDROIDXML,"text",-1);
@@ -88,16 +89,32 @@ public class ButtonRectangle extends Button {
 			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 			params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
 			params.setMargins(Utils.dpToPx(5, getResources()), Utils.dpToPx(5, getResources()), Utils.dpToPx(5, getResources()), Utils.dpToPx(5, getResources()));
-			textButton.setLayoutParams(params);			
+			textButton.setLayoutParams(params);
 			addView(textButton);
 //					FrameLayout.LayoutParams params = (LayoutParams) textView.getLayoutParams();
 //					params.width = getWidth();
 //					params.gravity = Gravity.CENTER_HORIZONTAL;
 ////					params.setMargins(paddingLeft, paddingTop, paddingRight, paddingRight);
-//					textView.setLayoutParams(params);
-			
+//					textView.setLayoutParams(params);textColor
+			int textColor = attrs.getAttributeResourceValue(ANDROIDXML,"textColor",-1);
+			if(textColor != -1){
+				textButton.setTextColor(textColor);
+			}else{
+				// Color by hexadecimal
+				// Color by hexadecimal
+				textColor = attrs.getAttributeIntValue(ANDROIDXML, "textColor", -1);
+				if (textColor != -1)
+					textButton.setTextColor(textColor);
+			}
+			int[] array = {android.R.attr.textSize};
+			TypedArray values = getContext().obtainStyledAttributes(attrs, array);
+	        float textSize = values.getDimension(0, -1);
+	        values.recycle();
+	        if(textSize != -1)
+	        	textButton.setTextSize(textSize);
+
 		}
-		
+
 		rippleSpeed = attrs.getAttributeFloatValue(MATERIALDESIGNXML,
 				"rippleSpeed", Utils.dpToPx(6, getResources()));
 	}
@@ -130,20 +147,4 @@ public class ButtonRectangle extends Button {
 		}
 	}
 	
-	public void setText(String text){
-			textButton.setText(text);
-	}
-	
-	public void setTextColor(int color){
-		textButton.setTextColor(color);
-	}
-	@Override
-	public TextView getTextView() {
-		return textButton;
-	}
-
-	public String getText(){
-        	return textButton.getText().toString();
- 	}
-
 }

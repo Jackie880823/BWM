@@ -145,7 +145,7 @@ public class LocalImagesAdapter extends BaseAdapter {
         }
         holder.check.setOncheckListener(new CheckBox.OnCheckListener() {
             @Override
-            public void onCheck(boolean check) {
+            public void onCheck(CheckBox checkbox,boolean check) {
                 Log.i(TAG, "onCheck& check: " + check);
                 Uri uri = mDatas.get(position);
                 if(mListener != null) {

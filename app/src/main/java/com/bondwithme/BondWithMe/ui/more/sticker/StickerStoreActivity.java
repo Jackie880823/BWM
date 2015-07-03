@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -126,7 +125,7 @@ public class StickerStoreActivity extends BaseActivity {
     @Override
     public void initView() {
         if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, R.string.text_loading);
+            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
         }
         mProgressDialog.show();
 

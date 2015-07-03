@@ -64,7 +64,7 @@ public class BirthdayAlertActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mProgressDialog = new ProgressDialog(this,R.string.text_loading);
+        mProgressDialog = new ProgressDialog(this,getString(R.string.text_loading));
         mProgressDialog.show();
 
         dob_alert_1 = getViewById(R.id.dob_alert_1);

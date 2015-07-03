@@ -378,9 +378,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         };
         //for not work in down 11
         if(SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            task.execute(new String[]{});
+            task.execute();
         }
 
     }
@@ -424,9 +424,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
         //for not work in down 11
         if(SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            task.execute(new String[]{});
+            task.execute();
         }
 
     }

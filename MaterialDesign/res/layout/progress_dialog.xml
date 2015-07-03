@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/dialog_background"
-        android:padding="32dp" >
+        android:padding="24dp" >
 
         <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
             android:id="@+id/progressBarCircularIndetermininate"
@@ -28,6 +28,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/progressBarCircularIndetermininate"
             android:layout_marginLeft="8dp"
+            android:text="Title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#000" />
     </RelativeLayout>
