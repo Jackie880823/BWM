@@ -403,7 +403,7 @@
     <string name="text_username">Username</string>
 
     <!-- reset password 界面 -->
-    <string name="text_reset_password_warning">Contain 8~16 alpha numeric characters</string>
+    <string name="text_reset_password_warning">Contain 6~16 alpha numeric characters</string>
 
     <string name="hint_mail">Your email address</string>
     <string name="hint_subject">Select a subject</string>
@@ -485,7 +485,9 @@
     <string name="download">DOWNLOAD</string>
     <string name="my_sticker">My Stickies</string>
     <string name="free">Free</string>
-    <string name="price">Price: </string>
+    <string name="price">Price:&#160;</string>
 
     <string name="text_admin">Admin</string>
+
+    <string name="Downloaded">Downloaded</string>
 </resources>

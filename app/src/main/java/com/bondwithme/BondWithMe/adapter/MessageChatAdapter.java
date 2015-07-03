@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,7 +8,9 @@ import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
@@ -29,11 +31,14 @@ import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
-
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -199,7 +204,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         if (null != msgEntity.getText_id()) {//文字
             holder.messageText.setText(msgEntity.getText_description());
         } else if (msgEntity.getLoc_id() != null) {//地图 item
-            String locUrl = LocationUtil.getLocationPicUrl(context, msgEntity.getLoc_latitude(), msgEntity.getLoc_longitude(),msgEntity.getLoc_type());
+            String locUrl = LocationUtil.getLocationPicUrl(context, msgEntity.getLoc_latitude(), msgEntity.getLoc_longitude(), msgEntity.getLoc_type());
             VolleyUtil.initNetworkImageView(context, holder.networkImageView
                     , locUrl, R.drawable.network_image_default, R.drawable.network_image_default);
         } else if (Constant.Sticker_Gif.equals(msgEntity.getSticker_type())) {//gif item
@@ -211,24 +216,22 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             }
             try {
                 String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.gif";
-                GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
+                //GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
+                Log.i("stickerPath", gifFilePath);
+                GifDrawable gifDrawable = new GifDrawable(gifFilePath);//new File(gifFilePath));
                 if (gifDrawable != null) {
                     holder.gifImageView.setImageDrawable(gifDrawable);
-//                    if ("true".equals(msgEntity.getIsNate())) {
-//                        holder.progressBar.setVisibility(View.VISIBLE);
-//                    } else {
-//                        holder.progressBar.setVisibility(View.GONE);
-//                    }
                 } else {
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
                             msgEntity.getSticker_name(), stickerGroupPath, msgEntity.getSticker_type());
                     downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
                         msgEntity.getSticker_name(), stickerGroupPath, msgEntity.getSticker_type());
+                Log.i("stickerUrl", stickerUrl);
                 downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
-                e.printStackTrace();
+                LogUtil.e("", "插入sticker info", e);
             }
         } else if (Constant.Sticker_Png.equals(msgEntity.getSticker_type())) {//Png
             holder.pngImageView.setImageResource(R.drawable.network_image_default);
@@ -247,23 +250,26 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
                 }
-
                 try {
                     //拼接大图路径
                     String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.png";
-                    InputStream is = context.getAssets().open(pngFileName);//得到数据流
-                    if (is != null) {//如果有图片直接显示，否则网络下载
-                        Bitmap bitmap = BitmapFactory.decodeStream(is);//将流转化成Bitmap对象
+                    //InputStream is = context.getAssets().open(pngFileName);//得到数据流
+                    Log.i("stickerPath", pngFileName);
+//                    InputStream is = new FileInputStream(new File(pngFileName));//得到数据流
+//                    if (is != null) {//如果有图片直接显示，否则网络下载
+                    Bitmap bitmap = BitmapFactory.decodeFile(pngFileName);//.decodeStream(is);//将流转化成Bitmap对象
+                    if (bitmap != null) {
                         holder.pngImageView.setImageBitmap(bitmap);//显示图片
                     } else {
                         String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
                         downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     //本地没有png的时候，从服务器下载
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+                    Log.i("stickerUrl", stickerUrl);
                     downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
-                    e.printStackTrace();
+                    LogUtil.e("", "插入sticker info", e);
                 }
             }
         } else if (msgEntity.getFile_id() != null) {
@@ -334,8 +340,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
      *
      * @param path
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void downloadAsyncTask(final ProgressBarCircularIndeterminate progressBar, final GifImageView gifImageView, final String path, final int defaultResource) {
-        new AsyncTask<String, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
             @Override
             protected byte[] doInBackground(String... params) {
                 return getImageByte(path);
@@ -368,12 +375,18 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
             }
 
-        }.execute(new String[]{});
+        };
+        //for not work in down 11
+        if(SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+        } else {
+            task.execute(new String[]{});
+        }
 
     }
 
     public void downloadPngAsyncTask(final ProgressBarCircularIndeterminate progressBar, final ImageView imageView, final String path, final int defaultResource) {
-        new AsyncTask<String, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
 
             @Override
             protected byte[] doInBackground(String... params) {
@@ -407,7 +420,14 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
             }
 
-        }.execute(new String[]{});
+        };
+
+        //for not work in down 11
+        if(SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+        } else {
+            task.execute(new String[]{});
+        }
 
     }
 
@@ -444,6 +464,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 networkImageView.setOnClickListener(this);
             }
         }
+
         //点击事件
         @Override
         public void onClick(View v) {

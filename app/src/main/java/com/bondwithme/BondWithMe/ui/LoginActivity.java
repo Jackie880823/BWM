@@ -1,13 +1,17 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,10 +23,6 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -34,7 +34,12 @@ import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.SystemUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
@@ -99,8 +104,9 @@ public class LoginActivity extends Activity {
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void registerInBackground() {
-        new AsyncTask<Void, Void, String>() {
+        AsyncTask task = new AsyncTask<Void, Void, String>() {
 
             @Override
             protected String doInBackground(Void... params) {
@@ -120,7 +126,13 @@ public class LoginActivity extends Activity {
                 }
             }
 
-        }.execute(null, null, null);
+        };
+        //for not work in down 11
+        if(SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+        } else {
+            task.execute(null, null, null);
+        }
     }
 
     private String doRegistration2Jpush() {
@@ -197,7 +209,7 @@ public class LoginActivity extends Activity {
         params.put("pushService", service);
         params.put("appID", AppInfoUtil.getAppPackageName(this));
         requestInfo.params = params;
-        new HttpTools(LoginActivity.this).post(requestInfo,this, new HttpCallback() {
+        new HttpTools(LoginActivity.this).post(requestInfo, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -236,9 +248,10 @@ public class LoginActivity extends Activity {
 //        finishByNoPlayService();
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void finishByNoPlayService() {
-        if (!SystemUtil.checkPlayServices(this)) {
-            new AsyncTask<Void, Void, Void>() {
+        if(!SystemUtil.checkPlayServices(this)) {
+            AsyncTask task = new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
                     try {
@@ -253,7 +266,13 @@ public class LoginActivity extends Activity {
                 protected void onPostExecute(Void aVoid) {
                     finish();
                 }
-            }.execute();
+            };
+            //for not work in down 11
+            if(SDKUtil.IS_HONEYCOMB) {
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+            } else {
+                task.execute();
+            }
         }
 
     }
@@ -292,6 +311,31 @@ public class LoginActivity extends Activity {
         do_faile_login_tv = (TextView) findViewById(R.id.do_faile_login_tv);
         do_faile_login_linear = (LinearLayout) findViewById(R.id.do_faile_login_linear);
         rlProgress = (RelativeLayout)findViewById(R.id.rl_progress);
+
+        tvCountryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(tvCountryCode.getText().toString()))
+                {
+                    ivRemove.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+
+                    ivRemove.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
         //取消国家区号
         ivRemove.setOnClickListener(new View.OnClickListener() {

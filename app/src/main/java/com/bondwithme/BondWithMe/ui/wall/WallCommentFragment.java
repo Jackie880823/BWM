@@ -1,10 +1,12 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -42,6 +44,7 @@ import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -204,10 +207,18 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
              *
              * @param uri
              */
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onReceiveBitmapUri(Uri uri) {
                 if(uri != null) { // 传输图片
-                    new CompressBitmapTask().execute(uri);
+                    CompressBitmapTask task = new CompressBitmapTask();
+
+                    //for not work in down 11
+                    if(SDKUtil.IS_HONEYCOMB) {
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
+                    } else {
+                        task.execute(uri);
+                    }
                 }
             }
 
@@ -860,6 +871,21 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         });
         if(!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
+        }
+    }
+
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally
+     * tied to {@link Activity#onResume() Activity.onResume} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(sendCommentView != null) {
+            sendCommentView.commitAllowingStateLoss();
         }
     }
 
