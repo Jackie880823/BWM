@@ -3,6 +3,7 @@ package com.bondwithme.BondWithMe;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.LoginActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.google.gson.Gson;
@@ -164,5 +166,12 @@ public class App extends MultiDexApplication {
         System.exit(0);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        LogUtil.d("", "1onConfigurationChanged============");
+//        Intent intent = new Intent(MainActivity.ACTION_REFRESH);
+//        sendBroadcast(intent);
+    }
 
 }
