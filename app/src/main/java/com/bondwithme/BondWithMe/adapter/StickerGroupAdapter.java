@@ -90,6 +90,7 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
             LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(mContext);
             boolean hasSticker = dao.hasDownloadSticker(stickerGroupEntity.getPath());
             if(hasSticker){
+
                 holder.tvDownload.setVisibility(View.INVISIBLE);
                 holder.ivExist.setVisibility(View.VISIBLE);
             }else {

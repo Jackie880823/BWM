@@ -291,9 +291,12 @@ public class HttpTools{
             }
             return request;
         }
+        /**启用缓存，wing 20150625*/
         if (sDownloadQueue == null) {
-            sDownloadQueue = Volley.newNoCacheRequestQueue(mContext);
+            sDownloadQueue = Volley.newRequestQueue(mContext);
+//            sDownloadQueue = Volley.newNoCacheRequestQueue(mContext);
         }
+        request.setShouldCache(true);
         sDownloadQueue.add(request);
         return request;
     }
