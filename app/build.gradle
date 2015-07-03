@@ -26,6 +26,7 @@ android {
         // 默认是umeng的渠道
         manifestPlaceholders = [UMENG_CHANNEL_VALUE: "umeng"]
     }
+
     //代码检查
     lintOptions {
         checkReleaseBuilds false //TODO release change to true
@@ -60,10 +61,10 @@ android {
 //        release {
 //            // 不显示Log
 //            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO 正式环境改false
-//            minifyEnabled true //TODO 正式环境改true
-//            zipAlignEnabled true //TODO 正式环境改true
+//            minifyEnabled false //TODO 正式环境改true
+//            zipAlignEnabled false //TODO 正式环境改true
 //            // 移除无用的resource文件
-//            shrinkResources true
+//            shrinkResources false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            signingConfig signingConfigs.release
 //        }
