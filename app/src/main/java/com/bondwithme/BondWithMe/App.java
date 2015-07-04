@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
@@ -46,7 +45,7 @@ public class App extends MultiDexApplication {
         crashHandler.init(getApplicationContext());
         /**网络工具初始*/
         HttpTools.init(this);
-        Log.i("", "MultiDexApplication==============" + System.getProperty("os.arch"));
+        LogUtil.i("", "MultiDexApplication==============" + System.getProperty("os.arch"));
         //TODO for baidu not support 64 bit cpu
         /**baidu map*/
         if(System.getProperty("os.arch").contains("64")){
@@ -169,9 +168,8 @@ public class App extends MultiDexApplication {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        LogUtil.d("", "1onConfigurationChanged============");
-//        Intent intent = new Intent(MainActivity.ACTION_REFRESH);
-//        sendBroadcast(intent);
+        Intent intent = new Intent();
+        intent.setAction("refresh");
+        sendBroadcast(intent);
     }
-
 }

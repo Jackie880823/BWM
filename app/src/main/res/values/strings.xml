@@ -488,6 +488,5 @@
     <string name="price">Price:&#160;</string>
 
     <string name="text_admin">Admin</string>
-
-    <string name="Downloaded">Downloaded</string>
+    <string name="text_check_in_a_location">Check in a location</string>
 </resources>
