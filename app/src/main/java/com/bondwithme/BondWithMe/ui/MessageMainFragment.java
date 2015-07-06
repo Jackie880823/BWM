@@ -239,6 +239,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);
+                privateAdapter.getmUserEntityList().get(arg2).setUnread("0");
                 Intent intent = new Intent(getActivity(), MessageChatActivity.class);
                 intent.putExtra("type", 0);
                 intent.putExtra("groupId", privateAdapter.getmUserEntityList().get(arg2).getGroup_id());
@@ -315,6 +316,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                 intent.putExtra("groupId", messageGroupAdapter.getmGroupList().get(arg2).getGroup_id());
                 intent.putExtra("titleName", messageGroupAdapter.getmGroupList().get(arg2).getGroup_name());
                 arg1.findViewById(R.id.tv_num).setVisibility(View.GONE);//服务器会消除。本地直接直接消除。
+                messageGroupAdapter.getmGroupList().get(arg2).setUnread("0");
                 startActivity(intent);
             }
         });
