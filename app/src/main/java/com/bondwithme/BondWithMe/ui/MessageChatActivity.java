@@ -125,6 +125,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public LinearLayoutManager llm;
     private InputMethodManager imm;
 
+    private int isNewGroup;
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -223,6 +225,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     }
 
+
+    @Override
+    public void finish() {
+        if(isNewGroup==1){
+            setResult(RESULT_OK);
+        }
+        super.finish();
+    }
+
     @Override
     protected void setTitle() {
         tvTitle.setText(titleName);
@@ -262,6 +273,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     public void initView() {
         userOrGroupType = getIntent().getIntExtra("type", -1);
+        //如果是从新建group打开的
+        isNewGroup = getIntent().getIntExtra("isNewGroup", -1);
         mContext = this;
         messageAction = new MessageAction(mContext, handler);
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
