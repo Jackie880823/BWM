@@ -11,7 +11,7 @@
 
 
 
-        <com.madx.bwm.widget.CustomGridView
+        <com.bondwithme.BondWithMe.widget.CustomGridView
             android:id="@+id/gv_select_photo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,0 +1,7 @@
+package com.madx.bwm.entity;
+
+/**
+ * Created by liangzemian on 15/7/2.
+ */
+public class ArchiveCommentEntity {
+}

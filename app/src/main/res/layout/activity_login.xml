@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/login"
-    tools:context="com.madx.bwm.ui.LoginActivity">
+    tools:context="com.bondwithme.BondWithMe.ui.LoginActivity">
     <!--android:background="@drawable/login_background"-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -77,6 +77,7 @@
                         android:id="@+id/iv_move"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
+                        android:visibility="invisible"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/default_view_margin"
                         android:layout_alignParentRight="true">

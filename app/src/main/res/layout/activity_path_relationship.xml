@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#ffffff"
-    tools:context="com.madx.bwm.ui.PathRelationshipActivity">
+    tools:context="com.bondwithme.BondWithMe.ui.PathRelationshipActivity">
 
         <include
             android:id="@+id/fragment_main_top"
@@ -78,7 +78,7 @@
                             android:orientation="horizontal"
                             android:layout_marginLeft="32dp"
                             android:layout_marginTop="16dp">
-                                <com.madx.bwm.widget.CircularNetworkImage
+                                <com.bondwithme.BondWithMe.widget.CircularNetworkImage
                                     android:id="@+id/cni_main"
                                     android:layout_width="80dp"
                                     android:layout_height="80dp"
@@ -134,7 +134,7 @@
                                     android:layout_height="wrap_content"
                                     android:orientation="horizontal"
                                     android:layout_marginLeft="32dp">
-                                        <com.madx.bwm.widget.CircularNetworkImage
+                                        <com.bondwithme.BondWithMe.widget.CircularNetworkImage
                                             android:id="@+id/cni1"
                                             android:layout_width="80dp"
                                             android:layout_height="80dp"
@@ -191,7 +191,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:layout_marginLeft="32dp">
-                                <com.madx.bwm.widget.CircularNetworkImage
+                                <com.bondwithme.BondWithMe.widget.CircularNetworkImage
                                     android:id="@+id/cni2"
                                     android:layout_width="80dp"
                                     android:layout_height="80dp"
@@ -248,7 +248,7 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:layout_marginLeft="32dp">
-                                    <com.madx.bwm.widget.CircularNetworkImage
+                                    <com.bondwithme.BondWithMe.widget.CircularNetworkImage
                                         android:id="@+id/cni3"
                                         android:layout_width="80dp"
                                         android:layout_height="80dp"
@@ -305,7 +305,7 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:layout_marginLeft="32dp">
-                                    <com.madx.bwm.widget.CircularNetworkImage
+                                    <com.bondwithme.BondWithMe.widget.CircularNetworkImage
                                         android:id="@+id/cni4"
                                         android:layout_width="80dp"
                                         android:layout_height="80dp"

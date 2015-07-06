@@ -161,8 +161,8 @@
 #In your case, that would be
 
 #entity
--dontwarn com.madx.bwm.entity.**
--keep class com.madx.bwm.entity.**
--keepclassmembers class com.madx.bwm.entity.** { *; }
--keep class com.madx.bwm.db.SQLiteHelperOrm
--keepclassmembers class com.madx.bwm.db.SQLiteHelperOrm { *; }
+-dontwarn com.bondwithme.BondWithMe.entity.**
+-keep class com.bondwithme.BondWithMe.entity.**
+-keepclassmembers class com.bondwithme.BondWithMe.entity.** { *; }
+-keep class com.bondwithme.BondWithMe.db.SQLiteHelperOrm
+-keepclassmembers class com.bondwithme.BondWithMe.db.SQLiteHelperOrm { *; }

@@ -2,10 +2,10 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.madx.bwm.WallMembersOrGroupsActivityFragment">
+                tools:context="com.bondwithme.BondWithMe.WallMembersOrGroupsActivityFragment">
 
 
-    <com.madx.bwm.widget.MySwipeRefreshLayout
+    <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,6 +20,6 @@
             android:scrollbars="vertical">
 
         </android.support.v7.widget.RecyclerView>
-    </com.madx.bwm.widget.MySwipeRefreshLayout>
+    </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
 
 </RelativeLayout>

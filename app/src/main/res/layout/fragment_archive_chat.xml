@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.madx.bwm.widget.MySwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/seatch_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/et_search"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/default_content_padding"
+                        android:padding="@dimen/default_content_padding"
+                        android:singleLine="true"
+                        android:hint="@string/family_search"
+                        android:textColorHint="#ccc"
+                        android:background="@drawable/et_oval_white"
+                        android:drawablePadding="@dimen/default_view_margin"
+                        android:drawableRight="@drawable/search" />
+
+                    <View
+                        android:id="@+id/option_split_line"
+                        style="@style/split_line_default" />
+                </LinearLayout>
+
+            </RelativeLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_chat_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/seatch_options"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:paddingRight="@dimen/default_content_padding"
+                android:paddingTop="@dimen/default_view_margin"
+                android:scrollbars="vertical">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+    </com.madx.bwm.widget.MySwipeRefreshLayout>
+
+    <include layout="@layout/progress_layout"/>
+
+</RelativeLayout>
