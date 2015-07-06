@@ -9,6 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_content_padding"
+        android:layout_marginRight="@dimen/default_content_padding"
+        android:layout_marginTop="@dimen/default_content_padding"
         android:orientation="horizontal">
 
         <com.bondwithme.BondWithMe.widget.CircularNetworkImage
@@ -49,10 +52,10 @@
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/niv_comment_pic"
                 style="@style/ListImageDefault"
-                android:layout_marginTop="@dimen/default_view_margin"
                 android:layout_width="@dimen/_80dp"
                 android:layout_height="@dimen/_80dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/default_view_margin"
                 android:scaleType="fitXY"
                 android:visibility="gone"/>
 
@@ -79,8 +82,8 @@
                 <TextView
                     android:id="@+id/comment_date"
                     style="@style/text_light_default"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"/>
 
                 <TextView
                     android:id="@+id/tv_like_desc"
