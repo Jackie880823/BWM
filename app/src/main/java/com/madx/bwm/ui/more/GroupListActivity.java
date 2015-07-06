@@ -8,10 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.gc.materialdesign.widgets.ProgressDialog;
-import com.madx.bwm.R;
 import com.madx.bwm.adapter.GroupListAdapter;
-import com.madx.bwm.ui.BaseActivity;
 
 /**
  * Created by liangzemian on 15/6/30.

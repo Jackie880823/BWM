@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:gravity="center">
 
-        <com.madx.bwm.widget.SquareLinnerLayout
+        <com.bondwithme.BondWithMe.widget.SquareLinnerLayout
             android:layout_width="@dimen/_62dp"
             android:layout_height="@dimen/_62dp"
             android:gravity="center">
@@ -24,6 +24,6 @@
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
                 android:background="@null" />
-        </com.madx.bwm.widget.SquareLinnerLayout>
+        </com.bondwithme.BondWithMe.widget.SquareLinnerLayout>
     </LinearLayout>
 </LinearLayout>

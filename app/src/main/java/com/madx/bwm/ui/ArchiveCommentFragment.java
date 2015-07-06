@@ -3,7 +3,8 @@ package com.madx.bwm.ui;
 import android.app.Activity;
 import android.view.View;
 
-import com.madx.bwm.R;
+import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.madx.bwm.adapter.ArchiveCommentAdapter;
 import com.madx.bwm.entity.ArchiveCommentEntity;
 

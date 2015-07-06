@@ -9,12 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.madx.bwm.R;
-import com.madx.bwm.entity.AlertEventEntity;
-import com.madx.bwm.ui.EventDetailActivity;
-import com.madx.bwm.util.MyDateUtils;
+import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.AlertEventEntity;
+import com.bondwithme.BondWithMe.ui.EventDetailActivity;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 
 import java.util.List;
+
 
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.VHItem> {
     private Context mContext;

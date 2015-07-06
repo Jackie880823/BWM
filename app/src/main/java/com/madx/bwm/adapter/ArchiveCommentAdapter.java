@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.madx.bwm.R;
+import com.bondwithme.BondWithMe.R;
 import com.madx.bwm.entity.ArchiveCommentEntity;
 
 import java.util.List;

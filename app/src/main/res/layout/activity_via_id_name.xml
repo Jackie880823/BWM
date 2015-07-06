@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/default_text_color_while"
-    tools:context="com.madx.bwm.ui.ViaIdNameActivity">
+    tools:context="com.bondwithme.BondWithMe.ui.ViaIdNameActivity">
 
     <include
         android:id="@+id/fragment_main_top"

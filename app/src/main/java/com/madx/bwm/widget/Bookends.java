@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.madx.bwm.R;
+import com.bondwithme.BondWithMe.R;
 
 import java.util.ArrayList;
 import java.util.List;

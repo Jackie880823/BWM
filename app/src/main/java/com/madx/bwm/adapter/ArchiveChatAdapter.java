@@ -5,7 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.madx.bwm.R;
+import com.bondwithme.BondWithMe.R;
+
 
 /**
  * Created by liangzemian on 15/7/2.

@@ -6,8 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.View;
 
-import com.madx.bwm.R;
-import com.madx.bwm.ui.BaseActivity;
+import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.BaseActivity;
+
 
 /**
  * Created by liangzemian on 15/6/30.

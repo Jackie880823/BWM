@@ -47,7 +47,7 @@
                                                 <!--android:background="@color/default_split_line"/>-->
 
                                     </LinearLayout>
-                                <com.madx.bwm.widget.MyListViewForScroolView
+                                <com.bondwithme.BondWithMe.widget.MyListViewForScroolView
                                     android:id="@+id/message_listView"
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"

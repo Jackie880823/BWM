@@ -9,9 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.madx.bwm.R;
+import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.BaseFragment;
+import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.madx.bwm.entity.ArchiveChatEntity;
-import com.madx.bwm.widget.MySwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;

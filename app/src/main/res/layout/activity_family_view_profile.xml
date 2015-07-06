@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context="com.madx.bwm.ui.FamilyViewProfileActivity">
+    tools:context="com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity">
 
     <include
         android:id="@+id/fragment_main_top"
@@ -32,7 +32,7 @@
                                 <FrameLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content">
-                                    <com.madx.bwm.widget.CircularNetworkImage
+                                    <com.bondwithme.BondWithMe.widget.CircularNetworkImage
                                         android:id="@+id/cni_main"
                                         android:layout_width="150dp"
                                         android:layout_height="150dp"
