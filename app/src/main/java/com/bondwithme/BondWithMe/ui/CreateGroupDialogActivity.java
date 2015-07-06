@@ -111,7 +111,8 @@ public class CreateGroupDialogActivity extends BaseActivity {
     @Override
     protected void titleLeftEvent() {
 //        super.titleLeftEvent();
-        backToLastPage();
+//        backToLastPage();
+        finish();
     }
 
     private void backToLastPage() {
