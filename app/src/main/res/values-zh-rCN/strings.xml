@@ -498,4 +498,6 @@
     <string name="download">DOWNLOAD</string>
     <string name="my_sticker">My Stickies</string>
     <string name="free">Free</string>
+
+    <string name="not_support_64bit">百度地图目前不支持64位CPU</string>
 </resources>
