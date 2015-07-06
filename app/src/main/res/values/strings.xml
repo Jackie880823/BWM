@@ -500,8 +500,5 @@
     <string name="text_admin">Admin</string>
 
     <string name="Downloaded">Downloaded</string>
-<<<<<<< HEAD
-=======
     <string name="not_support_64bit">Baidu map currently does not support 64-bit CPU</string>
->>>>>>> 02e6efff719a1e5720fbd758d5f51db54706e8ff
 </resources>

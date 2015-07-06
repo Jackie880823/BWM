@@ -501,8 +501,5 @@
     <string name="text_member_list">Member List</string>
 
     <string name="Downloaded">Downloaded</string>
-<<<<<<< HEAD
-=======
     <string name="not_support_64bit">百度地图目前不支持64位CPU</string>
->>>>>>> 02e6efff719a1e5720fbd758d5f51db54706e8ff
 </resources>
