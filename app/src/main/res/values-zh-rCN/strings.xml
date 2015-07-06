@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">伴我玩</string>伴我玩
-    <string name="title_tab_diary">日志</string>日志
+    <string name="app_name">伴我玩</string>
+    <string name="title_tab_diary">日志</string>
     <string name="title_tab_chat">信息</string>
     <string name="title_tab_event">活动</string>
     <string name="title_tab_more">更多</string>
@@ -492,4 +492,5 @@
     <string name="text_admin">管理员</string>
 
     <string name="Downloaded">Downloaded</string>
+    <string name="not_support_64bit">百度地图目前不支持64位CPU</string>
 </resources>
