@@ -2,6 +2,8 @@ package com.bondwithme.BondWithMe.ui.more;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -23,11 +25,12 @@ import java.util.Map;
 
 public class BirthdayAlertActivity extends BaseActivity {
 
-    ProgressDialog mProgressDialog;
+    View mProgressDialog;
     private CheckBox dob_alert_1;
     private CheckBox dob_alert_3;
     private CheckBox dob_alert_7;
     private CheckBox dob_alert_30;
+    private LinearLayout llBirthdayAlert;
 
     @Override
     public int getLayout() {
@@ -64,8 +67,10 @@ public class BirthdayAlertActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mProgressDialog = new ProgressDialog(this,R.string.text_loading);
-        mProgressDialog.show();
+        mProgressDialog = getViewById(R.id.rl_progress);
+        mProgressDialog.setVisibility(View.VISIBLE);
+
+        llBirthdayAlert = getViewById(R.id.ll_birthday_alert);
 
         dob_alert_1 = getViewById(R.id.dob_alert_1);
         dob_alert_3 = getViewById(R.id.dob_alert_3);
@@ -74,6 +79,7 @@ public class BirthdayAlertActivity extends BaseActivity {
 
     }
 
+    boolean result;
     @Override
     public void requestData() {
 
@@ -85,7 +91,10 @@ public class BirthdayAlertActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+                mProgressDialog.setVisibility(View.INVISIBLE);
+                if(result) {
+                    llBirthdayAlert.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -95,6 +104,7 @@ public class BirthdayAlertActivity extends BaseActivity {
                     if(jsonObject!=null){
 //                        JSONObject birthdayConfig = jsonObject.getJSONObject("birthday");
                         bindConfig2Birthday(jsonObject);
+                        result = true;
 
 //                        JSONObject acceptConfig = jsonObject.getJSONObject("auto");
 //                        bindConfig2Accept(jsonObject);
@@ -147,7 +157,7 @@ public class BirthdayAlertActivity extends BaseActivity {
 
     private void updateConfig(){
 
-        mProgressDialog.show();
+        mProgressDialog.setVisibility(View.VISIBLE);
 
         Map<String, String> params = new HashMap<>();
 
@@ -168,7 +178,7 @@ public class BirthdayAlertActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+                mProgressDialog.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -204,7 +214,7 @@ public class BirthdayAlertActivity extends BaseActivity {
         super.onDestroy();
         if (mProgressDialog != null)
         {
-            mProgressDialog.dismiss();
+            mProgressDialog.setVisibility(View.INVISIBLE);
         }
     }
 }
