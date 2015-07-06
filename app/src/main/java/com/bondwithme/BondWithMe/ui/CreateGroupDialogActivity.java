@@ -111,7 +111,8 @@ public class CreateGroupDialogActivity extends BaseActivity {
     @Override
     protected void titleLeftEvent() {
 //        super.titleLeftEvent();
-        backToLastPage();
+//        backToLastPage();
+        finish();
     }
 
     private void backToLastPage() {
@@ -394,6 +395,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
                         groupEntity.setGroup_name(etGroupName.getText().toString());
                         Intent intent = new Intent(CreateGroupDialogActivity.this, MessageChatActivity.class);
                         intent.putExtra("type", 1);
+                        intent.putExtra("isNewGroup", 1);
                         intent.putExtra("groupId", groupEntity.getGroup_id());
                         intent.putExtra("titleName", groupEntity.getGroup_name());
                         //intent.putExtra("groupEntity",groupEntity);

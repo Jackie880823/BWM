@@ -555,6 +555,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 intent.putExtra("groupId", groupAdapter.getGroupList().get(arg2).getGroup_id());
                 intent.putExtra("titleName", groupAdapter.getGroupList().get(arg2).getGroup_name());
                 startActivity(intent);
+//                startActivityForResult(intent,1);
             }
         });
         groupListView.setOnTouchListener(new View.OnTouchListener() {
@@ -826,6 +827,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         tvAddNewMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //打开添加成员页面
                 startActivity(new Intent(getActivity(), AddNewMembersActivity.class));
                 showSelectDialog.dismiss();
             }
@@ -835,10 +837,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onClick(View v) {
                 //startActivity(new Intent(getActivity(), CreateGroupActivity.class));
+                //打开创建群组页面
                 Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
                 intent.putExtra("isCreateNewGroup", true);
                 intent.putExtra("jumpIndex", 0);
-                startActivity(intent);
+//                startActivity(intent);
+                startActivityForResult(intent,1);
                 showSelectDialog.dismiss();
             }
         });
@@ -1030,7 +1034,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case 1:
-                if (resultCode == -1) {
+                if (resultCode == -1 || resultCode == 0) {
                     requestData();
                 }
         }

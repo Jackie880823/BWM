@@ -47,6 +47,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by quankun on 15/4/24.
@@ -124,6 +126,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public MessageChatAdapter messageChatAdapter;
     public LinearLayoutManager llm;
     private InputMethodManager imm;
+    private Timer mTimer;
+
+    private int isNewGroup;
 
     Handler handler = new Handler() {
         @Override
@@ -223,6 +228,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     }
 
+
+    @Override
+    public void finish() {
+        if(isNewGroup==1){
+            setResult(RESULT_OK);
+        }
+        super.finish();
+    }
+
     @Override
     protected void setTitle() {
         tvTitle.setText(titleName);
@@ -262,6 +276,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     public void initView() {
         userOrGroupType = getIntent().getIntExtra("type", -1);
+        //如果是从新建group打开的
+        isNewGroup = getIntent().getIntExtra("isNewGroup", -1);
         mContext = this;
         messageAction = new MessageAction(mContext, handler);
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
@@ -299,6 +315,20 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
+        mTimer = new Timer();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                indexPage = 1;
+                getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);//接收对话消息
+            }
+        }, 10000, 10000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTimer.cancel();
     }
 
     private void setView() {
