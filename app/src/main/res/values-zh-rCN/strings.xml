@@ -416,22 +416,22 @@
     <string name="text_item_resend">再发</string>
     <string name="text_item_remove">删除</string>
 
-    <string name="title_bond_alert">”伴“通告</string>
+    <string name="title_bond_alert">“伴”通告</string>
     <string name="title_diary_alert">动态通告</string>
     <string name="title_event_alert">活动通告</string>
-    <string name="title_big_day_alert">”大“日子通告</string>
+    <string name="title_big_day_alert">“大”日子通告</string>
     <string name="title_miss_alert">想念通告</string>
     <string name="title_news_alert">消息通告</string>
     <string name="title_member_alert">成员通告</string>
     <string name="title_recommended_alert">推荐通告</string>
     <string name="title_group_alert">群组通告</string>
 
-    <string name="text_bond_alert">”伴“通告</string>
+    <string name="text_bond_alert">“伴”通告</string>
     <!--Diary-->
     <string name="text_bond_alert_diary">动态</string>
     <!--Event-->
     <string name="text_bond_alert_event">活动</string>
-    <string name="text_big_day">”大“日子</string>
+    <string name="text_big_day">“大”日子</string>
     <string name="text_miss">想念</string>
     <string name="text_news">消息</string>
     <string name="text_member">会员</string>
