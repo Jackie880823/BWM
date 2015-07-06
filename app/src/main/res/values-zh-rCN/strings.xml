@@ -105,6 +105,8 @@
     <string name="text_relationship">关系</string>
     <string name="msg_no_contact_select">未选择联系人</string>
 
+
+
     <string name="text_via_contact">通过手机号码</string>
     <string name="text_ID_name">通过伴我玩账号 / 用户名字</string>
     <string name="text_QR">通过二维码添加</string>

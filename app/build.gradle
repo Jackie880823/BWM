@@ -19,7 +19,7 @@ android {
         minSdkVersion 9
         targetSdkVersion 21
         versionCode 51   //TODO
-        versionName "1.9.0" //TODO
+        versionName "1.9.4" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true

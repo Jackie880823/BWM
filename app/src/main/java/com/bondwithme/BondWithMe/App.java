@@ -154,6 +154,7 @@ public class App extends MultiDexApplication {
     }
 
     /**
+    /**
      * 完全退出app
      */
     @Override

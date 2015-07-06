@@ -648,8 +648,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals("refresh")){
-                LogUtil.d("", "2mReceiver================");
-//                recreate();
                 tabPagerAdapter.notifyDataSetChanged();
             }
         }

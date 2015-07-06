@@ -395,6 +395,9 @@
         <activity
             android:name="com.bondwithme.BondWithMe.ui.AlbumDetailActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.bondwithme.BondWithMe.ui.ViewPDFActivity"
+             />
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
