@@ -19,20 +19,37 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_view_margin"
             android:layout_below="@+id/country_code_layout">
-            <EditText
-                style="@style/et_start_phone"
-                android:id="@+id/et_phone_number"
-                android:nextFocusDown="@+id/et_password"
-                android:imeOptions="actionNext" />
+            <!--<EditText-->
+                <!--style="@style/et_start_phone"-->
+                <!--android:id="@+id/et_phone_number"-->
+                <!--android:nextFocusDown="@+id/et_password"-->
+                <!--android:imeOptions="actionNext" />-->
+            <LinearLayout
+                android:id="@+id/ll_code_phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/tv_start_country_code"
+                    android:id="@+id/tv_start_country_code"
+                    android:layout_marginLeft="@dimen/default_content_padding"
+                    android:text="" />
+                <EditText
+                    style="@style/et_start_phone"
+                    android:id="@+id/et_phone_number"
+                    android:layout_marginLeft="@dimen/default_view_margin"/>
+            </LinearLayout>
+
             <TextView
                 style="@style/tv_start_light_small"
                 android:id="@+id/tv_phone_number_prompt"
-                android:layout_below="@+id/et_phone_number"
-                android:layout_alignLeft="@+id/et_phone_number"
+                android:layout_below="@+id/ll_code_phone_number"
+                android:layout_alignLeft="@+id/ll_code_phone_number"
                 android:layout_marginLeft="@dimen/default_content_padding"
+                android:paddingLeft="@dimen/default_content_padding"
                 android:textColor="@color/stroke_color_red_wrong"
                 android:visibility="gone"
-                android:text="@string/text_phone_number_exist"/>
+                android:text="@string/text_start_phone_number_exist"/>
         </RelativeLayout>
 
 
@@ -50,10 +67,9 @@
                     style="@style/tv_start_light_small"
                     android:id="@+id/tv_password_prompt"
                     android:layout_below="@+id/et_password"
-                    android:visibility="gone"
                     android:layout_alignLeft="@+id/et_password"
                     android:layout_marginLeft="@dimen/default_content_padding"
-                    android:text="@string/text_least5_prompt"/>
+                    android:text="@string/text_start_least5_prompt"/>
         </RelativeLayout>
 
         <!--<TextView-->
@@ -117,6 +133,7 @@
                     />
 
                 <ImageView
+                    android:id="@+id/iv_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/sign_in_username"

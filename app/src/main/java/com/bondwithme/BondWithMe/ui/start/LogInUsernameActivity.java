@@ -7,9 +7,12 @@ import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
@@ -28,6 +31,7 @@ import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
+import com.gc.materialdesign.views.Button;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -39,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class LogInUsernameActivity extends BaseActivity implements View.OnClickListener{
+public class LogInUsernameActivity extends BaseActivity implements View.OnClickListener, EditText.OnEditorActionListener{
 
     private final static String TAG = LogInUsernameActivity.class.getSimpleName();
     private final static String GET_USER = TAG + "_GET_USER";
@@ -49,7 +53,8 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
     private EditText etUsername;
     private EditText etPassword;
-    private com.gc.materialdesign.views.Button btnLogIn;
+//    private TextView tvLogin;
+    private Button btnLogIn;
     private RelativeLayout rlProgress;
 
     private String strUsername;
@@ -118,9 +123,11 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     public void initView() {
         etUsername = getViewById(R.id.et_username);
         etPassword = getViewById(R.id.et_password);
-        btnLogIn = getViewById(R.id.tv_btn_log_in);
+//        tvLogin = getViewById(R.id.tv_btn_log_in);
+        btnLogIn = getViewById(R.id.br_log_in);
         rlProgress = getViewById(R.id.rl_progress);
 
+//        tvLogin.setOnClickListener(this);
         btnLogIn.setOnClickListener(this);
     }
 
@@ -139,9 +146,17 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
         super.onClick(v);
         switch (v.getId())
         {
-            case R.id.tv_btn_log_in:
+            case R.id.br_log_in:
                 doLogIn();
                 break;
+
+//            case R.id.tv_btn_log_in:
+//                doLogIn();
+//                break;
+
+            default:
+                break;
+
         }
     }
 
@@ -245,12 +260,14 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     public void doingLogInChangeUI()
     {
         rlProgress.setVisibility(View.VISIBLE);
+//        tvLogin.setClickable(false);
         btnLogIn.setClickable(false);
     }
 
     public void finishLogInChangeUI()
     {
         rlProgress.setVisibility(View.GONE);
+//        tvLogin.setClickable(true);
         btnLogIn.setClickable(true);
     }
 
@@ -259,5 +276,15 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
         startActivity(intent);
         PushApi.initPushApi(this);
         finish();
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE)
+        {
+            doLogIn();
+            return true;
+        }
+        return false;
     }
 }

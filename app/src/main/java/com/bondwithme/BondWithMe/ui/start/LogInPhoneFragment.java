@@ -7,9 +7,11 @@ import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -33,6 +35,7 @@ import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
+import com.bondwithme.BondWithMe.util.UIUtil;
 import com.gc.materialdesign.views.Button;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -44,19 +47,21 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-public class LogInPhoneFragment extends Fragment implements View.OnClickListener{
+public class LogInPhoneFragment extends Fragment implements View.OnClickListener , TextView.OnEditorActionListener{
 
     private final static String TAG = LogInPhoneFragment.class.getSimpleName();
     private final static String GET_USER = TAG + "_GET_USER";
 
 
     private static final int GET_COUNTRY_CODE = 0;
+
     private static final int GO_DETAILS = 1;
     private static final int GO_MAIN = 2;
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
     private TextView tvCountryCode;
+    private TextView tvStartCountryCode;
     private EditText etPhoneNumber;
     private EditText etPassword;
     private TextView tvLogIn;
@@ -119,15 +124,12 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                 break;
 
             case R.id.tv_forget_password:
+                startActivity(new Intent(getActivity(), ForgotPasswordActivity.class));
                 break;
 
             case R.id.iv_username:
                 goLogInUsernameActivity();
                 break;
-
-//            case R.id.ll_log_in_with_username:
-//                goLogInUsernameActivity();
-//                break;
 
             default:
                 break;
@@ -144,6 +146,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                     {
                         tvCountry.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
                         tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
+                        tvStartCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
                     }
                     break;
 
@@ -157,6 +160,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         rlCountryCode = (RelativeLayout)view.findViewById(R.id.rl_country_code);
         tvCountry = (TextView)view.findViewById(R.id.tv_country);
         tvCountryCode = (TextView)view.findViewById(R.id.tv_country_code);
+        tvStartCountryCode = (TextView)view.findViewById(R.id.tv_start_country_code);
         etPhoneNumber = (EditText)view.findViewById(R.id.et_phone_number);
         etPassword = (EditText)view.findViewById(R.id.et_password);
 //        tvLogIn = (TextView)view.findViewById(R.id.tv_btn_log_in);
@@ -171,8 +175,10 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         ivUsername.setOnClickListener(this);
         rlCountryCode.setOnClickListener(this);
         tvForgetPassword.setOnClickListener(this);
+        etPassword.setOnEditorActionListener(this);
 
         tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(getActivity()));
+        tvStartCountryCode.setText(CountryCodeUtil.GetCountryZipCode(getActivity()));
     }
 
     public void doLogIn()
@@ -188,9 +194,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
         if(!MyTextUtil.checkEmptyInputText(strCountryCode, strPhoneNumber, strPassword))
         {
-            rlProgress.setVisibility(View.VISIBLE);
-//            tvLogIn.setClickable(false);
-            brLogIn.setClickable(false);
+            doingLogInChangeUI();
 
             HashMap<String, String> jsonParams = new HashMap<String, String>();
             jsonParams.put("user_country_code", strCountryCode);
@@ -214,9 +218,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
                 @Override
                 public void onFinish() {
-                    rlProgress.setVisibility(View.GONE);
-//                    tvLogIn.setClickable(true);
-                    brLogIn.setClickable(true);
+                    finishLogInChangeUI();
                 }
 
                 @Override
@@ -273,6 +275,21 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    public void doingLogInChangeUI()
+    {
+        rlProgress.setVisibility(View.VISIBLE);
+//        tvLogIn.setClickable(false);
+        brLogIn.setClickable(false);
+        UIUtil.hideKeyboard(getActivity(), etPassword);
+    }
+
+    public void finishLogInChangeUI()
+    {
+        rlProgress.setVisibility(View.GONE);
+//        tvLogIn.setClickable(true);
+        brLogIn.setClickable(true);
+    }
+
     public void goMainActivity()
     {
         Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -290,5 +307,15 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     {
         Intent intent = new Intent(getActivity(), LogInUsernameActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE)
+        {
+            doLogIn();
+            return true;
+        }
+        return false;
     }
 }

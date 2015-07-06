@@ -1,0 +1,136 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_text_color_while"
+    tools:context="com.bondwithme.BondWithMe.ui.start.DetailsActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+            android:id="@+id/ll_center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            android:layout_centerInParent="true">
+                <EditText
+                    style="@style/et_start_details_name"
+                    android:id="@+id/et_first_name"
+                    android:hint="First Name"
+                    />
+
+                <TextView
+                    style="@style/tv_start_light_small"
+                    android:text="@string/text_start_detail_first_name_prompt"
+                    android:layout_marginLeft="@dimen/default_content_padding"
+                    android:paddingLeft="@dimen/default_content_padding"
+                    />
+
+                <TextView
+                    style="@style/tv_start_light_small"
+                    android:text="@string/text_start_detail_compulsory_field_error"
+                    android:textColor="@color/stroke_color_red_wrong"
+                    android:layout_marginLeft="@dimen/default_content_padding"
+                    android:paddingLeft="@dimen/default_content_padding"
+                    android:visibility="gone"
+                    />
+
+
+                <EditText
+                    style="@style/et_start_details_name"
+                    android:id="@+id/et_last_name"
+                    android:layout_marginTop="@dimen/default_content_padding"
+                    android:hint="Last Name"
+                    />
+
+                <RelativeLayout
+                    android:id="@+id/ll_rb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ll_tv"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/_32dp">
+                        <RadioGroup
+                            android:id="@+id/rg_main"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_centerHorizontal="true">
+                                <RadioButton
+                                    android:id="@+id/rb_male"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="@string/text_male"
+                                    android:textColor="@color/default_text_color_light"
+                                    android:textSize="@dimen/text_medium_size"/>
+                                <RadioButton
+                                    android:id="@+id/rb_femal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:layout_marginLeft="@dimen/_80dp"
+                                    android:text="@string/text_female"
+                                    android:textColor="@color/default_text_color_light"
+                                    android:textSize="@dimen/text_medium_size"/>
+                        </RadioGroup>
+                </RelativeLayout>
+
+        </LinearLayout>
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/ll_center"
+            android:layout_below="@+id/fragment_main_top">
+                <com.bondwithme.BondWithMe.widget.CircularImageView
+                    android:layout_width="@dimen/_100dp"
+                    android:layout_height="@dimen/_100dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:src="@drawable/album_details" />
+
+                <RelativeLayout
+                    android:layout_width="@dimen/_100dp"
+                    android:layout_height="@dimen/_100dp"
+                    android:layout_gravity="center"
+                    android:clickable="true"
+                    android:background="@drawable/bg_stroke_corners90_white">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/album_details"
+                            android:layout_centerInParent="true" />
+                </RelativeLayout>
+        </FrameLayout>
+
+
+
+        <com.gc.materialdesign.views.ButtonRectangle
+            android:id="@+id/br_log_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textSize="@dimen/text_large_size"
+            android:text="@string/text_start_next"
+            app:rippleSpeed="50"
+            android:background="@color/btn_bg_color_green_normal"
+            android:layout_marginBottom="@dimen/default_content_padding"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:layout_marginRight="@dimen/default_view_margin"
+            app:rippleColor="@color/btn_bg_color_green_press"
+            app:clickAfterRipple="true"/>
+
+    <include layout="@layout/progress_layout"/>
+
+
+</RelativeLayout>

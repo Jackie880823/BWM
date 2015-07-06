@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/default_text_color_while"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.bondwithme.BondWithMe.ui.start.LogInUsernameActivity">
         <include
@@ -64,7 +65,7 @@
             <!--/>-->
 
         <com.gc.materialdesign.views.ButtonRectangle
-            android:id="@+id/tv_btn_log_in"
+            android:id="@+id/br_log_in"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
