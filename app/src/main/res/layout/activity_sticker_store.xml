@@ -28,6 +28,12 @@
                 android:visibility="visible"
                 />
 
+            <ImageSwitcher
+                android:id="@+id/is_sticker_banner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150dp"
+                android:visibility="invisible"/>
+
 
             <!--<com.madx.bwm.widget.MySwipeRefreshLayout-->
                 <!--android:id="@+id/swipe_refresh_layout"-->

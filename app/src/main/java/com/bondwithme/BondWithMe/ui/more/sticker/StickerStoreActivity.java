@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -77,6 +78,7 @@ public class StickerStoreActivity extends BaseActivity {
     private ScrollView scrollView;
     int finished;
     int positionFromStickerDetail;
+    private ImageSwitcher isStickerBanner;
 
 
 
@@ -105,13 +107,8 @@ public class StickerStoreActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-//        rightButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
                 Intent intent = new Intent(StickerStoreActivity.this, MyStickerActivity.class);
                 startActivity(intent);
-//            }
-//        });
     }
 
 
@@ -132,6 +129,7 @@ public class StickerStoreActivity extends BaseActivity {
 
         scrollView = getViewById(R.id.sc_sticker_store);
         vp = getViewById(R.id.viewpager_sticker);
+        isStickerBanner = getViewById(R.id.is_sticker_banner);
 
 
 
@@ -141,7 +139,9 @@ public class StickerStoreActivity extends BaseActivity {
         recyclerViewList.setHasFixedSize(true);
         initAdapter();
         requestData();
+        initStickerBanner();
         initPagerAdapter();
+
 
         //注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -151,6 +151,12 @@ public class StickerStoreActivity extends BaseActivity {
         registerReceiver(mReceiver, filter);
 
     }
+
+    /**ImageSwitcher for sticker banner */
+    private void initStickerBanner() {
+
+    }
+
     /**sticker banner Adapter*/
     private void initPagerAdapter() {
         int stickerBanner = dataStickerBanner.size();
