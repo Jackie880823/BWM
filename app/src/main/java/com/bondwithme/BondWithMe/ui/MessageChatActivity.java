@@ -47,6 +47,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by quankun on 15/4/24.
@@ -124,6 +126,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public MessageChatAdapter messageChatAdapter;
     public LinearLayoutManager llm;
     private InputMethodManager imm;
+    private Timer mTimer;
 
     Handler handler = new Handler() {
         @Override
@@ -299,6 +302,20 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
+        mTimer = new Timer();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                indexPage = 1;
+                getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);//接收对话消息
+            }
+        }, 10000, 10000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTimer.cancel();
     }
 
     private void setView() {
