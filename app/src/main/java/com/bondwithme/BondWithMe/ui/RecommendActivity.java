@@ -246,11 +246,11 @@ public class RecommendActivity extends BaseActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if ("Success".equals(jsonObject.getString("response_status"))) {
-                        Toast.makeText(RecommendActivity.this, "Success to add member.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RecommendActivity.this, getResources().getString(R.string.text_success_add_member), Toast.LENGTH_SHORT).show();
                         adapter.setAdapterNotifyDataSetChanged(adapter.getPositionId());
                         // finish();
                     } else {
-                        Toast.makeText(RecommendActivity.this, "Fail to add member.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RecommendActivity.this, getResources().getString(R.string.text_fail_add_member), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (JSONException e) {

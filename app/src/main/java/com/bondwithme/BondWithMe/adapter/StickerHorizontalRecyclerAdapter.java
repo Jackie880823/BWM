@@ -38,8 +38,18 @@ public class StickerHorizontalRecyclerAdapter extends RecyclerView.Adapter<Stick
             for (Map.Entry<String, List<String>> entry : map.entrySet()) {
                 List<String> listString = entry.getValue();
                 String name = entry.getKey();
+                int listSize = list.size();
                 if (listString != null && listString.size() > 0) {
-                    list.add(listString.get(0));
+                    for (String string : listString) {
+                        String stickerName = string.substring(string.lastIndexOf(File.separator) + 1);
+                        if (stickerName.startsWith("1_B")) {
+                            list.add(string);
+                            break;
+                        }
+                    }
+                    if (listSize == list.size()) {
+                        list.add(listString.get(0));
+                    }
                     stickerNameList.add(name);
                 }
             }

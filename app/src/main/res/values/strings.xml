@@ -489,4 +489,14 @@
 
     <string name="text_admin">Admin</string>
     <string name="text_check_in_a_location">Check in a location</string>
+
+    <string name="text_post_and">Post and</string>
+    <string name="text_event_now">Event now</string>
+    <string name="text_archive">Archive</string>
+    <string name="text_group_posting">Group Posting</string>
+    <string name="text_private_posting">Private Posting</string>
+    <string name="text_archive_comment">Comment</string>
+    <string name="text_member_list">Member List</string>
+    <string name="Downloaded">Downloaded</string>
+    <string name="not_support_64bit">Baidu map currently does not support 64-bit CPU</string>
 </resources>

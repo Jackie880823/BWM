@@ -84,6 +84,7 @@
                 style="@style/text_title_default"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/cb_group_chat"
+                android:layout_alignParentLeft="true"
                 android:text="@string/text_group_chat"
                 android:textColor="@color/default_text_color_dark" />
 

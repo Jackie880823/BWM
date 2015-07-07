@@ -63,6 +63,9 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                 list.add(key);
             }
         }
+        if (list.size() == 0) {
+            return;
+        }
         boolean isLeft = false;
         if (position == list.get(0)) {
             isLeft = true;

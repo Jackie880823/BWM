@@ -93,8 +93,8 @@ public class StickerStoreActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         tvTitle.setText(getResources().getString(R.string.text_sticker_store));
-        rightButton.setImageResource(R.drawable.sticker_setting);
-        rightButton.setFocusable(true);
+        rightButton.setImageResource(R.drawable.stickies_setting);
+
     }
 
     @Override
@@ -104,13 +104,13 @@ public class StickerStoreActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        rightButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        rightButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
                 Intent intent = new Intent(StickerStoreActivity.this, MyStickerActivity.class);
                 startActivity(intent);
-            }
-        });
+//            }
+//        });
     }
 
 

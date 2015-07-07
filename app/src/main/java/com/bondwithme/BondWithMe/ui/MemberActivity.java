@@ -235,7 +235,7 @@ public class MemberActivity extends BaseActivity {
 
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_bond_alert_member, null);
-        showSelectDialog = new MyDialog(this, "Action", selectIntention);
+        showSelectDialog = new MyDialog(this, getResources().getString(R.string.text_tips_title), selectIntention);
         showSelectDialog.setCanceledOnTouchOutside(false);
 
         showSelectDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
