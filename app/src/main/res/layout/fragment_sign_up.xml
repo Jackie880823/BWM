@@ -144,4 +144,6 @@
                     android:text="@string/text_start_username"
                     />
         </LinearLayout>
+
+        <include layout="@layout/progress_layout"/>
 </RelativeLayout>

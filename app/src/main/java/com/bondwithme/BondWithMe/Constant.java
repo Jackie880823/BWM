@@ -228,9 +228,24 @@ public class Constant {
 
     public static final String HAS_LOGED_IN = "has_loged_in";
 
-    public static final String LOGIN_TYPE_PHONE = "phone";
-    public static final String LOGIN_TYPE_USERNAME = "username";
+    public static final String TYPE_PHONE = "phone";
+    public static final String TYPE_USERNAME = "username";
+    public static final String TYPE_FORGOT_PASSWORD = "forgot_password";
+
     public static final String USER_APP_OS = "android";
+
+    public static final String SUCCESS = "Success";
+    public static final String FAIL = "Fail";
+    public static final String TYPE = "type";
+
+
+
+    public static final String API_START_CHECK_LOG_ID = API_SERVER+"/bondwithme/index.php/api/loginID";//查询账号是否可用和获取验证码／重新获取验证码
+    public static final String API_START_PHONE_CREATE_USER = API_SERVER+"/bondwithme/index.php/api/verifyUser"; //Verify code and Create User (Phone)
+    public static final String API_START_USERNAME_CREATE_USER = API_SERVER+"/bondwithme/index.php/api/verifyUser"; //Verify code and Create User (Username)
+
+
+    public static final String API_START_FORGOT_PASSWORD_GET_CODE = API_SERVER+"/bondwithme/index.php/api/forgetPassword"; //忘记密码，获取验证码
 
 
 }

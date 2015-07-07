@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/default_text_color_while"
     tools:context="com.bondwithme.BondWithMe.ui.start.VerificationActivity"
     xmlns:app="http://schemas.android.com/apk/res-auto">
         <include
@@ -43,6 +44,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/tv_phone_number"
                     style="@style/tv_start_default"
                     android:layout_marginTop="@dimen/default_view_margin"
                     android:text="+6013528899226"
@@ -62,8 +64,10 @@
                 </View>
                 <EditText
                     style="@style/et_start_code"
+                    android:id="@+id/et_country_code"
                     android:layout_width="0dp"
-                    android:layout_weight="3" />
+                    android:layout_weight="3"
+                    android:imeOptions="actionDone"/>
                 <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -73,15 +77,16 @@
 
             <TextView
                 style="@style/tv_start_light_small"
-                android:textSize="@dimen/text_small_size"
-                android:text="@string/text_start_verification_time_prompt"
-                android:layout_marginTop="@dimen/default_view_margin"
+                android:id="@+id/tv_time"
+                android:textSize="@dimen/text_medium_size"
+                android:padding="@dimen/default_view_margin"
+                android:layout_marginTop="@dimen/default_content_padding"
                 android:singleLine="true"
                 />
         </LinearLayout>
 
         <com.gc.materialdesign.views.ButtonRectangle
-            android:id="@+id/br_log_in"
+            android:id="@+id/br_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

@@ -51,7 +51,7 @@
                     />
 
                 <RelativeLayout
-                    android:id="@+id/ll_rb"
+                    android:id="@+id/rl_rb"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_tv"
@@ -88,11 +88,13 @@
 
 
         <FrameLayout
+            android:id="@+id/fl_pic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/ll_center"
             android:layout_below="@+id/fragment_main_top">
                 <com.bondwithme.BondWithMe.widget.CircularImageView
+                    android:id="@+id/civ_pic"
                     android:layout_width="@dimen/_100dp"
                     android:layout_height="@dimen/_100dp"
                     android:layout_gravity="center"
@@ -100,6 +102,7 @@
                     android:src="@drawable/album_details" />
 
                 <RelativeLayout
+                    android:id="@+id/rl_pic"
                     android:layout_width="@dimen/_100dp"
                     android:layout_height="@dimen/_100dp"
                     android:layout_gravity="center"
@@ -116,7 +119,7 @@
 
 
         <com.gc.materialdesign.views.ButtonRectangle
-            android:id="@+id/br_log_in"
+            android:id="@+id/br_next"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

@@ -21,10 +21,12 @@
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:orientation="vertical">
             <EditText
-                style="@style/et_start_username" />
+                style="@style/et_start_username"
+                android:id="@+id/et_username"/>
 
             <TextView
                 style="@style/tv_start_light_small"
+                android:id="@+id/tv_username_prompt"
                 android:text="@string/text_start_least5_prompt"
                 android:layout_marginLeft="@dimen/default_content_padding"
                 android:paddingLeft="@dimen/default_content_padding"/>
@@ -42,25 +44,31 @@
                 android:orientation="horizontal">
                     <TextView
                         style="@style/tv_start_country_code"
+                        android:id="@+id/tv_start_country_code"
                         android:layout_marginLeft="@dimen/default_content_padding"
-                        android:text="" />
+                        />
                     <EditText
                         style="@style/et_start_phone"
+                        android:id="@+id/et_phone_number"
                         android:layout_marginLeft="@dimen/default_view_margin"/>
             </LinearLayout>
 
             <TextView
                 style="@style/tv_start_light_small"
+                android:id="@+id/tv_phone_number_prompt"
                 android:text="@string/text_start_phone_number_required"
                 android:layout_marginLeft="@dimen/default_content_padding"
                 android:paddingLeft="@dimen/default_content_padding" />
 
             <EditText
                 style="@style/et_start_password"
-                android:layout_marginTop="@dimen/default_content_padding" />
+                android:id="@+id/et_password"
+                android:layout_marginTop="@dimen/default_content_padding"
+                android:imeOptions="actionDone"/>
 
             <TextView
                 style="@style/tv_start_light_small"
+                android:id="@+id/tv_password_prompt"
                 android:text="@string/text_start_least5_prompt"
                 android:layout_marginLeft="@dimen/default_content_padding"
                 android:paddingLeft="@dimen/default_content_padding"
@@ -69,7 +77,7 @@
     </LinearLayout>
 
     <com.gc.materialdesign.views.ButtonRectangle
-        android:id="@+id/br_log_in"
+        android:id="@+id/br_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

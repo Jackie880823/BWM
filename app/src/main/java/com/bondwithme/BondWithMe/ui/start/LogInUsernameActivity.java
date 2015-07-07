@@ -31,6 +31,7 @@ import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
+import com.bondwithme.BondWithMe.util.UIUtil;
 import com.gc.materialdesign.views.Button;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -48,17 +49,16 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     private final static String TAG = LogInUsernameActivity.class.getSimpleName();
     private final static String GET_USER = TAG + "_GET_USER";
 
-    private final static int GO_DETAILS = 1;
-    private final static int GO_MAIN = 2;
+    private static final int ERROR = -1;
+    private static final int GO_DETAILS = 1;
+    private static final int GO_MAIN = 2;
+    private static final int CATCH =3;
 
     private EditText etUsername;
     private EditText etPassword;
 //    private TextView tvLogin;
     private Button btnLogIn;
     private RelativeLayout rlProgress;
-
-    private String strUsername;
-    private String strPassword;
 
     private List<UserEntity> userEntities;
     private UserEntity userEntity;
@@ -76,6 +76,14 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
                     break;
 
                 case GO_DETAILS:
+                    break;
+
+                case CATCH:
+                    unkonwWrong();
+                    break;
+
+                case ERROR:
+                    unkonwWrong();
                     break;
 
                 default:
@@ -129,6 +137,8 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
 //        tvLogin.setOnClickListener(this);
         btnLogIn.setOnClickListener(this);
+
+        etPassword.setOnEditorActionListener(this);
     }
 
     @Override
@@ -166,25 +176,25 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
             return;
         }
 
-        strUsername = etUsername.getText().toString();
-        strPassword = etPassword.getText().toString();
+        String strUsername = etUsername.getText().toString();
+        String strPassword = etPassword.getText().toString();
 
         if (!MyTextUtil.checkEmptyInputText(strUsername, strPassword))
         {
             doingLogInChangeUI();
 
-            HashMap<String, String> jsonParams = new HashMap<String, String>();
+            HashMap<String, String> jsonParams = new HashMap<>();
             jsonParams.put("user_country_code", "");
             jsonParams.put("user_phone", "");
             jsonParams.put("username", strUsername);
             jsonParams.put("user_password", MD5Util.string2MD5(strPassword));
-            jsonParams.put("login_type", Constant.LOGIN_TYPE_USERNAME);
+            jsonParams.put("login_type", Constant.TYPE_USERNAME);
             jsonParams.put("user_uuid", Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID));
             jsonParams.put("user_app_version", AppInfoUtil.getAppVersionName(this));
             jsonParams.put("user_app_os", Constant.USER_APP_OS);
 
             final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-            HashMap<String, String> params = new HashMap<String, String>();
+            HashMap<String, String> params = new HashMap<>();
             params.put("condition", jsonParamsString);
 
             new HttpTools(this).get(Constant.API_LOGIN, params, GET_USER, new HttpCallback() {
@@ -213,6 +223,8 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
                         if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
                         {
+                            //wrong data??
+                            unkonwWrong();
                             return;
                         }
 
@@ -230,6 +242,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
                         }
 
                     } catch (JSONException e) {
+                        handler.sendEmptyMessage(CATCH);
                         e.printStackTrace();
                     }
 
@@ -238,7 +251,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
                 @Override
                 public void onError(Exception e) {
-
+                    handler.sendEmptyMessage(ERROR);
                 }
 
                 @Override
@@ -251,7 +264,26 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
                 }
             });
+        }
+        else
+        {
+            if (TextUtils.isEmpty(etUsername.getText().toString()))
+            {
+                etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+            }
+            else
+            {
+                etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+            }
 
+            if (TextUtils.isEmpty(etPassword.getText().toString()))
+            {
+                etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+            }
+            else
+            {
+                etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+            }
         }
 
     }
@@ -262,6 +294,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
         rlProgress.setVisibility(View.VISIBLE);
 //        tvLogin.setClickable(false);
         btnLogIn.setClickable(false);
+        UIUtil.hideKeyboard(this, etPassword);
     }
 
     public void finishLogInChangeUI()
@@ -274,6 +307,8 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     private void goMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        //TODO
+        //why？？改
         PushApi.initPushApi(this);
         finish();
     }
@@ -286,5 +321,11 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
             return true;
         }
         return false;
+    }
+
+    private void unkonwWrong()
+    {
+        etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+        etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
     }
 }

@@ -45,6 +45,7 @@
 
         <TextView
             style="@style/tv_btn_start_white"
+            android:id="@+id/tv_start_using"
             android:text="Start Using!"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             />

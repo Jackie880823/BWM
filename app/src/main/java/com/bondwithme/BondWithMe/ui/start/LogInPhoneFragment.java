@@ -55,8 +55,10 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     private static final int GET_COUNTRY_CODE = 0;
 
+    private static final int ERROR = -1;
     private static final int GO_DETAILS = 1;
     private static final int GO_MAIN = 2;
+    private static final int CATCH =3;
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
@@ -88,8 +90,20 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                 case GO_DETAILS:
                     goDetails();
                     break;
+
                 case GO_MAIN:
                     goMainActivity();
+                    break;
+
+                case CATCH:
+                    unknowWrong();
+                    break;
+
+                case ERROR:
+                    unknowWrong();
+                    break;
+
+                default:
                     break;
             }
 
@@ -128,7 +142,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                 break;
 
             case R.id.iv_username:
-                goLogInUsernameActivity();
+                startActivity(new Intent(getActivity(), LogInUsernameActivity.class));
                 break;
 
             default:
@@ -201,7 +215,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
             jsonParams.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
             jsonParams.put("username", "");
             jsonParams.put("user_password", MD5Util.string2MD5(strPassword));
-            jsonParams.put("login_type", Constant.LOGIN_TYPE_PHONE);
+            jsonParams.put("login_type", Constant.TYPE_PHONE);
             jsonParams.put("user_uuid", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID));
             jsonParams.put("user_app_version", AppInfoUtil.getAppVersionName(getActivity()));
             jsonParams.put("user_app_os", Constant.USER_APP_OS);
@@ -234,6 +248,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                         if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
                         {
                             //bad date????
+                            unknowWrong();
                             return;
                         }
 
@@ -252,6 +267,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                         }
 
                     } catch (JSONException e) {
+                        handler.sendEmptyMessage(CATCH);
                         e.printStackTrace();
                     }
 
@@ -259,7 +275,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
                 @Override
                 public void onError(Exception e) {
-
+                    handler.sendEmptyMessage(ERROR);
                 }
 
                 @Override
@@ -273,6 +289,26 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                 }
             });
         }
+        else
+        {
+            if (TextUtils.isEmpty(etPhoneNumber.getText().toString()))
+            {
+                etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+            }
+            else
+            {
+                etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+            }
+
+            if (TextUtils.isEmpty(etPassword.getText().toString()))
+            {
+                etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+            }
+            else
+            {
+                etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+            }
+        }
     }
 
     public void doingLogInChangeUI()
@@ -283,8 +319,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         UIUtil.hideKeyboard(getActivity(), etPassword);
     }
 
-    public void finishLogInChangeUI()
-    {
+    public void finishLogInChangeUI() {
         rlProgress.setVisibility(View.GONE);
 //        tvLogIn.setClickable(true);
         brLogIn.setClickable(true);
@@ -294,6 +329,8 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         startActivity(intent);
+        //TODO
+        //要改。为什么在这边初始化？
         PushApi.initPushApi(getActivity());
         getActivity().finish();
     }
@@ -301,12 +338,6 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     public void goDetails()
     {
 
-    }
-
-    public void goLogInUsernameActivity()
-    {
-        Intent intent = new Intent(getActivity(), LogInUsernameActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -317,5 +348,11 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
             return true;
         }
         return false;
+    }
+
+    private void unknowWrong()
+    {
+        etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+        etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
     }
 }

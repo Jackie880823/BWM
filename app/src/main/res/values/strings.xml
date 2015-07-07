@@ -506,6 +506,7 @@
     <string name="text_start_username_exist">Username already exist. Please try again.</string>
     <string name="text_start_verification_prompt">Your SMS verification code has been sent to</string>
     <string name="text_start_verification_time_prompt">SMS will arrive in %s seconds.</string>
+    <string name="text_start_verification_resend_code">Resend Code.</string>
     <string name="text_start_next">Next</string>
     <string name="title_start_details">Details</string>
     <string name="title_start_Verification">Verification</string>
@@ -513,6 +514,7 @@
     <string name="text_start_detail_first_name_prompt">First name will be shown as Display Name.</string>
     <string name="text_start_detail_compulsory_field_error">This is a compulsory field.</string>
     <string name="text_start_phone_number_required">Phone number is required for verification purpose.</string>
+    <string name="text_fail_verify_code">Try to verify code again.</string>
 
 
 
