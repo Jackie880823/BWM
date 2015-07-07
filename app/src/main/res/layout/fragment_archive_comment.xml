@@ -1,0 +1,192 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@android:color/white">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <RelativeLayout
+                    android:id="@+id/rl_event_head"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/default_content_padding"
+                    android:paddingRight="@dimen/default_content_padding"
+                    android:paddingTop="@dimen/default_content_padding">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/btn_del"
+                        android:layout_toRightOf="@+id/owner_head"
+                        android:orientation="vertical"
+                        android:paddingLeft="@dimen/default_content_padding"
+                        android:paddingTop="@dimen/default_text_padding">
+
+
+                        <TextView
+                            android:id="@+id/owner_name"
+                            style="@style/text_dark_default"
+                            android:text="David"
+                            android:textStyle="bold"/>
+
+
+                        <TextView
+                            android:id="@+id/push_date"
+                            style="@style/text_dark_default"
+                            android:text="...."
+                            android:layout_marginTop="@dimen/default_view_margin"/>
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_view_margin"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/default_content_padding"
+                    android:paddingRight="@dimen/default_content_padding">
+
+                    <TextView
+                        android:id="@+id/tv_wall_content"
+                        android:autoLink="web"
+                        android:linksClickable="true"
+                        style="@style/text_dark_default"/>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/ll_walls_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_200dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="@dimen/default_view_margin">
+
+                    <com.android.volley.toolbox.NetworkImageView
+                        android:id="@+id/iv_walls_images"
+                        style="@style/ListImageDefault"
+                        android:paddingLeft="@dimen/default_content_padding"
+                        android:paddingRight="@dimen/default_content_padding"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <TextView
+                        android:id="@+id/tv_wall_photo_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/_1dp"
+                        android:background="@android:drawable/screen_background_dark_transparent"
+                        android:padding="@dimen/_4dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/text_size_12sp"/>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_default_selector_bg"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/_5dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/iv_location"
+                        android:layout_width="@dimen/_20dp"
+                        android:layout_height="@dimen/_20dp"
+                        android:background="@drawable/btn_default_selector_bg"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/location"/>
+
+                    <TextView
+                        android:id="@+id/tv_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_default_selector_bg"
+                        android:text="@string/text_location"
+                        android:textColor="@color/default_text_color_blue"
+                        android:textSize="@dimen/text_small_size"/>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/default_content_padding"
+                    android:paddingLeft="@dimen/default_content_padding"
+                    android:paddingRight="@dimen/default_content_padding"
+                    android:paddingTop="@dimen/default_content_padding">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true">
+
+                        <TextView
+                            android:id="@+id/up_time"
+                            style="@style/text_light_default"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="@dimen/default_view_margin" />
+
+                    </LinearLayout>
+                </RelativeLayout>
+                <View style="@style/split_line_default" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10dp"
+                    android:background="@color/archive_comment_background">
+
+                    <TextView
+                        android:id="@+id/memeber_lo"
+                        style="@style/text_dark_default"
+                        android:layout_alignParentLeft="true"
+                        android:text="..."/>
+                    <TextView
+                        style="@style/text_dark_default"
+                        android:layout_toRightOf="@+id/memeber_lo"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/default_view_margin"
+                        android:text="Loves"/>
+                    <TextView
+                        android:id="@+id/comment_me"
+                        android:layout_toLeftOf="@+id/comments"
+                        style="@style/text_dark_default"
+                        android:text="..."/>
+                    <TextView
+                        android:id="@+id/comments"
+                        style="@style/text_dark_default"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/default_view_margin"
+                        android:text="Comments"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_comment_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/seatch_options"
+                android:paddingLeft="@dimen/default_content_padding"
+                android:paddingRight="@dimen/default_content_padding"
+                android:paddingTop="@dimen/default_view_margin"
+                android:scrollbars="vertical">
+
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+
+    <include layout="@layout/progress_layout"/>
+</RelativeLayout>

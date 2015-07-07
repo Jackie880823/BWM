@@ -166,7 +166,13 @@
         <activity
             android:name=".ui.wall.SelectPhotosActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize" >
+            <intent-filter>
+                <action android:name="android.intent.action.PICK"/>
+                <data android:mimeType="image/*"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            </activity>
         <activity
             android:name=".ui.Map4GoogleActivity"
             android:noHistory="true"
@@ -351,7 +357,30 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".ui.more.MoreSettingActivity" >
+
+        <activity android:name=".ui.more.ArchiveActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.more.GroupListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.more.PrivateListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.more.ArchiveGroupChatActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.more.ArchivePrivateChatActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.more.ArchiveGroupCommentActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.more.ArchivePrivateCommentActivity"
+            android:screenOrientation="portrait"/>
+
+
+
+
+
+
+
+        <activity android:name="com.bondwithme.BondWithMe.ui.more.MoreSettingActivity" >
+
         </activity>
         <activity
             android:name=".ui.more.AutoAcceptActivity"

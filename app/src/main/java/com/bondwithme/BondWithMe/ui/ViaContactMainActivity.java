@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.gc.materialdesign.widgets.Dialog;
 import com.google.gson.Gson;
 import com.bondwithme.BondWithMe.Constant;
@@ -93,7 +94,7 @@ public class ViaContactMainActivity extends BaseActivity {
         tvSelectContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), 2);
+                startActivityForResult(new Intent(getApplicationContext(), SelectPhotosActivity.class), 2);
             }
         });
 

@@ -489,6 +489,18 @@
     <string name="price">Price:&#160;</string>
 
 
+    <string name="text_post_and">Post and</string>
+    <string name="text_event_now">Event now</string>
+
+    <!-- archive-->
+    <string name="text_archive">Archive</string>
+    <string name="text_group_posting">Group Posting</string>
+    <string name="text_private_posting">Private Posting</string>
+    <string name="text_archive_comment">Comment</string>
+    <string name="text_member_list">Member List</string>
+
+    <string name="text_admin">Admin</string>
+
     <string name="text_start_me_life_family">Me, My Life, My Family</string>
     <string name="text_start_phone_number">Phone Number</string>
     <string name="text_start_password">Password</string>
@@ -520,12 +532,8 @@
 
 
     <string name="action_settings">Settings</string>
-    <string name="text_admin">Admin</string>
+
     <string name="Downloaded">Downloaded</string>
 
-
-    <string name="hello_world">Hello world!</string>
-
-
+    <string name="not_support_64bit">Baidu map currently does not support 64-bit CPU</string>
 </resources>
-

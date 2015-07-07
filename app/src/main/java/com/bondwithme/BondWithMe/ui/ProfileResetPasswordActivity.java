@@ -16,7 +16,9 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.util.MD5Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +45,8 @@ public class ProfileResetPasswordActivity extends Activity {
 
     TextView tvBack;
     TextView tvDone;//请求修改密码
+
+    UserEntity changeUserEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +87,7 @@ public class ProfileResetPasswordActivity extends Activity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus == false) {
-                    if ((etFstPw.getText().toString().length() > 7) && (etFstPw.getText().toString().length() < 17)) {
+                    if ((etFstPw.getText().toString().length() > 5) && (etFstPw.getText().toString().length() < 17)) {
                         ivFst.setImageResource(R.drawable.correct);
                         blnPasswordNum = true;
                     } else {
@@ -163,7 +167,10 @@ public class ProfileResetPasswordActivity extends Activity {
 
                                 } else {
                                     Toast.makeText(ProfileResetPasswordActivity.this, getString(R.string.text_password_changed_successfully), Toast.LENGTH_SHORT).show();
-                                    App.logout(ProfileResetPasswordActivity.this);
+                                    changeUserEntity = App.getLoginedUser();
+                                    changeUserEntity.setUser_password(MD5Util.string2MD5(etSecPw.getText().toString()));
+                                    App.changeLoginedUser(changeUserEntity);
+                                    finish();
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
