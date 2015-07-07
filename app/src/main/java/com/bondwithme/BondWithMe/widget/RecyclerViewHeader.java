@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.madx.bwm.widget;
+package com.bondwithme.BondWithMe.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

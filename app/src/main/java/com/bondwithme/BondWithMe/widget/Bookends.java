@@ -1,4 +1,4 @@
-package com.madx.bwm.widget;
+package com.bondwithme.BondWithMe.widget;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
