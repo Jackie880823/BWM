@@ -27,6 +27,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -452,7 +453,7 @@ public class MyViewProfileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(Intent.ACTION_PICK, null);
+                Intent intent = new Intent(MyViewProfileActivity.this, SelectPhotosActivity.class);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, REQUEST_HEAD_PHOTO);
