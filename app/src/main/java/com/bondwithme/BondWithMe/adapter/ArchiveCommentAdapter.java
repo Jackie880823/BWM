@@ -1,4 +1,4 @@
-package com.madx.bwm.adapter;
+package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bondwithme.BondWithMe.R;
-import com.madx.bwm.entity.ArchiveCommentEntity;
+import com.bondwithme.BondWithMe.entity.ArchiveCommentEntity;
 
 import java.util.List;
 

@@ -16,7 +16,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.more.MoreSettingActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.widget.MyDialog;
-import com.madx.bwm.ui.more.ArchiveActivity;
+import com.bondwithme.BondWithMe.ui.more.ArchiveActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

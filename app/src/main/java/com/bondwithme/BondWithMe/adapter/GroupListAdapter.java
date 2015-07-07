@@ -1,4 +1,4 @@
-package com.madx.bwm.adapter;
+package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
 import android.content.Intent;

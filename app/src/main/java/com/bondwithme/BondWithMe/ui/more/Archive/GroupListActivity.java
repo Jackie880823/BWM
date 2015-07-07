@@ -1,4 +1,4 @@
-package com.madx.bwm.ui.more;
+package com.bondwithme.BondWithMe.ui.more.Archive;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.gc.materialdesign.widgets.ProgressDialog;
-import com.madx.bwm.adapter.GroupListAdapter;
+import com.bondwithme.BondWithMe.adapter.GroupListAdapter;
 
 /**
  * Created by liangzemian on 15/6/30.
