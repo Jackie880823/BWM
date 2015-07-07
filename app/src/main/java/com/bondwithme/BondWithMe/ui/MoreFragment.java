@@ -16,6 +16,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.more.MoreSettingActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.madx.bwm.ui.more.ArchiveActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +68,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         getViewById(R.id.btn_contact_us).setOnClickListener(this);
         getViewById(R.id.btn_terms).setOnClickListener(this);
         getViewById(R.id.btn_sign_out).setOnClickListener(this);
+//        getViewById(R.id.btn_archive).setOnClickListener(this);
 
 
         tv_num = getViewById(R.id.tv_num);
@@ -149,7 +151,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                 goStickerStore();
                 Log.i("MoreFragment","==========goStickerStore========");
                 break;
-
+//            case R.id.btn_archive:
+//                goArchive();
+//                break;
             case R.id.btn_about_us:
                 goAbout();
                 break;
@@ -231,6 +235,10 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         startActivity(intent);
     }
 
+    private void goArchive(){
+        Intent intent = new Intent(getActivity(), ArchiveActivity.class);
+        startActivity(intent);
+    }
     private void goFamily() {
         Intent intent = new Intent(getActivity(), FamilyFragment.class);
         startActivity(intent);

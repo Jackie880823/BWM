@@ -490,5 +490,16 @@
     <string name="text_admin">管理员</string>
     <string name="text_check_in_a_location">地点</string>
 
+    <string name="text_post_and">现在</string>
+    <string name="text_event_now">创建一个</string>
+
+    <!-- archive-->
+    <string name="text_archive">Archive</string>
+    <string name="text_group_posting">Group Posting</string>
+    <string name="text_private_posting">Private Posting</string>
+    <string name="text_archive_comment">Comment</string>
+    <string name="text_member_list">Member List</string>
+
     <string name="Downloaded">Downloaded</string>
+    <string name="not_support_64bit">百度地图目前不支持64位CPU</string>
 </resources>
