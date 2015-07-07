@@ -92,9 +92,6 @@ public class ViaIdNameActivity extends BaseActivity {
                 if(!TextUtils.isEmpty(etInfo.getText()) && !TextUtils.isEmpty(tvRelationship.getText())) {
                     srAddMember();
                 }else {
-//                    if (TextUtils.isEmpty(etInfo.getText())){
-//                        Toast.makeText(ViaIdNameActivity.this, getResources().getString(R.string.text_add_name_empty), Toast.LENGTH_SHORT).show();
-//                    }
                     if (TextUtils.isEmpty(tvRelationship.getText())) {
                         Toast.makeText(ViaIdNameActivity.this, getResources().getString(R.string.text_add_relationship_empty), Toast.LENGTH_SHORT).show();
 
