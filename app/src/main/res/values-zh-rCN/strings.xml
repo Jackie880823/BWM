@@ -250,7 +250,7 @@
 
     <!-- end -->
 
-    <string name="select_too_many">最多可选％d张</string>
+    <string name="select_too_many">最多可选%d张</string>
     <string name="text_nearest">近期</string>
     <string name="start_a_new">现在</string>
     <string name="post_now">创建一个</string>
