@@ -156,16 +156,15 @@ public class StickerDetailActivity extends BaseActivity {
     private void initDownloadView() {
         List<LocalStickerInfo> data = new ArrayList<>();
         try {       //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
-            Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-            data = stickerDao.queryForEq("name",stickerGroupEntity.getName());
-            Log.i(TAG,"==========data.size============="+data.size());
-            if(data.size() > 0){
-                tvDownload.setText("Downloaded");
+            LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(this);
+            boolean hasSticker = dao.hasDownloadSticker(stickerGroupEntity.getPath());
+            if(hasSticker){
+                tvDownload.setText(getResources().getString(R.string.Downloaded));
                 tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                 tvDownload.setEnabled(false);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LogUtil.e(TAG,"",e);
         }
 
     }
@@ -187,7 +186,7 @@ public class StickerDetailActivity extends BaseActivity {
                     pbProgress.setVisibility(View.INVISIBLE);
                     pbProgress.setProgress(0);
                     tvDownload.setVisibility(View.VISIBLE);
-                    tvDownload.setText("Downloaded");
+                    tvDownload.setText(getResources().getString(R.string.Downloaded));
                     tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                     tvDownload.setEnabled(false);
 
@@ -320,7 +319,7 @@ public class StickerDetailActivity extends BaseActivity {
                     if (finished == 100){
                         pbProgress.setVisibility(View.INVISIBLE);
                         tvDownload.setVisibility(View.VISIBLE);
-                        tvDownload.setText("Downloaded");
+                        tvDownload.setText(getResources().getString(R.string.Downloaded));
                         tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                         tvDownload.setEnabled(false);
                     }
@@ -337,7 +336,7 @@ public class StickerDetailActivity extends BaseActivity {
                     if (finished == 100){
                         pbProgress.setVisibility(View.INVISIBLE);
                         tvDownload.setVisibility(View.VISIBLE);
-                        tvDownload.setText("Downloaded");
+                        tvDownload.setText(getResources().getString(R.string.Downloaded));
                         tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
                         tvDownload.setEnabled(false);
                     }

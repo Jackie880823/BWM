@@ -135,6 +135,9 @@ public class ZipUtils {
         }
         zipInputStream.close();
         LocalStickerInfo stickerInfo = new LocalStickerInfo();
+        if (zipFileName.contains(File.separator)) {
+            zipFileName = zipFileName.substring(0, zipFileName.indexOf(File.separator));
+        }
         stickerInfo.setName(zipFileName);
         stickerInfo.setPath(zipFileName);
         stickerInfo.setSticker_name("1_B");

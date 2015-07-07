@@ -36,6 +36,7 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
@@ -67,7 +68,6 @@ public class StickerStoreActivity extends BaseActivity {
     private ViewPager vp;
     private StickerPagerAdapter stickerPagerAdapter;
     private List<View> views;
-    private LayoutInflater inflater;
     private RecyclerView recyclerViewList;
     private LinearLayoutManager llm;
     private  List<StickerGroupEntity> dataStickerGroup = new ArrayList<>();
@@ -76,7 +76,6 @@ public class StickerStoreActivity extends BaseActivity {
     private final int AUTO_PLAY = 1;
     private ScrollView scrollView;
     int finished;
-    boolean isLoading;
     int positionFromStickerDetail;
 
 
@@ -95,8 +94,8 @@ public class StickerStoreActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         tvTitle.setText(getResources().getString(R.string.text_sticker_store));
-        rightButton.setImageResource(R.drawable.sticker_setting);
-        rightButton.setFocusable(true);
+        rightButton.setImageResource(R.drawable.stickies_setting);
+
     }
 
     @Override
@@ -106,13 +105,13 @@ public class StickerStoreActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        rightButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        rightButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
                 Intent intent = new Intent(StickerStoreActivity.this, MyStickerActivity.class);
                 startActivity(intent);
-            }
-        });
+//            }
+//        });
     }
 
 
@@ -256,7 +255,7 @@ public class StickerStoreActivity extends BaseActivity {
                     Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LogUtil.e(TAG,"插入sticker info",e);
                 }
 
 

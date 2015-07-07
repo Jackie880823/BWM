@@ -288,12 +288,14 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     private long calculateLength(CharSequence c) {
         double len = 0;
         for (int i = 0; i < c.length(); i++) {
-            int tmp = (int) c.charAt(i);
-            if (tmp > 0 && tmp < 127) {
-                len += 0.5;
-            } else {
-                len++;
-            }
+            len++;
+
+//            int tmp = (int) c.charAt(i);
+//            if (tmp > 0 && tmp < 127) {
+//                len += 0.5;
+//            } else {
+//                len++;
+//            }
         }
         return Math.round(len);
     }

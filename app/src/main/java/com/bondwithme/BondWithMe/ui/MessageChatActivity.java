@@ -1,7 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
 import android.annotation.TargetApi;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,7 +24,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.action.MessageAction;
@@ -34,11 +32,12 @@ import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
+import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
-import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
+import com.gc.materialdesign.widgets.ProgressDialog;
 
 import org.json.JSONObject;
 
@@ -47,6 +46,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by quankun on 15/4/24.
@@ -124,6 +125,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public MessageChatAdapter messageChatAdapter;
     public LinearLayoutManager llm;
     private InputMethodManager imm;
+    private Timer mTimer;
+
+    private int isNewGroup;
 
     Handler handler = new Handler() {
         @Override
@@ -223,6 +227,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     }
 
+
+    @Override
+    public void finish() {
+        if(isNewGroup==1){
+            setResult(RESULT_OK);
+        }
+        super.finish();
+    }
+
     @Override
     protected void setTitle() {
         tvTitle.setText(titleName);
@@ -262,6 +275,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     public void initView() {
         userOrGroupType = getIntent().getIntExtra("type", -1);
+        //如果是从新建group打开的
+        isNewGroup = getIntent().getIntExtra("isNewGroup", -1);
         mContext = this;
         messageAction = new MessageAction(mContext, handler);
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
@@ -299,6 +314,20 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
+        mTimer = new Timer();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                indexPage = 1;
+                getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);//接收对话消息
+            }
+        }, 10000, 10000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTimer.cancel();
     }
 
     private void setView() {
@@ -317,7 +346,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         sendTextView = getViewById(R.id.btn_send);
         empty_message = getViewById(R.id.no_message_data_linear);
 
-        initViewPager();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -328,8 +356,19 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         });
     }
 
-    private void initViewPager() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initViewPager();
+            }
+        }, 50);
 
+    }
+
+    private void initViewPager() {
         if (isFinishing()) {
             return;
         }
@@ -338,7 +377,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
         mainFragment.setPicClickListener(this);
         transaction.replace(R.id.sticker_message_fragment, mainFragment);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.addToBackStack(null);
         transaction.commitAllowingStateLoss();
     }
@@ -488,7 +526,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
      * 打开相册
      */
     private void openAlbum() {
-        intent = new Intent(Intent.ACTION_PICK, null);
+        intent = new Intent(getApplicationContext(), SelectPhotosActivity.class);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(intent, REQUEST_HEAD_PHOTO);
@@ -506,20 +544,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case REQUEST_HEAD_PHOTO:
                     pickUries.clear();
                     if (data != null) {
-                        if (SDKUtil.IS_JB) {
-                            ClipData clipData = data.getClipData();//??
-                            if (clipData != null) {
-                                int size = clipData.getItemCount();
-                                for (int i = 0; i < size; i++) {
-                                    Uri uri = clipData.getItemAt(i).getUri();
-                                    pickUries.add(uri);
-                                }
-                            } else {
-                                pickUries.add(data.getData());
-                            }
-                        } else {
-                            pickUries.add(data.getData());
-                        }
+                        ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
+                        pickUries.addAll(uris);
                         for (Uri uri : pickUries) {
                             MsgEntity msgEntity = new MsgEntity();
                             msgEntity.setSticker_type(".png");

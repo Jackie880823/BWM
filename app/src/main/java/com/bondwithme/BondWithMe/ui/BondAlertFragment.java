@@ -27,7 +27,6 @@ import org.json.JSONObject;
 public class BondAlertFragment extends BaseFragment<BondAlertActivity> implements View.OnClickListener {
 
 
-    private ProgressDialog mProgressDialog;
     private TextView wall_alert_num;
     private TextView event_alert_num;
     private TextView bigday_alert_num;
@@ -62,7 +61,6 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     @Override
     public void initView() {
 
-        mProgressDialog = new ProgressDialog(getActivity(), R.string.text_loading);
         getViewById(R.id.btn_alert_miss).setOnClickListener(this);
         getViewById(R.id.btn_alert_bigday).setOnClickListener(this);
         getViewById(R.id.btn_alert_wall).setOnClickListener(this);
@@ -129,12 +127,12 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_MODULES_COUNT,MainActivity.getUser().getUser_id()), null,this, new HttpCallback() {
             @Override
             public void onStart() {
-                mProgressDialog.show();
+
             }
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+
             }
 
             @Override

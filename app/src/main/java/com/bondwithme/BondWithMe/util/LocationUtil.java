@@ -142,7 +142,16 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
 
         //判断是用百度还是google
         if(!SystemUtil.checkPlayServices(context)) {
-            intent.setClass(context, Map4BaiduActivity.class);
+            //TODO for baidu not support 64 bit cpu
+            /**baidu map*/
+            if(System.getProperty("os.arch").contains("64")) {
+                //64bit cpu
+                MessageUtil.showMessage(context, context.getString(R.string.not_support_64bit));
+                return null;
+            } else {
+                //32 bit cpu
+                intent.setClass(context, Map4BaiduActivity.class);
+            }
         } else {
             intent.setClass(context, Map4GoogleActivity.class);
         }

@@ -3,23 +3,26 @@ package com.bondwithme.BondWithMe;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.SDKInitializer;
-import com.google.gson.Gson;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.LoginActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.google.gson.Gson;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +39,8 @@ public class App extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         appContext = this;
+        /**图片工具*/
+        BitmapTools.init(this);
         /**异常处理*/
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(getApplicationContext());
@@ -111,7 +116,7 @@ public class App extends MultiDexApplication {
 
 
         //反注册推送
-        NotificationUtil.unRegisterPush(context,user.getUser_id());
+        NotificationUtil.unRegisterPush(context, user.getUser_id());
         user = null;
         if (context != null) {
             FileUtil.clearCache(context);
@@ -161,5 +166,12 @@ public class App extends MultiDexApplication {
         System.exit(0);
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        LogUtil.d("", "1onConfigurationChanged============");
+//        Intent intent = new Intent(MainActivity.ACTION_REFRESH);
+//        sendBroadcast(intent);
+    }
 
 }

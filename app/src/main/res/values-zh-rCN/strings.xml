@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">伴我玩</string>伴我玩
-    <string name="title_tab_diary">日志</string>日志
+    <string name="app_name">伴我玩</string>
+    <string name="title_tab_diary">日志</string>
     <string name="title_tab_chat">信息</string>
     <string name="title_tab_event">活动</string>
     <string name="title_tab_more">更多</string>
@@ -250,7 +250,7 @@
 
     <!-- end -->
 
-    <string name="select_too_many">最多可选％d张</string>
+    <string name="select_too_many">最多可选%d张</string>
     <string name="text_nearest">近期</string>
     <string name="start_a_new">现在</string>
     <string name="post_now">创建一个</string>
@@ -405,8 +405,6 @@
     <!-- reset password 界面 -->
 
     <string name="text_reset_password_warning">包含6-16位字符（字母或数字）</string>
-
-
     <string name="hint_mail">你的邮址</string>
     <string name="hint_subject">关于</string>
     <string name="hint_mail_content">有什么我们可以帮您吗?</string>
@@ -416,22 +414,22 @@
     <string name="text_item_resend">再发</string>
     <string name="text_item_remove">删除</string>
 
-    <string name="title_bond_alert">”伴“通告</string>
+    <string name="title_bond_alert">“伴”通告</string>
     <string name="title_diary_alert">动态通告</string>
     <string name="title_event_alert">活动通告</string>
-    <string name="title_big_day_alert">”大“日子通告</string>
+    <string name="title_big_day_alert">“大”日子通告</string>
     <string name="title_miss_alert">想念通告</string>
     <string name="title_news_alert">消息通告</string>
     <string name="title_member_alert">成员通告</string>
     <string name="title_recommended_alert">推荐通告</string>
     <string name="title_group_alert">群组通告</string>
 
-    <string name="text_bond_alert">”伴“通告</string>
+    <string name="text_bond_alert">“伴”通告</string>
     <!--Diary-->
     <string name="text_bond_alert_diary">动态</string>
     <!--Event-->
     <string name="text_bond_alert_event">活动</string>
-    <string name="text_big_day">”大“日子</string>
+    <string name="text_big_day">“大”日子</string>
     <string name="text_miss">想念</string>
     <string name="text_news">消息</string>
     <string name="text_member">会员</string>
@@ -487,7 +485,21 @@
     <string name="download">DOWNLOAD</string>
     <string name="my_sticker">My Stickies</string>
     <string name="free">Free</string>
-    <string name="price">Price: </string>
+    <string name="price">Price:&#160;</string>
 
     <string name="text_admin">管理员</string>
+    <string name="text_check_in_a_location">地点</string>
+
+    <string name="text_post_and">现在</string>
+    <string name="text_event_now">创建一个</string>
+
+    <!-- archive-->
+    <string name="text_archive">Archive</string>
+    <string name="text_group_posting">Group Posting</string>
+    <string name="text_private_posting">Private Posting</string>
+    <string name="text_archive_comment">Comment</string>
+    <string name="text_member_list">Member List</string>
+
+    <string name="Downloaded">Downloaded</string>
+    <string name="not_support_64bit">百度地图目前不支持64位CPU</string>
 </resources>

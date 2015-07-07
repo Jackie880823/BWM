@@ -13,12 +13,14 @@
         android:layout_alignParentTop="true" />
 
     <LinearLayout
+        android:id="@+id/ll_autoaccept"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/fragment_main_top"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:orientation="vertical"
-        android:paddingTop="@dimen/default_view_margin">
+        android:paddingTop="@dimen/default_view_margin"
+        android:visibility="invisible">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -169,4 +171,5 @@
 
          <View style="@style/split_line_default" />
     </LinearLayout>
+    <include layout="@layout/progress_layout"/>
 </RelativeLayout>
