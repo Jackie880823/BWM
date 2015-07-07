@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -73,7 +74,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private TextView tvGender;
     private RelativeLayout rlGender;
     private TextView etEmail;
-    private TextView etRegion;
+    private EditText etRegion;
     private Dialog showSelectDialog;
     private Dialog showCameraAlbum;
     private Boolean isUploadName = false;
@@ -248,8 +249,8 @@ public class MyViewProfileActivity extends BaseActivity {
                 }
             }
         }
-        //etRegion.setText(MainActivity.getUser().getUser_location_name());
-        etRegion.setKeyListener(null);
+        etRegion.setText(MainActivity.getUser().getUser_location_name());
+//        etRegion.setKeyListener(null);
         String dofeel_code = MainActivity.getUser().getDofeel_code();
         if (!TextUtils.isEmpty(dofeel_code)) {
             try {
