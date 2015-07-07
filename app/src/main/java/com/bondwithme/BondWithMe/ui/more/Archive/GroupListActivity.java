@@ -9,9 +9,13 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.GroupListEntity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.bondwithme.BondWithMe.adapter.GroupListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by liangzemian on 15/6/30.
@@ -21,6 +25,7 @@ public class GroupListActivity extends BaseActivity implements View.OnClickListe
     private RecyclerView rvList;
     private LinearLayoutManager llm;
     private GroupListAdapter adapter;
+    private List<GroupListEntity> data = new ArrayList<>();
     private RelativeLayout rl1;
     private RelativeLayout rl2;
     private RelativeLayout rl3;

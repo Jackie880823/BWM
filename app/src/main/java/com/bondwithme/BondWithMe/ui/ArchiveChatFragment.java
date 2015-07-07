@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.adapter.ArchiveChatAdapter;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
 
@@ -34,6 +35,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements View.
     private String archive_id;
     private View vProgress;
 
+    private ArchiveChatAdapter adapter;
     private List<ArchiveChatEntity> data = new ArrayList<>();
 
     public static ArchiveChatFragment newInstance(String... params) {

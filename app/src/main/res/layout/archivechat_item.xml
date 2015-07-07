@@ -64,14 +64,14 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/ll_walls_image"
+            android:id="@+id/ll_chats_image"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_200dp"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="@dimen/default_view_margin">
 
             <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/iv_walls_images"
+                android:id="@+id/iv_chats_images"
                 style="@style/ListImageDefault"
                 android:paddingLeft="@dimen/default_content_padding"
                 android:paddingRight="@dimen/default_content_padding"
@@ -79,7 +79,7 @@
                 android:layout_height="match_parent"/>
 
             <TextView
-                android:id="@+id/tv_wall_photo_count"
+                android:id="@+id/tv_chat_photo_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
