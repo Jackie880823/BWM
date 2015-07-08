@@ -106,7 +106,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                     List<String> list = new ArrayList<>();
                     for (File file1 : files) {
                         String filePath = file1.getAbsolutePath();
-                        if (filePath.substring(filePath.lastIndexOf(File.separator) + 1).contains("B")) {
+                        if ((filePath.substring(0,filePath.lastIndexOf("."))).endsWith("S")) {
                             list.add(filePath);
                         }
                     }
