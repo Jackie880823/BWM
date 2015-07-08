@@ -503,6 +503,6 @@
     <string name="text_add_relationship_empty">Choose relationship</string>
 
     <string name="Downloaded">Downloaded</string>
-    <string name="not_support_64bit">Baidu map currently does not support 64-bit CPU</string>
+    <string name="msg_service_not_available">Google Service not Available</string>
 </resources>
 
