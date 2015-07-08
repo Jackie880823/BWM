@@ -22,29 +22,35 @@
             android:paddingRight="@dimen/default_content_padding"
             android:paddingTop="@dimen/default_content_padding">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/btn_del"
-                android:layout_toRightOf="@+id/owner_head"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/default_content_padding"
-                android:paddingTop="@dimen/default_text_padding">
+
+            <TextView
+            android:id="@+id/owner_name"
+            style="@style/text_dark_default"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:textStyle="bold"/>
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_toLeftOf="@+id/btn_del"-->
+                <!--android:layout_toRightOf="@+id/owner_head"-->
+                <!--android:orientation="vertical"-->
+                <!--android:paddingLeft="@dimen/default_content_padding"-->
+                <!--android:paddingTop="@dimen/default_text_padding">-->
 
 
-                <TextView
-                    android:id="@+id/owner_name"
-                    style="@style/text_dark_default"
-                    android:text="David"
-                    android:textStyle="bold"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/owner_name"-->
+                    <!--style="@style/text_dark_default"-->
+                    <!--android:text="David"-->
+                    <!--android:textStyle="bold"/>-->
 
 
-                <TextView
-                    android:id="@+id/push_date"
-                    style="@style/text_dark_default"
-                    android:text="...."
-                    android:layout_marginTop="@dimen/default_view_margin"/>
-            </LinearLayout>
+                <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/push_date"&ndash;&gt;-->
+                    <!--&lt;!&ndash;style="@style/text_dark_default"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:text="123312234341234234"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginTop="@dimen/default_view_margin"/>&ndash;&gt;-->
+            <!--</LinearLayout>-->
 
         </RelativeLayout>
 
@@ -57,9 +63,10 @@
             android:paddingRight="@dimen/default_content_padding">
 
             <TextView
-                android:id="@+id/tv_wall_content"
+                android:id="@+id/tv_archive_content"
                 android:autoLink="web"
                 android:linksClickable="true"
+                android:layout_marginLeft="@dimen/default_view_margin"
                 style="@style/text_dark_default"/>
         </LinearLayout>
 
@@ -108,8 +115,7 @@
                     android:id="@+id/up_time"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/default_view_margin"
-                    android:text="18 Feb 2015"/>
+                    android:layout_marginLeft="@dimen/default_view_margin" />
 
             </LinearLayout>
         </RelativeLayout>

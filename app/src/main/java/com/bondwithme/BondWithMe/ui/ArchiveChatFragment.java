@@ -23,7 +23,7 @@ import java.util.List;
 public class ArchiveChatFragment extends BaseFragment<Activity> implements View.OnClickListener {
     private static final String TAG = ArchiveChatFragment.class.getSimpleName();
     //如果是0，则是group，否则是private
-    private String tag;
+//    private String tag;
     private RecyclerView rvList;
     private MySwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh = true;
@@ -45,9 +45,9 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements View.
     public ArchiveChatFragment(){
         super();
     }
-    public ArchiveChatFragment(String params){
-        tag = params;
-    }
+//    public ArchiveChatFragment(String params){
+//        tag = params;
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
