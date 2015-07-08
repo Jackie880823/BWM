@@ -893,6 +893,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     Log.i(TAG, "onActivityResult: size = " + at_members_data.size());
                     String groups = data.getStringExtra("groups_data");
                     at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {}.getType());
+                    changeTab(WALL_TAB_WORD);
                     changeAtDesc(true);
                     break;
             }

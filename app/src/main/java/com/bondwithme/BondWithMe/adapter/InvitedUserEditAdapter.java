@@ -50,13 +50,13 @@ public class InvitedUserEditAdapter extends RecyclerView.Adapter<InvitedUserEdit
         viewHolder.user_name.setText(user.getUser_given_name());
         String status = user.getGroup_member_response();
         if (!TextUtils.isEmpty(status)) {
-            if ("3".equals(status)) {
+            if ("2".equals(status)) {
                 UIUtil.setViewBackground(mContext, viewHolder.intent_status, R.drawable.status_not_going_press);
 //                viewHolder.intent_status.setImageResource(R.drawable.status_not_going_normal);
             } else if ("1".equals(status)) {
                 UIUtil.setViewBackground(mContext, viewHolder.intent_status, R.drawable.status_going_press);
 //                viewHolder.intent_status.setImageResource(R.drawable.status_going_normal);
-            } else if ("2".equals(status)) {
+            } else if ("3".equals(status)) {
                 UIUtil.setViewBackground(mContext, viewHolder.intent_status, R.drawable.status_maybe_press);
 //                viewHolder.intent_status.setImageResource(R.drawable.status_maybe_normal);
             }
