@@ -218,7 +218,7 @@
     <string name="text_old_password_wrong">旧密码不正确</string>
     <string name="text_full_all_fields">请检查信息是否完整</string>
     <string name="text_success_add_member">添加成员成功</string>
-    <string name="text_fail_add_member">添加成员失败，请重试</string>
+    <string name="text_fail_add_member">添加成员失败，账号或者用户名错误。请重试</string>
     <string name="title_select_relationship">设置关系</string>
     <string name="title_reset_password">重设密码</string>
     <string name="title_select_members">选择成员</string>
@@ -446,7 +446,7 @@
     <string name="text_sign_out">登出</string>
 
     <string name="text_invited_event">%s 邀请你参加活动.</string>
-    <string name="text_responded_event">%s （参与／不能参与／可能参与）活动.</string>
+    <string name="text_responded_event">%s 响应了活动.</string>
     <string name="text_commented_event">%s 评论活动.</string>
     <string name="text_also_commented_event">%s 也评论活动.</string>
     <string name="text_updated_event">%s 更新了活动.</string>
@@ -485,7 +485,6 @@
     <string name="download">DOWNLOAD</string>
     <string name="my_sticker">My Stickies</string>
     <string name="free">Free</string>
-    <string name="price">Price:&#160;</string>
 
     <string name="text_admin">管理员</string>
     <string name="text_check_in_a_location">地点</string>
@@ -502,4 +501,6 @@
 
     <string name="Downloaded">Downloaded</string>
     <string name="not_support_64bit">百度地图目前不支持64位CPU</string>
+    <string name="text_add_relationship_empty">请选择关系</string>
+    <string name="msg_service_not_available">谷歌服务没有启动</string>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BWM</string>
+    <string name="app_name">BondWithMe</string>
     <string name="title_tab_diary">Diary</string>
     <string name="title_tab_chat">Message</string>
     <string name="title_tab_event">Event</string>
@@ -28,11 +28,11 @@
     <string name="msg_action_successed">Action successful</string>
     <string name="msg_action_canceled">Action Cancelled</string>
     <string name="msg_action_failed">Action failed</string>
-    <string name="msg_no_content">You cannot submit an empty posting!</string>
+    <string name="msg_no_content">You cannot submit an empty post!</string>
     <string name="msg_no_internet">Poor internet connection</string>
     <string name="msg_load_config_successed">Loaded successfully</string>
     <string name="msg_load_config_failed">Loading failed</string>
-    <string name="msg_date_not_befort_now">Date must be greater than now</string>
+    <string name="msg_date_not_befort_now">Date must be after today</string>
     <string name="draft_ask_save">Do you want to save as draft?</string>
     <string name="event_accept">YES</string>
     <string name="event_cancel">NO</string>
@@ -59,7 +59,7 @@
     <string name="text_awaiting">Awaiting</string>
     <string name="text_private">Private</string>
     <string name="text_like_desc">Love</string>
-    <string name="text_ask_delete">Confirm remove member?</string>
+    <string name="text_ask_delete">Confirm removal of member?</string>
     <string name="text_comments">Comments</string>
 
     <string name="text_diary_content_at_member_desc">\@%1$smembers</string>
@@ -84,8 +84,8 @@
 
     <!-- about -->
 
-    <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you  and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
-    <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
+    <string name="text_about_desc1">The BondWithMe group of companies brings you an eco-system of apps for you and your family. We take pride in providing responsible social family-oriented apps in the market.</string>
+    <string name="text_about_desc2">It is BondWithMe’s mission to use connectivity and sharing to bring family members together even when they are living across the globe. Due to our busy lives in this modern age, we envisage that building our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
     <string name="msg_ask_exit_app">Do you really want to log out?</string>
     <string name="text_yes">YES</string>
@@ -94,20 +94,20 @@
 
 
     <string name="hint_search_name">Search by name</string>
-    <string name="alert_text_mail_info_not_complete">Please fill up all the fields</string>
+    <string name="alert_text_mail_info_not_complete">Please complete all the required fields</string>
     <string name="mail_subject_1">General Inquiry</string>
     <string name="mail_subject_2">Suggestion &amp; Feedback</string>
     <string name="mail_subject_3">Report a Problem</string>
-    <string name="text_sending">\t Sending …</string>
-    <string name="text_waiting">\t Waiting …</string>
-    <string name="text_loading">\t Loading …</string>
-    <string name="text_search_contact">Search name here</string>
+    <string name="text_sending">	\t Sending …</string>
+    <string name="text_waiting">	\t Waiting …</string>
+    <string name="text_loading">	\t Loading …</string>
+    <string name="text_search_contact">Search here</string>
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">No contact selected</string>
 
     <string name="text_via_contact">Via Contact</string>
     <string name="text_ID_name">Via BondWithMe ID / Username</string>
-    <string name="text_QR">Add via Q.R Code</string>
+    <string name="text_QR">Add via QR Code</string>
     <string name="text_location">Location</string>
     <string name="text_stickers">Stickies</string>
     <string name="text_video">Video</string>
@@ -187,48 +187,48 @@
     <string name="text_fail_update_group_name">Fail to update group name. Please try again.</string>
     <string name="text_success_remove">Remove member successfully</string>
     <string name="text_fail_remove">Fail to remove member. Please try again.</string>
-    <string name="text_leave_group_sure">Confirm leave group?</string>
+    <string name="text_leave_group_sure">Are you sure you want to leave the group?</string>
     <string name="text_dialog_yes">Yes</string>
-    <string name="text_success_leave_group">Successfully leave group.</string>
-    <string name="text_fail_leave_group">Fail to leave group. Please try again.</string>
-    <string name="text_success_resend">Resend Successfully.</string>
-    <string name="text_success_request">Request Successfully.</string>
-    <string name="text_success_accept">Add Member Successfully.</string>
-    <string name="text_success_set_relationship">Relationship Add Successfully.</string>
-    <string name="text_input_first_name">Please input your First Name</string>
-    <string name="text_input_last_name">Please input your Last Name</string>
+    <string name="text_success_leave_group">Successfully left group!</string>
+    <string name="text_fail_leave_group">Failed to leave group. Please try again.</string>
+    <string name="text_success_resend">Resent Successfully!</string>
+    <string name="text_success_request">Request sent successfully!</string>
+    <string name="text_success_accept">Member added successfully!</string>
+    <string name="text_success_set_relationship">Relationship added successfully!</string>
+    <string name="text_input_first_name">Please enter your First Name</string>
+    <string name="text_input_last_name">Please enter your Last Name</string>
     <string name="text_choose_gender">Please choose your gender</string>
     <string name="text_agree_with_terms">Please agree with the Terms &amp; Privacy.</string>
     <string name="text_no_network">Poor Internet Connection</string>
     <string name="text_enter_details">Please enter your details.</string>
-    <string name="text_input_phone_number">Input your Phone Number.</string>
-    <string name="text_input_password">Input your Password</string>
-    <string name="text_successfully_dismiss_miss">Miss Received</string>
+    <string name="text_input_phone_number">Please enter your phone number</string>
+    <string name="text_input_password">Please enter your password</string>
+    <string name="text_successfully_dismiss_miss">Someone misses you!</string>
     <string name="text_input_name_gender">Please input your name and gender.</string>
-    <string name="text_fail_update_information">Fail to update your information. try again.</string>
+    <string name="text_fail_update_information">Failed to update your information. Please try again.</string>
     <string name="text_success_update_information">Successfully updated your information.</string>
     <string name="text_update_proPicFail">Action failed</string>
     <string name="text_updateProPicSuccess">Action Successful</string>
     <string name="text_wrong_data">Birthday should NOT be a future date</string>
     <string name="successfully_update_relationship">Relationship updated Successfully .</string>
-    <string name="fail_update_relationship">Fail to update relationship. Please try again.</string>
-    <string name="text_updateProPicFail">Fail to update photo, try again or skip</string>
-    <string name="text_password_specified_invalid">Password specified is invalid. Try again.</string>
-    <string name="text_password_changed_successfully">Password changed successfully, Login again.</string>
+    <string name="fail_update_relationship">Failed to update your relationship. Please try again.</string>
+    <string name="text_updateProPicFail">Failed to upload your photo. Please try again.</string>
+    <string name="text_password_specified_invalid">Password specified is invalid. Please try again.</string>
+    <string name="text_password_changed_successfully">Password changed successfully. Please login again.</string>
     <string name="text_old_password_wrong">Old password is incorrect.</string>
-    <string name="text_full_all_fields">Please fill up ALL fields and try again.</string>
-    <string name="text_success_add_member">Add member successfully.</string>
-    <string name="text_fail_add_member">Add member failed. Try again.</string>
+    <string name="text_full_all_fields">Please complete all fields.</string>
+    <string name="text_success_add_member">Added member successfully.</string>
+    <string name="text_fail_add_member">Unable to add member. Please try again.</string>
     <string name="title_select_relationship">Select Relationship</string>
     <string name="title_reset_password">Reset Password</string>
     <string name="title_select_members">Select Members</string>
 
 
     <string name="text_account_already_exist">Account already exist</string>
-    <string name="text_verification_fail">Verification fail. Try again.</string>
+    <string name="text_verification_fail">Verification failed. Please try again.</string>
     <string name="text_verification_successful">Verification successful.</string>
     <string name="text_choose_country_code">Please choose your Country Code</string>
-    <string name="text_fail_verify_phone_number">Fail to verify phone number</string>
+    <string name="text_fail_verify_phone_number">Failed to verify your phone number.</string>
     <string name="title_password">Password</string>
     <string name="text_invalid_account_name">Invalid account name. Please try again.</string>
     <string name="text_input_re_enter_password">Please confirm your password</string>
@@ -237,10 +237,10 @@
 
 
     <string name="text_photos">photos</string>
-    <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" ">]]></string>
+    <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" >	]]></string>
     <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
-    <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" ">]]></string>
-    <string name="photo_position_no_arrow">%1$d/%2$d</string>
+    <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" >	]]></string>
+    <string name="photo_position_no_arrow">	%1$d/%2$d</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -290,7 +290,7 @@
     <string name="text_members_num">%s members</string>
     <string name="family_search">Search</string>
     <string name="text_dialog_ok">OK</string>
-    <string name="text_all_field_compulsory">Please fill up ALL fields and try again.</string>
+    <string name="text_all_field_compulsory">Please complete all fields</string>
     <string name="text_pending_approval">Pending approval.</string>
     <string name="diary_comments">Comments</string>
     <string name="text_new_member">MEMBER</string>
@@ -299,8 +299,8 @@
     <string name="text_group_name_here">Type group name here</string>
     <string name="text_dialog_no">NO</string>
     <string name="text_dialog_show_no">NO</string>
-    <string name="text_create_group_not_save">Are you sure you want to cancel ? Changes made will not be save !</string>
-    <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group. Add more members now!</string>
+    <string name="text_create_group_not_save">Are you sure you want to cancel? Changes made will not be saved!</string>
+    <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group.</string>
 
     <string name="text_setting_1_title">Birthday Alert Reminder</string>
     <string name="text_setting_1_1">1 Day earlier</string>
@@ -333,11 +333,11 @@
     <string name="text_diary_posted_to_diary">posted to diary</string>
     <string name="text_diary_tagged_you_in_post">tagged you in a post</string>
     <string name="text_diary_commented_on_your_post">commented on your post</string>
-    <string name="text_diary_loved_your_comment">love your comment</string>
-    <string name="text_diary_loved_your_post">love your post</string>
+    <string name="text_diary_loved_your_comment">loved your comment</string>
+    <string name="text_diary_loved_your_post">loved your post</string>
 
     <!--Alert Group-->
-    <string name="text_pending">&#160;requested you to join the group</string>
+    <string name="text_pending">&#160;sent you a request to join the group</string>
     <string name="text_add_group">&#160;added you to group</string>
     <string name="text_reject_has">&#160;has</string>
     <string name="text_reject_dec">&#160;declined</string>
@@ -349,7 +349,7 @@
     <string name="title_personal_information">Personal Information</string>
     <string name="title_country_code">Country Code</string>
     <string name="title_family_profile">Profile</string>
-    <string name="title_forget_password">Forget Password</string>
+    <string name="title_forget_password">Forgot Password</string>
 
     <string name="text_next">Next</string>
     <string name="text_or">or</string>
@@ -358,7 +358,7 @@
     <string name="text_cancel">Cancel</string>
 
     <string name="text_from_camera">From Camera</string>
-    <string name="text_from_camera_bottom">Snap a photo of yourself</string>
+    <string name="text_from_camera_bottom">Take a selfie</string>
     <string name="text_from_album">From Album</string>
     <string name="text_from_album_bottom">Choose a photo from your Album gallery</string>
     <string name="text_skip">&#8230;SKIP</string>
@@ -368,7 +368,7 @@
     <string name="text_sign_up">SIGN UP</string>
     <string name="text_login_warning">Ignore country code if signing in via Username</string>
     <string name="text_country_code">Country Code</string>
-    <string name="text_login_forget_password">Forget your password?</string>
+    <string name="text_login_forget_password">Forgot Password?</string>
     <string name="text_login_faile_prompt">Are you sure your account is:</string>
     <string name="text_login">LOGIN</string>
     <string name="hint_phone_username">Phone Number / Username</string>
@@ -389,7 +389,7 @@
     <string name="text_sign_up_phone_password_warning">Min 6 characters (alpha numeric)</string>
 
     <!-- sign up phone information 界面 -->
-    <string name="text_sign_up_phone_information_name_warning">We encourage to use real name for better member recommendation</string>
+    <string name="text_sign_up_phone_information_name_warning">We encourage you to use your real name for better member recommendations</string>
     <string name="text_sign_up_phone_information_agree_warning">I agree with the Terms &amp; Privacy.</string>
 
     <!-- sign up username 界面 -->
@@ -399,7 +399,7 @@
     <string name="text_forget_password_contact1">If you still issues with your password, please</string>
     <string name="text_forget_password_contact2">contact us</string>
     <string name="text_forget_password_phone_warning1">We have sent code to</string>
-    <string name="text_forget_password_phone_warning2">, please check it.</string>
+    <string name="text_forget_password_phone_warning2">, please check your phone number.</string>
     <string name="text_username">Username</string>
 
     <!-- reset password 界面 -->
@@ -498,7 +498,11 @@
     <string name="text_member_list">Member List</string>
 
     <string name="text_admin">Admin</string>
+    <string name="not_support_64bit">Baidu map currently does not support 64-bit CPU</string>
+    <string name="text_check_in_a_location">Check in a location</string>
+    <string name="text_add_relationship_empty">Choose relationship</string>
 
     <string name="Downloaded">Downloaded</string>
-    <string name="not_support_64bit">Baidu map currently does not support 64-bit CPU</string>
+    <string name="msg_service_not_available">Google Service not Available</string>
 </resources>
+
