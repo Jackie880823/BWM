@@ -21,6 +21,7 @@ import com.madx.bwm.Constant;
 import com.madx.bwm.R;
 import com.madx.bwm.entity.UserEntity;
 import com.madx.bwm.http.UrlUtil;
+import com.madx.bwm.util.MyTextUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -147,7 +148,7 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
                 {
 
                     HashMap<String, String> params = new HashMap<String, String>();
-                    params.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
+                    params.put("user_phone_number", tvCountryCode.getText().toString() + MyTextUtil.NoZero(etPhone.getText().toString()));
                     params.put("verification_action", "register");
 
 
@@ -166,7 +167,7 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
 
                         @Override
                         public void onResult(String response) {
-                            tvWarningPhone.setText(tvCountryCode.getText().toString() + etPhone.getText().toString());
+                            tvWarningPhone.setText(tvCountryCode.getText().toString() + MyTextUtil.NoZero(etPhone.getText().toString()));
                             llWarning.setVisibility(View.VISIBLE);
 
                             try {
@@ -202,57 +203,6 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
                         }
                     });
 
-
-
-
-
-
-//                    StringRequest stringRequestVerification = new StringRequest(Request.Method.POST, Constant.API_VERIFICATION, new Response.Listener<String>() {
-//                        @Override
-//                        public void onResponse(String response) {
-//
-//                            tvWarningPhone.setText(tvCountryCode.getText().toString() + etPhone.getText().toString());
-//                            llWarning.setVisibility(View.VISIBLE);
-//
-//                            try {
-//                                String responseStatus;
-//                                JSONObject jsonObject = new JSONObject(response);
-//                                responseStatus = jsonObject.getString("response_status");//申请验证码状态信息，失败也分两种情况
-//                                if (responseStatus.equals("Fail")) {
-//                                    Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_createVerification_fail), Toast.LENGTH_SHORT).show();
-//                                } else {
-//                                    time = new TimeCount(60000, 1000);//构造CountDownTimer对象
-//                                    time.start();//开始计时
-//                                    Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_createVerification_success), Toast.LENGTH_SHORT).show();
-//                                    etVerifyCode.requestFocus();
-//                                }
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        }
-//                    }, new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            //TODO
-//                            error.printStackTrace();
-//                            Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_error), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }) {
-//                        @Override
-//                        protected Map<String, String> getParams() throws AuthFailureError {
-//                            HashMap<String, String> params = new HashMap<String, String>();
-//
-//                            params.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
-//                            params.put("verification_action", "register");
-//                            return params;
-//                        }
-//                    };
-//                    stringRequestVerification.setShouldCache(false);
-//                    VolleyUtil.addRequest2Queue(SignUpUsernameVerifyPhoneActivity.this, stringRequestVerification, "");
-
-
-
                 }
 
                 else if (tvCountryCode.getText().toString().length() == 0)
@@ -283,7 +233,7 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
                 {
                     String url;
                     HashMap<String, String> jsonParams = new HashMap<String, String>();
-                    jsonParams.put("user_phone_number", tvCountryCode.getText().toString() + etPhone.getText().toString());
+                    jsonParams.put("user_phone_number", tvCountryCode.getText().toString() + MyTextUtil.NoZero(etPhone.getText().toString()));
                     jsonParams.put("verify_code", etVerifyCode.getText().toString());
                     String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                     HashMap<String, String> params = new HashMap<String, String>();
@@ -319,7 +269,7 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
 
                                     Intent intent = new Intent(SignUpUsernameVerifyPhoneActivity.this, InformationUsernameActivity.class);
 
-                                    userEntity.setUser_phone(etPhone.getText().toString());
+                                    userEntity.setUser_phone(MyTextUtil.NoZero(etPhone.getText().toString()));
                                     userEntity.setUser_country_code(tvCountryCode.getText().toString());
 
                                     intent.putExtra("userEntity", userEntity);
@@ -347,49 +297,6 @@ public class SignUpUsernameVerifyPhoneActivity extends BaseActivity {
 
                         }
                     });
-
-
-//
-//                    StringRequest stringRequestVerifyCode = new StringRequest(url, new Response.Listener<String>() {
-//
-//                        @Override
-//                        public void onResponse(String response) {
-//                            try
-//                            {
-//                                JSONObject jsonObject = new JSONObject(response);
-//
-//                                if (jsonObject.getString("response_status").equals("Fail"))
-//                                {
-//                                    Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_verification_fail), Toast.LENGTH_SHORT).show();
-//                                }
-//                                else if (jsonObject.getString("response_status").equals("Success"))
-//                                {
-//                                    Toast.makeText(SignUpUsernameVerifyPhoneActivity.this, getString(R.string.text_verification_successful), Toast.LENGTH_SHORT).show();
-//
-//                                    Intent intent = new Intent(SignUpUsernameVerifyPhoneActivity.this, InformationUsernameActivity.class);
-//
-//                                    userEntity.setUser_phone(etPhone.getText().toString());
-//                                    userEntity.setUser_country_code(tvCountryCode.getText().toString());
-//
-//                                    intent.putExtra("userEntity", userEntity);
-//                                    startActivity(intent);
-//                                }
-//                            }
-//                            catch (JSONException e)
-//                            {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    },new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//
-//                        }
-//                    });
-//                    stringRequestVerifyCode.setShouldCache(false);
-//                    VolleyUtil.addRequest2Queue(SignUpUsernameVerifyPhoneActivity.this, stringRequestVerifyCode, "");
-
-
 
                 }
 
