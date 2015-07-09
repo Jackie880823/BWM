@@ -243,9 +243,11 @@ public class Constant {
     public static final String API_START_CHECK_LOG_ID = API_SERVER+"/bondwithme/index.php/api/loginID";//查询账号是否可用和获取验证码／重新获取验证码
     public static final String API_START_PHONE_CREATE_USER = API_SERVER+"/bondwithme/index.php/api/verifyUser"; //Verify code and Create User (Phone)
     public static final String API_START_USERNAME_CREATE_USER = API_SERVER+"/bondwithme/index.php/api/verifyUser"; //Verify code and Create User (Username)
+    public static final String API_START_COMPLETE_PROFILE = API_SERVER+"/bondwithme/index.php/api/profile"; //Complete profile
 
 
     public static final String API_START_FORGOT_PASSWORD_GET_CODE = API_SERVER+"/bondwithme/index.php/api/forgetPassword"; //忘记密码，获取验证码
+    public static final String API_START_FORGOT_PASSWORD_VERIFY_CODE = API_SERVER+"/bondwithme/index.php/api/verification"; //verify code(忘记密码)
 
 
 }

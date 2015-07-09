@@ -6,7 +6,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +35,6 @@ import com.bondwithme.BondWithMe.util.CountryCodeUtil;
 import com.bondwithme.BondWithMe.util.MD5Util;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
-import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.gc.materialdesign.views.Button;
@@ -96,10 +97,12 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                     break;
 
                 case CATCH:
+                    //需要怎么处理？暂时？
                     unknowWrong();
                     break;
 
                 case ERROR:
+                    //需要怎么处理？暂时？
                     unknowWrong();
                     break;
 
@@ -193,6 +196,40 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
         tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(getActivity()));
         tvStartCountryCode.setText(CountryCodeUtil.GetCountryZipCode(getActivity()));
+
+        etPhoneNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+            }
+        });
+
+        etPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+            }
+        });
     }
 
     public void doLogIn()
@@ -206,7 +243,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
 
-        if(!MyTextUtil.checkEmptyInputText(strCountryCode, strPhoneNumber, strPassword))
+        if(!MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber, strPassword))
         {
             doingLogInChangeUI();
 
@@ -241,29 +278,26 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                     Gson gson = gsonb.create();
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-                        userEntities = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<List<UserEntity>>(){}.getType());
+                        userEntities = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<List<UserEntity>>() {
+                        }.getType());
                         tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
-                        String verificationFlag = jsonObject.getString("verification_flag");
 
                         if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
                         {
-                            //bad date????
+                            //这样可以当做是bad date
                             unknowWrong();
                             return;
                         }
 
-                        if ("true".equals(verificationFlag))
+                        userEntity = userEntities.get(0);
+
+                        if ("created".equals(userEntity.getUser_status()))
                         {
-                            userEntity = userEntities.get(0);
-                            App.changeLoginedUser(userEntity, tokenEntity);
-                            PreferencesUtil.saveValue(getActivity(), Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
-                            handler.sendEmptyMessage(GO_MAIN);
+                            handler.sendEmptyMessage(GO_DETAILS);
                         }
                         else
                         {
-                            //这种情况当做是登陆过吗？
-                            //TODO
-                            handler.sendEmptyMessage(GO_DETAILS);
+                            handler.sendEmptyMessage(GO_MAIN);
                         }
 
                     } catch (JSONException e) {
@@ -291,6 +325,15 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         }
         else
         {
+            if (TextUtils.isEmpty(tvCountryCode.getText().toString()))
+            {
+                rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+            }
+            else
+            {
+                rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+            }
+
             if (TextUtils.isEmpty(etPhoneNumber.getText().toString()))
             {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
@@ -328,6 +371,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     public void goMainActivity()
     {
         Intent intent = new Intent(getActivity(), MainActivity.class);
+        App.changeLoginedUser(userEntity, tokenEntity);
         startActivity(intent);
         //TODO
         //要改。为什么在这边初始化？
@@ -337,7 +381,10 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     public void goDetails()
     {
-
+        Intent intent = new Intent(getActivity(), DetailsActivity.class);
+        intent.putExtra(Constant.LOGIN_USER, userEntity);
+        intent.putExtra(Constant.HTTP_TOKEN, tokenEntity);
+        startActivity(intent);
     }
 
     @Override

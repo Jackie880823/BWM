@@ -43,7 +43,7 @@ public class MyTextUtil {
 
     }
 
-    public static boolean checkEmptyInputText(String... str) {
+    public static boolean isHasEmpty(String... str) {
         for (int i = 0; i < str.length; i++) {
             if (TextUtils.isEmpty(str[i])) {
                 return true;

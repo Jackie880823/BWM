@@ -32,17 +32,19 @@ import com.bondwithme.BondWithMe.util.UIUtil;
 import com.gc.materialdesign.views.Button;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class VerificationActivity extends BaseActivity implements EditText.OnEditorActionListener, View.OnClickListener{
 
     private final static String TAG = VerificationActivity.class.getSimpleName();
     private final static String CHECK_GET_CODE = TAG + "_CHECK_GET_CODE";
-    private final static String VERIFY_CODE_CREATE_USER = TAG + "_VERIFY_CODE";
+    private final static String VERIFY_CODE = TAG + "_VERIFY_CODE";
 
     private final static String LOGIN_ID_EXISET = "LoginIdExist";
     private final static String REGISTER_FAIL = "RegisterFail";
@@ -52,15 +54,19 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     private final static int COUNT_DOWN_INTERVAL = 1000;
 
     private final static int ERROR = -1;
+    private final static int CATCH = -2;
 
-    private final static int HANDLE_SUCCESS_RESEND_CODE = 1;
-    private final static int HANDLE_UNDEFINE_WRONG_RESEND_CODE = 2;
-    private final static int CATCH = 3;
+    private final static int HANDLE_SUCCESS_RESEND_CODE = 0xa1;
+    private final static int HANDLE_UNDEFINE_WRONG_RESEND_CODE = 0xa2;
 
-    private final static int HANDLE_SUCCESS_CREATE_USER = 9;
-    private final static int HANDLE_LOGIN_ID_EXISET = 10;
-    private final static int HANDLE_REGISTER_FAIL = 11;
-    private final static int HANDLE_FAIL_VERIFY = 12;
+    private final static int HANDLE_SUCCESS_CREATE_USER = 0xb1;
+    private final static int HANDLE_LOGIN_ID_EXISET = 0xb2;
+    private final static int HANDLE_REGISTER_FAIL = 0xb3;
+    private final static int HANDLE_FAIL_VERIFY = 0xb4;
+
+    private final static int HANDLE_SUCCESS_FORGOT_VERIFY_CODE = 0xc1;
+    private final static int HANDLE_FAIL_FORGOT_VERIFY_CODE = 0xc2;
+
 
 
 
@@ -80,6 +86,11 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     private UserEntity userEntity;
     private AppTokenEntity tokenEntity;
 
+    private ArrayList<UserEntity> forgotAccountList;
+
+    //验证码出错怎么处理三种情况
+    //http进入catch error怎么处理
+    //TODO
     Handler handler = new Handler()
     {
         @Override
@@ -97,9 +108,9 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                     break;
 
 
-                //以下创建用户回调
+                //以下验证，创建用户回调
                 case HANDLE_SUCCESS_CREATE_USER:
-                    goSuccessful();
+                    goSignUpSuccessful();
                     break;
 
                 case HANDLE_LOGIN_ID_EXISET:
@@ -113,6 +124,17 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 case HANDLE_FAIL_VERIFY:
                     goBackAgain();
                     break;
+
+
+                //以下忘记密码验证回调
+                case HANDLE_SUCCESS_FORGOT_VERIFY_CODE:
+                    goSelectAccount();
+                    break;
+
+                case HANDLE_FAIL_FORGOT_VERIFY_CODE:
+                    goBackAgain();
+                    break;
+
 
 
                 //http
@@ -199,6 +221,8 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         tvTime.setOnClickListener(this);
         brNext.setOnClickListener(this);
 
+        etCode.setOnEditorActionListener(this);
+
         timeCount = new TimeCount(MILLIS_IN_FUTURE, COUNT_DOWN_INTERVAL);
         timeCount.start();
 
@@ -280,9 +304,6 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 break;
         }
     }
-
-
-
 
 
 
@@ -529,7 +550,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         params.put("user_app_version", AppInfoUtil.getAppVersionName(this));
         params.put("user_app_os",Constant.USER_APP_OS);
 
-        new HttpTools(this).post(Constant.API_START_PHONE_CREATE_USER, params, VERIFY_CODE_CREATE_USER, new HttpCallback() {
+        new HttpTools(this).post(Constant.API_START_PHONE_CREATE_USER, params, VERIFY_CODE, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -537,7 +558,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
             @Override
             public void onFinish() {
-
+                finishHttpChangeUI();
             }
 
             @Override
@@ -607,7 +628,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         params.put("user_app_version", AppInfoUtil.getAppVersionName(this));
         params.put("user_app_os", Constant.USER_APP_OS);
 
-        new HttpTools(this).post(Constant.API_START_USERNAME_CREATE_USER, params, VERIFY_CODE_CREATE_USER, new HttpCallback() {
+        new HttpTools(this).post(Constant.API_START_USERNAME_CREATE_USER, params, VERIFY_CODE, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -615,7 +636,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
             @Override
             public void onFinish() {
-
+                finishHttpChangeUI();
             }
 
             @Override
@@ -677,6 +698,58 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
     private void doForgotPassword()
     {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("user_country_code", strCountryCode);
+        params.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
+        params.put("verify_code", etCode.getText().toString());
+
+        new HttpTools(this).get(Constant.API_START_FORGOT_PASSWORD_VERIFY_CODE, params, VERIFY_CODE, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+                finishHttpChangeUI();
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                Gson gson = gsonBuilder.create();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (Constant.SUCCESS.equals(jsonObject.getString("response_status"))) {
+                        //有可能服务是success还传了错误数据？
+                        forgotAccountList = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<ArrayList<UserEntity>>() {
+                        }.getType());
+                        handler.sendEmptyMessage(HANDLE_SUCCESS_FORGOT_VERIFY_CODE);
+                    } else {
+                        handler.sendEmptyMessage(HANDLE_FAIL_FORGOT_VERIFY_CODE);
+                    }
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(HANDLE_FAIL_FORGOT_VERIFY_CODE);
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.sendEmptyMessage(HANDLE_FAIL_FORGOT_VERIFY_CODE);
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
 
     }
 
@@ -702,11 +775,20 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         rlProgress.setVisibility(View.GONE);
     }
 
-    private void goSuccessful()
+    private void goSignUpSuccessful()
     {
         Intent intent = new Intent(this, SignUpSuccessfulActivity.class);
         intent.putExtra(Constant.LOGIN_USER, userEntity);
         intent.putExtra(Constant.HTTP_TOKEN, tokenEntity);
+        startActivity(intent);
+    }
+
+    private void goSelectAccount()
+    {
+        Intent intent = new Intent(this, SelectAccountActivity.class);
+        intent.putExtra(Constant.LOGIN_USER, forgotAccountList);
+        intent.putExtra("user_country_code",strCountryCode);
+        intent.putExtra("user_phone",MyTextUtil.NoZero(strPhoneNumber));
         startActivity(intent);
     }
 

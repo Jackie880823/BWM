@@ -6,7 +6,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -29,7 +31,6 @@ import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.MD5Util;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
-import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.gc.materialdesign.views.Button;
@@ -72,10 +73,12 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
             switch (msg.what)
             {
                 case GO_MAIN:
+                    App.changeLoginedUser(userEntity, tokenEntity);
                     goMainActivity();
                     break;
 
                 case GO_DETAILS:
+                    goDetails();
                     break;
 
                 case CATCH:
@@ -139,6 +142,40 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
         btnLogIn.setOnClickListener(this);
 
         etPassword.setOnEditorActionListener(this);
+
+        etUsername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+            }
+        });
+
+        etPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+            }
+        });
     }
 
     @Override
@@ -179,7 +216,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
         String strUsername = etUsername.getText().toString();
         String strPassword = etPassword.getText().toString();
 
-        if (!MyTextUtil.checkEmptyInputText(strUsername, strPassword))
+        if (!MyTextUtil.isHasEmpty(strUsername, strPassword))
         {
             doingLogInChangeUI();
 
@@ -216,10 +253,8 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
                     try {
                         JSONObject jsonObject = new JSONObject(response);
-
                         userEntities = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<List<UserEntity>>(){}.getType());
                         tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
-                        String verificationFlag = jsonObject.getString("verification_flag");
 
                         if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
                         {
@@ -228,17 +263,15 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
                             return;
                         }
 
-                        if ("true".equals(verificationFlag))
+                        userEntity = userEntities.get(0);
+
+                        if ("created".equals(userEntity.getUser_status()))
                         {
-                            userEntity = userEntities.get(0);
-                            App.changeLoginedUser(userEntity, tokenEntity);
-                            PreferencesUtil.saveValue(LogInUsernameActivity.this, Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
-                            handler.sendEmptyMessage(GO_MAIN);
+                            handler.sendEmptyMessage(GO_DETAILS);
                         }
                         else
                         {
-                            //TODO
-                            handler.sendEmptyMessage(GO_DETAILS);
+                            handler.sendEmptyMessage(GO_MAIN);
                         }
 
                     } catch (JSONException e) {
@@ -305,12 +338,21 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     }
 
     private void goMainActivity() {
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         //TODO
         //why？？改
         PushApi.initPushApi(this);
         finish();
+    }
+
+    public void goDetails()
+    {
+        Intent intent = new Intent(LogInUsernameActivity.this, DetailsActivity.class);
+        intent.putExtra(Constant.LOGIN_USER, userEntity);
+        intent.putExtra(Constant.HTTP_TOKEN, tokenEntity);
+        startActivity(intent);
     }
 
     @Override

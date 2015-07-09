@@ -152,6 +152,8 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
             if (!TextUtils.isEmpty(tokenString)) {
                 App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));//为什么这里又要初始化Token??
             }
+            //TODO
+            //为什么在这？需修改。
             PushApi.initPushApi(this);
             finish();
             return;

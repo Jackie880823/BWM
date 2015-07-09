@@ -73,7 +73,6 @@ public class MyDialog extends Dialog {
             llContent.addView(textView);
         }else if(mContentView!=null){
             llContent.addView(mContentView);
-
         }
     }
 

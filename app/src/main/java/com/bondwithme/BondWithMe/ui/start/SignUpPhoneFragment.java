@@ -261,7 +261,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
 
-        if( (!MyTextUtil.checkEmptyInputText(strCountryCode, strPhoneNumber, strPassword)) && (strPassword.length() > 4) )//检查输入，提取出来。
+        if( (!MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber, strPassword)) && (strPassword.length() > 4) )//检查输入，提取出来。
         {
             doingSignUpChangeUI();
 

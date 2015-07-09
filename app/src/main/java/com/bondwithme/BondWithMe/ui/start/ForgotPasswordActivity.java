@@ -72,6 +72,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
                     break;
 
                 case HANDRLER_RM_PHONE_NUMBERNOT_FOUND:
+                    etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     break;
 
                 case HANDRLER_RM_CREATE_VERIFICATION_FAIL:
@@ -195,7 +196,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE)
         {
-
+            doGetVerification();
             return true;
         }
         return false;
@@ -317,7 +318,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
     }
 
     private boolean checkAll() {
-        return ( !MyTextUtil.checkEmptyInputText(strCountryCode, strPhoneNumber) );
+        return ( !MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber) );
     }
 
     private void goVerification() {

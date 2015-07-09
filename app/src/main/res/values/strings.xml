@@ -527,7 +527,8 @@
     <string name="text_start_detail_compulsory_field_error">This is a compulsory field.</string>
     <string name="text_start_phone_number_required">Phone number is required for verification purpose.</string>
     <string name="text_fail_verify_code">Try to verify code again.</string>
-
+    <string name="text_start_new_password">New Password</string>
+    <string name="text_start_re_enter_password">Re-enter Password</string>
 
 
 
@@ -536,4 +537,12 @@
     <string name="Downloaded">Downloaded</string>
 
     <string name="not_support_64bit">Baidu map currently does not support 64-bit CPU</string>
+    <string name="title_activity_select_account">SelectAccountActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_reset_password_successful">ResetPasswordSuccessfulActivity</string>
+    <string name="text_start_password_reset">Password reset</string>
+    <string name="text_start_successful">SUCCESSFUL!</string>
+    <string name="title_start_select_account">Select Account</string>
+
 </resources>

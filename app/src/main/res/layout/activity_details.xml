@@ -35,6 +35,7 @@
 
                 <TextView
                     style="@style/tv_start_light_small"
+                    android:id="@+id/tv_first_name_error"
                     android:text="@string/text_start_detail_compulsory_field_error"
                     android:textColor="@color/stroke_color_red_wrong"
                     android:layout_marginLeft="@dimen/default_content_padding"
@@ -55,12 +56,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_tv"
+                    android:layout_marginLeft="@dimen/default_content_padding"
+                    android:layout_marginRight="@dimen/default_content_padding"
                     android:orientation="horizontal"
                     android:layout_marginTop="@dimen/_32dp">
                         <RadioGroup
                             android:id="@+id/rg_main"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+
                             android:orientation="horizontal"
                             android:layout_centerHorizontal="true">
                                 <RadioButton
@@ -98,7 +102,7 @@
                     android:layout_width="@dimen/_100dp"
                     android:layout_height="@dimen/_100dp"
                     android:layout_gravity="center"
-                    android:visibility="gone"
+                    android:visibility="invisible"
                     android:src="@drawable/album_details" />
 
                 <RelativeLayout
