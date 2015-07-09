@@ -105,6 +105,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             return;
         }
 
+        //表示这个用户已经登陆过。提供给登录界面判断显示sign up 还是 log in
+        //-----------------------------------------------------------------------------
+        PreferencesUtil.saveValue(this, Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
+        //-----------------------------------------------------------------------------
         super.onCreate(savedInstanceState);
     }
 

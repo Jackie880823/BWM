@@ -15,7 +15,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.ui.LoginActivity;
+import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -121,7 +121,7 @@ public class App extends MultiDexApplication {
         if (context != null) {
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
-            Intent intent = new Intent(context, LoginActivity.class);
+            Intent intent = new Intent(context, StartActivity.class);
             ComponentName cn = intent.getComponent();
             Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
             context.startActivity(mainIntent);

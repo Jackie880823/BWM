@@ -486,6 +486,9 @@
     <string name="my_sticker">My Stickies</string>
     <string name="free">Free</string>
 
+    <string name="price">Price:&#160;</string>
+
+
     <string name="text_admin">管理员</string>
     <string name="text_check_in_a_location">地点</string>
 

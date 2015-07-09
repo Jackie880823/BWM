@@ -62,13 +62,16 @@
 
    <!--christopher-->
     <color name="tab_color_login">#c1c1c1</color>
-    <color name="et_hint">#9b9b9b</color>
-    <color name="et_sign_up_phone">#878787</color>
     <color name="bold_text_color_red">#d32b23</color>
     <color name="default_text_color_blue">#0087FF</color>
     <color name="bg_forget_password">#cc363636</color>
-    <color name="default_sticker">#feb400</color><!--  65% -->
-    <color name="login">#3BD42E</color><!--  65% -->
+    <color name="default_sticker">#feb400</color>
+
+    <color name="btn_gradient_color_green_normal">#3BD42E</color>
+    <color name="btn_gradient_color_green_press">#00AD00</color>
+
+    <color name="stroke_color_gray_normal">#a6C7C7C7</color>
+    <color name="stroke_color_red_wrong">#C5270C</color>
 
     <color name="Year">#000000</color><!--  65% -->
 
