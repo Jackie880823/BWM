@@ -55,7 +55,7 @@ public class NewsInfoActivity extends BaseActivity {
     public void initView() {
         webView = getViewById(R.id.webView);
         if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, R.string.text_loading);
+            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
         }
         mProgressDialog.show();
         //begin

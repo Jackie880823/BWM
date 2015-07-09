@@ -28,9 +28,7 @@ import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -199,9 +197,9 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         };
         //for not work in down 11
         if (SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            task.execute(new String[]{});
+            task.execute();
         }
 
     }

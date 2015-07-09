@@ -1,5 +1,8 @@
 package com.gc.materialdesign.views;
 
+import com.gc.materialdesign.R;
+import com.gc.materialdesign.utils.Utils;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,9 +11,6 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.gc.materialdesign.R;
-import com.gc.materialdesign.utils.Utils;
 
 public class ButtonFlat extends Button {
 	
@@ -116,9 +116,5 @@ public class ButtonFlat extends Button {
 	public String getText(){
         	return textButton.getText().toString();
  	}
-
-    public void setTextColor(int color){
-        textButton.setTextColor(color);
-    }
 
 }

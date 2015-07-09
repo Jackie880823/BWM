@@ -6,14 +6,14 @@ import android.support.v4.app.Fragment;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.views.CheckBox;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.gc.materialdesign.views.CheckBox;
+import com.gc.materialdesign.widgets.ProgressDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,7 +78,7 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
 
     @Override
     public void initView() {
-        mProgressDialog = new ProgressDialog(this,R.string.text_loading);
+        mProgressDialog = new ProgressDialog(this,getString(R.string.text_loading));
         mProgressDialog.show();
 
         dob_alert_1 = getViewById(R.id.dob_alert_1);
@@ -102,7 +102,7 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
 
         auto_acp_all.setOncheckListener(new CheckBox.OnCheckListener() {
             @Override
-            public void onCheck(boolean check) {
+            public void onCheck(CheckBox checkBox,boolean check) {
 //                if (autoCheck) {
 //                    autoCheck = false;
 //                    return;
@@ -313,7 +313,7 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
     }
 
     @Override
-    public void onCheck(boolean check) {
+    public void onCheck(CheckBox checkBox,boolean check) {
         if(check){
             checkCount++;
         }else{
