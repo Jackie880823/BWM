@@ -139,8 +139,8 @@ public class SelectPhotosActivity extends BaseActivity {
     public void initView() {
         // 是否为同时添加多张图片
         Intent intent = getIntent();
-        multi = intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        residue = intent.getIntExtra(TabPictureFragment.RESIDUE, 0);
+        multi = intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+        residue = intent.getIntExtra(TabPictureFragment.RESIDUE, 10);
         fragment.setSelectImageUirListener(listener);
     }
 

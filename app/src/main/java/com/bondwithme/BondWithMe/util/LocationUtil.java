@@ -16,12 +16,12 @@ import android.util.Log;
 
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.Map4BaiduActivity;
 import com.bondwithme.BondWithMe.ui.Map4GoogleActivity;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.IOException;
 import java.util.List;
@@ -51,7 +51,12 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
      */
     public static String getLocationAddress(Context context, double latitude, double longitude) {
         String add = null;
-        Address address = getAddress(context, latitude, longitude);
+        Address address = null;
+        try {
+            address = getAddress(context, latitude, longitude);
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
         if(address != null) {
             int maxLine = address.getMaxAddressLineIndex();
             if(maxLine >= 2) {
@@ -72,7 +77,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
      * @param longitude 经度
      * @return 返回地址信息封装对象Address
      */
-    public static Address getAddress(Context context, double latitude, double longitude) {
+    public static Address getAddress(Context context, double latitude, double longitude) throws IOException {
         Log.i(TAG, "getAddress& latitude: " + latitude + "; longitude: " + longitude);
         if(latitude == 0 && longitude == 0) {
             Location location = getLastKnowLocation();
@@ -88,18 +93,15 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
             geoCoder = new Geocoder(context);
         }
 
-        try {
-            List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-            if(addresses != null && addresses.size() > 0) {
-                address = addresses.get(0);
-            }
-        } catch(IOException e) {
-            e.printStackTrace();
+        List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+        if(addresses != null && addresses.size() > 0) {
+            address = addresses.get(0);
         }
         return address;
     }
 
     private static LocationListener locationListener = new LocationUtil();
+
     public static void setRequestLocationUpdates(Context context) {
         if(lm == null) {
             lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -129,12 +131,17 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
             lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         }
 
-//        if(currentLocation != null) {
-//            Address address = getAddress(context, currentLocation.getLatitude(), currentLocation.getLongitude());
-//            if(address != null) {
-//                Log.i(TAG, "getPlacePickerIntent& locale: country: " + address.getCountryName());
-//            }
-//        }
+        if(currentLocation != null) {
+            Address address = null;
+            try {
+                address = getAddress(context, currentLocation.getLatitude(), currentLocation.getLongitude());
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+            if(address != null) {
+                Log.i(TAG, "getPlacePickerIntent& locale: country: " + address.getCountryName());
+            }
+        }
 
         intent.putExtra(Constant.EXTRA_LOCATION_NAME, name);
         intent.putExtra(Constant.EXTRA_LATITUDE, latitude);
@@ -329,7 +336,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
 
     public static LatLng convert2BaiduLocation(Context context, String latitude, String longitude) {
 
-        LatLng sourceLatLng = new LatLng(Double.valueOf(latitude),Double.valueOf(longitude));
+        LatLng sourceLatLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
         // 将google地图、soso地图、aliyun地图、mapabc地图和amap地图// 所用坐标转换成百度坐标
         CoordinateConverter converter = new CoordinateConverter();
         converter.from(CoordinateConverter.CoordType.COMMON);
@@ -338,11 +345,11 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         LatLng desLatLng = converter.convert();
 
         // 将GPS设备采集的原始GPS坐标转换成百度坐标
-//        CoordinateConverter converter = new CoordinateConverter();
-//        converter.from(CoordinateConverter.CoordType.GPS);
-//        // sourceLatLng待转换坐标
-//        converter.coord(sourceLatLng);
-//        LatLng desLatLng = converter.convert();
+        //        CoordinateConverter converter = new CoordinateConverter();
+        //        converter.from(CoordinateConverter.CoordType.GPS);
+        //        // sourceLatLng待转换坐标
+        //        converter.coord(sourceLatLng);
+        //        LatLng desLatLng = converter.convert();
 
         return desLatLng;
 

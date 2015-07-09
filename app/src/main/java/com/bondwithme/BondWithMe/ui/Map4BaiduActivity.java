@@ -413,7 +413,7 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
             switch(msg.what) {
                 case ADD_MARKER:
                     Bundle bundle = msg.getData();
-                    if(bundle != null) {
+                    if(bundle != null && poiInfos != null) {
                         //                        addTarget(new LatLng(bundle.getDouble(Constant.EXTRA_LATITUDE, 0), bundle.getDouble(Constant.EXTRA_LONGITUDE, 0)), msg.obj.toString());
                         LatLng latLng = new LatLng(bundle.getDouble(Constant.EXTRA_LATITUDE, 0), bundle.getDouble(Constant.EXTRA_LONGITUDE, 0));
                         PoiInfo poiInfo = new PoiInfo();

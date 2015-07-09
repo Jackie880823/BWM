@@ -3,6 +3,8 @@ package com.bondwithme.BondWithMe.ui.more;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -24,7 +26,8 @@ import java.util.Map;
 
 public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheckListener{
 
-    ProgressDialog mProgressDialog;
+    View mProgressDialog;
+    LinearLayout llAutoAccept;
 
     private int checkCount = 0;
 
@@ -71,8 +74,10 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
     @Override
     public void initView() {
 
-        mProgressDialog = new ProgressDialog(this,getString(R.string.text_loading));
-        mProgressDialog.show();
+        mProgressDialog = getViewById(R.id.rl_progress);
+        mProgressDialog.setVisibility(View.VISIBLE);
+
+        llAutoAccept = getViewById(R.id.ll_autoaccept);
 
         auto_acp_all = getViewById(R.id.auto_acp_all);
         auto_acp_chd = getViewById(R.id.auto_acp_chd);
@@ -164,7 +169,7 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
 
     private void updateConfig(){
 
-        mProgressDialog.show();
+        mProgressDialog.setVisibility(View.VISIBLE);
 
         Map<String, String> params = new HashMap<>();
 
@@ -187,7 +192,7 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+                mProgressDialog.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -213,17 +218,21 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
         });
     }
 
+    boolean result;
     @Override
     public void requestData() {
         new HttpTools(this).get(String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id()),null,this,new HttpCallback() {
             @Override
             public void onStart() {
-
+                result = false;
             }
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+                mProgressDialog.setVisibility(View.INVISIBLE);
+                if(result) {
+                    llAutoAccept.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -236,6 +245,7 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
 
 //                        JSONObject acceptConfig = jsonObject.getJSONObject("auto");
                         bindConfig2Accept(jsonObject);
+                        result = true;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -289,7 +299,7 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
         super.onDestroy();
         if (mProgressDialog != null)
         {
-            mProgressDialog.dismiss();
+            mProgressDialog.setVisibility(View.INVISIBLE);
         }
     }
 }

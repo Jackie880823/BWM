@@ -1,4 +1,4 @@
-package com.madx.bwm.ui.more;
+package com.bondwithme.BondWithMe.ui.more.Archive;
 
 import android.content.Intent;
 import android.net.Uri;

@@ -1,4 +1,4 @@
-package com.madx.bwm.entity;
+package com.bondwithme.BondWithMe.entity;
 
 import java.io.Serializable;
 

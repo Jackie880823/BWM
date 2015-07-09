@@ -2,6 +2,8 @@ package com.bondwithme.BondWithMe.ui.more;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -23,10 +25,11 @@ import java.util.Map;
 
 public class GroupPrivacyActivity extends BaseActivity {
 
-    ProgressDialog mProgressDialog;
+    View mProgressDialog;
     private CheckBox cbTO;
     private CheckBox cbTM;
     private CheckBox cbGC;
+    private LinearLayout llGroupPrivacy;
 
 
     @Override
@@ -65,8 +68,10 @@ public class GroupPrivacyActivity extends BaseActivity {
     @Override
     public void initView() {
 
-        mProgressDialog = new ProgressDialog(this,getString(R.string.text_loading));
-        mProgressDialog.show();
+        mProgressDialog = getViewById(R.id.rl_progress);
+        mProgressDialog.setVisibility(View.VISIBLE);
+
+        llGroupPrivacy = getViewById(R.id.ll_group_privacy);
 
         cbTO = getViewById(R.id.cb_to_other);
         cbTM = getViewById(R.id.cb_to_me);
@@ -77,7 +82,7 @@ public class GroupPrivacyActivity extends BaseActivity {
 
     private void updateConfig(){
 
-        mProgressDialog.show();
+        mProgressDialog.setVisibility(View.VISIBLE);
 
         Map<String, String> params = new HashMap<>();
 
@@ -97,7 +102,7 @@ public class GroupPrivacyActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+                mProgressDialog.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -123,6 +128,7 @@ public class GroupPrivacyActivity extends BaseActivity {
         });
     }
 
+    boolean result;
     @Override
     public void requestData() {
         new HttpTools(this).get(String.format(Constant.API_SETTING_CONFIG, MainActivity.getUser().getUser_id()), null,this, new HttpCallback() {
@@ -133,7 +139,10 @@ public class GroupPrivacyActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+                mProgressDialog.setVisibility(View.INVISIBLE);
+                if(result) {
+                    llGroupPrivacy.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -148,6 +157,7 @@ public class GroupPrivacyActivity extends BaseActivity {
 //                        bindConfig2Accept(jsonObject);
 
                         bindConfig2Group(jsonObject);
+                        result = true;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -193,5 +203,14 @@ public class GroupPrivacyActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mProgressDialog != null)
+        {
+            mProgressDialog.setVisibility(View.INVISIBLE);
+        }
     }
 }

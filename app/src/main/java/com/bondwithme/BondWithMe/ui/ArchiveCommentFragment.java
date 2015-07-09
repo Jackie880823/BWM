@@ -1,12 +1,11 @@
-package com.madx.bwm.ui;
+package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
 import android.view.View;
 
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.ui.BaseFragment;
-import com.madx.bwm.adapter.ArchiveCommentAdapter;
-import com.madx.bwm.entity.ArchiveCommentEntity;
+import com.bondwithme.BondWithMe.adapter.ArchiveCommentAdapter;
+import com.bondwithme.BondWithMe.entity.ArchiveCommentEntity;
 
 import java.util.ArrayList;
 import java.util.List;

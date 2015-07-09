@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.gc.materialdesign.widgets.Dialog;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
@@ -473,7 +474,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(Intent.ACTION_PICK, null);
+                Intent intent = new Intent(CreateGroupDialogActivity.this, SelectPhotosActivity.class);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, REQUEST_HEAD_PHOTO);
