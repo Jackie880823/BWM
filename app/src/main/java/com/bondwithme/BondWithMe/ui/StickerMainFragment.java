@@ -53,6 +53,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
     private static final int CLICK_POSITION = 0X11;
     private static final int GET_DATA = 0X12;
     private LinkedHashMap<Integer, String> positionMap = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, StickerGridViewAdapter> adapterMap = new LinkedHashMap<>();
     private int lastPage;
 
     private void setPage(String clickName, int position) {
@@ -105,7 +106,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                     List<String> list = new ArrayList<>();
                     for (File file1 : files) {
                         String filePath = file1.getAbsolutePath();
-                        if (filePath.substring(filePath.lastIndexOf(File.separator) + 1).contains("B")) {
+                        if ((filePath.substring(0,filePath.lastIndexOf("."))).endsWith("S")) {
                             list.add(filePath);
                         }
                     }
@@ -182,6 +183,10 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
         public void onPageSelected(int arg0) {
             String nowName = positionMap.get(arg0);
             String lastName = positionMap.get(lastPage);
+            List<String> stringList = STICKER_LIST_MAP.get(nowName);
+            if (adapterMap.get(arg0).getCount() == 0) {
+                adapterMap.get(arg0).addData(stringList);
+            }
             if (lastName.equals(nowName)) {
                 List<Integer> list = new ArrayList<>();
                 for (Integer key : positionMap.keySet()) {
@@ -214,14 +219,6 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
 
         public StickerViewPagerAdapter(List<NoScrollGridView> array) {
             this.mLists = array;
-        }
-
-        public void setNewData(List<NoScrollGridView> array) {
-            if (array != null && array.size() > 0) {
-                mLists.clear();
-                mLists.addAll(array);
-                notifyDataSetChanged();
-            }
         }
 
         @Override
@@ -265,9 +262,14 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                 NoScrollGridView gv;
                 for (int i = 0; i < count; i++) {
                     positionMap.put(position, entry.getKey());
-                    position++;
                     gv = new NoScrollGridView(mContext);
-                    final StickerGridViewAdapter gridViewAdapter = new StickerGridViewAdapter(mContext, list, i);
+                    List<String> dataList = new ArrayList<>();
+                    if (i == 0) {
+                        dataList.addAll(list);
+                    }
+                    final StickerGridViewAdapter gridViewAdapter = new StickerGridViewAdapter(mContext, dataList, i);
+                    adapterMap.put(position, gridViewAdapter);
+                    position++;
                     gv.setAdapter(gridViewAdapter);
                     gv.setGravity(Gravity.CENTER);
                     gv.setClickable(true);
@@ -309,14 +311,31 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
     class StickerGridViewAdapter extends BaseAdapter {
         private List<String> stringList = new ArrayList<>();
         private Context mContext;
+        private int position;
 
         public StickerGridViewAdapter(Context mContext, List<String> list, int spot) {
             this.mContext = mContext;
-            int i = spot * SHOW_NUM;
-            int end = i + SHOW_NUM;
-            while ((i < list.size()) && (i < end)) {
-                stringList.add(list.get(i));
-                i++;
+            position = spot;
+            if (null != list && list.size() > 0) {
+                int i = spot * SHOW_NUM;
+                int end = i + SHOW_NUM;
+                while ((i < list.size()) && (i < end)) {
+                    stringList.add(list.get(i));
+                    i++;
+                }
+            }
+        }
+
+        public void addData(List<String> list) {
+            stringList.clear();
+            if (null != list && list.size() > 0) {
+                int i = position * SHOW_NUM;
+                int end = i + SHOW_NUM;
+                while ((i < list.size()) && (i < end)) {
+                    stringList.add(list.get(i));
+                    i++;
+                }
+                notifyDataSetChanged();
             }
         }
 

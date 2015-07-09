@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
+import com.bondwithme.BondWithMe.ui.BaseFragment;
+
 import java.util.List;
 
 
@@ -17,23 +19,19 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter implements View
 	private FragmentManager fm;
 
 	public MyFragmentPagerAdapter(FragmentManager fm, Context context,
-			ViewPager pager,List<Fragment> fragments) {
+								  ViewPager pager,List<Fragment> fragments) {
 		super(fm);
-        this.fm = fm;
+		this.fm = fm;
 		this.pager = pager;
 		this.fragments = fragments;
 		this.pager.setAdapter(this);
 		this.pager.setOnPageChangeListener(this);
 	}
-	
+
 
 	@Override
 	public Fragment getItem(int position) {
 		return fragments.get(position);
-	}
-	
-	public void destroyItem(ViewGroup container, int position, Object object) {
-//		super.destroyItem(container, position, object);
 	}
 
 	@Override
@@ -45,10 +43,10 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter implements View
 	}
 
 	public void onPageScrolled(int position, float positionOffset,
-			int positionOffsetPixesl) {
+							   int positionOffsetPixesl) {
 	}
-	
-	
+
+
 	public void goNext(){
 		int nextItem = pager.getCurrentItem()+1;
 		if(nextItem<getCount())
@@ -61,10 +59,10 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter implements View
 	}
 
 	Fragment currentFragment;
-	
+
 	@Override
 	public void setPrimaryItem(ViewGroup container, int position, Object object) {
-	    super.setPrimaryItem(container, position, object);
+		super.setPrimaryItem(container, position, object);
 	}
 
 	@Override
@@ -78,19 +76,28 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter implements View
 	public void setOnMyPageChangeListenner(OnPageChangeListenner pcl){
 		onPageChangeListenner = pcl;
 	}
-	
+
 	public interface OnPageChangeListenner{
 		void onPageChange(int position);
 	}
 
-    public Fragment getActiveFragment(ViewPager container, int position) {
-        String name = makeFragmentName(container.getId(), position);
-        return  fm.findFragmentByTag(name);
-    }
+	public Fragment getActiveFragment(ViewPager container, int position) {
+		String name = makeFragmentName(container.getId(), position);
+		return  fm.findFragmentByTag(name);
+	}
 
-    private static String makeFragmentName(int viewId, int index) {
-        return "android:switcher:" + viewId + ":" + index;
-    }
+	private static String makeFragmentName(int viewId, int index) {
+		return "android:switcher:" + viewId + ":" + index;
+	}
 
-	
+	@Override
+	public int getItemPosition(Object object) {
+
+		//刷新fragment
+		if(object instanceof BaseFragment) {
+			((BaseFragment)object).refreshView();
+		}
+		return POSITION_NONE;
+	}
+
 }

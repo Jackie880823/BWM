@@ -33,10 +33,6 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.Dialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.FamilyGroupAdapter;
@@ -50,6 +46,10 @@ import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
+import com.gc.materialdesign.widgets.Dialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -679,7 +679,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     if ("Success".equals(jsonObject.getString("response_status"))) {
                         String urlString = jsonObject.getString("filePath");
                         if (!TextUtils.isEmpty(urlString)) {
-                            getPdf(urlString);
+                            showPDF(urlString);
                         }
                     } else {
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
@@ -1065,5 +1065,13 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 etSearch.setSelection(etSearch.length());
                 break;
         }
+    }
+
+    private void showPDF(String url) {
+        if(TextUtils.isEmpty(url))
+            return;
+        Intent intent = new Intent(getActivity(),ViewPDFActivity.class);
+        intent.putExtra(ViewPDFActivity.PARAM_PDF_URL,url);
+        startActivity(intent);
     }
 }

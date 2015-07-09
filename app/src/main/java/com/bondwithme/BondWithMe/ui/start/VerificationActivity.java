@@ -759,7 +759,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
     private void goBackAgain()
     {
-        MessageUtil.showMessage(this, getString(R.string.text_fail_verify_code));
+        MessageUtil.showMessage(this, getString(R.string.text_start_fail_verify_code));
         finish();
     }
 

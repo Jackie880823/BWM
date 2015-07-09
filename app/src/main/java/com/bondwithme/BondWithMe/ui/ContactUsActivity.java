@@ -132,7 +132,7 @@ public class ContactUsActivity extends BaseActivity {
     private void sendMail(){
         if(validateForm()) {
 
-            mProgressDialog = new ProgressDialog(this,R.string.text_sending);
+            mProgressDialog = new ProgressDialog(this,getString(R.string.text_sending));
             mProgressDialog.show();
 
             Map<String, String> params = new HashMap<>();

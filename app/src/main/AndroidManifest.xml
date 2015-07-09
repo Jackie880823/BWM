@@ -85,10 +85,9 @@
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="@string/baidu_maps_key" />
-
-        <!-- android:value="@string/baidu_maps_key_debug" /> -->
-        <!-- android:value="@string/jackie_baidu_maps_key_debug" /> -->
+        android:value="@string/baidu_maps_key_debug" />
+            <!--android:value="@string/baidu_maps_key" />-->
+        <!--android:value="@string/jackie_baidu_maps_key_debug" />-->
 
         <service
             android:name="com.baidu.location.f"
@@ -404,6 +403,9 @@
         <activity
             android:name=".ui.AlbumDetailActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.bondwithme.BondWithMe.ui.ViewPDFActivity"
+             />
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
@@ -539,8 +541,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
         <activity
-            android:name=".ui.start.ResetPasswordSuccessfulActivity"
-            android:label="@string/title_activity_reset_password_successful" >
+            android:name=".ui.start.ResetPasswordSuccessfulActivity">
         </activity>
     </application>
 

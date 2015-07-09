@@ -4,15 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.gc.materialdesign.views.CheckBox;
 import com.bondwithme.BondWithMe.R;
+import com.gc.materialdesign.views.CheckBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,10 +83,8 @@ public class ContactCursorAdapter extends CursorRecyclerViewAdapter<ContactCurso
                     if(event.getAction()==MotionEvent.ACTION_UP) {
                         try {
                             if (cb_selector.isCheck()) {
-                                Log.i("", "onClick=========1" + getAdapterPosition());
                                 selectContactIds.remove(getAdapterPosition());
                             } else {
-                                Log.i("", "onClick=========2" + getAdapterPosition());
                                 selectContactIds.add(getAdapterPosition());
                             }
                         } catch (Exception e) {

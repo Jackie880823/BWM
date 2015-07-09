@@ -1,6 +1,9 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +27,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.ui.wall.WallNewActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
@@ -319,7 +323,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     @Override
     public void initView() {
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
-
+        IS_FIRST_LOGIN += App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
         if (isFirstLogin) {
             new Thread() {
@@ -390,6 +394,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         red_point_5 = getViewById(R.id.red_point_5);
 
         NotificationUtil.setNotificationOtherHandle(this);
+
+
+        //注册广播接收器
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("refresh");
+        registerReceiver(mReceiver, filter);
     }
 
     private boolean isEventFragmentDate() {
@@ -618,4 +628,32 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         }
         super.onDestroy();
     }
+
+    private void updateViewPager() {
+//        data.clear();
+//        data.add("X");
+//        data.add("Y");
+//        data.add("Z");
+//        myViewPager.getAdapter().notifyDataSetChanged();
+    }
+
+//    @Override
+//    public void onConfigurationChanged(Configuration newConfig) {
+//        super.onConfigurationChanged(newConfig);
+//        LogUtil.i("", "onConfigurationChanged====================");
+//        //restart
+//            Intent intent = getIntent();
+//            finish();
+//            startActivity(intent);
+//    }
+
+    /**更新UI的广播接收器*/
+    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals("refresh")){
+                tabPagerAdapter.notifyDataSetChanged();
+            }
+        }
+    };
 }

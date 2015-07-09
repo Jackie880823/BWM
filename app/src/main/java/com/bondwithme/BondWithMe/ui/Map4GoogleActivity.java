@@ -447,6 +447,13 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
     }
 
+    @Override
+    protected void msgBarChangeByStatus(int status) {
+        if(status == View.GONE) {
+            tvMsg.setText(R.string.msg_no_internet);
+        }
+        super.msgBarChangeByStatus(status);
+    }
 
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
@@ -505,8 +512,22 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
+                    Address address = null;
+                    try {
+                        address = LocationUtil.getAddress(Map4GoogleActivity.this, latLng.latitude, latLng.longitude);
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                        msgBarChangeByStatus(View.VISIBLE);
+                        tvMsg.setText(getString(R.string.msg_service_not_available));
+                    }
+                    if(address == null) {
+                        // 没有获取到地址信息返回不做任何处理
+                        return;
+                    } else {
+                        msgBarChangeByStatus(View.GONE);
+                    }
+
                     toLocation = false;
-                    Address address = LocationUtil.getAddress(Map4GoogleActivity.this, latLng.latitude, latLng.longitude);
 
                     Marker marker = mMap.addMarker(new MarkerOptions().position(latLng));
 
@@ -609,7 +630,13 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
             long lastTime = beginTime;
             //wait 10 second
             while(lastTime - beginTime < 10 * 1000) {
-                address = LocationUtil.getAddress(getApplicationContext(), latitude, longitude);
+                try {
+                    address = LocationUtil.getAddress(getApplicationContext(), latitude, longitude);
+                } catch(IOException e) {
+                    e.printStackTrace();
+                    msgBarChangeByStatus(View.VISIBLE);
+                    tvMsg.setText(getString(R.string.msg_service_not_available));
+                }
                 if(address == null) {
                     try {
                         Thread.sleep(200);
@@ -618,6 +645,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                     }
                     lastTime = System.currentTimeMillis();
                 } else {
+                    msgBarChangeByStatus(View.GONE);
                     break;
                 }
             }
@@ -669,7 +697,11 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
      * @param marker 持有弹出框的标识封装对象
      * @return 返回持有弹出框的标识封装对象
      */
-    private Marker setMarkerContent(Address address, Marker marker) {
+    private void setMarkerContent(Address address, Marker marker) {
+        if(address == null) {
+            return;
+        }
+
         String title;
         String snippet;
 
@@ -689,7 +721,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
 
         marker.showInfoWindow();
 
-        return marker;
+        return;
     }
 
     private void setMyLocation(double latitude, double longitude) {
