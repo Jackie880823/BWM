@@ -234,6 +234,7 @@ public class Constant {
 
     public static final String USER_APP_OS = "android";
 
+
     public static final String SUCCESS = "Success";
     public static final String FAIL = "Fail";
     public static final String TYPE = "type";
@@ -248,6 +249,12 @@ public class Constant {
 
     public static final String API_START_FORGOT_PASSWORD_GET_CODE = API_SERVER+"/bondwithme/index.php/api/forgetPassword"; //忘记密码，获取验证码
     public static final String API_START_FORGOT_PASSWORD_VERIFY_CODE = API_SERVER+"/bondwithme/index.php/api/verification"; //verify code(忘记密码)
+
+
+    public static final String STATUS_SUCCESS = "Success";
+    public static final String STATUS_FAIL = "Fail";
+
+
 
 
 }
