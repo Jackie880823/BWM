@@ -27,7 +27,6 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.ui.wall.WallNewActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
@@ -626,6 +625,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         if (snackBar != null) {
             snackBar.dismiss();
         }
+        unregisterReceiver(mReceiver);
         super.onDestroy();
     }
 
