@@ -44,6 +44,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     Fragment fragment;
     protected View msg_bar;
     protected TextView tvMsg;
+    protected Bundle mSavedInstanceState;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -66,6 +67,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSavedInstanceState = savedInstanceState;
         // 打开Activity隐藏软键盘；
         //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(getLayout());
