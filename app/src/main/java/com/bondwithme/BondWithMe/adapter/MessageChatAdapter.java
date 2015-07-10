@@ -46,6 +46,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -342,9 +343,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void downloadAsyncTask(final ProgressBarCircularIndeterminate progressBar, final GifImageView gifImageView, final String path, final int defaultResource) {
-        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
             @Override
-            protected byte[] doInBackground(String... params) {
+            protected byte[] doInBackground(Object... params) {
                 return getImageByte(path);
             }
 
@@ -386,10 +387,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     }
 
     public void downloadPngAsyncTask(final ProgressBarCircularIndeterminate progressBar, final ImageView imageView, final String path, final int defaultResource) {
-        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
 
             @Override
-            protected byte[] doInBackground(String... params) {
+            protected byte[] doInBackground(Object... params) {
                 return getImageByte(path);
             }
 
