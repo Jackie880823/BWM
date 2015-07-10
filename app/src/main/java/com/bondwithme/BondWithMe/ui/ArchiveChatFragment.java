@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.adapter.ArchiveChatAdapter;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
 
@@ -22,7 +23,7 @@ import java.util.List;
 public class ArchiveChatFragment extends BaseFragment<Activity> implements View.OnClickListener {
     private static final String TAG = ArchiveChatFragment.class.getSimpleName();
     //如果是0，则是group，否则是private
-    private String tag;
+//    private String tag;
     private RecyclerView rvList;
     private MySwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh = true;
@@ -34,6 +35,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements View.
     private String archive_id;
     private View vProgress;
 
+    private ArchiveChatAdapter adapter;
     private List<ArchiveChatEntity> data = new ArrayList<>();
 
     public static ArchiveChatFragment newInstance(String... params) {
@@ -43,9 +45,9 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements View.
     public ArchiveChatFragment(){
         super();
     }
-    public ArchiveChatFragment(String params){
-        tag = params;
-    }
+//    public ArchiveChatFragment(String params){
+//        tag = params;
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

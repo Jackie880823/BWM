@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.adapter.PrivateListAdapter;
+import com.bondwithme.BondWithMe.entity.PrivateListEntity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 
 
@@ -14,6 +16,8 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
  * Created by liangzemian on 15/6/30.
  */
 public class PrivateListActivity extends BaseActivity implements View.OnClickListener{
+    private PrivateListAdapter adapter;
+    private PrivateListEntity data;
     private RelativeLayout rl1;
     private RelativeLayout rl2;
 

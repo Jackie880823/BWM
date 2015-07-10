@@ -141,7 +141,7 @@ public class TellAFriendsActivity extends BaseActivity {
 
     private void sendContact() {
         if (validateForm()) {
-            mProgressDialog = new ProgressDialog(this, getString(R.string.text_waiting));
+            mProgressDialog = new ProgressDialog(this, getString(R.string.text_sending));
             mProgressDialog.show();
 
             ContactMessageEntity messageEntity = generateMessage("");
@@ -173,7 +173,7 @@ public class TellAFriendsActivity extends BaseActivity {
 
                 @Override
                 public void onResult(String string) {
-                    MessageUtil.showMessage(TellAFriendsActivity.this, R.string.msg_action_successed);
+                    MessageUtil.showMessage(TellAFriendsActivity.this, R.string.action_invitation_successful);
                 }
 
                 @Override

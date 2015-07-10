@@ -18,6 +18,10 @@ public class ArchiveCommentFragment extends BaseFragment<Activity> implements Vi
     private List<ArchiveCommentEntity> data = new ArrayList<>();
     private ArchiveCommentAdapter adapter;
 
+    public static ArchiveCommentFragment newInstance(String... params){
+        return createInstance(new ArchiveCommentFragment(),params[0]);
+    }
+
     @Override
     public void setLayoutId() {
         this.layoutId = R.layout.fragment_archive_comment;
