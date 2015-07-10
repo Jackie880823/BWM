@@ -494,7 +494,6 @@
     <string name="text_admin">管理员</string>
     <string name="text_check_in_a_location">地点</string>
     <string name="text_add_name_empty">用户名不能为空</string>
-    <string name="text_add_relationship_empty">请选择关系</string>
 
 
     <string name="text_post_and">现在</string>
