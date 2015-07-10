@@ -29,6 +29,7 @@ import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.util.SharedPreferencesUtils;
 import com.bondwithme.BondWithMe.widget.DatePicker;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.TimePicker;
@@ -105,14 +106,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         // Required empty public constructor
     }
 
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_event, container, false);
-//    }
-
     @Override
     public void setLayoutId() {
         this.layoutId = R.layout.fragment_event_new;
@@ -172,7 +165,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         getViewById(R.id.rl_add_members).setOnClickListener(this);
         position_choose.setOnClickListener(this);
         item_date.setOnClickListener(this);
-
 
         //点击事件
         getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {

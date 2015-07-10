@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.ArchiveCommentFragment;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 
 
@@ -13,10 +14,10 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
  */
 public class ArchivePrivateCommentActivity extends BaseActivity implements View.OnClickListener{
 
-    @Override
-    public int getLayout() {
-        return R.layout.activity_more_archive_groupcomment;
-    }
+//    @Override
+//    public int getLayout() {
+//        return R.layout.activity_more_archive_groupcomment;
+//    }
 
     @Override
     protected void initBottomBar() {
@@ -42,7 +43,7 @@ public class ArchivePrivateCommentActivity extends BaseActivity implements View.
 
     @Override
     protected Fragment getFragment() {
-        return null;
+        return new ArchiveCommentFragment().newInstance();
     }
 
     @Override
