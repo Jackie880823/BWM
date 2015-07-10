@@ -81,6 +81,7 @@ public class ViaIdNameActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(ViaIdNameActivity.this, RelationshipActivity.class), 1);
+
             }
         });
 
@@ -90,6 +91,11 @@ public class ViaIdNameActivity extends BaseActivity {
 
                 if(!TextUtils.isEmpty(etInfo.getText()) && !TextUtils.isEmpty(tvRelationship.getText())) {
                     srAddMember();
+                }else {
+                    if (TextUtils.isEmpty(tvRelationship.getText())) {
+                        Toast.makeText(ViaIdNameActivity.this, getResources().getString(R.string.text_add_relationship_empty), Toast.LENGTH_SHORT).show();
+
+                    }
                 }
             }
         });

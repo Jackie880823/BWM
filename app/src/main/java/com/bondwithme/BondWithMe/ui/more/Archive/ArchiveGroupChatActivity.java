@@ -7,6 +7,7 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.ArchiveChatFragment;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 
 
@@ -16,10 +17,10 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
 public class ArchiveGroupChatActivity extends BaseActivity implements View.OnClickListener{
     private CardView c1;
 
-    @Override
-    public int getLayout() {
-        return R.layout.activity_more_archive_groupchat;
-    }
+//    @Override
+//    public int getLayout() {
+//        return R.layout.activity_more_archive_groupchat;
+//    }
 
     @Override
     protected void initBottomBar() {
@@ -45,7 +46,7 @@ public class ArchiveGroupChatActivity extends BaseActivity implements View.OnCli
 
     @Override
     protected Fragment getFragment() {
-        return null;
+        return ArchiveChatFragment.newInstance();
     }
 
     @Override

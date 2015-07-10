@@ -14,20 +14,22 @@ import java.util.List;
 /**
  * Created by liangzemian on 15/7/2.
  */
-public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public class ArchiveCommentAdapter extends RecyclerView.Adapter<ArchiveCommentAdapter.VHItem> {
 
     private Context mContext;
     private List<ArchiveCommentEntity> data;
+
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ArchiveCommentAdapter.VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.archive_comment_item,parent,false);
         return new VHItem(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(VHItem holder, int position) {
 
     }
+
 
     @Override
     public int getItemCount() {
