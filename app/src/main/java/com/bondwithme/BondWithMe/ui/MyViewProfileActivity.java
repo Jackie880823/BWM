@@ -100,11 +100,11 @@ public class MyViewProfileActivity extends BaseActivity {
     /**
      * 头像缓存文件名称
      */
-    public final static String CACHE_PIC_NAME = "head_cache";
+    public final static String CACHE_PIC_NAME = "head_cache.png";
     /**
      * 临时文件用户裁剪
      */
-    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
+    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp.png";
 
     @Override
     public int getLayout() {
@@ -503,7 +503,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
                 // 取得裁剪后的图片
                 case REQUEST_HEAD_FINAL:
-                    if (data != null) {
+//                    if (data != null) {
                         Bitmap photo;
                         try {
                             imagePath = mCropImagedUri.getPath();
@@ -519,7 +519,7 @@ public class MyViewProfileActivity extends BaseActivity {
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
-                    }
+//                    }
                     break;
 
                 default:
@@ -602,6 +602,7 @@ public class MyViewProfileActivity extends BaseActivity {
             intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
             intent.putExtra("noFaceDetection", true);
             //		if(fromPhoto){
+//            File f = new File(PicturesCacheUtil.getPicPath(MyViewProfileActivity.this,CACHE_PIC_NAME));
             File f = PicturesCacheUtil.getCachePicFileByName(MyViewProfileActivity.this, CACHE_PIC_NAME);
             mCropImagedUri = Uri.fromFile(f);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);

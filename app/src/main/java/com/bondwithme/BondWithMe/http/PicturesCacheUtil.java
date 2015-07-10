@@ -70,7 +70,7 @@ public class PicturesCacheUtil extends FileUtil {
      * @return
      */
     public static String getPicPath(Context context, String prefix) {
-        return getSavePicPath(context) + String.format(SAVE_PIC_NAME, prefix, "" + System.currentTimeMillis());
+        return getSavePicPath(context) + String.format(SAVE_PIC_NAME, prefix, "" + System.currentTimeMillis()+".png");
     }
 
     /**
