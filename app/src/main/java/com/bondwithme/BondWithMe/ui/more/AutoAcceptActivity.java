@@ -95,7 +95,7 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
 
         auto_acp_all.setOncheckListener(new CheckBox.OnCheckListener() {
             @Override
-            public void onCheck(boolean check) {
+            public void onCheck(CheckBox checkBox,boolean check) {
 //                if (autoCheck) {
 //                    autoCheck = false;
 //                    return;
@@ -277,7 +277,7 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
     }
 
     @Override
-    public void onCheck(boolean check) {
+    public void onCheck(CheckBox checkBox,boolean check) {
         if(check){
             checkCount++;
         }else{

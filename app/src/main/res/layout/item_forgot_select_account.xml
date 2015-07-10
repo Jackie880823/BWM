@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/default_view_margin"
+    android:background="@color/default_text_color_while"
+    android:layout_gravity="center">
+        <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+            android:id="@+id/cniv_main"
+            android:layout_width="@dimen/default_user_head_width_height"
+            android:layout_height="@dimen/default_user_head_width_height"
+            android:layout_centerVertical="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/cniv_main"
+            android:layout_toLeftOf="@+id/iv_right"
+            android:layout_marginLeft="@dimen/default_content_padding"
+            android:orientation="vertical"
+            android:layout_centerVertical="true">
+                <TextView
+                    android:id="@+id/tv_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/text_medium_size"
+                    android:text="skdlfjalsfd"
+                    android:textColor="@color/default_text_color_dark"/>
+        </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_right"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/profile_right"
+        android:padding="@dimen/default_content_padding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        />
+</RelativeLayout>

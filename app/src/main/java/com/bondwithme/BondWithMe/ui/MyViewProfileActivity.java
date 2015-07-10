@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,6 +28,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -73,7 +75,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private TextView tvGender;
     private RelativeLayout rlGender;
     private TextView etEmail;
-    private TextView etRegion;
+    private EditText etRegion;
     private Dialog showSelectDialog;
     private Dialog showCameraAlbum;
     private Boolean isUploadName = false;
@@ -252,8 +254,8 @@ public class MyViewProfileActivity extends BaseActivity {
                 }
             }
         }
-        //etRegion.setText(MainActivity.getUser().getUser_location_name());
-        etRegion.setKeyListener(null);
+        etRegion.setText(MainActivity.getUser().getUser_location_name());
+//        etRegion.setKeyListener(null);
         String dofeel_code = MainActivity.getUser().getDofeel_code();
         if (!TextUtils.isEmpty(dofeel_code)) {
             try {
@@ -452,7 +454,7 @@ public class MyViewProfileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(Intent.ACTION_PICK, null);
+                Intent intent = new Intent(MyViewProfileActivity.this, SelectPhotosActivity.class);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, REQUEST_HEAD_PHOTO);

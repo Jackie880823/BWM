@@ -63,7 +63,7 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
     @Override
     public void initView() {
 
-        progressDialog = new ProgressDialog(getActivity(), R.string.text_loading);
+        progressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
 
         rvList = getViewById(R.id.rv_users);
 

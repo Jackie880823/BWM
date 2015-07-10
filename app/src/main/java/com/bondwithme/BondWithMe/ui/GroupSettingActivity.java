@@ -365,7 +365,7 @@ public class GroupSettingActivity extends BaseActivity {
             viewHolder.cniMain = (CircularNetworkImage) convertView.findViewById(R.id.cni_main);
             viewHolder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
             viewHolder.tvAdmin = (TextView) convertView.findViewById(R.id.tv_admin);
-            viewHolder.ivWaitting = (ImageView) convertView.findViewById(R.id.iv_waitting);
+            viewHolder.ivWaitting = (ImageView) convertView.findViewById(R.id.iv_right);
 
             VolleyUtil.initNetworkImageView(mContext, viewHolder.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 

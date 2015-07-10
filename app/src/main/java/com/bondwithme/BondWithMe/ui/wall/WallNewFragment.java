@@ -855,7 +855,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         Log.i(TAG, "onActivityResult");
 
         // 没有退出编辑不用保存蓝草稿
-        draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).commit();
+        if(draftPreferences != null) {
+            draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).commit();
+        }
 
         if(resultCode == getActivity().RESULT_OK) {
             switch(requestCode) {
@@ -893,6 +895,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     Log.i(TAG, "onActivityResult: size = " + at_members_data.size());
                     String groups = data.getStringExtra("groups_data");
                     at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {}.getType());
+                    changeTab(WALL_TAB_WORD);
                     changeAtDesc(true);
                     break;
             }

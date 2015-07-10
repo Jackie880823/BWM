@@ -42,7 +42,7 @@ public class StickerHorizontalRecyclerAdapter extends RecyclerView.Adapter<Stick
                 if (listString != null && listString.size() > 0) {
                     for (String string : listString) {
                         String stickerName = string.substring(string.lastIndexOf(File.separator) + 1);
-                        if (stickerName.startsWith("1_B")) {
+                        if (stickerName.startsWith("1_S")) {
                             list.add(string);
                             break;
                         }

@@ -44,7 +44,7 @@ public abstract class BaseLazyLoadFragment extends BaseFragment {
 
         //for not work in down 11
         if(SDKUtil.IS_HONEYCOMB) {
-            lazyLoadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+            lazyLoadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             lazyLoadTask.execute();
         }
