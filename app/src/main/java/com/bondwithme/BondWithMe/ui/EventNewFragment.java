@@ -162,7 +162,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             @Override
             public void afterTextChanged(Editable s) {
                 String tplocation =  position_name.getText().toString().trim();
-                if(!tplocation.equals(locationName)){
+                if(!tplocation.equals(locationName) && locationName != null){
                      latitude = -1000;
                      longitude = -1000;
                 }
@@ -353,11 +353,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //        mEevent.getGroup_name();
 //        mEevent.getText_description();
 //        mEevent = new Gson().fromJson(PreferencesUtil.getValue(getParentActivity(), "mEevent", null).toString(),EventEntity.class);
-
 //        members = SharedPreferencesUtils.getParam(getParentActivity(), "members_data", "").toString();
 //        groups = SharedPreferencesUtils.getParam(getParentActivity(), "Groups_date", "").toString();
 //        users_date = SharedPreferencesUtils.getParam(getParentActivity(), "users_date", "").toString();
-
 //        title = mEevent.getGroup_name();
 //        location = mEevent.getLoc_name();
 //        content = mEevent.getText_description();
@@ -702,14 +700,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     }else {
                         PreferencesUtil.saveValue(getParentActivity(), "location", "");
                     }
-//                    if (!TextUtils.isEmpty(members.trim())) {
-//                        SharedPreferencesUtils.setParam(getParentActivity(), "members_data", members);
-////                        Log.i("Set_Spmemeber_date===", Spmemeber_date);
-//                    }
-//                    if (!TextUtils.isEmpty(groups.trim())) {
-//                        SharedPreferencesUtils.setParam(getParentActivity(), "Groups_date", groups);
-////                        Log.i("Set_Groups_date===", Groups_date);
-//                    }
                     if (userList.size() > 0) {
                         Gson gson = new Gson();
                         PreferencesUtil.saveValue(getParentActivity(), "users_date", gson.toJson(userList));
