@@ -44,7 +44,7 @@
     <string name="title_message_creategroup">新群组</string>
     <string name="alert_comment_del">您确定要删除这条评论？</string>
     <string name="alert_diary_del">您确定要删除？</string>
-    <string name="alert_diary_del_photo">您确定要删除？</string>
+    <string name="alert_diary_del_photo">您确定要删除这张图片？</string>
 
     <string name="text_word">文字</string>
     <string name="text_photo">图片</string>
@@ -103,7 +103,7 @@
     <string name="text_loading">\t 加载中 &#8230;</string>
     <string name="text_search_contact">搜索</string>
     <string name="text_relationship">关系</string>
-    <string name="msg_no_contact_select">未选择联系人</string>
+    <string name="msg_no_contact_select">请至少选择一个联系人</string>
 
 
 
@@ -507,4 +507,6 @@
     <string name="not_support_64bit">百度地图目前不支持64位CPU</string>
     <string name="text_add_relationship_empty">请选择关系</string>
     <string name="msg_service_not_available">谷歌服务没有启动</string>
+
+    <string name="action_invitation_successful">邀请发送成功</string>
 </resources>

@@ -28,8 +28,13 @@
     <string name="msg_action_successed">Action successful</string>
     <string name="msg_action_canceled">Action Cancelled</string>
     <string name="msg_action_failed">Action failed</string>
+<<<<<<< HEAD
     <string name="msg_no_content">You cannot submit an empty posting!</string>
     <string name="msg_no_internet">Poor internet connection</string>
+=======
+    <string name="msg_no_content">You cannot submit an empty post!</string>
+    <string name="msg_no_internet">Poor Internet Connection</string>
+>>>>>>> develop
     <string name="msg_load_config_successed">Loaded successfully</string>
     <string name="msg_load_config_failed">Loading failed</string>
     <string name="msg_date_not_befort_now">Date must be greater than now</string>
@@ -44,7 +49,7 @@
     <string name="title_message_creategroup">New Group</string>
     <string name="alert_comment_del">Are you sure you want to delete this comment?</string>
     <string name="alert_diary_del">Are you sure you want to delete this post?</string>
-    <string name="alert_diary_del_photo">Delete this photo?</string>
+    <string name="alert_diary_del_photo">Are you sure you want to delete this photo?</string>
 
     <string name="text_word">Text</string>
     <string name="text_photo">Photo</string>
@@ -103,7 +108,7 @@
     <string name="text_loading">\t Loading …</string>
     <string name="text_search_contact">Search name here</string>
     <string name="text_relationship">Relationship</string>
-    <string name="msg_no_contact_select">No contact selected</string>
+    <string name="msg_no_contact_select">Please select at least 1 contact.</string>
 
     <string name="text_via_contact">Via Contact</string>
     <string name="text_ID_name">Via BondWithMe ID / Username</string>
@@ -134,16 +139,16 @@
     <string name="text_female">Female</string>
     <string name="text_wrong_password">Invalid password. Please try again.</string>
     <string name="text_back">Back</string>
-    <string name="text_old_password">Old password</string>
+    <string name="text_old_password">Old Password</string>
     <string name="text_new_password">New Password</string>
     <string name="text_re_enter_password">Re-enter Password</string>
-    <string name="text_create_new_password">Create A New Password</string>
-    <string name="text_select_contact">Select contact</string>
-    <string name="text_select_relationship">Select relationship</string>
+    <string name="text_create_new_password">Create a New Password</string>
+    <string name="text_select_contact">Select Contact</string>
+    <string name="text_select_relationship">Select Relationship</string>
     <string name="text_warning_invaild_id_name">Invaild ID / Username, please try again</string>
     <string name="hint_id_accout">Insert ID / Username</string>
     <string name="text_remove_user">Remove Member</string>
-    <string name="text_add_member">Add Member?</string>
+    <string name="text_add_member">Add Member</string>
     <string name="text_view_profile">View Member\'s Profile</string>
     <string name="text_message_user">Message Member</string>
     <string name="text_add_new_member">Add New Member</string>
@@ -156,9 +161,9 @@
     <!-- Bond Alert 界面 -->
 
     <string name="title_add_new_members">Add New Members</string>
-    <string name="title_album_gallery">Album gallery</string>
+    <string name="title_album_gallery">Album Gallery</string>
 
-    <string name="title_group_setting">Group Setting</string>
+    <string name="title_group_setting">Group Settings</string>
     <string name="title_group_info">Group Info</string>
 
     <string name="title_me">Me</string>
@@ -173,16 +178,16 @@
     <string name="text_no_found_reduce">Your device does not support crop function</string>
     <string name="text_choose_your_group_picture">Choose your group picture.</string>
     <string name="text_fail_to_create_group">Fail to create group, please try again.</string>
-    <string name="text_please_select_username_phone">Please select only username or phone number</string>
+    <string name="text_please_select_username_phone">Please select only username or phone number.</string>
     <string name="text_please_choose_country_code">Please choose your Country Code</string>
-    <string name="text_input_username_phone">Please input your username or phone number</string>
-    <string name="text_input_username">Please input your username</string>
+    <string name="text_input_username_phone">Please input your username or phone number.</string>
+    <string name="text_input_username">Please input your username.</string>
     <string name="text_fill_in_verification_code">Please fill in verification code.</string>
     <string name="text_createVerification_fail">Verification code creation Failed</string>
     <string name="text_createVerification_success">Verification code created Successfully</string>
     <string name="text_not_change_anything">Please choose photo or change group name</string>
     <string name="text_fail_upload_group_profile_phone">Fail to upload group photo</string>
-    <string name="text_success_upload_group_profile_phone">Successfully uploaded group phone</string>
+    <string name="text_success_upload_group_profile_phone">Successfully uploaded group photo</string>
     <string name="text_success_update_group_name">Group name updated successfully.</string>
     <string name="text_fail_update_group_name">Fail to update group name. Please try again.</string>
     <string name="text_success_remove">Remove member successfully</string>
@@ -211,10 +216,17 @@
     <string name="text_updateProPicSuccess">Action Successful</string>
     <string name="text_wrong_data">Birthday should NOT be a future date</string>
     <string name="successfully_update_relationship">Relationship updated Successfully .</string>
+<<<<<<< HEAD
     <string name="fail_update_relationship">Fail to update relationship. Please try again.</string>
     <string name="text_updateProPicFail">Fail to update photo, try again or skip</string>
     <string name="text_password_specified_invalid">Password specified is invalid. Try again.</string>
     <string name="text_password_changed_successfully">Password changed successfully, Login again.</string>
+=======
+    <string name="fail_update_relationship">Failed to update your relationship. Please try again.</string>
+    <string name="text_updateProPicFail">Failed to upload your photo. Please try again.</string>
+    <string name="text_password_specified_invalid">Password specified is invalid. Please try again.</string>
+    <string name="text_password_changed_successfully">Password changed successfully.</string>
+>>>>>>> develop
     <string name="text_old_password_wrong">Old password is incorrect.</string>
     <string name="text_full_all_fields">Please fill up ALL fields and try again.</string>
     <string name="text_success_add_member">Add member successfully.</string>
@@ -541,6 +553,8 @@
 
 
     <string name="msg_service_not_available">Google Service not Available</string>
+
+    <string name="action_invitation_successful">Invitation sent successfully</string>
 
 
 

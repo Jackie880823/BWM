@@ -6,6 +6,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -160,6 +161,12 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void initView() {
 
+        if (mSavedInstanceState != null)
+        {
+            userEntity = (UserEntity) mSavedInstanceState.getSerializable(Constant.LOGIN_USER);
+            tokenEntity = (AppTokenEntity) mSavedInstanceState.getSerializable(Constant.HTTP_TOKEN);
+            mCropImagedUri = Uri.parse(mSavedInstanceState.getString("uri"));
+        }
         getData();
 
         flPic = getViewById(R.id.fl_pic);
@@ -366,6 +373,8 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
          */
         int degree = LocalImageLoader.readPictureDegree(uri.getPath());
 
+
+
         if (degree != 0) {
             /**
              * 把图片旋转为正的方向
@@ -461,7 +470,8 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this, CACHE_PIC_NAME_TEMP));
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this,
+                            CACHE_PIC_NAME_TEMP));
                     if (new File(uri.getPath()).exists()) {
                         try {
                             startPhotoZoom(uri, false);
@@ -606,4 +616,14 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         return !MyTextUtil.isHasEmpty(strFirstName, strLastName, strGender);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(Constant.LOGIN_USER, userEntity);
+        outState.putSerializable(Constant.HTTP_TOKEN, tokenEntity);
+        if (mCropImagedUri != null)
+        {
+            outState.putString("uri", mCropImagedUri.toString());
+        }
+    }
 }
