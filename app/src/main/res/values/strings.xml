@@ -28,13 +28,8 @@
     <string name="msg_action_successed">Action successful</string>
     <string name="msg_action_canceled">Action Cancelled</string>
     <string name="msg_action_failed">Action failed</string>
-<<<<<<< HEAD
-    <string name="msg_no_content">You cannot submit an empty posting!</string>
-    <string name="msg_no_internet">Poor internet connection</string>
-=======
     <string name="msg_no_content">You cannot submit an empty post!</string>
     <string name="msg_no_internet">Poor Internet Connection</string>
->>>>>>> develop
     <string name="msg_load_config_successed">Loaded successfully</string>
     <string name="msg_load_config_failed">Loading failed</string>
     <string name="msg_date_not_befort_now">Date must be greater than now</string>
@@ -216,17 +211,10 @@
     <string name="text_updateProPicSuccess">Action Successful</string>
     <string name="text_wrong_data">Birthday should NOT be a future date</string>
     <string name="successfully_update_relationship">Relationship updated Successfully .</string>
-<<<<<<< HEAD
-    <string name="fail_update_relationship">Fail to update relationship. Please try again.</string>
-    <string name="text_updateProPicFail">Fail to update photo, try again or skip</string>
-    <string name="text_password_specified_invalid">Password specified is invalid. Try again.</string>
-    <string name="text_password_changed_successfully">Password changed successfully, Login again.</string>
-=======
     <string name="fail_update_relationship">Failed to update your relationship. Please try again.</string>
     <string name="text_updateProPicFail">Failed to upload your photo. Please try again.</string>
     <string name="text_password_specified_invalid">Password specified is invalid. Please try again.</string>
     <string name="text_password_changed_successfully">Password changed successfully.</string>
->>>>>>> develop
     <string name="text_old_password_wrong">Old password is incorrect.</string>
     <string name="text_full_all_fields">Please fill up ALL fields and try again.</string>
     <string name="text_success_add_member">Add member successfully.</string>
