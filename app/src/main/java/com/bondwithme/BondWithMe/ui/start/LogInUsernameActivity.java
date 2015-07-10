@@ -1,11 +1,13 @@
 package com.bondwithme.BondWithMe.ui.start;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -73,7 +75,6 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
             switch (msg.what)
             {
                 case GO_MAIN:
-                    App.changeLoginedUser(userEntity, tokenEntity);
                     goMainActivity();
                     break;
 
@@ -340,11 +341,11 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     private void goMainActivity() {
 
         Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        //TODO
-        //why？？改
+        ComponentName cn = intent.getComponent();
+        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+        App.changeLoginedUser(userEntity, tokenEntity);//可能会传入没有数据的???
         PushApi.initPushApi(this);
-        finish();
+        startActivity(mainIntent);
     }
 
     public void goDetails()
