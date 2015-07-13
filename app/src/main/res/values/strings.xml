@@ -212,7 +212,6 @@
     <string name="text_updateProPicSuccess">Action Successful</string>
     <string name="text_wrong_data">Birthday should NOT be a future date</string>
     <string name="successfully_update_relationship">Relationship updated Successfully .</string>
-
     <string name="fail_update_relationship">Failed to update your relationship. Please try again.</string>
     <string name="text_updateProPicFail">Failed to upload your photo. Please try again.</string>
     <string name="text_password_specified_invalid">Password specified is invalid. Please try again.</string>
