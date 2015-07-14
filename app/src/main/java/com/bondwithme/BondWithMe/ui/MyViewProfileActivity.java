@@ -6,7 +6,6 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -185,11 +184,6 @@ public class MyViewProfileActivity extends BaseActivity {
     BitmapTools mBitmapTools;
     @Override
     public void initView() {
-
-        if (mSavedInstanceState != null)
-        {
-            mCropImagedUri = Uri.parse(mSavedInstanceState.getString("uri"));
-        }
 
         progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         mContext = this;
@@ -773,12 +767,5 @@ public class MyViewProfileActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (mCropImagedUri != null)
-        {
-            outState.putString("uri", mCropImagedUri.toString());
-        }
-    }
+
 }

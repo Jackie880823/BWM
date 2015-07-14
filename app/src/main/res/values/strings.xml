@@ -28,6 +28,7 @@
     <string name="msg_action_successed">Action successful</string>
     <string name="msg_action_canceled">Action Cancelled</string>
     <string name="msg_action_failed">Action failed</string>
+
     <string name="msg_no_content">You cannot submit an empty post!</string>
     <string name="msg_no_internet">Poor Internet Connection</string>
     <string name="msg_load_config_successed">Loaded successfully</string>
