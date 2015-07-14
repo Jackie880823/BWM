@@ -32,7 +32,7 @@ public class ArchiveActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        rightButton.setVisibility(View.GONE);
+        rightButton.setVisibility(View.INVISIBLE);
     }
 
     @Override

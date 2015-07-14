@@ -68,7 +68,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         getViewById(R.id.btn_contact_us).setOnClickListener(this);
         getViewById(R.id.btn_terms).setOnClickListener(this);
         getViewById(R.id.btn_sign_out).setOnClickListener(this);
-//        getViewById(R.id.btn_archive).setOnClickListener(this);
+        getViewById(R.id.btn_archive).setOnClickListener(this);
 
 
         tv_num = getViewById(R.id.tv_num);
@@ -151,9 +151,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                 goStickerStore();
                 Log.i("MoreFragment","==========goStickerStore========");
                 break;
-//            case R.id.btn_archive:
-//                goArchive();
-//                break;
+            case R.id.btn_archive:
+                goArchive();
+                break;
             case R.id.btn_about_us:
                 goAbout();
                 break;
