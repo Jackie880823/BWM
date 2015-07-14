@@ -345,7 +345,7 @@
     <string name="text_reject_dec">拒绝</string>
     <string name="text_reject_invite">加入到你的</string>
     <string name="text_reject_group">&#160;群组</string>
-    <string name="text_item_accept">接收</string>
+    <string name="text_item_accept">接受</string>
     <string name="text_item_decline">拒绝</string>
 
     <string name="title_personal_information">个人资料</string>

@@ -302,7 +302,6 @@
     <string name="text_create_group_not_save">Are you sure you want to cancel ? Changes made will not be save !</string>
     <string name="text_create_group_members_least_two">You need to have at least 2 members to Create Group. Add more members now!</string>
 
-    <string name="text_setting_1_title">Birthday Alert Reminder</string>
     <string name="text_setting_1_1">1 Day earlier</string>
     <string name="text_setting_1_2">3 Days earlier</string>
     <string name="text_setting_1_3">1 Week earlier</string>
@@ -325,9 +324,9 @@
     <string name="text_today_birthday_on"> birthday is today!</string>
     <string name="text_upcoming_birthdays_on"> birthday is on</string>
     <string name="text_d">day </string>
-    <string name="text_left">left</string>
+    <string name="text_left">&#160;left</string>
 
-    <string name="text_miss_you">miss you</string>
+    <string name="text_miss_you">Miss You</string>
 
     <!--diary-->
     <string name="text_diary_posted_to_diary">posted to diary</string>
@@ -341,7 +340,7 @@
     <string name="text_add_group">&#160;added you to group</string>
     <string name="text_reject_has">&#160;has</string>
     <string name="text_reject_dec">&#160;declined</string>
-    <string name="text_reject_invite">&#160;your invite to&#160;</string>
+    <string name="text_reject_invite">&#160;your invite to join&#160;</string>
     <string name="text_reject_group">&#160;group</string>
     <string name="text_item_accept">Accept</string>
     <string name="text_item_decline">Decline</string>
@@ -358,7 +357,7 @@
     <string name="text_cancel">Cancel</string>
 
     <string name="text_from_camera">From Camera</string>
-    <string name="text_from_camera_bottom">Snap a photo of yourself</string>
+    <string name="text_from_camera_bottom">Take a selfie</string>
     <string name="text_from_album">From Album</string>
     <string name="text_from_album_bottom">Choose a photo from your Album gallery</string>
     <string name="text_skip">&#8230;SKIP</string>
@@ -438,14 +437,14 @@
 
     <string name="titlte_terms_and_privacy">Terms and Privacy</string>
 
-    <string name="text_tell_friend">Tell A Friend</string>
+    <string name="text_tell_friend">Tell a Friend</string>
     <string name="text_setting">Settings</string>
     <string name="text_about_us">About Us</string>
     <string name="text_contact_us">Contact Us</string>
-    <string name="text_terms">Terms and Privacy</string>
+    <string name="text_terms">Terms &amp; Privacy</string>
     <string name="text_sign_out">Log Out</string>
 
-    <string name="text_invited_event">%s invited you to event.</string>
+    <string name="text_invited_event">%s invited you to an event.</string>
     <string name="text_responded_event">%s responded for event.</string>
     <string name="text_commented_event">%s commented on event.</string>
     <string name="text_also_commented_event">%s also commented on event.</string>
@@ -457,14 +456,14 @@
     <string name="text_dialog_save_draft">Save as Draft?</string>
     <string name="text_empty_add_member">Tap on the + to add family member.</string>
     <string name="text_empty_add_group">Tap on the + to create group.</string>
-    <string name="text_message_type_here">type message here</string>
+    <string name="text_message_type_here">Type message here</string>
 
     <string name="text_target_choose">Select</string>
-    <string name="waiting_upload">Waiting for the upload to complete, please</string>
+    <string name="waiting_upload">Please wait for the upload to complete</string>
     <string name="alert_no_join_group">You need to be a member of this group to see more details</string>
     <string name="alert_ask_add_member">Add Member?</string>
     <string name="text_group">Group</string>
-    <string name="hint_comment_input">Type a comments here…</string>
+    <string name="hint_comment_input">Type a comment here…</string>
     <string name="text_character_and"><![CDATA[" & "]]></string>
     <string name="saved_to_path">Has been saved to: </string>
     <string name="location_search_error">location search error!</string>
