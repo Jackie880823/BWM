@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -12,6 +13,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.entity.OrmEntityDemo;
 
+import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
@@ -41,7 +43,6 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 		//TODO
 		try {
 			TableUtils.createTable(connectionSource, OrmEntityDemo.class);
-			TableUtils.createTable(connectionSource, UserEntity.class);
             TableUtils.createTable(connectionSource, LocalStickerInfo.class);
 		} catch (java.sql.SQLException e) {
 			e.printStackTrace();
@@ -52,12 +53,13 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
 			int arg2, int arg3) {
 		//TODO
-		// try {
-		// TableUtils.dropTable(connectionSource, POUser.class, true);
-		// onCreate(db, connectionSource);
-		// } catch (SQLException e) {
-		// Log.e("SQLiteHelperOrm", "onUpgrade", e);
-		// }
+//		 try {
+//
+//        // TableUtils.dropTable(connectionSource, POUser.class, true);
+//		// onCreate(db, connectionSource);
+//		 } catch (SQLException e) {
+//		 LogUtil.e("SQLiteHelperOrm", "onUpgrade", e);
+//		 }
 	}
 
     public static synchronized SQLiteHelperOrm getHelper(Context paramContext) {
