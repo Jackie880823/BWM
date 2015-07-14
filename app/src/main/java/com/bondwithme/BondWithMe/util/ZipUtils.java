@@ -24,6 +24,8 @@ import java.util.zip.ZipInputStream;
  */
 public class ZipUtils {
 
+    private final String TAG = "ZipUtils";
+
     /**
      * 解压缩功能.
      * 将zipFile文件解压到folderPath目录下.
@@ -140,9 +142,16 @@ public class ZipUtils {
         }
         stickerInfo.setName(zipFileName);
         stickerInfo.setPath(zipFileName);
-        stickerInfo.setSticker_name("1_B");
+        stickerInfo.setSticker_name("1_S");
         stickerInfo.setVersion("1");
-        stickerInfo.setType(".gif");
+        String strZip = assetName.substring(0,assetName.length()-4);
+        LogUtil.i("ZipUtils", "=====strZip=====" + strZip);
+        LogUtil.i("zipFileName", "=====zipFileName=====" + strZip);
+        if (zipFileName.contains("Bara-Bara_Na")){
+            stickerInfo.setType(".png");
+        }else {
+            stickerInfo.setType(".gif");
+        }
         stickerInfo.setPosition(1);
         LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
     }

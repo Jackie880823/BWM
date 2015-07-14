@@ -1,5 +1,8 @@
 package com.bondwithme.BondWithMe.entity;
 
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.ForeignCollectionField;
+
 import java.io.Serializable;
 
 /**
@@ -53,6 +56,10 @@ public class UserEntity implements Serializable {
     private String fam_accept_flag;
     private String group_new_post;
     private String group_member_response;
+
+    /**实体关系UserEntity为测试用，可以到UserEntity注释看反引用关系写法*/
+	@ForeignCollectionField(eager = true,orderAscending=false)
+	private ForeignCollection<LocalStickerInfo> stickerInfos;
 
 //    private AppTokenEntity token;
 
@@ -467,4 +474,13 @@ public class UserEntity implements Serializable {
 //    public void setToken(AppTokenEntity token) {
 //        this.token = token;
 //    }
+
+
+    public ForeignCollection<LocalStickerInfo> getStickerInfos() {
+        return stickerInfos;
+    }
+
+    public void setStickerInfos(ForeignCollection<LocalStickerInfo> stickerInfos) {
+        this.stickerInfos = stickerInfos;
+    }
 }

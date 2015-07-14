@@ -10,6 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
+import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
+import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.j256.ormlite.dao.Dao;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.R;
@@ -62,7 +66,7 @@ public class MyStickerActivity extends BaseActivity {
     }
     @Override
     public void initView() {
-        mhandler.sendEmptyMessageDelayed(QUERY_STICKER,5);
+        mhandler.sendEmptyMessageDelayed(QUERY_STICKER, 5);
     }
     Handler mhandler = new Handler(){
         @Override
@@ -70,10 +74,10 @@ public class MyStickerActivity extends BaseActivity {
             switch (msg.what){
                 case QUERY_STICKER:
                     try {
-                        Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-                        data = stickerDao.queryForAll();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
+                        Dao<LocalStickerInfo, String> stickerInfoDao = SQLiteHelperOrm.getHelper(MyStickerActivity.this).getDao(LocalStickerInfo.class);
+                        data = stickerInfoDao.queryForEq("loginUserId", MainActivity.getUser().getUser_id());
+                    } catch (Exception e) {
+                        LogUtil.e(TAG,"",e);
                     }
                     if(data!=null && data.size() > 0){
                         rvList = (RecyclerView) getViewById(R.id.rv_my_sticker);

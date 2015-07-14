@@ -3,6 +3,7 @@ package com.bondwithme.BondWithMe.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -40,6 +41,7 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 		//TODO
 		try {
 			TableUtils.createTable(connectionSource, OrmEntityDemo.class);
+			TableUtils.createTable(connectionSource, UserEntity.class);
             TableUtils.createTable(connectionSource, LocalStickerInfo.class);
 		} catch (java.sql.SQLException e) {
 			e.printStackTrace();
