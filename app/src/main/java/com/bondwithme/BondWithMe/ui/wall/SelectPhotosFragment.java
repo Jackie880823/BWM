@@ -26,7 +26,6 @@ import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.AsyncLoadBitmapTask;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
-import com.gc.materialdesign.views.CheckBox;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,12 +56,14 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     /**
      * 当前显示的图片的Ur列表
      */
-    ArrayList<Uri> mImageUriList = new ArrayList();
+    private ArrayList<Uri> mImageUriList = new ArrayList();
+
+    private boolean multi;
 
     /**
      * 已经选择的图Ur列表
      */
-    ArrayList<Uri> mSelectedImageUris = new ArrayList();
+    ArrayList<Uri> mSelectedImageUris;
     /**
      * 目录列表
      */
@@ -76,8 +77,13 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      */
     private LocalImagesAdapter localImagesAdapter;
 
-    public static final SelectPhotosFragment newInstance(String... params) {
-        return createInstance(new SelectPhotosFragment(), params);
+    public SelectPhotosFragment(ArrayList<Uri> selectUris) {
+        super();
+        mSelectedImageUris = selectUris;
+    }
+
+    public static final SelectPhotosFragment newInstance(ArrayList<Uri> selectUris, String... params) {
+        return createInstance(new SelectPhotosFragment(selectUris), params);
     }
 
     /**
@@ -182,33 +188,20 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         mGvShowPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CheckBox check = (CheckBox) view.findViewById(R.id.select_image_right);
-                Log.i(TAG, "onItemClick " + check.isCheck());
+                Log.i(TAG, "onItemClick& position: " + position);
 
-                Uri itemUri = mImageUriList.get(position);
-                if(check.isCheck()) {
-                    if(selectImageUirListener != null) {
-                        // 从列表中已经选中的图片
-                        boolean result = selectImageUirListener.removeUri(itemUri);
-                        check.setChecked(!result);
-                        if(result) {
-                            // 删除成功当前选择的列表也需要删除
-                            mSelectedImageUris.remove(itemUri);
-                        }
-                    }
-                } else {
-                    if(selectImageUirListener != null) {
-                        // 添加图片到选中列表
-                        boolean result = selectImageUirListener.addUri(itemUri);
-                        check.setChecked(result);
-                        if(result) {
-                            // 添加成功当前列表也需要添加
-                            mSelectedImageUris.add(itemUri);
-                        }
+                if(selectImageUirListener != null) {
+                    Uri itemUri = mImageUriList.get(position);
+                    if(multi) {
+                        selectImageUirListener.preview(itemUri);
+                    } else {
+                        selectImageUirListener.addUri(itemUri);
                     }
                 }
             }
         });
+
+        multi = getParentActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
     }
 
     public boolean changeDrawer() {
@@ -304,7 +297,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             Log.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
             if(localImagesAdapter == null) {
                 localImagesAdapter = new LocalImagesAdapter(getActivity(), mImageUriList, getParentActivity().getActionBarColor());
-                localImagesAdapter.setCheckBoxVisible(getParentActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false));
+                localImagesAdapter.setCheckBoxVisible(multi);
                 localImagesAdapter.setSelectedImages(mSelectedImageUris);
                 localImagesAdapter.setListener(selectImageUirListener);
                 mGvShowPhotos.setAdapter(localImagesAdapter);

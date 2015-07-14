@@ -139,7 +139,8 @@ public class LocalImageLoader {
 
             // Find the correct scale value. It should be the power of 2.
             //            final int REQUIRED_SIZE = 400;
-            int width_tmp = bitmapTempOption.outWidth, height_tmp = bitmapTempOption.outHeight;
+            int width_tmp = bitmapTempOption.outWidth;
+            int height_tmp = bitmapTempOption.outHeight;
             int scale = 1;
             while(true) {
                 if(width_tmp / 2 < width || height_tmp / 2 < height)
@@ -677,23 +678,30 @@ public class LocalImageLoader {
         if(!TextUtils.isEmpty(miniThumbnailUri)) {
             //系统存有此图的略缩图
             Log.i(TAG, "getMiniThumbnailBitmap& miniThumbnailUri: " + miniThumbnailUri + " for uri: " + uri);
-            thumbnail = LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbnailUri).getPath());
-        }
-        if(thumbnail == null) {
-            // 没有获取的缩略，从原图加载缩略图
-            thumbnail = LocalImageLoader.loadBitmapFromFile(context, path, columnWidthHeight, columnWidthHeight);
-//            Bitmap sourceBitmap = BitmapFactory.decodeFile(path);
+            try {
+                thumbnail = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(miniThumbnailUri));
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+
+//            thumbnail = LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbnailUri).getPath());
         }
 
         if(thumbnail == null) {
-            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail is null. path: " + path);
-            return null;
-        } else {
-            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail not null. path: " + path);
-            // 转回角度
-            int rotation = readPictureDegree(path);
-            return LocalImageLoader.rotaingImageView(rotation, thumbnail);
+            // 没有获取的缩略，从原图加载缩略图
+            thumbnail = LocalImageLoader.loadBitmapFromFile(context, path, columnWidthHeight, columnWidthHeight);
         }
+        return thumbnail;
+
+//        if(thumbnail == null) {
+//            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail is null. path: " + path);
+//            return null;
+//        } else {
+//            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail not null. path: " + path);
+//            // 转回角度
+//            int rotation = readPictureDegree(path);
+//            return LocalImageLoader.rotaingImageView(rotation, thumbnail);
+//        }
 
 
     }

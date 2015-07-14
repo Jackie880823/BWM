@@ -167,19 +167,13 @@ public class LocalImagesAdapter extends BaseAdapter {
                     if(mListener != null) {
                         if(check) {
                             boolean result = mListener.addUri(uri);
-                            if(result) {
-                                // 添加成功当前列表也需要添加
-                                mSelectImages.add(uri);
-                            } else {
+                            if(!result) {
                                 // 添加失败，当前图片不能显示选中
                                 holder.check.setChecked(false);
                             }
                         } else {
                             boolean result = mListener.removeUri(uri);
-                            if(result) {
-                                // 删除成功当前选择的列表也需要删除
-                                mSelectImages.remove(uri);
-                            } else {
+                            if(!result) {
                                 // 删除失败，当前图片不能显示未选中
                                 holder.check.setChecked(true);
                             }
