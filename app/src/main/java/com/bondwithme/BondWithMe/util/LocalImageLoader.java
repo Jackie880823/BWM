@@ -116,6 +116,18 @@ public class LocalImageLoader {
         Bitmap bitmap = null;
         try {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options);
+            String path = null;
+            Cursor c = context.getContentResolver().query(uri, null, null, null, null);
+            if(c != null) {
+                c.moveToFirst();
+                int idx = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                path = c.getString(idx);
+                c.close();
+            }
+            int d = readPictureDegree(path);
+            if(d != 0) {
+                bitmap = rotaingImageView(d, bitmap);
+            }
         } catch(FileNotFoundException e) {
             return null;
         }
@@ -127,6 +139,7 @@ public class LocalImageLoader {
     }
 
     public static Bitmap loadBitmapFromFile(Context context, String pathName, int width, int height) {
+        Log.i(TAG, "loadBitmapFromFile& pathName: " + pathName);
         try {
             File file = new File(pathName);
             if(!file.exists()) {
@@ -678,13 +691,8 @@ public class LocalImageLoader {
         if(!TextUtils.isEmpty(miniThumbnailUri)) {
             //系统存有此图的略缩图
             Log.i(TAG, "getMiniThumbnailBitmap& miniThumbnailUri: " + miniThumbnailUri + " for uri: " + uri);
-            try {
-                thumbnail = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(miniThumbnailUri));
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
 
-//            thumbnail = LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbnailUri).getPath());
+            thumbnail = LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbnailUri).getPath());
         }
 
         if(thumbnail == null) {
@@ -693,15 +701,15 @@ public class LocalImageLoader {
         }
         return thumbnail;
 
-//        if(thumbnail == null) {
-//            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail is null. path: " + path);
-//            return null;
-//        } else {
-//            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail not null. path: " + path);
-//            // 转回角度
-//            int rotation = readPictureDegree(path);
-//            return LocalImageLoader.rotaingImageView(rotation, thumbnail);
-//        }
+        //        if(thumbnail == null) {
+        //            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail is null. path: " + path);
+        //            return null;
+        //        } else {
+        //            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail not null. path: " + path);
+        //            // 转回角度
+        //            int rotation = readPictureDegree(path);
+        //            return LocalImageLoader.rotaingImageView(rotation, thumbnail);
+        //        }
 
 
     }
