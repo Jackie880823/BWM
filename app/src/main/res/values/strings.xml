@@ -539,6 +539,7 @@
 
 
     <string name="msg_service_not_available">Google Service not Available</string>
+    <string name="text_add_group_photo">Add Photo</string>
 
     <string name="action_invitation_successful">Invitation sent successfully</string>
 

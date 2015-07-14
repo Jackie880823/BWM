@@ -5,6 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <!--android:src="@drawable/network_image_default"
+            android:src="@drawable/album_details"
+    -->
     <include
         android:id="@+id/fragment_main_top"
         layout="@layout/title_view"
@@ -23,6 +27,39 @@
         android:layout_below="@+id/fragment_main_top"
         android:layout_marginBottom="30dp"
         app:border="false" />
+    <RelativeLayout
+        android:id="@+id/default_imagview"
+        android:layout_width="@dimen/_120dp"
+        android:layout_height="@dimen/_120dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:layout_centerInParent="true"
+        android:layout_below="@+id/fragment_main_top"
+        android:background="@drawable/park_edge"
+        android:layout_marginBottom="30dp">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!-->-->
+            <ImageView
+                android:id="@+id/default_imag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:paddingBottom="@dimen/_18dp"
+                android:src="@drawable/album_details"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/_60dp"
+                android:textColor="#b6b7b7"
+                android:text="@string/text_add_group_photo"/>
+        <!--</LinearLayout>-->
+    </RelativeLayout>
 
     <View
         android:id="@+id/view1"
@@ -104,19 +141,20 @@
     </RelativeLayout>
 
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_35dp"
-        android:layout_marginTop="@dimen/_20dp"
-        android:text="@string/text_done"
-        android:textSize="@dimen/_22dp"
-        android:textColor="#ffffff"
-        android:id="@+id/creategroup_button"
-        android:background="@drawable/btn_chat_send_bg"
-        android:layout_marginBottom="@dimen/_20dp"
-        android:layout_above="@+id/cancel_button"
-        android:layout_marginLeft="@dimen/_30dp"
-        android:layout_marginRight="@dimen/_30dp" />
+    <!--<Button-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/_35dp"-->
+    <!--android:layout_marginTop="@dimen/_20dp"-->
+    <!--android:text="@string/text_done"-->
+    <!--android:textSize="@dimen/_22dp"-->
+    <!--android:visibility="gone"-->
+    <!--android:textColor="#ffffff"-->
+    <!--android:id="@+id/creategroup_button"-->
+    <!--android:background="@drawable/btn_chat_send_bg"-->
+    <!--android:layout_marginBottom="@dimen/_20dp"-->
+    <!--android:layout_above="@+id/cancel_button"-->
+    <!--android:layout_marginLeft="@dimen/_30dp"-->
+    <!--android:layout_marginRight="@dimen/_30dp" />-->
 
     <Button
         android:layout_width="match_parent"
