@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -153,6 +154,10 @@ public class ZipUtils {
             stickerInfo.setType(".gif");
         }
         stickerInfo.setPosition(1);
-        LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
+        try {
+            LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
+        } catch (SQLException e) {
+            LogUtil.e("","",e);
+        }
     }
 }
