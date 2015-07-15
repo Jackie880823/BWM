@@ -53,7 +53,11 @@ public class SelectPhotosActivity extends BaseActivity {
             if(multi) {
                 if(mSelectedImages.size() < residue) {
                     // 没有超过限制的图片数量可以继续添加并返回添加结果的返回值
-                    result = mSelectedImages.add(imageUri);
+                    if(mSelectedImages.contains(imageUri)) {
+                        result = true;
+                    } else {
+                        result = mSelectedImages.add(imageUri);
+                    }
                 } else {
                     // 提示用户添加的图片超过限制的数量
                     MessageUtil.showMessage(SelectPhotosActivity.this, String.format(SelectPhotosActivity.this.getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
@@ -79,7 +83,11 @@ public class SelectPhotosActivity extends BaseActivity {
         @Override
         public boolean removeUri(Uri imageUri) {
             // 返回删除结果成功与否的值
-            return mSelectedImages.remove(imageUri);
+            if(mSelectedImages.contains(imageUri)) {
+                return mSelectedImages.remove(imageUri);
+            } else {
+                return true;
+            }
         }
 
         /**

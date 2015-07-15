@@ -11,13 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.util.AsyncLoadBitmapTask;
 import com.bondwithme.BondWithMe.util.SDKUtil;
-import com.gc.materialdesign.views.CheckBox;
+import com.material.widget.CheckBox;
 
 import java.util.List;
 
@@ -144,28 +145,20 @@ public class LocalImagesAdapter extends BaseAdapter {
             holder = (HolderView) convertView.getTag();
         }
 
-
         holder.iv.setImageResource(R.drawable.network_image_default);
         loadLocalBitmap(holder.iv, position);
-
-        if(mSelectImages != null && mSelectImages.contains(mDatas.get(position))) {
-            // 当前图片已被选中
-            holder.check.setChecked(true);
-        } else {
-            holder.check.setChecked(false);
-        }
         if(!checkBoxVisible) {
             holder.check.setVisibility(View.GONE);
         } else {
             // 需要显示选择框，并显设置点击监听事件
             holder.check.setVisibility(View.VISIBLE);
-            holder.check.setOncheckListener(new CheckBox.OnCheckListener() {
+            holder.check.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
                 @Override
-                public void onCheck(CheckBox checkbox, boolean check) {
-                    Log.i(TAG, "onCheck& check: " + check);
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Log.i(TAG, "onCheck& check: " + isChecked + "; position = " + position);
                     Uri uri = mDatas.get(position);
                     if(mListener != null) {
-                        if(check) {
+                        if(isChecked) {
                             boolean result = mListener.addUri(uri);
                             if(!result) {
                                 // 添加失败，当前图片不能显示选中
@@ -181,6 +174,14 @@ public class LocalImagesAdapter extends BaseAdapter {
                     }
                 }
             });
+
+            // 判断当前数据是否被选中，一在设置setOnCheckedChangeListener之后执行否则数据无效添加或删除上一次使用当前View的URI
+            if(mSelectImages != null && mSelectImages.contains(mDatas.get(position))) {
+                // 当前图片已被选中
+                holder.check.setChecked(true);
+            } else {
+                holder.check.setChecked(false);
+            }
         }
 
         return convertView;
