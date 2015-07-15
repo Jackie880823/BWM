@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Created by liangzemian on 15/6/30.
  */
-public class GroupListActivity extends BaseActivity implements View.OnClickListener{
+public class GroupListActivity extends BaseActivity{
     private static final String Tag = GroupListActivity.class.getSimpleName();
     ProgressDialog mProgressDialog;
     private boolean isRefresh;
@@ -200,9 +200,10 @@ public class GroupListActivity extends BaseActivity implements View.OnClickListe
         adapter = new  GroupListAdapter(this,data);
         adapter.setItemClickListener(new GroupListAdapter.ItemClickListener() {
             @Override
-            public void topItemClick(String group_id) {
+            public void topItemClick(String group_id,String group_name) {
                 Intent intent = new Intent(GroupListActivity.this,ArchiveGroupChatActivity.class);
                 intent.putExtra("group_id",group_id);
+                intent.putExtra("group_name",group_name);
                 startActivity(intent);
             }
         });
@@ -211,25 +212,6 @@ public class GroupListActivity extends BaseActivity implements View.OnClickListe
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-
-    }
-    @Override
-    public void onClick(View v) {
-        switch (v.getId())
-        {
-//            case R.id.rl_1:
-//                starttest();
-//                break;
-//            case R.id.rl_2:
-//                starttest();
-//                break;
-//            case R.id.rl_3:
-//                starttest();
-//                break;
-//            default:
-//                super.onClick(v);
-//                break;
-        }
 
     }
     private void starttest(){

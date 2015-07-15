@@ -39,17 +39,19 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
     @Override
     public ArchiveChatAdapter.VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.archivechat_item, parent, false);
+//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.group_list_item, parent, false);
         return new VHItem(view);
     }
 
     @Override
     public void onBindViewHolder(ArchiveChatAdapter.VHItem holder, int position) {
         final ArchiveChatEntity archive = data.get(position);
+//        holder.group_name.setText(archive.getComment_count());
         if(TextUtils.isEmpty(archive.getFile_id())){
-            holder.imArchiveImages.setVisibility(View.GONE);
+            holder.llArchiveImage.setVisibility(View.GONE);
         }else {
             //如果有照片
-            holder.imArchiveImages.setVisibility(View.VISIBLE);
+            holder.llArchiveImage.setVisibility(View.VISIBLE);
             //照片的总数
             int PhotoCount = Integer.valueOf(archive.getPhoto_count());
             if(PhotoCount > 1){
@@ -62,13 +64,22 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             }
             //加载照片
             VolleyUtil.initNetworkImageView(mContext, holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-
         }
         holder.tvUserName.setText(archive.getGroup_name());
-        holder.tvContent.setText(archive.getText_description());
+
+        String Content = archive.getText_description();
+        if(TextUtils.isEmpty(Content)){
+//            holder.liContent.setVisibility(View.VISIBLE);
+            holder.liContent.setVisibility(View.GONE);
+        }else {
+            holder.tvContent.setText(Content);
+            holder.liContent.setVisibility(View.VISIBLE);
+        }
         holder.tvLoveCount.setText(archive.getLove_count());
         holder.tvCommentCount.setText(archive.getComment_count());
-        holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext,archive.getContent_creation_timestamp()));
+//        String tempdate = MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date());
+        holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date()));//时间有问题
+//        holder.tvDate.setText(tempdate);
     }
 
     @Override
@@ -102,24 +113,33 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
          */
         TextView tvContent;
 
-        View llWallsImage;
+        View liContent;
+
+        View llArchiveImage;
 
         /**
          * 显示网络图片的视图控件
          */
         NetworkImageView imArchiveImages;
 
+        private TextView group_name;
+
         public VHItem(View itemView) {
             super(itemView);
+
+//            group_name = (TextView) itemView.findViewById(R.id.group_name);
+
+
             tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
-            tvDate = (TextView) itemView.findViewById(R.id.push_date);
+            tvDate = (TextView) itemView.findViewById(R.id.up_time);
             tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_chat_photo_count);
-            llWallsImage = itemView.findViewById(R.id.ll_chats_image);
+            llArchiveImage = itemView.findViewById(R.id.ll_chats_image);
             tvCommentCount = (TextView) itemView.findViewById(R.id.member_comment);
             tvLoveCount = (TextView) itemView.findViewById(R.id.memeber_love);
+            liContent = itemView.findViewById(R.id.li_content);
             tvContent = (TextView) itemView.findViewById(R.id.tv_archive_content);
             tvContent.setMaxLines(9);
-            imArchiveImages = (NetworkImageView) imArchiveImages.findViewById(R.id.iv_chats_images);
+            imArchiveImages = (NetworkImageView) itemView.findViewById(R.id.iv_chats_images);
             tvContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -149,6 +169,19 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
 
         @Override
         public void onClick(View v) {
+            int position = getAdapterPosition();
+            ArchiveChatEntity entity = data.get(position);
+            switch (v.getId()){
+                case R.id.iv_chats_images:
+                    if(marchiveChatViewClickListener != null){
+                        marchiveChatViewClickListener.showOriginalPic(entity.getContent_id());
+                    }
+                    break;
+                case R.id.top_archive:
+                    if(marchiveChatViewClickListener != null){
+                        marchiveChatViewClickListener.showComments(entity.getContent_group_id(),entity.getGroup_id());
+                    }
+            }
 
         }
     }

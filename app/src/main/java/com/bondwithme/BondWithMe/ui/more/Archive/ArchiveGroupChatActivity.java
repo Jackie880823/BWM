@@ -16,6 +16,7 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
 public class ArchiveGroupChatActivity extends BaseActivity implements View.OnClickListener{
 //    private CardView c1;
     private String group_id;
+    private String group_name;
     private String Tag;
 
 //    @Override
@@ -36,7 +37,8 @@ public class ArchiveGroupChatActivity extends BaseActivity implements View.OnCli
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.text_archive);
+        group_name = getIntent().getStringExtra("group_name");
+        tvTitle.setText(group_name);
 
     }
 

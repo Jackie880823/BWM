@@ -104,7 +104,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.VHIt
                 @Override
                 public void onClick(View v) {
                     if(itemClickListener != null){
-                        itemClickListener.topItemClick(data.get(getAdapterPosition()).getGroup_id());
+                        itemClickListener.topItemClick(data.get(getAdapterPosition()).getGroup_id(),data.get(getAdapterPosition()).getGroup_name());
                     }
 //                    Intent intent = new Intent(mContext, EventDetailActivity.class);
 //                    intent.putExtra("group_id", data.get(getAdapterPosition()).getModule_id());
@@ -117,7 +117,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.VHIt
     public ItemClickListener itemClickListener ;
     //点击事件回调接口
     public interface ItemClickListener{
-        void topItemClick(String group_id);
+        void topItemClick(String group_id,String group_name);
     }
     public void setItemClickListener(ItemClickListener itCL){
         itemClickListener  = itCL;
