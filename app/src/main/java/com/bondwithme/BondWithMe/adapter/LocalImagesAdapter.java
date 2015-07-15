@@ -150,6 +150,16 @@ public class LocalImagesAdapter extends BaseAdapter {
         if(!checkBoxVisible) {
             holder.check.setVisibility(View.GONE);
         } else {
+
+            holder.iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mListener != null) {
+                        mListener.preview(mDatas.get(position));
+                    }
+                }
+            });
+
             // 需要显示选择框，并显设置点击监听事件
             holder.check.setVisibility(View.VISIBLE);
             holder.check.setOnClickListener(new View.OnClickListener() {
