@@ -198,6 +198,14 @@ public class GroupListActivity extends BaseActivity implements View.OnClickListe
 
     private void  initAdapter(){
         adapter = new  GroupListAdapter(this,data);
+        adapter.setItemClickListener(new GroupListAdapter.ItemClickListener() {
+            @Override
+            public void topItemClick(String group_id) {
+                Intent intent = new Intent(GroupListActivity.this,ArchiveGroupChatActivity.class);
+                intent.putExtra("group_id",group_id);
+                startActivity(intent);
+            }
+        });
         rvList.setAdapter(adapter);
     }
 

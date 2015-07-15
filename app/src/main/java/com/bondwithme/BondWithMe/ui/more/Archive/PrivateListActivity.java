@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui.more.Archive;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -227,6 +228,14 @@ public class PrivateListActivity extends BaseActivity implements View.OnClickLis
 
     private void  initAdapter(){
         adapter = new PrivateListAdapter(this,data);
+        adapter.setItemClickListener(new PrivateListAdapter.ItemClickListener() {
+            @Override
+            public void topItemClick(String user_id) {
+                Intent intent = new Intent(PrivateListActivity.this,ArchivePrivateChatActivity.class);
+                intent.putExtra("user_id",user_id);
+                startActivity(intent);
+            }
+        });
         rvList.setAdapter(adapter);
     }
     @Override

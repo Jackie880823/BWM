@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe.ui.more.Archive;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.view.View;
 
 import com.bondwithme.BondWithMe.R;
@@ -15,7 +14,9 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
  * Created by liangzemian on 15/6/30.
  */
 public class ArchiveGroupChatActivity extends BaseActivity implements View.OnClickListener{
-    private CardView c1;
+//    private CardView c1;
+    private String group_id;
+    private String Tag;
 
 //    @Override
 //    public int getLayout() {
@@ -46,26 +47,28 @@ public class ArchiveGroupChatActivity extends BaseActivity implements View.OnCli
 
     @Override
     protected Fragment getFragment() {
-        return ArchiveChatFragment.newInstance();
+        group_id = getIntent().getStringExtra("group_id");
+        //0是群组备份，1是聊天备份
+        return ArchiveChatFragment.newInstance("0",group_id);
     }
 
     @Override
     public void initView() {
 //        getViewById(R.id.chat_top).setOnClickListener(this);
-        c1 = getViewById(R.id.top_event);
-        c1.setOnClickListener(this);
+//        c1 = getViewById(R.id.top_event);
+//        c1.setOnClickListener(this);
 
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.top_event:
-                starttest();
-                break;
-            default:
-                super.onClick(v);
-                break;
+//            case R.id.top_event:
+//                starttest();
+//                break;
+//            default:
+//                super.onClick(v);
+//                break;
         }
         super.onClick(v);
     }

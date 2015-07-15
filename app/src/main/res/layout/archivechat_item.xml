@@ -37,11 +37,10 @@
                     style="@style/text_dark_default"
                     android:textStyle="bold"/>
 
-
-                <TextView
-                    android:id="@+id/push_date"
-                    style="@style/text_dark_default"
-                    android:layout_marginTop="@dimen/default_view_margin"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/push_date"-->
+                    <!--style="@style/text_dark_default"-->
+                    <!--android:layout_marginTop="@dimen/default_view_margin"/>-->
             </LinearLayout>
 
         </RelativeLayout>
@@ -55,7 +54,7 @@
             android:paddingRight="@dimen/default_content_padding">
 
             <TextView
-                android:id="@+id/tv_wall_content"
+                android:id="@+id/tv_archive_content"
                 android:autoLink="web"
                 android:linksClickable="true"
                 style="@style/text_dark_default"/>
@@ -146,7 +145,7 @@
             android:background="@color/archive_comment_background">
 
             <TextView
-                android:id="@+id/memeber_lo"
+                android:id="@+id/memeber_love"
                 style="@style/text_dark_default"
                 android:layout_alignParentLeft="true" />
             <TextView
@@ -156,7 +155,7 @@
                 android:layout_marginLeft="@dimen/default_view_margin"
                 android:text="Loves"/>
             <TextView
-                android:id="@+id/comment_me"
+                android:id="@+id/member_comment"
                 android:layout_toLeftOf="@+id/comments"
                 style="@style/text_dark_default" />
             <TextView

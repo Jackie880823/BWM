@@ -39,7 +39,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.VHIt
     @Override
     public void onBindViewHolder(VHItem holder, int position) {
         GroupListEntity groupListEntity = data.get(position);
-        holder.group_name.setText(groupListEntity.getUser_given_name());
+        holder.group_name.setText(groupListEntity.getGroup_name());
 //        holder.news_title.setText(alertEventEntity.getModule_name());
 //        holder.news_content.setText(selectEvent(alertEventEntity.getModule_action(), alertEventEntity.getAction_username(), alertEventEntity.getPostowner_username()));
 //        holder.news_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, alertEventEntity.getCreation_date()));
@@ -103,6 +103,9 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.VHIt
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(itemClickListener != null){
+                        itemClickListener.topItemClick(data.get(getAdapterPosition()).getGroup_id());
+                    }
 //                    Intent intent = new Intent(mContext, EventDetailActivity.class);
 //                    intent.putExtra("group_id", data.get(getAdapterPosition()).getModule_id());
 //                    mContext.startActivity(intent);
@@ -111,5 +114,13 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.VHIt
         }
     }
 
+    public ItemClickListener itemClickListener ;
+    //点击事件回调接口
+    public interface ItemClickListener{
+        void topItemClick(String group_id);
+    }
+    public void setItemClickListener(ItemClickListener itCL){
+        itemClickListener  = itCL;
+    }
 
 }

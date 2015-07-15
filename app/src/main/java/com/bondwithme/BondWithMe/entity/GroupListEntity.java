@@ -7,6 +7,7 @@ public class GroupListEntity {
 
     private String group_id;
     private String user_id;
+    private String group_name;
     private String user_given_name;
 
     public String getGroup_id() {
@@ -23,6 +24,14 @@ public class GroupListEntity {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public String getGroup_name() {
+        return group_name;
+    }
+
+    public void setGroup_name(String group_name) {
+        this.group_name = group_name;
     }
 
     public String getUser_given_name() {

@@ -4,12 +4,12 @@
     android:orientation="vertical"
     android:background="@color/default_content_bg">
 
-    <include
-        android:id="@+id/fragment_main_top"
-        layout="@layout/title_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
+    <!--<include-->
+        <!--android:id="@+id/fragment_main_top"-->
+        <!--layout="@layout/title_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true" />-->
 
     <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
