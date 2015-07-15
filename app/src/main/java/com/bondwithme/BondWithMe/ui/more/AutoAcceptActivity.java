@@ -229,8 +229,8 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
 
             @Override
             public void onFinish() {
-                mProgressDialog.setVisibility(View.INVISIBLE);
                 if(result) {
+                    mProgressDialog.setVisibility(View.INVISIBLE);
                     llAutoAccept.setVisibility(View.VISIBLE);
                 }
             }

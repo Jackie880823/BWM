@@ -87,7 +87,7 @@
     <string name="text_about_desc1">Bond With Me group of companies worldwide will bring to you an eco-system of apps that is for you and your family. We pride ourselves as providing responsible social family oriented apps in the market.</string>
     <string name="text_about_desc2">It is BondWithMe’s mission to bring connectivity and sharing between family members together even when they are living globally apart. Due to our respective busy lives in this modern age, we envisage that building on our “family bond” is an important priority in our lives.</string>
     <string name="text_about_desc3">Our vision is to create BondWithMe as a respectable platform of innovative family apps recognized globally as bringing family members together in this ever changing busy world. We also intend to develop feature rich and fun apps specifically for you which will improve and enhance your daily life in this mobile and connected world.</string>
-    <string name="msg_ask_exit_app">你是否确定登出?</string>
+    <string name="msg_ask_exit_app">你是否确定退出?</string>
     <string name="text_yes">确定</string>
     <string name="text_camera">拍照</string>
     <string name="text_album">相册</string>
@@ -345,7 +345,7 @@
     <string name="text_reject_dec">拒绝</string>
     <string name="text_reject_invite">加入到你的</string>
     <string name="text_reject_group">&#160;群组</string>
-    <string name="text_item_accept">接收</string>
+    <string name="text_item_accept">接受</string>
     <string name="text_item_decline">拒绝</string>
 
     <string name="title_personal_information">个人资料</string>
@@ -509,4 +509,6 @@
     <string name="msg_service_not_available">谷歌服务没有启动</string>
 
     <string name="action_invitation_successful">邀请发送成功</string>
+
+    <string name="log_out">你是否确定登出？</string>
 </resources>

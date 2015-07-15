@@ -14,7 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosFragment;
+import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.util.AsyncLoadBitmapTask;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.gc.materialdesign.views.CheckBox;
@@ -38,11 +38,16 @@ public class LocalImagesAdapter extends BaseAdapter {
      */
     private List<Uri> mSelectImages;
 
-    private SelectPhotosFragment.SelectImageUirChangeListener mListener;
+    private SelectImageUirChangeListener mListener;
 
     private int columnWidthHeight;
 
     private int mColor = -1;
+
+    /**
+     * 控制是否显示选择按钮，当选择一张图片时不需要显示选择框
+     */
+    private boolean checkBoxVisible = true;
 
     public LocalImagesAdapter(Context context, List<Uri> datas, int color) {
         mContext = context;
@@ -96,8 +101,12 @@ public class LocalImagesAdapter extends BaseAdapter {
         mSelectImages = selectedImages;
     }
 
-    public void setListener(SelectPhotosFragment.SelectImageUirChangeListener listener) {
+    public void setListener(SelectImageUirChangeListener listener) {
         this.mListener = listener;
+    }
+
+    public void setCheckBoxVisible(boolean visible) {
+        checkBoxVisible = visible;
     }
 
     /**
@@ -134,6 +143,8 @@ public class LocalImagesAdapter extends BaseAdapter {
         } else {
             holder = (HolderView) convertView.getTag();
         }
+
+
         holder.iv.setImageResource(R.drawable.network_image_default);
         loadLocalBitmap(holder.iv, position);
 
@@ -143,34 +154,40 @@ public class LocalImagesAdapter extends BaseAdapter {
         } else {
             holder.check.setChecked(false);
         }
-        holder.check.setOncheckListener(new CheckBox.OnCheckListener() {
-            @Override
-            public void onCheck(CheckBox checkbox,boolean check) {
-                Log.i(TAG, "onCheck& check: " + check);
-                Uri uri = mDatas.get(position);
-                if(mListener != null) {
-                    if(check) {
-                        boolean result = mListener.addUri(uri);
-                        if(result) {
-                            // 添加成功当前列表也需要添加
-                            mSelectImages.add(uri);
+        if(!checkBoxVisible) {
+            holder.check.setVisibility(View.GONE);
+        } else {
+            // 需要显示选择框，并显设置点击监听事件
+            holder.check.setVisibility(View.VISIBLE);
+            holder.check.setOncheckListener(new CheckBox.OnCheckListener() {
+                @Override
+                public void onCheck(CheckBox checkbox, boolean check) {
+                    Log.i(TAG, "onCheck& check: " + check);
+                    Uri uri = mDatas.get(position);
+                    if(mListener != null) {
+                        if(check) {
+                            boolean result = mListener.addUri(uri);
+                            if(result) {
+                                // 添加成功当前列表也需要添加
+                                mSelectImages.add(uri);
+                            } else {
+                                // 添加失败，当前图片不能显示选中
+                                holder.check.setChecked(false);
+                            }
                         } else {
-                            // 添加失败，当前图片不能显示选中
-                            holder.check.setChecked(false);
-                        }
-                    } else {
-                        boolean result = mListener.removeUri(uri);
-                        if(result) {
-                            // 删除成功当前选择的列表也需要删除
-                            mSelectImages.remove(uri);
-                        } else {
-                            // 删除失败，当前图片不能显示未选中
-                            holder.check.setChecked(true);
+                            boolean result = mListener.removeUri(uri);
+                            if(result) {
+                                // 删除成功当前选择的列表也需要删除
+                                mSelectImages.remove(uri);
+                            } else {
+                                // 删除失败，当前图片不能显示未选中
+                                holder.check.setChecked(true);
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
 
         return convertView;
     }
@@ -192,7 +209,7 @@ public class LocalImagesAdapter extends BaseAdapter {
                     AsyncLoadBitmapTask task = new AsyncLoadBitmapTask(mContext, imageView, columnWidthHeight);
                     imageView.setTag(task);
                     //for not work in down 11
-                    if (SDKUtil.IS_HONEYCOMB) {
+                    if(SDKUtil.IS_HONEYCOMB) {
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
                     } else {
                         task.execute(uri);

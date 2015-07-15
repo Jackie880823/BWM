@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.util;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -20,7 +19,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -135,7 +133,7 @@ public class LocalImageLoader {
                 return null;
             }
             // decode image size
-            BitmapFactory.Options bitmapTempOption = new BitmapFactory.Options();
+            Options bitmapTempOption = new Options();
             bitmapTempOption.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(new FileInputStream(file), null, bitmapTempOption);
 
@@ -152,7 +150,7 @@ public class LocalImageLoader {
             }
 
             // decode with inSampleSize
-            BitmapFactory.Options bitmapOption = new BitmapFactory.Options();
+            Options bitmapOption = new Options();
             bitmapOption.inSampleSize = scale;
 
             try {
@@ -198,7 +196,7 @@ public class LocalImageLoader {
      * @param height
      *            需要的宽度
      * @return
-     * @throws java.io.FileNotFoundException
+     * @throws FileNotFoundException
      */
     //	public static Drawable loadDrawableFromUri(Context context, Uri uri,
     //			int width, int height) throws FileNotFoundException {
@@ -408,7 +406,7 @@ public class LocalImageLoader {
      *
      * @return
      */
-    public final static int caculateInSampleSize(BitmapFactory.Options options, int rqsW, int rqsH) {
+    public final static int caculateInSampleSize(Options options, int rqsW, int rqsH) {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
@@ -426,10 +424,10 @@ public class LocalImageLoader {
      * 压缩指定路径的图片，并得到图片对象
      *
      * @param path bitmap source path
-     * @return Bitmap {@link android.graphics.Bitmap}
+     * @return Bitmap {@link Bitmap}
      */
     public final static Bitmap compressBitmap(String path, int rqsW, int rqsH) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
+        final Options options = new Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
         options.inSampleSize = calculateInSampleSize(options, rqsW, rqsH);
@@ -449,12 +447,6 @@ public class LocalImageLoader {
      * @return
      */
     public final static String compressBitmap(Context context, String srcPath, int rqsW, int rqsH, boolean isDelSrc) {
-//        // 获取图片缓存目录
-//        String cacheFilePath = PicturesCacheUtil.getCacheFilePath(context);
-//        if(srcPath.contains(cacheFilePath)) {
-//            // 传入的图片目录包含缓存的目录说明图片是缓存图片，无需压缩返回当前图片路径
-//            return srcPath;
-//        }
 
         Bitmap bitmap;
         bitmap = compressBitmap(srcPath, rqsW, rqsH);
@@ -478,6 +470,7 @@ public class LocalImageLoader {
                     break;
                 bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
             }
+
             // Generate compressed image file
             FileOutputStream fos = new FileOutputStream(desPath);
             fos.write(os.toByteArray());
@@ -491,15 +484,6 @@ public class LocalImageLoader {
             e.printStackTrace();
         }
         return desPath;
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-    protected int sizeOf(Bitmap data) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
-            return data.getRowBytes() * data.getHeight();
-        } else {
-            return data.getByteCount();
-        }
     }
 
     /**

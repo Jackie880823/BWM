@@ -220,43 +220,44 @@
         <item>	赞比亚	260	</item></string-array>
 
     <array name="relationship_item">
-        <item>妈妈</item>
-        <item>爸爸</item>
+        <item>母亲</item>
+        <item>父亲</item>
         <item>老婆</item>
         <item>老公</item>
         <item>姐妹</item>
         <item>兄弟</item>
         <item>女儿</item>
         <item>儿子</item>
-        <item>婆婆</item>
-        <item>公公</item>
+        <item>奶奶、外婆</item>
+        <item>爷爷、外公</item>
         <item>孙女</item>
         <item>孙子</item>
         <item>叔祖</item>
         <item>叔祖母</item>
         <item>侄孙女</item>
-        <item>侄孙子</item>
-        <item>太公</item>
-        <item>太婆</item>
-        <item>太侄孙女</item>
-        <item>太侄孙子</item>
+        <item>侄孙</item>
+        <item>曾祖父</item>
+        <item>曾祖母</item>
+        <item>曾侄孙女</item>
+        <item>曾侄孙子</item>
+        <item>姑妈、婶婶、舅妈、姨妈</item>
         <item>叔叔</item>
         <item>第一代堂表兄妹</item>
         <item>第二代堂表兄妹</item>
         <item>堂表兄弟姊妹</item>
-        <item>外甥女</item>
-        <item>外甥</item>
-        <item>岳母</item>
-        <item>岳父</item>
-        <item>阿姨</item>
-        <item>叔叔</item>
-        <item>弟媳</item>
-        <item>姐夫，妹夫</item>
-        <item>儿媳妇</item>
+        <item>侄女、外甥女</item>
+        <item>侄子、外甥</item>
+        <item>婆婆、岳母</item>
+        <item>公公、岳父</item>
+        <item>姑妈</item>
+        <item>姑父</item>
+        <item>嫂子、弟媳</item>
+        <item>姐夫、妹夫</item>
+        <item>儿媳</item>
         <item>女婿</item>
         <item>姻堂表兄妹</item>
-        <item>姻外甥女</item>
-        <item>姻外甥</item>
+        <item>侄媳</item>
+        <item>侄女婿</item>
         <item>未婚妻</item>
         <item>未婚夫</item>
         <item>前妻</item>
@@ -267,12 +268,12 @@
         <item>干哥弟</item>
         <item>干女儿</item>
         <item>干儿子</item>
-        <item>后母</item>
-        <item>后父</item>
-        <item>后姐妹</item>
-        <item>后哥弟</item>
-        <item>后女儿</item>
-        <item>后儿子</item>
+        <item>继母</item>
+        <item>继父</item>
+        <item>非亲姐妹</item>
+        <item>非亲兄弟</item>
+        <item>继儿</item>
+        <item>继子</item>
         <item>其他亲戚</item>
         <item>伴侣</item>
         <item>同事</item>

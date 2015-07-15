@@ -19,6 +19,7 @@ import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.MyStickerActivity;
 import com.bondwithme.BondWithMe.util.AnimatedGifDrawable;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,33 +51,6 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
     public void onBindViewHolder(final MyStickerAdapter.VHItem holder, final int position) {
         final LocalStickerInfo stickerInfo = data.get(position);
 
-        //设置sticker icon                                        /FamilyWishes
-//        String path = MainActivity.STICKERS_NAME + File.separator + stickerInfo.getPath();
-//        File file = new File(path);
-//        File[] files = file.listFiles();
-//        if (null != files && files.length > 0) {
-//            for (File file1 : files) {
-//                String filePath = file1.getAbsolutePath();
-//                if (filePath.substring(filePath.lastIndexOf(File.separator) + 1).contains("s")) {
-//                    try {
-//                        File f = new File(filePath);
-//                        InputStream inputStream = new FileInputStream(f);//mContext.getAssets().open(filePath);
-//                        if (filePath.endsWith("gif")) {
-//                            AnimatedGifDrawable animatedGifDrawable = new AnimatedGifDrawable(mContext.getResources(), 0, inputStream, null);
-//                            Drawable drawable = animatedGifDrawable.getDrawable();
-//                            holder.ivMySticker.setImageDrawable(drawable);
-//                        } else {
-//                            holder.ivMySticker.setImageBitmap(BitmapFactory.decodeStream(inputStream));
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    break;
-//                }
-//            }
-//
-//        }
-
         String picPath = MainActivity.STICKERS_NAME+"/"+stickerInfo.getPath()+"/"+stickerInfo.getSticker_name()+stickerInfo.getType();
         Bitmap bmp = BitmapFactory.decodeFile(picPath);
         holder.ivMySticker.setImageBitmap(bmp);
@@ -85,13 +59,15 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
         holder.tvRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean deleted = false;
-                File f = new File(MainActivity.STICKERS_NAME +"/"+stickerInfo.getPath());
-                deleted = deleteDirectory(f);
+                boolean deleted = true;
+//                File f = new File(MainActivity.STICKERS_NAME +"/"+stickerInfo.getPath());
+//                deleted = deleteDirectory(f);
                 if (deleted){
                     try {
                         Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-                        stickerDao.delete(stickerInfo);
+                        DeleteBuilder deleteBuilder= stickerDao.deleteBuilder();
+                        deleteBuilder.where().eq("loginUserId",MainActivity.getUser().getUser_id()).and().eq("path",stickerInfo.getPath());
+                        deleteBuilder.delete();
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
