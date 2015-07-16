@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe.ui.more.Archive;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.ArchiveChatFragment;
@@ -13,7 +12,7 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
 /**
  * Created by liangzemian on 15/6/30.
  */
-public class ArchiveGroupChatActivity extends BaseActivity implements View.OnClickListener{
+public class ArchiveGroupChatActivity extends BaseActivity {
 //    private CardView c1;
     private String group_id;
     private String group_name;
@@ -62,18 +61,18 @@ public class ArchiveGroupChatActivity extends BaseActivity implements View.OnCli
 
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-//            case R.id.top_event:
-//                starttest();
-//                break;
-//            default:
-//                super.onClick(v);
-//                break;
-        }
-        super.onClick(v);
-    }
+//    @Override
+//    public void onClick(View v) {
+//        switch (v.getId()){
+////            case R.id.top_event:
+////                starttest();
+////                break;
+////            default:
+////                super.onClick(v);
+////                break;
+//        }
+//        super.onClick(v);
+//    }
 
     private void  starttest(){
         Intent intent = new Intent(ArchiveGroupChatActivity.this,ArchiveGroupCommentActivity.class);

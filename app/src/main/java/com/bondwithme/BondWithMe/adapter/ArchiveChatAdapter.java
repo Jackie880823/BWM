@@ -124,6 +124,8 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
 
         private TextView group_name;
 
+        private View cardView;
+
         public VHItem(View itemView) {
             super(itemView);
 
@@ -140,6 +142,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             tvContent = (TextView) itemView.findViewById(R.id.tv_archive_content);
             tvContent.setMaxLines(9);
             imArchiveImages = (NetworkImageView) itemView.findViewById(R.id.iv_chats_images);
+            cardView = itemView.findViewById(R.id.top_archive);
             tvContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -165,6 +168,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             });
 
             imArchiveImages.setOnClickListener(this);
+            cardView.setOnClickListener(this);
         }
 
         @Override
@@ -172,9 +176,11 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             int position = getAdapterPosition();
             ArchiveChatEntity entity = data.get(position);
             switch (v.getId()){
+//                case R.id.iv_chats_images:
                 case R.id.iv_chats_images:
                     if(marchiveChatViewClickListener != null){
                         marchiveChatViewClickListener.showOriginalPic(entity.getContent_id());
+//                        marchiveChatViewClickListener.showComments(entity.getContent_group_id(),entity.getGroup_id());
                     }
                     break;
                 case R.id.top_archive:

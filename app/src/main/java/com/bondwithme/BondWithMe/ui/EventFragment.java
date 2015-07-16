@@ -1,4 +1,4 @@
-package com.madx.bwm.ui;
+package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,9 +17,6 @@ import com.bondwithme.BondWithMe.adapter.EventAdapter;
 import com.bondwithme.BondWithMe.entity.BirthdayEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.ui.BaseFragment;
-import com.bondwithme.BondWithMe.ui.EventDetailActivity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.Bookends;
@@ -39,9 +36,9 @@ import java.util.List;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.madx.bwm.ui.EventFragment.OnFragmentInteractionListener} interface
+ * {@link com.bondwithme.BondWithMe.ui.EventFragment.OnFragmentInteractionListener} interface
  * to handle interaction events
- * Use the {@link com.madx.bwm.ui.EventFragment#newInstance} factory method to
+ * Use the {@link com.bondwithme.BondWithMe.ui.EventFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class EventFragment extends BaseFragment<MainActivity> {

@@ -15,9 +15,8 @@ import com.bondwithme.BondWithMe.adapter.ArchiveCommentAdapter;
 import com.bondwithme.BondWithMe.adapter.ArchiveDetailAdapter;
 import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
 import com.bondwithme.BondWithMe.entity.ArchiveCommentEntity;
-import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.widget.Bookends;
+import com.bondwithme.BondWithMe.widget.ArchiveCommentHead;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -54,7 +53,7 @@ public class ArchiveCommentFragment extends BaseFragment<Activity> implements Vi
     private HttpTools mHttpTools;
 
     private View heah;
-    private Bookends<ArchiveCommentAdapter> abookends;
+    private ArchiveCommentHead<ArchiveCommentAdapter> abookends;
 
     public static ArchiveCommentFragment newInstance(String... params){
         return createInstance(new ArchiveCommentFragment(),params);
@@ -72,18 +71,23 @@ public class ArchiveCommentFragment extends BaseFragment<Activity> implements Vi
             content_group_id  = getArguments().getString(ARG_PARAM_PREFIX + "0");
             group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
         }
+
+        LayoutInflater inflater = LayoutInflater.from(getParentActivity());
+//        heah = inflater.inflate(R.layout.fragment_archive_comment_head, rvList, false);
+
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
-        rvList = getViewById(R.id.rv_Archive_list);
+
+        rvList = getViewById(R.id.rv_archive_list);
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
         initAdapter();
 
-        LayoutInflater inflater = LayoutInflater.from(getParentActivity());
-        heah = inflater.inflate(R.layout.fragment_archive_comment_head, rvList, false);
-        abookends = new Bookends<>(adapter);
-        abookends.addHeader(heah);
+//        LayoutInflater inflater = LayoutInflater.from(getParentActivity());
+//        heah = inflater.inflate(R.layout.fragment_archive_comment_head, rvList, false);
+//        abookends = new ArchiveCommentHead<>(adapter);
+//        abookends.addHeader(heah);
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -98,8 +102,7 @@ public class ArchiveCommentFragment extends BaseFragment<Activity> implements Vi
                 }
             }
         });
-        swipeRefreshLayout = getViewById(R.id.swipe_refresh_layout);
-
+        swipeRefreshLayout = getViewById(R.id.swipe_archive_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -119,9 +122,14 @@ public class ArchiveCommentFragment extends BaseFragment<Activity> implements Vi
     }
 
     private void initAdapter(){
-        adapter = new ArchiveCommentAdapter(getParentActivity(),CommentData);
+        adapter = new ArchiveCommentAdapter(getParentActivity(),CommentData,detailDate);
 //        adapter.setPicClickListener(this);
         rvList.setAdapter(adapter);
+
+//        abookends = new ArchiveCommentHead<>(adapter,getParentActivity(),detailDate);
+//        abookends.addHeader(heah);
+////        abookends.notifyDataSetChanged();
+//        rvList.setAdapter(abookends);
     }
 
     private void finishReFresh() {
@@ -131,6 +139,7 @@ public class ArchiveCommentFragment extends BaseFragment<Activity> implements Vi
 
     @Override
     public void requestData() {
+//        getComments();
         Map<String,String> params = new HashMap<>();
         params.put("start","0");
         params.put("limit","10");
@@ -181,9 +190,9 @@ public class ArchiveCommentFragment extends BaseFragment<Activity> implements Vi
                     startIndex += detailDate.size();
                     if(adapter == null) {
                         initAdapter();
-                        detailAdapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
                     } else {
-                        detailAdapter.addData(detailDate);
+//                        abookends.addData(detailDate);
                     }
                 }
                 loading = false;
@@ -243,8 +252,8 @@ public class ArchiveCommentFragment extends BaseFragment<Activity> implements Vi
                 //给GsonBuilder方法单独指定Date类型的反序列化方法
                 //gsonb.registerTypeAdapter(Date.class, ds);
                 Gson gson = gsonb.create();
-                CommentData = gson.fromJson(response, new TypeToken<ArrayList<WallCommentEntity>>() {}.getType());
-
+                CommentData = gson.fromJson(response, new TypeToken<ArrayList<ArchiveCommentEntity>>() {}.getType());
+                vProgress.setVisibility(View.GONE);
                 try{
                     if(isRefresh) {
                         isRefresh = false;
