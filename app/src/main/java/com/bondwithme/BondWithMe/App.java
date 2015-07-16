@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
@@ -18,6 +17,7 @@ import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.google.gson.Gson;
@@ -54,6 +54,8 @@ public class App extends MultiDexApplication {
             //32 bit cpu
             SDKInitializer.initialize(getApplicationContext());
         }
+
+        LocationUtil.setRequestLocationUpdates(this);
     }
 
 

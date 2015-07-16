@@ -42,7 +42,11 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
     private static double lat = 31.22997;
     private static double lon = 121.640756;
     public static double x_pi = lat * lon / 180.0;
-    private static Location currentLocation;
+    /**
+     * <br>    谷歌服务是否可用标识位，在应用启动后获取到位置信息则标识位置设置为true,没有获取到位置信息或服务不用都为
+     * <br>false。默认状态也为false
+     */
+    private static boolean googleAvailable = false;
 
     /**
      * 通过经纬度获取地址
@@ -102,13 +106,24 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
 
     private static LocationListener locationListener = new LocationUtil();
 
-    public static void setRequestLocationUpdates(Context context) {
-        if(lm == null) {
-            lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+    /**
+     * <br>注册监听谷歌地图变化，在应用启动是监听获取地后则取消监听，只用于验证是否可以通过谷歌地图获取位置信息，得到
+     * <br>判断谷歌地图是否可用的标识，如果没有谷歌服务不启用监听
+     *
+     * @param context 上下文件资源
+     */
+    public static void setRequestLocationUpdates(final Context context) {
+        if(SystemUtil.checkPlayServices(context)) {
+            if(lm == null) {
+                lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            }
+            lm.requestLocationUpdates(2000, 0, getCriteria(), locationListener, null);
         }
-        lm.requestLocationUpdates(2000, 0, getCriteria(), locationListener, null);
     }
 
+    /**
+     * 删除监听用于得到判断谷歌地图是否可用的标识的监听
+     */
     public static void removerLocationListener() {
         if(lm == null) {
             return;
@@ -127,28 +142,14 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
      */
     public static Intent getPlacePickerIntent(Context context, double latitude, double longitude, String name) {
         Intent intent = new Intent();
-        if(lm == null) {
-            lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        }
-
-        if(currentLocation != null) {
-            Address address = null;
-            try {
-                address = getAddress(context, currentLocation.getLatitude(), currentLocation.getLongitude());
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
-            if(address != null) {
-                Log.i(TAG, "getPlacePickerIntent& locale: country: " + address.getCountryName());
-            }
-        }
 
         intent.putExtra(Constant.EXTRA_LOCATION_NAME, name);
         intent.putExtra(Constant.EXTRA_LATITUDE, latitude);
         intent.putExtra(Constant.EXTRA_LONGITUDE, longitude);
 
         //判断是用百度还是google
-        if(!SystemUtil.checkPlayServices(context)) {
+        if(!googleAvailable) {
+            // 应用启动后用谷歌获取了一次地址信息，如果这次地址信息为空则证明谷歌地图不可用，启用百度地
             //TODO for baidu not support 64 bit cpu
             /**baidu map*/
             if(System.getProperty("os.arch").contains("64")) {
@@ -363,7 +364,8 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
     @Override
     public void onLocationChanged(Location location) {
         Log.i(TAG, "onLocationChanged()& latitude: " + location.getLatitude() + "; longitude: " + location.getLongitude());
-        currentLocation = location;
+        googleAvailable = true;
+        removerLocationListener();
     }
 
     @Override
