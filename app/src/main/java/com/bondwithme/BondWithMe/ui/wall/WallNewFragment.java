@@ -362,7 +362,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         editor.putString(PREFERENCE_KEY_TAG_GROUPS, gson.toJson(at_groups_data));
 
         WallEditView editView = fragment1.getEditText4Content();
-        editor.putString(PREFERENCE_KEY_TEXT_CONTENT, editView.getRelText());
+        editor.putString(PREFERENCE_KEY_TEXT_CONTENT, editView.getText().toString());
         editor.putString(PREFERENCE_KEY_OLD_MEMBER_TEXT, editView.getOldMemberText());
         editor.putString(PREFERENCE_KEY_OLD_GROUP_TEXT, editView.getOldGroupText());
 
