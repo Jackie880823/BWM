@@ -22,11 +22,9 @@
             android:paddingRight="@dimen/default_content_padding"
             android:paddingTop="@dimen/default_content_padding">
 
-
             <TextView
             android:id="@+id/owner_name"
             style="@style/text_dark_default"
-            android:layout_marginLeft="@dimen/default_view_margin"
             android:textStyle="bold"/>
             <!--<LinearLayout-->
                 <!--android:layout_width="match_parent"-->
@@ -66,36 +64,35 @@
                 android:id="@+id/tv_archive_content"
                 android:autoLink="web"
                 android:linksClickable="true"
-                android:layout_marginLeft="@dimen/default_view_margin"
                 style="@style/text_dark_default"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/ll_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_default_selector_bg"
-            android:gravity="center_vertical"
-            android:padding="@dimen/_5dp"
-            android:visibility="gone">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/ll_location"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/btn_default_selector_bg"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:padding="@dimen/_5dp"-->
+            <!--android:visibility="gone">-->
 
-            <ImageView
-                android:id="@+id/iv_location"
-                android:layout_width="@dimen/_20dp"
-                android:layout_height="@dimen/_20dp"
-                android:background="@drawable/btn_default_selector_bg"
-                android:scaleType="centerInside"
-                android:src="@drawable/location"/>
+            <!--<ImageView-->
+                <!--android:id="@+id/iv_location"-->
+                <!--android:layout_width="@dimen/_20dp"-->
+                <!--android:layout_height="@dimen/_20dp"-->
+                <!--android:background="@drawable/btn_default_selector_bg"-->
+                <!--android:scaleType="centerInside"-->
+                <!--android:src="@drawable/location"/>-->
 
-            <TextView
-                android:id="@+id/tv_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_default_selector_bg"
-                android:text="@string/text_location"
-                android:textColor="@color/default_text_color_blue"
-                android:textSize="@dimen/text_small_size"/>
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:id="@+id/tv_location"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/btn_default_selector_bg"-->
+                <!--android:text="@string/text_location"-->
+                <!--android:textColor="@color/default_text_color_blue"-->
+                <!--android:textSize="@dimen/text_small_size"/>-->
+        <!--</LinearLayout>-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -105,19 +102,18 @@
             android:paddingRight="@dimen/default_content_padding"
             android:paddingTop="@dimen/default_content_padding">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true">
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_centerVertical="true">-->
 
                 <TextView
                     android:id="@+id/up_time"
                     style="@style/text_light_default"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/default_view_margin" />
+                    android:layout_gravity="center_vertical" />
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
         </RelativeLayout>
         <!--<View style="@style/split_line_default" />-->
         <!--<RelativeLayout-->

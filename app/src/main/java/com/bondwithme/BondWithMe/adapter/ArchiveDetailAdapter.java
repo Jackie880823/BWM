@@ -9,40 +9,39 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.entity.ArchiveCommentEntity;
-import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
 
 import java.util.List;
 
 /**
  * Created by liangzemian on 15/7/2.
  */
-public class ArchiveCommentAdapter extends RecyclerView.Adapter<ArchiveCommentAdapter.VHItem> {
+public class ArchiveDetailAdapter extends RecyclerView.Adapter<ArchiveDetailAdapter.VHItem> {
 
     private Context mContext;
-    private List<ArchiveCommentEntity> data;
+    private List<ArchiveChatEntity> data;
 
-    public ArchiveCommentAdapter(Context context,List<ArchiveCommentEntity> data){
+    public ArchiveDetailAdapter(Context context, List<ArchiveChatEntity> data){
         mContext = context;
         this.data = data;
     }
 
-    public void addData(List<ArchiveCommentEntity> newData){
+    public void addData(List<ArchiveChatEntity> newData){
         data.addAll(newData);
         notifyItemInserted(data.size());
     }
     @Override
-    public ArchiveCommentAdapter.VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ArchiveDetailAdapter.VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.archive_comment_item,parent,false);
         return new VHItem(view);
     }
 
     @Override
     public void onBindViewHolder(VHItem holder, int position) {
-        final ArchiveCommentEntity archiveCommentEntity = data.get(position);
-        holder.tvUserName.setText(archiveCommentEntity.getUser_given_name());
-        holder.tvContent.setText(archiveCommentEntity.getComment_content());
-        holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, archiveCommentEntity.getComment_creation_date()));
+        final ArchiveChatEntity archiveChatEntity = data.get(position);
+//        holder.tvUserName.setText(archiveCommentEntity.getUser_given_name());
+//        holder.tvContent.setText(archiveCommentEntity.getComment_content());
+//        holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, archiveCommentEntity.getComment_creation_date()));
     }
 
 

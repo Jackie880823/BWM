@@ -18,6 +18,7 @@ import com.bondwithme.BondWithMe.adapter.ArchiveChatAdapter;
 import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.ArchiveChatViewClickListener;
+import com.bondwithme.BondWithMe.ui.more.Archive.ArchiveGroupCommentActivity;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -237,7 +238,10 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
 
     @Override
     public void showComments(String content_group_id, String group_id) {
-
+        Intent intent = new Intent(getActivity(), ArchiveGroupCommentActivity.class);
+        intent.putExtra("content_group_id",content_group_id);
+        intent.putExtra("group_id",group_id);
+        startActivity(intent);
     }
 
 }
