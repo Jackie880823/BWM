@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,13 +27,17 @@ import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
+import com.bondwithme.BondWithMe.entity.FaceBookUserEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.interfaces.LogInStateListener;
 import com.bondwithme.BondWithMe.ui.CountryCodeActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.CountryCodeUtil;
+import com.bondwithme.BondWithMe.util.LoginManager;
 import com.bondwithme.BondWithMe.util.MD5Util;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
@@ -48,7 +53,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-public class LogInPhoneFragment extends Fragment implements View.OnClickListener , TextView.OnEditorActionListener{
+public class LogInPhoneFragment extends Fragment implements View.OnClickListener , TextView.OnEditorActionListener, LogInStateListener {
 
     private final static String TAG = LogInPhoneFragment.class.getSimpleName();
     private final static String GET_USER = TAG + "_GET_USER";
@@ -71,6 +76,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     private Button brLogIn;
     private TextView tvForgetPassword;
     private ImageView ivUsername;
+    private ImageView ivFacebook;
     private RelativeLayout rlProgress;
 
     private String strCountryCode;
@@ -120,6 +126,9 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
         initView(view);
 
+        LoginManager.initialize(getActivity());
+        LoginManager.setFaceBookLoginParams(getActivity(), this, ivFacebook, null, this);
+
         return view;
     }
 
@@ -156,6 +165,9 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+            LoginManager.onActivityResult(requestCode, resultCode, data);
+
             switch (requestCode)
             {
                 case GET_COUNTRY_CODE:
@@ -170,6 +182,13 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                 default:
                     break;
             }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LoginManager.OnDestory();
     }
 
     private void initView(View view)
@@ -184,6 +203,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         brLogIn = (Button)view.findViewById(R.id.br_log_in);
         tvForgetPassword = (TextView)view.findViewById(R.id.tv_forget_password);
         ivUsername = (ImageView)view.findViewById(R.id.iv_username);
+        ivFacebook = (ImageView)view.findViewById(R.id.iv_facebook);
         rlProgress = (RelativeLayout)view.findViewById(R.id.rl_progress);
 
 //        tvLogIn.setOnClickListener(this);
@@ -401,5 +421,16 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     {
         etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
         etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+    }
+
+    @Override
+    public void OnLoginSuccess(FaceBookUserEntity faceBookUserEntity, String logType) {
+        MessageUtil.showMessage(getActivity(),"OnLoginSuccess");
+        Log.d("","faceBookUserEntity" + faceBookUserEntity.toString());
+    }
+
+    @Override
+    public void OnLoginError(String error) {
+        MessageUtil.showMessage(getActivity(),"OnLoginError");
     }
 }

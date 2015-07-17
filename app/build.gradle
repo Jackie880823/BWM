@@ -142,6 +142,7 @@ dependencies {
     compile project(':Volley')
     compile project(':MaterialDesign')
     compile project(':PhotoView')
+    compile project(':facebook')
     //    compile 'com.android.support:gridlayout-v7:21.0.3'
     compile('org.apache.httpcomponents:httpmime:4.3.5') {
         // avoid "is ignored for the default configuration X" warnings
@@ -158,5 +159,4 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.android.support:support-v4:22.2.0'
-    compile 'com.facebook.android:facebook-android-sdk:4.4.0'
 }
