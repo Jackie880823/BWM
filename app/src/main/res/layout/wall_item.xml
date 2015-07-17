@@ -80,7 +80,7 @@
             android:paddingLeft="@dimen/default_content_padding"
             android:paddingRight="@dimen/default_content_padding">
 
-            <TextView
+            <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
                 android:id="@+id/tv_wall_content"
                 android:autoLink="web"
                 android:linksClickable="true"
