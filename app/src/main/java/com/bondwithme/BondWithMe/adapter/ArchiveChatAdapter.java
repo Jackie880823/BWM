@@ -17,6 +17,7 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.ArchiveChatViewClickListener;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,17 +26,53 @@ import java.util.List;
  */
 public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.VHItem>{
     private Context mContext;
-    private List<ArchiveChatEntity> data;
+    private List<ArchiveChatEntity> data = new ArrayList<>();
+    private List<ArchiveChatEntity> defaultData = new ArrayList<>();
+    private List<ArchiveChatEntity> searchData = new ArrayList<>();
+
 
     public ArchiveChatAdapter(Context context,List<ArchiveChatEntity> data){
         mContext = context;
-        this.data = data;
+        defaultData = data;
+        this.data = defaultData;
     }
 
     public void add(List<ArchiveChatEntity> newData){
+//        defaultData.addAll(newData);
+//        data = defaultData;
         data.addAll(newData);
+        defaultData.addAll(data);
         notifyItemInserted(data.size());
     }
+
+    public void addsearchData(List<ArchiveChatEntity> newData){
+        data.clear();
+        if (newData != null && newData.size()>0) {
+            searchData.addAll(newData);
+            data.addAll(searchData);
+            notifyItemInserted(data.size());
+        }
+        notifyDataSetChanged();
+
+
+    }
+    public void setDefaultData(){
+//        data.clear();
+        data.addAll(defaultData);
+//        data.clear();
+//        data = defaultData;
+        notifyDataSetChanged();
+    }
+//    public void addNewData(List<ArchiveChatEntity> newData){
+//        searchData.clear();
+//        if(newData != null && newData.size() >0){
+//            searchData.addAll(newData);
+//            data.clear();
+//            data = searchData;
+//        }
+//        notifyDataSetChanged();
+//    }
+
     @Override
     public ArchiveChatAdapter.VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.archivechat_item, parent, false);

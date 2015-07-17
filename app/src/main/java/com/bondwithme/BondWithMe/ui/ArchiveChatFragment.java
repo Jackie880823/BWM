@@ -6,9 +6,14 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -49,10 +54,13 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
 
     private String Tap;//0是群组传进来的，1成员传进来的
     private String group_id;
-    private String user_id;
+
+    private TextView searchText;
+    private ImageButton searchButton;
 
     private ArchiveChatAdapter adapter;
     private List<ArchiveChatEntity> data = new ArrayList<>();
+    private List<ArchiveChatEntity> searchData = new ArrayList<>();
 
     public static ArchiveChatFragment newInstance(String... params) {
             return createInstance(new ArchiveChatFragment(),params);
@@ -91,7 +99,8 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         }
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
-
+        searchText = getViewById(R.id.et_search);
+        searchButton = getViewById(R.id.bv_search);
         rvList = getViewById(R.id.rv_Archive_list);
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
@@ -122,6 +131,33 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
                 requestData();
             }
 
+        });
+        //搜索按钮监听事件
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchData(searchText.getText().toString().trim());
+            }
+        });
+
+        searchText.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String etImport = searchText.getText().toString().trim();
+                if (TextUtils.isEmpty(etImport)){
+                    adapter.setDefaultData();
+                }
+            }
         });
     }
 
@@ -212,6 +248,78 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
 
     }
 
+    private void searchData(String searchText){
+        Map<String,String> params = new HashMap<>();
+        params.put("start",startIndex + "");
+        params.put("limit",offset + "");
+        params.put("group_id",group_id);
+        params.put("view_user",MainActivity.getUser().getUser_id());
+        params.put("search_key",searchText);
+        String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
+
+        new HttpTools(getActivity()).get(url, null, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                //Json中的日期表达方式没有办法直接转换成我们的Date类型, 因此需要单独注册一个Date的反序列化类.
+                //DateDeserializer ds = new DateDeserializer();
+                //给GsonBuilder方法单独指定Date类型的反序列化方法
+                //gsonb.registerTypeAdapter(Date.class, ds);
+                Gson gson = gsonb.create();
+                try {
+                    searchData = gson.fromJson(response, new TypeToken<ArrayList<ArchiveChatEntity>>() {
+                    }.getType());
+                    if(isRefresh) {
+                        startIndex = searchData.size();
+                        currentPage = 1;
+                        finishReFresh();
+                        initAdapter();
+                    } else {
+                        startIndex += searchData.size();
+                        adapter.addsearchData(searchData);
+                    }
+                    if(data.size() > 0){
+                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+                    }
+                    loading = false;
+                }catch (Exception e){
+                    e.printStackTrace();
+                    reInitDataStatus();
+                }finally {
+                    vProgress.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                if(isRefresh) {
+                    finishReFresh();
+                }
+                loading = false;
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
     private void reInitDataStatus() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
