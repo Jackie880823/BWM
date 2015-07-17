@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,12 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
 import com.bondwithme.BondWithMe.entity.ArchiveCommentEntity;
+import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.interfaces.ArchiveChatViewClickListener;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 
 import java.util.List;
@@ -42,18 +46,22 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyItemInserted(getItemCount());
     }
     @Override
-    public ArchiveCommentAdapter.VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
+        RecyclerView.ViewHolder viewHolder = null;
         switch (viewType) {
             case TYPE_HEADER:
                 view = LayoutInflater.from(mContext).inflate(R.layout.fragment_archive_comment_head,parent,false);
+                viewHolder = new VHHeader(view);
+//                return new VHHeader(view);
                 break;
             case TYPE_ITEM:
                 view = LayoutInflater.from(mContext).inflate(R.layout.archive_comment_item,parent,false);
+                viewHolder = new VHItem(view);
+//                return new VHItem(view);
                 break;
         }
-        return new VHItem(view);
-
+        return viewHolder;
     }
 
     @Override
@@ -71,41 +79,40 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(position == 0){
-//            VHHeader item = (VHHeader) holder;
-//            item.tvUserName.setText("111111");
-//            ArchiveChatEntity archive = detailData.get(0);
-//            if(TextUtils.isEmpty(archive.getFile_id())){
-//                item.llArchiveImage.setVisibility(View.GONE);
-//            }else {
-//                //如果有照片
-//                item.llArchiveImage.setVisibility(View.VISIBLE);
-//                //照片的总数
-//                int PhotoCount = Integer.valueOf(archive.getPhoto_count());
-//                if(PhotoCount > 1){
-//                    String photoCountStr;
-//                    photoCountStr = PhotoCount + " " + mContext.getString(R.string.text_photos);
-//                    item.tvPhotoCount.setText(photoCountStr);
-//                    item.tvPhotoCount.setVisibility(View.VISIBLE);
-//                }else {
-//                    item.tvPhotoCount.setVisibility(View.GONE);
-//                }
-//                //加载照片
-//                VolleyUtil.initNetworkImageView(mContext, item.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//            }
-//            item.tvUserName.setText(archive.getGroup_name());
-//
-//            String Content = archive.getText_description();
-//            if(TextUtils.isEmpty(Content)){
-////            holder.liContent.setVisibility(View.VISIBLE);
-//                item.liContent.setVisibility(View.GONE);
-//            }else {
-//                item.tvContent.setText(Content);
-//                item.liContent.setVisibility(View.VISIBLE);
-//            }
-//            item.tvLoveCount.setText(archive.getLove_count());
-//            item.tvCommentCount.setText(archive.getComment_count());
-////        String tempdate = MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date());
-//            item.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date()));//时间有问题
+            VHHeader item = (VHHeader) holder;
+            ArchiveChatEntity archive = detailData.get(0);
+            if(TextUtils.isEmpty(archive.getFile_id())){
+                item.llArchiveImage.setVisibility(View.GONE);
+            }else {
+                //如果有照片
+                item.llArchiveImage.setVisibility(View.VISIBLE);
+                //照片的总数
+                int PhotoCount = Integer.valueOf(archive.getPhoto_count());
+                if(PhotoCount > 1){
+                    String photoCountStr;
+                    photoCountStr = PhotoCount + " " + mContext.getString(R.string.text_photos);
+                    item.tvPhotoCount.setText(photoCountStr);
+                    item.tvPhotoCount.setVisibility(View.VISIBLE);
+                }else {
+                    item.tvPhotoCount.setVisibility(View.GONE);
+                }
+                //加载照片
+                VolleyUtil.initNetworkImageView(mContext, item.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            }
+            item.tvUserName.setText(archive.getGroup_name());
+
+            String Content = archive.getText_description();
+            if(TextUtils.isEmpty(Content)){
+//            holder.liContent.setVisibility(View.VISIBLE);
+                item.liContent.setVisibility(View.GONE);
+            }else {
+                item.tvContent.setText(Content);
+                item.liContent.setVisibility(View.VISIBLE);
+            }
+            item.tvLoveCount.setText(archive.getLove_count());
+            item.tvCommentCount.setText(archive.getComment_count());
+//        String tempdate = MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date());
+            item.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date()));//时间有问题
         }else {
             VHItem item = (VHItem) holder;
             ArchiveCommentEntity commentEntity = data.get(position-detailItemCount);
@@ -195,10 +202,15 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         }
         @Override
         public void onClick(View v) {
-
+            ArchiveChatEntity archive = detailData.get(0);
+            switch (v.getId()){
+                case R.id.iv_chats_images:
+                    if(marchiveChatViewClickListener != null){
+                        marchiveChatViewClickListener.showOriginalPic(archive.getContent_id());
+                    }
+            }
         }
     }
-
 
 
     class VHItem extends RecyclerView.ViewHolder {
@@ -247,5 +259,10 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             });
 
         }
+    }
+
+    public ArchiveChatViewClickListener marchiveChatViewClickListener;
+    public void setPicClickListener(ArchiveChatViewClickListener archiveChatViewClickListener){
+        marchiveChatViewClickListener = archiveChatViewClickListener;
     }
 }

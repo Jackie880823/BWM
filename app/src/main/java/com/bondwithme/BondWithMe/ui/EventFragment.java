@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -17,11 +16,8 @@ import com.bondwithme.BondWithMe.adapter.EventAdapter;
 import com.bondwithme.BondWithMe.entity.BirthdayEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.bondwithme.BondWithMe.widget.Bookends;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
-import com.bondwithme.BondWithMe.widget.RecyclerViewHeader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -72,7 +68,6 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
     private RecyclerView rvList;
     private EventAdapter adapter;
-    private Bookends<EventAdapter> aBoolean;
     public List<EventEntity> data = new ArrayList<EventEntity>();
     public List<BirthdayEntity> birthdayEvents = new ArrayList<BirthdayEntity>();
     private FrameLayout eventStart;
@@ -87,10 +82,6 @@ public class EventFragment extends BaseFragment<MainActivity> {
     LinearLayoutManager llm;
     private View vProgress;
 
-    private View heah;
-
-    RecyclerViewHeader header;
-
     @Override
     public void initView() {
 
@@ -104,19 +95,12 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
-        rvList.setHasFixedSize(true);
-//        header = getViewById(R.id.header);
-
+//        rvList.setHasFixedSize(true);
         adapter = new EventAdapter(getParentActivity(), data, birthdayEvents);
-        aBoolean = new Bookends<>(adapter);
 
-//        rvList.setAdapter(adapter);
-//        header = RecyclerViewHeader.fromXml(getActivity(),R.layout.fragment_archive_comment_head);
-//        header.attachTo(rvList);
-        LayoutInflater inflater = LayoutInflater.from(getParentActivity());
-        heah = inflater.inflate(R.layout.fragment_archive_comment_head, rvList, false);
-        aBoolean.addHeader(heah);
-        rvList.setAdapter(aBoolean);
+        rvList.setAdapter(adapter);
+
+
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -173,7 +157,6 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
     @Override
     public void requestData() {
-//        Log.i("requestData","===========================");
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "1");
@@ -220,8 +203,6 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     }
                     finishReFresh();
                     adapter = new EventAdapter(getParentActivity(), data, birthdayEvents);
-                    aBoolean = new Bookends<>(adapter);
-                    aBoolean.addHeader(heah);
                     adapter.setItemClickListener(new EventAdapter.ItemClickListener() {
                         @Override
                         public void topItemClick(List<BirthdayEntity> birthdayEntitys) {
@@ -229,7 +210,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 //                            intent.putExtra("birthday_events", (Serializable) birthdayEntitys);
 //                            startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
                             //跳转生日界面
-                            Intent intent = new Intent(getActivity(), BigDayActivity.class);
+                            Intent intent = new Intent(getActivity(), com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity.class);
                             startActivity(intent);
                         }
 
@@ -249,7 +230,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
                         }
                     });
-                    rvList.setAdapter(aBoolean);
+                    rvList.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                     loading = false;
 
@@ -283,7 +264,6 @@ public class EventFragment extends BaseFragment<MainActivity> {
     }
 
     private void loadMoreEvent() {
-//        Log.i("loadMoreEvent","===========================");
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "0");

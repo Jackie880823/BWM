@@ -57,7 +57,7 @@ public class PrivateListAdapter extends RecyclerView.Adapter<PrivateListAdapter.
                 @Override
                 public void onClick(View v) {
                     if(itemClickListener != null){
-                        itemClickListener.topItemClick(data.get(getAdapterPosition()).getUser_id());
+                        itemClickListener.topItemClick(data.get(getAdapterPosition()).getUser_id(),data.get(getAdapterPosition()).getUser_given_name());
                     }
                 }
             });
@@ -67,7 +67,7 @@ public class PrivateListAdapter extends RecyclerView.Adapter<PrivateListAdapter.
     public ItemClickListener itemClickListener ;
     //点击事件回调接口
     public interface ItemClickListener{
-        void topItemClick(String user_id);
+        void topItemClick(String user_id,String user_name);
     }
     public void setItemClickListener(ItemClickListener itCL){
         itemClickListener  = itCL;

@@ -15,6 +15,7 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
 public class ArchivePrivateChatActivity extends BaseActivity implements View.OnClickListener{
 //    private CardView c1;
     private String user_id;
+    private String user_name;
 
 //    @Override
 //    public int getLayout() {
@@ -34,6 +35,8 @@ public class ArchivePrivateChatActivity extends BaseActivity implements View.OnC
 
     @Override
     protected void setTitle() {
+        user_name = getIntent().getStringExtra("user_name");
+        tvTitle.setText(user_name);
 
     }
 

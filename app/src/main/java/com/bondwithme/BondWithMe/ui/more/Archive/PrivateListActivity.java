@@ -230,9 +230,10 @@ public class PrivateListActivity extends BaseActivity implements View.OnClickLis
         adapter = new PrivateListAdapter(this,data);
         adapter.setItemClickListener(new PrivateListAdapter.ItemClickListener() {
             @Override
-            public void topItemClick(String user_id) {
+            public void topItemClick(String user_id,String user_name) {
                 Intent intent = new Intent(PrivateListActivity.this,ArchivePrivateChatActivity.class);
                 intent.putExtra("user_id",user_id);
+                intent.putExtra("user_name",user_name);
                 startActivity(intent);
             }
         });

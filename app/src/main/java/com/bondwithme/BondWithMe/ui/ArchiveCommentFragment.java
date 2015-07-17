@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.bondwithme.BondWithMe.adapter.ArchiveDetailAdapter;
 import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
 import com.bondwithme.BondWithMe.entity.ArchiveCommentEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.interfaces.ArchiveChatViewClickListener;
 import com.bondwithme.BondWithMe.widget.ArchiveCommentHead;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
@@ -30,7 +32,7 @@ import java.util.Map;
 /**
  * Created by liangzemian on 15/7/1.
  */
-public class ArchiveCommentFragment extends BaseFragment<Activity> implements View.OnClickListener{
+public class ArchiveCommentFragment extends BaseFragment<Activity>  implements ArchiveChatViewClickListener {
     private final String TAG = ArchiveCommentFragment.class.getSimpleName();
     private RecyclerView rvList;
     private MySwipeRefreshLayout swipeRefreshLayout;
@@ -123,7 +125,7 @@ public class ArchiveCommentFragment extends BaseFragment<Activity> implements Vi
 
     private void initAdapter(){
         adapter = new ArchiveCommentAdapter(getParentActivity(),CommentData,detailDate);
-//        adapter.setPicClickListener(this);
+        adapter.setPicClickListener(this);
         rvList.setAdapter(adapter);
 
 //        abookends = new ArchiveCommentHead<>(adapter,getParentActivity(),detailDate);
@@ -294,7 +296,19 @@ public class ArchiveCommentFragment extends BaseFragment<Activity> implements Vi
     }
 
     @Override
-    public void onClick(View v) {
+    public void showOriginalPic(String content_id) {
+        Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
+        Map<String, String> condition = new HashMap<>();
+        condition.put("content_id", content_id);
+        Map<String, String> params = new HashMap<>();
+        params.put("condition", UrlUtil.mapToJsonstring(condition));
+        String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
+        intent.putExtra("request_url", url);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showComments(String content_group_id, String group_id) {
 
     }
 }
