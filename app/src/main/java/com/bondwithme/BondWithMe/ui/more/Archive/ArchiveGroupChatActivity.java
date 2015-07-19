@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.ArchiveChatFragment;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.GroupSettingActivity;
 
 
 /**
@@ -43,7 +44,10 @@ public class ArchiveGroupChatActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-
+        Intent intent = new Intent(ArchiveGroupChatActivity.this, GroupSettingActivity.class);
+        intent.putExtra("groupId", group_id);
+        intent.putExtra("groupName", group_name);
+        startActivity(intent);
     }
 
     @Override

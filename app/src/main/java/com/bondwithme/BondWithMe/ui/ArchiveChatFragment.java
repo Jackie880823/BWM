@@ -59,6 +59,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
     private ImageButton searchButton;
 
     private ArchiveChatAdapter adapter;
+    private ArchiveChatAdapter searchAdapter;
     private List<ArchiveChatEntity> data = new ArrayList<>();
     private List<ArchiveChatEntity> searchData = new ArrayList<>();
 
@@ -136,6 +137,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isRefresh = true;
                 searchData(searchText.getText().toString().trim());
             }
         });
@@ -155,12 +157,18 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
             public void afterTextChanged(Editable s) {
                 String etImport = searchText.getText().toString().trim();
                 if (TextUtils.isEmpty(etImport)){
-                    adapter.setDefaultData();
+                    rvList.setAdapter(adapter);
+//                    adapter.setDefaultData();
                 }
             }
         });
     }
 
+    private void initSearchAdapter(){
+        searchAdapter = new ArchiveChatAdapter(getParentActivity(),searchData);
+        searchAdapter.setPicClickListener(this);
+        rvList.setAdapter(searchAdapter);
+    }
     private void initAdapter(){
         adapter = new ArchiveChatAdapter(getParentActivity(),data);
         adapter.setPicClickListener(this);
@@ -173,13 +181,6 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         params.put("limit",offset + "");
         params.put("group_id",group_id);
         params.put("view_user",MainActivity.getUser().getUser_id());
-//        if(Tap.equals(0)){
-//            params.put("group_id",group_id);
-//            params.put("view_user","");
-//        }else {
-//            params.put("group_id","");
-//            params.put("view_user",user_id);
-//        }
         params.put("search_key","");
         String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
 
@@ -283,10 +284,10 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
                         startIndex = searchData.size();
                         currentPage = 1;
                         finishReFresh();
-                        initAdapter();
+                        initSearchAdapter();
                     } else {
                         startIndex += searchData.size();
-                        adapter.addsearchData(searchData);
+                        searchAdapter.add(searchData);
                     }
                     if(data.size() > 0){
                         swipeRefreshLayout.setVisibility(View.VISIBLE);

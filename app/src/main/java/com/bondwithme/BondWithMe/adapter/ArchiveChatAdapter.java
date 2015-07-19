@@ -27,51 +27,16 @@ import java.util.List;
 public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.VHItem>{
     private Context mContext;
     private List<ArchiveChatEntity> data = new ArrayList<>();
-    private List<ArchiveChatEntity> defaultData = new ArrayList<>();
-    private List<ArchiveChatEntity> searchData = new ArrayList<>();
-
 
     public ArchiveChatAdapter(Context context,List<ArchiveChatEntity> data){
         mContext = context;
-        defaultData = data;
-        this.data = defaultData;
+        this.data = data;
     }
 
     public void add(List<ArchiveChatEntity> newData){
-//        defaultData.addAll(newData);
-//        data = defaultData;
         data.addAll(newData);
-        defaultData.addAll(data);
         notifyItemInserted(data.size());
     }
-
-    public void addsearchData(List<ArchiveChatEntity> newData){
-        data.clear();
-        if (newData != null && newData.size()>0) {
-            searchData.addAll(newData);
-            data.addAll(searchData);
-            notifyItemInserted(data.size());
-        }
-        notifyDataSetChanged();
-
-
-    }
-    public void setDefaultData(){
-//        data.clear();
-        data.addAll(defaultData);
-//        data.clear();
-//        data = defaultData;
-        notifyDataSetChanged();
-    }
-//    public void addNewData(List<ArchiveChatEntity> newData){
-//        searchData.clear();
-//        if(newData != null && newData.size() >0){
-//            searchData.addAll(newData);
-//            data.clear();
-//            data = searchData;
-//        }
-//        notifyDataSetChanged();
-//    }
 
     @Override
     public ArchiveChatAdapter.VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -115,7 +80,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
         holder.tvLoveCount.setText(archive.getLove_count());
         holder.tvCommentCount.setText(archive.getComment_count());
 //        String tempdate = MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date());
-        holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date()));//时间有问题
+        holder.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date()));
 //        holder.tvDate.setText(tempdate);
     }
 
@@ -213,11 +178,9 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             int position = getAdapterPosition();
             ArchiveChatEntity entity = data.get(position);
             switch (v.getId()){
-//                case R.id.iv_chats_images:
                 case R.id.iv_chats_images:
                     if(marchiveChatViewClickListener != null){
                         marchiveChatViewClickListener.showOriginalPic(entity.getContent_id());
-//                        marchiveChatViewClickListener.showComments(entity.getContent_group_id(),entity.getGroup_id());
                     }
                     break;
                 case R.id.top_archive:
