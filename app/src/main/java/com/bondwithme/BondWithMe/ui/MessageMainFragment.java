@@ -492,12 +492,18 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     }
 
     private void showGroupEmptyView() {
+        if (groupRefreshLayout.getVisibility() == View.VISIBLE) {
+            groupRefreshLayout.setVisibility(View.GONE);
+        }
         emptyGroupMessageLinear.setVisibility(View.VISIBLE);
         emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
         emptyGroupMessageTv.setText("");
     }
 
     private void hideGroupEmptyView() {
+        if (groupRefreshLayout.getVisibility() == View.GONE) {
+            groupRefreshLayout.setVisibility(View.VISIBLE);
+        }
         emptyGroupMessageLinear.setVisibility(View.GONE);
     }
 
@@ -587,12 +593,18 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     }
 
     private void showMemberEmptyView() {
+        if (userRefreshLayout.getVisibility() == View.VISIBLE) {
+            userRefreshLayout.setVisibility(View.GONE);
+        }
         emptyMemberMessageLinear.setVisibility(View.VISIBLE);
         emptyMemberMessageIv.setImageResource(R.drawable.message_member_empty);
         emptyMemberMessageTv.setText("");
     }
 
     private void hideMemberEmptyView() {
+        if (userRefreshLayout.getVisibility() == View.GONE) {
+            userRefreshLayout.setVisibility(View.VISIBLE);
+        }
         emptyMemberMessageLinear.setVisibility(View.GONE);
     }
 
