@@ -52,11 +52,13 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LogInPhoneFragment extends Fragment implements View.OnClickListener , TextView.OnEditorActionListener, LogInStateListener {
 
     private final static String TAG = LogInPhoneFragment.class.getSimpleName();
     private final static String GET_USER = TAG + "_GET_USER";
+    private final static String CHECK_ID = TAG + "_CHECK_ID";
 
 
     private static final int GET_COUNTRY_CODE = 0;
@@ -64,7 +66,9 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     private static final int ERROR = -1;
     private static final int GO_DETAILS = 1;
     private static final int GO_MAIN = 2;
-    private static final int CATCH =3;
+    private static final int CATCH = 3;
+    private static final int THIRD_PARTY_SIGN_UP = 4;
+
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
@@ -107,10 +111,16 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                     unknowWrong();
                     break;
 
+                case THIRD_PARTY_SIGN_UP:
+                    goThirdPartyCheckId();
+                    break;
+
                 case ERROR:
                     //需要怎么处理？暂时？
                     unknowWrong();
                     break;
+
+
 
                 default:
                     break;
@@ -118,6 +128,8 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
         }
     };
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -423,14 +435,106 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
     }
 
+    private FaceBookUserEntity faceBookUserEntity;
+
     @Override
     public void OnLoginSuccess(FaceBookUserEntity faceBookUserEntity, String logType) {
-        MessageUtil.showMessage(getActivity(),"OnLoginSuccess");
-        Log.d("","faceBookUserEntity" + faceBookUserEntity.toString());
+
+        if (!MyTextUtil.isHasEmpty(faceBookUserEntity.getUserId(), faceBookUserEntity.getFirstname(), faceBookUserEntity.getLastname(), faceBookUserEntity.getGender()))
+        {
+            Log.d("", faceBookUserEntity.toString());
+            this.faceBookUserEntity = faceBookUserEntity;
+            checkFacebookId();
+        }
+        else
+        {
+            //没必要吧？？？
+        }
     }
 
     @Override
     public void OnLoginError(String error) {
-        MessageUtil.showMessage(getActivity(),"OnLoginError");
+        MessageUtil.showMessage(getActivity(), error);
     }
+
+    private void checkFacebookId() {
+        if (!NetworkUtil.isNetworkConnected(getActivity())) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("user_login_id", faceBookUserEntity.getUserId());
+        params.put("login_type", Constant.TYPE_FACEBOOK);
+        params.put("access_token", faceBookUserEntity.getToken());
+        params.put("user_uuid", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID));
+        params.put("user_app_version", AppInfoUtil.getAppVersionName(getActivity()));
+        params.put("user_app_os", Constant.USER_APP_OS);
+
+        new HttpTools(getActivity()).get(Constant.API_START_THIRD_PARTY_CHECK_ID, params, CHECK_ID, new HttpCallback() {
+            @Override
+            public void onStart() {
+                doingLogInChangeUI();
+            }
+
+            @Override
+            public void onFinish() {
+                finishLogInChangeUI();
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                Log.d("","---facebook--checkId" + response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if ("1".equals(jsonObject.getString("bwm_user")))
+                    {
+                        userEntities = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<List<UserEntity>>() {
+                        }.getType());
+                        tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
+                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
+                        {
+                            //这样可以当做是bad date
+                            return;
+                        }
+                        userEntity = userEntities.get(0);
+                        handler.sendEmptyMessage(GO_MAIN);
+                    }
+                    else if ("0".equals(jsonObject.getString("bwm_user")))
+                    {
+                        handler.sendEmptyMessage(THIRD_PARTY_SIGN_UP);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
+    private void goThirdPartyCheckId() {
+        Intent intent = new Intent(getActivity(), ThirdPartyVerifyPhoneActivity.class);
+        intent.putExtra(Constant.TYPE_FACEBOOK, faceBookUserEntity);
+        startActivity(intent);
+    }
+
+
+
 }

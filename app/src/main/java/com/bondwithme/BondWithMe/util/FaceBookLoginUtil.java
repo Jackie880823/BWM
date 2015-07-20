@@ -112,17 +112,16 @@ public class FaceBookLoginUtil{
     private class FaceBookCallBackListener implements FacebookCallback<LoginResult>{
         @Override
         public void onSuccess(LoginResult result) {
-            MessageUtil.showMessage(loginActivity,"onSuccess");
             fetchUserInfo(result.getAccessToken());
         }
         @Override
         public void onCancel() {
-            MessageUtil.showMessage(loginActivity,"onCancel");
+            LoginManager.getInstance().logOut();//清除Facebook授权缓存
             mBookLoginStateChanged.OnLoginError("user cancle log in facebook!");
         }
         @Override
         public void onError(FacebookException error) {
-            MessageUtil.showMessage(loginActivity,"onError");
+            LoginManager.getInstance().logOut();//清除Facebook授权缓存
             mBookLoginStateChanged.OnLoginError(error.getMessage());
         }
 
@@ -131,10 +130,11 @@ public class FaceBookLoginUtil{
     private  class OnFaceBookLoginClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
+            //这里要填入fragment，为什么呢？
             LoginManager.getInstance().logInWithReadPermissions(loginFragment, permissions);
         }
     }
-    private void fetchUserInfo(AccessToken accessToken){
+    private void fetchUserInfo(final AccessToken accessToken){
         GraphRequest request = GraphRequest.newMeRequest(
                 accessToken,
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -149,6 +149,7 @@ public class FaceBookLoginUtil{
                                 FaceBookUserEntity faceBookUserEntity =new FaceBookUserEntity();
 //                                faceBookUserEntity.setEmail(object.getString("email"));
                                 faceBookUserEntity.setGender(object.getString("gender"));
+                                faceBookUserEntity.setToken(accessToken.getToken().toString());//每次登录这个token都变化。有何作用？
 //                                faceBookUserEntity.setLink(object.getString("link"));
                                 faceBookUserEntity.setFirstname(object.getString("first_name"));
                                 faceBookUserEntity.setLastname(object.getString("last_name"));
