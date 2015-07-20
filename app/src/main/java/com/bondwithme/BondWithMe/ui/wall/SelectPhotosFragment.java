@@ -1,9 +1,9 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,13 +20,12 @@ import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.gc.materialdesign.views.CheckBox;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.LocalImagesAdapter;
-import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.AsyncLoadBitmapTask;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
-import com.gc.materialdesign.views.CheckBox;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -304,7 +303,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             Log.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
             if(localImagesAdapter == null) {
                 localImagesAdapter = new LocalImagesAdapter(getActivity(), mImageUriList, getParentActivity().getActionBarColor());
-                localImagesAdapter.setCheckBoxVisible(getParentActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false));
                 localImagesAdapter.setSelectedImages(mSelectedImageUris);
                 localImagesAdapter.setListener(selectImageUirListener);
                 mGvShowPhotos.setAdapter(localImagesAdapter);
@@ -389,6 +387,43 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
     public void setSelectImageUirListener(SelectImageUirChangeListener selectImageUirListener) {
         this.selectImageUirListener = selectImageUirListener;
+    }
+
+    /**
+     * 选中图片改变监听
+     */
+    public interface SelectImageUirChangeListener {
+        /**
+         * 添加图片{@code imageUri}到选择列表
+         *
+         * @param imageUri -   需要添加的图片uri
+         * @return -   true:   添加成功；
+         * -   false:  添加失败；
+         */
+        boolean addUri(Uri imageUri);
+
+        /**
+         * 从列表中删除图片{@code imageUri}
+         *
+         * @param imageUri -   需要删除的图片uri
+         * @return -   true:   删除成功；
+         * -   false:  删除失败；
+         */
+        boolean removeUri(Uri imageUri);
+
+        /**
+         * 打开了左侧的目录列表并设置标题栏左侧图标为{@code drawable}
+         *
+         * @param drawable
+         */
+        void onDrawerOpened(Drawable drawable);
+
+        /**
+         * 关闭了左侧的目录列表并设置标题栏左侧图标为{@code drawable}
+         *
+         * @param drawable
+         */
+        void onDrawerClose(Drawable drawable);
     }
 
 }

@@ -36,8 +36,9 @@ public class Constant {
      * for api
      */
 //    public static final String API_SERVER = "http://m.bondwith.me";
-    public static final String API_SERVER = "http://pt.bondwith.me";
+//    public static final String API_SERVER = "http://pt.bondwith.me";
 //    public static final String API_SERVER = "http://sc.bondwith.me";
+    public static final String API_SERVER = "http://dev.bondwith.me";
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER+"/bondwithme/index.php/api/multiPhoto";
 
     public static final String API_WALL_MAIN = API_SERVER+"/bondwithme/index.php/api/wall";
@@ -248,5 +249,11 @@ public class Constant {
 
     public static final String API_START_FORGOT_PASSWORD_GET_CODE = API_SERVER+"/bondwithme/index.php/api/forgetPassword"; //忘记密码，获取验证码
     public static final String API_START_FORGOT_PASSWORD_VERIFY_CODE = API_SERVER+"/bondwithme/index.php/api/verification"; //verify code(忘记密码)
+
+    public static final String API_MORE_ARCHIVE_LIST = API_SERVER+"/bondwithme/index.php/api/archivePostMain";
+    public static final String API_MORE_ARCHIVE_POSTING_LIST = API_SERVER+"/bondwithme/index.php/api/archivePost";
+    public static final String API_MORE_ARCHIVE_POSTING_DETAIL = API_SERVER+"/bondwithme/index.php/api/archivePostDetail";
+    public static final String API_MORE_ARCHIVE_COMMENT_LIST = API_SERVER+"/bondwithme/index.php/api/comment";
+    public static final String API_MORE_ARCHIVE_GROUP_MEMEBER_LIST = API_SERVER+"/bondwithme/index.php/api/archivePostMain";
 
 }

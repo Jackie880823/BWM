@@ -14,88 +14,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <RelativeLayout
-        android:id="@+id/rl_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_white_gray"
-        android:padding="@dimen/default_content_padding">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="BMW_Group"
-            android:textSize="@dimen/text_medium_size"
-            android:textColor="@color/primary_dark_material_dark"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:src="@drawable/profile_right"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
-
-    <View
+    <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/default_split_line"
-        android:layout_gravity="center"/>
+        android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/rl_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_white_gray"
-        android:padding="@dimen/default_content_padding">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Ming Dinasty"
-            android:textSize="@dimen/text_medium_size"
-            android:textColor="@color/primary_dark_material_dark"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:src="@drawable/profile_right"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/default_split_line"
-        android:layout_gravity="center"/>
+    </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_white_gray"
-        android:padding="@dimen/default_content_padding">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Grease Monkees only"
-            android:textSize="@dimen/text_medium_size"
-            android:textColor="@color/primary_dark_material_dark"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:src="@drawable/profile_right"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/default_split_line"
-        android:layout_gravity="center"/>
 
 </LinearLayout>

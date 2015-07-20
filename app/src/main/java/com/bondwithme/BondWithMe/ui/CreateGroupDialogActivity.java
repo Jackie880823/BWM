@@ -74,6 +74,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
     private String TAG;
     private RelativeLayout defaultHead;
     private ImageView default_imag;
+    private TextView add_photo_text;
     /**
      * 头像缓存文件名称
      */
@@ -356,6 +357,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
     private void setPicToView(Bitmap photo) {
         if (photo != null) {
             default_imag.setVisibility(View.GONE);
+            add_photo_text.setVisibility(View.GONE);
             defaultHead.setBackgroundResource(0);
             ivGroupPic.setImageBitmap(photo);
         }
@@ -539,6 +541,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
         member_num = getViewById(R.id.member_num);
         ivGroupPic = getViewById(R.id.creategroup_imageview);
         etGroupName = getViewById(R.id.creategroup_editText);
+        add_photo_text = getViewById(R.id.add_photo_text);
         defaultHead = getViewById(R.id.default_imagview);
         default_imag = getViewById(R.id.default_imag);
         //groupMembers = getIntent().getStringExtra("members_json");//上一个界面传来的成员数据(JSON格式)

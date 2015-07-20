@@ -193,7 +193,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         sendCommentView = getViewById(R.id.send_comment);
         sendCommentView.initViewPager(getParentActivity(), this);
-        sendCommentView.setCommentListener(new SendComment.CommentListener() {
+        sendCommentView.setCommentListenr(new SendComment.CommentListener() {
             @Override
             public void onStickerItemClick(String type, String folderName, String filName) {
                 stickerType = type;
