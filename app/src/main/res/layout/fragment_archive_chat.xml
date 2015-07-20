@@ -42,7 +42,8 @@
         </RelativeLayout>
     <View
         android:id="@+id/option_split_line"
-        style="@style/split_line_default" />
+        style="@style/split_line_default"
+        android:layout_below="@+id/search_linear"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
