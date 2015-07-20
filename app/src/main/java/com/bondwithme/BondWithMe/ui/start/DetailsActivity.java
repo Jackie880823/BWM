@@ -165,7 +165,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         {
             userEntity = (UserEntity) mSavedInstanceState.getSerializable(Constant.LOGIN_USER);
             tokenEntity = (AppTokenEntity) mSavedInstanceState.getSerializable(Constant.HTTP_TOKEN);
-            mCropImagedUri = mSavedInstanceState.getParcelable("uri");
+            mCropImagedUri = Uri.parse(mSavedInstanceState.getString("uri"));
         }
         getData();
 
@@ -623,7 +623,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         outState.putSerializable(Constant.HTTP_TOKEN, tokenEntity);
         if (mCropImagedUri != null)
         {
-            outState.putParcelable("uri", mCropImagedUri);
+            outState.putString("uri", mCropImagedUri.toString());
         }
     }
 }

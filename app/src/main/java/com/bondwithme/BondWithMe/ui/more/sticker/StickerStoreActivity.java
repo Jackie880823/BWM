@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -64,7 +62,7 @@ public class StickerStoreActivity extends BaseActivity {
     public static final String FINISHED = "finished";
 
 
-    View mProgressDialog;
+    ProgressDialog mProgressDialog;
 
     private ViewPager vp;
     private StickerPagerAdapter stickerPagerAdapter;
@@ -75,11 +73,9 @@ public class StickerStoreActivity extends BaseActivity {
     private  List<StickerBannerEntity> dataStickerBanner = new ArrayList<>();
     private  List<StickerGroupEntity> data = new ArrayList<>();
     private final int AUTO_PLAY = 1;
-    private final int INIT_ADAPTER = 2;
-    private final int DISMISS_DIALOG = 3;
     private ScrollView scrollView;
     int finished;
-    int positionFromStickerDetail = -1;
+    int positionFromStickerDetail;
 
 
 
@@ -128,8 +124,11 @@ public class StickerStoreActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mProgressDialog = getViewById(R.id.rl_progress);
-        mProgressDialog.setVisibility(View.VISIBLE);
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
+        }
+        mProgressDialog.show();
+
         scrollView = getViewById(R.id.sc_sticker_store);
         vp = getViewById(R.id.viewpager_sticker);
 
@@ -170,6 +169,7 @@ public class StickerStoreActivity extends BaseActivity {
             addView(i, view,stickerGroupEntity,position);
             views.add(view);
         }
+        mProgressDialog.dismiss();
         stickerPagerAdapter = new StickerPagerAdapter(views);
         vp.setAdapter(stickerPagerAdapter);
 
@@ -197,7 +197,7 @@ public class StickerStoreActivity extends BaseActivity {
                 intent.putExtra(StickerGroupAdapter.STICKER_GROUP, dataStickerGroup.get(position));
                 intent.putExtra(StickerGroupAdapter.POSITION, position);
                 intent.putExtra(FINISHED, finished);
-                intent.putExtra("positionFromStickerDetail", positionFromStickerDetail);
+                intent.putExtra("positionFromStickerDetail",positionFromStickerDetail);
                 startActivity(intent);
 
 
@@ -215,6 +215,9 @@ public class StickerStoreActivity extends BaseActivity {
                 downloadZip(holder,position);
             }
         });
+
+
+
 
         recyclerViewList.setAdapter(adapter);
 
@@ -234,6 +237,26 @@ public class StickerStoreActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
+                pbDownload.setVisibility(View.INVISIBLE);
+                pbDownload.setProgress(0);
+                ivExist.setVisibility(View.VISIBLE);
+
+                //插入sticker info
+                try {
+                    LocalStickerInfo stickerInfo = new LocalStickerInfo();
+                    stickerInfo.setName(stickerGroupEntity.getName());
+                    stickerInfo.setPath(stickerGroupEntity.getPath());
+                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
+                    stickerInfo.setVersion(stickerGroupEntity.getVersion());
+                    stickerInfo.setType(stickerGroupEntity.getType());
+                    stickerInfo.setPosition(position);
+                    LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
+                    Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
+
+                } catch (Exception e) {
+                    LogUtil.e(TAG,"插入sticker info",e);
+                }
+
 
             }
 
@@ -247,26 +270,6 @@ public class StickerStoreActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                //插入sticker info
-                try {
-                    LocalStickerInfo stickerInfo = new LocalStickerInfo();
-                    stickerInfo.setName(stickerGroupEntity.getName());
-                    stickerInfo.setPath(stickerGroupEntity.getPath());
-                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
-                    stickerInfo.setVersion(stickerGroupEntity.getVersion());
-                    stickerInfo.setType(stickerGroupEntity.getType());
-                    stickerInfo.setPosition(position);
-                    LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
-                    Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
-
-                } catch (Exception e) {
-                    LogUtil.e(TAG, "插入sticker info", e);
-                }
-
-                pbDownload.setVisibility(View.INVISIBLE);
-                pbDownload.setProgress(0);
-                ivExist.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -321,9 +324,6 @@ public class StickerStoreActivity extends BaseActivity {
         super.onResume();
         data = dataStickerGroup;
 //        handler.sendEmptyMessageDelayed(AUTO_PLAY, 4000);
-        handler.sendEmptyMessageDelayed(DISMISS_DIALOG, 6000);
-
-
     }
 
     @Override
@@ -332,29 +332,20 @@ public class StickerStoreActivity extends BaseActivity {
         data = dataStickerGroup;
     }
 
-        private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case AUTO_PLAY:
-                    int totalItem = views.size();
-                    int currentItem = vp.getCurrentItem();
-                    int toItem = currentItem + 1 == totalItem ? 0 :currentItem + 1;
-                    vp.setCurrentItem(toItem, true);
-                    this.sendEmptyMessageDelayed(AUTO_PLAY,4000);
-                    break;
-                case INIT_ADAPTER:
-                    initAdapter();
-                    break;
-                case DISMISS_DIALOG:
-                    if (mProgressDialog != null){
-                        mProgressDialog.setVisibility(View.INVISIBLE);
-                    }
-                    break;
-
-            }
-        }
-    };
+    //    private Handler handler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            switch (msg.what){
+//                case AUTO_PLAY:
+//                    int totalItem = views.size();
+//                    int currentItem = vp.getCurrentItem();
+//                    int toItem = currentItem + 1 == totalItem ? 0 :currentItem + 1;
+////                    Log.i("TAG", "totalItem:" + totalItem + "  currentItem:" + currentItem);
+//                    vp.setCurrentItem(toItem, true);
+//                    this.sendEmptyMessageDelayed(AUTO_PLAY,4000);
+//            }
+//        }
+//    };
 
     @Override
     protected void onStop() {
@@ -512,9 +503,6 @@ public class StickerStoreActivity extends BaseActivity {
     protected void onDestroy() {
         if(mReceiver!=null){
             unregisterReceiver(mReceiver);
-        }
-        if (mProgressDialog != null){
-            mProgressDialog.setVisibility(View.INVISIBLE);
         }
         super.onDestroy();
     }

@@ -85,9 +85,9 @@
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-        android:value="@string/baidu_maps_key_debug" />
-            <!--android:value="@string/baidu_maps_key" />-->
-        <!--android:value="@string/jackie_baidu_maps_key_debug" />-->
+            android:value="@string/baidu_maps_key_debug" />
+        <!-- android:value="@string/baidu_maps_key" /> -->
+        <!-- android:value="@string/jackie_baidu_maps_key_debug" /> -->
 
         <service
             android:name="com.baidu.location.f"
@@ -362,22 +362,24 @@
             android:name=".ui.more.ArchiveActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.GroupListActivity"
+            android:name=".ui.more.Archive.GroupListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.PrivateListActivity"
+            android:name=".ui.more.Archive.PrivateListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.ArchiveGroupChatActivity"
+            android:name=".ui.more.Archive.ArchiveGroupChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".ui.more.Archive.ArchivePrivateChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".ui.more.Archive.ArchiveGroupCommentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.ArchivePrivateChatActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.more.ArchiveGroupCommentActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.more.ArchivePrivateCommentActivity"
+            android:name=".ui.more.Archive.ArchivePrivateCommentActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.more.MoreSettingActivity" >
         </activity>
@@ -403,9 +405,7 @@
         <activity
             android:name=".ui.AlbumDetailActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.bondwithme.BondWithMe.ui.ViewPDFActivity"
-             />
+        <activity android:name=".ui.ViewPDFActivity" />
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
@@ -541,7 +541,21 @@
             android:windowSoftInputMode="adjustResize|stateHidden" >
         </activity>
         <activity
-            android:name=".ui.start.ResetPasswordSuccessfulActivity">
+            android:name=".ui.start.ResetPasswordSuccessfulActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".ui.start.ThirdPartyVerifyPhoneActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden">
         </activity>
     </application>
 

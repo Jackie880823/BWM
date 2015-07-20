@@ -5,8 +5,6 @@ import android.text.TextUtils;
 
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
-import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -59,14 +57,14 @@ public class LocalStickerInfoDao {
         }
     }
 
-    public void addOrUpdate(LocalStickerInfo stickerInfo) throws SQLException {
+    public void addOrUpdate(LocalStickerInfo stickerInfo) {
         if (null == stickerInfo) {
             return;
         }
         try {
             stickerInfo.setLoginUserId();
             QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
-            queryBuilder.where().eq("loginUserId", MainActivity.getUser().getUser_id()).and().eq("path", stickerInfo.getPath());
+            queryBuilder.where().eq("loginUserId", LocalStickerInfo.LOGIN_USER_ID).and().eq("path", stickerInfo.getPath());
             List<LocalStickerInfo> localList = queryBuilder.query();
             if ((localList != null) && (localList.size() > 0)) {
                 //stickerInfoDao.update(stickerInfo);
@@ -84,7 +82,7 @@ public class LocalStickerInfoDao {
         }
         try {
             QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
-            queryBuilder.where().eq("loginUserId", MainActivity.getUser().getUser_id()).and().eq("path", path);
+            queryBuilder.where().eq("loginUserId", LocalStickerInfo.LOGIN_USER_ID).and().eq("path", path);
             List<LocalStickerInfo> localList = queryBuilder.query();
             if ((localList != null) && (localList.size() > 0)) {
                 //stickerInfoDao.update(stickerInfo);
@@ -99,7 +97,7 @@ public class LocalStickerInfoDao {
     public List<String> queryAllSticker() {
         List<String> list = new ArrayList<>();
         try {
-            List<LocalStickerInfo> localList = stickerInfoDao.queryForEq("loginUserId", MainActivity.getUser().getUser_id());
+            List<LocalStickerInfo> localList = stickerInfoDao.queryForEq("loginUserId", LocalStickerInfo.LOGIN_USER_ID);
             if (null != localList && localList.size() > 0) {
                 list.add(DEF_FIRST_STICKER);
                 list.add(DEF_SECOND_STICKER);

@@ -7,7 +7,6 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 
@@ -24,7 +23,7 @@ public class SelectPhotosActivity extends BaseActivity {
     private boolean multi;
     private int residue;
 
-    private SelectImageUirChangeListener listener = new SelectImageUirChangeListener() {
+    private SelectPhotosFragment.SelectImageUirChangeListener listener = new SelectPhotosFragment.SelectImageUirChangeListener() {
 
         /**
          * 添加图片{@code imageUri}到选择列表
@@ -138,10 +137,9 @@ public class SelectPhotosActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        Intent intent = getIntent();
         // 是否为同时添加多张图片
+        Intent intent = getIntent();
         multi = intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        // 总共需要添加的图片数量
         residue = intent.getIntExtra(TabPictureFragment.RESIDUE, 10);
         fragment.setSelectImageUirListener(listener);
     }

@@ -35,7 +35,7 @@ public class RequestInfo {
             Iterator<String> iterotor = params.keySet().iterator();
             while (iterotor.hasNext()) {
                 String key = (String) iterotor.next();
-                if (key != null) {
+                if (key != null&&params.get(key)!=null) {
                     try {
                         /**wing modifed for encode get or delete url params*/
                         sb.append(key).append("=").append(URLEncoder.encode(params.get(key), "utf-8")).append("&");

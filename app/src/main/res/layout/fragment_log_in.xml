@@ -123,17 +123,45 @@
                     android:text="@string/text_start_or_log_in_with"
                     />
 
-                <ImageView
-                    android:id="@+id/iv_username"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/sign_in_username"
-                    />
+                    android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageView
+                                android:id="@+id/iv_username"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/sign_in_username" />
 
-                <TextView
-                    style="@style/tv_start_light_small"
-                    android:text="@string/text_start_username"
-                    />
+                            <TextView
+                                style="@style/tv_start_light_small"
+                                android:text="@string/text_start_username" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="@dimen/default_view_margin"
+                            android:gravity="center">
+                            <ImageView
+                                android:id="@+id/iv_facebook"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:src="@drawable/com_facebook_button_icon" />
+
+                            <TextView
+                                style="@style/tv_start_light_small"
+                                android:text="Facebook" />
+
+                        </LinearLayout>
+
+                </LinearLayout>
         </LinearLayout>
 
         <include layout="@layout/progress_layout"/>
