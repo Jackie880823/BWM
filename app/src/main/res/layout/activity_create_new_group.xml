@@ -38,12 +38,23 @@
         android:layout_below="@+id/fragment_main_top"
         android:background="@drawable/park_edge"
         android:layout_marginBottom="30dp">
-        <ImageView
-            android:id="@+id/default_imag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/album_details"/>
+            <ImageView
+                android:id="@+id/default_imag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:paddingBottom="@dimen/_18dp"
+                android:src="@drawable/album_details"/>
+            <TextView
+                android:id="@+id/add_photo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/_60dp"
+                android:textColor="#b6b7b7"
+                android:text="@string/text_add_group_photo"/>
     </RelativeLayout>
 
     <View

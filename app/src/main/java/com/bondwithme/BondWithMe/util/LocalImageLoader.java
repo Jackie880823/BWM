@@ -19,6 +19,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
@@ -696,9 +697,14 @@ public class LocalImageLoader {
             thumbnail = LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbnailUri).getPath());
         }
         if(thumbnail == null) {
-            // 没有获取的缩略，从原图加载缩略图
-            thumbnail = LocalImageLoader.loadBitmapFromFile(context, path, columnWidthHeight, columnWidthHeight);
-//            Bitmap sourceBitmap = BitmapFactory.decodeFile(path);
+            // 没有获取的缩略，使用原图
+            Bitmap sourceBitmap = BitmapFactory.decodeFile(path);
+            if(sourceBitmap == null) {
+                Log.i(TAG, "getMiniThumbnailBitmap& sourceBitmap is null");
+                return null;
+            }
+            // 略缩图
+            thumbnail = ThumbnailUtils.extractThumbnail(sourceBitmap, columnWidthHeight, columnWidthHeight);
         }
 
         if(thumbnail == null) {

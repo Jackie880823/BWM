@@ -87,12 +87,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     Calendar mCalendar;
     Calendar calendar;
 
+    private String locationName;
+
     String members;
     String groups;
     private String Spmemeber_date;
     private String users_date;
-
-    private String locationName;
 
     private static final int MAX_COUNT = 300;
 
@@ -105,6 +105,14 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         super();
         // Required empty public constructor
     }
+
+//
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                             Bundle savedInstanceState) {
+//        // Inflate the layout for this fragment
+//        return inflater.inflate(R.layout.fragment_event, container, false);
+//    }
 
     @Override
     public void setLayoutId() {
@@ -155,7 +163,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             @Override
             public void afterTextChanged(Editable s) {
                 String tplocation =  position_name.getText().toString().trim();
-                if(!tplocation.equals(locationName) && locationName != null){
+                if(!tplocation.equals(locationName)){
                      latitude = -1000;
                      longitude = -1000;
                 }
@@ -165,6 +173,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         getViewById(R.id.rl_add_members).setOnClickListener(this);
         position_choose.setOnClickListener(this);
         item_date.setOnClickListener(this);
+
 
         //点击事件
         getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
@@ -309,17 +318,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //                return true;
 //            }
 //        }
-//        if (users_date != null) {
-//            String userDate = users_date.trim().replaceAll("\\[([^\\]]*)\\]", "$1");
-//            if (!TextUtils.isEmpty(userDate.trim())) {
-//                return true;
-//            }
-//        }
-
-        if(userList.size() > 0){
-            return true;
-        }else {
-            PreferencesUtil.saveValue(getParentActivity(), "users_date", "");
+        if (users_date != null) {
+            String userDate = users_date.trim().replaceAll("\\[([^\\]]*)\\]", "$1");
+            if (!TextUtils.isEmpty(userDate.trim())) {
+                return true;
+            }
         }
         return false;
     }
@@ -334,20 +337,17 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //        }
 //    }
 
-    /**
-     *  获取草稿
-     */
     private void bindData2View() {
-        String stlatitude ;
+        String stlatitude;
         String stlongitude;
-//        new Gson().toJson(mEevent);//string
-//        new Gson().fromJson("",EventEntity.class);
-//        mEevent.getGroup_name();
-//        mEevent.getText_description();
-//        mEevent = new Gson().fromJson(PreferencesUtil.getValue(getParentActivity(), "mEevent", null).toString(),EventEntity.class);
+        title = SharedPreferencesUtils.getParam(getParentActivity(), "title", "").toString();
+        content = SharedPreferencesUtils.getParam(getParentActivity(), "content", "").toString();
+        location = SharedPreferencesUtils.getParam(getParentActivity(), "location", "").toString();
+        date = (Long) SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(), "date", 0L);
 //        members = SharedPreferencesUtils.getParam(getParentActivity(), "members_data", "").toString();
 //        groups = SharedPreferencesUtils.getParam(getParentActivity(), "Groups_date", "").toString();
 //        users_date = SharedPreferencesUtils.getParam(getParentActivity(), "users_date", "").toString();
+
 //        title = mEevent.getGroup_name();
 //        location = mEevent.getLoc_name();
 //        content = mEevent.getText_description();
@@ -364,10 +364,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
         members = PreferencesUtil.getValue(getParentActivity(), "members_data", "").toString();
         groups = PreferencesUtil.getValue(getParentActivity(), "Groups_date", "").toString();
-        users_date = PreferencesUtil.getValue(getParentActivity(), "users_date", "").toString();
+        users_date = SharedPreferencesUtils.getParam(getParentActivity(), "users_date", "").toString();
+
         setText();
-//        latitude = TextUtils.isEmpty(mEevent.getLoc_latitude()) ? -1000 : Double.valueOf(mEevent.getLoc_latitude());
-//        longitude = TextUtils.isEmpty(mEevent.getLoc_longitude()) ? -1000 : Double.valueOf(mEevent.getLoc_longitude());
+        latitude = TextUtils.isEmpty(mEevent.getLoc_latitude()) ? -1000 : Double.valueOf(mEevent.getLoc_latitude());
+        longitude = TextUtils.isEmpty(mEevent.getLoc_longitude()) ? -1000 : Double.valueOf(mEevent.getLoc_longitude());
     }
 
     /**
@@ -512,9 +513,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_type", "post");
             params.put("first_post", "1");
-            params.put("group_event_date", mEevent.getGroup_event_date());//date
+            params.put("group_event_date", mEevent.getGroup_event_date());
             params.put("group_event_status", "1");
-            params.put("group_name", event_title.getText().toString());//title
+            params.put("group_name", event_title.getText().toString());
             params.put("group_owner_id", MainActivity.getUser().getUser_id());
             params.put("group_type", "1");
             if (latitude == -1000 || longitude == -1000) {
@@ -524,10 +525,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 params.put("loc_latitude", latitude + "");
                 params.put("loc_longitude", longitude + "");
             }
-            params.put("loc_name", position_name.getText().toString());//location
+            params.put("loc_name", position_name.getText().toString());
             //坐标数据类型
             params.put("loc_type", mEevent.getLoc_type());
-            params.put("text_description", event_desc.getText().toString());//conten
+            params.put("text_description", event_desc.getText().toString());
             params.put("user_id", MainActivity.getUser().getUser_id());
             params.put("event_member", gson.toJson(setGetMembersIds(userList)));
             requestInfo.params = params;
@@ -571,9 +572,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
     }
 
-    //显示草稿
     private void setText() {
-
         if (!TextUtils.isEmpty(title)) {
             event_title.setText(title);
 
@@ -584,7 +583,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
         if (!TextUtils.isEmpty(location)) {
             position_name.setText(location);
-
 
         }
         if (date != null && date != 0L) {
@@ -649,16 +647,13 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 goLocationSetting();
                 break;
             case R.id.item_date:
-                if (pickDateTimeDialog==null||!pickDateTimeDialog.isShowing()) {
+                if(pickDateTimeDialog==null||!pickDateTimeDialog.isShowing()) {
                     showDateTimePicker();
                 }
                 break;
         }
     }
 
-    /**
-     * 保存草稿
-     */
     private void showSaveAlert() {
         if (saveAlertDialog == null) {
             saveAlertDialog = new MyDialog(getActivity(), getString(R.string.text_tips_title), getString(R.string.draft_ask_save));
@@ -675,26 +670,28 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                         PreferencesUtil.saveValue(getParentActivity(), "latitude", Double.toString(latitude));
                         PreferencesUtil.saveValue(getParentActivity(), "longitude", Double.toString(longitude));
                     if (!TextUtils.isEmpty(event_title.getText().toString().trim())) {
-                        PreferencesUtil.saveValue(getParentActivity(), "title", event_title.getText().toString());
+                        SharedPreferencesUtils.setParam(getParentActivity(), "title", event_title.getText().toString());
 //                        Log.i("title=============",event_title.getText().toString());
-                    }else {
-                        PreferencesUtil.saveValue(getParentActivity(), "title", "");
                     }
                     if (!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
-                        PreferencesUtil.saveValue(getParentActivity(), "content", event_desc.getText().toString());
+                        SharedPreferencesUtils.setParam(getParentActivity(), "content", event_desc.getText().toString());
 //                        Log.i("content=============",event_desc.getText().toString());
-                    }else {
-                        PreferencesUtil.saveValue(getParentActivity(), "content", "");
                     }
                     if (!TextUtils.isEmpty(position_name.getText().toString().trim())) {
-                        PreferencesUtil.saveValue(getParentActivity(), "location", position_name.getText().toString());
+                        SharedPreferencesUtils.setParam(getParentActivity(), "location", position_name.getText().toString());
 //                        Log.i("location=============",position_name.getText().toString());
-                    }else {
-                        PreferencesUtil.saveValue(getParentActivity(), "location", "");
                     }
+//                    if (!TextUtils.isEmpty(members.trim())) {
+//                        SharedPreferencesUtils.setParam(getParentActivity(), "members_data", members);
+////                        Log.i("Set_Spmemeber_date===", Spmemeber_date);
+//                    }
+//                    if (!TextUtils.isEmpty(groups.trim())) {
+//                        SharedPreferencesUtils.setParam(getParentActivity(), "Groups_date", groups);
+////                        Log.i("Set_Groups_date===", Groups_date);
+//                    }
                     if (userList.size() > 0) {
                         Gson gson = new Gson();
-                        PreferencesUtil.saveValue(getParentActivity(), "users_date", gson.toJson(userList));
+                        SharedPreferencesUtils.setParam(getParentActivity(), "users_date", gson.toJson(userList));
 //                        Log.i("Set_users_date===", users_date);
                     }
                     getParentActivity().finish();
@@ -760,7 +757,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 }
                 //把时间储存到缓存
                 if (mCalendar != null) {
-                    PreferencesUtil.saveValue(getParentActivity(), "date", mCalendar.getTimeInMillis());
+                    SharedPreferencesUtils.setParam(getParentActivity(), "date", mCalendar.getTimeInMillis());
                 }
                 //将日历的时间转化成字符串
                 String dateDesc = MyDateUtils.getEventLocalDateStringFromLocal(getActivity(), mCalendar.getTimeInMillis());
@@ -779,12 +776,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         pickDateTimeDialog.show();
     }
 
-    //打开地图
     private void goLocationSetting() {
         Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, position_name.getText().toString());
         if(intent!=null)
             startActivityForResult(intent, GET_LOCATION);
-
     }
 
     private void goChooseMembers() {
@@ -820,21 +815,19 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //                            }
 //
 //                        }else {
-                        locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
-                        if (!TextUtils.isEmpty(locationName)) {
-//                            location = locationName;//
-                            position_name.setText(locationName);
-                            mEevent.setLoc_name(locationName);
-                            latitude = data.getDoubleExtra(Constant.EXTRA_LATITUDE, 0);
-                            longitude = data.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0);
-                        } else {
-//                            location= "";//
-                            position_name.setText(null);
-                            latitude = -1000;
-                            longitude = -1000;
-                        }
-                        //坐标数据类型
-                        mEevent.setLoc_type(data.getStringExtra("loc_type"));
+                            locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
+                            if (!TextUtils.isEmpty(locationName)) {
+                                position_name.setText(locationName);
+                                mEevent.setLoc_name(locationName);
+                                latitude = data.getDoubleExtra(Constant.EXTRA_LATITUDE, 0);
+                                longitude = data.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0);
+                            } else {
+                                position_name.setText(null);
+                                latitude = -1000;
+                                longitude = -1000;
+                            }
+                            //坐标数据类型
+                            mEevent.setLoc_type(data.getStringExtra("loc_type"));
 //                        }
                     }
                     break;
