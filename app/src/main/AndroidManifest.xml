@@ -362,22 +362,24 @@
             android:name=".ui.more.ArchiveActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.GroupListActivity"
+            android:name=".ui.more.Archive.GroupListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.PrivateListActivity"
+            android:name=".ui.more.Archive.PrivateListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.ArchiveGroupChatActivity"
+            android:name=".ui.more.Archive.ArchiveGroupChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".ui.more.Archive.ArchivePrivateChatActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+        <activity
+            android:name=".ui.more.Archive.ArchiveGroupCommentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.ArchivePrivateChatActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.more.ArchiveGroupCommentActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.more.ArchivePrivateCommentActivity"
+            android:name=".ui.more.Archive.ArchivePrivateCommentActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.more.MoreSettingActivity" >
         </activity>

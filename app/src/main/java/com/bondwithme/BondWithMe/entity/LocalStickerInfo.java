@@ -12,6 +12,7 @@ import java.io.Serializable;
  */
 @DatabaseTable(tableName = "sticker_info")
 public class LocalStickerInfo implements Serializable {
+    public static final String LOGIN_USER_ID= MainActivity.getUser().getUser_id();
     @DatabaseField(generatedId = true)
     private int id;
     @DatabaseField

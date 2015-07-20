@@ -81,6 +81,7 @@ public class GroupSettingActivity extends BaseActivity {
     private static final int GET_DATA = 0X11;
     private String groupData = null;
     private List<FamilyGroupEntity> familyGroupEntityList;
+    private int type;//0 聊天界面打开，1是Archive打开
 
     @Override
     public int getLayout() {
@@ -103,8 +104,7 @@ public class GroupSettingActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        rightButton.setVisibility(View.INVISIBLE);
-
+            rightButton.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -132,6 +132,7 @@ public class GroupSettingActivity extends BaseActivity {
         mContext = this;
         groupId = getIntent().getStringExtra("groupId");
         groupName = getIntent().getStringExtra("groupName");
+        type = getIntent().getIntExtra("groupType",1);
         llSetting = getViewById(R.id.ll_setting);
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_group_name);
@@ -374,7 +375,7 @@ public class GroupSettingActivity extends BaseActivity {
                 viewHolder.tvAdmin.setVisibility(View.VISIBLE);
                 viewHolder.ivWaitting.setVisibility(View.GONE);
                 groupOwnerId = userEntity.getGroup_owner_id();
-                if (MainActivity.getUser().getUser_id().equals(userEntity.getGroup_owner_id())) {
+                if (MainActivity.getUser().getUser_id().equals(userEntity.getGroup_owner_id()) || type == 0) {
                     isAdmin = true;
                     rightButton.setVisibility(View.VISIBLE);
                 } else {

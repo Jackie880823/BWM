@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.CardView
-    android:id="@+id/top_event"
+    android:id="@+id/top_archive"
     style="@style/CardViewDefault"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -27,26 +27,23 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/btn_del"
                 android:layout_toRightOf="@+id/owner_head"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/default_content_padding"
-                android:paddingTop="@dimen/default_text_padding">
-
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/owner_name"
                     style="@style/text_dark_default"
                     android:textStyle="bold"/>
 
-
-                <TextView
-                    android:id="@+id/push_date"
-                    style="@style/text_dark_default"
-                    android:layout_marginTop="@dimen/default_view_margin"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/push_date"-->
+                    <!--style="@style/text_dark_default"-->
+                    <!--android:layout_marginTop="@dimen/default_view_margin"/>-->
             </LinearLayout>
 
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/li_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_view_margin"
@@ -55,7 +52,7 @@
             android:paddingRight="@dimen/default_content_padding">
 
             <TextView
-                android:id="@+id/tv_wall_content"
+                android:id="@+id/tv_archive_content"
                 android:autoLink="web"
                 android:linksClickable="true"
                 style="@style/text_dark_default"/>
@@ -71,8 +68,6 @@
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/iv_chats_images"
                 style="@style/ListImageDefault"
-                android:paddingLeft="@dimen/default_content_padding"
-                android:paddingRight="@dimen/default_content_padding"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
@@ -119,24 +114,15 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/default_content_padding"
-            android:paddingLeft="@dimen/default_content_padding"
-            android:paddingRight="@dimen/default_content_padding"
-            android:paddingTop="@dimen/default_content_padding">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true">
+            android:padding="@dimen/_10dp">
 
                 <TextView
                     android:id="@+id/up_time"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/default_view_margin" />
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true" />
 
-            </LinearLayout>
         </RelativeLayout>
         <View style="@style/split_line_default" />
         <RelativeLayout
@@ -146,18 +132,19 @@
             android:background="@color/archive_comment_background">
 
             <TextView
-                android:id="@+id/memeber_lo"
+                android:id="@+id/memeber_love"
                 style="@style/text_dark_default"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true" />
             <TextView
                 style="@style/text_dark_default"
-                android:layout_toRightOf="@+id/memeber_lo"
                 android:layout_gravity="center_vertical"
+                android:layout_toRightOf="@id/memeber_love"
                 android:layout_marginLeft="@dimen/default_view_margin"
                 android:text="Loves"/>
             <TextView
-                android:id="@+id/comment_me"
-                android:layout_toLeftOf="@+id/comments"
+                android:id="@+id/member_comment"
+                android:layout_toLeftOf="@id/comments"
                 style="@style/text_dark_default" />
             <TextView
                 android:id="@+id/comments"

@@ -129,9 +129,9 @@ public class LoginActivity extends Activity {
         };
         //for not work in down 11
         if(SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
         } else {
-            task.execute();
+            task.execute(null, null, null);
         }
     }
 
@@ -269,7 +269,7 @@ public class LoginActivity extends Activity {
             };
             //for not work in down 11
             if(SDKUtil.IS_HONEYCOMB) {
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
             } else {
                 task.execute();
             }

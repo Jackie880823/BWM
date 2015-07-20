@@ -4,109 +4,69 @@
     android:orientation="vertical"
     android:background="@color/default_content_bg">
 
-    <include
-        android:id="@+id/fragment_main_top"
-        layout="@layout/title_view"
+    <!--<include-->
+        <!--android:id="@+id/fragment_main_top"-->
+        <!--layout="@layout/title_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true" />-->
+
+        <RelativeLayout
+        android:id="@+id/search_linear"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
-
-    <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <RelativeLayout
-                android:id="@+id/search_linear"
-                android:orientation="vertical"
+        android:paddingLeft="@dimen/_3dp"
+        android:paddingRight="@dimen/_3dp">
+            <!--  android:drawableRight="@drawable/search"-->
+            <EditText
+                android:id="@+id/et_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_3dp"
-                android:paddingRight="@dimen/_3dp">
+                android:layout_margin="@dimen/default_content_padding"
+                android:padding="@dimen/default_content_padding"
+                android:singleLine="true"
+                android:hint="@string/family_search"
+                android:textColorHint="#ccc"
+                android:background="@drawable/et_oval_white"
+                android:drawablePadding="@dimen/default_view_margin" />
+            <ImageButton
+                android:id="@+id/bv_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/et_oval_white"
+                android:layout_marginRight="@dimen/_20dp"
+                android:src="@drawable/search"/>
+        </RelativeLayout>
+    <View
+        android:id="@+id/option_split_line"
+        style="@style/split_line_default" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding"
+        android:paddingTop="@dimen/default_view_margin">
+        <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-                <EditText
-                    android:id="@+id/et_search"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/default_content_padding"
-                    android:padding="@dimen/default_content_padding"
-                    android:singleLine="true"
-                    android:hint="@string/family_search"
-                    android:textColorHint="#ccc"
-                    android:background="@drawable/et_oval_white"
-                    android:drawablePadding="@dimen/default_view_margin"
-                    android:drawableRight="@drawable/search" />
-            </RelativeLayout>
-            <View
-                android:id="@+id/option_split_line"
-                style="@style/split_line_default" />
             <android.support.v7.widget.RecyclerView
-
                 android:id="@+id/rv_Archive_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/top_event"
+                android:layout_below="@+id/search_linear"
                 android:scrollbars="vertical">
 
             </android.support.v7.widget.RecyclerView>
-        </LinearLayout>
-    </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
+        </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
 
-    <!--<com.madx.bwm.widget.MySwipeRefreshLayout-->
-        <!--android:id="@+id/swipe_refresh_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
+    </RelativeLayout>
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical">-->
 
-            <!--&lt;!&ndash;<RelativeLayout&ndash;&gt;-->
-                <!--&lt;!&ndash;android:id="@+id/seatch_options"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_height="wrap_content">&ndash;&gt;-->
-                <!--&lt;!&ndash;<LinearLayout&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                    <!--&lt;!&ndash;android:orientation="vertical">&ndash;&gt;-->
-
-                    <!--&lt;!&ndash;<EditText&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:id="@+id/et_search"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_margin="@dimen/default_content_padding"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:padding="@dimen/default_content_padding"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:singleLine="true"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:hint="@string/family_search"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:textColorHint="#ccc"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:background="@drawable/et_oval_white"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:drawablePadding="@dimen/default_view_margin"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:drawableRight="@drawable/search" />&ndash;&gt;-->
-
-                    <!--&lt;!&ndash;<View&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:id="@+id/option_split_line"&ndash;&gt;-->
-                        <!--&lt;!&ndash;style="@style/split_line_default" />&ndash;&gt;-->
-                <!--&lt;!&ndash;</LinearLayout>&ndash;&gt;-->
-
-            <!--&lt;!&ndash;</RelativeLayout>&ndash;&gt;-->
-            <!--&lt;!&ndash;<android.support.v7.widget.RecyclerView&ndash;&gt;-->
-                <!--&lt;!&ndash;android:id="@+id/rv_chat_list"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_below="@id/seatch_options"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:paddingLeft="@dimen/default_content_padding"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:paddingRight="@dimen/default_content_padding"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:paddingTop="@dimen/default_view_margin"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:scrollbars="vertical">&ndash;&gt;-->
-
-            <!--&lt;!&ndash;</android.support.v7.widget.RecyclerView>&ndash;&gt;-->
-
-        <!--</LinearLayout>-->
-    <!--</com.madx.bwm.widget.MySwipeRefreshLayout>-->
 
     <include layout="@layout/progress_layout"/>
 

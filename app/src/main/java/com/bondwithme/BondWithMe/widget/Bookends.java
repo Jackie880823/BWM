@@ -160,7 +160,6 @@ public class Bookends<T extends RecyclerView.Adapter> extends RecyclerView.Adapt
 	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 		if (position < mHeaders.size()) {
 			// Headers don't need anything special
-
 		} else if (position < mHeaders.size() + mBase.getItemCount()) {
 			// This is a real position, not a header or footer. Bind it.
 			mBase.onBindViewHolder(viewHolder, position - mHeaders.size());
@@ -189,11 +188,11 @@ public class Bookends<T extends RecyclerView.Adapter> extends RecyclerView.Adapt
 	}
 
 	class VHHeader extends RecyclerView.ViewHolder {
-		private TextView test;
+		private TextView textView;
 
 		public VHHeader(View itemView) {
 			super(itemView);
-			test = (TextView) itemView.findViewById(R.id.owner_name);
+			textView = (TextView) itemView.findViewById(R.id.owner_name);
 		}
 	}
 }
