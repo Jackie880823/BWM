@@ -134,7 +134,7 @@
                     style="@style/text_dark_default"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/default_view_margin"
-                    android:hint="Check in a location"
+                    android:hint="@string/text_check_in_a_location"
                     android:textSize="@dimen/text_small_size"/>
 
             </LinearLayout>

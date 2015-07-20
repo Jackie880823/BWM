@@ -10,9 +10,6 @@ import android.widget.FrameLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.EventAdapter;
@@ -21,6 +18,9 @@ import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -157,7 +157,6 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
     @Override
     public void requestData() {
-//        Log.i("requestData","===========================");
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "1");
@@ -218,14 +217,14 @@ public class EventFragment extends BaseFragment<MainActivity> {
                         @Override
                         public void contentItemClick(EventEntity eventEntity) {
 //                            if("1".equals(eventEntity.getGroup_event_status())){
-                                //item的点击事件跳转到EventDetailActivity
+                            //item的点击事件跳转到EventDetailActivity
 //                            requestData();
 //                            adapter.notifyDataSetChanged();
 
-                                Intent intent = new Intent(getActivity(), EventDetailActivity.class);
+                            Intent intent = new Intent(getActivity(), EventDetailActivity.class);
 //                            intent.putExtra("event", eventEntity);
-                                intent.putExtra("group_id", eventEntity.getGroup_id());
-                                startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
+                            intent.putExtra("group_id", eventEntity.getGroup_id());
+                            startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
 //                            requestData();
 //                            }
 
@@ -265,7 +264,6 @@ public class EventFragment extends BaseFragment<MainActivity> {
     }
 
     private void loadMoreEvent() {
-//        Log.i("loadMoreEvent","===========================");
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("user_id", MainActivity.getUser().getUser_id());
         jsonParams.put("show_birthday", "0");

@@ -35,10 +35,11 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
+import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -342,9 +343,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void downloadAsyncTask(final ProgressBarCircularIndeterminate progressBar, final GifImageView gifImageView, final String path, final int defaultResource) {
-        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
             @Override
-            protected byte[] doInBackground(String... params) {
+            protected byte[] doInBackground(Object... params) {
                 return getImageByte(path);
             }
 
@@ -377,19 +378,19 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
         };
         //for not work in down 11
-        if(SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+        if (SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            task.execute(new String[]{});
+            task.execute();
         }
 
     }
 
     public void downloadPngAsyncTask(final ProgressBarCircularIndeterminate progressBar, final ImageView imageView, final String path, final int defaultResource) {
-        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
 
             @Override
-            protected byte[] doInBackground(String... params) {
+            protected byte[] doInBackground(Object... params) {
                 return getImageByte(path);
             }
 
@@ -423,10 +424,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         };
 
         //for not work in down 11
-        if(SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+        if (SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            task.execute(new String[]{});
+            task.execute();
         }
 
     }
@@ -439,7 +440,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     class VHItem extends RecyclerView.ViewHolder implements View.OnClickListener {
         //接收
         CircularNetworkImage iconImage;
-        TextView messageText;
+        FreedomSelectionTextView messageText;
         NetworkImageView networkImageView;
         GifImageView gifImageView;
         TextView dateTime;
@@ -450,7 +451,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         public VHItem(View itemView) {
             super(itemView);
             iconImage = (CircularNetworkImage) itemView.findViewById(R.id.message_icon_image);
-            messageText = (TextView) itemView.findViewById(R.id.message_item_content_tv);
+            messageText = (FreedomSelectionTextView) itemView.findViewById(R.id.message_item_content_tv);
             networkImageView = (NetworkImageView) itemView.findViewById(R.id.message_pic_iv);
             gifImageView = (GifImageView) itemView.findViewById(R.id.message_pic_gif_iv);
             dateTime = (TextView) itemView.findViewById(R.id.date_time_tv);

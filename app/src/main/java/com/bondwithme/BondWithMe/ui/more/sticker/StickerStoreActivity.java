@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageSwitcher;
@@ -123,7 +122,7 @@ public class StickerStoreActivity extends BaseActivity {
     @Override
     public void initView() {
         if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, R.string.text_loading);
+            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
         }
         mProgressDialog.show();
 
@@ -256,7 +255,7 @@ public class StickerStoreActivity extends BaseActivity {
                     stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
                     stickerInfo.setVersion(stickerGroupEntity.getVersion());
                     stickerInfo.setType(stickerGroupEntity.getType());
-                    stickerInfo.setPosition(position);
+                    stickerInfo.setOrder(System.currentTimeMillis());
                     LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
                     Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
 
@@ -486,9 +485,6 @@ public class StickerStoreActivity extends BaseActivity {
                 int position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
                 finished = intent.getIntExtra(FINISHED,0);
                 StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
-                Log.i(TAG, "==========position========" + position);
-                Log.i(TAG, "==========recyclerViewList========" + recyclerViewList);
-                Log.i(TAG, "==========holder========" + holder);
                 if ( holder!= null){
                     ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
                     ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);

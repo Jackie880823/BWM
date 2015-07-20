@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -142,8 +143,19 @@ public class ZipUtils {
         stickerInfo.setPath(zipFileName);
         stickerInfo.setSticker_name("1_B");
         stickerInfo.setVersion("1");
-        stickerInfo.setType(".gif");
-        stickerInfo.setPosition(1);
+
+        if (zipFileName.contains("Bara-Bara_Na")){
+            stickerInfo.setType(".png");
+            stickerInfo.setOrder(System.currentTimeMillis());
+        }else if (zipFileName.contains("A_day_life_of_Ping")){
+            stickerInfo.setOrder(System.currentTimeMillis());
+            stickerInfo.setType(".gif");
+        }else if (zipFileName.contains("Baby_Trunky")){
+            stickerInfo.setOrder(System.currentTimeMillis());
+            stickerInfo.setType(".gif");
+        }
+
         LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
+
     }
 }

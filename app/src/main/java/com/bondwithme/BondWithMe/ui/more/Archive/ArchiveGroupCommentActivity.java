@@ -5,19 +5,22 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.ArchiveCommentFragment;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 
 
 /**
  * Created by liangzemian on 15/6/30.
  */
-public class ArchiveGroupCommentActivity extends BaseActivity implements View.OnClickListener{
+public class ArchiveGroupCommentActivity extends BaseActivity {
+    private String content_group_id;
+    private String group_id;
 
-    @Override
-    public int getLayout() {
-        return R.layout.activity_more_archive_groupcomment;
-//        return R.layout.activity_more_archive_groupchat;
-    }
+//    @Override
+//    public int getLayout() {
+//        return R.layout.activity_more_archive_groupcomment;
+////        return R.layout.activity_more_archive_groupchat;
+//    }
 
     @Override
     protected void initBottomBar() {
@@ -43,7 +46,9 @@ public class ArchiveGroupCommentActivity extends BaseActivity implements View.On
 
     @Override
     protected Fragment getFragment() {
-        return null;
+        content_group_id = getIntent().getStringExtra("content_group_id");
+        group_id  = getIntent().getStringExtra("group_id");
+        return new ArchiveCommentFragment().newInstance(content_group_id,group_id);
     }
 
     @Override

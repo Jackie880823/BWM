@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.bondwithme.BondWithMe.Constant;
@@ -121,12 +122,15 @@ public class TellAFriendsActivity extends BaseActivity {
             showSelectDialog.dismiss();
             showSelectDialog = null;
         }
+        if(cursor!=null){
+            cursor.close();
+        }
         super.onDestroy();
     }
 
 
     private boolean validateForm() {
-        if (adapter==null||adapter.getSelectContactIds().size()==0) {
+        if (adapter == null || adapter.getSelectContactIds().size() == 0) {
             return false;
         }
 
@@ -137,25 +141,26 @@ public class TellAFriendsActivity extends BaseActivity {
 
     private void sendContact() {
         if (validateForm()) {
-            mProgressDialog = new ProgressDialog(this, R.string.text_waiting);
+            mProgressDialog = new ProgressDialog(this, getString(R.string.text_sending));
             mProgressDialog.show();
 
             ContactMessageEntity messageEntity = generateMessage("");
 //            params.put("messageEntity", new Gson().toJson(messageEntity));
 
             Map<String, String> params = new HashMap<>();
-            params.put("user_id",MainActivity.getUser().getUser_id());
+            params.put("user_id", MainActivity.getUser().getUser_id());
             params.put("user_given_name", messageEntity.getUser_given_name());
             params.put("user_country_code", messageEntity.getUser_country_code());
             params.put("personal_msg", messageEntity.getPersonal_msg());
             params.put("contact_list", new Gson().toJson(messageEntity.getContact_list()));
 
+            LogUtil.d("", "sendContact=========" + new Gson().toJson(messageEntity.getContact_list()));
             RequestInfo requestInfo = new RequestInfo();
             requestInfo.params = params;
             requestInfo.url = Constant.API_SHARE2FRIEND;
 
-            new HttpTools(this).post(requestInfo, this,new HttpCallback() {
-//            new HttpTools(this).post(Constant.API_SHARE2FRIEND, params, new HttpCallback() {
+            new HttpTools(this).post(requestInfo, this, new HttpCallback() {
+                //            new HttpTools(this).post(Constant.API_SHARE2FRIEND, params, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -168,7 +173,7 @@ public class TellAFriendsActivity extends BaseActivity {
 
                 @Override
                 public void onResult(String string) {
-                    MessageUtil.showMessage(TellAFriendsActivity.this, R.string.msg_action_successed);
+                    MessageUtil.showMessage(TellAFriendsActivity.this, R.string.action_invitation_successful);
                 }
 
                 @Override
@@ -198,13 +203,12 @@ public class TellAFriendsActivity extends BaseActivity {
 
         List<ContactDetailEntity> contactDetailEntities = new ArrayList<>();
         List<Integer> contactIds = adapter.getSelectContactIds();
-
         if (contactIds != null) {
             for (Integer contactId : contactIds) {
                 ContactDetailEntity contactDetailEntity = new ContactDetailEntity();
                 cursor.moveToPosition(contactId);
                 contactDetailEntity.setDisplayName(cursor.getString(0));
-                contactDetailEntity.setPhoneNumbers(ContactUtil.getContactPhones(this, contactId));
+                contactDetailEntity.setPhoneNumbers(ContactUtil.getContactPhones(this, cursor));
                 contactDetailEntity.setEmails(ContactUtil.getContactEmails(this, contactId));
                 contactDetailEntities.add(contactDetailEntity);
             }
@@ -230,6 +234,7 @@ public class TellAFriendsActivity extends BaseActivity {
                 break;
         }
     }
+
 
 
     @Override

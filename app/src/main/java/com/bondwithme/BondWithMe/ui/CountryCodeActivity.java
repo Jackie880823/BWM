@@ -36,7 +36,8 @@ import java.util.List;
 
 public class CountryCodeActivity extends BaseActivity {
     String[] dataArray = new String[]{};
-
+    public static final String COUNTRY = "country";
+    public static final String CODE = "code";
 
     @Override
     public int getLayout() {
@@ -164,37 +165,29 @@ public class CountryCodeActivity extends BaseActivity {
                                     long arg3) {
 
                 if (isSearch) {
-                    //				Log.i("", "1----"+((TextView)arg1).getText());
                     if (ataaa2.getItemViewType(arg2) == 1) {
-                        // String text = ((TextView) arg1).getText().toString();
-                        //begin 更改国家的布局
                         String text = ataaa2.list.get(arg2).getValue().trim();
-                        //end
                         String code = text.substring(text.lastIndexOf(" ") + 1, text.length());
-                        Log.i("", "2----" + text.substring(text.lastIndexOf(" ") + 1, text.length()));
                         String reg = "[a-zA-Z]";
                         boolean isCract = code.matches(reg);
                         if (!isCract) {
                             Intent intent = new Intent();
-                            intent.putExtra("code", code);
+                            intent.putExtra(COUNTRY,text.substring(0,text.lastIndexOf(" ") + 1));
+                            intent.putExtra(CODE, code);
                             setResult(RESULT_OK, intent);
                             finish();
                         }
                     }
                 } else {
-                    //				Log.i("", "1----"+((TextView)arg1).getText());
                     if (ataaa.getItemViewType(arg2) == 1) {
-                        // String text = ((TextView) arg1).getText().toString();
-                        //begin 更改国家的布局
                         String text = ataaa.list.get(arg2).getValue().trim();
-                        //end
                         String code = text.substring(text.lastIndexOf(" ") + 1, text.length());
-                        Log.i("", "2----" + text.substring(text.lastIndexOf(" ") + 1, text.length()));
                         String reg = "[a-zA-Z]";
                         boolean isCract = code.matches(reg);
                         if (!isCract) {
                             Intent intent = new Intent();
-                            intent.putExtra("code", code);
+                            intent.putExtra(COUNTRY, text.substring(0,text.lastIndexOf(" ") + 1));
+                            intent.putExtra(CODE, code);
                             setResult(RESULT_OK, intent);
                             finish();
                         }

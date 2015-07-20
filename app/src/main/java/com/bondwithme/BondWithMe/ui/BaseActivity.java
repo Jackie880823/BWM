@@ -42,7 +42,9 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     //    protected TextView rightTextButton;
 
     Fragment fragment;
-    private View msg_bar;
+    protected View msg_bar;
+    protected TextView tvMsg;
+    protected Bundle mSavedInstanceState;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -65,6 +67,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSavedInstanceState = savedInstanceState;
         // 打开Activity隐藏软键盘；
         //        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(getLayout());
@@ -78,6 +81,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
             }
         }
         msg_bar = getViewById(R.id.msg_bar);
+        tvMsg = getViewById(R.id.msg);
         if(NetworkUtil.isNetworkConnected(this)) {
             msgBarChangeByStatus(View.GONE);
         } else {
@@ -245,7 +249,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         msgBarChangeByStatus(View.GONE);
     }
 
-    private void msgBarChangeByStatus(int status) {
+    protected void msgBarChangeByStatus(int status) {
         if(msg_bar != null) {
             msg_bar.setVisibility(status);
         }

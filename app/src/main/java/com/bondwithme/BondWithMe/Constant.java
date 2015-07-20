@@ -38,6 +38,7 @@ public class Constant {
 //    public static final String API_SERVER = "http://m.bondwith.me";
     public static final String API_SERVER = "http://pt.bondwith.me";
 //    public static final String API_SERVER = "http://sc.bondwith.me";
+//    public static final String API_SERVER = "http://dev.bondwith.me";
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER+"/bondwithme/index.php/api/multiPhoto";
 
     public static final String API_WALL_MAIN = API_SERVER+"/bondwithme/index.php/api/wall";
@@ -225,4 +226,40 @@ public class Constant {
      * 地址经度
      */
     public static final String EXTRA_LONGITUDE   = "longitude";
+
+    public static final String HAS_LOGED_IN = "has_loged_in";
+
+    public static final String TYPE_PHONE = "phone";
+    public static final String TYPE_USERNAME = "username";
+    public static final String TYPE_FACEBOOK = "facebook";
+    public static final String TYPE_FORGOT_PASSWORD = "forgot_password";
+
+    public static final String USER_APP_OS = "android";
+
+    public static final String SUCCESS = "Success";
+    public static final String FAIL = "Fail";
+    public static final String TYPE = "type";
+
+
+
+    public static final String API_START_CHECK_LOG_ID = API_SERVER+"/bondwithme/index.php/api/loginID";//查询账号是否可用和获取验证码／重新获取验证码
+    public static final String API_START_PHONE_CREATE_USER = API_SERVER+"/bondwithme/index.php/api/verifyUser"; //Verify code and Create User (Phone)
+    public static final String API_START_USERNAME_CREATE_USER = API_SERVER+"/bondwithme/index.php/api/verifyUser"; //Verify code and Create User (Username)
+    public static final String API_START_COMPLETE_PROFILE = API_SERVER+"/bondwithme/index.php/api/profile"; //Complete profile
+
+
+    public static final String API_START_FORGOT_PASSWORD_GET_CODE = API_SERVER+"/bondwithme/index.php/api/forgetPassword"; //忘记密码，获取验证码
+    public static final String API_START_FORGOT_PASSWORD_VERIFY_CODE = API_SERVER+"/bondwithme/index.php/api/verification"; //verify code(忘记密码)
+
+    public static final String API_START_THIRD_PARTY_CHECK_ID = API_SERVER+"/bondwithme/index.php/api/loginID"; //查询账号是否已登记
+    public static final String API_START_THIRD_PARTY_GET_CODE = API_SERVER+"/bondwithme/index.php/api/loginID"; //查询账号是否可用和获取验证码／重新获取验证码
+    public static final String API_START_THIRD_PARTY_CREATE_USER = API_SERVER+"/bondwithme/index.php/api/verifyUser"; //Verify code and Create User(facebook)
+
+
+    public static final String API_MORE_ARCHIVE_LIST = API_SERVER+"/bondwithme/index.php/api/archivePostMain";
+    public static final String API_MORE_ARCHIVE_POSTING_LIST = API_SERVER+"/bondwithme/index.php/api/archivePost";
+    public static final String API_MORE_ARCHIVE_POSTING_DETAIL = API_SERVER+"/bondwithme/index.php/api/archivePostDetail";
+    public static final String API_MORE_ARCHIVE_COMMENT_LIST = API_SERVER+"/bondwithme/index.php/api/comment";
+    public static final String API_MORE_ARCHIVE_GROUP_MEMEBER_LIST = API_SERVER+"/bondwithme/index.php/api/archivePostMain";
+
 }

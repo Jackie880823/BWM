@@ -148,7 +148,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     break;
                 case GET_SEND_OVER_MESSAGE:
                     List<MsgEntity> msgSendList = (List<MsgEntity>) msg.obj;
-                    if (null != msgSendList) {
+                    if (null != msgSendList && msgSendList.size() > 0) {
+                        if (empty_message.getVisibility() == View.VISIBLE) {
+                            empty_message.setVisibility(View.GONE);
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                        }
                         messageChatAdapter.addSendData(msgSendList);
                     }
                     break;
@@ -230,7 +234,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     @Override
     public void finish() {
-        if(isNewGroup==1){
+        if (isNewGroup == 1) {
             setResult(RESULT_OK);
         }
         super.finish();

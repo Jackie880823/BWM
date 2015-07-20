@@ -15,7 +15,7 @@
         android:src="@drawable/default_head_icon"/>
 
 
-    <TextView
+    <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
         android:id="@+id/message_item_content_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -28,6 +28,7 @@
         android:layout_toLeftOf="@id/message_icon_image"
         android:textColor="@color/default_text_color_dark"
         android:textSize="@dimen/text_medium_size"
+        android:textIsSelectable="true"
         android:text="看比赛开始吧"
         />
 

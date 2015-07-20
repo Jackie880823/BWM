@@ -1,11 +1,9 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/default_content_bg"
-    tools:context="com.madx.bwm.ui.more.MoreSettingActivity">
+    tools:context="com.bondwithme.BondWithMe.ui.TermsActivity">
 
     <include
         android:id="@+id/fragment_main_top"
@@ -13,9 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
-    <include
-        layout="@layout/archive_comment"
+
+    <WebView
+        android:layout_below="@id/fragment_main_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/webView"
+    />
+
+
+
+</RelativeLayout>

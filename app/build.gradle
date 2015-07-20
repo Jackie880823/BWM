@@ -18,8 +18,8 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 1   //TODO
-        versionName "1.0.1" //TODO
+        versionCode 51   //TODO
+        versionName "1.9.4" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -32,6 +32,7 @@ android {
         checkReleaseBuilds false //TODO release change to true
         abortOnError false
     }
+
 //    signingConfigs {
 //
 //        debug {
@@ -46,6 +47,7 @@ android {
 //
 //    }
 //
+
 //    buildTypes {
 //        debug {
 //            // 显示Log
@@ -133,27 +135,28 @@ repositories {
 }
 
 dependencies {
-    //    compile 'com.android.support:recyclerview-v7:+'
     //    compile 'com.android.support:cardview-v7:+'
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     //for 突破65535的限制
-    compile 'com.android.support:multidex:1.0.0'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':Volley')
     compile project(':MaterialDesign')
     compile project(':PhotoView')
+    compile project(':facebook')
     //    compile 'com.android.support:gridlayout-v7:21.0.3'
     compile('org.apache.httpcomponents:httpmime:4.3.5') {
         // avoid "is ignored for the default configuration X" warnings
         // since httpclient is included in the android SDK.
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.android.support:support-annotations:22.0.0'
-    compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'com.android.support:support-annotations:22.2.0'
+    compile 'com.google.android.gms:play-services:7.5.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.j256.ormlite:ormlite-core:4.48'
-    compile 'com.android.support:recyclerview-v7:22.1.1'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:support-v4:22.2.0'
 }

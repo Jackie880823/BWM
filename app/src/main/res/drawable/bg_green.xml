@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true" >
+        <shape>
+            <gradient
+                android:endColor="@color/btn_gradient_color_green_press"
+                android:startColor="@color/btn_gradient_color_green_press" />
+            <corners
+                android:radius="6dp" />
+        </shape>
+    </item>
+
+    <item android:state_focused="true"  >
+        <shape>
+            <gradient
+                android:endColor="@color/btn_gradient_color_green_press"
+                android:startColor="@color/btn_gradient_color_green_press" />
+            <corners
+                android:radius="6dp"  />
+        </shape>
+    </item>
+
+    <item android:state_enabled="false" >
+        <shape>
+            <gradient
+                android:endColor="@color/btn_gradient_color_green_normal"
+                android:startColor="@color/btn_gradient_color_green_normal" />
+            <corners
+                android:radius="6dp"  />
+        </shape>
+    </item>
+
+
+</selector>

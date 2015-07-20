@@ -1,0 +1,168 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_text_color_while"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.bondwithme.BondWithMe.ui.start.LogInPhoneFragment">
+
+        <include
+            layout="@layout/country_code_layout"
+            android:id="@+id/country_code_layout"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:layout_below="@+id/country_code_layout">
+
+                <!--<EditText-->
+                    <!--style="@style/et_start_phone"-->
+                    <!--android:id="@+id/et_phone_number"-->
+                    <!--android:nextFocusDown="@+id/et_password"-->
+                    <!--android:imeOptions="actionNext" />-->
+                <LinearLayout
+                    android:id="@+id/ll_code_phone_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        style="@style/tv_start_country_code"
+                        android:id="@+id/tv_start_country_code"
+                        android:layout_marginLeft="@dimen/default_content_padding"
+                        android:text="" />
+                    <EditText
+                        style="@style/et_start_phone"
+                        android:id="@+id/et_phone_number"
+                        android:layout_marginLeft="@dimen/default_view_margin"/>
+                </LinearLayout>
+
+                <TextView
+                    style="@style/tv_start_light_small"
+                    android:id="@+id/tv_phone_number_prompt"
+                    android:layout_below="@+id/ll_code_phone_number"
+                    android:layout_alignLeft="@+id/ll_code_phone_number"
+                    android:layout_alignStart="@+id/ll_code_phone_number"
+                    android:layout_marginLeft="@dimen/default_content_padding"
+                    android:layout_marginStart="@dimen/default_content_padding"
+                    android:paddingLeft="@dimen/default_content_padding"
+                    android:visibility="gone"
+                    android:text=""/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_password"
+            android:layout_below="@+id/rl_phone_number"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:layout_height="wrap_content">
+                <EditText
+                    style="@style/et_start_password"
+                    android:id="@+id/et_password"
+
+                    android:imeOptions="actionDone" />
+                <TextView
+                    style="@style/tv_start_light_small"
+                    android:id="@+id/tv_password_prompt"
+                    android:layout_below="@+id/et_password"
+                    android:layout_alignLeft="@+id/et_password"
+                    android:layout_marginLeft="@dimen/default_content_padding"
+                    android:visibility="gone"
+                    android:text=""/>
+        </RelativeLayout>
+
+        <!--<TextView-->
+            <!--style="@style/tv_btn_start_green"-->
+            <!--android:id="@+id/tv_btn_log_in"-->
+            <!--android:layout_below="@+id/rl_password"-->
+            <!--android:layout_marginTop="@dimen/default_view_margin"-->
+            <!--android:text="@string/text_start_log_in" />-->
+
+        <com.gc.materialdesign.views.ButtonRectangle
+            android:id="@+id/br_log_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_large_size"
+            android:text="@string/text_start_log_in"
+            android:layout_below="@+id/rl_password"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:layout_marginRight="@dimen/default_view_margin"
+            app:rippleSpeed="50"
+            android:background="@color/btn_bg_color_green_normal"
+            app:rippleColor="@color/btn_gradient_color_green_press"
+            app:clickAfterRipple="true"/>
+
+
+        <TextView
+            style="@style/tv_start_default"
+            android:id="@+id/tv_forget_password"
+            android:layout_below="@+id/br_log_in"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:textSize="@dimen/text_medium_size"
+            android:textColor="@color/default_text_color_blue"
+            android:text="@string/text_start_forget_password"
+            />
+
+        <LinearLayout
+            android:id="@+id/ll_log_in_with_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:gravity="center">
+                <TextView
+                    style="@style/tv_start_light_small"
+                    android:text="@string/text_start_or_log_in_with"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageView
+                                android:id="@+id/iv_username"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/sign_in_username" />
+
+                            <TextView
+                                style="@style/tv_start_light_small"
+                                android:text="@string/text_start_username" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="@dimen/default_view_margin"
+                            android:gravity="center">
+                            <ImageView
+                                android:id="@+id/iv_facebook"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:src="@drawable/com_facebook_button_icon" />
+
+                            <TextView
+                                style="@style/tv_start_light_small"
+                                android:text="Facebook" />
+
+                        </LinearLayout>
+
+                </LinearLayout>
+        </LinearLayout>
+
+        <include layout="@layout/progress_layout"/>
+</RelativeLayout>

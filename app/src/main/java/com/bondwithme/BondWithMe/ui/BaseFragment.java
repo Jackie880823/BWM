@@ -122,6 +122,10 @@ public abstract class BaseFragment<P extends Activity> extends Fragment implemen
         public void onFragmentInteraction(Uri uri);
     }
 
-
+    public void refreshView(){
+        rootView = LayoutInflater.from(getActivity()).inflate(layoutId, null);
+        initView();
+        requestData();
+    }
 
 }

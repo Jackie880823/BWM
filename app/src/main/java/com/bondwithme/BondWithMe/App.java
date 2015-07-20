@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
@@ -15,12 +14,13 @@ import com.baidu.mapapi.SDKInitializer;
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.ui.LoginActivity;
+import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -46,7 +46,7 @@ public class App extends MultiDexApplication {
         crashHandler.init(getApplicationContext());
         /**网络工具初始*/
         HttpTools.init(this);
-        Log.i("", "MultiDexApplication==============" + System.getProperty("os.arch"));
+        LogUtil.i("", "MultiDexApplication==============" + System.getProperty("os.arch"));
         //TODO for baidu not support 64 bit cpu
         /**baidu map*/
         if(System.getProperty("os.arch").contains("64")){
@@ -119,9 +119,10 @@ public class App extends MultiDexApplication {
         NotificationUtil.unRegisterPush(context, user.getUser_id());
         user = null;
         if (context != null) {
+            LoginManager.getInstance().logOut();//清除Facebook授权缓存
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
-            Intent intent = new Intent(context, LoginActivity.class);
+            Intent intent = new Intent(context, StartActivity.class);
             ComponentName cn = intent.getComponent();
             Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
             context.startActivity(mainIntent);
@@ -155,6 +156,7 @@ public class App extends MultiDexApplication {
     }
 
     /**
+    /**
      * 完全退出app
      */
     @Override
@@ -169,9 +171,8 @@ public class App extends MultiDexApplication {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        LogUtil.d("", "1onConfigurationChanged============");
-//        Intent intent = new Intent(MainActivity.ACTION_REFRESH);
-//        sendBroadcast(intent);
+        Intent intent = new Intent();
+        intent.setAction("refresh");
+        sendBroadcast(intent);
     }
-
 }

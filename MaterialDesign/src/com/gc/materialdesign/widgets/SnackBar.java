@@ -70,17 +70,14 @@ public class SnackBar extends Dialog{
 				
 				@Override
 				public void onClick(View v) {
-                    isButtonClick = true;
-                    dismiss();
-
+					dismiss();
+					onClickListener.onClick(v);
 				}
 			});
 		}
 		view = findViewById(R.id.snackbar);
 		view.setBackgroundColor(backgroundSnackBar);
 	}
-
-    boolean isButtonClick;
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -93,14 +90,12 @@ public class SnackBar extends Dialog{
 	
 	@Override
 	public void show() {
-        if(!isShowing()) {
-            super.show();
-            view.setVisibility(View.VISIBLE);
-            view.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.snackbar_show_animation));
-            if (!mIndeterminate) {
-                dismissTimer.start();
-            }
-        }
+		super.show();
+		view.setVisibility(View.VISIBLE);
+		view.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.snackbar_show_animation));
+		if (!mIndeterminate) {
+		    dismissTimer.start();
+		}
 	}
 	
 	// Dismiss timer 
@@ -148,10 +143,6 @@ public class SnackBar extends Dialog{
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				SnackBar.super.dismiss();
-                if(isButtonClick&&onClickListener!=null) {
-                    isButtonClick = false;
-                    onClickListener.onClick(button);
-                }
 			}
 		});
 		view.startAnimation(anim);

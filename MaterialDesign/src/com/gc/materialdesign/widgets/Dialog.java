@@ -35,8 +35,9 @@ public class Dialog extends android.app.Dialog{
 
 //    private View mContentView;
     protected  boolean canceledOnTouchOutside = true;
+	private boolean dismissing;
 
-    public void setCanceledOnTouchOutside(boolean canceledOnTouchOutside){
+	public void setCanceledOnTouchOutside(boolean canceledOnTouchOutside){
         this.canceledOnTouchOutside = canceledOnTouchOutside;
     }
 
@@ -141,7 +142,44 @@ public class Dialog extends android.app.Dialog{
 		}
 	}
 
-    boolean dismissing;
+	public TextView getTitleTextView() {
+		return titleTextView;
+	}
+
+	public void setTitleTextView(TextView titleTextView) {
+		this.titleTextView = titleTextView;
+	}
+
+	public ButtonFlat getButtonAccept() {
+		return buttonAccept;
+	}
+
+	public void setButtonAccept(ButtonFlat buttonAccept) {
+		this.buttonAccept = buttonAccept;
+	}
+
+	public ButtonFlat getButtonCancel() {
+		return buttonCancel;
+	}
+
+	public void setButtonCancel(ButtonFlat buttonCancel) {
+		this.buttonCancel = buttonCancel;
+	}
+
+	public void setOnAcceptButtonClickListener(
+			View.OnClickListener onAcceptButtonClickListener) {
+		this.onAcceptButtonClickListener = onAcceptButtonClickListener;
+		if(buttonAccept != null)
+			buttonAccept.setOnClickListener(onAcceptButtonClickListener);
+	}
+
+	public void setOnCancelButtonClickListener(
+			View.OnClickListener onCancelButtonClickListener) {
+		this.onCancelButtonClickListener = onCancelButtonClickListener;
+		if(buttonCancel != null)
+			buttonCancel.setOnClickListener(onCancelButtonClickListener);
+	}
+
 	@Override
 	public void dismiss() {
         if(!dismissing&&isShowing()) {

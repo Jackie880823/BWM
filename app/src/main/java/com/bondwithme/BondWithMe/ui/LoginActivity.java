@@ -2,14 +2,14 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
+
 import android.text.Editable;
+
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -293,9 +293,8 @@ public class LoginActivity extends Activity {
                 App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));//init http header
             }
 
-            /**wing begin test gcm*/
             initPushApi();
-            /**wing end test gcm*/
+
             finish();
             return;
         }
@@ -539,37 +538,5 @@ public class LoginActivity extends Activity {
                 }
         }
     }
-
-    //自动获取国家区号方法
-    public String GetCountryZipCode() {
-        String CountryID = "";
-        String CountryZipCode = "";
-
-        TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        //getNetworkCountryIso
-        CountryID = manager.getSimCountryIso().toUpperCase();
-        String[] rl = this.getResources().getStringArray(R.array.CountryCodes);
-        for (int i = 0; i < rl.length; i++) {
-            String[] g = rl[i].split(",");
-            if (g[1].trim().equals(CountryID.trim())) {
-                CountryZipCode = g[0];
-                break;
-            }
-        }
-        return CountryZipCode;
-    }
-
-    //判断字符串的是否为字母，字母true。
-    public static boolean test(String s) {
-        char c = s.charAt(0);
-        int i = (int) c;
-        if ((i >= 65 && i <= 90) || (i >= 97 && i <= 122)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
 
 }

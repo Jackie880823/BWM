@@ -18,10 +18,6 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MembersGridAdapter;
@@ -32,10 +28,15 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.SharedPreferencesUtils;
 import com.bondwithme.BondWithMe.widget.DatePicker;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.TimePicker;
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -85,6 +86,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private ProgressBarCircularIndeterminate progressBar;
     Calendar mCalendar;
     Calendar calendar;
+
+    private String locationName;
 
     String members;
     String groups;
@@ -143,6 +146,27 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     return true;
                 }
                 return false;
+            }
+        });
+        position_name.addTextChangedListener(new TextWatcher(){
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String tplocation =  position_name.getText().toString().trim();
+                if(!tplocation.equals(locationName)){
+                     latitude = -1000;
+                     longitude = -1000;
+                }
             }
         });
         //invited members点击事件
@@ -314,12 +338,32 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //    }
 
     private void bindData2View() {
+        String stlatitude;
+        String stlongitude;
         title = SharedPreferencesUtils.getParam(getParentActivity(), "title", "").toString();
         content = SharedPreferencesUtils.getParam(getParentActivity(), "content", "").toString();
         location = SharedPreferencesUtils.getParam(getParentActivity(), "location", "").toString();
         date = (Long) SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(), "date", 0L);
 //        members = SharedPreferencesUtils.getParam(getParentActivity(), "members_data", "").toString();
 //        groups = SharedPreferencesUtils.getParam(getParentActivity(), "Groups_date", "").toString();
+//        users_date = SharedPreferencesUtils.getParam(getParentActivity(), "users_date", "").toString();
+
+//        title = mEevent.getGroup_name();
+//        location = mEevent.getLoc_name();
+//        content = mEevent.getText_description();
+//        date = Long.parseLong(mEevent.getGroup_event_date());
+
+        title = PreferencesUtil.getValue(getParentActivity(), "title", "").toString();
+        content = PreferencesUtil.getValue(getParentActivity(), "content", "").toString();
+        location = PreferencesUtil.getValue(getParentActivity(), "location", "").toString();
+        date =  PreferencesUtil.getValue(getParentActivity().getApplicationContext(), "date", 0L);
+        stlatitude  = PreferencesUtil.getValue(getParentActivity(),"latitude","-1000");
+        stlongitude = PreferencesUtil.getValue(getParentActivity(),"longitude","-1000");
+        latitude = Double.valueOf(stlatitude).doubleValue();
+        longitude = Double.valueOf(stlongitude).shortValue();
+
+        members = PreferencesUtil.getValue(getParentActivity(), "members_data", "").toString();
+        groups = PreferencesUtil.getValue(getParentActivity(), "Groups_date", "").toString();
         users_date = SharedPreferencesUtils.getParam(getParentActivity(), "users_date", "").toString();
 
         setText();
@@ -563,26 +607,24 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     }
 
-    private void cleanText() {
-        event_title.setText("");
-        event_desc.setText("");
-        position_name.setText("");
-        date_desc.setText("");
-    }
-
+    /**
+     * 删除草稿
+     */
     private void reomveSP() {
 //        File file = new File("/data/data/"+getParentActivity().getPackageName().toString()+"/shared_prefs","EventNew_date.xml");
 //        if (file.exists()){
 //            file.delete();
 ////            Toast.makeText(getParentActivity(), "删除成功", Toast.LENGTH_LONG).show();
 //        }
-        SharedPreferencesUtils.removeParam(getParentActivity(), "title", "");
-        SharedPreferencesUtils.removeParam(getParentActivity(), "content", "");
-        SharedPreferencesUtils.removeParam(getParentActivity(), "location", "");
-        SharedPreferencesUtils.removeParam(getParentActivity(), "date", 0L);
-//        SharedPreferencesUtils.removeParam(getParentActivity(), "members_data", "");
-//        SharedPreferencesUtils.removeParam(getParentActivity(), "Groups_date", "");
-        SharedPreferencesUtils.removeParam(getParentActivity(), "users_date", "");
+        PreferencesUtil.saveValue(getParentActivity(), "title", "");
+        PreferencesUtil.saveValue(getParentActivity(), "content", "");
+        PreferencesUtil.saveValue(getParentActivity(), "location", "");
+        PreferencesUtil.saveValue(getParentActivity(), "date", 0L);
+        PreferencesUtil.saveValue(getParentActivity(), "members_data", "");
+        PreferencesUtil.saveValue(getParentActivity(), "Groups_date", "");
+        PreferencesUtil.saveValue(getParentActivity(), "users_date", "");
+        PreferencesUtil.saveValue(getParentActivity(), "latitude",  "-1000");
+        PreferencesUtil.saveValue(getParentActivity(), "longitude", "-1000");
 
     }
 
@@ -620,6 +662,13 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 public void onClick(View v) {
                     saveAlertDialog.dismiss();
 //                    Long tiem = mCalendar.getTimeInMillis();
+//                    mEevent.setGroup_name(event_title.getText().toString().trim());
+//                    mEevent.setLoc_latitude(latitude+"");
+//
+//                    PreferencesUtil.saveValue(getParentActivity(),"mEvent",new Gson().toJson(mEevent));
+
+                        PreferencesUtil.saveValue(getParentActivity(), "latitude", Double.toString(latitude));
+                        PreferencesUtil.saveValue(getParentActivity(), "longitude", Double.toString(longitude));
                     if (!TextUtils.isEmpty(event_title.getText().toString().trim())) {
                         SharedPreferencesUtils.setParam(getParentActivity(), "title", event_title.getText().toString());
 //                        Log.i("title=============",event_title.getText().toString());
@@ -728,7 +777,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void goLocationSetting() {
-        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude,position_name.getText().toString());
+        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, position_name.getText().toString());
         if(intent!=null)
             startActivityForResult(intent, GET_LOCATION);
     }
@@ -766,7 +815,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 //                            }
 //
 //                        }else {
-                            String locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
+                            locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
                             if (!TextUtils.isEmpty(locationName)) {
                                 position_name.setText(locationName);
                                 mEevent.setLoc_name(locationName);
