@@ -1,7 +1,9 @@
 package com.bondwithme.BondWithMe.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -60,8 +62,9 @@ public class PushApi {
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private static void registerInBackground() {
-        new AsyncTask<Void, Void, String>() {
+        AsyncTask task = new AsyncTask<Void, Void, String>() {
 
             @Override
             protected String doInBackground(Void... params) {
@@ -81,7 +84,13 @@ public class PushApi {
                 }
             }
 
-        }.execute(null, null, null);
+        };
+        //for not work in down 11
+        if(SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            task.execute();
+        }
     }
 
     private  static String doRegistration2Jpush() {
