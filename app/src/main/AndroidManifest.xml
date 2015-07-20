@@ -229,6 +229,9 @@
             android:name=".ui.more.sticker.StickerDetailActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".ui.more.sticker.StickerSortActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.TellAFriendsActivity"
             android:screenOrientation="portrait" />
         <activity

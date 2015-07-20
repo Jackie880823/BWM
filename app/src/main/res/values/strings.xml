@@ -545,5 +545,12 @@
 
     <string name="log_out">Do you really want to Log out?</string>
 
+
+    <string name="text_recorder_stickies">Reorder stickies in the chat page</string>
+    <string name="text_sort">Sort</string>
+
+
+
+
 </resources>
 

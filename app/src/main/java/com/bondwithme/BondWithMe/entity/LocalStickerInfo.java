@@ -25,8 +25,8 @@ public class LocalStickerInfo implements Serializable {
     private String version;         //sticker group version
     @DatabaseField
     private String type;                //picture type
-    @DatabaseField
-    private int position;               //sticker group position
+    @DatabaseField(unique=true)
+    private long order;               //sticker group order
     @DatabaseField
     private String loginUserId;
 
@@ -89,12 +89,12 @@ public class LocalStickerInfo implements Serializable {
         this.type = type;
     }
 
-    public int getPosition() {
-        return position;
+    public long getOrder() {
+        return order;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setOrder(long order) {
+        this.order = order;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class LocalStickerInfo implements Serializable {
                 ", sticker_name='" + sticker_name + '\'' +
                 ", version='" + version + '\'' +
                 ", type='" + type + '\'' +
-                ", position=" + position +
+                ", order=" + order +
                 '}';
     }
 }
