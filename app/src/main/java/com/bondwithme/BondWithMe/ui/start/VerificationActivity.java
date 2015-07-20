@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui.start;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -7,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -20,15 +22,20 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
+import com.bondwithme.BondWithMe.entity.FaceBookUserEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
+import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UIUtil;
+import com.facebook.login.LoginManager;
 import com.gc.materialdesign.views.Button;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,6 +46,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class VerificationActivity extends BaseActivity implements EditText.OnEditorActionListener, View.OnClickListener{
 
@@ -63,6 +72,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     private final static int HANDLE_LOGIN_ID_EXISET = 0xb2;
     private final static int HANDLE_REGISTER_FAIL = 0xb3;
     private final static int HANDLE_FAIL_VERIFY = 0xb4;
+    private final static int HANDLE_SUCCESS_CREATE_FACEBOOK_USER = 0xb5;
 
     private final static int HANDLE_SUCCESS_FORGOT_VERIFY_CODE = 0xc1;
     private final static int HANDLE_FAIL_FORGOT_VERIFY_CODE = 0xc2;
@@ -82,7 +92,9 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     private String strCountryCode;
     private String strPhoneNumber;
     private String strPassword;
+    private FaceBookUserEntity faceBookUserEntity;
 
+    private List<UserEntity> userEntities;
     private UserEntity userEntity;
     private AppTokenEntity tokenEntity;
 
@@ -108,6 +120,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                     break;
 
 
+
                 //以下验证，创建用户回调
                 case HANDLE_SUCCESS_CREATE_USER:
                     goSignUpSuccessful();
@@ -122,8 +135,15 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                     break;
 
                 case HANDLE_FAIL_VERIFY:
-                    goBackAgain();
+//                    goBackAgain();
+                    etCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     break;
+
+                case HANDLE_SUCCESS_CREATE_FACEBOOK_USER:
+                    goMainActivity();
+                    break;
+
+
 
 
                 //以下忘记密码验证回调
@@ -151,6 +171,8 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
             }
         }
     };
+
+
 
     class TimeCount extends CountDownTimer {
         public TimeCount(long millisInFuture, long countDownInterval) {
@@ -271,6 +293,12 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 strPhoneNumber = intent.getStringExtra("user_phone");
                 break;
 
+            case Constant.TYPE_FACEBOOK:
+                faceBookUserEntity = (FaceBookUserEntity) intent.getSerializableExtra("faceBookUserEntity");
+                strCountryCode = intent.getStringExtra("user_country_code");
+                strPhoneNumber = intent.getStringExtra("user_phone");
+                break;
+
             default:
                 finish();
                 break;
@@ -307,6 +335,34 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
 
 
+
+
+    private void doResendCode()
+    {
+        doingHttpChangeUI();
+        switch (type)
+        {
+            case Constant.TYPE_PHONE:
+                doPhoneResendCode();
+                break;
+
+            case Constant.TYPE_USERNAME:
+                doUsernameResendCode();
+                break;
+
+            case Constant.TYPE_FORGOT_PASSWORD:
+                doForgotPasswordResendCode();
+                break;
+
+            case Constant.TYPE_FACEBOOK:
+                doFacebookResendCode();
+                break;
+
+            default:
+                break;
+        }
+    }
+
     private void doNext()
     {
         if (TextUtils.isEmpty(etCode.getText().toString()))
@@ -329,32 +385,16 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                 doForgotPassword();
                 break;
 
-            default:
-                break;
-        }
-    }
-
-    private void doResendCode()
-    {
-        doingHttpChangeUI();
-        switch (type)
-        {
-            case Constant.TYPE_PHONE:
-                doPhoneResendCode();
-                break;
-
-            case Constant.TYPE_USERNAME:
-                doUsernameResendCode();
-                break;
-
-            case Constant.TYPE_FORGOT_PASSWORD:
-                doForgotPasswordResendCode();
+            case Constant.TYPE_FACEBOOK:
+                doFacebookVerifyUser();
                 break;
 
             default:
                 break;
         }
     }
+
+
 
     private void doPhoneResendCode() {
         HashMap<String, String> params = new HashMap<>();
@@ -536,6 +576,65 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         });
     }
 
+    private void doFacebookResendCode() {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("user_login_id", faceBookUserEntity.getUserId());
+        params.put("user_country_code", strCountryCode);
+        params.put("user_phone", MyTextUtil.NoZero(strPhoneNumber));
+        params.put("login_type", Constant.TYPE_FACEBOOK);
+
+        new HttpTools(this).get(Constant.API_START_THIRD_PARTY_GET_CODE, params, CHECK_GET_CODE, new HttpCallback() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+                finishHttpChangeUI();
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (Constant.SUCCESS.equals(jsonObject.getString("response_status"))) {
+                        //成功获得验证码
+                        handler.sendEmptyMessage(HANDLE_SUCCESS_RESEND_CODE);
+                    } else if (Constant.FAIL.equals(jsonObject.getString("response_status"))) {
+                        if (ThirdPartyVerifyPhoneActivity.RESPONSE_MESSAGE_ID_EXIST.equals(jsonObject.getString("response_message"))) {
+                            //账号被注册
+                            handler.sendEmptyMessage(HANDLE_UNDEFINE_WRONG_RESEND_CODE);
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(CATCH);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.sendEmptyMessage(ERROR);
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
+
+
+
     private void doPhoneVerifyUser()
     {
         HashMap<String, String> params = new HashMap<>();
@@ -681,6 +780,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
             @Override
             public void onError(Exception e) {
+                e.printStackTrace();
                 handler.sendEmptyMessage(ERROR);
             }
 
@@ -753,7 +853,79 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
     }
 
+    private void doFacebookVerifyUser() {
 
+        Map<String, String> params = new HashMap<>();
+        params.put("user_country_code", strCountryCode);
+        params.put("user_phone",MyTextUtil.NoZero(strPhoneNumber));
+        params.put("verify_code", etCode.getText().toString());
+        params.put("user_login_id",faceBookUserEntity.getUserId());
+        params.put("user_login_type", Constant.TYPE_FACEBOOK);
+        params.put("user_uuid", Settings.Secure.getString(VerificationActivity.this.getContentResolver(),
+                Settings.Secure.ANDROID_ID));
+        params.put("user_app_version", AppInfoUtil.getAppVersionName(this));
+        params.put("user_app_os", Constant.USER_APP_OS);
+        params.put("access_token", faceBookUserEntity.getToken());
+        params.put("user_surname", faceBookUserEntity.getLastname());
+        params.put("user_given_name", faceBookUserEntity.getFirstname());
+        if ("male".equals(faceBookUserEntity.getGender()))
+        {
+            params.put("user_gender", "M");
+        }
+        else
+        {
+            params.put("user_gender", "F");
+        }
+
+        new HttpTools(this).post(Constant.API_START_THIRD_PARTY_CREATE_USER, params, VERIFY_CODE, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+                finishHttpChangeUI();
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if (Constant.SUCCESS.equals(jsonObject.get("response_status"))) {
+                        userEntity = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), UserEntity.class);
+                        tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
+                        handler.sendEmptyMessage(HANDLE_SUCCESS_CREATE_FACEBOOK_USER);
+                    } else if (Constant.FAIL.equals(jsonObject.get("response_status"))) {
+                        handler.sendEmptyMessage(HANDLE_FAIL_VERIFY);
+                    }
+
+                } catch (JSONException e) {
+                    handler.sendEmptyMessage(CATCH);
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                handler.sendEmptyMessage(ERROR);
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
 
 
 
@@ -792,6 +964,15 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         startActivity(intent);
     }
 
+    private void goMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        ComponentName cn = intent.getComponent();
+        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+        App.changeLoginedUser(userEntity, tokenEntity);//可能会传入没有数据的???
+        PushApi.initPushApi(this);
+        startActivity(mainIntent);
+    }
+
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE)
@@ -800,6 +981,15 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(Constant.TYPE_FACEBOOK.equals(type))
+        {
+            LoginManager.getInstance().logOut();//清除Facebook授权缓存
+        }
     }
 
 }
