@@ -356,12 +356,8 @@ public class CreateGroupDialogActivity extends BaseActivity {
      */
     private void setPicToView(Bitmap photo) {
         if (photo != null) {
-<<<<<<< HEAD
-            default_imag.setVisibility(View.INVISIBLE);
-=======
             default_imag.setVisibility(View.GONE);
             add_photo_text.setVisibility(View.GONE);
->>>>>>> develop
             defaultHead.setBackgroundResource(0);
             ivGroupPic.setImageBitmap(photo);
         }
