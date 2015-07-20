@@ -511,4 +511,7 @@
     <string name="action_invitation_successful">邀请发送成功</string>
 
     <string name="log_out">你是否确定登出？</string>
+
+    <string name="text_recorder_stickies">Reorder stickies in the chat page</string>
+    <string name="text_sort">Sort</string>
 </resources>

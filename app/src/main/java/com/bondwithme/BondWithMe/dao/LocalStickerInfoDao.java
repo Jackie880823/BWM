@@ -69,7 +69,7 @@ public class LocalStickerInfoDao {
             queryBuilder.where().eq("loginUserId", MainActivity.getUser().getUser_id()).and().eq("path", stickerInfo.getPath());
             List<LocalStickerInfo> localList = queryBuilder.query();
             if ((localList != null) && (localList.size() > 0)) {
-                //stickerInfoDao.update(stickerInfo);
+                stickerInfoDao.update(stickerInfo);
                 return;
             }
             stickerInfoDao.createIfNotExists(stickerInfo);
@@ -99,18 +99,22 @@ public class LocalStickerInfoDao {
     public List<String> queryAllSticker() {
         List<String> list = new ArrayList<>();
         try {
-            List<LocalStickerInfo> localList = stickerInfoDao.queryForEq("loginUserId", MainActivity.getUser().getUser_id());
+
+            List<LocalStickerInfo> localList = null;
+            QueryBuilder qb = stickerInfoDao.queryBuilder();
+            qb.orderBy("order",false).where().eq("loginUserId", MainActivity.getUser().getUser_id());
+            localList = qb.query();
             if (null != localList && localList.size() > 0) {
-                list.add(DEF_FIRST_STICKER);
-                list.add(DEF_SECOND_STICKER);
-                list.add(DEF_THREAD_STICKER);
+//                list.add(DEF_FIRST_STICKER);
+//                list.add(DEF_SECOND_STICKER);
+//                list.add(DEF_THREAD_STICKER);
                 for (LocalStickerInfo stickerInfo : localList) {
                     String name = stickerInfo.getPath();
-                    if (DEF_FIRST_STICKER.equalsIgnoreCase(name) || DEF_SECOND_STICKER.equalsIgnoreCase(name) || DEF_THREAD_STICKER.equalsIgnoreCase(name)) {
-                        continue;
-                    } else {
+//                    if (DEF_FIRST_STICKER.equalsIgnoreCase(name) || DEF_SECOND_STICKER.equalsIgnoreCase(name) || DEF_THREAD_STICKER.equalsIgnoreCase(name)) {
+//                        continue;
+//                    } else {
                         list.add(name);
-                    }
+//                    }
                 }
             }
         } catch (SQLException e) {

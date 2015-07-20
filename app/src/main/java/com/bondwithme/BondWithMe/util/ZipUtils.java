@@ -145,15 +145,17 @@ public class ZipUtils {
         stickerInfo.setPath(zipFileName);
         stickerInfo.setSticker_name("1_S");
         stickerInfo.setVersion("1");
-        String strZip = assetName.substring(0,assetName.length()-4);
-        LogUtil.i("ZipUtils", "=====strZip=====" + strZip);
-        LogUtil.i("zipFileName", "=====zipFileName=====" + strZip);
         if (zipFileName.contains("Bara-Bara_Na")){
             stickerInfo.setType(".png");
-        }else {
+            stickerInfo.setOrder(System.currentTimeMillis());
+        }else if (zipFileName.contains("A_day_life_of_Ping")){
+            stickerInfo.setOrder(System.currentTimeMillis());
+            stickerInfo.setType(".gif");
+        }else if (zipFileName.contains("Baby_Trunky")){
+            stickerInfo.setOrder(System.currentTimeMillis());
             stickerInfo.setType(".gif");
         }
-        stickerInfo.setPosition(1);
+
         try {
             LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
         } catch (SQLException e) {
