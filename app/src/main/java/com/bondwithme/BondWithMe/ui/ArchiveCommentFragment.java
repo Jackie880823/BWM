@@ -37,6 +37,7 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
     private RecyclerView rvList;
     private MySwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh = true;
+    private boolean isCommentRefresh = true;
     private int startIndex = 0;
     private int offset = 10;
     private int currentPage = 1;
@@ -109,7 +110,9 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
             @Override
             public void onRefresh() {
                 isRefresh = true;
+                isCommentRefresh = true;
                 startIndex = 0;
+                CommentData.clear();
                 requestData();
             }
 
@@ -119,6 +122,7 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
     private void reInitDataStatus() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
+        isCommentRefresh = false;
         startIndex = 0;
         loading = false;
     }
@@ -137,6 +141,7 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
+        isCommentRefresh  = false;
     }
 
     @Override
@@ -172,11 +177,25 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
                 //DateDeserializer ds = new DateDeserializer();
                 //给GsonBuilder方法单独指定Date类型的反序列化方法
                 //gsonb.registerTypeAdapter(Date.class, ds);
-                Gson gson = gsonb.create();
-                detailDate = gson.fromJson(response, new TypeToken<ArrayList<ArchiveChatEntity>>() {}.getType());
 
                 try{
-
+                    Gson gson = gsonb.create();
+                    detailDate = gson.fromJson(response, new TypeToken<ArrayList<ArchiveChatEntity>>() {}.getType());
+                    if(isRefresh) {
+                        isRefresh = false;
+                        currentPage = 1;//还原为第一页
+                        initAdapter();
+                    } else {
+//                    startIndex += detailDate.size();
+                        if(adapter == null) {
+                            initAdapter();
+                            adapter.notifyDataSetChanged();
+                        } else {
+//                        abookends.addData(detailDate);
+                        }
+                    }
+                    swipeRefreshLayout.setRefreshing(false);
+                    loading = false;
                 }catch (Exception e){
                     e.printStackTrace();
                     reInitDataStatus();
@@ -184,20 +203,6 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
                     vProgress.setVisibility(View.GONE);
                 }
 
-                if(isRefresh) {
-                    isRefresh = false;
-                    currentPage = 1;//还原为第一页
-                    initAdapter();
-                } else {
-                    startIndex += detailDate.size();
-                    if(adapter == null) {
-                        initAdapter();
-                        adapter.notifyDataSetChanged();
-                    } else {
-//                        abookends.addData(detailDate);
-                    }
-                }
-                loading = false;
             }
 
             @Override
@@ -258,9 +263,9 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
                 vProgress.setVisibility(View.GONE);
                 try{
                     if(isRefresh) {
-                        isRefresh = false;
+                        isCommentRefresh = false;
                         currentPage = 1;//还原为第一页
-                        initAdapter();
+//                        initAdapter();
                     } else {
                         startIndex += CommentData.size();
                         if(adapter == null) {

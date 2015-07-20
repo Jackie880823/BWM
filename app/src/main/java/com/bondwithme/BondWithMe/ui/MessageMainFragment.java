@@ -198,6 +198,12 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     private TextView emptyGroupMessageTv;
     private String TAG;
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getData(0);
+        getDataGroup(0);
+    }
 
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
@@ -274,7 +280,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                 }
             }
         });
-        getData(0);
+//        getData(0);
 
         mLists.add(userView);
         View groupView = LayoutInflater.from(mContext).inflate(R.layout.message_list_view_layout, null);
@@ -346,12 +352,12 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                 }
             }
         });
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getDataGroup(0);
-            }
-        }, 1500);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                getDataGroup(0);
+//            }
+//        }, 1500);
         mLists.add(groupView);
         return mLists;
     }

@@ -138,10 +138,11 @@ dependencies {
     //    compile 'com.android.support:cardview-v7:+'
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     //for 突破65535的限制
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':Volley')
     compile project(':MaterialDesign')
     compile project(':PhotoView')
+    compile project(':facebook')
     //    compile 'com.android.support:gridlayout-v7:21.0.3'
     compile('org.apache.httpcomponents:httpmime:4.3.5') {
         // avoid "is ignored for the default configuration X" warnings
