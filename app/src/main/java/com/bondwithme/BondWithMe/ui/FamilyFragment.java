@@ -147,7 +147,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     }
                     //所有的成员包括亲人、好友、等待回复
                     memberEntityList = map.get("private");
-                    Log.i("member_size===",memberEntityList.size()+"");
+                    Log.i("member_size===", memberEntityList.size() + "");
                     if (memberEntityList != null && memberEntityList.size() > 0) {
                         FamilyMemberEntity member = new FamilyMemberEntity();//family_tree
                         member.setUser_given_name(FAMILY_TREE);
@@ -158,7 +158,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
                             //成员的关系
                             String tree_type = memberEntity.getTree_type();
-                            Log.i("tree_type===",memberEntity.getTree_type());
+                            Log.i("tree_type===", memberEntity.getTree_type());
                             if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
                                     || FAMILY_SIBLING.equals(tree_type) || FAMILY_SPOUSE.equals(tree_type)) {
                                 memberList.add(memberEntity);
@@ -249,7 +249,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         vProgress.setVisibility(View.VISIBLE);
 
         memberAdapter = new MyFamilyAdapter(mContext, memberEntityList);
-        groupAdapter = new FamilyGroupAdapter(mContext,groupEntityList);
+        groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
         //绑定自定义适配器
         pager.setAdapter(new FamilyPagerAdapter(initPagerView()));
         pager.setOnPageChangeListener(new MyOnPageChanger());
@@ -296,6 +296,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         });
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
+
     //搜索
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
@@ -306,20 +307,20 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //                familyMemberEntityList = searchMemberList(etImport, moreMemberList);
 //                memberAdapter.addNewData(familyMemberEntityList);
                 memberAdapter.setSerach(moreMemberList);
-                Filter filter =  memberAdapter.getFilter();
+                Filter filter = memberAdapter.getFilter();
                 filter.filter(etImport);
             } else {
-                if(isopen){
+                if (isopen) {
                     familyMemberEntityList = searchMemberList(etImport, moreMemberList);
                     memberAdapter.addNewData(familyMemberEntityList);
-                }else {
-                    if(TextUtils.isEmpty(etImport)){
+                } else {
+                    if (TextUtils.isEmpty(etImport)) {
                         familyMemberEntityList = searchMemberList(etImport, memberList);
                         memberAdapter.addNewData(familyMemberEntityList);
-                    }else {
+                    } else {
 //                    familyMemberEntityList = searchMemberList(etImport, memberList);
                         memberAdapter.setSerach(moreMemberList);
-                        Filter filter =  memberAdapter.getFilter();
+                        Filter filter = memberAdapter.getFilter();
                         filter.filter(etImport);
                     }
                 }
@@ -333,7 +334,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 groupAdapter.addData(familyGroupEntityList);
             } else {
 //                familyGroupEntityList = searchGroupList(etImport, groupEntityList);
-                Filter filter =  groupAdapter.getFilter();
+                Filter filter = groupAdapter.getFilter();
                 filter.filter(etImport);
             }
 
@@ -395,22 +396,34 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //            memberList.add(member);
 //        }
 //        memberAdapter.addNewData(memberList);
+        if (memberRefreshLayout.getVisibility() == View.VISIBLE) {
+            memberRefreshLayout.setVisibility(View.GONE);
+        }
         emptyMemberLinear.setVisibility(View.VISIBLE);
         emptyMemberIv.setImageResource(R.drawable.family_member_msg_empty);
         emptyMemberTv.setText(getString(R.string.text_empty_add_member));
     }
 
     private void showGroupEmptyView() {
+        if (groupRefreshLayout.getVisibility() == View.VISIBLE) {
+            groupRefreshLayout.setVisibility(View.GONE);
+        }
         emptyGroupLinear.setVisibility(View.VISIBLE);
         emptyGroupIv.setImageResource(R.drawable.family_group_msg_empty);
         emptyGroupTv.setText(mContext.getString(R.string.text_empty_add_group));
     }
 
     private void hideMemberEmptyView() {
+        if (memberRefreshLayout.getVisibility() == View.GONE) {
+            memberRefreshLayout.setVisibility(View.VISIBLE);
+        }
         emptyMemberLinear.setVisibility(View.GONE);
     }
 
     private void hideGroupEmptyView() {
+        if (groupRefreshLayout.getVisibility() == View.GONE) {
+            groupRefreshLayout.setVisibility(View.VISIBLE);
+        }
         emptyGroupLinear.setVisibility(View.GONE);
     }
 
@@ -473,7 +486,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         Intent intent = new Intent(getActivity(), FamilyProfileActivity.class);
                         intent.putExtra("member_id", familyMemberEntity.getUser_id());
 //                        startActivity(intent);
-                        startActivityForResult(intent,1);
+                        startActivityForResult(intent, 1);
                     }
                 }
             }
@@ -484,7 +497,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 isMemberRefresh = true;
                 isup = false;
                 opendate.clear();
-                requestData();
+//                requestData();
+                getData();
             }
         });
         userGridView.setOnTouchListener(new View.OnTouchListener() {
@@ -541,7 +555,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onRefresh() {
                 isGroupRefresh = true;
-                requestData();
+//                requestData();
+                getData();
             }
 
         });
@@ -596,6 +611,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         return mLists;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getData();
+    }
+
     public void updateMiss(String member_id) {
         final RequestInfo requestInfo = new RequestInfo();
         HashMap<String, String> params = new HashMap<String, String>();
@@ -606,7 +627,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //            @Override
 //            public void run() {
 //                super.run();
-        new HttpTools(getActivity()).put(requestInfo,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).put(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -661,7 +682,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //            @Override
 //            public void run() {
 //                super.run();
-        new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -842,7 +863,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 intent.putExtra("isCreateNewGroup", true);
                 intent.putExtra("jumpIndex", 0);
 //                startActivity(intent);
-                startActivityForResult(intent,1);
+                startActivityForResult(intent, 1);
                 showSelectDialog.dismiss();
             }
         });
@@ -855,8 +876,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         showSelectDialog.show();
     }
 
-    @Override
-    public void requestData() {
+    private void getData() {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
             Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             finishReFresh();
@@ -867,7 +887,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void run() {
                 super.run();
-                new HttpTools(getActivity()).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null,Tag, new HttpCallback() {
+                new HttpTools(getActivity()).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }
@@ -919,9 +939,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //                                }
 //                            }
                             if (map.size() > 0) {
-                                if(isopen){
+                                if (isopen) {
                                     Message.obtain(handler, GET_OP, map).sendToTarget();
-                                }else {
+                                } else {
                                     Message.obtain(handler, GET_DATA, map).sendToTarget();
                                 }
                             }
@@ -950,6 +970,103 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 });
             }
         }.start();
+    }
+
+    @Override
+    public void requestData() {
+//        if (!NetworkUtil.isNetworkConnected(getActivity())) {
+//            Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+//            finishReFresh();
+//            return;
+//        }
+//
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
+//                new HttpTools(getActivity()).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null,Tag, new HttpCallback() {
+//                    @Override
+//                    public void onStart() {
+//                    }
+//
+//                    @Override
+//                    public void onFinish() {
+//                        vProgress.setVisibility(View.GONE);
+//                    }
+//
+//                    @Override
+//                    public void onResult(String response) {
+//                        GsonBuilder gsonb = new GsonBuilder();
+//                        Gson gson = gsonb.create();
+//                        finishReFresh();
+////                        if (mProgressDialog.isShowing()) {
+////                            mProgressDialog.dismiss();
+////                        }
+//                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+//                            showMemberEmptyView();
+//                            showGroupEmptyView();
+//                        }
+//                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
+//                            showMemberEmptyView();
+//                            showGroupEmptyView();
+//                        }
+//                        try {
+//                            JSONObject jsonObject = new JSONObject(response);
+//                            List<FamilyMemberEntity> memberList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
+//                            }.getType());
+//                            List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
+//                            }.getType());
+//                            Map<String, List> map = new HashMap<>();
+//                            if (memberList != null && memberList.size() > 0) {
+//                                hideMemberEmptyView();
+//                                map.put("private", memberList);
+//                            } else {
+//                                showMemberEmptyView();
+//                            }
+//                            if (groupList != null && groupList.size() > 0) {
+//                                hideGroupEmptyView();
+//                                map.put("group", groupList);
+//                            } else {
+//                                showGroupEmptyView();
+//                            }
+////                            if(memberAdapter=null){
+////                                int size = memberAdapter.getList().size();
+////                                if (memberAdapter.getList().get(size-1).getUser_given_name()==FAMILY_MORE_MEMBER){
+////                                    isopen  = true;
+////                                }
+////                            }
+//                            if (map.size() > 0) {
+//                                if(isopen){
+//                                    Message.obtain(handler, GET_OP, map).sendToTarget();
+//                                }else {
+//                                    Message.obtain(handler, GET_DATA, map).sendToTarget();
+//                                }
+//                            }
+//                        } catch (JSONException e) {
+//                            finishReFresh();
+//                            showGroupEmptyView();
+//                            showMemberEmptyView();
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onError(Exception e) {
+//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+//                        finishReFresh();
+//                    }
+//
+//                    @Override
+//                    public void onCancelled() {
+//                    }
+//
+//                    @Override
+//                    public void onLoading(long count, long current) {
+//
+//                    }
+//                });
+//            }
+//        }.start();
 
     }
 
@@ -1035,7 +1152,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         switch (requestCode) {
             case 1:
                 if (resultCode == -1 || resultCode == 0) {
-                    requestData();
+//                    requestData();
+                    getData();
                 }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -1068,10 +1186,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     }
 
     private void showPDF(String url) {
-        if(TextUtils.isEmpty(url))
+        if (TextUtils.isEmpty(url))
             return;
-        Intent intent = new Intent(getActivity(),ViewPDFActivity.class);
-        intent.putExtra(ViewPDFActivity.PARAM_PDF_URL,url);
+        Intent intent = new Intent(getActivity(), ViewPDFActivity.class);
+        intent.putExtra(ViewPDFActivity.PARAM_PDF_URL, url);
         startActivity(intent);
     }
 }
