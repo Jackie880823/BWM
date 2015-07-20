@@ -40,11 +40,15 @@
                 android:layout_marginRight="@dimen/_20dp"
                 android:src="@drawable/search"/>
         </RelativeLayout>
+    <View
+        android:id="@+id/option_split_line"
+        style="@style/split_line_default" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/default_content_padding"
-        android:paddingRight="@dimen/default_content_padding">
+        android:paddingRight="@dimen/default_content_padding"
+        android:paddingTop="@dimen/default_view_margin">
         <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
