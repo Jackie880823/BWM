@@ -59,9 +59,6 @@ public class AsyncLoadBitmapTask extends AsyncTask<Uri, Integer, Bitmap> {
             // memory中没有这张图片从手机内存
             Log.i(TAG, "doInBackground& not cache bitmap");
             bitmap = LocalImageLoader.getMiniThumbnailBitmap(mContext, uri, mColumnWidthHeight);
-            if(bitmaps.size() > 60) {
-                bitmaps.clear();
-            }
             bitmaps.put(uri, bitmap);
         } else {
             Log.i(TAG, "doInBackground& cached bitmap");

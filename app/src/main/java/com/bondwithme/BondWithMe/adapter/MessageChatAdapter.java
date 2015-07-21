@@ -35,10 +35,11 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
+import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -46,7 +47,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -378,7 +378,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
         };
         //for not work in down 11
-        if(SDKUtil.IS_HONEYCOMB) {
+        if (SDKUtil.IS_HONEYCOMB) {
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             task.execute();
@@ -424,7 +424,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         };
 
         //for not work in down 11
-        if(SDKUtil.IS_HONEYCOMB) {
+        if (SDKUtil.IS_HONEYCOMB) {
             task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             task.execute();
@@ -440,7 +440,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     class VHItem extends RecyclerView.ViewHolder implements View.OnClickListener {
         //接收
         CircularNetworkImage iconImage;
-        TextView messageText;
+        FreedomSelectionTextView messageText;
         NetworkImageView networkImageView;
         GifImageView gifImageView;
         TextView dateTime;
@@ -451,7 +451,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         public VHItem(View itemView) {
             super(itemView);
             iconImage = (CircularNetworkImage) itemView.findViewById(R.id.message_icon_image);
-            messageText = (TextView) itemView.findViewById(R.id.message_item_content_tv);
+            messageText = (FreedomSelectionTextView) itemView.findViewById(R.id.message_item_content_tv);
             networkImageView = (NetworkImageView) itemView.findViewById(R.id.message_pic_iv);
             gifImageView = (GifImageView) itemView.findViewById(R.id.message_pic_gif_iv);
             dateTime = (TextView) itemView.findViewById(R.id.date_time_tv);

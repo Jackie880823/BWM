@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,13 +27,17 @@ import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
+import com.bondwithme.BondWithMe.entity.FaceBookUserEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.interfaces.LogInStateListener;
 import com.bondwithme.BondWithMe.ui.CountryCodeActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.CountryCodeUtil;
+import com.bondwithme.BondWithMe.util.LoginManager;
 import com.bondwithme.BondWithMe.util.MD5Util;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
@@ -47,11 +52,13 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class LogInPhoneFragment extends Fragment implements View.OnClickListener , TextView.OnEditorActionListener{
+public class LogInPhoneFragment extends Fragment implements View.OnClickListener , TextView.OnEditorActionListener, LogInStateListener {
 
     private final static String TAG = LogInPhoneFragment.class.getSimpleName();
     private final static String GET_USER = TAG + "_GET_USER";
+    private final static String CHECK_ID = TAG + "_CHECK_ID";
 
 
     private static final int GET_COUNTRY_CODE = 0;
@@ -59,7 +66,9 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     private static final int ERROR = -1;
     private static final int GO_DETAILS = 1;
     private static final int GO_MAIN = 2;
-    private static final int CATCH =3;
+    private static final int CATCH = 3;
+    private static final int THIRD_PARTY_SIGN_UP = 4;
+
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
@@ -71,6 +80,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     private Button brLogIn;
     private TextView tvForgetPassword;
     private ImageView ivUsername;
+    private ImageView ivFacebook;
     private RelativeLayout rlProgress;
 
     private String strCountryCode;
@@ -101,10 +111,16 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                     unknowWrong();
                     break;
 
+                case THIRD_PARTY_SIGN_UP:
+                    goThirdPartyCheckId();
+                    break;
+
                 case ERROR:
                     //需要怎么处理？暂时？
                     unknowWrong();
                     break;
+
+
 
                 default:
                     break;
@@ -113,12 +129,17 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         }
     };
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_log_in, container, false);
 
         initView(view);
+
+        LoginManager.initialize(getActivity());
+        LoginManager.setFaceBookLoginParams(getActivity(), this, ivFacebook, null, this);
 
         return view;
     }
@@ -156,6 +177,9 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+            LoginManager.onActivityResult(requestCode, resultCode, data);
+
             switch (requestCode)
             {
                 case GET_COUNTRY_CODE:
@@ -170,6 +194,13 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                 default:
                     break;
             }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LoginManager.OnDestory();
     }
 
     private void initView(View view)
@@ -184,6 +215,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         brLogIn = (Button)view.findViewById(R.id.br_log_in);
         tvForgetPassword = (TextView)view.findViewById(R.id.tv_forget_password);
         ivUsername = (ImageView)view.findViewById(R.id.iv_username);
+        ivFacebook = (ImageView)view.findViewById(R.id.iv_facebook);
         rlProgress = (RelativeLayout)view.findViewById(R.id.rl_progress);
 
 //        tvLogIn.setOnClickListener(this);
@@ -402,4 +434,107 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
         etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
     }
+
+    private FaceBookUserEntity faceBookUserEntity;
+
+    @Override
+    public void OnLoginSuccess(FaceBookUserEntity faceBookUserEntity, String logType) {
+
+        if (!MyTextUtil.isHasEmpty(faceBookUserEntity.getUserId(), faceBookUserEntity.getFirstname(), faceBookUserEntity.getLastname(), faceBookUserEntity.getGender()))
+        {
+            Log.d("", faceBookUserEntity.toString());
+            this.faceBookUserEntity = faceBookUserEntity;
+            checkFacebookId();
+        }
+        else
+        {
+            //没必要吧？？？
+        }
+    }
+
+    @Override
+    public void OnLoginError(String error) {
+        MessageUtil.showMessage(getActivity(), error);
+    }
+
+    private void checkFacebookId() {
+        if (!NetworkUtil.isNetworkConnected(getActivity())) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("user_login_id", faceBookUserEntity.getUserId());
+        params.put("login_type", Constant.TYPE_FACEBOOK);
+        params.put("access_token", faceBookUserEntity.getToken());
+        params.put("user_uuid", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID));
+        params.put("user_app_version", AppInfoUtil.getAppVersionName(getActivity()));
+        params.put("user_app_os", Constant.USER_APP_OS);
+
+        new HttpTools(getActivity()).get(Constant.API_START_THIRD_PARTY_CHECK_ID, params, CHECK_ID, new HttpCallback() {
+            @Override
+            public void onStart() {
+                doingLogInChangeUI();
+            }
+
+            @Override
+            public void onFinish() {
+                finishLogInChangeUI();
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                Log.d("","---facebook--checkId" + response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if ("1".equals(jsonObject.getString("bwm_user")))
+                    {
+                        userEntities = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<List<UserEntity>>() {
+                        }.getType());
+                        tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
+                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
+                        {
+                            //这样可以当做是bad date
+                            return;
+                        }
+                        userEntity = userEntities.get(0);
+                        handler.sendEmptyMessage(GO_MAIN);
+                    }
+                    else if ("0".equals(jsonObject.getString("bwm_user")))
+                    {
+                        handler.sendEmptyMessage(THIRD_PARTY_SIGN_UP);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
+    private void goThirdPartyCheckId() {
+        Intent intent = new Intent(getActivity(), ThirdPartyVerifyPhoneActivity.class);
+        intent.putExtra(Constant.TYPE_FACEBOOK, faceBookUserEntity);
+        startActivity(intent);
+    }
+
+
+
 }

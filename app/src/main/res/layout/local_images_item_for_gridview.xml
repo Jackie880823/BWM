@@ -9,8 +9,8 @@
         android:scaleType="centerCrop"/>
     <CheckBox
         android:id="@+id/select_image_right"
-        android:layout_width="@dimen/_32dp"
-        android:layout_height="@dimen/_32dp"
-        android:layout_alignParentRight="true"/>
+        style="@style/CustomCheckboxTheme"
+        android:layout_alignParentRight="true"
+        />
 
 </com.bondwithme.BondWithMe.widget.SquareRelativeLayout>

@@ -1,4 +1,4 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +7,9 @@
     android:background="@color/default_text_color_while"
     tools:context="com.madx.bwm.ui.more.MoreSettingActivity">
 
+<!--    android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding"
+        android:paddingTop="@dimen/default_view_margin"-->
     <include
         android:id="@+id/fragment_main_top"
         layout="@layout/title_view"
@@ -14,49 +17,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <RelativeLayout
-        android:id="@+id/rl_1"
+    <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_white_gray"
-        android:padding="@dimen/default_content_padding">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Hery"
-            android:textSize="@dimen/text_medium_size"
-            android:textColor="@color/primary_dark_material_dark"
-            />
-    </RelativeLayout>
+        android:layout_below="@+id/fragment_main_top">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/default_split_line"
-        android:layout_gravity="center"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <RelativeLayout
-        android:id="@+id/rl_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_white_gray"
-        android:padding="@dimen/default_content_padding">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="You hui"
-            android:textSize="@dimen/text_medium_size"
-            android:textColor="@color/primary_dark_material_dark"
-            />
-    </RelativeLayout>
+    </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/default_split_line"
-        android:layout_gravity="center"/>
+    <include layout="@layout/progress_layout"/>
 
-
-</LinearLayout>
+</RelativeLayout>

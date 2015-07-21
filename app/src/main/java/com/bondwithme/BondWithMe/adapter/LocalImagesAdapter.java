@@ -136,10 +136,12 @@ public class LocalImagesAdapter extends BaseAdapter {
             holder = new HolderView();
             holder.iv = (ImageView) convertView.findViewById(R.id.iv_pic);
             holder.check = (CheckBox) convertView.findViewById(R.id.select_image_right);
-            if(mColor != -1) {
-                // 需要修改颜色
-                holder.check.setBackgroundColor(mColor);
-            }
+            /**wing modified begin 2015.07.15 (如果真要改变checkbox 的颜色使用checkbox_color和checkbox_checked_color属性)*/
+//            if(mColor != -1) {
+//                // 需要修改颜色
+//                holder.check.setBackgroundColor(mColor);
+//            }
+            /**wing modified end*/
             convertView.setTag(holder);
         } else {
             holder = (HolderView) convertView.getTag();

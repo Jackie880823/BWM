@@ -280,12 +280,12 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     isCommentBim = true;
                     hideAllViewState();
                     mUri = uri;
-                    if(mUri != null){
+                    if(mUri != null) {
                         String path = LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), mUri), 480, 800, false);
                         File file = new File(path);
-                        if (file.exists()){
+                        if(file.exists()) {
                             progressBar.setVisibility(View.VISIBLE);
-//                            vProgress.setVisibility(View.VISIBLE);
+                            //                            vProgress.setVisibility(View.VISIBLE);
                             Map<String, Object> param = new HashMap<>();
                             param.put("content_group_id", event.getContent_group_id());
                             param.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -306,7 +306,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onSendCommentClick(EditText et) {
-                    if (isComment){
+                    if(isComment) {
                         sendComment();
                     }
                     isStickerItemClick = false;

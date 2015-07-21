@@ -198,7 +198,7 @@ public class StickerDetailActivity extends BaseActivity {
                         stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
                         stickerInfo.setVersion(stickerGroupEntity.getVersion());
                         stickerInfo.setType(stickerGroupEntity.getType());
-                        stickerInfo.setPosition(position);
+                        stickerInfo.setOrder(System.currentTimeMillis());
                         LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -228,6 +228,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         super.onDestroy();
         // 清除存入Map中的图片
         AsyncLoadBitmapTask.clearBitmaps();
+        if(imageCursor!=null) {
+            if(!imageCursor.isClosed())
+                imageCursor.close();
+        }
     }
 
     /**

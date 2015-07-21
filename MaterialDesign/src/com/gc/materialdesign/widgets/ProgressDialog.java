@@ -24,17 +24,7 @@ public class ProgressDialog extends android.app.Dialog{
 	TextView titleTextView;
 	
 	int progressColor = -1;
-
-
-
-    public ProgressDialog(Context context,int titleResource) {
-        this(context,context.getString(titleResource));
-    }
-
-    public ProgressDialog(Context context,int titleResource, int progressColor) {
-        this(context,context.getString(titleResource),progressColor);
-    }
-
+	
 	public ProgressDialog(Context context,String title) {
 		super(context, android.R.style.Theme_Translucent);
 		this.title = title;
@@ -95,21 +85,14 @@ public class ProgressDialog extends android.app.Dialog{
 		return title;
 	}
 
-    @Override
-    public void setTitle(int titleId) {
-        setTitle(context.getString(titleId));
-    }
-
-    public void setTitle(String title) {
+	public void setTitle(String title) {
 		this.title = title;
-        if(titleTextView!=null) {
-            if (title == null)
-                titleTextView.setVisibility(View.GONE);
-            else {
-                titleTextView.setVisibility(View.VISIBLE);
-                titleTextView.setText(title);
-            }
-        }
+		if(title == null)
+			titleTextView.setVisibility(View.GONE);
+		else{
+			titleTextView.setVisibility(View.VISIBLE);
+			titleTextView.setText(title);
+		}
 	}
 
 	public TextView getTitleTextView() {
@@ -120,40 +103,36 @@ public class ProgressDialog extends android.app.Dialog{
 		this.titleTextView = titleTextView;
 	}
 
-    boolean dismissing;
-    @Override
-    public void dismiss() {
-        if(!dismissing&&isShowing()) {
-            dismissing = true;
-            Animation anim = AnimationUtils.loadAnimation(context, R.anim.dialog_main_hide_amination);
-            anim.setAnimationListener(new AnimationListener() {
-
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-//                    view.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-                            ProgressDialog.super.dismiss();
-                            dismissing = false;
-//                        }
-//                    });
-
-                }
-            });
-            anim.setFillAfter(true);
-            Animation backAnim = AnimationUtils.loadAnimation(context, R.anim.dialog_root_hide_amin);
-            backAnim.setFillAfter(true);
-            view.startAnimation(anim);
-            backView.startAnimation(backAnim);
-        }
+	@Override
+	public void dismiss() {
+		Animation anim = AnimationUtils.loadAnimation(context, R.anim.dialog_main_hide_amination);
+		anim.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				view.post(new Runnable() {
+					@Override
+					public void run() {
+			        	ProgressDialog.super.dismiss();
+			        }
+			    });
+				
+			}
+		});
+		Animation backAnim = AnimationUtils.loadAnimation(context, R.anim.dialog_root_hide_amin);
+		
+		view.startAnimation(anim);
+		backView.startAnimation(backAnim);
 	}
+	
+	
 
 }

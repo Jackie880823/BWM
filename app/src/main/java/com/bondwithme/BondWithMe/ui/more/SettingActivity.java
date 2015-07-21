@@ -42,7 +42,7 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
     private CheckBox auto_acp_sps;
 
     public int getLayout() {
-        return 0;
+        return R.layout.activity_setting;
     }
 
     @Override

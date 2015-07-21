@@ -116,15 +116,15 @@ public class LocalImageLoader {
         Bitmap bitmap = null;
         try {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options);
-            String path = null;
-            Cursor c = context.getContentResolver().query(uri, null, null, null, null);
-            if(c != null) {
-                c.moveToFirst();
-                int idx = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-                path = c.getString(idx);
-                c.close();
-            }
-            int d = readPictureDegree(path);
+//            String path = null;
+//            Cursor c = context.getContentResolver().query(uri, null, null, null, null);
+//            if(c != null) {
+//                c.moveToFirst();
+//                int idx = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+//                path = c.getString(idx);
+//                c.close();
+//            }
+            int d = readPictureDegree(uri.getPath());
             if(d != 0) {
                 bitmap = rotaingImageView(d, bitmap);
             }
@@ -484,7 +484,6 @@ public class LocalImageLoader {
                     break;
                 bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
             }
-
             // Generate compressed image file
             FileOutputStream fos = new FileOutputStream(desPath);
             fos.write(os.toByteArray());
@@ -597,8 +596,10 @@ public class LocalImageLoader {
      * @return degree旋转的角度
      */
     public static int readPictureDegree(String path) {
+        if(TextUtils.isEmpty(path)){
+            return 0;
+        }
         int degree = 0;
-
         try {
             ExifInterface exifInterface = new ExifInterface(path);
             int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);

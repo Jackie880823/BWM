@@ -186,7 +186,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.wall_new_container, fragment1);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
         fragmentTransaction.commit();
 
         iv_feeling = getViewById(R.id.iv_feeling);
@@ -716,7 +716,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
         fragmentTransaction.replace(R.id.wall_new_container, fragment);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
         fragmentTransaction.commit();
         currentTabIndex = tabIndex;
 

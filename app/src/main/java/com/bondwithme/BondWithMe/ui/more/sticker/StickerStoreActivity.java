@@ -249,7 +249,7 @@ public class StickerStoreActivity extends BaseActivity {
                     stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
                     stickerInfo.setVersion(stickerGroupEntity.getVersion());
                     stickerInfo.setType(stickerGroupEntity.getType());
-                    stickerInfo.setPosition(position);
+                    stickerInfo.setOrder(System.currentTimeMillis());
                     LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
                     Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
 
@@ -479,9 +479,6 @@ public class StickerStoreActivity extends BaseActivity {
                 int position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
                 finished = intent.getIntExtra(FINISHED,0);
                 StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
-                Log.i(TAG, "==========position========" + position);
-                Log.i(TAG, "==========recyclerViewList========" + recyclerViewList);
-                Log.i(TAG, "==========holder========" + holder);
                 if ( holder!= null){
                     ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
                     ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);

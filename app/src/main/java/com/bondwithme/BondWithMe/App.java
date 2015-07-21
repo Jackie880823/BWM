@@ -21,6 +21,7 @@ import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
@@ -121,6 +122,7 @@ public class App extends MultiDexApplication {
         NotificationUtil.unRegisterPush(context, user.getUser_id());
         user = null;
         if (context != null) {
+            LoginManager.getInstance().logOut();//清除Facebook授权缓存
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
             Intent intent = new Intent(context, StartActivity.class);
