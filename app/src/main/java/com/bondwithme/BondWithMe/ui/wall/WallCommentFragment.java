@@ -24,6 +24,10 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallCommentAdapter;
@@ -47,10 +51,6 @@ import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.SendComment;
-import com.material.widget.CircularProgress;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.InputStream;
@@ -128,7 +128,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private View split;
     private RecyclerView rvList;
     private ScrollView scrollView;
-    private CircularProgress progressBar;
+    private ProgressBarCircularIndeterminate progressBar;
     private SendComment sendCommentView;
 
     private WallCommentAdapter adapter;
