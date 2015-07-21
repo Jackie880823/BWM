@@ -35,7 +35,6 @@ import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,7 +86,7 @@ public class GroupSettingActivity extends BaseActivity {
     protected void initBottomBar() {
 
     }
-//    @Override
+    //    @Override
 //    public void finish() {
 //        Intent intent = new Intent();
 //        intent.putExtra("groupName", tvName.getText().toString());
@@ -153,6 +152,7 @@ public class GroupSettingActivity extends BaseActivity {
         gson = new Gson();
         VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName.setText(groupName);
+
         //groupName = groupEntity.getGroup_name();
 
         getMembersList();
@@ -249,6 +249,10 @@ public class GroupSettingActivity extends BaseActivity {
 
             }
         });
+
+        if(type == 1){
+            btnLeaveGroup.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -383,16 +387,21 @@ public class GroupSettingActivity extends BaseActivity {
                     isAdmin = true;
                     rightButton.setVisibility(View.VISIBLE);
                 } else {
+                    rightButton.setVisibility(View.INVISIBLE);
                 }
             } else {
                 viewHolder.tvName.setText(userEntity.getUser_given_name());
             }
-
-            if ("1".equals(userEntity.getJoin_group())) {
-                viewHolder.ivWaitting.setImageResource(R.drawable.existing_user);
-            } else {
-                viewHolder.ivWaitting.setImageResource(R.drawable.pending_user);
+            if(type ==1 ){
+                viewHolder.ivWaitting.setVisibility(View.INVISIBLE);
+            }else {
+                if ("1".equals(userEntity.getJoin_group())) {
+                    viewHolder.ivWaitting.setImageResource(R.drawable.existing_user);
+                } else {
+                    viewHolder.ivWaitting.setImageResource(R.drawable.pending_user);
+                }
             }
+
             return convertView;
 
         }

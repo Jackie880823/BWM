@@ -390,7 +390,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
 
     CommentListener commentListener;
 
-    public void setCommentListenr(CommentListener commentListener) {
+    public void setCommentListener(CommentListener commentListener) {
         this.commentListener = commentListener;
     }
 

@@ -226,7 +226,7 @@ public class LocalImagesAdapter extends BaseAdapter {
                     AsyncLoadBitmapTask task = new AsyncLoadBitmapTask(mContext, imageView, columnWidthHeight);
                     imageView.setTag(task);
                     //for not work in down 11
-                    if (SDKUtil.IS_HONEYCOMB) {
+                    if(SDKUtil.IS_HONEYCOMB) {
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
                     } else {
                         task.execute(uri);

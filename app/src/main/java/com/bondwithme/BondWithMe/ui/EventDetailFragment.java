@@ -264,7 +264,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             sendCommentView = getViewById(R.id.send_comment);
             sendCommentView.initViewPager(getParentActivity(), this);
-            sendCommentView.setCommentListenr(new SendComment.CommentListener() {
+            sendCommentView.setCommentListener(new SendComment.CommentListener() {
                 @Override
                 public void onStickerItemClick(String type, String folderName, String filName) {
                     isStickerItemClick = true;
@@ -1011,7 +1011,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     enum ResponseStatus {
-        not_re("1"), go("1"), maybe("3"), not_go("2");
+        //0-no reponse, 1-going, 2-not going, 3-maybe
+        not_re("0"), go("1"), maybe("3"), not_go("2");
 
         private String mServerCode;
 
