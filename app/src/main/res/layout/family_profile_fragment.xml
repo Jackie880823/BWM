@@ -114,13 +114,12 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <CheckBox
+                    <ImageButton
                         android:id="@+id/iv_miss"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/default_view_margin"
-                        android:button="@null"
-                        android:background="@drawable/check_box_miss_selector"/>
+                        android:background="@drawable/miss_profile"/>
 
                     <TextView
                         android:layout_width="wrap_content"

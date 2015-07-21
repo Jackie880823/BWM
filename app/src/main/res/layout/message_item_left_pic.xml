@@ -40,7 +40,7 @@
             android:layout_height="@dimen/_150dp"
             android:scaleType="fitXY"/>
 
-        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+        <com.material.widget.CircularProgress
             android:id="@+id/message_progress_bar"
             android:layout_width="@dimen/_32dp"
             android:layout_height="@dimen/_32dp"

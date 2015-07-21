@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -8,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -325,10 +323,14 @@ public class PersonalPictureActivity extends BaseActivity {
             public void onClick(View v) {
                 //TODO
                 Intent intent = new Intent(PersonalPictureActivity.this, MainActivity.class);
-                ComponentName cn = intent.getComponent();
-                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+                /**wing modified for clear activity stacks*/
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                ComponentName cn = intent.getComponent();
+//                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
                 App.changeLoginedUser(userEntity, appTokenEntity);
-                startActivity(mainIntent);
+                startActivity(intent);
+                /**wing modified for clear activity stacks*/
+                finish();
             }
         });
 
@@ -346,6 +348,8 @@ public class PersonalPictureActivity extends BaseActivity {
             }
         });
     }
+
+
 
     @Override
     public void requestData() {
@@ -405,10 +409,13 @@ public class PersonalPictureActivity extends BaseActivity {
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(PersonalPictureActivity.this, MainActivity.class);
-                        ComponentName cn = intent.getComponent();
-                        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+                        /**wing modified for clear activity stacks*/
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                        ComponentName cn = intent.getComponent();
+//                        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
                         App.changeLoginedUser(userEntity, appTokenEntity);//可能会传入没有数据的???
-                        startActivity(mainIntent);
+                        startActivity(intent);
+                        /**wing modified for clear activity stacks*/
                     } else {
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                     }
@@ -439,11 +446,22 @@ public class PersonalPictureActivity extends BaseActivity {
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                /**wing modified for clear activity stacks*/
                 Intent intent = new Intent(PersonalPictureActivity.this, MainActivity.class);
-                ComponentName cn = intent.getComponent();
-                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                ComponentName cn = intent.getComponent();
+//                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
                 App.changeLoginedUser(userEntity, appTokenEntity);
-                startActivity(mainIntent);
+                startActivity(intent);
+
+//                Intent intentToBeNewRoot = new Intent(this, MainActivity.class);
+//                ComponentName cn = intentToBeNewRoot.getComponent();
+//                App.changeLoginedUser(userEntity, appTokenEntity);
+//                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+//
+//                startActivity(mainIntent);
+//                finish();
+                /**wing modified for clear activity stacks*/
             }
         }
         return super.dispatchKeyEvent(event);

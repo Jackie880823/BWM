@@ -119,6 +119,18 @@ public class LocalImageLoader {
         Bitmap bitmap = null;
         try {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options);
+//            String path = null;
+//            Cursor c = context.getContentResolver().query(uri, null, null, null, null);
+//            if(c != null) {
+//                c.moveToFirst();
+//                int idx = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+//                path = c.getString(idx);
+//                c.close();
+//            }
+            int d = readPictureDegree(uri.getPath());
+            if(d != 0) {
+                bitmap = rotaingImageView(d, bitmap);
+            }
         } catch(FileNotFoundException e) {
             return null;
         }
@@ -130,6 +142,7 @@ public class LocalImageLoader {
     }
 
     public static Bitmap loadBitmapFromFile(Context context, String pathName, int width, int height) {
+        Log.i(TAG, "loadBitmapFromFile& pathName: " + pathName);
         try {
             File file = new File(pathName);
             if(!file.exists()) {
@@ -142,7 +155,8 @@ public class LocalImageLoader {
 
             // Find the correct scale value. It should be the power of 2.
             //            final int REQUIRED_SIZE = 400;
-            int width_tmp = bitmapTempOption.outWidth, height_tmp = bitmapTempOption.outHeight;
+            int width_tmp = bitmapTempOption.outWidth;
+            int height_tmp = bitmapTempOption.outHeight;
             int scale = 1;
             while(true) {
                 if(width_tmp / 2 < width || height_tmp / 2 < height)
@@ -600,8 +614,10 @@ public class LocalImageLoader {
      * @return degree旋转的角度
      */
     public static int readPictureDegree(String path) {
+        if(TextUtils.isEmpty(path)){
+            return 0;
+        }
         int degree = 0;
-
         try {
             ExifInterface exifInterface = new ExifInterface(path);
             int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
@@ -694,28 +710,25 @@ public class LocalImageLoader {
         if(!TextUtils.isEmpty(miniThumbnailUri)) {
             //系统存有此图的略缩图
             Log.i(TAG, "getMiniThumbnailBitmap& miniThumbnailUri: " + miniThumbnailUri + " for uri: " + uri);
+
             thumbnail = LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbnailUri).getPath());
-        }
-        if(thumbnail == null) {
-            // 没有获取的缩略，使用原图
-            Bitmap sourceBitmap = BitmapFactory.decodeFile(path);
-            if(sourceBitmap == null) {
-                Log.i(TAG, "getMiniThumbnailBitmap& sourceBitmap is null");
-                return null;
-            }
-            // 略缩图
-            thumbnail = ThumbnailUtils.extractThumbnail(sourceBitmap, columnWidthHeight, columnWidthHeight);
         }
 
         if(thumbnail == null) {
-            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail is null. path: " + path);
-            return null;
-        } else {
-            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail not null. path: " + path);
-            // 转回角度
-            int rotation = readPictureDegree(path);
-            return LocalImageLoader.rotaingImageView(rotation, thumbnail);
+            // 没有获取的缩略，从原图加载缩略图
+            thumbnail = LocalImageLoader.loadBitmapFromFile(context, path, columnWidthHeight, columnWidthHeight);
         }
+        return thumbnail;
+
+        //        if(thumbnail == null) {
+        //            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail is null. path: " + path);
+        //            return null;
+        //        } else {
+        //            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail not null. path: " + path);
+        //            // 转回角度
+        //            int rotation = readPictureDegree(path);
+        //            return LocalImageLoader.rotaingImageView(rotation, thumbnail);
+        //        }
 
 
     }

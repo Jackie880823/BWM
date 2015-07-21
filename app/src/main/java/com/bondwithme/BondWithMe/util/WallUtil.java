@@ -61,7 +61,7 @@ public class WallUtil {
         String strMember = "";
         if(tagMemberCount > 0) {
             strMember = String.format(mContext.getString(R.string.text_diary_content_at_member_desc), tagMemberCount);
-
+            LogUtil.d("WallUtil","setSpanContent================="+wall.getContent_group_id());
             // 文字特殊效果设置
             SpannableString ssMember = new SpannableString(strMember);
 

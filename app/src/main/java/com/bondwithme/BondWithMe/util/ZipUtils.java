@@ -1,9 +1,10 @@
 package com.bondwithme.BondWithMe.util;
 
 import android.content.Context;
+import android.text.TextUtils;
 
-import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
+import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -102,9 +103,7 @@ public class ZipUtils {
         if (!file.exists()) {
             file.mkdirs();
         }
-        InputStream inputStream = null;
-        //打开压缩文件
-        inputStream = context.getAssets().open(assetName);
+        InputStream inputStream = context.getAssets().open(assetName);
         ZipInputStream zipInputStream = new ZipInputStream(inputStream);
         //读取一个进入点
         ZipEntry zipEntry = zipInputStream.getNextEntry();
@@ -142,8 +141,19 @@ public class ZipUtils {
         stickerInfo.setPath(zipFileName);
         stickerInfo.setSticker_name("1_B");
         stickerInfo.setVersion("1");
-        stickerInfo.setType(".gif");
-        stickerInfo.setPosition(1);
+
+        if (zipFileName.contains("Raya_Greeting")) {
+            stickerInfo.setType(".png");
+            stickerInfo.setOrder(System.currentTimeMillis() - 3000L);
+        } else if (zipFileName.contains("Eggplant")) {
+            stickerInfo.setOrder(System.currentTimeMillis() - 1500L);
+            stickerInfo.setType(".gif");
+        } else if (zipFileName.contains("LittleGG")) {
+            stickerInfo.setOrder(System.currentTimeMillis());
+            stickerInfo.setType(".gif");
+        }
+
         LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
+
     }
 }

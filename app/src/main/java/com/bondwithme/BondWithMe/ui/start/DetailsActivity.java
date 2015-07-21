@@ -42,10 +42,10 @@ import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.widget.CircularImageView;
 import com.bondwithme.BondWithMe.widget.MyDialog;
-import com.gc.materialdesign.views.Button;
-import com.gc.materialdesign.widgets.Dialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.material.widget.Dialog;
+import com.material.widget.PaperButton;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -95,7 +95,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
     private EditText etLast;
     private RelativeLayout rlRB;
     private RadioGroup rgMain;
-    private Button brNext;
+    private PaperButton brNext;
     private RelativeLayout rlProgress;
 
     private Dialog showCameraAlbum;

@@ -2,7 +2,6 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -11,6 +10,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -26,27 +26,21 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
-import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MD5Util;
 import com.bondwithme.BondWithMe.widget.MyDialog;
-import com.gc.materialdesign.widgets.Dialog;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,10 +51,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
     private ImageView ivGroupPic;
     private EditText etGroupName;
     private String groupMembers;//上一个界面传来的成员数据(JSON格式)
-    private ProgressDialog progressDialog;
-    private final static int REQUEST_HEAD_PHOTO = 1;
-    private final static int REQUEST_HEAD_CAMERA = 2;
-    private final static int REQUEST_HEAD_FINAL = 3;
+    private final static int REQUEST_PHOTO = 1;
     private Uri mCropImagedUri;//裁剪后的uri
     private String imagePath;
     private TextView member_num;
@@ -151,36 +142,10 @@ public class CreateGroupDialogActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (CreateGroupDialogActivity.RESULT_OK == resultCode) {
             switch (requestCode) {
-                // 如果是直接从相册获取
-                case REQUEST_HEAD_PHOTO:
-                    if (data != null) {
-
-                        Uri uri;
-                        uri = data.getData();
-                        try {
-                            startPhotoZoom(uri, false);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-                // 如果是调用相机拍照时
-                case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(CreateGroupDialogActivity.this, CACHE_PIC_NAME_TEMP));
-                    if (new File(uri.getPath()).exists()) {
-                        try {
-                            startPhotoZoom(uri, false);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-
-
-                // 取得裁剪后的图片
-                case REQUEST_HEAD_FINAL:
+                case REQUEST_PHOTO:
                     if (data != null) {
                         Bitmap photo;
+                        mCropImagedUri = data.getParcelableExtra(PickAndCropPictureActivity.FINAL_PIC_URI);
                         try {
                             imagePath = mCropImagedUri.getPath();
                             if (!TextUtils.isEmpty(imagePath)) {
@@ -273,81 +238,6 @@ public class CreateGroupDialogActivity extends BaseActivity {
         groupMembers = new Gson().toJson(selectUserList);
     }
 
-    /**
-     * 裁剪图片方法实现
-     *
-     * @param uri
-     * @throws java.io.IOException
-     */
-    public void startPhotoZoom(Uri uri, boolean fromPhoto) throws IOException {
-
-        if (uri == null || uri.getPath() == null) {
-            return;
-        }
-
-        //TODO换为view 的宽度
-        int width = ivGroupPic.getWidth();
-        int height = ivGroupPic.getHeight();
-
-        /**
-         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转?????
-         */
-        int degree = LocalImageLoader.readPictureDegree(uri.getPath());
-
-        if (degree != 0) {
-            /**
-             * 把图片旋转为正的方向
-             */
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            Bitmap bitmap = BitmapFactory.decodeStream(
-                    new FileInputStream(uri.getPath()), null, options);
-            options.inSampleSize = 4;
-            options.outWidth = width;
-            options.outHeight = height;
-            options.inJustDecodeBounds = false;
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            bitmap = BitmapFactory.decodeStream(
-                    new FileInputStream(uri.getPath()), null, options);
-            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
-            byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
-            File file = new File(uri.getPath());
-            file.delete();
-            FileOutputStream fos = new FileOutputStream(uri.getPath());
-            fos.write(newBytes);
-            fos.flush();
-            fos.close();
-            bitmap.recycle();
-            bitmap = null;
-        }
-
-
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        List<ResolveInfo> list = CreateGroupDialogActivity.this.getPackageManager().queryIntentActivities(intent, 0);
-        int size = list.size();
-        if (size == 0) {
-            Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_no_found_reduce), Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-            intent.putExtra("crop", "true");
-            // aspectX aspectY 是宽高的比例
-            intent.putExtra("aspectX", 1);
-            intent.putExtra("aspectY", 1);
-            // outputX outputY 是裁剪图片宽高
-            intent.putExtra("outputX", width);
-            intent.putExtra("outputY", height);
-            intent.putExtra("return-data", false);
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-            intent.putExtra("noFaceDetection", true);
-            File f = PicturesCacheUtil.getCachePicFileByName(CreateGroupDialogActivity.this, CACHE_PIC_NAME);
-            mCropImagedUri = Uri.fromFile(f);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
-            startActivityForResult(intent, REQUEST_HEAD_FINAL);
-        }
-    }
-
 
     /**
      * 保存裁剪之后的图片数据
@@ -374,8 +264,8 @@ public class CreateGroupDialogActivity extends BaseActivity {
             rightButton.setEnabled(true);
             return;
         }
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
+//        progressDialog.setCanceledOnTouchOutside(false);
+//        progressDialog.show();
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
         String fileName = MD5Util.string2MD5(System.currentTimeMillis() + "");
@@ -403,7 +293,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     groupId = jsonObject.getString("group_id");
                     if (TextUtils.isEmpty(groupId)) {
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                         rightButton.setEnabled(true);
                         Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_fail_to_create_group), Toast.LENGTH_SHORT).show();
                     } else {
@@ -418,13 +308,13 @@ public class CreateGroupDialogActivity extends BaseActivity {
                         intent.putExtra("titleName", groupEntity.getGroup_name());
                         //intent.putExtra("groupEntity",groupEntity);
                         startActivity(intent);//创建完群组直接跳转到聊天界面，那么前面的CreateGroupActivity和CreateGroupDialogActivity界面如何处理???
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
 
                         finish();
                     }
 
                 } catch (JSONException e) {
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                     rightButton.setEnabled(true);
                     Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
@@ -433,7 +323,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
                 rightButton.setEnabled(true);
                 Toast.makeText(CreateGroupDialogActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
@@ -467,18 +357,11 @@ public class CreateGroupDialogActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                intent2.putExtra("android.intent.extras.CAMERA_FACING", 1);
-                intent2.putExtra("camerasensortype", 2);
-
-                // 下面这句指定调用相机拍照后的照片存储的路径
-                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getCachePicFileByName(CreateGroupDialogActivity.this,
-                                CACHE_PIC_NAME_TEMP)));
-                // 图片质量为高
-                intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                intent2.putExtra("return-data", false);
-                startActivityForResult(intent2, REQUEST_HEAD_CAMERA);
+                Intent intent = new Intent(CreateGroupDialogActivity.this,PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM,PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH,ivGroupPic.getWidth());
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, ivGroupPic.getHeight());
+                startActivityForResult(intent, REQUEST_PHOTO);
             }
         });
         tv_cancel.setOnClickListener(new View.OnClickListener() {
@@ -491,10 +374,11 @@ public class CreateGroupDialogActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(CreateGroupDialogActivity.this, SelectPhotosActivity.class);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                startActivityForResult(intent, REQUEST_HEAD_PHOTO);
+                Intent intent = new Intent(CreateGroupDialogActivity.this,PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM,PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH,ivGroupPic.getWidth());
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, ivGroupPic.getHeight());
+                startActivityForResult(intent, REQUEST_PHOTO);
             }
         });
 
@@ -537,12 +421,13 @@ public class CreateGroupDialogActivity extends BaseActivity {
         selectUserList = new ArrayList<>();
         selectUserEntityList = new ArrayList<>();
         selectGroupEntityList = new ArrayList<>();
-        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
+//        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         member_num = getViewById(R.id.member_num);
         ivGroupPic = getViewById(R.id.creategroup_imageview);
         etGroupName = getViewById(R.id.creategroup_editText);
         add_photo_text = getViewById(R.id.add_photo_text);
         defaultHead = getViewById(R.id.default_imagview);
+        add_photo_text = getViewById(R.id.add_photo_text);
         default_imag = getViewById(R.id.default_imag);
         //groupMembers = getIntent().getStringExtra("members_json");//上一个界面传来的成员数据(JSON格式)
         jumpIndex = getIntent().getIntExtra("jumpIndex", 0);
@@ -563,7 +448,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
         getViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNoFriendDialog();
+                ask4Confirm();
             }
         });
         member_num.setOnClickListener(new View.OnClickListener() {
@@ -574,31 +459,32 @@ public class CreateGroupDialogActivity extends BaseActivity {
         });
     }
 
-    private void showNoFriendDialog() {
-        LayoutInflater factory = LayoutInflater.from(mContext);
-        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
-        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
-        tv_no_member.setText(getString(R.string.text_create_group_not_save));
-        TextView okTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
-        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
-        cancelTv.setVisibility(View.VISIBLE);
-        ((View) selectIntention.findViewById(R.id.line_view)).setVisibility(View.VISIBLE);
-        cancelTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSelectDialog.dismiss();
-            }
-        });
-        okTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, MainActivity.class);
-                intent.putExtra("jumpIndex", jumpIndex);
-                startActivity(intent);
-            }
-        });
-        showSelectDialog.show();
+        MyDialog myDialog = null;
+
+    private void ask4Confirm() {
+
+        if (myDialog == null) {
+            myDialog = new MyDialog(this, R.string.text_tips_title, R.string.text_create_group_not_save);
+            myDialog.setCanceledOnTouchOutside(false);
+            myDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (myDialog != null) {
+                        myDialog.dismiss();
+                    }
+                }
+            });
+            myDialog.setButtonAccept(R.string.accept, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    myDialog.dismiss();
+                    finish();
+                }
+            });
+        }
+        if (!myDialog.isShowing())
+            myDialog.show();
+
     }
 
     @Override
@@ -653,5 +539,24 @@ public class CreateGroupDialogActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(myDialog!=null)
+            myDialog.dismiss();
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                ask4Confirm();
+            }
+            return true;
+        }else{
+            return super.dispatchKeyEvent(event);
+        }
     }
 }

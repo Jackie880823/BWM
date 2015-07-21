@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,8 +26,9 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.widget.MyDialog;
-import com.gc.materialdesign.widgets.Dialog;
 import com.google.gson.Gson;
+import android.widget.CheckBox;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -42,4 +42,6 @@ public interface SelectImageUirChangeListener {
      * @param drawable
      */
     void onDrawerClose(Drawable drawable);
+
+    void preview(Uri uri);
 }

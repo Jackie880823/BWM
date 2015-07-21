@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/default_text_color_while"
-    android:fillViewport="true"
-    >
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,12 +40,11 @@
 
                     <TextView
                         android:id="@+id/tv_num"
-                        android:layout_alignParentRight="true"
                         style="@style/RedPoint"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:visibility="visible"
-                        />
+                        android:layout_alignParentRight="true"
+                        android:visibility="visible" />
                 </RelativeLayout>
 
                 <TextView
@@ -62,8 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/btn_me"
@@ -158,8 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/btn_setting"
@@ -189,8 +185,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:visibility="visible"
-                >
+                android:visibility="visible">
 
                 <RelativeLayout
                     android:id="@+id/btn_sticker_store"
@@ -233,7 +228,6 @@
                         android:layout_height="@dimen/default_small_button_width_height"
                         android:layout_centerInParent="true"
                         android:src="@drawable/more_archive" />
-
                 </RelativeLayout>
 
                 <TextView
@@ -243,7 +237,6 @@
                     android:text="@string/text_archive" />
 
             </LinearLayout>
-
 
 
             <!--<LinearLayout-->
@@ -313,14 +306,14 @@
 
             </LinearLayout>
 
+
             <LinearLayout
 
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:id="@+id/btn_contact_us"
@@ -373,10 +366,6 @@
                     android:text="@string/text_terms" />
 
             </LinearLayout>
-
-
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -386,7 +375,6 @@
             android:orientation="horizontal">
 
             <LinearLayout
-
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -414,18 +402,23 @@
                     android:text="@string/text_sign_out" />
 
             </LinearLayout>
+
             <LinearLayout
-                android:layout_width="@dimen/_0dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"/>
 
-            </LinearLayout>
-
-
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"/>
 
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"

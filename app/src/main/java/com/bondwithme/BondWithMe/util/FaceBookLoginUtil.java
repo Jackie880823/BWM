@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.View;
 
 import com.bondwithme.BondWithMe.entity.FaceBookUserEntity;
@@ -141,7 +140,6 @@ public class FaceBookLoginUtil{
                     @Override
                     public void onCompleted(JSONObject object,
                                             GraphResponse response) {
-                        Log.d("", "---------" + object.toString());
                         try{
                             if(response.getError()!=null){
                                 mBookLoginStateChanged.OnLoginError(response.getError().toString());

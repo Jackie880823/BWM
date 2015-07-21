@@ -26,8 +26,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_content_padding"
-                android:layout_marginRight="@dimen/default_content_padding">
+                android:padding="@dimen/default_content_padding">
 
                 <TextView
                     style="@style/text_title_default"
@@ -35,13 +34,12 @@
                     android:text="@string/text_setting_1_1"
                     android:textColor="@color/default_text_color_dark" />
 
-                <com.gc.materialdesign.views.CheckBox
+                <CheckBox
                     android:id="@+id/dob_alert_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/checkbox_default"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/tab_color_press4" />
+                     />
 
             </RelativeLayout>
 
@@ -50,8 +48,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_content_padding"
-                android:layout_marginRight="@dimen/default_content_padding">
+                android:padding="@dimen/default_content_padding">
 
                 <TextView
                     style="@style/text_title_default"
@@ -59,13 +56,12 @@
                     android:text="@string/text_setting_1_2"
                     android:textColor="@color/default_text_color_dark" />
 
-                <com.gc.materialdesign.views.CheckBox
+                <CheckBox
                     android:id="@+id/dob_alert_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/checkbox_default"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/tab_color_press4" />
+                     />
 
             </RelativeLayout>
 
@@ -74,8 +70,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_content_padding"
-                android:layout_marginRight="@dimen/default_content_padding">
+                android:padding="@dimen/default_content_padding">
 
                 <TextView
                     style="@style/text_title_default"
@@ -84,13 +79,12 @@
                     android:text="@string/text_setting_1_3"
                     android:textColor="@color/default_text_color_dark" />
 
-                <com.gc.materialdesign.views.CheckBox
+                <CheckBox
                     android:id="@+id/dob_alert_7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/checkbox_default"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/tab_color_press4" />
+                     />
 
             </RelativeLayout>
 
@@ -99,8 +93,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_content_padding"
-                android:layout_marginRight="@dimen/default_content_padding">
+                android:padding="@dimen/default_content_padding">
 
                 <TextView
                     style="@style/text_title_default"
@@ -108,13 +101,11 @@
                     android:text="@string/text_setting_1_4"
                     android:textColor="@color/default_text_color_dark" />
 
-                <com.gc.materialdesign.views.CheckBox
+                <CheckBox
                     android:id="@+id/dob_alert_30"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/checkbox_default"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@color/tab_color_press4"
                     />
 
             </RelativeLayout>
@@ -123,6 +114,11 @@
 
     </LinearLayout>
 
-    <include layout="@layout/progress_layout"/>
+    <RelativeLayout
+        android:layout_below="@+id/fragment_main_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <include layout="@layout/progress_layout"/>
+    </RelativeLayout>
 
 </RelativeLayout>

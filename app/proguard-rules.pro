@@ -108,37 +108,10 @@
 }
 
 -dontwarn android.support.**
-#-keep class android.support.v4.app.** { *; }
-#-keep interface android.support.v4.app.** { *; }
-#-keep class android.support.v7.app.** { *; }
-#-keep interface android.support.v7.app.** { *; }
-
-
-#-dontwarn java.beans.**
-#-dontwarn java.awt.**
-#-dontwarn javax.swing.**
-#-keep class java.beans.** { *;}
-#-keep class java.awt.** { *;}
-#-keep class javax.swing.** { *;}
 
 #pinyin4j
 -dontwarn net.soureceforge.pinyin4j.**
 -dontwarn demo.**
-#-keep class net.sourceforge.pinyin4j.** { *;}
-#-keep class demo.** { *;}
-
-#gson
-#-keep class sun.misc.Unsafe { *; }
-#-keep class com.google.gson.examples.android.model.** { *; }
-
-#volley
-#-keep class com.android.volley.** {*;}
-#-keep class com.android.volley.toolbox.** {*;}
-#-keep class com.android.volley.Response$* { *; }
-#-keep class com.android.volley.Request$* { *; }
-#-keep class com.android.volley.RequestQueue$* { *; }
-#-keep class com.android.volley.toolbox.HurlStack$* { *; }
-#-keep class com.android.volley.toolbox.ImageLoader$* { *; }
 
 #apache http
 -dontwarn org.apache.http.entity.mime.**
@@ -166,3 +139,6 @@
 -keepclassmembers class com.bondwithme.BondWithMe.entity.** { *; }
 -keep class com.bondwithme.BondWithMe.db.SQLiteHelperOrm
 -keepclassmembers class com.bondwithme.BondWithMe.db.SQLiteHelperOrm { *; }
+-dontwarn com.artifex.mupdfdemo.**
+-keep class com.artifex.mupdfdemo.**
+-keepclassmembers class com.artifex.mupdfdemo.** { *; }

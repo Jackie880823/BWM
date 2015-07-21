@@ -400,7 +400,7 @@ public class SignUpPhoneActivity extends BaseActivity {
                     if ("Fail".equals(jsonObject.getString("response_status"))) {
                         Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_verification_fail), Toast.LENGTH_SHORT).show();
                     } else if ("Success".equals(jsonObject.getString("response_status"))){
-                        Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_verification_successful), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpPhoneActivity.this, getString(R.string.text_createVerification_success), Toast.LENGTH_SHORT).show();
                         etVerifyCode.requestFocus();
                     }
                     else {

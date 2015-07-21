@@ -33,9 +33,7 @@
 
             <CheckBox
                 android:id="@+id/creategroup_image_right"
-                style="@style/CustomCheckboxTheme"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                style="@style/checkbox_default"
                 android:layout_gravity="bottom|right"
                 android:gravity="center"
                 android:clickable="false"
