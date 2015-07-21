@@ -262,6 +262,30 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         });
+
+        tvCountryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(tvCountryCode.getText().toString()))
+                {
+                    rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                }
+                else
+                {
+                    rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                }
+            }
+        });
     }
 
     public void doLogIn()
@@ -440,6 +464,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     @Override
     public void OnLoginSuccess(FaceBookUserEntity faceBookUserEntity, String logType) {
 
+        com.facebook.login.LoginManager.getInstance().logOut();//清除Facebook授权缓存
         if (!MyTextUtil.isHasEmpty(faceBookUserEntity.getUserId(), faceBookUserEntity.getFirstname(), faceBookUserEntity.getLastname(), faceBookUserEntity.getGender()))
         {
             Log.d("", faceBookUserEntity.toString());
@@ -455,6 +480,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     @Override
     public void OnLoginError(String error) {
         MessageUtil.showMessage(getActivity(), error);
+        com.facebook.login.LoginManager.getInstance().logOut();//清除Facebook授权缓存
     }
 
     private void checkFacebookId() {
