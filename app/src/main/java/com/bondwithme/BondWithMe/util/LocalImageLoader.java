@@ -116,15 +116,19 @@ public class LocalImageLoader {
         Bitmap bitmap = null;
         try {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options);
-//            String path = null;
-//            Cursor c = context.getContentResolver().query(uri, null, null, null, null);
-//            if(c != null) {
-//                c.moveToFirst();
-//                int idx = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-//                path = c.getString(idx);
-//                c.close();
-//            }
-            int d = readPictureDegree(uri.getPath());
+            String path = null;
+            Cursor c = context.getContentResolver().query(uri, null, null, null, null);
+            if(c != null) {
+                c.moveToFirst();
+                int idx = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                path = c.getString(idx);
+                c.close();
+            }
+
+            if(TextUtils.isEmpty(path)) {
+                path = uri.getPath();
+            }
+            int d = readPictureDegree(path);
             if(d != 0) {
                 bitmap = rotaingImageView(d, bitmap);
             }
@@ -484,6 +488,7 @@ public class LocalImageLoader {
                     break;
                 bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
             }
+
             // Generate compressed image file
             FileOutputStream fos = new FileOutputStream(desPath);
             fos.write(os.toByteArray());
