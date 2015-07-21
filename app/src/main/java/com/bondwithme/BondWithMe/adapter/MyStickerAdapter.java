@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +16,11 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.MyStickerActivity;
-import com.bondwithme.BondWithMe.util.AnimatedGifDrawable;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -51,7 +48,8 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
     public void onBindViewHolder(final MyStickerAdapter.VHItem holder, final int position) {
         final LocalStickerInfo stickerInfo = data.get(position);
 
-        String picPath = MainActivity.STICKERS_NAME+"/"+stickerInfo.getPath()+"/"+stickerInfo.getSticker_name()+stickerInfo.getType();
+        //设置sticker icon                                        /FamilyWishes/1_B.gif
+        String picPath = FileUtil.getCacheFilePath(mContext)+"/"+stickerInfo.getPath()+"/"+stickerInfo.getSticker_name()+stickerInfo.getType();
         Bitmap bmp = BitmapFactory.decodeFile(picPath);
         holder.ivMySticker.setImageBitmap(bmp);
 
@@ -59,9 +57,9 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
         holder.tvRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean deleted = true;
-//                File f = new File(MainActivity.STICKERS_NAME +"/"+stickerInfo.getPath());
-//                deleted = deleteDirectory(f);
+                boolean deleted = false;
+                File f = new File(FileUtil.getCacheFilePath(mContext)+"/"+stickerInfo.getPath());
+                deleted = deleteDirectory(f);
                 if (deleted){
                     try {
                         Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
@@ -73,7 +71,7 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
                     }
                     //发广播更新StickerStoreActivity的DOWNLOAD or √
                     Intent intent = new Intent(MyStickerActivity.ACTION_UPDATE);
-                    intent.putExtra("path",stickerInfo.getPath());
+                    intent.putExtra("position",stickerInfo.getPosition());
                     mContext.sendBroadcast(intent);
 
                     int position = data.indexOf(stickerInfo);

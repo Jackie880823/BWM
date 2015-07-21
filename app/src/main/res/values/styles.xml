@@ -1,4 +1,7 @@
-<resources xmlns:app="http://schemas.android.com/apk/com.bondwithme.BondWithMe">
+<resources
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/com.bondwithme.BondWithMe"
+    >
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -44,6 +47,12 @@
 
     <style name="text_max_default" parent="text_title_default">
         <item name="android:textSize">@dimen/text_large_size</item>
+    </style>
+
+    <style name="text_dialog_style" parent="text_title_default">
+        <item name="android:textColor">@color/default_text_color_dark</item>
+        <item name="android:background">@drawable/bg_transparent_gray</item>
+
     </style>
 
     <style name="text_button_default">
@@ -128,7 +137,6 @@
     <style name="AiWidget">
         <item name="android:textAppearance">?android:attr/textAppearance</item>
     </style>
-    app
 
     <style name="AiWidget.NumberPicker">
         <item name="android:orientation">vertical</item>
@@ -258,14 +266,19 @@
         <item name="android:layout_width">@dimen/_50dp</item>
         <item name="android:layout_height">@dimen/_50dp</item>
         <item name="android:layout_centerInParent">true</item>
-        <item name="android:background">@color/bg_progressBar</item>
+        <item name="android:background">@color/high_light_color</item>
 
     </style>
+    <style name="checkbox_default" parent="android:Widget.CompoundButton.CheckBox">
+        <item name="android:layout_width">@dimen/_24dp</item>
+        <item name="android:layout_height">@dimen/_24dp</item>
 
+        <item name="android:button">@drawable/checkbox_style</item>
+    </style>
 
     <!-- other-->
-    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/checkbox_style</item>
+    <style name="CustomCheckboxTheme" parent="checkbox_default">
+        <item name="android:button">@drawable/checkbox_4_pic</item>
     </style>
 
     <style name="MissCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
@@ -391,6 +404,12 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
+
+    <style name="paper_button_style">
+        <item name="android:layout_height">54dp</item>
+        <item name="com.bondwithme.BondWithMe:paper_color">@color/tab_color_press4</item>
+        <item name="com.bondwithme.BondWithMe:paper_text_color">@color/default_text_color_dark</item>
+    </style>
 
 
 </resources>

@@ -11,13 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.util.AsyncLoadBitmapTask;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
-import com.gc.materialdesign.views.CheckBox;
 
 import java.util.List;
 
@@ -135,58 +136,74 @@ public class LocalImagesAdapter extends BaseAdapter {
             holder = new HolderView();
             holder.iv = (ImageView) convertView.findViewById(R.id.iv_pic);
             holder.check = (CheckBox) convertView.findViewById(R.id.select_image_right);
-            if(mColor != -1) {
-                // 需要修改颜色
-                holder.check.setBackgroundColor(mColor);
-            }
+            /**wing modified begin 2015.07.15 (如果真要改变checkbox 的颜色使用checkbox_color和checkbox_checked_color属性)*/
+//            if(mColor != -1) {
+//                // 需要修改颜色
+//                holder.check.setBackgroundColor(mColor);
+//            }
+            /**wing modified end*/
             convertView.setTag(holder);
         } else {
             holder = (HolderView) convertView.getTag();
         }
 
-
         holder.iv.setImageResource(R.drawable.network_image_default);
         loadLocalBitmap(holder.iv, position);
-
-        if(mSelectImages != null && mSelectImages.contains(mDatas.get(position))) {
-            // 当前图片已被选中
-            holder.check.setChecked(true);
-        } else {
-            holder.check.setChecked(false);
-        }
         if(!checkBoxVisible) {
             holder.check.setVisibility(View.GONE);
         } else {
+
+            holder.iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mListener != null) {
+                        mListener.preview(mDatas.get(position));
+                    }
+                }
+            });
+
             // 需要显示选择框，并显设置点击监听事件
             holder.check.setVisibility(View.VISIBLE);
-            holder.check.setOncheckListener(new CheckBox.OnCheckListener() {
+            holder.check.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheck(CheckBox checkbox, boolean check) {
-                    Log.i(TAG, "onCheck& check: " + check);
+                public void onClick(View v) {
+                    CheckBox checkBox = (CheckBox) v;
+                    boolean isChecked = checkBox.isChecked();
+                    checkBox.setChecked(isChecked);
+
                     Uri uri = mDatas.get(position);
                     if(mListener != null) {
-                        if(check) {
+                        LogUtil.i(TAG, "onCheck& check2");
+                        if(isChecked) {
+                            LogUtil.i(TAG, "onCheck& check5");
                             boolean result = mListener.addUri(uri);
-                            if(result) {
-                                // 添加成功当前列表也需要添加
-                                mSelectImages.add(uri);
-                            } else {
+                            if(!result) {
                                 // 添加失败，当前图片不能显示选中
-                                holder.check.setChecked(false);
+                                checkBox.setChecked(false);
                             }
                         } else {
+                            LogUtil.i(TAG, "onCheck& check4");
                             boolean result = mListener.removeUri(uri);
-                            if(result) {
-                                // 删除成功当前选择的列表也需要删除
-                                mSelectImages.remove(uri);
-                            } else {
+                            Log.i(TAG, "onCheck& check2: result ＝ " + result);
+                            if(!result) {
+                                Log.i(TAG, "onCheck& check6:");
                                 // 删除失败，当前图片不能显示未选中
-                                holder.check.setChecked(true);
+                                checkBox.setChecked(true);
                             }
                         }
                     }
                 }
             });
+
+            // 判断当前数据是否被选中，一在设置setOnCheckedChangeListener之后执行否则数据无效添加或删除上一次使用当前View的URI
+            if(mSelectImages != null && mSelectImages.contains(mDatas.get(position))) {
+                LogUtil.i(TAG, "onCheck& check7");
+                // 当前图片已被选中
+                holder.check.setChecked(true);
+            } else {
+                LogUtil.i(TAG, "onCheck& check8");
+                holder.check.setChecked(false);
+            }
         }
 
         return convertView;

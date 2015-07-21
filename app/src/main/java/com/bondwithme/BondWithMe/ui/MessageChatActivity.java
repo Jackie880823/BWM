@@ -37,7 +37,6 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
-import com.gc.materialdesign.widgets.ProgressDialog;
 
 import org.json.JSONObject;
 
@@ -46,13 +45,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by quankun on 15/4/24.
  */
 public class MessageChatActivity extends BaseActivity implements View.OnTouchListener, StickerViewClickListener {
     private Context mContext;
-    private ProgressDialog progressDialog;
+//    private ProgressDialog progressDialog;
     /**
      * 聊天布局
      */
@@ -123,6 +124,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public MessageChatAdapter messageChatAdapter;
     public LinearLayoutManager llm;
     private InputMethodManager imm;
+    private Timer mTimer;
 
     private int isNewGroup;
 
@@ -132,7 +134,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             super.handleMessage(msg);
             switch (msg.what) {
                 case GET_LATEST_MESSAGE:
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                     List<MsgEntity> msgList = (List<MsgEntity>) msg.obj;
                     if (null == msgList || msgList.size() == 0) {
                         empty_message.setVisibility(View.VISIBLE);
@@ -263,7 +265,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         } else if (userOrGroupType == 1) {
             intent = new Intent(mContext, GroupSettingActivity.class);
             intent.putExtra("groupId", groupId);
-            intent.putExtra("groupName", titleName);
+            if(!TextUtils.isEmpty(tvTitle.getText())){
+                intent.putExtra("groupName", tvTitle.getText());
+            }else {
+                intent.putExtra("groupName", titleName);
+            }
             startActivityForResult(intent, REQUEST_GET_GROUP_NAME);
         }
     }
@@ -280,8 +286,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         isNewGroup = getIntent().getIntExtra("isNewGroup", -1);
         mContext = this;
         messageAction = new MessageAction(mContext, handler);
-        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
-        progressDialog.show();
+//        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
+//        progressDialog.show();
         msgList = new ArrayList<>();
 //        if (userOrGroupType == 0) {
 //            titleName
@@ -315,6 +321,20 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
+        mTimer = new Timer();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                indexPage = 1;
+                getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);//接收对话消息
+            }
+        }, 10000, 10000);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTimer.cancel();
     }
 
     private void setView() {
@@ -555,7 +575,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case REQUEST_HEAD_FINAL:
                     break;
                 case REQUEST_GET_GROUP_NAME:
-                    tvTitle.setText(data.getStringExtra("group_name"));
+                    String groupNmae = data.getStringExtra("groupName");
+                    if(!TextUtils.isEmpty(groupNmae)){
+                        tvTitle.setText(groupNmae);
+                    }
                     break;
 
                 default:

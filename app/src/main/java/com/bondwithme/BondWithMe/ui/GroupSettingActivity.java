@@ -23,10 +23,6 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.Dialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
@@ -36,6 +32,10 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,14 +91,22 @@ public class GroupSettingActivity extends BaseActivity {
     protected void initBottomBar() {
 
     }
-
+//    @Override
+//    public void finish() {
+//        Intent intent = new Intent();
+//        intent.putExtra("groupName", tvName.getText().toString());
+//        setResult(RESULT_OK, intent);
+//        finish();
+//    }
     @Override
     protected void titleLeftEvent() {
         Intent intent = new Intent();
-        intent.putExtra("group_name", tvName.getText().toString());
+        intent.putExtra("groupName", tvName.getText().toString());
         setResult(RESULT_OK, intent);
         finish();
     }
+
+
 
     @Override
     protected void initTitleBar() {
@@ -781,6 +789,10 @@ public class GroupSettingActivity extends BaseActivity {
 
                 /** christopher begin */
                 case SET_GROUP_PIC_NAME:
+                    String newGroupName = data.getStringExtra("groupName");
+                    Intent intent = new Intent();
+                    intent.putExtra("groupName",newGroupName);
+                    setResult(RESULT_OK, intent);
                     finish();
 //                    tvName.setText(data.getStringExtra("groupName"));
 //                    VolleyUtil.initNetworkImageView(GroupSettingActivity.this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO,  groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);

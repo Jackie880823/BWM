@@ -28,7 +28,7 @@
             <!--android:clickable="true"-->
             <!--android:layout_centerInParent="true">-->
 
-            <!--<com.gc.materialdesign.views.ProgressBarCircularIndeterminate-->
+            <!--<com.material.widget.CircularProgress-->
                 <!--android:id="@+id/progressBar"-->
                 <!--android:layout_width="32dp"-->
                 <!--android:layout_height="32dp"-->

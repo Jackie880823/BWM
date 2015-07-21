@@ -16,10 +16,10 @@ android {
 
     defaultConfig {
         applicationId "com.bondwithme.BondWithMe"
-        minSdkVersion 9
+        minSdkVersion 14
         targetSdkVersion 21
-        versionCode 51   //TODO
-        versionName "1.9.4" //TODO
+        versionCode 52   //TODO
+        versionName "1.9.0" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -28,11 +28,10 @@ android {
     }
 
     //代码检查
-    lintOptions {
-        checkReleaseBuilds false //TODO release change to true
-        abortOnError false
-    }
-
+//    lintOptions {
+//        checkReleaseBuilds false //TODO release change to true
+//        abortOnError false
+//    }
 //    signingConfigs {
 //
 //        debug {
@@ -60,9 +59,9 @@ android {
 //        }
 //        release {
 //            // 不显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO 正式环境改false
-//            minifyEnabled false //TODO 正式环境改true
-//            zipAlignEnabled false //TODO 正式环境改true
+//            buildConfigField "boolean", "LOG_DEBUG", "false" //TODO 正式环境改false
+//            minifyEnabled true //TODO 正式环境改true
+//            zipAlignEnabled true //TODO 正式环境改true
 //            // 移除无用的resource文件
 //            shrinkResources false
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -80,8 +79,6 @@ android {
 //            }
 //        }
 //    }
-
-
     // 多渠道打包
     productFlavors {
         wandoujia {}
@@ -135,13 +132,15 @@ repositories {
 }
 
 dependencies {
-    //    compile 'com.android.support:cardview-v7:+'
+    compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.android.support:cardview-v7:+'
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     //for 突破65535的限制
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':Volley')
-    compile project(':MaterialDesign')
     compile project(':PhotoView')
+    compile project(':mupdflibrary')
+    compile project(':MaterialWidget')
     //    compile 'com.android.support:gridlayout-v7:21.0.3'
     compile('org.apache.httpcomponents:httpmime:4.3.5') {
         // avoid "is ignored for the default configuration X" warnings

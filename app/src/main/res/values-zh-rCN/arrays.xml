@@ -272,7 +272,7 @@
         <item>继父</item>
         <item>非亲姐妹</item>
         <item>非亲兄弟</item>
-        <item>继儿</item>
+        <item>继女</item>
         <item>继子</item>
         <item>其他亲戚</item>
         <item>伴侣</item>
@@ -489,5 +489,6 @@
         <item>260,ZM</item>
         <item>263,ZW</item>
     </string-array>
+    <!-- new string add before here -->
 
 </resources>

@@ -17,6 +17,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
@@ -54,6 +55,8 @@ public class App extends MultiDexApplication {
             //32 bit cpu
             SDKInitializer.initialize(getApplicationContext());
         }
+
+        LocationUtil.setRequestLocationUpdates(this);
     }
 
 
@@ -166,11 +169,4 @@ public class App extends MultiDexApplication {
         System.exit(0);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Intent intent = new Intent();
-        intent.setAction("refresh");
-        sendBroadcast(intent);
-    }
 }

@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +10,6 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 
@@ -61,6 +61,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     @Override
     public void initView() {
 
+//        mProgressDialog = new ProgressDialog(getActivity(), R.string.text_loading);
         getViewById(R.id.btn_alert_miss).setOnClickListener(this);
         getViewById(R.id.btn_alert_bigday).setOnClickListener(this);
         getViewById(R.id.btn_alert_wall).setOnClickListener(this);
@@ -127,12 +128,12 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_MODULES_COUNT,MainActivity.getUser().getUser_id()), null,this, new HttpCallback() {
             @Override
             public void onStart() {
-
+//                mProgressDialog.show();
             }
 
             @Override
             public void onFinish() {
-
+//                mProgressDialog.dismiss();
             }
 
             @Override

@@ -32,6 +32,8 @@ public class AsyncLoadBitmapTask extends AsyncTask<Uri, Integer, Bitmap> {
         mColumnWidthHeight = columnWidthHeight;
     }
 
+
+
     /**
      * Override this method to perform a computation on a background thread. The
      * specified parameters are the parameters passed to {@link #execute}
@@ -49,13 +51,13 @@ public class AsyncLoadBitmapTask extends AsyncTask<Uri, Integer, Bitmap> {
     @Override
     protected Bitmap doInBackground(Uri... params) {
         uri = params[0];
-        if(uri == null) {
+        if (uri == null) {
             // ur为空则返回空
             return null;
         }
         // 获取memory中对应的图片
         Bitmap bitmap = getBitmap4MemoryMap(uri);
-        if(bitmap == null) {
+        if (bitmap == null) {
             // memory中没有这张图片从手机内存
             Log.i(TAG, "doInBackground& not cache bitmap");
             bitmap = LocalImageLoader.getMiniThumbnailBitmap(mContext, uri, mColumnWidthHeight);
@@ -72,10 +74,10 @@ public class AsyncLoadBitmapTask extends AsyncTask<Uri, Integer, Bitmap> {
 
     @Override
     protected void onPostExecute(Bitmap bitmap) {
-        if(imageViewReference != null) {
+        if (imageViewReference != null) {
             ImageView imageView = (ImageView) imageViewReference.get();
-            if(imageView != null) {
-                if(bitmap != null) {
+            if (imageView != null) {
+                if (bitmap != null) {
                     imageView.setImageBitmap(bitmap);
                 } else {
                     imageView.setImageResource(R.drawable.default_head_icon);

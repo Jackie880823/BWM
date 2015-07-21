@@ -60,6 +60,28 @@
 
     <!-- <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" /> -->
     <!-- <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/> -->
+
+    <supports-screens
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:requiresSmallestWidthDp="480"
+        android:resizeable="true"
+        android:smallScreens="false"
+        android:xlargeScreens="true" />
+
+    <!-- android:largestWidthLimitDp="integer" -->
+    <!-- <compatible-screens> -->
+    <!-- <screen android:screenSize="xlarge" android:screenDensity="xhdpi"/> -->
+    <!-- <screen android:screenSize="xlarge" android:screenDensity="ldpi"/> -->
+    <!-- <screen android:screenSize="xlarge" android:screenDensity="hdpi"/> -->
+    <!-- <screen android:screenSize="normal" android:screenDensity="xhdpi"/> -->
+    <!-- <screen android:screenSize="normal" android:screenDensity="ldpi"/> -->
+    <!-- <screen android:screenSize="normal" android:screenDensity="hdpi"/> -->
+    <!-- <screen android:screenSize="large" android:screenDensity="xhdpi"/> -->
+    <!-- <screen android:screenSize="large" android:screenDensity="ldpi"/> -->
+    <!-- <screen android:screenSize="large" android:screenDensity="hdpi"/> -->
+    <!-- &lt;!&ndash;<screen android:screenSize="xlarge" android:screenDensity="mdpi"/>&ndash;&gt; -->
+    <!-- </compatible-screens> -->
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -75,19 +97,15 @@
 
 
         <!-- gaode map -->
-
-
         <!-- <meta-data -->
         <!-- android:name="com.amap.api.v2.apikey" -->
         <!-- android:value="83390a943f5896f8210b294faec6c5a3" /> -->
-
-
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-        android:value="@string/baidu_maps_key_debug" />
-            <!--android:value="@string/baidu_maps_key" />-->
-        <!--android:value="@string/jackie_baidu_maps_key_debug" />-->
+            android:value="@string/baidu_maps_key" />
+        <!-- android:value="@string/baidu_maps_key_debug" /> -->
+        <!-- android:value="@string/jackie_baidu_maps_key_debug" /> -->
 
         <service
             android:name="com.baidu.location.f"
@@ -97,7 +115,6 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <!-- <meta-data -->
         <!-- android:name="com.google.android.maps.v2.API_KEY" -->
         <!-- android:value="@string/google_maps_key" /> -->
@@ -140,7 +157,8 @@
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
         <activity
             android:name=".ui.MainActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
@@ -189,7 +207,6 @@
         <!-- android:screenOrientation="portrait" -->
         <!-- android:windowSoftInputMode="adjustResize" -->
         <!-- /> -->
-
         <activity
             android:name=".ui.InvitedStatusActivity"
             android:screenOrientation="portrait" />
@@ -211,7 +228,7 @@
         <activity
             android:name=".ui.ContactUsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.AboutUsActivity"
             android:screenOrientation="portrait" />
@@ -333,7 +350,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ViaContactMainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".ui.ViaIdNameActivity"
             android:screenOrientation="portrait" />
@@ -362,22 +380,22 @@
             android:name=".ui.more.ArchiveActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.GroupListActivity"
+            android:name=".ui.more.Archive.GroupListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.PrivateListActivity"
+            android:name=".ui.more.Archive.PrivateListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.ArchiveGroupChatActivity"
+            android:name=".ui.more.Archive.ArchiveGroupChatActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.ArchivePrivateChatActivity"
+            android:name=".ui.more.Archive.ArchivePrivateChatActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.ArchiveGroupCommentActivity"
+            android:name=".ui.more.Archive.ArchiveGroupCommentActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.ArchivePrivateCommentActivity"
+            android:name=".ui.more.Archive.ArchivePrivateCommentActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.more.MoreSettingActivity" >
         </activity>
@@ -403,9 +421,7 @@
         <activity
             android:name=".ui.AlbumDetailActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.bondwithme.BondWithMe.ui.ViewPDFActivity"
-             />
+        <activity android:name=".ui.ViewPDFActivity" />
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
@@ -492,16 +508,15 @@
             android:value="developer-default" />
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="@string/jiguang_api_key" /> <!-- </>值来自开发者平台取得的AppKey -->
+            android:value="@string/jiguang_api_key" />
+        <!-- </>值来自开发者平台取得的AppKey -->
 
 
         <!-- 全局网络状态监听广播接收器 -->
-
         <receiver android:name=".receiver_service.NetWorkStateReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED"> -->
-
             </intent-filter>
         </receiver>
 
@@ -542,6 +557,11 @@
         </activity>
         <activity
             android:name=".ui.start.ResetPasswordSuccessfulActivity">
+        </activity>
+
+        <activity
+            android:name=".ui.PickAndCropPictureActivity"
+             >
         </activity>
     </application>
 

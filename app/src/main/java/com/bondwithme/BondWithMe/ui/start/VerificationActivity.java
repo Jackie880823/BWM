@@ -29,10 +29,10 @@ import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
-import com.gc.materialdesign.views.Button;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,7 +73,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     private TextView tvPhoneNumber;
     private EditText etCode;
     private TextView tvTime;
-    private Button brNext;
+    private PaperButton brNext;
     private TimeCount timeCount;
     private RelativeLayout rlProgress;
 

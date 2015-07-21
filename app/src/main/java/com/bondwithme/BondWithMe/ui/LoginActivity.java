@@ -2,14 +2,14 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-
+import android.telephony.TelephonyManager;
 import android.text.Editable;
-
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -75,25 +75,25 @@ public class LoginActivity extends Activity {
 
     private void initPushApi() {
 
-        if (SystemUtil.checkPlayServices(this)) {
+        if(SystemUtil.checkPlayServices(this)) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(this);
-            if (TextUtils.isEmpty(regid)) {
+            if(TextUtils.isEmpty(regid)) {
                 isGCM = true;
                 registerInBackground();
             }
         } else {
             JPushInterface.init(LoginActivity.this);
             regid = AppInfoUtil.getJpushRegistrationId(this);
-            if (TextUtils.isEmpty(regid)) {
+            if(TextUtils.isEmpty(regid)) {
                 isGCM = false;
                 registerInBackground();
             }
             /**极光推送*/
-//            JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+            //            JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
 
-//        JPushInterface.stopPush(getApplicationContext());
-//        JPushInterface.resumePush(getApplicationContext());
+            //        JPushInterface.stopPush(getApplicationContext());
+            //        JPushInterface.resumePush(getApplicationContext());
         }
 
     }
@@ -110,7 +110,7 @@ public class LoginActivity extends Activity {
 
             @Override
             protected String doInBackground(Void... params) {
-                if (isGCM) {
+                if(isGCM) {
                     return doRegistration2GCM();
                 } else {
                     return doRegistration2Jpush();
@@ -119,9 +119,9 @@ public class LoginActivity extends Activity {
 
             @Override
             protected void onPostExecute(String msg) {
-                if (isGCM) {
+                if(isGCM) {
 
-                }else{
+                } else {
 
                 }
             }
@@ -139,24 +139,24 @@ public class LoginActivity extends Activity {
         String msg = "";
         try {
             Thread.sleep(3000);
-        } catch (InterruptedException e) {
+        } catch(InterruptedException e) {
             e.printStackTrace();
         }
         regid = JPushInterface.getRegistrationID(this);
-//        if(TextUtils.isEmpty(regid)){
-//            regid = JPushInterface.getRegistrationID(this);
-//        }
-        while (TextUtils.isEmpty(regid)){
+        //        if(TextUtils.isEmpty(regid)){
+        //            regid = JPushInterface.getRegistrationID(this);
+        //        }
+        while(TextUtils.isEmpty(regid)) {
             regid = JPushInterface.getRegistrationID(this);
             try {
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
+            } catch(InterruptedException e) {
                 e.printStackTrace();
             }
         }
         msg = "Device registered, registration ID=" + regid;
         sendRegistrationIdToBackend(regid, "jpush");
-        AppInfoUtil.storeRegistrationId(LoginActivity.this, regid,false);
+        AppInfoUtil.storeRegistrationId(LoginActivity.this, regid, false);
         return msg;
     }
 
@@ -179,10 +179,10 @@ public class LoginActivity extends Activity {
             // message using the 'from' address in the message.
 
             // Persist the registration ID - no need to register again.
-            AppInfoUtil.storeRegistrationId(LoginActivity.this, regid,true);
+            AppInfoUtil.storeRegistrationId(LoginActivity.this, regid, true);
 
 
-        } catch (IOException ex) {
+        } catch(IOException ex) {
             msg = "Error :" + ex.getMessage();
             // If there is an error, don't just keep trying to register.
             // Require the user to click a button again, or perform
@@ -245,7 +245,7 @@ public class LoginActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-//        finishByNoPlayService();
+        //        finishByNoPlayService();
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -256,7 +256,7 @@ public class LoginActivity extends Activity {
                 protected Void doInBackground(Void... params) {
                     try {
                         Thread.sleep(2 * 1000);
-                    } catch (InterruptedException e) {
+                    } catch(InterruptedException e) {
                         e.printStackTrace();
                     }
                     return null;
@@ -269,7 +269,7 @@ public class LoginActivity extends Activity {
             };
             //for not work in down 11
             if(SDKUtil.IS_HONEYCOMB) {
-                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
                 task.execute();
             }
@@ -284,12 +284,12 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         UserEntity userEntity = App.getLoginedUser();
-        if (userEntity != null) {
+        if(userEntity != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
 
             String tokenString = PreferencesUtil.getValue(this, Constant.HTTP_TOKEN, null);
-            if (!TextUtils.isEmpty(tokenString)) {
+            if(!TextUtils.isEmpty(tokenString)) {
                 App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));//init http header
             }
 
@@ -309,7 +309,32 @@ public class LoginActivity extends Activity {
         ivRemove = (LinearLayout) findViewById(R.id.iv_move);
         do_faile_login_tv = (TextView) findViewById(R.id.do_faile_login_tv);
         do_faile_login_linear = (LinearLayout) findViewById(R.id.do_faile_login_linear);
-        rlProgress = (RelativeLayout)findViewById(R.id.rl_progress);
+        rlProgress = (RelativeLayout) findViewById(R.id.rl_progress);
+
+        tvCountryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(tvCountryCode.getText().toString()))
+                {
+                    ivRemove.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+
+                    ivRemove.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
 
         tvCountryCode.addTextChangedListener(new TextWatcher() {
             @Override
@@ -349,27 +374,27 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                if (!NetworkUtil.isNetworkConnected(LoginActivity.this)) {
+                if(!NetworkUtil.isNetworkConnected(LoginActivity.this)) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String account = etAccount.getText().toString().trim();
                 String password = etPassword.getText().toString().trim();
-                if(!TextUtils.isEmpty(account)&&!TextUtils.isEmpty(password)){
+                if(!TextUtils.isEmpty(account) && !TextUtils.isEmpty(password)) {
 
                     rlProgress.setVisibility(View.VISIBLE);
                     btnLogin.setClickable(false);
 
                     HashMap<String, String> jsonParams = new HashMap<String, String>();
-                    if ((account.length() != 0)) {
+                    if((account.length() != 0)) {
 
-                        if (TextUtils.isEmpty(tvCountryCode.getText())) {
-//                            jsonParams.put("user_phone", account);//是否可以不需要
+                        if(TextUtils.isEmpty(tvCountryCode.getText())) {
+                            //                            jsonParams.put("user_phone", account);//是否可以不需要
                             jsonParams.put("username", tvCountryCode.getText() + account);
                             jsonParams.put("login_type", "username");
                         } else {
                             account = MyTextUtil.NoZero(account);
-//                            jsonParams.put("username", tvCountryCode.getText().toString() + account);//是否可以不需要
+                            //                            jsonParams.put("username", tvCountryCode.getText().toString() + account);//是否可以不需要
                             jsonParams.put("user_phone", account);
                             jsonParams.put("login_type", "phone");
                         }
@@ -377,14 +402,13 @@ public class LoginActivity extends Activity {
 
                     jsonParams.put("user_country_code", tvCountryCode.getText().toString());
                     jsonParams.put("user_password", MD5(password));
-                    jsonParams.put("user_uuid", Settings.Secure.getString(LoginActivity.this.getContentResolver(),
-                            Settings.Secure.ANDROID_ID));
+                    jsonParams.put("user_uuid", Settings.Secure.getString(LoginActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID));
                     jsonParams.put("user_app_version", AppInfoUtil.getAppVersionName(LoginActivity.this));
                     jsonParams.put("user_app_os", "android");
                     String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("condition", jsonParamsString);
-//                    String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
+                    //                    String url = UrlUtil.generateUrl(Constant.API_LOGIN, params);
 
                     new HttpTools(LoginActivity.this).get(Constant.API_LOGIN, params, this, new HttpCallback() {
                         @Override
@@ -411,7 +435,7 @@ public class LoginActivity extends Activity {
 
                                 }.getType());
                                 AppTokenEntity tokenEntity = gson.fromJson(jsonObject.getString("token"), AppTokenEntity.class);
-                                if (userList != null && userList.get(0) != null) {
+                                if(userList != null && userList.get(0) != null) {
                                     UserEntity userEntity = userList.get(0);//登录的用户数据
                                     App.changeLoginedUser(userEntity, tokenEntity);
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -422,9 +446,9 @@ public class LoginActivity extends Activity {
                                     finish();
                                 }
 
-                            } catch (Exception e) {
+                            } catch(Exception e) {
                                 MessageUtil.showMessage(LoginActivity.this, e.getMessage());
-//                                MessageUtil.showMessage(LoginActivity.this, R.string.msg_action_failed);
+                                //                                MessageUtil.showMessage(LoginActivity.this, R.string.msg_action_failed);
                                 btnLogin.setClickable(true);
                                 e.printStackTrace();
                             }
@@ -435,17 +459,15 @@ public class LoginActivity extends Activity {
                             MessageUtil.showMessage(LoginActivity.this, R.string.msg_action_failed);
                             btnLogin.setClickable(true);
 
-                            if (TextUtils.isEmpty(tvCountryCode.getText())) {
+                            if(TextUtils.isEmpty(tvCountryCode.getText())) {
                                 //用户名
                                 do_faile_login_linear.setVisibility(View.VISIBLE);
-                                String failePrompt = tvCountryCode.getText().toString() + " "
-                                        + etAccount.getText().toString();
+                                String failePrompt = tvCountryCode.getText().toString() + " " + etAccount.getText().toString();
                                 do_faile_login_tv.setText(failePrompt);
                             } else {
                                 //手机号
                                 do_faile_login_linear.setVisibility(View.VISIBLE);
-                                String failePrompt = tvCountryCode.getText().toString() + " "
-                                        + MyTextUtil.NoZero(etAccount.getText().toString().trim());
+                                String failePrompt = tvCountryCode.getText().toString() + " " + MyTextUtil.NoZero(etAccount.getText().toString().trim());
                                 do_faile_login_tv.setText(failePrompt);
                             }
 
@@ -461,11 +483,11 @@ public class LoginActivity extends Activity {
 
                         }
                     });
-                } else if ((account.length() == 0) && (password.length() == 0)) {
+                } else if((account.length() == 0) && (password.length() == 0)) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_enter_details), Toast.LENGTH_SHORT).show();
-                } else if (account.length() == 0) {
+                } else if(account.length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_username_phone), Toast.LENGTH_SHORT).show();
-                } else if (password.length() == 0) {
+                } else if(password.length() == 0) {
                     Toast.makeText(LoginActivity.this, getResources().getString(R.string.text_input_password), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -505,7 +527,7 @@ public class LoginActivity extends Activity {
         MessageDigest md5 = null;
         try {
             md5 = MessageDigest.getInstance("MD5");
-        } catch (Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
             return "";
         }
@@ -513,15 +535,15 @@ public class LoginActivity extends Activity {
         char[] charArray = str.toCharArray();
         byte[] byteArray = new byte[charArray.length];
 
-        for (int i = 0; i < charArray.length; i++) {
+        for(int i = 0; i < charArray.length; i++) {
             byteArray[i] = (byte) charArray[i];
         }
         byte[] md5Bytes = md5.digest(byteArray);
 
         StringBuffer hexValue = new StringBuffer();
-        for (int i = 0; i < md5Bytes.length; i++) {
+        for(int i = 0; i < md5Bytes.length; i++) {
             int val = ((int) md5Bytes[i]) & 0xff;
-            if (val < 16) {
+            if(val < 16) {
                 hexValue.append("0");
             }
             hexValue.append(Integer.toHexString(val));
@@ -531,12 +553,43 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case GET_COUNTRY_CODE :
-                if (resultCode == RESULT_OK) {
+        switch(requestCode) {
+            case GET_COUNTRY_CODE:
+                if(resultCode == RESULT_OK) {
                     tvCountryCode.setText(data.getStringExtra("code"));
                 }
         }
     }
+
+    //自动获取国家区号方法
+    public String GetCountryZipCode() {
+        String CountryID = "";
+        String CountryZipCode = "";
+
+        TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        //getNetworkCountryIso
+        CountryID = manager.getSimCountryIso().toUpperCase();
+        String[] rl = this.getResources().getStringArray(R.array.CountryCodes);
+        for(int i = 0; i < rl.length; i++) {
+            String[] g = rl[i].split(",");
+            if(g[1].trim().equals(CountryID.trim())) {
+                CountryZipCode = g[0];
+                break;
+            }
+        }
+        return CountryZipCode;
+    }
+
+    //判断字符串的是否为字母，字母true。
+    public static boolean test(String s) {
+        char c = s.charAt(0);
+        int i = (int) c;
+        if((i >= 65 && i <= 90) || (i >= 97 && i <= 122)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 }

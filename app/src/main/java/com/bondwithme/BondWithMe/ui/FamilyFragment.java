@@ -1,10 +1,8 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -40,21 +38,19 @@ import com.bondwithme.BondWithMe.adapter.MyFamilyAdapter;
 import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
 import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
-import com.gc.materialdesign.widgets.Dialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -711,54 +707,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     }
 
-    public void getPdf(String urlString) {
 
-        final String target = FileUtil.getCacheFilePath(getActivity()) + String.format("/cache_%s.pdf", "" + System.currentTimeMillis());
-
-        new HttpTools(getActivity()).download(urlString, target, true, new HttpCallback() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-                vProgress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onResult(String string) {
-                File file = new File(target);
-                if (file.exists()) {
-//                    mProgressDialog.dismiss();
-                    Uri path1 = Uri.fromFile(file);
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setDataAndType(path1, "application/pdf");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    try {
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException e) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    }
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-//                mProgressDialog.dismiss();
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-            }
-
-            @Override
-            public void onCancelled() {
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
-    }
 
     class MyOnPageChanger implements ViewPager.OnPageChangeListener {
         @Override

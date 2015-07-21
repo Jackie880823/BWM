@@ -145,7 +145,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     public static SharedPreferences draftPreferences;
 
     /**
-     * private ProgressBarCircularIndeterminate progressBar;
+     * private CircularProgress progressBar;
      */
     private RecyclerView feeling_icons;
 
@@ -186,7 +186,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.wall_new_container, fragment1);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
         fragmentTransaction.commit();
 
         iv_feeling = getViewById(R.id.iv_feeling);
@@ -362,7 +362,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         editor.putString(PREFERENCE_KEY_TAG_GROUPS, gson.toJson(at_groups_data));
 
         WallEditView editView = fragment1.getEditText4Content();
-        editor.putString(PREFERENCE_KEY_TEXT_CONTENT, editView.getRelText());
+        editor.putString(PREFERENCE_KEY_TEXT_CONTENT, editView.getText().toString());
         editor.putString(PREFERENCE_KEY_OLD_MEMBER_TEXT, editView.getOldMemberText());
         editor.putString(PREFERENCE_KEY_OLD_GROUP_TEXT, editView.getOldGroupText());
 
@@ -716,7 +716,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
         fragmentTransaction.replace(R.id.wall_new_container, fragment);
         fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_NONE);
         fragmentTransaction.commit();
         currentTabIndex = tabIndex;
 

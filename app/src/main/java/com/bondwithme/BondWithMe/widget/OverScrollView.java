@@ -197,6 +197,7 @@ public class OverScrollView extends ScrollView {
             isOnTouch = false;
         }
 
+
         // 如果禁用，不做任何处理
         if(!mIsUseOverScroll){
             return super.onTouchEvent(ev);
@@ -209,13 +210,12 @@ public class OverScrollView extends ScrollView {
 
         switch (ev.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                mActivePointerId = ev.getPointerId(0);
+
                 mLastMotionY = (int) ev.getY();
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
-                final int index = ev.getActionIndex();
-                mLastMotionY = (int) ev.getY(index);
-                mActivePointerId = ev.getPointerId(index);
+                mActivePointerId = ev.getPointerId(0);
+                mLastMotionY = (int) ev.getY(mActivePointerId);
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 onSecondaryPointerUp(ev);

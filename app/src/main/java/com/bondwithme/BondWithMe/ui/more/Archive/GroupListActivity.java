@@ -9,10 +9,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.adapter.GroupListAdapter;
 import com.bondwithme.BondWithMe.entity.GroupListEntity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.gc.materialdesign.widgets.ProgressDialog;
-import com.bondwithme.BondWithMe.adapter.GroupListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ import java.util.List;
  * Created by liangzemian on 15/6/30.
  */
 public class GroupListActivity extends BaseActivity implements View.OnClickListener{
-    ProgressDialog mProgressDialog;
+//    ProgressDialog mProgressDialog;
     private RecyclerView rvList;
     private LinearLayoutManager llm;
     private GroupListAdapter adapter;

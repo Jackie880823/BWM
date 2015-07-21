@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
@@ -29,6 +28,7 @@ import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
+import com.material.widget.CircularProgress;
 
 import java.io.File;
 import java.io.IOException;
@@ -153,7 +153,7 @@ public class ChatAdapter extends BaseAdapter {
             else if (".png".equals(msgEntity.getSticker_type())) {
                 convertView = mInflater.inflate(R.layout.list_item_right_png, null);
                 viewHolder.rightMessageImage = (ImageView) convertView.findViewById(R.id.right_message_iv);
-                ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) convertView.findViewById(R.id.right_progress_bar);
+                CircularProgress progressBar = (CircularProgress) convertView.findViewById(R.id.right_progress_bar);
                 if (msgEntity.getUri() != null)//直接显示在ListView,相册和相机
                 {
                     Bitmap bitmap;
@@ -186,7 +186,7 @@ public class ChatAdapter extends BaseAdapter {
             else if (".gif".equals(msgEntity.getSticker_type())) {
                 convertView = mInflater.inflate(R.layout.list_item_right_gif, null);
                 viewHolder.rightMessageGif = (GifImageView) convertView.findViewById(R.id.right_message_gif);
-                ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) convertView.findViewById(R.id.right_progress_bar);
+                CircularProgress progressBar = (CircularProgress) convertView.findViewById(R.id.right_progress_bar);
                 try {
                     String gifFilePath = MainActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.gif";
                     GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
@@ -207,7 +207,7 @@ public class ChatAdapter extends BaseAdapter {
             else {
                 convertView = mInflater.inflate(R.layout.list_item_right_png, null);
                 viewHolder.rightMessageImage = (ImageView) convertView.findViewById(R.id.right_message_iv);
-                ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) convertView.findViewById(R.id.right_progress_bar);
+                CircularProgress progressBar = (CircularProgress) convertView.findViewById(R.id.right_progress_bar);
             }
 
             //共用的
@@ -300,7 +300,7 @@ public class ChatAdapter extends BaseAdapter {
 
                 viewHolder.leftMessageImage = (ImageView) convertView.findViewById(R.id.left_message_iv);
 
-                ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) convertView.findViewById(R.id.left_progress_bar);
+                CircularProgress progressBar = (CircularProgress) convertView.findViewById(R.id.left_progress_bar);
 
                 try {
                     String pngFileName = MainActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.png";
@@ -325,7 +325,7 @@ public class ChatAdapter extends BaseAdapter {
 
                 viewHolder.leftMessageGif = (GifImageView) convertView.findViewById(R.id.left_message_gif);
 
-                ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) convertView.findViewById(R.id.left_progress_bar);
+                CircularProgress progressBar = (CircularProgress) convertView.findViewById(R.id.left_progress_bar);
 
                 try {
                     String gifFilePath = MainActivity.STICKERS_NAME + File.separator + msgEntity.getSticker_group_path() + File.separator + msgEntity.getSticker_name() + "_B.gif";
@@ -344,7 +344,7 @@ public class ChatAdapter extends BaseAdapter {
 
                 viewHolder.leftMessageImage = (ImageView) convertView.findViewById(R.id.left_message_iv);
 
-                ProgressBarCircularIndeterminate progressBar = (ProgressBarCircularIndeterminate) convertView.findViewById(R.id.left_progress_bar);
+                CircularProgress progressBar = (CircularProgress) convertView.findViewById(R.id.left_progress_bar);
             }
 
             //共用的

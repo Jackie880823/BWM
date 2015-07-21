@@ -28,7 +28,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -36,10 +35,9 @@ import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.DatePicker;
 import com.bondwithme.BondWithMe.widget.MyDialog;
-import com.gc.materialdesign.widgets.Dialog;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+
 
 public class MyViewProfileActivity extends BaseActivity {
     private CircularNetworkImage cniMain;
@@ -87,11 +86,9 @@ public class MyViewProfileActivity extends BaseActivity {
 
     private String userGender;
 
-    private ProgressDialog progressDialog;
+//    private ProgressDialog progressDialog;
 
-    private final static int REQUEST_HEAD_PHOTO = 1;
-    private final static int REQUEST_HEAD_CAMERA = 2;
-    private final static int REQUEST_HEAD_FINAL = 3;
+    private final static int REQUEST_PHOTO = 1;
 
     Uri mCropImagedUri;
     private String imagePath;
@@ -104,7 +101,7 @@ public class MyViewProfileActivity extends BaseActivity {
     /**
      * 临时文件用户裁剪
      */
-    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp.png";
+    public String CACHE_PIC_NAME_TEMP ;
 
     @Override
     public int getLayout() {
@@ -135,8 +132,12 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void titleLeftEvent() {
-        // super.titleLeftEvent();
-        showNoFriendDialog();
+//        Log.i("isChange===",isChange()+"");
+        if (isChange()){
+            showNoFriendDialog();
+        }else {
+            super.titleLeftEvent();
+        }
     }
 
     private void showNoFriendDialog() {
@@ -165,6 +166,57 @@ public class MyViewProfileActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
+    private boolean isChange(){
+        if(!TextUtils.isEmpty(etFirstName.getText().toString().trim()) && !MainActivity.getUser().getUser_given_name().equals(etFirstName.getText().toString().trim())){
+            return true;
+        }else {
+            if(TextUtils.isEmpty(etFirstName.getText().toString().trim())){
+                return true;
+            }
+        }
+        if(!TextUtils.isEmpty(etLastName.getText().toString().trim()) && !MainActivity.getUser().getUser_surname().equals(etLastName.getText().toString().trim())){
+            return true;
+        }else {
+            if(TextUtils.isEmpty(etLastName.getText().toString().trim())){
+                return true;
+            }
+        }
+        if(!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())){
+            return true;
+        }else {
+            if(!TextUtils.isEmpty(tvBirthday.getText().toString().trim()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())){
+                return true;
+            }
+        }
+        //性别简写
+        String simpleSex =  MainActivity.getUser().getUser_gender();
+        String tempSex = tvGender.getText().toString().trim();
+        String simpleRealitySex = null;
+        //实际显示性别转换成简写
+        if(tempSex.equals(getResources().getString(R.string.text_female))){
+            simpleRealitySex = "F";
+        }else if(tempSex.equals(getResources().getString(R.string.text_male))){
+            simpleRealitySex = "M";
+        }
+        if(!simpleSex.equals(simpleRealitySex)){
+            return true;
+        }
+        if(!TextUtils.isEmpty(MainActivity.getUser().getUser_email()) && !MainActivity.getUser().getUser_email().equals(etEmail.getText().toString().trim())){
+            return true;
+        }else {
+            if(!TextUtils.isEmpty(etEmail.getText().toString().trim()) && !MainActivity.getUser().getUser_email().equals(etEmail.getText().toString().trim())){
+                return true;
+            }
+        }
+        if(!TextUtils.isEmpty(MainActivity.getUser().getUser_location_name()) && !MainActivity.getUser().getUser_location_name().equals(etRegion.getText().toString().trim())){
+            return true;
+        }else {
+            if(!TextUtils.isEmpty(etRegion.getText().toString().trim()) && !MainActivity.getUser().getUser_location_name().equals(etRegion.getText().toString().trim())){
+                return true;
+            }
+        }
+        return false;
+    }
 //    @Override
 //    public boolean onKeyDown(int keyCode, KeyEvent event) {
 //        if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -184,8 +236,7 @@ public class MyViewProfileActivity extends BaseActivity {
     BitmapTools mBitmapTools;
     @Override
     public void initView() {
-
-        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
+//        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         mContext = this;
         TAG = mContext.getClass().getSimpleName();
         cniMain = getViewById(R.id.cni_main);
@@ -271,7 +322,6 @@ public class MyViewProfileActivity extends BaseActivity {
 //                    Drawable da = Drawable.createFromStream(is, null);
 //                    ivBottomLeft.setImageDrawable(da);
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
 
@@ -316,7 +366,9 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     public void updateProfile() {
-
+        if(!isChange()){
+            finish();
+        }
         if (TextUtils.isEmpty(etLastName.getText()) || TextUtils.isEmpty(etFirstName.getText()) || TextUtils.isEmpty(tvGender.getText())) {
             Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_input_name_gender), Toast.LENGTH_SHORT).show();
             return;
@@ -374,6 +426,7 @@ public class MyViewProfileActivity extends BaseActivity {
                             intent.putExtra("name", etFirstName.getText().toString());
                             setResult(RESULT_OK, intent);
                             finish();
+
                         }
                     }
                 }
@@ -436,18 +489,11 @@ public class MyViewProfileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                intent2.putExtra("android.intent.extras.CAMERA_FACING", 1);
-                intent2.putExtra("camerasensortype", 2);
-
-                // 下面这句指定调用相机拍照后的照片存储的路径
-                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getCachePicFileByName(MyViewProfileActivity.this,
-                                CACHE_PIC_NAME_TEMP)));
-                // 图片质量为高
-                intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-                intent2.putExtra("return-data", false);
-                startActivityForResult(intent2, REQUEST_HEAD_CAMERA);
+                Intent intent = new Intent(MyViewProfileActivity.this,PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM,PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH,cniMain.getWidth());
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, cniMain.getHeight());
+                startActivityForResult(intent, REQUEST_PHOTO);
             }
         });
 
@@ -455,10 +501,11 @@ public class MyViewProfileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(MyViewProfileActivity.this, SelectPhotosActivity.class);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-                intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                startActivityForResult(intent, REQUEST_HEAD_PHOTO);
+                Intent intent = new Intent(MyViewProfileActivity.this,PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM,PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH,cniMain.getWidth());
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, cniMain.getHeight());
+                startActivityForResult(intent, REQUEST_PHOTO);
             }
         });
         tv_cancel.setOnClickListener(new View.OnClickListener() {
@@ -473,38 +520,11 @@ public class MyViewProfileActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (PersonalPictureActivity.RESULT_OK == resultCode) {
-
             switch (requestCode) {
-                // 如果是直接从相册获取
-                case REQUEST_HEAD_PHOTO:
-                    if (data != null) {
-
-                        Uri uri;
-                        uri = data.getData();
-                        try {
-                            startPhotoZoom(uri, false);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-
-                // 如果是调用相机拍照时
-                case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(MyViewProfileActivity.this, CACHE_PIC_NAME_TEMP));
-                    if (new File(uri.getPath()).exists()) {
-                        try {
-                            startPhotoZoom(uri, false);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-
-
                 // 取得裁剪后的图片
-                case REQUEST_HEAD_FINAL:
-//                    if (data != null) {
+                case REQUEST_PHOTO:
+                    if (data != null) {
+                        mCropImagedUri = data.getParcelableExtra(PickAndCropPictureActivity.FINAL_PIC_URI);
                         Bitmap photo;
                         try {
                             imagePath = mCropImagedUri.getPath();
@@ -520,97 +540,12 @@ public class MyViewProfileActivity extends BaseActivity {
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
-//                    }
+                    }
                     break;
-
                 default:
                     break;
-
             }
             super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    /**
-     * 裁剪图片方法实现
-     *
-     * @param uri
-     * @throws java.io.IOException
-     */
-    public void startPhotoZoom(Uri uri, boolean fromPhoto) throws IOException {
-
-        if (uri == null || uri.getPath() == null) {
-            return;
-        }
-
-        //TODO换为view 的宽度
-        int width = cniMain.getWidth();
-        int height = cniMain.getHeight();
-
-        /**
-         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
-         */
-        int degree = LocalImageLoader.readPictureDegree(uri.getPath());
-
-        if (degree != 0) {
-            /**
-             * 把图片旋转为正的方向
-             */
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            Bitmap bitmap = BitmapFactory.decodeStream(
-                    new FileInputStream(uri.getPath()), null, options);
-            options.inSampleSize = 4;
-            options.outWidth = width;
-            options.outHeight = height;
-            options.inJustDecodeBounds = false;
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            bitmap = BitmapFactory.decodeStream(
-                    new FileInputStream(uri.getPath()), null, options);
-            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
-            byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
-            File file = new File(uri.getPath());
-            file.delete();
-            FileOutputStream fos = new FileOutputStream(uri.getPath());
-            fos.write(newBytes);
-            fos.flush();
-            fos.close();
-            bitmap.recycle();
-            bitmap = null;
-        }
-
-
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        List<ResolveInfo> list = MyViewProfileActivity.this.getPackageManager().queryIntentActivities(intent, 0);
-        int size = list.size();
-        if (size == 0) {
-            Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_no_found_reduce), Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-            intent.putExtra("crop", "true");
-            // aspectX aspectY 是宽高的比例
-            intent.putExtra("aspectX", 1);
-            intent.putExtra("aspectY", 1);
-            // outputX outputY 是裁剪图片宽高
-            intent.putExtra("outputX", width);
-            intent.putExtra("outputY", height);
-            // //防止毛边
-            // intent.putExtra("scale", true);//黑边
-            // intent.putExtra("scaleUpIfNeeded", true);//黑边
-            intent.putExtra("return-data", false);
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-            intent.putExtra("noFaceDetection", true);
-            //		if(fromPhoto){
-//            File f = new File(PicturesCacheUtil.getPicPath(MyViewProfileActivity.this,CACHE_PIC_NAME));
-            File f = PicturesCacheUtil.getCachePicFileByName(MyViewProfileActivity.this, CACHE_PIC_NAME);
-            mCropImagedUri = Uri.fromFile(f);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
-            //		}else{
-            //			mCropImagedUri = uri;
-            //		}
-            startActivityForResult(intent, REQUEST_HEAD_FINAL);
         }
     }
 
@@ -626,18 +561,17 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     private void uploadImage() {
-
         if (mCropImagedUri == null) {
             return;
         }
         String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 480, 800, false);
-        File file = new File(path);
+        final File file = new File(path);
         isUploadImage = true;
 //        File f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
         if (!file.exists()) {
             return;
         }
-        progressDialog.show();
+//        progressDialog.show();
 
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
@@ -666,7 +600,7 @@ public class MyViewProfileActivity extends BaseActivity {
                     responseStatus = jsonObject.getString("response_status");
                     if (responseStatus.equals("Fail")) {
                         Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_update_proPicFail), Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
 
                     } else {
                         /**wing modify 20150625 begin*/
@@ -675,23 +609,24 @@ public class MyViewProfileActivity extends BaseActivity {
                         mBitmapTools.clearDiskCache(null);
                         /**wing modify 20150625 end*/
 
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                         Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
                         isUploadImageSuccess = true;
                         Intent intent = new Intent();
                         intent.putExtra("name", etFirstName.getText().toString());
+                        intent.putExtra("new_pic", Uri.fromFile(file));
                         setResult(RESULT_OK, intent);
                         finish();
                     }
                 } catch (JSONException e) {
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
                 Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
 
@@ -761,9 +696,9 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
+//        if (progressDialog != null) {
+//            progressDialog.dismiss();
+//        }
         super.onDestroy();
     }
 

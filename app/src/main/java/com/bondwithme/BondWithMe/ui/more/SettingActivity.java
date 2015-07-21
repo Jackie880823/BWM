@@ -2,6 +2,8 @@ package com.bondwithme.BondWithMe.ui.more;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -12,8 +14,6 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.gc.materialdesign.views.CheckBox;
-import com.gc.materialdesign.widgets.ProgressDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,11 +24,11 @@ import java.util.Map;
 /**
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
  */
-public class SettingActivity extends BaseActivity implements CheckBox.OnCheckListener {
+public class SettingActivity extends BaseActivity implements CheckBox.OnCheckedChangeListener {
 
 
 //    private TextView mail_subject;
-    ProgressDialog mProgressDialog;
+//    ProgressDialog mProgressDialog;
     private CheckBox dob_alert_1;
     private CheckBox dob_alert_3;
     private CheckBox dob_alert_7;
@@ -78,8 +78,8 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
 
     @Override
     public void initView() {
-        mProgressDialog = new ProgressDialog(this,getString(R.string.text_loading));
-        mProgressDialog.show();
+//        mProgressDialog = new ProgressDialog(this,getString(R.string.text_loading));
+//        mProgressDialog.show();
 
         dob_alert_1 = getViewById(R.id.dob_alert_1);
         dob_alert_3 = getViewById(R.id.dob_alert_3);
@@ -93,34 +93,30 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
         auto_acp_sib = getViewById(R.id.auto_acp_sib);
         auto_acp_sps = getViewById(R.id.auto_acp_sps);
 
-        auto_acp_chd.setOncheckListener(this);
-        auto_acp_oth.setOncheckListener(this);
-        auto_acp_prt.setOncheckListener(this);
-        auto_acp_sib.setOncheckListener(this);
-        auto_acp_sps.setOncheckListener(this);
+        auto_acp_chd.setOnCheckedChangeListener(this);
+        auto_acp_oth.setOnCheckedChangeListener(this);
+        auto_acp_prt.setOnCheckedChangeListener(this);
+        auto_acp_sib.setOnCheckedChangeListener(this);
+        auto_acp_sps.setOnCheckedChangeListener(this);
 
 
-        auto_acp_all.setOncheckListener(new CheckBox.OnCheckListener() {
+        auto_acp_all.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
             @Override
-            public void onCheck(CheckBox checkBox,boolean check) {
-//                if (autoCheck) {
-//                    autoCheck = false;
-//                    return;
-//                }
-                if (auto_acp_all.isCheck()) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (auto_acp_all.isChecked()) {
                     auto_acp_chd.setChecked(true);
                     auto_acp_oth.setChecked(true);
                     auto_acp_prt.setChecked(true);
                     auto_acp_sib.setChecked(true);
                     auto_acp_sps.setChecked(true);
-                    checkCount= 5;
+                    checkCount = 5;
                 } else {
                     auto_acp_chd.setChecked(false);
                     auto_acp_oth.setChecked(false);
                     auto_acp_prt.setChecked(false);
                     auto_acp_sib.setChecked(false);
                     auto_acp_sps.setChecked(false);
-                    checkCount= 0;
+                    checkCount = 0;
                 }
             }
         });
@@ -135,24 +131,24 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
 
     private void updateConfig(){
 
-        mProgressDialog.show();
+//        mProgressDialog.show();
 
         Map<String, String> params = new HashMap<>();
 
 //        Map<String, String> birthday = new HashMap<>();
-        params.put("dob_alert_1",(dob_alert_1.isCheck()?"1":"0"));
-        params.put("dob_alert_3",(dob_alert_3.isCheck()?"1":"0"));
-        params.put("dob_alert_7",(dob_alert_7.isCheck()?"1":"0"));
-        params.put("dob_alert_30",(dob_alert_30.isCheck()?"1":"0"));
+        params.put("dob_alert_1",(dob_alert_1.isChecked()?"1":"0"));
+        params.put("dob_alert_3",(dob_alert_3.isChecked()?"1":"0"));
+        params.put("dob_alert_7",(dob_alert_7.isChecked()?"1":"0"));
+        params.put("dob_alert_30",(dob_alert_30.isChecked()?"1":"0"));
 //        params.put("birthday", UrlUtil.mapToJsonstring(birthday));
 //
 //        Map<String, String> auto = new HashMap<>();
-        params.put("auto_acp_all",(auto_acp_all.isCheck()?"1":"0"));
-        params.put("auto_acp_chd",(auto_acp_chd.isCheck()?"1":"0"));
-        params.put("auto_acp_oth",(auto_acp_oth.isCheck()?"1":"0"));
-        params.put("auto_acp_prt",(auto_acp_prt.isCheck()?"1":"0"));
-        params.put("auto_acp_sib",(auto_acp_sib.isCheck()?"1":"0"));
-        params.put("auto_acp_sps",(auto_acp_sps.isCheck()?"1":"0"));
+        params.put("auto_acp_all",(auto_acp_all.isChecked()?"1":"0"));
+        params.put("auto_acp_chd",(auto_acp_chd.isChecked()?"1":"0"));
+        params.put("auto_acp_oth",(auto_acp_oth.isChecked()?"1":"0"));
+        params.put("auto_acp_prt",(auto_acp_prt.isChecked()?"1":"0"));
+        params.put("auto_acp_sib",(auto_acp_sib.isChecked()?"1":"0"));
+        params.put("auto_acp_sps",(auto_acp_sps.isChecked()?"1":"0"));
 //        params.put("auto", UrlUtil.mapToJsonstring(auto));
 
 
@@ -169,7 +165,7 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
             }
 
             @Override
@@ -207,7 +203,7 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
             }
 
             @Override
@@ -313,8 +309,8 @@ public class SettingActivity extends BaseActivity implements CheckBox.OnCheckLis
     }
 
     @Override
-    public void onCheck(CheckBox checkBox,boolean check) {
-        if(check){
+    public void onCheckedChanged(CompoundButton buttonView, boolean isCheckeded) {
+        if(isCheckeded){
             checkCount++;
         }else{
             checkCount--;

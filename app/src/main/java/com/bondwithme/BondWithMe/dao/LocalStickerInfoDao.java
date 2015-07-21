@@ -5,7 +5,6 @@ import android.text.TextUtils;
 
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
-import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.j256.ormlite.dao.Dao;
@@ -64,7 +63,7 @@ public class LocalStickerInfoDao {
             return;
         }
         try {
-            stickerInfo.setLoginUserId();
+            stickerInfo.setLoginUserId(MainActivity.getUser().getUser_id());
             QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
             queryBuilder.where().eq("loginUserId", MainActivity.getUser().getUser_id()).and().eq("path", stickerInfo.getPath());
             List<LocalStickerInfo> localList = queryBuilder.query();

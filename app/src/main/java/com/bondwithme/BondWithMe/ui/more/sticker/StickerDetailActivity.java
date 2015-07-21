@@ -1,12 +1,10 @@
 package com.bondwithme.BondWithMe.ui.more.sticker;
 
-import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -45,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 public class StickerDetailActivity extends BaseActivity {
     private String TAG = StickerDetailActivity.class.getSimpleName();
     Intent intent = null;
@@ -58,6 +55,7 @@ public class StickerDetailActivity extends BaseActivity {
     private int position = -1;
     public static final String ACTION_UPDATE = "ACTION_UPDATE_FROM_STICKER_DETAIL";
     int finished;
+    private final int UPDATE_PROGRESSBAR =1;
 
 
     @Override
@@ -157,11 +155,12 @@ public class StickerDetailActivity extends BaseActivity {
     private void initDownloadView() {
         List<LocalStickerInfo> data = new ArrayList<>();
         try {       //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
-            LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(this);
-            boolean hasSticker = dao.hasDownloadSticker(stickerGroupEntity.getPath());
-            if(hasSticker){
-                tvDownload.setText(getResources().getString(R.string.Downloaded));
-                tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
+            Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+            data = stickerDao.queryForEq("name",stickerGroupEntity.getName());
+            Log.i(TAG,"==========data.size============="+data.size());
+            if(data.size() > 0){
+                tvDownload.setText("Downloaded");
+                tvDownload.setBackgroundColor(getResources().getColor(R.color.default_unenable_item_bg));
                 tvDownload.setEnabled(false);
             }
         } catch (Exception e) {
@@ -193,6 +192,7 @@ public class StickerDetailActivity extends BaseActivity {
 
                     //插入sticker info
                     try {
+                        Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
                         LocalStickerInfo stickerInfo = new LocalStickerInfo();
                         stickerInfo.setName(stickerGroupEntity.getName());
                         stickerInfo.setPath(stickerGroupEntity.getPath());
@@ -201,12 +201,15 @@ public class StickerDetailActivity extends BaseActivity {
                         stickerInfo.setType(stickerGroupEntity.getType());
                         stickerInfo.setPosition(position);
                         LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
-                    } catch (Exception e) {
+                        Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
+
+                    } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
 
             }
+
             @Override
             public void onResult(String response) {
                 File zipFile = new File(target);
@@ -244,18 +247,8 @@ public class StickerDetailActivity extends BaseActivity {
         });
     }
 
-
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void initAdapter() {
         adapter = new StickerItemAdapter(this,data,stickerGroupEntity);
-
-//        gvSticker.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                return false;
-//            }
-//        });
-
         gvSticker.setAdapter(adapter);
 
     }

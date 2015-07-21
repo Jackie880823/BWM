@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.material.widget.CircularProgress;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
@@ -85,7 +85,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 
     private double latitude = -1000;
     private double longitude = -1000;
-    private ProgressBarCircularIndeterminate progressBar;
+    private CircularProgress progressBar;
 
     private static final int MAX_COUNT = 300;
 

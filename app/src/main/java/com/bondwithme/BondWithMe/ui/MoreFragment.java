@@ -13,10 +13,10 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.more.ArchiveActivity;
 import com.bondwithme.BondWithMe.ui.more.MoreSettingActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.widget.MyDialog;
-import com.bondwithme.BondWithMe.ui.more.ArchiveActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,7 +68,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         getViewById(R.id.btn_contact_us).setOnClickListener(this);
         getViewById(R.id.btn_terms).setOnClickListener(this);
         getViewById(R.id.btn_sign_out).setOnClickListener(this);
-//        getViewById(R.id.btn_archive).setOnClickListener(this);
+        getViewById(R.id.btn_archive).setOnClickListener(this);
 
 
         tv_num = getViewById(R.id.tv_num);
@@ -149,11 +149,11 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                 break;
             case R.id.btn_sticker_store:
                 goStickerStore();
-                Log.i("MoreFragment","==========goStickerStore========");
                 break;
-//            case R.id.btn_archive:
-//                goArchive();
-//                break;
+            case R.id.btn_archive:
+                goArchive();
+                break;
+
             case R.id.btn_about_us:
                 goAbout();
                 break;
@@ -178,7 +178,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                     myDialog.setButtonAccept(R.string.accept, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            myDialog.dismiss();
+                            myDialog.dismiss();
                             App.logout(getActivity());
                         }
                     });

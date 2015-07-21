@@ -19,7 +19,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.GridView;
@@ -29,11 +28,6 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.Dialog;
-import com.gc.materialdesign.widgets.ProgressDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.InviteGroupAdapter;
@@ -44,6 +38,11 @@ import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import android.widget.CheckBox;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,7 +67,7 @@ public class InviteMemberActivity extends BaseActivity {
     private List<FamilyMemberEntity> memberEntityList;
     private List<FamilyGroupEntity> groupEntityList;
 //    private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0x11;
     private InviteMemberAdapter memberAdapter;
     private InviteGroupAdapter groupAdapter;
@@ -200,8 +199,8 @@ public class InviteMemberActivity extends BaseActivity {
         etSearch = getViewById(R.id.et_search);
         memberEntityList = new ArrayList<>();
         groupEntityList = new ArrayList<>();
-        mProgressDialog = new ProgressDialog(mContext, getString(R.string.text_loading));
-        mProgressDialog.show();
+//        mProgressDialog = new ProgressDialog(mContext, getString(R.string.text_loading));
+//        mProgressDialog.show();
 
         memberAdapter = new InviteMemberAdapter(mContext, memberEntityList, selectMemberList);
         groupAdapter = new InviteGroupAdapter(mContext,groupEntityList, selectGroupList);
@@ -597,9 +596,9 @@ public class InviteMemberActivity extends BaseActivity {
                     public void onResult(String response) {
                         Gson gson = new GsonBuilder().create();
                         finishReFresh();
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             List<FamilyMemberEntity> memberList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
