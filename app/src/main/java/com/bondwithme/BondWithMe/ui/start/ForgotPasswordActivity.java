@@ -24,7 +24,7 @@ import com.bondwithme.BondWithMe.util.CountryCodeUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
-import com.gc.materialdesign.views.Button;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +54,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
     private TextView tvCountryCode;
     private TextView tvStartCountryCode;
     private EditText etPhoneNumber;
-    private Button brNext;
+    private PaperButton brNext;
     private RelativeLayout rlProgress;
 
     private String strCountryCode;

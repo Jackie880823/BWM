@@ -103,7 +103,7 @@ public class PathRelationshipActivity extends BaseActivity {
     @Override
     public void initView() {
         getDataEn();
-        if(Locale.getDefault().toString().equals("zh_CN")){
+        if (Locale.getDefault().toString().equals("zh_CN")) {
             isZh = true;
 //            data_Us = Arrays.asList(relationships);
             getDataZh();
@@ -168,7 +168,7 @@ public class PathRelationshipActivity extends BaseActivity {
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_PATH_RELATIONSHIP, params);
 
-        new HttpTools(PathRelationshipActivity.this).get(url, null,Tag, new HttpCallback() {
+        new HttpTools(PathRelationshipActivity.this).get(url, null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -187,23 +187,33 @@ public class PathRelationshipActivity extends BaseActivity {
                 pathList = gson.fromJson(response, new TypeToken<ArrayList<MemberPathEntity>>() {
                 }.getType());
 
-                for (int i = 0; i < pathList.size(); i++) {//关系列表
-                    ll[i].setVisibility(View.VISIBLE);
-                    VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-                    if(isZh){
-                        int positon = data_Us.indexOf(pathList.get(i).getRelationship());
-                        tvRelationships[i].setText(data_Zh.get(positon));
-                        tvRelationship.setText(tvRelationships[0].getText());
-                    } else {
-                        tvRelationships[i].setText(pathList.get(i).getRelationship());
-                        tvRelationship.setText(tvRelationships[0].getText());
+                if (pathList != null) {
+                    for (int i = 0; i < pathList.size(); i++) {//关系列表
+                        ll[i].setVisibility(View.VISIBLE);
+                        VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                        String relationship4En = pathList.get(i).getRelationship();
+                        /**wing modify for no relationship begin*/
+                        if (TextUtils.isEmpty(relationship4En)) {
+                            continue;
+                        }
+                        if (isZh) {
+                            int position = data_Us.indexOf(relationship4En);
+                            if (position != -1) {
+                                tvRelationships[i].setText(data_Zh.get(position));
+                                tvRelationship.setText(tvRelationships[0].getText());
+                            }
+                        } else {
+                            tvRelationships[i].setText(relationship4En);
+                            tvRelationship.setText(tvRelationships[0].getText());
+                        }
+                        /**wing modify end*/
+                        tvNames[i].setText(pathList.get(i).getMember_fullname());
                     }
-                    tvNames[i].setText(pathList.get(i).getMember_fullname());
-                }
 
-                for (int j = pathList.size(); j < 4; j++)//其他空位
-                {
-                    ll[j].setVisibility(View.INVISIBLE);
+                    for (int j = pathList.size(); j < 4; j++)//其他空位
+                    {
+                        ll[j].setVisibility(View.INVISIBLE);
+                    }
                 }
             }
 
@@ -263,20 +273,21 @@ public class PathRelationshipActivity extends BaseActivity {
         //设置应用为简体中文
         configuration.locale = Locale.SIMPLIFIED_CHINESE;
         getResources().updateConfiguration(configuration, null);
-        String [] ralationArrayZh = getResources().getStringArray(R.array.relationship_item);
+        String[] ralationArrayZh = getResources().getStringArray(R.array.relationship_item);
         data_Zh = Arrays.asList(ralationArrayZh);
         return data_Zh;
     }
 
-    private List<String> getDataEn(){
+    private List<String> getDataEn() {
         Configuration configuration = new Configuration();
         //设置应用为英文
         configuration.locale = Locale.US;
         getResources().updateConfiguration(configuration, null);
-        String [] ralationArrayUs = getResources().getStringArray(R.array.relationship_item);
+        String[] ralationArrayUs = getResources().getStringArray(R.array.relationship_item);
         data_Us = Arrays.asList(ralationArrayUs);
         return data_Us;
     }
+
     public void updateRelationship() {
         RequestInfo requestInfo = new RequestInfo();
 
@@ -292,7 +303,7 @@ public class PathRelationshipActivity extends BaseActivity {
         requestInfo.url = String.format(Constant.API_UPDATE_RELATIONSHIP_NICKNAME, MainActivity.getUser().getUser_id());
         requestInfo.jsonParam = jsonParamsString;
 
-        new HttpTools(PathRelationshipActivity.this).put(requestInfo,Tag, new HttpCallback() {
+        new HttpTools(PathRelationshipActivity.this).put(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 

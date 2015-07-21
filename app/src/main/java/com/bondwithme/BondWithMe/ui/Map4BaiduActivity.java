@@ -261,7 +261,7 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
             @Override
             public boolean onQueryTextSubmit(String queryText) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if(imm != null) {
+                if (imm != null) {
                     // 这将让键盘在所有的情况下都被隐藏，但是一般我们在点击搜索按钮后，输入法都会乖乖的自动隐藏的。
                     imm.hideSoftInputFromWindow(search_view.getWindowToken(), 0); // 输入法如果是显示状态，那么就隐藏输入法
                 }
@@ -272,7 +272,7 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
             @Override
             public boolean onQueryTextChange(String queryText) {
 
-                if(!TextUtils.isEmpty(queryText)) {
+                if (!TextUtils.isEmpty(queryText)) {
 
                     mSuggestionSearch.requestSuggestion((new SuggestionSearchOption()).keyword(queryText).city(city));
                 } else {
@@ -301,12 +301,14 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
                 center2myLoc(false);
             }
         });
-        if(!TextUtils.isEmpty(intent.getStringExtra(Constant.EXTRA_LOCATION_NAME))) {
-            hasSetLocation = true;
-            LatLng latLng = new LatLng(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
-            location_name = intent.getStringExtra(Constant.EXTRA_LOCATION_NAME);
-            center2myLoc(latLng, true);
-            addTarget(latLng, location_name);
+        if(!(-1000==intent.getDoubleExtra(Constant.EXTRA_LATITUDE,0)||(-1000==intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0))||TextUtils.isEmpty(intent.getStringExtra(Constant.EXTRA_LOCATION_NAME)))) {
+//            if (!TextUtils.isEmpty(intent.getStringExtra(Constant.EXTRA_LOCATION_NAME))) {
+                hasSetLocation = true;
+                LatLng latLng = new LatLng(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
+                location_name = intent.getStringExtra(Constant.EXTRA_LOCATION_NAME);
+                center2myLoc(latLng, true);
+                addTarget(latLng, location_name);
+//            }
         }
 
 

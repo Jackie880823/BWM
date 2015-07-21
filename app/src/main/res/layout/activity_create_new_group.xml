@@ -153,12 +153,12 @@
     <!--android:layout_marginRight="@dimen/_30dp" />-->
 
     <Button
+        android:id="@+id/cancel_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_35dp"
         android:text="@string/text_cancel"
         android:textSize="@dimen/_22dp"
         android:textColor="#ffffff"
-        android:id="@+id/cancel_button"
         android:layout_alignParentBottom="true"
         android:background="@drawable/btn_chat_send_bg"
         android:layout_marginBottom="@dimen/_30dp"

@@ -1,5 +1,8 @@
 package com.bondwithme.BondWithMe.ui;
 
+//import android.app.ProgressDialog;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,16 +10,15 @@ import android.text.TextUtils;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.InvitedUserAdapter;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ import java.util.List;
  */
 public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> implements InvitedUserAdapter.OperaListener {
 
-    private ProgressDialog progressDialog;
+//    private ProgressDialog progressDialog;
 
     public static InvitedTabFragment newInstance(String... params) {
 
@@ -63,7 +65,7 @@ public class InvitedTabFragment extends BaseFragment<InvitedStatusActivity> impl
     @Override
     public void initView() {
 
-        progressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
+//        progressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
 
         rvList = getViewById(R.id.rv_users);
 

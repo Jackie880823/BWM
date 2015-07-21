@@ -23,6 +23,7 @@ import java.util.List;
 
 public class BigDayActivity extends BaseActivity {
 
+    View mProgressDialog;
     private RecyclerView rvList;
     private BondAlertBigDayAdapter bondAlertBigDayAdapter;
     private List<BigDayEntity> data = new ArrayList<>();
@@ -61,6 +62,8 @@ public class BigDayActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        mProgressDialog = getViewById(R.id.rl_progress);
+        mProgressDialog.setVisibility(View.VISIBLE);
         rvList = getViewById(R.id.rvList);
         rvList.setLayoutManager(new LinearLayoutManager(this));
         initAdapter();
@@ -77,7 +80,7 @@ public class BigDayActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-
+                mProgressDialog.setVisibility(View.INVISIBLE);
             }
 
             @Override

@@ -1,9 +1,11 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -211,10 +213,19 @@ public class InformationPhoneActivity extends BaseActivity {
                                 AppTokenEntity tokenEntity = gson.fromJson(jsonObject.getString("token"), AppTokenEntity.class);
 
                                 if (userEntity != null ) {
-                                    Intent intent = new Intent(InformationPhoneActivity.this, PersonalPictureActivity.class);
-                                    intent.putExtra("user", userEntity);
-                                    intent.putExtra("token", tokenEntity);
-                                    startActivity(intent);
+//                                    Intent intent = new Intent(InformationPhoneActivity.this, PersonalPictureActivity.class);
+//                                    /**wing modified for clear activity stack*/
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                    intent.putExtra("user", userEntity);
+//                                    intent.putExtra("token", tokenEntity);
+//                                    startActivity(intent);
+
+                                    Intent intentToBeNewRoot = new Intent(InformationPhoneActivity.this, PersonalPictureActivity.class);
+                                    ComponentName cn = intentToBeNewRoot.getComponent();
+                                    Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+                                    mainIntent.putExtra("user", userEntity);
+                                    mainIntent.putExtra("token", tokenEntity);
+                                    startActivity(mainIntent);
                                 }
                                 else
                                 {

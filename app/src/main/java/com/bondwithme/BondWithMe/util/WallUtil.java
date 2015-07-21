@@ -36,6 +36,8 @@ public class WallUtil {
      */
     public static final String AT_MEMBER = "@%1$smembers";
 
+    private static Long lastClickTimeMills = 0L;
+
     private Context mContext;
     private WallViewClickListener mViewClickListener;
 
@@ -61,7 +63,7 @@ public class WallUtil {
         String strMember = "";
         if(tagMemberCount > 0) {
             strMember = String.format(mContext.getString(R.string.text_diary_content_at_member_desc), tagMemberCount);
-
+            LogUtil.d("WallUtil","setSpanContent================="+wall.getContent_group_id());
             // 文字特殊效果设置
             SpannableString ssMember = new SpannableString(strMember);
 
@@ -71,7 +73,12 @@ public class WallUtil {
                 public void onClick(View widget) {
                     if(mViewClickListener != null) {
                         Log.i(TAG, "onClick& mViewClickListener not null showMembers");
-                        mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
+                        long currentTime = System.currentTimeMillis();
+                        if(currentTime - lastClickTimeMills > 500) {
+                            // 部分手机会连续执行两次，500毫秒之内的连续执行被认为一次点击只执行一次点击事件
+                            lastClickTimeMills = currentTime;
+                            mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
+                        }
                     } else {
                         Log.i(TAG, "onClick& mViewClickListener do nothing");
                     }
@@ -97,7 +104,12 @@ public class WallUtil {
                 public void onClick(View widget) {
                     if(mViewClickListener != null) {
                         Log.i(TAG, "onClick& mViewClickListener not null showGroups");
-                        mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
+                        long currentTime = System.currentTimeMillis();
+                        if(currentTime - lastClickTimeMills > 500) {
+                            // 部分手机会连续执行两次，500毫秒之内的连续执行被认为一次点击只执行一次点击事件
+                            lastClickTimeMills = currentTime;
+                            mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
+                        }
                     } else {
                         Log.i(TAG, "onClick& mViewClickListener do nothing");
                     }

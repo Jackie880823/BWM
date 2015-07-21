@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
+import com.material.widget.CircularProgress;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
@@ -112,14 +112,14 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
         XmlPullParser parser = getResources().getXml(R.xml.progress_bar_style);
         AttributeSet attributes = Xml.asAttributeSet(parser);
-        ProgressBarCircularIndeterminate progress_bar = new ProgressBarCircularIndeterminate(this, attributes);
+        CircularProgress progress_bar = new CircularProgress(this, attributes);
 
         relativeLayout.addView(progress_bar);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) progress_bar.getLayoutParams();
         layoutParams.width = 100;
         layoutParams.height = 100;
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        progress_bar.setBackgroundColor(getResources().getColor(R.color.bg_progressBar));
+        progress_bar.setBackgroundColor(getResources().getColor(R.color.high_light_color));
 
         return relativeLayout;
     }
@@ -267,6 +267,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     }
 
     protected void showWaitting() {
-        ((ProgressBarCircularIndeterminate) getViewById(R.id.progressBar)).setVisibility(View.VISIBLE);
+        ((CircularProgress) getViewById(R.id.progressBar)).setVisibility(View.VISIBLE);
     }
 }

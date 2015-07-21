@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.util;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -19,9 +18,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -119,6 +116,22 @@ public class LocalImageLoader {
         Bitmap bitmap = null;
         try {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options);
+            String path = null;
+            Cursor c = context.getContentResolver().query(uri, null, null, null, null);
+            if(c != null) {
+                c.moveToFirst();
+                int idx = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                path = c.getString(idx);
+                c.close();
+            }
+
+            if(TextUtils.isEmpty(path)) {
+                path = uri.getPath();
+            }
+            int d = readPictureDegree(path);
+            if(d != 0) {
+                bitmap = rotaingImageView(d, bitmap);
+            }
         } catch(FileNotFoundException e) {
             return null;
         }
@@ -130,19 +143,21 @@ public class LocalImageLoader {
     }
 
     public static Bitmap loadBitmapFromFile(Context context, String pathName, int width, int height) {
+        Log.i(TAG, "loadBitmapFromFile& pathName: " + pathName);
         try {
             File file = new File(pathName);
             if(!file.exists()) {
                 return null;
             }
             // decode image size
-            BitmapFactory.Options bitmapTempOption = new BitmapFactory.Options();
+            Options bitmapTempOption = new Options();
             bitmapTempOption.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(new FileInputStream(file), null, bitmapTempOption);
 
             // Find the correct scale value. It should be the power of 2.
             //            final int REQUIRED_SIZE = 400;
-            int width_tmp = bitmapTempOption.outWidth, height_tmp = bitmapTempOption.outHeight;
+            int width_tmp = bitmapTempOption.outWidth;
+            int height_tmp = bitmapTempOption.outHeight;
             int scale = 1;
             while(true) {
                 if(width_tmp / 2 < width || height_tmp / 2 < height)
@@ -153,7 +168,7 @@ public class LocalImageLoader {
             }
 
             // decode with inSampleSize
-            BitmapFactory.Options bitmapOption = new BitmapFactory.Options();
+            Options bitmapOption = new Options();
             bitmapOption.inSampleSize = scale;
 
             try {
@@ -199,7 +214,7 @@ public class LocalImageLoader {
      * @param height
      *            需要的宽度
      * @return
-     * @throws java.io.FileNotFoundException
+     * @throws FileNotFoundException
      */
     //	public static Drawable loadDrawableFromUri(Context context, Uri uri,
     //			int width, int height) throws FileNotFoundException {
@@ -409,7 +424,7 @@ public class LocalImageLoader {
      *
      * @return
      */
-    public final static int caculateInSampleSize(BitmapFactory.Options options, int rqsW, int rqsH) {
+    public final static int caculateInSampleSize(Options options, int rqsW, int rqsH) {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
@@ -427,10 +442,10 @@ public class LocalImageLoader {
      * 压缩指定路径的图片，并得到图片对象
      *
      * @param path bitmap source path
-     * @return Bitmap {@link android.graphics.Bitmap}
+     * @return Bitmap {@link Bitmap}
      */
     public final static Bitmap compressBitmap(String path, int rqsW, int rqsH) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
+        final Options options = new Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
         options.inSampleSize = calculateInSampleSize(options, rqsW, rqsH);
@@ -450,12 +465,6 @@ public class LocalImageLoader {
      * @return
      */
     public final static String compressBitmap(Context context, String srcPath, int rqsW, int rqsH, boolean isDelSrc) {
-//        // 获取图片缓存目录
-//        String cacheFilePath = PicturesCacheUtil.getCacheFilePath(context);
-//        if(srcPath.contains(cacheFilePath)) {
-//            // 传入的图片目录包含缓存的目录说明图片是缓存图片，无需压缩返回当前图片路径
-//            return srcPath;
-//        }
 
         Bitmap bitmap;
         bitmap = compressBitmap(srcPath, rqsW, rqsH);
@@ -479,6 +488,7 @@ public class LocalImageLoader {
                     break;
                 bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
             }
+
             // Generate compressed image file
             FileOutputStream fos = new FileOutputStream(desPath);
             fos.write(os.toByteArray());
@@ -492,15 +502,6 @@ public class LocalImageLoader {
             e.printStackTrace();
         }
         return desPath;
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-    protected int sizeOf(Bitmap data) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
-            return data.getRowBytes() * data.getHeight();
-        } else {
-            return data.getByteCount();
-        }
     }
 
     /**
@@ -600,8 +601,10 @@ public class LocalImageLoader {
      * @return degree旋转的角度
      */
     public static int readPictureDegree(String path) {
+        if(TextUtils.isEmpty(path)){
+            return 0;
+        }
         int degree = 0;
-
         try {
             ExifInterface exifInterface = new ExifInterface(path);
             int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
@@ -694,28 +697,25 @@ public class LocalImageLoader {
         if(!TextUtils.isEmpty(miniThumbnailUri)) {
             //系统存有此图的略缩图
             Log.i(TAG, "getMiniThumbnailBitmap& miniThumbnailUri: " + miniThumbnailUri + " for uri: " + uri);
+
             thumbnail = LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbnailUri).getPath());
-        }
-        if(thumbnail == null) {
-            // 没有获取的缩略，使用原图
-            Bitmap sourceBitmap = BitmapFactory.decodeFile(path);
-            if(sourceBitmap == null) {
-                Log.i(TAG, "getMiniThumbnailBitmap& sourceBitmap is null");
-                return null;
-            }
-            // 略缩图
-            thumbnail = ThumbnailUtils.extractThumbnail(sourceBitmap, columnWidthHeight, columnWidthHeight);
         }
 
         if(thumbnail == null) {
-            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail is null. path: " + path);
-            return null;
-        } else {
-            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail not null. path: " + path);
-            // 转回角度
-            int rotation = readPictureDegree(path);
-            return LocalImageLoader.rotaingImageView(rotation, thumbnail);
+            // 没有获取的缩略，从原图加载缩略图
+            thumbnail = LocalImageLoader.loadBitmapFromFile(context, path, columnWidthHeight, columnWidthHeight);
         }
+        return thumbnail;
+
+        //        if(thumbnail == null) {
+        //            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail is null. path: " + path);
+        //            return null;
+        //        } else {
+        //            Log.i(TAG, "getMiniThumbnailBitmap& thumbnail not null. path: " + path);
+        //            // 转回角度
+        //            int rotation = readPictureDegree(path);
+        //            return LocalImageLoader.rotaingImageView(rotation, thumbnail);
+        //        }
 
 
     }

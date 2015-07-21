@@ -63,6 +63,8 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
     private List<ArchiveChatEntity> data = new ArrayList<>();
     private List<ArchiveChatEntity> searchData = new ArrayList<>();
 
+    private boolean isEtImport;
+
     public static ArchiveChatFragment newInstance(String... params) {
             return createInstance(new ArchiveChatFragment(),params);
     }
@@ -159,8 +161,11 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
             public void afterTextChanged(Editable s) {
                 String etImport = searchText.getText().toString().trim();
                 if (TextUtils.isEmpty(etImport)){
+                    isEtImport = true;
                     rvList.setAdapter(adapter);
 //                    adapter.setDefaultData();
+                }else {
+                    isEtImport = false;
                 }
             }
         });
@@ -286,14 +291,16 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
                 try {
                     searchData = gson.fromJson(response, new TypeToken<ArrayList<ArchiveChatEntity>>() {
                     }.getType());
-                    if(isRefresh) {
-                        startIndex = searchData.size();
-                        currentPage = 1;
-                        finishReFresh();
-                        initSearchAdapter();
-                    } else {
-                        startIndex += searchData.size();
-                        searchAdapter.add(searchData);
+                    if (!isEtImport){
+                        if(isRefresh) {
+                            startIndex = searchData.size();
+                            currentPage = 1;
+                            finishReFresh();
+                            initSearchAdapter();
+                        } else {
+                            startIndex += searchData.size();
+                            searchAdapter.add(searchData);
+                        }
                     }
                     if(data.size() > 0){
                         swipeRefreshLayout.setVisibility(View.VISIBLE);

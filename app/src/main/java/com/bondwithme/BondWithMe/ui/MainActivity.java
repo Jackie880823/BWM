@@ -30,7 +30,7 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
-import com.gc.materialdesign.widgets.SnackBar;
+import com.material.widget.SnackBar;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -165,8 +165,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onStop() {
-        super.onStop();
         PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
+        super.onStop();
     }
 
     public static UserEntity getUser() {
@@ -397,7 +397,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         //注册广播接收器
         IntentFilter filter = new IntentFilter();
-        filter.addAction("refresh");
+        filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+//        filter.addAction("refresh");
         registerReceiver(mReceiver, filter);
     }
 
@@ -646,12 +647,16 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //            startActivity(intent);
 //    }
 
-    /**更新UI的广播接收器*/
+    /**
+     * 更新UI的广播接收器
+     */
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals("refresh")){
-                tabPagerAdapter.notifyDataSetChanged();
+            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
+                Intent reintent = getIntent();
+                finish();
+                startActivity(reintent);
             }
         }
     };

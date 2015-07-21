@@ -1,29 +1,43 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.KeyEvent;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.adapter.PreviewFragment;
+import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class SelectPhotosActivity extends BaseActivity {
 
+    private static final String TAG = SelectPhotosActivity.class.getSimpleName();
+
     public static final String IMAGES_STR = "images";
 
     private SelectPhotosFragment fragment;
-    private List<Uri> mSelectedImages = new ArrayList();
+    private ArrayList<Uri> mSelectedImages = new ArrayList();
     private boolean multi;
     private int residue;
+    /**
+     * 当前是否为浏览状态标识位
+     */
+    private boolean isPreview = false;
+    private Uri currentUri;
 
-    private SelectPhotosFragment.SelectImageUirChangeListener listener = new SelectPhotosFragment.SelectImageUirChangeListener() {
+    private SelectImageUirChangeListener listener = new SelectImageUirChangeListener() {
+
+        PreviewFragment previewFragment;
 
         /**
          * 添加图片{@code imageUri}到选择列表
@@ -39,7 +53,11 @@ public class SelectPhotosActivity extends BaseActivity {
             if(multi) {
                 if(mSelectedImages.size() < residue) {
                     // 没有超过限制的图片数量可以继续添加并返回添加结果的返回值
-                    result = mSelectedImages.add(imageUri);
+                    if(mSelectedImages.contains(imageUri)) {
+                        result = true;
+                    } else {
+                        result = mSelectedImages.add(imageUri);
+                    }
                 } else {
                     // 提示用户添加的图片超过限制的数量
                     MessageUtil.showMessage(SelectPhotosActivity.this, String.format(SelectPhotosActivity.this.getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
@@ -65,7 +83,11 @@ public class SelectPhotosActivity extends BaseActivity {
         @Override
         public boolean removeUri(Uri imageUri) {
             // 返回删除结果成功与否的值
-            return mSelectedImages.remove(imageUri);
+            if(mSelectedImages.contains(imageUri)) {
+                return mSelectedImages.remove(imageUri);
+            } else {
+                return true;
+            }
         }
 
         /**
@@ -87,6 +109,21 @@ public class SelectPhotosActivity extends BaseActivity {
         public void onDrawerClose(Drawable drawable) {
             leftButton.setImageDrawable(drawable);
         }
+
+        @Override
+        public void preview(Uri uri) {
+            currentUri = uri;
+            Log.i(TAG, "preview& uri: " + uri.toString());
+            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(getApplicationContext(), uri);
+            if(previewFragment == null) {
+                previewFragment = PreviewFragment.newInstance("");
+            }
+            changeFragment(previewFragment, true);
+            previewFragment.setBitmap(bitmap);
+            isPreview = true;
+            leftButton.setImageResource(R.drawable.back_normal);
+        }
+
     };
 
     /**
@@ -113,7 +150,12 @@ public class SelectPhotosActivity extends BaseActivity {
 
     @Override
     protected void titleLeftEvent() {
-        fragment.changeDrawer();
+        if(isPreview) {
+            changeFragment(fragment, false);
+            isPreview = false;
+        } else {
+            fragment.changeDrawer();
+        }
     }
 
     /**
@@ -121,25 +163,34 @@ public class SelectPhotosActivity extends BaseActivity {
      */
     @Override
     protected void titleRightEvent() {
-        if(mSelectedImages != null && mSelectedImages.size() > 0) {
-            Intent intent = new Intent();
-            intent.putParcelableArrayListExtra(IMAGES_STR, (ArrayList<? extends Parcelable>) mSelectedImages);
-            setResult(RESULT_OK, intent);
+        if(isPreview) {
+            changeFragment(fragment, false);
+            if(!mSelectedImages.contains(currentUri)) {
+                listener.addUri(currentUri);
+            }
+            isPreview = false;
+        } else {
+            if(mSelectedImages != null && mSelectedImages.size() > 0) {
+                Intent intent = new Intent();
+                intent.putParcelableArrayListExtra(IMAGES_STR, mSelectedImages);
+                setResult(RESULT_OK, intent);
+            }
+            finish();
         }
-        finish();
     }
 
     @Override
     protected Fragment getFragment() {
-        fragment = SelectPhotosFragment.newInstance("");
+        fragment = SelectPhotosFragment.newInstance(mSelectedImages, "");
         return fragment;
     }
 
     @Override
     public void initView() {
-        // 是否为同时添加多张图片
         Intent intent = getIntent();
+        // 是否为同时添加多张图片
         multi = intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+        // 总共需要添加的图片数量
         residue = intent.getIntExtra(TabPictureFragment.RESIDUE, 10);
         fragment.setSelectImageUirListener(listener);
     }
@@ -152,5 +203,44 @@ public class SelectPhotosActivity extends BaseActivity {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.i(TAG, "onKeyDown& " + keyCode);
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            if(isPreview) {
+                changeFragment(fragment, false);
+                isPreview = false;
+                Log.i(TAG, "onKeyDown& back is false");
+                return false;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            Log.i(TAG, "dispatchKeyEvent& back");
+            if(isPreview) {
+                Log.i(TAG, "dispatchKeyEvent& back is false");
+                changeFragment(fragment, false);
+                isPreview = false;
+                return false;
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected void changeFragment(Fragment f, boolean init) {
+        super.changeFragment(f, init);
+        if(f instanceof SelectPhotosFragment) {
+            Resources resources = getResources();
+            DrawerArrowDrawable drawerArrowDrawable = new DrawerArrowDrawable(resources);
+            drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.drawer_arrow_color));
+            leftButton.setImageDrawable(drawerArrowDrawable);
+        }
     }
 }

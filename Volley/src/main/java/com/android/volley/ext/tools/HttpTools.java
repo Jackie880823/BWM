@@ -27,7 +27,6 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -489,7 +488,7 @@ public class HttpTools{
         sRequestQueue.add(request);
     }
 
-    public void cancelRequestByTag(Objects tag){
+    public void cancelRequestByTag(Object tag){
         if (sRequestQueue != null) {
             sRequestQueue.cancelAll(tag);
         }
