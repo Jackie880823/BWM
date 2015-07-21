@@ -198,7 +198,7 @@
                         android:layout_width="@dimen/default_small_button_width_height"
                         android:layout_height="@dimen/default_small_button_width_height"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/more_sticket_store" />
+                        android:src="@drawable/stickies_icon" />
                 </RelativeLayout>
 
                 <TextView

@@ -152,6 +152,18 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
     }
 
     /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        // 取消获取群组或者用户列表的网络请求
+        new HttpTools(getActivity()).cancelRequestByTag(GET_DETAIL);
+    }
+
+    /**
      * Callback method to be invoked when an item in this AdapterView has
      * been clicked.
      * <p/>

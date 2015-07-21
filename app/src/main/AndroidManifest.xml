@@ -155,6 +155,7 @@
         </activity>
 
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
+        <!--android:launchMode="singleInstance"  此Activity的单例模式慎，会与其它Activity完全独立使用不同的上下文资源，有导致资源、数据无法传递的危险-->
         <activity
             android:name=".ui.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
