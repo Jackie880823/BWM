@@ -507,8 +507,42 @@
     <string name="action_invitation_successful">邀请发送成功</string>
     <string name="log_out">你是否确定登出？</string>
     <string name="text_add_group_photo">添加照片</string>
-
     <string name="text_recorder_stickies">Reorder stickies in the chat page</string>
     <string name="text_sort">Sort</string>
+
+
+    <string name="text_start_me_life_family">我，我的生活，我的家庭</string>
+    <string name="text_start_phone_number">手机号</string>
+    <string name="text_start_password">密码</string>
+    <string name="text_start_username">用户名</string>
+    <string name="text_start_log_in">登录</string>
+    <string name="text_start_sign_up">注册</string>
+    <string name="text_start_terms"><Data><![CDATA[ <b>By signing up now mean you agreed with our <font color="#0087FF">Terms & Conditions</font></b> ]]></Data></string>
+    <string name="text_start_or_register_with">或注册使用</string>
+    <string name="text_start_forget_password">忘记密码?</string>
+    <string name="text_start_or_log_in_with">或登录使用</string>
+    <string name="text_start_least5_prompt">至少五位</string>
+    <string name="text_start_enter_code">验证码</string>
+    <string name="text_start_code">区号</string>
+    <string name="text_start_phone_number_exist">手机号已被使用.</string>
+    <string name="text_start_username_exist">用户名已被使用.</string>
+    <string name="text_start_verification_prompt">你的验证码将发送到：</string>
+    <string name="text_start_verification_time_prompt">SMS will arrive in %s seconds.</string>
+    <string name="text_start_verification_resend_code">重新获取.</string>
+    <string name="text_start_next">下一步</string>
+    <string name="title_start_details">详情</string>
+    <string name="title_start_Verification">验证</string>
+    <string name="title_start_forgot_password">忘记密码</string>
+    <string name="text_start_detail_first_name_prompt">First name will be shown as Display Name.</string>
+    <string name="text_start_detail_compulsory_field_error">必填资料.</string>
+    <string name="text_start_phone_number_required">该手机号将用来申请验证码.</string>
+    <string name="text_start_fail_verify_code">资料有误，请再次尝试.</string>
+    <string name="text_start_new_password">新密码</string>
+    <string name="text_start_re_enter_password">再次输入新密码</string>
+    <string name="text_start_password_reset">修改密码</string>
+    <string name="text_start_successful">成功!</string>
+    <string name="facebook_app_id">802726666512653</string>
+    <string name="text_start_third_party_prompt">输入你的手机号确认你的身份.</string>
+    <string name="title_start_select_account">账号选择</string>
 
 </resources>
