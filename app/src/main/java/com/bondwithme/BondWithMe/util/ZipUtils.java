@@ -118,27 +118,6 @@ public class ZipUtils {
             if (zipEntry.isDirectory()) {
                 file = new File(outputDirectory + File.separator + zipEntry.getName());
                 file.mkdir();
-                String pathname = zipEntry.getName();
-                if (pathname.startsWith("Sticker/")) {
-                    try {
-                        pathname = pathname.substring(pathname.indexOf("/") + 1);
-                        if (!TextUtils.isEmpty(pathname)) {
-                            LocalStickerInfo stickerInfo = new LocalStickerInfo();
-                            if (pathname.endsWith(File.separator)) {
-                                pathname = pathname.substring(0, pathname.lastIndexOf(File.separator));
-                            }
-                            stickerInfo.setName(pathname);
-                            stickerInfo.setPath(pathname);
-                            stickerInfo.setSticker_name("");
-                            stickerInfo.setVersion("1");
-                            stickerInfo.setType("");
-//                            stickerInfo.setPosition(1);
-                            LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
             } else {
                 //如果是文件
                 file = new File(outputDirectory + File.separator + zipEntry.getName());
@@ -163,13 +142,13 @@ public class ZipUtils {
         stickerInfo.setSticker_name("1_B");
         stickerInfo.setVersion("1");
 
-        if (zipFileName.contains("Bara-Bara_Na")){
+        if (zipFileName.contains("Raya_Greeting")) {
             stickerInfo.setType(".png");
-            stickerInfo.setOrder(System.currentTimeMillis());
-        }else if (zipFileName.contains("A_day_life_of_Ping")){
-            stickerInfo.setOrder(System.currentTimeMillis());
+            stickerInfo.setOrder(System.currentTimeMillis() - 3000L);
+        } else if (zipFileName.contains("Eggplant")) {
+            stickerInfo.setOrder(System.currentTimeMillis() - 1500L);
             stickerInfo.setType(".gif");
-        }else if (zipFileName.contains("Baby_Trunky")){
+        } else if (zipFileName.contains("LittleGG")) {
             stickerInfo.setOrder(System.currentTimeMillis());
             stickerInfo.setType(".gif");
         }

@@ -32,6 +32,7 @@ import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.material.widget.SnackBar;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -329,16 +330,13 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 public void run() {
                     super.run();
                     try {
-                        String filePath = "Sticker.zip";
-                        ZipUtils.unZip(MainActivity.this, filePath, FileUtil.getSavePath(MainActivity.this, false).getAbsolutePath());
-//                        List<String> pathList = FileUtil.getAllFilePathsFromAssets(MainActivity.this, "stickers");
-//                        if (null != pathList) {
-//                            for (String string : pathList) {
-//                                String filePath = "stickers" + File.separator + string;
-////                                ZipUtils.unZip(MainActivity.this, filePath, STICKERS_NAME);
-//                                ZipUtils.unZip(MainActivity.this, filePath, FileUtil.getSavePath(MainActivity.this, false).getAbsolutePath());
-//                            }
-//                        }
+                        List<String> pathList = FileUtil.getAllFilePathsFromAssets(MainActivity.this, "stickers");
+                        if (null != pathList) {
+                            for (String string : pathList) {
+                                String filePath = "stickers" + File.separator + string;
+                                ZipUtils.unZip(MainActivity.this, filePath, STICKERS_NAME);
+                            }
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
