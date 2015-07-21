@@ -110,8 +110,8 @@
                 android:gravity="center">
                     <CheckBox
                         android:id="@+id/cb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        style="@style/checkbox_default"
+                        />
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -15,16 +15,15 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.gc.materialdesign.widgets.ProgressDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.AlbumDetailAdapter;
 import com.bondwithme.BondWithMe.entity.AlbumPhotoEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
@@ -46,7 +45,7 @@ public class AlbumDetailActivity extends BaseActivity {
     private String memberId;
     private String fileId;
     private int startIndex = 0;
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0X11;
     private AlbumDetailAdapter albumDetailAdapter;
     private String total;
@@ -136,8 +135,8 @@ public class AlbumDetailActivity extends BaseActivity {
         imageView = getViewById(R.id.album_image_view);
         recyclerView = getViewById(R.id.album_recycler_view);
         pic_num = getViewById(R.id.pic_num);
-        mProgressDialog = new ProgressDialog(mContext, getString(R.string.text_loading));
-        mProgressDialog.show();
+//        mProgressDialog = new ProgressDialog(mContext, getString(R.string.text_loading));
+//        mProgressDialog.show();
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -250,9 +249,9 @@ public class AlbumDetailActivity extends BaseActivity {
 
                     @Override
                     public void onResult(String response) {
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
                         if (isPullData) {
                             startIndex++;
                             isPullData = false;
@@ -275,16 +274,16 @@ public class AlbumDetailActivity extends BaseActivity {
 
                     @Override
                     public void onError(Exception e) {
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
                     }
 
                     @Override
                     public void onCancelled() {
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
                     }
 
                     @Override

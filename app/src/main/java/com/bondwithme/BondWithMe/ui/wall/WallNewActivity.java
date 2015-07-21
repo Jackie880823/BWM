@@ -70,12 +70,6 @@ public class WallNewActivity extends BaseActivity {
 
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.i(TAG, "onKeyDown& keyCode: " + keyCode);
-        return super.onKeyDown(keyCode, event);
-    }
-
     private boolean banBack;
 
     @Override

@@ -11,7 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -20,9 +20,6 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -33,6 +30,9 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.util.MslToast;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +61,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     private ImageView ivBottomRight;
     private TextView tvName1;
     private TextView tvId1;
-    private CheckBox ibMiss;
+    private ImageButton ibMiss;
     private LinearLayout llViewProfile;
 
     private RelativeLayout rlPathRelationship;
@@ -133,7 +133,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlAlbumGallery = getViewById(R.id.rl_album_gallery);
         rlWallPosting = getViewById(R.id.rl_wall_posting);
         btnSendMessage = getViewById(R.id.btn_message);
-        ibMiss.setChecked(true);
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,7 +179,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         ibMiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ibMiss.setChecked(true);
                 if (userEntity != null) {
                     getHasMiss();
                 }

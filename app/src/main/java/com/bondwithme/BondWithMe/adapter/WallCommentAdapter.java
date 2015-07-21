@@ -26,6 +26,7 @@ import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
+import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 
 import java.io.File;
 import java.io.IOException;
@@ -212,7 +213,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         CircularNetworkImage civ_comment_owner_head;
         TextView tv_comment_owner_name;
-        TextView tv_comment_content;
+        FreedomSelectionTextView tv_comment_content;
         TextView tv_agree_count;
         ImageButton iv_agree;
         ImageButton btn_comment_del;
@@ -223,7 +224,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public VHItem(View itemView) {
             super(itemView);
             civ_comment_owner_head = (CircularNetworkImage) itemView.findViewById(R.id.civ_comment_owner_head);
-            tv_comment_content = (TextView) itemView.findViewById(R.id.tv_comment_content);
+            tv_comment_content = (FreedomSelectionTextView) itemView.findViewById(R.id.tv_comment_content);
             tv_comment_owner_name = (TextView) itemView.findViewById(R.id.tv_comment_owner_name);
             comment_date = (TextView) itemView.findViewById(R.id.comment_date);
             tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);

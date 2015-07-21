@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -7,7 +8,6 @@ import android.webkit.WebView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.bondwithme.BondWithMe.R;
 
 import org.json.JSONException;
@@ -17,7 +17,7 @@ public class NewsInfoActivity extends BaseActivity {
 
     WebView webView;
     private String newUrl;
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
 
     @Override
     public int getLayout() {
@@ -54,10 +54,10 @@ public class NewsInfoActivity extends BaseActivity {
     @Override
     public void initView() {
         webView = getViewById(R.id.webView);
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
-        }
-        mProgressDialog.show();
+//        if (mProgressDialog == null) {
+//            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
+//        }
+//        mProgressDialog.show();
         //begin
         newUrl = getIntent().getStringExtra("newUrl");
         //end
@@ -73,7 +73,7 @@ public class NewsInfoActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
             }
 
             @Override

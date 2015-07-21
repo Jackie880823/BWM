@@ -33,7 +33,6 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter implements View
 	public Fragment getItem(int position) {
 		return fragments.get(position);
 	}
-
 	@Override
 	public int getCount() {
 		return fragments.size();
@@ -100,4 +99,5 @@ public class MyFragmentPagerAdapter extends FragmentPagerAdapter implements View
 		return POSITION_NONE;
 	}
 
+	
 }

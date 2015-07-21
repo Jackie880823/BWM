@@ -82,20 +82,17 @@
             <!--android:layout_marginTop="@dimen/default_view_margin"-->
             <!--android:text="@string/text_start_log_in" />-->
 
-        <com.gc.materialdesign.views.ButtonRectangle
+        <com.material.widget.PaperButton
             android:id="@+id/br_log_in"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_large_size"
-            android:text="@string/text_start_log_in"
+            style="@style/paper_button_style"
+            app:paper_text="@string/text_start_log_in"
+            app:paper_color="@color/btn_bg_color_green_normal"
             android:layout_below="@+id/rl_password"
             android:layout_marginTop="@dimen/default_view_margin"
             android:layout_marginLeft="@dimen/default_view_margin"
             android:layout_marginRight="@dimen/default_view_margin"
-            app:rippleSpeed="50"
-            android:background="@color/btn_bg_color_green_normal"
-            app:rippleColor="@color/btn_gradient_color_green_press"
-            app:clickAfterRipple="true"/>
+            />
 
 
         <TextView
@@ -136,7 +133,8 @@
                                 android:id="@+id/iv_username"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/sign_in_username" />
+                                android:src="@drawable/sign_in_username"
+                                />
 
                             <TextView
                                 style="@style/tv_start_light_small"

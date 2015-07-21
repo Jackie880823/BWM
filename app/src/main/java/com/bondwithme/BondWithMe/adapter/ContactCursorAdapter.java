@@ -8,10 +8,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
-import com.gc.materialdesign.views.CheckBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class ContactCursorAdapter extends CursorRecyclerViewAdapter<ContactCurso
                 public boolean onTouch(View v, MotionEvent event) {
                     if(event.getAction()==MotionEvent.ACTION_UP) {
                         try {
-                            if (cb_selector.isCheck()) {
+                            if (cb_selector.isChecked()) {
                                 selectContactIds.remove(getAdapterPosition());
                             } else {
                                 selectContactIds.add(getAdapterPosition());

@@ -47,6 +47,7 @@ public class ArchiveGroupChatActivity extends BaseActivity {
         Intent intent = new Intent(ArchiveGroupChatActivity.this, GroupSettingActivity.class);
         intent.putExtra("groupId", group_id);
         intent.putExtra("groupName", group_name);
+        intent.putExtra("groupType",1);
         startActivity(intent);
     }
 

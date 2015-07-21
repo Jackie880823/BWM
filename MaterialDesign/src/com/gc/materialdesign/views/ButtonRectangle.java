@@ -73,7 +73,6 @@ public class ButtonRectangle extends Button {
 //		}
 
 
-
 		// Set text button
 		String text = null;
 		int textResource = attrs.getAttributeResourceValue(ANDROIDXML,"text",-1);

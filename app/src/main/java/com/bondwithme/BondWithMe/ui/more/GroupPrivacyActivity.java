@@ -8,14 +8,13 @@ import android.widget.LinearLayout;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.views.CheckBox;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import android.widget.CheckBox;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,9 +85,9 @@ public class GroupPrivacyActivity extends BaseActivity {
 
         Map<String, String> params = new HashMap<>();
 
-        params.put("recommend_me",(cbTO.isCheck()?"1":"0"));
-        params.put("recommend_others",(cbTM.isCheck()?"1":"0"));
-        params.put("group_add", (cbGC.isCheck() ? "1" : "0"));
+        params.put("recommend_me",(cbTO.isChecked()?"1":"0"));
+        params.put("recommend_others",(cbTM.isChecked()?"1":"0"));
+        params.put("group_add", (cbGC.isChecked() ? "1" : "0"));
 
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);

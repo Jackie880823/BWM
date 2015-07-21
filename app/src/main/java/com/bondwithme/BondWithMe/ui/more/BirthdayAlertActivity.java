@@ -8,14 +8,13 @@ import android.widget.LinearLayout;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.views.CheckBox;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import android.widget.CheckBox;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -161,10 +160,10 @@ public class BirthdayAlertActivity extends BaseActivity {
 
         Map<String, String> params = new HashMap<>();
 
-        params.put("dob_alert_1",(dob_alert_1.isCheck()?"1":"0"));
-        params.put("dob_alert_3",(dob_alert_3.isCheck()?"1":"0"));
-        params.put("dob_alert_7",(dob_alert_7.isCheck()?"1":"0"));
-        params.put("dob_alert_30",(dob_alert_30.isCheck()?"1":"0"));
+        params.put("dob_alert_1",(dob_alert_1.isChecked() ? "1":"0"));
+        params.put("dob_alert_3",(dob_alert_3.isChecked() ? "1":"0"));
+        params.put("dob_alert_7",(dob_alert_7.isChecked() ? "1":"0"));
+        params.put("dob_alert_30",(dob_alert_30.isChecked() ? "1":"0"));
 
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);

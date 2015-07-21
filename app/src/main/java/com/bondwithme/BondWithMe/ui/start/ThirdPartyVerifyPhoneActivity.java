@@ -25,7 +25,7 @@ import com.bondwithme.BondWithMe.util.CountryCodeUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.facebook.login.LoginManager;
-import com.gc.materialdesign.views.Button;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +53,7 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
     private TextView tvStartCountryCode;
     private EditText etPhoneNumber;
 
-    private Button brNext;
+    private PaperButton brNext;
     private RelativeLayout rlProgress;
 
     private FaceBookUserEntity faceBookUserEntity;

@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center">
-            <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+            <com.material.widget.CircularProgress
                 android:id="@+id/gv_progress_bar"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
