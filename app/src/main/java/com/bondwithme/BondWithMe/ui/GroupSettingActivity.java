@@ -86,7 +86,7 @@ public class GroupSettingActivity extends BaseActivity {
     protected void initBottomBar() {
 
     }
-//    @Override
+    //    @Override
 //    public void finish() {
 //        Intent intent = new Intent();
 //        intent.putExtra("groupName", tvName.getText().toString());
