@@ -198,6 +198,12 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     private TextView emptyGroupMessageTv;
     private String TAG;
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        getData(0);
+        getDataGroup(0);
+    }
 
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
@@ -274,7 +280,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                 }
             }
         });
-        getData(0);
+//        getData(0);
 
         mLists.add(userView);
         View groupView = LayoutInflater.from(mContext).inflate(R.layout.message_list_view_layout, null);
@@ -346,12 +352,12 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                 }
             }
         });
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getDataGroup(0);
-            }
-        }, 1500);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                getDataGroup(0);
+//            }
+//        }, 1500);
         mLists.add(groupView);
         return mLists;
     }
@@ -486,12 +492,18 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     }
 
     private void showGroupEmptyView() {
+        if (groupRefreshLayout.getVisibility() == View.VISIBLE) {
+            groupRefreshLayout.setVisibility(View.GONE);
+        }
         emptyGroupMessageLinear.setVisibility(View.VISIBLE);
         emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
         emptyGroupMessageTv.setText("");
     }
 
     private void hideGroupEmptyView() {
+        if (groupRefreshLayout.getVisibility() == View.GONE) {
+            groupRefreshLayout.setVisibility(View.VISIBLE);
+        }
         emptyGroupMessageLinear.setVisibility(View.GONE);
     }
 
@@ -581,12 +593,18 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     }
 
     private void showMemberEmptyView() {
+        if (userRefreshLayout.getVisibility() == View.VISIBLE) {
+            userRefreshLayout.setVisibility(View.GONE);
+        }
         emptyMemberMessageLinear.setVisibility(View.VISIBLE);
         emptyMemberMessageIv.setImageResource(R.drawable.message_member_empty);
         emptyMemberMessageTv.setText("");
     }
 
     private void hideMemberEmptyView() {
+        if (userRefreshLayout.getVisibility() == View.GONE) {
+            userRefreshLayout.setVisibility(View.VISIBLE);
+        }
         emptyMemberMessageLinear.setVisibility(View.GONE);
     }
 

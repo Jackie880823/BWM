@@ -25,8 +25,6 @@ import java.util.zip.ZipInputStream;
  */
 public class ZipUtils {
 
-    private final String TAG = "ZipUtils";
-
     /**
      * 解压缩功能.
      * 将zipFile文件解压到folderPath目录下.
@@ -134,7 +132,7 @@ public class ZipUtils {
                             stickerInfo.setSticker_name("");
                             stickerInfo.setVersion("1");
                             stickerInfo.setType("");
-                            stickerInfo.setPosition(1);
+//                            stickerInfo.setPosition(1);
                             LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
                         }
                     } catch (Exception e) {
@@ -156,13 +154,27 @@ public class ZipUtils {
             zipEntry = zipInputStream.getNextEntry();
         }
         zipInputStream.close();
-//        LocalStickerInfo stickerInfo = new LocalStickerInfo();
-//        stickerInfo.setName(zipFileName);
-//        stickerInfo.setPath(zipFileName);
-//        stickerInfo.setSticker_name("");
-//        stickerInfo.setVersion("1");
-//        stickerInfo.setType("");
-//        stickerInfo.setPosition(1);
-//        LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
+        LocalStickerInfo stickerInfo = new LocalStickerInfo();
+        if (zipFileName.contains(File.separator)) {
+            zipFileName = zipFileName.substring(0, zipFileName.indexOf(File.separator));
+        }
+        stickerInfo.setName(zipFileName);
+        stickerInfo.setPath(zipFileName);
+        stickerInfo.setSticker_name("1_B");
+        stickerInfo.setVersion("1");
+
+        if (zipFileName.contains("Bara-Bara_Na")){
+            stickerInfo.setType(".png");
+            stickerInfo.setOrder(System.currentTimeMillis());
+        }else if (zipFileName.contains("A_day_life_of_Ping")){
+            stickerInfo.setOrder(System.currentTimeMillis());
+            stickerInfo.setType(".gif");
+        }else if (zipFileName.contains("Baby_Trunky")){
+            stickerInfo.setOrder(System.currentTimeMillis());
+            stickerInfo.setType(".gif");
+        }
+
+        LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
+
     }
 }

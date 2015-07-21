@@ -153,7 +153,6 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
             case R.id.btn_archive:
                 goArchive();
                 break;
-
             case R.id.btn_about_us:
                 goAbout();
                 break;
@@ -165,7 +164,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                 break;
             case R.id.btn_sign_out:
                 if (myDialog == null) {
-                    myDialog = new MyDialog(getActivity(), R.string.text_tips_title, R.string.log_out);
+                    myDialog = new MyDialog(getActivity(), R.string.text_tips_title, R.string.msg_ask_exit_app);
                     myDialog.setCanceledOnTouchOutside(false);
                     myDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
                         @Override

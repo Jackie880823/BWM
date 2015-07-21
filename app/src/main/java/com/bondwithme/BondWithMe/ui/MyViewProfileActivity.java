@@ -97,11 +97,11 @@ public class MyViewProfileActivity extends BaseActivity {
     /**
      * 头像缓存文件名称
      */
-    public final static String CACHE_PIC_NAME = "head_cache.png";
+    public final static String CACHE_PIC_NAME = "head_cache";
     /**
      * 临时文件用户裁剪
      */
-    public String CACHE_PIC_NAME_TEMP ;
+    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
 
     @Override
     public int getLayout() {
@@ -701,6 +701,4 @@ public class MyViewProfileActivity extends BaseActivity {
 //        }
         super.onDestroy();
     }
-
-
 }

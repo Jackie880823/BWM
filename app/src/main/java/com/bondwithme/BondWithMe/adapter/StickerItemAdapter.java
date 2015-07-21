@@ -112,11 +112,11 @@ public class StickerItemAdapter extends BaseAdapter{
                 popupBigSticker.setFocusable(true);
 
                 if ((position + 1) % 3 == 1) {
-                    popupBigSticker.showAsDropDown(v, 0, -450);
+                    popupBigSticker.showAsDropDown(v, 0, -400);
                 } else if ((position + 1) % 3 == 2) {
-                    popupBigSticker.showAsDropDown(v, -60, -450);
+                    popupBigSticker.showAsDropDown(v, -60, -400);
                 } else if ((position + 1) % 3 == 0) {
-                    popupBigSticker.showAsDropDown(v, -110, -450);
+                    popupBigSticker.showAsDropDown(v, -110, -400);
                 }
                 return false;
             }

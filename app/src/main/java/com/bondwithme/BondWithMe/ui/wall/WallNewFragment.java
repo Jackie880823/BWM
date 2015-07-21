@@ -493,9 +493,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     }
 
-    private boolean hasPicContent;
-    private boolean hasTextContent;
-    private String loc_type;
+    boolean hasPicContent;
+    boolean hasTextContent;
+    String loc_type;
 
     private void submitWall() {
         hasTextContent = false;

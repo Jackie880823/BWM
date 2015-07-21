@@ -1,1 +1,1 @@
-include ':app', ':Volley', ':PhotoView', ':mupdflibrary', ':MaterialWidget'
+include ':app', ':Volley', ':PhotoView', ':mupdflibrary', ':MaterialWidget',':facebook'

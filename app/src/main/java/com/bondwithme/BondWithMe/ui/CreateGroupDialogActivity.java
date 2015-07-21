@@ -425,6 +425,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
         member_num = getViewById(R.id.member_num);
         ivGroupPic = getViewById(R.id.creategroup_imageview);
         etGroupName = getViewById(R.id.creategroup_editText);
+        add_photo_text = getViewById(R.id.add_photo_text);
         defaultHead = getViewById(R.id.default_imagview);
         add_photo_text = getViewById(R.id.add_photo_text);
         default_imag = getViewById(R.id.default_imag);

@@ -116,6 +116,6 @@
         android:textColor="#ffffff"
         android:textSize="@dimen/_22dp"
         android:background="@drawable/btn_red_bg"
-         />
+        />
 
 </RelativeLayout>

@@ -43,11 +43,11 @@
                 android:hint="@string/hint_subject"
                 android:padding="@dimen/default_content_padding"
                 android:textStyle="bold" />
-
+            
             <LinearLayout
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="#e0e0e0"
+                android:background="@color/btn_text_color_press_gray"
                 >
                     <ImageView android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:src="@drawable/spinner_arrow"

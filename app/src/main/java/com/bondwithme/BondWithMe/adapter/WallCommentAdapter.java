@@ -29,9 +29,7 @@ import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,13 +72,13 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         item.tv_agree_count.setText((TextUtils.isEmpty(comment.getLove_count()) ? "0" : comment.getLove_count()));
         item.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, comment.getComment_creation_date()));
 
-        if(MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
+        if (MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
             item.btn_comment_del.setVisibility(View.VISIBLE);
         } else {
             item.btn_comment_del.setVisibility(View.GONE);
         }
 
-        if(TextUtils.isEmpty(comment.getLove_id())) {
+        if (TextUtils.isEmpty(comment.getLove_id())) {
             item.iv_agree.setImageResource(R.drawable.agree_normal);
         } else {
             item.iv_agree.setImageResource(R.drawable.agree_press);
@@ -90,22 +88,22 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private void setCommentPic(GifImageView iv, NetworkImageView niv, WallCommentEntity comment) {
         Log.i(TAG, "setCommentPic& file_id: " + comment.getFile_id() + "; StickerName is " + comment.getSticker_name());
-        if(!TextUtils.isEmpty(comment.getFile_id())) {
+        if (!TextUtils.isEmpty(comment.getFile_id())) {
             niv.setVisibility(View.VISIBLE);
             iv.setVisibility(View.GONE);
             VolleyUtil.initNetworkImageView(mContext, niv, String.format(Constant.API_GET_COMMENT_PIC, Constant.Module_preview_m, comment.getUser_id(), comment.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-        } else if(!TextUtils.isEmpty(comment.getSticker_group_path())) {
+        } else if (!TextUtils.isEmpty(comment.getSticker_group_path())) {
             iv.setVisibility(View.VISIBLE);
             niv.setVisibility(View.GONE);
-            if(Constant.Sticker_Gif.equals(comment.getSticker_type())) {
+            if (Constant.Sticker_Gif.equals(comment.getSticker_type())) {
                 String stickerGroupPath = comment.getSticker_group_path();
-                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
+                if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
                 }
                 try {
                     String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.gif";
-                    GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
-                    if(gifDrawable != null) {
+                    GifDrawable gifDrawable = new GifDrawable(gifFilePath);
+                    if (gifDrawable != null) {
                         iv.setImageDrawable(gifDrawable);
                         //                    if ("true".equals(comment.getIsNate())) {
                         //                        holder.progressBar.setVisibility(View.VISIBLE);
@@ -116,29 +114,30 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, comment.getSticker_type());
                         downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
                     }
-                } catch(IOException e) {
+                } catch (IOException e) {
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, comment.getSticker_type());
                     downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
                     e.printStackTrace();
                 }
-            } else if(Constant.Sticker_Png.equals(comment.getSticker_type())) {
+            } else if (Constant.Sticker_Png.equals(comment.getSticker_type())) {
                 String stickerGroupPath = comment.getSticker_group_path();
-                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
+                if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
                 }
 
                 try {
                     String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.png";
 //                    InputStream is = mContext.getAssets().open(pngFileName);
-                    InputStream is = new FileInputStream(new File(pngFileName));
-                    if(is != null) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    //InputStream is = new FileInputStream(new File(pngFileName));
+                    // if(is != null) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(pngFileName);//BitmapFactory.decodeStream(is);
+                    if (null != bitmap) {
                         iv.setImageBitmap(bitmap);
                     } else {
                         String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
                         downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
                     }
-                } catch(IOException e) {
+                } catch (Exception e) {
                     //本地没有png的时候，从服务器下载
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
                     downloadAsyncTask(iv, stickerUrl, comment.getSticker_type(), R.drawable.network_image_default);
@@ -155,11 +154,11 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void downloadAsyncTask(final GifImageView gifImageView, final String path, final String type, final int defaultResource) {
-        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
 
             @Override
-            protected byte[] doInBackground(Object... params) {
-                return NetworkUtil.getImageByte(params[0].toString());
+            protected byte[] doInBackground(String... params) {
+                return NetworkUtil.getImageByte(path);
             }
 
             @Override
@@ -171,17 +170,17 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             protected void onPostExecute(byte[] resultByte) {
                 super.onPostExecute(resultByte);
                 try {
-                    if(null != resultByte) {
-                        if(Constant.Sticker_Png.equals(type)) {
+                    if (null != resultByte) {
+                        if (Constant.Sticker_Png.equals(type)) {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(resultByte, 0, resultByte.length);
-                            if(bitmap != null && gifImageView != null) {
+                            if (bitmap != null && gifImageView != null) {
                                 gifImageView.setImageBitmap(bitmap);
                             } else {
                                 gifImageView.setImageResource(defaultResource);
                             }
-                        } else if(Constant.Sticker_Gif.equals(type)) {
+                        } else if (Constant.Sticker_Gif.equals(type)) {
                             GifDrawable gifDrawable = new GifDrawable(resultByte);
-                            if(gifDrawable != null && gifImageView != null) {
+                            if (gifDrawable != null && gifImageView != null) {
                                 gifImageView.setImageDrawable(gifDrawable);
                             } else {
                                 gifImageView.setImageResource(defaultResource);
@@ -190,7 +189,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     } else {
                         gifImageView.setImageResource(defaultResource);
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -199,9 +198,9 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         };
         //for not work in down 11
         if (SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, path);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
-            task.execute(path);
+            task.execute();
         }
 
     }
@@ -242,11 +241,11 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public void onClick(View v) {
             int position = getAdapterPosition();
             WallCommentEntity commentEntity = data.get(position);
-            switch(v.getId()) {
+            switch (v.getId()) {
                 case R.id.iv_agree:
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());
-                    if(TextUtils.isEmpty(commentEntity.getLove_id())) {
+                    if (TextUtils.isEmpty(commentEntity.getLove_id())) {
                         iv_agree.setImageResource(R.drawable.agree_press);
                         commentEntity.setLove_id(MainActivity.getUser().getUser_id());
                         tv_agree_count.setText(count + 1 + "");
@@ -256,7 +255,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         tv_agree_count.setText(count - 1 + "");
                     }
                     //判断是否已经有进行中的判断
-                    if(!runningList.contains(position)) {
+                    if (!runningList.contains(position)) {
                         runningList.add(position);
                         check(position);
                     }
@@ -264,8 +263,8 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 case R.id.btn_comment_del:
                     WallCommentEntity comment = data.get(position);
                     //自己发的或event creator 可以删除
-                    if(mCommentActionListener != null) {
-                        if(MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
+                    if (mCommentActionListener != null) {
+                        if (MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
                             mCommentActionListener.doDelete(comment.getComment_id());
                         }
                     }
@@ -284,8 +283,8 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 long startTime = System.currentTimeMillis();//点击时间
                 long nowTime = System.currentTimeMillis();
                 //缓冲时间为1000
-                while(nowTime - startTime < 1000) {
-                    if(newClick) {
+                while (nowTime - startTime < 1000) {
+                    if (newClick) {
                         startTime = System.currentTimeMillis();
                         newClick = false;
                     }
@@ -293,11 +292,11 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
                 try {
                     runningList.remove(position);
-                } catch(Exception e) {
+                } catch (Exception e) {
                 }
                 final WallCommentEntity commentEntity = data.get(position);
-                if(mCommentActionListener != null) {
-                    if(TextUtils.isEmpty(commentEntity.getLove_id())) {
+                if (mCommentActionListener != null) {
+                    if (TextUtils.isEmpty(commentEntity.getLove_id())) {
                         mCommentActionListener.doLove(commentEntity, false);
                     } else {
                         mCommentActionListener.doLove(commentEntity, true);

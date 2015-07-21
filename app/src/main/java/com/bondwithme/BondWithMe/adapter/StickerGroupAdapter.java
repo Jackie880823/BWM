@@ -152,7 +152,7 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
                     stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
                     stickerInfo.setVersion(stickerGroupEntity.getVersion());
                     stickerInfo.setType(stickerGroupEntity.getType());
-                    stickerInfo.setPosition(position);
+                    stickerInfo.setOrder(System.currentTimeMillis());
                     LocalStickerInfoDao.getInstance(mContext).addOrUpdate(stickerInfo);
                     //stickerDao.create(stickerInfo);
 
@@ -240,42 +240,36 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
                 @Override
                 public void onClick(View v) {
                     if (downloadClickListener != null && dataStickerGroup != null){
-                        downloadClickListener.downloadClick(stickerGroupEntity,getAdapterPosition());
+                        downloadClickListener.downloadClick(stickerGroupEntity, getAdapterPosition());
                     }
                 }
             });
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(mContext, StickerDetailActivity.class);
-//                    intent.putExtra(STICKER_GROUP, dataStickerGroup.get(getAdapterPosition()));
-//                    intent.putExtra(POSITION, getAdapterPosition());
-//                    mContext.startActivity(intent);
-//
-//                }
-//            });
+
         }
 
 
     }
 
     public ItemClickListener itemClickListener;
+    public interface ItemClickListener {
+        void itemClick(StickerGroupEntity stickerGroupEntity, int position);
+
+    }
+
     public DownloadClickListener downloadClickListener;
+    public interface DownloadClickListener {
+        void downloadClick(StickerGroupEntity stickerGroupEntity, int position);
+
+    }
+
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 
+
     public void setDownloadClickListener(DownloadClickListener downloadClickListener) {
         this.downloadClickListener = downloadClickListener;
-    }
-    public interface ItemClickListener {
-        void itemClick(StickerGroupEntity stickerGroupEntity, int position);
-
-    }
-    public interface DownloadClickListener {
-        void downloadClick(StickerGroupEntity stickerGroupEntity, int position);
-
     }
 
 

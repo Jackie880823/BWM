@@ -52,7 +52,7 @@ public class StickerDetailActivity extends BaseActivity {
     private StickerItemAdapter adapter;
     private ProgressBar pbProgress;
     private TextView tvDownload;
-    private int position = -1;
+    private int position;
     public static final String ACTION_UPDATE = "ACTION_UPDATE_FROM_STICKER_DETAIL";
     int finished;
     private final int UPDATE_PROGRESSBAR =1;
@@ -94,20 +94,19 @@ public class StickerDetailActivity extends BaseActivity {
     public void initView() {
         intent = getIntent();
         stickerGroupEntity = (StickerGroupEntity) intent.getSerializableExtra(StickerGroupAdapter.STICKER_GROUP);
-        position = intent.getIntExtra(StickerGroupAdapter.POSITION,-1);
-        finished = intent.getIntExtra("finished",-1);
-        int loadingPosition = intent.getIntExtra("positionFromStickerDetail",-1);
+        position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
+        finished = intent.getIntExtra("finished",0);
+        int loadingPosition = intent.getIntExtra("positionFromStickerDetail",0);
 
         NetworkImageView insideSticker = getViewById(R.id.iv_inside_sticker);
         TextView insideStickerName = getViewById(R.id.tv_inside_sticker_name);
         TextView desc = getViewById(R.id.tv_description);
-//        desc.setText("sticker_type: "+stickerGroupEntity.getType());
+        desc.setText("sticker_type: "+stickerGroupEntity.getType());
         TextView price = getViewById(R.id.price);
         tvDownload = getViewById(R.id.tv_inside_download);
         gvSticker = getViewById(R.id.gv_sticker);
         pbProgress = getViewById(R.id.pb_download);
 
-        LogUtil.i(TAG,"=====finished=="+finished+"====position==="+position+"=====loadingPosition======"+loadingPosition);
         if(finished>0 && finished<100 && position == loadingPosition) {
             tvDownload.setVisibility(View.INVISIBLE);
             pbProgress.setVisibility(View.VISIBLE);
@@ -199,7 +198,7 @@ public class StickerDetailActivity extends BaseActivity {
                         stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
                         stickerInfo.setVersion(stickerGroupEntity.getVersion());
                         stickerInfo.setType(stickerGroupEntity.getType());
-                        stickerInfo.setPosition(position);
+                        stickerInfo.setOrder(System.currentTimeMillis());
                         LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
                         Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
 

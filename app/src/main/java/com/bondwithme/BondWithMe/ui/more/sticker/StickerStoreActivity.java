@@ -203,7 +203,7 @@ public class StickerStoreActivity extends BaseActivity {
                 intent.putExtra(StickerGroupAdapter.STICKER_GROUP, dataStickerGroup.get(position));
                 intent.putExtra(StickerGroupAdapter.POSITION, position);
                 intent.putExtra(FINISHED, finished);
-                intent.putExtra("positionFromStickerDetail", positionFromStickerDetail);
+                intent.putExtra("positionFromStickerDetail",positionFromStickerDetail);
                 startActivity(intent);
 
 
@@ -220,6 +220,9 @@ public class StickerStoreActivity extends BaseActivity {
                 downloadZip(holder, position);
             }
         });
+
+
+
 
         recyclerViewList.setAdapter(adapter);
 
@@ -241,6 +244,27 @@ public class StickerStoreActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
+                pbDownload.setVisibility(View.INVISIBLE);
+                pbDownload.setProgress(0);
+                ivExist.setVisibility(View.VISIBLE);
+
+                //插入sticker info
+                try {
+                    Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+                    LocalStickerInfo stickerInfo = new LocalStickerInfo();
+                    stickerInfo.setName(stickerGroupEntity.getName());
+                    stickerInfo.setPath(stickerGroupEntity.getPath());
+                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
+                    stickerInfo.setVersion(stickerGroupEntity.getVersion());
+                    stickerInfo.setType(stickerGroupEntity.getType());
+                    stickerInfo.setOrder(System.currentTimeMillis());
+                    LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
+                    Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
+
+                } catch (Exception e) {
+                    LogUtil.e(TAG,"插入sticker info",e);
+                }
+
 
             }
 
@@ -254,27 +278,6 @@ public class StickerStoreActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                //插入sticker info
-                try {
-                    Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-                    LocalStickerInfo stickerInfo = new LocalStickerInfo();
-                    stickerInfo.setName(stickerGroupEntity.getName());
-                    stickerInfo.setPath(stickerGroupEntity.getPath());
-                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
-                    stickerInfo.setVersion(stickerGroupEntity.getVersion());
-                    stickerInfo.setType(stickerGroupEntity.getType());
-                    stickerInfo.setPosition(position);
-                    LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
-                    Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
-
-                } catch (Exception e) {
-                    LogUtil.e(TAG, "插入sticker info", e);
-                }
-
-                pbDownload.setVisibility(View.INVISIBLE);
-                pbDownload.setProgress(0);
-                ivExist.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -328,9 +331,6 @@ public class StickerStoreActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 //        handler.sendEmptyMessageDelayed(AUTO_PLAY, 4000);
-        handler.sendEmptyMessageDelayed(DISMISS_DIALOG, 6000);
-
-
     }
 
     @Override
@@ -494,6 +494,23 @@ public class StickerStoreActivity extends BaseActivity {
                 TextView tvDownload = (TextView) holder.itemView.findViewById(R.id.tv_download);
                 ivExist.setVisibility(View.INVISIBLE);
                 tvDownload.setVisibility(View.VISIBLE);
+            }else if (StickerStoreActivity.ACTION_UPDATE.equals(intent.getAction())){
+                int position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
+                finished = intent.getIntExtra(FINISHED,0);
+                StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
+                if ( holder!= null){
+                    ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
+                    ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
+                    TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
+                    tvDownload.setVisibility(View.INVISIBLE);
+                    pbDownload.setVisibility(View.VISIBLE);
+                    pbDownload.setProgress(finished);
+                    if (finished == 100){
+                        pbDownload.setVisibility(View.INVISIBLE);
+                        ivExist.setVisibility(View.VISIBLE);
+                    }
+                }
+
             }
         }
     };
@@ -503,9 +520,6 @@ public class StickerStoreActivity extends BaseActivity {
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
-//        if (mProgressDialog != null){
-//            mProgressDialog.setVisibility(View.INVISIBLE);
-//        }
         super.onDestroy();
     }
 
