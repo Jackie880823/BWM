@@ -29,15 +29,6 @@
                 />
 
 
-            <!--<com.madx.bwm.widget.MySwipeRefreshLayout-->
-                <!--android:id="@+id/swipe_refresh_layout"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!-- -->
-                <!--android:paddingLeft="@dimen/default_content_padding"-->
-                <!--android:paddingRight="@dimen/default_content_padding"-->
-                <!--android:paddingTop="@dimen/default_view_margin">-->
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerview_sticker"
                     android:layout_below="@+id/viewpager_sticker"
@@ -48,4 +39,11 @@
 
         </RelativeLayout>
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_below="@+id/fragment_main_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <include layout="@layout/progress_layout"/>
+    </RelativeLayout>
 </RelativeLayout>

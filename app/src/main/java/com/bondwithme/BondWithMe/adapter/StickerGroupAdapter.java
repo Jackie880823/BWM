@@ -25,6 +25,7 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.j256.ormlite.dao.Dao;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
@@ -76,7 +77,8 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
     public void onBindViewHolder(final StickerGroupAdapter.VHItem holder, final int position) {
         boolean isNew = false;
         stickerGroupEntity = dataStickerGroup.get(position);
-        url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), stickerGroupEntity.getFirst_sticker(), stickerGroupEntity.getPath(),stickerGroupEntity.getType());
+        url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_S", stickerGroupEntity.getPath(), stickerGroupEntity.getType());
+        LogUtil.d(TAG,"======sticker_name======="+stickerGroupEntity.getFirst_sticker());
         //设置new sticker
         if(isNew){
             holder.ivNewSticker.setVisibility(View.VISIBLE);
