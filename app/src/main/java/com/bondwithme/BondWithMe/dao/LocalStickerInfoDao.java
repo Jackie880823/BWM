@@ -102,7 +102,7 @@ public class LocalStickerInfoDao {
 
             List<LocalStickerInfo> localList = null;
             QueryBuilder qb = stickerInfoDao.queryBuilder();
-            qb.orderBy("order",true).where().eq("loginUserId", MainActivity.getUser().getUser_id());
+            qb.orderBy("order",false).where().eq("loginUserId", MainActivity.getUser().getUser_id());
             localList = qb.query();
 
             if (null != localList && localList.size() > 0) {

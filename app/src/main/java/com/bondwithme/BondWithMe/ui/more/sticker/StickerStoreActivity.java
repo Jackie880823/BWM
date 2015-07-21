@@ -66,7 +66,7 @@ public class StickerStoreActivity extends BaseActivity {
     public static final String FINISHED = "finished";
 
 
-//    ProgressDialog mProgressDialog;
+    View mProgressDialog;
 
     private ViewPager vp;
     private StickerPagerAdapter stickerPagerAdapter;
@@ -109,13 +109,8 @@ public class StickerStoreActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-//        rightButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
         Intent intent = new Intent(StickerStoreActivity.this, MyStickerActivity.class);
         startActivity(intent);
-//            }
-//        });
     }
 
 
@@ -127,10 +122,8 @@ public class StickerStoreActivity extends BaseActivity {
 
     @Override
     public void initView() {
-//        if (mProgressDialog == null) {
-//            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
-//        }
-//        mProgressDialog.show();
+        mProgressDialog = getViewById(R.id.rl_progress);
+        mProgressDialog.setVisibility(View.VISIBLE);
 
         scrollView = getViewById(R.id.sc_sticker_store);
 
@@ -176,7 +169,6 @@ public class StickerStoreActivity extends BaseActivity {
         }
         stickerPagerAdapter = new StickerPagerAdapter(views);
         vp.setAdapter(stickerPagerAdapter);
-
     }
 
     //获取广告图对应的表情包的position
@@ -331,6 +323,7 @@ public class StickerStoreActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 //        handler.sendEmptyMessageDelayed(AUTO_PLAY, 4000);
+        handler.sendEmptyMessageDelayed(DISMISS_DIALOG,5000);
     }
 
     @Override
@@ -354,9 +347,9 @@ public class StickerStoreActivity extends BaseActivity {
                     initAdapter();
                     break;
                 case DISMISS_DIALOG:
-//                    if (mProgressDialog != null) {
-//                        mProgressDialog.setVisibility(View.INVISIBLE);
-//                    }
+                    if (mProgressDialog != null) {
+                        mProgressDialog.setVisibility(View.INVISIBLE);
+                    }
                     break;
 
             }
@@ -366,7 +359,7 @@ public class StickerStoreActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-//        handler.removeMessages(AUTO_PLAY);
+        handler.removeMessages(AUTO_PLAY);
     }
 
     @Override
@@ -425,7 +418,6 @@ public class StickerStoreActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-//                mProgressDialog.dismiss();
 
             }
 
