@@ -35,6 +35,7 @@ import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +87,7 @@ public class GroupSettingActivity extends BaseActivity {
     protected void initBottomBar() {
 
     }
-    //    @Override
+//    @Override
 //    public void finish() {
 //        Intent intent = new Intent();
 //        intent.putExtra("groupName", tvName.getText().toString());

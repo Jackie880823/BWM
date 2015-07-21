@@ -4,13 +4,13 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.views.CheckBox;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.UrlUtil;
@@ -24,7 +24,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheckListener{
+public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheckedChangeListener{
 
     View mProgressDialog;
     LinearLayout llAutoAccept;
@@ -86,34 +86,30 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
         auto_acp_sib = getViewById(R.id.auto_acp_sib);
         auto_acp_sps = getViewById(R.id.auto_acp_sps);
 
-        auto_acp_chd.setOncheckListener(this);
-        auto_acp_oth.setOncheckListener(this);
-        auto_acp_prt.setOncheckListener(this);
-        auto_acp_sib.setOncheckListener(this);
-        auto_acp_sps.setOncheckListener(this);
+        auto_acp_chd.setOnCheckedChangeListener(this);
+        auto_acp_oth.setOnCheckedChangeListener(this);
+        auto_acp_prt.setOnCheckedChangeListener(this);
+        auto_acp_sib.setOnCheckedChangeListener(this);
+        auto_acp_sps.setOnCheckedChangeListener(this);
 
 
-        auto_acp_all.setOncheckListener(new CheckBox.OnCheckListener() {
+        auto_acp_all.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
             @Override
-            public void onCheck(CheckBox checkBox,boolean check) {
-//                if (autoCheck) {
-//                    autoCheck = false;
-//                    return;
-//                }
-                if (auto_acp_all.isCheck()) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (auto_acp_all.isChecked()) {
                     auto_acp_chd.setChecked(true);
                     auto_acp_oth.setChecked(true);
                     auto_acp_prt.setChecked(true);
                     auto_acp_sib.setChecked(true);
                     auto_acp_sps.setChecked(true);
-                    checkCount= 5;
+                    checkCount = 5;
                 } else {
                     auto_acp_chd.setChecked(false);
                     auto_acp_oth.setChecked(false);
                     auto_acp_prt.setChecked(false);
                     auto_acp_sib.setChecked(false);
                     auto_acp_sps.setChecked(false);
-                    checkCount= 0;
+                    checkCount = 0;
                 }
             }
         });
@@ -173,12 +169,12 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
 
         Map<String, String> params = new HashMap<>();
 
-        params.put("auto_acp_all",(auto_acp_all.isCheck()?"1":"0"));
-        params.put("auto_acp_chd",(auto_acp_chd.isCheck()?"1":"0"));
-        params.put("auto_acp_oth",(auto_acp_oth.isCheck()?"1":"0"));
-        params.put("auto_acp_prt",(auto_acp_prt.isCheck()?"1":"0"));
-        params.put("auto_acp_sib",(auto_acp_sib.isCheck()?"1":"0"));
-        params.put("auto_acp_sps",(auto_acp_sps.isCheck()?"1":"0"));
+        params.put("auto_acp_all",(auto_acp_all.isChecked()?"1":"0"));
+        params.put("auto_acp_chd",(auto_acp_chd.isChecked()?"1":"0"));
+        params.put("auto_acp_oth",(auto_acp_oth.isChecked()?"1":"0"));
+        params.put("auto_acp_prt",(auto_acp_prt.isChecked()?"1":"0"));
+        params.put("auto_acp_sib",(auto_acp_sib.isChecked()?"1":"0"));
+        params.put("auto_acp_sps",(auto_acp_sps.isChecked()?"1":"0"));
 
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
@@ -277,8 +273,17 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
     }
 
     @Override
-    public void onCheck(CheckBox checkBox,boolean check) {
-        if(check){
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mProgressDialog != null)
+        {
+            mProgressDialog.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isCheckeded) {
+        if(isCheckeded){
             checkCount++;
         }else{
             checkCount--;
@@ -292,14 +297,5 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
         }
 
         Log.d("", "ccccccccc---->" + checkCount);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mProgressDialog != null)
-        {
-            mProgressDialog.setVisibility(View.INVISIBLE);
-        }
     }
 }

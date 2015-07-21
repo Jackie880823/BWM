@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.AlbumAdapter;
@@ -45,7 +44,7 @@ public class AlbumActivity extends BaseActivity {
     private String memberId;
     private String selectYear;
     private AlbumAdapter albumAdapter;
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0X11;
     private LinearLayout no_image_linear;
     private TextView textView;
@@ -97,7 +96,7 @@ public class AlbumActivity extends BaseActivity {
                                         int which) {
                         selectYear = year_pv.getSelectData();
                         requestData();
-                        mProgressDialog.show();
+//                        mProgressDialog.show();
                         tvTitle.setText(selectYear);
                     }
                 })
@@ -163,8 +162,8 @@ public class AlbumActivity extends BaseActivity {
         selectYear = Calendar.getInstance().get(Calendar.YEAR) + "";
         albumAdapter = new AlbumAdapter(mContext, albumEntityList, memberId);
         albumListView.setAdapter(albumAdapter);
-        mProgressDialog = new ProgressDialog(mContext, getString(R.string.text_loading));
-        mProgressDialog.show();
+//        mProgressDialog = new ProgressDialog(mContext, getString(R.string.text_loading));
+//        mProgressDialog.show();
 
     }
 
@@ -190,9 +189,9 @@ public class AlbumActivity extends BaseActivity {
 
                     @Override
                     public void onResult(String response) {
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
                         List<AlbumEntity> albumList = new ArrayList<>();
                         try {
                             JSONArray jsonArray = new JSONArray(response);
@@ -249,9 +248,9 @@ public class AlbumActivity extends BaseActivity {
 
                     @Override
                     public void onError(Exception e) {
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
                         no_image_linear.setVisibility(View.VISIBLE);
                         MessageUtil.showMessage(mContext, getResources().getString(R.string.text_error));
                     }

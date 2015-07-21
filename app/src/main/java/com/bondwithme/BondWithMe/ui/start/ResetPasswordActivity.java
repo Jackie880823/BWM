@@ -24,7 +24,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.util.MD5Util;
-import com.gc.materialdesign.views.Button;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +39,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
     private EditText etFirstPassword;
     private EditText etSecondPassword;
     private TextView tvPasswordPrompt;
-    private Button brNext;
+    private PaperButton brNext;
     private RelativeLayout rlProgress;
 
     private UserEntity userEntity;

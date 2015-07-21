@@ -62,7 +62,7 @@ public class GifView extends View {
     private void setViewAttributes(Context context, AttributeSet attrs,
                                    int defStyle) {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            ViewCompat.setLayerType(this,View.LAYER_TYPE_SOFTWARE, null);
+            ViewCompat.setLayerType(this,ViewCompat.LAYER_TYPE_SOFTWARE, null);
 //        }
         // 从描述文件中读出gif的值，创建出Movie实例
         final TypedArray array = context.obtainStyledAttributes(attrs,

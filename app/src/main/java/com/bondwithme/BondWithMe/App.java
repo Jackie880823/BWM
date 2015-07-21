@@ -171,11 +171,4 @@ public class App extends MultiDexApplication {
         System.exit(0);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Intent intent = new Intent();
-        intent.setAction("refresh");
-        sendBroadcast(intent);
-    }
 }

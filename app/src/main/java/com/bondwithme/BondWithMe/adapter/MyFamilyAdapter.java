@@ -137,7 +137,6 @@ public class MyFamilyAdapter extends BaseAdapter implements Filterable {
                     Drawable da = Drawable.createFromStream(is, null);
                     viewHolder.imageLeft.setImageDrawable(da);
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }

@@ -42,10 +42,10 @@ import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UIUtil;
-import com.gc.materialdesign.views.Button;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,7 +77,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     private EditText etPhoneNumber;
     private EditText etPassword;
     private TextView tvLogIn;
-    private Button brLogIn;
+    private PaperButton brLogIn;
     private TextView tvForgetPassword;
     private ImageView ivUsername;
     private ImageView ivFacebook;
@@ -212,7 +212,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         etPhoneNumber = (EditText)view.findViewById(R.id.et_phone_number);
         etPassword = (EditText)view.findViewById(R.id.et_password);
 //        tvLogIn = (TextView)view.findViewById(R.id.tv_btn_log_in);
-        brLogIn = (Button)view.findViewById(R.id.br_log_in);
+        brLogIn = (PaperButton)view.findViewById(R.id.br_log_in);
         tvForgetPassword = (TextView)view.findViewById(R.id.tv_forget_password);
         ivUsername = (ImageView)view.findViewById(R.id.iv_username);
         ivFacebook = (ImageView)view.findViewById(R.id.iv_facebook);

@@ -73,6 +73,7 @@ public class ProfileResetPasswordActivity extends Activity {
                     if (MainActivity.getUser().getUser_password().equals(MD5(etOld.getText().toString()))) {
                         ivOld.setImageResource(R.drawable.correct);
                         blnOldRight = true;
+                        tvInvalid.setVisibility(View.GONE);
                     } else {
                         ivOld.setImageResource(R.drawable.wrong);
                         blnOldRight = false;

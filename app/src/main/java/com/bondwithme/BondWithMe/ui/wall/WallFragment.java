@@ -306,6 +306,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     @Override
     public void showMembers(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_USER);
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);
@@ -321,6 +322,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     @Override
     public void showGroups(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
+        /**wing 2015.01.17 临时解决打开两个activity bug*/
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_GROUP);
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);

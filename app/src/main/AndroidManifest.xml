@@ -97,18 +97,14 @@
 
 
         <!-- gaode map -->
-
-
         <!-- <meta-data -->
         <!-- android:name="com.amap.api.v2.apikey" -->
         <!-- android:value="83390a943f5896f8210b294faec6c5a3" /> -->
-
-
         <!-- baidu map -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="@string/baidu_maps_key_debug" />
-        <!-- android:value="@string/baidu_maps_key" /> -->
+            android:value="@string/baidu_maps_key" />
+        <!-- android:value="@string/baidu_maps_key_debug" /> -->
         <!-- android:value="@string/jackie_baidu_maps_key_debug" /> -->
 
         <service
@@ -212,7 +208,6 @@
         <!-- android:screenOrientation="portrait" -->
         <!-- android:windowSoftInputMode="adjustResize" -->
         <!-- /> -->
-
         <activity
             android:name=".ui.InvitedStatusActivity"
             android:screenOrientation="portrait" />
@@ -234,7 +229,7 @@
         <activity
             android:name=".ui.ContactUsActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.AboutUsActivity"
             android:screenOrientation="portrait" />
@@ -359,7 +354,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ViaContactMainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".ui.ViaIdNameActivity"
             android:screenOrientation="portrait" />
@@ -518,16 +514,15 @@
             android:value="developer-default" />
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="@string/jiguang_api_key" /> <!-- </>值来自开发者平台取得的AppKey -->
+            android:value="@string/jiguang_api_key" />
+        <!-- </>值来自开发者平台取得的AppKey -->
 
 
         <!-- 全局网络状态监听广播接收器 -->
-
         <receiver android:name=".receiver_service.NetWorkStateReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED"> -->
-
             </intent-filter>
         </receiver>
 
@@ -582,6 +577,11 @@
             android:name=".ui.start.ThirdPartyVerifyPhoneActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden">
+        </activity>
+
+        <activity
+            android:name=".ui.PickAndCropPictureActivity"
+             >
         </activity>
     </application>
 

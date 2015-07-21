@@ -145,7 +145,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     public static SharedPreferences draftPreferences;
 
     /**
-     * private ProgressBarCircularIndeterminate progressBar;
+     * private CircularProgress progressBar;
      */
     private RecyclerView feeling_icons;
 

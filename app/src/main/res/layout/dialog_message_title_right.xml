@@ -8,16 +8,11 @@
         <TextView
             android:id="@+id/tv_add_new_member"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/text_dialog_style"
             android:gravity="center_horizontal"
             android:text="@string/text_add_new_member"
-            android:textSize="@dimen/_18dp"
-            android:background="@drawable/bg_white_gray"
-            android:textColor="#0066ff"
-            android:paddingTop="@dimen/_5dp"
-            android:paddingBottom="@dimen/default_content_padding"
-            android:paddingLeft="@dimen/default_content_padding"
-            android:paddingRight="@dimen/default_content_padding"/>
+            android:padding="@dimen/default_content_padding"
+            />
 
 
         <View
@@ -28,12 +23,9 @@
         <TextView
             android:id="@+id/tv_create_new_group"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/text_dialog_style"
             android:gravity="center_horizontal"
             android:text="@string/text_create_new_group"
-            android:background="@drawable/bg_white_gray"
-            android:textSize="@dimen/_18dp"
-            android:textColor="#0066ff"
             android:padding="@dimen/default_content_padding" />
 
         <View
@@ -44,13 +36,11 @@
         <TextView
             android:id="@+id/tv_cancel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/text_dialog_style"
             android:gravity="center_horizontal"
             android:text="@string/cancel"
-            android:background="@drawable/bg_white_gray"
-            android:textSize="@dimen/_18dp"
             android:textStyle="bold"
-            android:textColor="#0066ff"
+            android:textColor="@color/high_light_color"
             android:padding="@dimen/default_content_padding" />
 
 </LinearLayout>

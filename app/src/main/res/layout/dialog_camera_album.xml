@@ -4,22 +4,15 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
     android:gravity="center">
         <TextView
             android:id="@+id/tv_camera"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/text_dialog_style"
             android:gravity="center_horizontal"
             android:text="@string/text_camera"
-            android:background="@drawable/bg_white_gray"
-            android:textSize="@dimen/text_large_size"
-            android:textStyle="bold"
-            android:textColor="@color/tab_color_press3"
-            android:paddingTop="2dp"
-            android:paddingBottom="@dimen/default_content_padding"
-            android:paddingLeft="@dimen/default_content_padding"
-            android:paddingRight="@dimen/default_content_padding"/>
+            android:padding="@dimen/default_content_padding"
+            />
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -27,14 +20,10 @@
         <TextView
             android:id="@+id/tv_album"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/text_dialog_style"
             android:gravity="center_horizontal"
             android:text="@string/text_album"
-            android:background="@drawable/bg_white_gray"
-            android:textColor="@color/tab_color_press3"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_large_size"
-            android:padding="@dimen/default_content_padding"/>
+            android:padding="@dimen/default_content_padding" />
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -42,12 +31,10 @@
     <TextView
         android:id="@+id/tv_cancel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/text_dialog_style"
         android:gravity="center_horizontal"
-        android:text="@string/text_cancel"
-        android:background="@drawable/bg_white_gray"
-        android:textColor="@color/tab_color_press3"
+        android:text="@string/cancel"
         android:textStyle="bold"
-        android:textSize="@dimen/text_large_size"
-        android:padding="@dimen/default_content_padding"/>
+        android:textColor="@color/high_light_color"
+        android:padding="@dimen/default_content_padding" />
 </LinearLayout>

@@ -34,8 +34,8 @@ public class LocalStickerInfo implements Serializable {
         return loginUserId;
     }
 
-    public void setLoginUserId() {
-        this.loginUserId = MainActivity.getUser().getUser_id();
+    public void setLoginUserId(String loginUserId) {
+        this.loginUserId = loginUserId;
     }
 
     public LocalStickerInfo() {

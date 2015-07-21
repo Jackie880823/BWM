@@ -24,10 +24,6 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallCommentAdapter;
@@ -51,6 +47,10 @@ import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.SendComment;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.material.widget.CircularProgress;
 
 import java.io.File;
 import java.io.InputStream;
@@ -128,7 +128,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private View split;
     private RecyclerView rvList;
     private ScrollView scrollView;
-    private ProgressBarCircularIndeterminate progressBar;
+    private CircularProgress progressBar;
     private SendComment sendCommentView;
 
     private WallCommentAdapter adapter;
@@ -276,6 +276,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         //            ibComment.setOnClickListener(this);
         btn_del.setOnClickListener(this);
         imWallsImages.setOnClickListener(this);
+
     }
 
     /**
@@ -401,7 +402,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 iv_mood.setVisibility(View.GONE);
             }
         } catch(Exception e) {
-            e.printStackTrace();
             iv_mood.setVisibility(View.GONE);
         }
 
@@ -987,6 +987,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void showMembers(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_USER);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);
         startActivityForResult(intent, Constant.ACTION_COMMENT_MEMBERS);
@@ -1001,6 +1002,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     @Override
     public void showGroups(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_GROUP);
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);

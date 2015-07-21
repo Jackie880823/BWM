@@ -63,7 +63,7 @@ public class LocalStickerInfoDao {
             return;
         }
         try {
-            stickerInfo.setLoginUserId();
+            stickerInfo.setLoginUserId(MainActivity.getUser().getUser_id());
             QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
             queryBuilder.where().eq("loginUserId", LocalStickerInfo.LOGIN_USER_ID).and().eq("path", stickerInfo.getPath());
             List<LocalStickerInfo> localList = queryBuilder.query();

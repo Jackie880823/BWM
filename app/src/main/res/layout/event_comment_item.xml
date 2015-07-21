@@ -49,7 +49,8 @@
 
             </RelativeLayout>
 
-            <TextView
+            <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+                android:textIsSelectable="true"
                 android:id="@+id/tv_comment_content"
                 style="@style/text_dark_default"
                 android:autoLink="web"
@@ -73,7 +74,7 @@
                 <!--android:layout_height="@dimen/_150dp"-->
                 <!--android:visibility="gone"-->
                 <!--android:scaleType="fitXY"/>-->
-            <!--<com.gc.materialdesign.views.ProgressBarCircularIndeterminate-->
+            <!--<com.material.widget.CircularProgress-->
                 <!--android:id="@+id/message_progress_bar"-->
                 <!--android:layout_width="@dimen/_32dp"-->
                 <!--android:layout_height="@dimen/_32dp"-->

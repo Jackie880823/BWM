@@ -54,8 +54,10 @@
     <color name="btn_bg_color_gray_press">#6E6E6E</color>
 
 
-
-    <color name="bg_progressBar">#1E88E5</color>
+    <!--用于推荐，比如引导用户点击确定-->
+    <color name="high_light_color">#1E88E5</color>
+    <!--用于不推荐，比如引导用户不要点击取消-->
+    <color name="warning_high_light_color">@color/default_text_color_light</color>
 
 
 

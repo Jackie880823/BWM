@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -10,15 +11,14 @@ import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.AlertWallAdapter;
 import com.bondwithme.BondWithMe.entity.AlertWallEntity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ import java.util.Map;
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
  */
 public class AlertWallActivity extends BaseActivity {
-    ProgressDialog mProgressDialog;
+    View mProgressDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
 
@@ -75,11 +75,9 @@ public class AlertWallActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        mProgressDialog = getViewById(R.id.rl_progress);
+        mProgressDialog.setVisibility(View.VISIBLE);
 
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
-        }
-        mProgressDialog.show();
 
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
@@ -125,7 +123,7 @@ public class AlertWallActivity extends BaseActivity {
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
-        mProgressDialog.dismiss();
+        mProgressDialog.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -143,7 +141,7 @@ public class AlertWallActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+                mProgressDialog.setVisibility(View.INVISIBLE);
             }
 
             @Override
