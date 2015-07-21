@@ -27,7 +27,7 @@ import com.bondwithme.BondWithMe.util.MD5Util;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
-import com.gc.materialdesign.views.Button;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +58,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 //    private TextView tvPhoneNumberPrompt;
     private EditText etPassword;
     private TextView tvPasswordPrompt;
-    private Button brNext;
+    private PaperButton brNext;
     private RelativeLayout rlProgress;
 
     private String strUsername;

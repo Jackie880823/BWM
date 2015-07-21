@@ -13,16 +13,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <ScrollView
-        android:id="@+id/contact_scroll"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/fragment_main_top"
-        android:layout_height="wrap_content">
+
+    <!--<ScrollView-->
+        <!--android:id="@+id/contact_scroll"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_below="@+id/fragment_main_top"-->
+        <!--android:layout_height="wrap_content">-->
 
         <LinearLayout
             android:id="@+id/ll"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_main_top"
             android:orientation="vertical">
 
             <TextView
@@ -129,22 +131,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="#ccc" />
-            <Button
-                android:id="@+id/btn_add"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35dp"
-                android:text="@string/text_add"
-                android:textColor="#ffffff"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_large_size"
-                android:background="@drawable/btn_chat_send_bg"
-                android:layout_marginLeft="32dp"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/_60dp"
-                android:layout_marginRight="32dp"
-                android:layout_marginBottom="16dp" />
+
         </LinearLayout>
-    </ScrollView>
+    <!--</ScrollView>-->
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/text_add"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_large_size"
+        android:background="@drawable/btn_chat_send_bg"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="16dp" />
 
 
 </RelativeLayout>

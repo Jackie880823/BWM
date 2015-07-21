@@ -50,7 +50,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.PlaceAutocompleteAdapter;
-import com.bondwithme.BondWithMe.db.PlacesDisplayTask;
+import com.bondwithme.BondWithMe.task.PlacesDisplayTask;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
@@ -309,12 +309,13 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         Intent intent = getIntent();
         //        if (intent.getBooleanExtra("has_location", false)) {
         String locationName = intent.getStringExtra(Constant.EXTRA_LOCATION_NAME);
-        Log.i(TAG, "initView& locationName: " + locationName);
 
-        if(!TextUtils.isEmpty(locationName)) {
-            setUpMapIfNeededWithLocation(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
-        } else {
-            setUpMapIfNeededNoLocation();
+        if((-1000==intent.getDoubleExtra(Constant.EXTRA_LATITUDE,0))||(-1000==intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0))||TextUtils.isEmpty(locationName)) {
+//            if (!TextUtils.isEmpty(locationName)) {
+                setUpMapIfNeededNoLocation();
+            } else {
+                setUpMapIfNeededWithLocation(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
+//            }
         }
 
     }

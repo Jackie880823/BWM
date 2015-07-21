@@ -33,10 +33,10 @@ import com.bondwithme.BondWithMe.util.SharedPreferencesUtils;
 import com.bondwithme.BondWithMe.widget.DatePicker;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.TimePicker;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.CircularProgress;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -83,7 +83,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private final static String USER_HEAD = "user_head";
     private final static String USER_NAME = "user_name";
 
-    private ProgressBarCircularIndeterminate progressBar;
+    private CircularProgress progressBar;
     Calendar mCalendar;
     Calendar calendar;
 
@@ -148,7 +148,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 return false;
             }
         });
-        position_name.addTextChangedListener(new TextWatcher(){
+        position_name.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -162,10 +162,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
             @Override
             public void afterTextChanged(Editable s) {
-                String tplocation =  position_name.getText().toString().trim();
-                if(!tplocation.equals(locationName)){
-                     latitude = -1000;
-                     longitude = -1000;
+                String tplocation = position_name.getText().toString().trim();
+                if (!tplocation.equals(locationName) && locationName!=null) {
+                    latitude = -1000;
+                    longitude = -1000;
                 }
             }
         });
@@ -360,7 +360,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         stlatitude  = PreferencesUtil.getValue(getParentActivity(),"latitude","-1000");
         stlongitude = PreferencesUtil.getValue(getParentActivity(),"longitude","-1000");
         latitude = Double.valueOf(stlatitude).doubleValue();
-        longitude = Double.valueOf(stlongitude).shortValue();
+        longitude = Double.valueOf(stlongitude).doubleValue();
 
         members = PreferencesUtil.getValue(getParentActivity(), "members_data", "").toString();
         groups = PreferencesUtil.getValue(getParentActivity(), "Groups_date", "").toString();

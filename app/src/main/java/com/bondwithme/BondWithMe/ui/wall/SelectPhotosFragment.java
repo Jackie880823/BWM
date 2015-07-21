@@ -1,9 +1,9 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,9 +20,9 @@ import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.gc.materialdesign.views.CheckBox;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.LocalImagesAdapter;
+import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.AsyncLoadBitmapTask;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
@@ -56,12 +56,14 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     /**
      * 当前显示的图片的Ur列表
      */
-    ArrayList<Uri> mImageUriList = new ArrayList();
+    private ArrayList<Uri> mImageUriList = new ArrayList();
+
+    private boolean multi;
 
     /**
      * 已经选择的图Ur列表
      */
-    ArrayList<Uri> mSelectedImageUris = new ArrayList();
+    ArrayList<Uri> mSelectedImageUris;
     /**
      * 目录列表
      */
@@ -75,8 +77,13 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      */
     private LocalImagesAdapter localImagesAdapter;
 
-    public static final SelectPhotosFragment newInstance(String... params) {
-        return createInstance(new SelectPhotosFragment(), params);
+    public SelectPhotosFragment(ArrayList<Uri> selectUris) {
+        super();
+        mSelectedImageUris = selectUris;
+    }
+
+    public static final SelectPhotosFragment newInstance(ArrayList<Uri> selectUris, String... params) {
+        return createInstance(new SelectPhotosFragment(selectUris), params);
     }
 
     /**
@@ -181,33 +188,20 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         mGvShowPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CheckBox check = (CheckBox) view.findViewById(R.id.select_image_right);
-                Log.i(TAG, "onItemClick " + check.isCheck());
+                Log.i(TAG, "onItemClick& position: " + position);
 
-                Uri itemUri = mImageUriList.get(position);
-                if(check.isCheck()) {
-                    if(selectImageUirListener != null) {
-                        // 从列表中已经选中的图片
-                        boolean result = selectImageUirListener.removeUri(itemUri);
-                        check.setChecked(!result);
-                        if(result) {
-                            // 删除成功当前选择的列表也需要删除
-                            mSelectedImageUris.remove(itemUri);
-                        }
-                    }
-                } else {
-                    if(selectImageUirListener != null) {
-                        // 添加图片到选中列表
-                        boolean result = selectImageUirListener.addUri(itemUri);
-                        check.setChecked(result);
-                        if(result) {
-                            // 添加成功当前列表也需要添加
-                            mSelectedImageUris.add(itemUri);
-                        }
+                if(selectImageUirListener != null) {
+                    Uri itemUri = mImageUriList.get(position);
+                    if(multi) {
+                        selectImageUirListener.preview(itemUri);
+                    } else {
+                        selectImageUirListener.addUri(itemUri);
                     }
                 }
             }
         });
+
+        multi = getParentActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
     }
 
     public boolean changeDrawer() {
@@ -234,6 +228,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         super.onDestroy();
         // 清除存入Map中的图片
         AsyncLoadBitmapTask.clearBitmaps();
+        if(imageCursor!=null) {
+            if(!imageCursor.isClosed())
+                imageCursor.close();
+        }
     }
 
     /**
@@ -303,6 +301,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
             Log.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
             if(localImagesAdapter == null) {
                 localImagesAdapter = new LocalImagesAdapter(getActivity(), mImageUriList, getParentActivity().getActionBarColor());
+                localImagesAdapter.setCheckBoxVisible(multi);
                 localImagesAdapter.setSelectedImages(mSelectedImageUris);
                 localImagesAdapter.setListener(selectImageUirListener);
                 mGvShowPhotos.setAdapter(localImagesAdapter);
@@ -387,43 +386,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
     public void setSelectImageUirListener(SelectImageUirChangeListener selectImageUirListener) {
         this.selectImageUirListener = selectImageUirListener;
-    }
-
-    /**
-     * 选中图片改变监听
-     */
-    public interface SelectImageUirChangeListener {
-        /**
-         * 添加图片{@code imageUri}到选择列表
-         *
-         * @param imageUri -   需要添加的图片uri
-         * @return -   true:   添加成功；
-         * -   false:  添加失败；
-         */
-        boolean addUri(Uri imageUri);
-
-        /**
-         * 从列表中删除图片{@code imageUri}
-         *
-         * @param imageUri -   需要删除的图片uri
-         * @return -   true:   删除成功；
-         * -   false:  删除失败；
-         */
-        boolean removeUri(Uri imageUri);
-
-        /**
-         * 打开了左侧的目录列表并设置标题栏左侧图标为{@code drawable}
-         *
-         * @param drawable
-         */
-        void onDrawerOpened(Drawable drawable);
-
-        /**
-         * 关闭了左侧的目录列表并设置标题栏左侧图标为{@code drawable}
-         *
-         * @param drawable
-         */
-        void onDrawerClose(Drawable drawable);
     }
 
 }

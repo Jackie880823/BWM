@@ -35,10 +35,10 @@ import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UIUtil;
-import com.gc.materialdesign.views.Button;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +60,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
     private EditText etUsername;
     private EditText etPassword;
 //    private TextView tvLogin;
-    private Button btnLogIn;
+    private PaperButton btnLogIn;
     private RelativeLayout rlProgress;
 
     private List<UserEntity> userEntities;

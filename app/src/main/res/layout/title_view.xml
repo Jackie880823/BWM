@@ -96,7 +96,7 @@
             style="@style/text_default"
             android:layout_centerVertical="true"
             android:text="@string/msg_no_internet"
-            android:textColor="@color/bold_text_color_red" />
+            android:textColor="@color/default_text_color_while" />
 
         <ImageView
             android:layout_width="20dp"

@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -15,22 +16,22 @@ import android.view.inputmethod.InputMethodManager;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondWithMe.util.LogUtil;
-import com.gc.materialdesign.widgets.ProgressDialog;
-import com.google.gson.Gson;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.ContactCursorAdapter;
 import com.bondwithme.BondWithMe.entity.ContactDetailEntity;
 import com.bondwithme.BondWithMe.entity.ContactMessageEntity;
 import com.bondwithme.BondWithMe.util.ContactUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
@@ -137,12 +138,12 @@ public class TellAFriendsActivity extends BaseActivity {
         return true;
     }
 
-    ProgressDialog mProgressDialog;
+//    ProgressDialog mProgressDialog;
 
     private void sendContact() {
         if (validateForm()) {
-            mProgressDialog = new ProgressDialog(this, getString(R.string.text_sending));
-            mProgressDialog.show();
+//            mProgressDialog = new ProgressDialog(this, getString(R.string.text_waiting));
+//            mProgressDialog.show();
 
             ContactMessageEntity messageEntity = generateMessage("");
 //            params.put("messageEntity", new Gson().toJson(messageEntity));
@@ -168,7 +169,7 @@ public class TellAFriendsActivity extends BaseActivity {
 
                 @Override
                 public void onFinish() {
-                    mProgressDialog.dismiss();
+//                    mProgressDialog.dismiss();
                 }
 
                 @Override

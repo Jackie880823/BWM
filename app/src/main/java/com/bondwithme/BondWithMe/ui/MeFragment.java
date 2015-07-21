@@ -3,6 +3,7 @@ package com.bondwithme.BondWithMe.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -81,7 +82,6 @@ public class MeFragment extends BaseFragment<MeActivity> {
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
                 ivBottomLeft.setImageBitmap(bitmap);
             } catch (IOException e) {
-                e.printStackTrace();
             }
         }
 
@@ -141,9 +141,22 @@ public class MeFragment extends BaseFragment<MeActivity> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case UPDATE_PROFILE:
-                if (resultCode == getActivity().RESULT_OK) {
+                if(resultCode== getActivity().RESULT_OK ){
+                    if(!TextUtils.isEmpty(data.getStringExtra("name"))){
+                        tvName1.setText(data.getStringExtra("name"));
+                        Uri new_pic = data.getParcelableExtra("new_pic");
+                        if(new_pic!=null){
+//                            cniMain.setImageDrawable();
+                            cniMain.setImageURI(new_pic);
+                        }
+                    }
+            }
+//                String etFirstName = data.getStringExtra("name");
 
-                    getActivity().finish();
+
+//                if (resultCode == getActivity().RESULT_OK) {
+//
+//                    getActivity().finish();
 //                    tvName1.setText(data.getStringExtra("name"));
 //                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
@@ -161,8 +174,8 @@ public class MeFragment extends BaseFragment<MeActivity> {
 //                    }).start();
 
 //                    initView();
-                }
-                break;
+//                }
+//                break;
 
             default:
         }

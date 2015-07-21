@@ -15,6 +15,17 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.DownloadRequest;
 import com.android.volley.toolbox.NetworkImageView;
+import com.bondwithme.BondWithMe.App;
+import com.bondwithme.BondWithMe.Constant;
+import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
+import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
+import com.bondwithme.BondWithMe.entity.StickerGroupEntity;
+import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.j256.ormlite.dao.Dao;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.App;
@@ -30,7 +41,7 @@ import com.bondwithme.BondWithMe.util.ZipUtils;
 
 
 import java.io.File;
-import java.lang.Exception;import java.lang.Integer;import java.lang.Override;import java.lang.String;import java.sql.SQLException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,10 +74,11 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
 
     @Override
     public void onBindViewHolder(final StickerGroupAdapter.VHItem holder, final int position) {
+        boolean isNew = false;
         stickerGroupEntity = dataStickerGroup.get(position);
         url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), stickerGroupEntity.getFirst_sticker(), stickerGroupEntity.getPath(),stickerGroupEntity.getType());
         //设置new sticker
-        if(stickerGroupEntity.getSticker_new().equals("1")){
+        if(isNew){
             holder.ivNewSticker.setVisibility(View.VISIBLE);
         }else {
             holder.ivNewSticker.setVisibility(View.INVISIBLE);
@@ -140,7 +152,7 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
                     stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
                     stickerInfo.setVersion(stickerGroupEntity.getVersion());
                     stickerInfo.setType(stickerGroupEntity.getType());
-                    stickerInfo.setPosition(position);
+                    stickerInfo.setOrder(System.currentTimeMillis());
                     LocalStickerInfoDao.getInstance(mContext).addOrUpdate(stickerInfo);
                     //stickerDao.create(stickerInfo);
 
@@ -228,42 +240,36 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
                 @Override
                 public void onClick(View v) {
                     if (downloadClickListener != null && dataStickerGroup != null){
-                        downloadClickListener.downloadClick(stickerGroupEntity,getAdapterPosition());
+                        downloadClickListener.downloadClick(stickerGroupEntity, getAdapterPosition());
                     }
                 }
             });
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(mContext, StickerDetailActivity.class);
-//                    intent.putExtra(STICKER_GROUP, dataStickerGroup.get(getAdapterPosition()));
-//                    intent.putExtra(POSITION, getAdapterPosition());
-//                    mContext.startActivity(intent);
-//
-//                }
-//            });
+
         }
 
 
     }
 
     public ItemClickListener itemClickListener;
+    public interface ItemClickListener {
+        void itemClick(StickerGroupEntity stickerGroupEntity, int position);
+
+    }
+
     public DownloadClickListener downloadClickListener;
+    public interface DownloadClickListener {
+        void downloadClick(StickerGroupEntity stickerGroupEntity, int position);
+
+    }
+
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 
+
     public void setDownloadClickListener(DownloadClickListener downloadClickListener) {
         this.downloadClickListener = downloadClickListener;
-    }
-    public interface ItemClickListener {
-        void itemClick(StickerGroupEntity stickerGroupEntity, int position);
-
-    }
-    public interface DownloadClickListener {
-        void downloadClick(StickerGroupEntity stickerGroupEntity, int position);
-
     }
 
 

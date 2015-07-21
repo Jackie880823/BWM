@@ -36,10 +36,10 @@ import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.facebook.login.LoginManager;
-import com.gc.materialdesign.views.Button;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,7 +83,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     private TextView tvPhoneNumber;
     private EditText etCode;
     private TextView tvTime;
-    private Button brNext;
+    private PaperButton brNext;
     private TimeCount timeCount;
     private RelativeLayout rlProgress;
 
@@ -110,7 +110,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
             super.handleMessage(msg);
             switch (msg.what)
             {
-                //以下获取验证码回调
+                //以下再次获取验证码回调
                 case HANDLE_SUCCESS_RESEND_CODE:
                     timeCount.start();
                     break;
@@ -121,12 +121,13 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
 
 
-                //以下验证，创建用户回调
+                //以下验证且创建用户出现的各种情况回调
                 case HANDLE_SUCCESS_CREATE_USER:
                     goSignUpSuccessful();
                     break;
 
                 case HANDLE_LOGIN_ID_EXISET:
+                    //log_in_id 被使用，返回重新填
                     goBackAgain();
                     break;
 
@@ -136,10 +137,12 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
                 case HANDLE_FAIL_VERIFY:
 //                    goBackAgain();
+                    //验证码错误
                     etCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     break;
 
                 case HANDLE_SUCCESS_CREATE_FACEBOOK_USER:
+                    //facebook 用户创建成功
                     goMainActivity();
                     break;
 
@@ -152,7 +155,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                     break;
 
                 case HANDLE_FAIL_FORGOT_VERIFY_CODE:
-                    goBackAgain();
+                    etCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     break;
 
 
@@ -829,7 +832,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
                         handler.sendEmptyMessage(HANDLE_FAIL_FORGOT_VERIFY_CODE);
                     }
                 } catch (JSONException e) {
-                    handler.sendEmptyMessage(HANDLE_FAIL_FORGOT_VERIFY_CODE);
+                    handler.sendEmptyMessage(CATCH);
                     e.printStackTrace();
                 }
 
@@ -837,7 +840,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
             @Override
             public void onError(Exception e) {
-                handler.sendEmptyMessage(HANDLE_FAIL_FORGOT_VERIFY_CODE);
+                handler.sendEmptyMessage(ERROR);
             }
 
             @Override

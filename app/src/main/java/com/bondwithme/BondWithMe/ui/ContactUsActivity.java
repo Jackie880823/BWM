@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -128,12 +128,12 @@ public class ContactUsActivity extends BaseActivity {
         return true;
     }
 
-    ProgressDialog mProgressDialog;
+//    ProgressDialog mProgressDialog;
     private void sendMail(){
         if(validateForm()) {
 
-            mProgressDialog = new ProgressDialog(this,getString(R.string.text_sending));
-            mProgressDialog.show();
+//            mProgressDialog = new ProgressDialog(this,getString(R.string.text_sending));
+//            mProgressDialog.show();
 
             Map<String, String> params = new HashMap<>();
 
@@ -150,7 +150,7 @@ public class ContactUsActivity extends BaseActivity {
 
                 @Override
                 public void onFinish() {
-                    mProgressDialog.dismiss();
+//                    mProgressDialog.dismiss();
                 }
 
                 @Override

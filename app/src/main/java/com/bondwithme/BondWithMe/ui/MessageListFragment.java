@@ -19,11 +19,6 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.Dialog;
-import com.gc.materialdesign.widgets.ProgressDialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MessageGroupAdapter;
@@ -36,6 +31,10 @@ import com.bondwithme.BondWithMe.util.MslToast;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,7 +63,7 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
     private int startIndex = 0;
     private boolean isUserRefresh = false;
     private boolean isGroupRefresh = false;
-    private ProgressDialog mProgressDialog;
+//    private ProgressDialog mProgressDialog;
     static List<String> STICKER_NAME_LIST = new ArrayList<>();
     static List<String> FIRST_STICKER_LIST = new ArrayList<>();
     private String TAG;
@@ -112,8 +111,8 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
         pager = getViewById(R.id.message_list_viewpager);
         message_member_tv = getViewById(R.id.message_member_tv);
         message_group_tv = getViewById(R.id.message_group_tv);
-        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
-        mProgressDialog.show();
+//        mProgressDialog = new ProgressDialog(getActivity(), getString(R.string.text_loading));
+//        mProgressDialog.show();
         userEntityList = new ArrayList<>();
         groupEntityList = new ArrayList<>();
         privateAdapter = new MessageMemberListAdapter(mContext, userEntityList);
@@ -425,9 +424,9 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
                     public void onResult(String response) {
                         userFinishReFresh();
                         groupFinishReFresh();
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
                         Gson gson = new GsonBuilder().create();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
@@ -457,9 +456,9 @@ public class MessageListFragment extends BaseFragment<MainActivity> implements V
 
                     @Override
                     public void onError(Exception e) {
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
+//                        if (mProgressDialog.isShowing()) {
+//                            mProgressDialog.dismiss();
+//                        }
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                         userFinishReFresh();
                         groupFinishReFresh();

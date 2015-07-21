@@ -28,6 +28,7 @@ import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
+import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -132,7 +133,6 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                 holder.iv_mood.setVisibility(View.GONE);
             }
         } catch(Exception e) {
-            e.printStackTrace();
             holder.iv_mood.setVisibility(View.GONE);
         }
 
@@ -210,7 +210,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
          * 头像视图
          */
         CircularNetworkImage nivHead;
-        TextView tvContent;
+        FreedomSelectionTextView tvContent;
 
         /**
          * 发表日期显示视图
@@ -261,7 +261,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             super(itemView);
             nivHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
             tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
-            tvContent = (TextView) itemView.findViewById(R.id.tv_wall_content);
+            tvContent = (FreedomSelectionTextView) itemView.findViewById(R.id.tv_wall_content);
             tvDate = (TextView) itemView.findViewById(R.id.push_date);
             llWallsImage = itemView.findViewById(R.id.ll_walls_image);
             imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);

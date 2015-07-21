@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -11,8 +11,6 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/default_content_padding"
         >
-
-
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/iv_sticker"
@@ -56,7 +54,7 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ok_press" />
+                android:src="@drawable/ok_normal" />
 
             <ProgressBar
                 android:id="@+id/pb_download"
@@ -81,4 +79,4 @@
         android:visibility="visible" />
 
     <View style="@style/split_line_default" />
-</RelativeLayout>
+</LinearLayout>
