@@ -58,13 +58,12 @@
                             android:layout_toRightOf="@+id/icon_comments"
                             android:text="@string/text_comments"/>
 
-                        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
+                        <com.material.widget.CircularProgress
                             android:id="@+id/wall_comment_progress_bar"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:layout_centerInParent="true"
+                            android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:background="@color/bg_progressBar"
                             />
 
                     </RelativeLayout>

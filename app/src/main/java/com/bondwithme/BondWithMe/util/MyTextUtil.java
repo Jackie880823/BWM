@@ -1,9 +1,11 @@
 package com.bondwithme.BondWithMe.util;
 
+import android.graphics.Paint;
 import android.text.TextUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 
 public class MyTextUtil {
@@ -51,4 +53,26 @@ public class MyTextUtil {
         }
         return false;
     }
+
+    /**
+     * 获取字符长度，忽略文字和半全角
+     * @param currentMax
+     * @param strings
+     * @param p
+     * @return
+     */
+    public static int computeMaxStringWidth(int currentMax, String[] strings, Paint p) {
+        float maxWidthF = 0.0f;
+        int len = strings.length;
+        for (int i = 0; i < len; i++) {
+            float width = p.measureText(strings[i]);
+            maxWidthF = Math.max(width, maxWidthF);
+        }
+        int maxWidth = (int) (maxWidthF + 0.5);
+        if (maxWidth < currentMax) {
+            maxWidth = currentMax;
+        }
+        return maxWidth;
+    }
+
 }

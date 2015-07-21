@@ -1,93 +1,95 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/default_text_color_while"
     tools:context="com.bondwithme.BondWithMe.ui.start.ThirdPartyVerifyPhoneActivity">
-        <include
-            android:id="@+id/fragment_main_top"
-            layout="@layout/title_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true" />
 
-        <include
-            layout="@layout/country_code_layout"
-            android:id="@+id/country_code_layout"
-            android:layout_below="@+id/fragment_main_top"
-            android:layout_marginTop="@dimen/default_content_padding"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
 
-        <LinearLayout
-            android:id="@+id/ll_code_phone_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_content_padding"
-            android:layout_below="@+id/country_code_layout"
-            android:orientation="horizontal">
-                <TextView
-                    style="@style/tv_start_country_code"
-                    android:id="@+id/tv_start_country_code"
-                    android:layout_marginLeft="@dimen/default_content_padding" />
-                <EditText
-                    style="@style/et_start_phone"
-                    android:id="@+id/et_phone_number"
-                    android:layout_marginLeft="@dimen/default_view_margin"/>
-        </LinearLayout>
+    <include
+        android:id="@+id/country_code_layout"
+        layout="@layout/country_code_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_main_top"
+        android:layout_marginTop="@dimen/default_content_padding" />
+
+    <LinearLayout
+        android:id="@+id/ll_code_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/country_code_layout"
+        android:layout_marginTop="@dimen/default_content_padding"
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/tv_start_country_code"
+            style="@style/tv_start_country_code"
+            android:layout_marginLeft="@dimen/default_content_padding" />
+
+        <EditText
+            android:id="@+id/et_phone_number"
+            style="@style/et_start_phone"
+            android:layout_marginLeft="@dimen/default_view_margin" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_phone_number_prompt"
+        style="@style/tv_start_light_small"
+        android:layout_below="@+id/ll_code_phone_number"
+        android:layout_marginLeft="@dimen/default_content_padding"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:text="@string/text_start_phone_number_required"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_phone_number_prompt"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"></View>
+
+        <TextView
+            android:id="@+id/tv_terms"
             style="@style/tv_start_light_small"
-            android:id="@+id/tv_phone_number_prompt"
-            android:layout_below="@+id/ll_code_phone_number"
-            android:text="@string/text_start_phone_number_required"
-            android:visibility="gone"
-            android:layout_marginLeft="@dimen/default_content_padding"
-            android:paddingLeft="@dimen/default_content_padding" />
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="@string/text_start_third_party_prompt"
+            android:textSize="@dimen/text_small_size" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_phone_number_prompt"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:gravity="center">
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"></View>
-            <TextView
-                style="@style/tv_start_light_small"
-                android:id="@+id/tv_terms"
-                android:layout_weight="5"
-                android:layout_width="0dp"
-                android:gravity="center"
-                android:maxLines="2"
-                android:text="@string/text_start_third_party_prompt"
-                android:textSize="@dimen/text_small_size"
-                />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"></View>
-        </LinearLayout>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"></View>
+    </LinearLayout>
 
 
-    <com.gc.materialdesign.views.ButtonRectangle
-            android:id="@+id/br_next"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:textSize="@dimen/text_large_size"
-            android:text="@string/text_start_next"
-            app:rippleSpeed="50"
-            android:background="@color/btn_bg_color_green_normal"
-            android:layout_marginBottom="@dimen/default_content_padding"
-            android:layout_marginLeft="@dimen/default_view_margin"
-            android:layout_marginRight="@dimen/default_view_margin"
-            app:rippleColor="@color/btn_bg_color_green_press"
-            app:clickAfterRipple="true"/>
+    <com.material.widget.PaperButton
+        android:id="@+id/br_next"
+        style="@style/paper_button_style"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/default_content_padding"
+        android:layout_marginLeft="@dimen/default_view_margin"
+        android:layout_marginRight="@dimen/default_view_margin"
+        app:paper_color="@color/btn_bg_color_green_normal"
+        app:paper_text="@string/text_start_next"
+         />
 
-         <include layout="@layout/progress_layout"/>
+    <include layout="@layout/progress_layout" />
 
 </RelativeLayout>

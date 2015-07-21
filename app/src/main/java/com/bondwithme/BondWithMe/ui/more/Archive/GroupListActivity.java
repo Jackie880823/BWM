@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui.more.Archive;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -18,7 +19,6 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -46,6 +46,7 @@ public class GroupListActivity extends BaseActivity{
     private LinearLayoutManager llm;
     private GroupListAdapter adapter;
     private List<GroupListEntity> data = new ArrayList<>();
+    private View vProgress;
 
     @Override
     public int getLayout() {
@@ -81,10 +82,12 @@ public class GroupListActivity extends BaseActivity{
 
     @Override
     public void initView() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
-        }
-        mProgressDialog.show();
+//        if (mProgressDialog == null) {
+//            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
+//        }
+//        mProgressDialog.show();
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
         rvList.setLayoutManager(llm);
@@ -127,7 +130,8 @@ public class GroupListActivity extends BaseActivity{
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
-        mProgressDialog.dismiss();
+//        mProgressDialog.dismiss();
+        vProgress.setVisibility(View.GONE);
     }
 
     @Override
@@ -148,7 +152,8 @@ public class GroupListActivity extends BaseActivity{
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override

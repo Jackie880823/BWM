@@ -23,11 +23,6 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.gc.materialdesign.widgets.Dialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
@@ -36,6 +31,11 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.material.widget.CircularProgress;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +60,7 @@ public class CreateGroupActivity extends BaseActivity {
     private EditText etSearch;
     private List<String> checkItem = new ArrayList();
 
-    private ProgressBarCircularIndeterminate progressBar;
+    private CircularProgress progressBar;
 
     public static CreateGroupActivity instance;
     private Context mContext;

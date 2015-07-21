@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -51,7 +50,7 @@ public class ResetPasswordActivity extends BaseActivity{
     private UserEntity userEntity = new UserEntity();
     private List<UserEntity> userList;
 
-    ProgressDialog progressDialog;
+//    ProgressDialog progressDialog;
 
     @Override
     public int getLayout() {
@@ -88,7 +87,7 @@ public class ResetPasswordActivity extends BaseActivity{
     @Override
     public void initView() {
         
-        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
+//        progressDialog = new ProgressDialog(this,getResources().getString(R.string.text_dialog_loading));
 
         userEntity = (UserEntity) getIntent().getExtras().getSerializable("userEntity");
 
@@ -337,7 +336,7 @@ public class ResetPasswordActivity extends BaseActivity{
     public void login()
     {
         btnNext.setClickable(false);
-        progressDialog.show();
+//        progressDialog.show();
         HashMap<String, String> jsonParams = new HashMap<String, String>();
 
         jsonParams.put("username", userEntity.getUser_login_id());
@@ -387,12 +386,12 @@ public class ResetPasswordActivity extends BaseActivity{
 
                         startActivity(intent);
                         finish();
-                        progressDialog.dismiss();
+//                        progressDialog.dismiss();
                     }
 
                 } catch (JSONException e) {
                     btnNext.setClickable(true);
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                     e.printStackTrace();
                 }
             }
@@ -400,7 +399,7 @@ public class ResetPasswordActivity extends BaseActivity{
             @Override
             public void onError(Exception e) {
                 btnNext.setClickable(true);
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
                 Log.i("", "error=====" + e.getMessage());
                 Toast.makeText(ResetPasswordActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }

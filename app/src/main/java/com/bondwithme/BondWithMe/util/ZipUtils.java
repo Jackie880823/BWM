@@ -1,9 +1,10 @@
 package com.bondwithme.BondWithMe.util;
 
 import android.content.Context;
+import android.text.TextUtils;
 
-import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
+import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -102,9 +103,7 @@ public class ZipUtils {
         if (!file.exists()) {
             file.mkdirs();
         }
-        InputStream inputStream = null;
-        //打开压缩文件
-        inputStream = context.getAssets().open(assetName);
+        InputStream inputStream = context.getAssets().open(assetName);
         ZipInputStream zipInputStream = new ZipInputStream(inputStream);
         //读取一个进入点
         ZipEntry zipEntry = zipInputStream.getNextEntry();
@@ -119,6 +118,27 @@ public class ZipUtils {
             if (zipEntry.isDirectory()) {
                 file = new File(outputDirectory + File.separator + zipEntry.getName());
                 file.mkdir();
+                String pathname = zipEntry.getName();
+                if (pathname.startsWith("Sticker/")) {
+                    try {
+                        pathname = pathname.substring(pathname.indexOf("/") + 1);
+                        if (!TextUtils.isEmpty(pathname)) {
+                            LocalStickerInfo stickerInfo = new LocalStickerInfo();
+                            if (pathname.endsWith(File.separator)) {
+                                pathname = pathname.substring(0, pathname.lastIndexOf(File.separator));
+                            }
+                            stickerInfo.setName(pathname);
+                            stickerInfo.setPath(pathname);
+                            stickerInfo.setSticker_name("");
+                            stickerInfo.setVersion("1");
+                            stickerInfo.setType("");
+//                            stickerInfo.setPosition(1);
+                            LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             } else {
                 //如果是文件
                 file = new File(outputDirectory + File.separator + zipEntry.getName());
@@ -142,8 +162,19 @@ public class ZipUtils {
         stickerInfo.setPath(zipFileName);
         stickerInfo.setSticker_name("1_B");
         stickerInfo.setVersion("1");
-        stickerInfo.setType(".gif");
-        stickerInfo.setPosition(1);
+
+        if (zipFileName.contains("Bara-Bara_Na")){
+            stickerInfo.setType(".png");
+            stickerInfo.setOrder(System.currentTimeMillis());
+        }else if (zipFileName.contains("A_day_life_of_Ping")){
+            stickerInfo.setOrder(System.currentTimeMillis());
+            stickerInfo.setType(".gif");
+        }else if (zipFileName.contains("Baby_Trunky")){
+            stickerInfo.setOrder(System.currentTimeMillis());
+            stickerInfo.setType(".gif");
+        }
+
         LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
+
     }
 }

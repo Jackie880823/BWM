@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -47,11 +48,10 @@ import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.SendComment;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.CircularProgress;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,7 +72,7 @@ import java.util.Map;
  */
 public class EventDetailFragment extends BaseFragment<EventDetailActivity> implements View.OnClickListener {
     private static final String Tag = EventDetailFragment.class.getSimpleName();
-//    private final static String TAG = EventDetailFragment.class.getSimpleName();
+    //    private final static String TAG = EventDetailFragment.class.getSimpleName();
 
     private ProgressDialog mProgressDialog;
 
@@ -108,7 +108,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private RecyclerView rvList;
     private EventEntity event;
     int colorIntentSelected;
-    private ProgressBarCircularIndeterminate progressBar;
+    private CircularProgress progressBar;
 
     private SendComment sendCommentView;
     private ScrollView Socontent;
@@ -130,10 +130,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private Context mContext;
     private Uri mUri;
 
-    EventCommentEntity  stickerEntity = new EventCommentEntity();
+    EventCommentEntity stickerEntity = new EventCommentEntity();
 
     public static EventDetailFragment newInstance(String... params) {
-//        event = eventEntity;
+        //        event = eventEntity;
         return createInstance(new EventDetailFragment(), params);
     }
 
@@ -142,7 +142,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
-    Handler handler = new Handler(){
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -183,25 +183,25 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
         mContext = getParentActivity();
-//        messageAction = new MessageAction(mContext, handler);
+        //        messageAction = new MessageAction(mContext, handler);
         rvList = getViewById(R.id.rv_event_comment_list);
         final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
-//        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
+        //        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
-//        rvList.setHasFixedSize(true);
+        //        rvList.setHasFixedSize(true);
         initAdapter();
         EventDetailActivity eventDetailActivity = new EventDetailActivity();
         eventDetailActivity.setTitleLeftClick(new EventDetailActivity.TitleLeftClick() {
             @Override
             public void Click() {
-//                if (false) {
+                if(false) {
                     getParentActivity().finish();
-//                } else {
-//                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
-//                }
+                } else {
+                    //                    MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                }
             }
         });
-        if (NetworkUtil.isNetworkConnected(getActivity())) {
+        if(NetworkUtil.isNetworkConnected(getActivity())) {
 
             progressBar = getViewById(R.id.event_detail_progress_bar);
 
@@ -228,7 +228,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             going_count = getViewById(R.id.going_count);
             maybe_count = getViewById(R.id.maybe_count);
             not_going_count = getViewById(R.id.not_going_count);
-//        comment_container = getViewById(R.id.comment_container);
+            //        comment_container = getViewById(R.id.comment_container);
 
 
             btn_intent_all.setOnClickListener(this);
@@ -241,14 +241,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             option_no_going = getViewById(R.id.image_no_going);
             option_maybe = getViewById(R.id.image_maybe);
             option_going = getViewById(R.id.image_going);
-//        option_no_going = getViewById(R.id.option_no_going);
-//        option_maybe = getViewById(R.id.option_maybe);
-//        option_going = getViewById(R.id.option_going);
+            //        option_no_going = getViewById(R.id.option_no_going);
+            //        option_maybe = getViewById(R.id.option_maybe);
+            //        option_going = getViewById(R.id.option_going);
             colorIntentSelected = getResources().getColor(R.color.btn_bg_color_green_press);
-//        colorIntentSelected = getResources().getColor(R.color.default_text_color_while);
+            //        colorIntentSelected = getResources().getColor(R.color.default_text_color_while);
 
             //bind data
-//        bindData();
+            //        bindData();
 
             option_cancel.setOnClickListener(this);
             option_no_going.setOnClickListener(this);
@@ -280,12 +280,12 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     isCommentBim = true;
                     hideAllViewState();
                     mUri = uri;
-                    if(mUri != null){
+                    if(mUri != null) {
                         String path = LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), mUri), 480, 800, false);
                         File file = new File(path);
-                        if (file.exists()){
+                        if(file.exists()) {
                             progressBar.setVisibility(View.VISIBLE);
-//                            vProgress.setVisibility(View.VISIBLE);
+                            //                            vProgress.setVisibility(View.VISIBLE);
                             Map<String, Object> param = new HashMap<>();
                             param.put("content_group_id", event.getContent_group_id());
                             param.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -306,7 +306,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onSendCommentClick(EditText et) {
-                    if (isComment){
+                    if(isComment) {
                         sendComment();
                     }
                     isStickerItemClick = false;
@@ -329,7 +329,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     int totalItemCount = llm.getItemCount();
                     //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                     // dy>0 表示向下滑动
-                    if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                    if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
                         loading = true;
                         requestComment();
                     }
@@ -337,16 +337,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             });
 
 
-
             getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
                 @Override
                 public boolean execute(View v) {
-                    if(vProgress.getVisibility()==View.VISIBLE ){
+                    if(vProgress.getVisibility() == View.VISIBLE) {
                         return false;
                     }
 
-                    if (R.id.tv_title == v.getId()) {
-                        if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
+                    if(R.id.tv_title == v.getId()) {
+                        if(MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
 
                             option_cancel.setVisibility(View.VISIBLE);
                             option_status.setVisibility(View.GONE);
@@ -356,9 +355,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             option_status.setVisibility(View.VISIBLE);
 
                         }
-                        if("2".equals(event.getGroup_event_status())){
+                        if("2".equals(event.getGroup_event_status())) {
                             event_options.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             if(event_options.getVisibility() == View.VISIBLE) {
                                 event_options.setVisibility(View.GONE);
                                 getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
@@ -368,42 +367,42 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             }
                         }
 
-                    } else if (R.id.ib_top_button_right == v.getId()) {
+                    } else if(R.id.ib_top_button_right == v.getId()) {
                         //打开编辑页面
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
                         getActivity().startActivityForResult(intent, 1);
-//                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
-                    }else if(v.getId() == getParentActivity().leftButton.getId()){
-//                        if (isCommentBim){
+                        //                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
+                    } else if(v.getId() == getParentActivity().leftButton.getId()) {
+                        if(isCommentBim) {
                             getParentActivity().finish();
-//                        }else {
-//                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
-//                        }
+                        } else {
+                            //                            MessageUtil.showMessage(getActivity(), R.string.msg_date_not_commentbim_now);
+                        }
 
                     }
                     return false;
                 }
             });
         }
-//        initViewPager();
+        //        initViewPager();
 
     }
 
-//    private void initViewPager() {
-//
-////        if (isFinishing()) {
-////            return;
-////        }
-//        // 开启一个Fragment事务
-//        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//        StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
-//        mainFragment.setPicClickListener(this);
-//        transaction.replace(R.id.sticker_event_fragment, mainFragment);
-//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-//        transaction.addToBackStack(null);
-//        transaction.commitAllowingStateLoss();
-//    }
+    //    private void initViewPager() {
+    //
+    ////        if (isFinishing()) {
+    ////            return;
+    ////        }
+    //        // 开启一个Fragment事务
+    //        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+    //        StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
+    //        mainFragment.setPicClickListener(this);
+    //        transaction.replace(R.id.sticker_event_fragment, mainFragment);
+    //        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+    //        transaction.addToBackStack(null);
+    //        transaction.commitAllowingStateLoss();
+    //    }
     //适配器
     private void initAdapter() {
         adapter = new EventCommentAdapter(getParentActivity(), data, rvList);
@@ -427,21 +426,21 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(event != null){
+        if(event != null) {
             bindData();
             requestComment();
-        }else {
+        } else {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    while (true){
+                    while(true) {
                         try {
                             Thread.sleep(100);
-                            if (getParentActivity() != null && getParentActivity().getDataDone) {
+                            if(getParentActivity() != null && getParentActivity().getDataDone) {
                                 Message.obtain(handler).sendToTarget();
                                 break;
                             }
-                        }catch (Exception e){
+                        } catch(Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -457,7 +456,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
      */
     public void bindData() {
 
-        if (getParentActivity().getEventEntity() != null) {
+        if(getParentActivity().getEventEntity() != null) {
             event = getParentActivity().getEventEntity();
             push_date.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), event.getGroup_creation_date()));
             owner_name.setText(event.getUser_given_name());
@@ -469,10 +468,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             event_date.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), event.getGroup_event_date()));
             location_desc.setText(event.getLoc_name());
 
-            if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
+            if(MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
                 try {
                     going_count.setText((Integer.valueOf(event.getTotal_yes()) - 1) + "");
-                } catch (Exception e) {
+                } catch(Exception e) {
                     e.printStackTrace();
                 }
 
@@ -484,8 +483,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             ResponseStatus[] statuses = ResponseStatus.values();
 
-            for (ResponseStatus status : statuses) {
-                if (status.getServerCode().equals(event.getGroup_member_response())) {
+            for(ResponseStatus status : statuses) {
+                if(status.getServerCode().equals(event.getGroup_member_response())) {
                     currentStatus = status;
                     break;
                 }
@@ -494,14 +493,12 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             }
             changeIntentUI(currentStatus);
             vProgress.setVisibility(View.GONE);
-            if (!TextUtils.isEmpty(event.getLoc_latitude()) && !TextUtils.isEmpty(event.getLoc_longitude())) {
+            if(!TextUtils.isEmpty(event.getLoc_latitude()) && !TextUtils.isEmpty(event.getLoc_longitude())) {
                 event_picture_4_location.setVisibility(View.VISIBLE);
-                VolleyUtil.initNetworkImageView(getActivity(), event_picture_4_location
-                        ,LocationUtil.getLocationPicUrl(mContext, event.getLoc_latitude(), event.getLoc_longitude(),event.getLoc_type())
-                        , R.drawable.network_image_default, R.drawable.network_image_default);
+                VolleyUtil.initNetworkImageView(getActivity(), event_picture_4_location, LocationUtil.getLocationPicUrl(mContext, event.getLoc_latitude(), event.getLoc_longitude(), event.getLoc_type()), R.drawable.network_image_default, R.drawable.network_image_default);
 
                 event_picture_4_location.setOnClickListener(this);
-//                btn_location.setOnClickListener(this);
+                //                btn_location.setOnClickListener(this);
             } else {
                 event_picture_4_location.setVisibility(View.GONE);
             }
@@ -514,12 +511,12 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     private void changeIntentUI(ResponseStatus status) {
-        if (status == null) {
+        if(status == null) {
             return;
         }
-        switch (status) {
+        switch(status) {
             case not_re:
-                if(!MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())){
+                if(!MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
                     if(event_options.getVisibility() == View.GONE) {
                         event_options.setVisibility(View.VISIBLE);
                     }
@@ -536,7 +533,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 option_going.setImageResource(R.drawable.status_going_normal);
                 option_maybe.setImageResource(R.drawable.status_maybe_press);
                 option_no_going.setImageResource(R.drawable.status_not_going_normal);
-                if(!MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())){
+                if(!MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
                     if(event_options.getVisibility() == View.GONE) {
                         event_options.setVisibility(View.VISIBLE);
                     }
@@ -560,20 +557,20 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     public EventCommentAdapter adapter;
 
     //发送大表情
-    private void sendSticker(){
-        if (NetworkUtil.isNetworkConnected(getActivity())){
+    private void sendSticker() {
+        if(NetworkUtil.isNetworkConnected(getActivity())) {
             progressBar.setVisibility(View.VISIBLE);
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_group_id", event.getContent_group_id());
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
             params.put("content_type", "comment");
             params.put("comment_content", "");
-//          Log.i("isStickerItemClick=====","true");
+            //          Log.i("isStickerItemClick=====","true");
             params.put("sticker_group_path", stickerEntity.getSticker_group_path());
             params.put("sticker_name", stickerEntity.getSticker_name());
             params.put("sticker_type", stickerEntity.getSticker_type());
 
-            new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params,Tag, new HttpCallback() {
+            new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -596,15 +593,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
                     progressBar.setVisibility(View.GONE);
-//                    vProgress.setVisibility(View.GONE);
+                    //                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onError(Exception e) {
-//                    UIUtil.hideKeyboard(getActivity(), et_comment);
+                    //                    UIUtil.hideKeyboard(getActivity(), et_comment);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     progressBar.setVisibility(View.GONE);
-//                    vProgress.setVisibility(View.GONE);
+                    //                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -622,41 +619,41 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     //发送评论
     private void sendComment() {
-//        String commentText = et.getText().toString();
-//        if(TextUtils.isEmpty(etChat.getText().toString().trim()) && isStickerItemClick==false) {
-//            // 如果没有输入字符且没有添加表情，不发送评论
-//            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
-//            return;
-//        }
+        //        String commentText = et.getText().toString();
+        //        if(TextUtils.isEmpty(etChat.getText().toString().trim()) && isStickerItemClick==false) {
+        //            // 如果没有输入字符且没有添加表情，不发送评论
+        //            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+        //            return;
+        //        }
         isComment = false;
         if(TextUtils.isEmpty(etChat.getText().toString().trim())) {
             // 如果没有输入字不发送评论
             MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
             isComment = true;
             return;
-        }else {
-            if (NetworkUtil.isNetworkConnected(getActivity())) {
+        } else {
+            if(NetworkUtil.isNetworkConnected(getActivity())) {
                 progressBar.setVisibility(View.VISIBLE);
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("content_group_id", event.getContent_group_id());
                 params.put("comment_owner_id", MainActivity.getUser().getUser_id());
                 params.put("content_type", "comment");
                 params.put("comment_content", etChat.getText().toString().trim());
-//            if(isStickerItemClick){
-                if(false){
-//                Log.i("isStickerItemClick=====","true");
+                //            if(isStickerItemClick){
+                if(false) {
+                    //                Log.i("isStickerItemClick=====","true");
                     params.put("sticker_group_path", stickerEntity.getSticker_group_path());
                     params.put("sticker_name", stickerEntity.getSticker_name());
                     params.put("sticker_type", stickerEntity.getSticker_type());
 
-                }else{
-//                Log.i("isStickerItemClick=====","false");
+                } else {
+                    //                Log.i("isStickerItemClick=====","false");
                     params.put("sticker_group_path", "");
                     params.put("sticker_name", "");
                     params.put("sticker_type", "");
                 }
 
-                new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params,Tag, new HttpCallback() {
+                new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -685,7 +682,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                     @Override
                     public void onError(Exception e) {
-//                    UIUtil.hideKeyboard(getActivity(), et_comment);
+                        //                    UIUtil.hideKeyboard(getActivity(), et_comment);
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                         progressBar.setVisibility(View.GONE);
                     }
@@ -713,7 +710,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         @Override
         protected Boolean doInBackground(Map... params) {
 
-            new HttpTools(App.getContextInstance()).upload(Constant.API_COMMENT_POST_TEXT, params[0],Tag, new HttpCallback() {
+            new HttpTools(App.getContextInstance()).upload(Constant.API_COMMENT_POST_TEXT, params[0], Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
@@ -782,7 +779,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("photo_fullsize", "1");
 
 
-            new HttpTools(App.getContextInstance()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params,Tag, new HttpCallback() {
+            new HttpTools(App.getContextInstance()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
@@ -799,7 +796,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     mUri = null;
                     requestComment();
                     getParentActivity().setResult(Activity.RESULT_OK);
-//                    Log.i("onResult====",string);
+                    //                    Log.i("onResult====",string);
                 }
 
                 @Override
@@ -826,8 +823,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
 
     public void requestComment() {
-        if (NetworkUtil.isNetworkConnected(getActivity())) {
-            if (event == null || MainActivity.getUser() == null)
+        if(NetworkUtil.isNetworkConnected(getActivity())) {
+            if(event == null || MainActivity.getUser() == null)
                 return;
 
             HashMap<String, String> jsonParams = new HashMap<String, String>();
@@ -844,7 +841,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             String url = UrlUtil.generateUrl(Constant.API_EVENT_COMMENT, params);
 
-            new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
+            new HttpTools(getActivity()).get(url, null, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -853,16 +850,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public void onFinish() {
                     progressBar.setVisibility(View.GONE);
-//                    vProgress.setVisibility(View.GONE);
+                    //                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onResult(String response) {
                     GsonBuilder gsonb = new GsonBuilder();
                     Gson gson = gsonb.create();
-                    data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {
-                    }.getType());
-                    if (isRefresh) {
+                    data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {}.getType());
+                    if(isRefresh) {
                         isRefresh = false;
                         currentPage = 1;
                         initAdapter();
@@ -871,7 +867,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         startIndex += data.size();
                         adapter.addData(data);
                     }
-                    if (adapter != null && adapter.getItemCount() > 0) {
+                    if(adapter != null && adapter.getItemCount() > 0) {
                         getViewById(R.id.comment_split_line).setVisibility(View.VISIBLE);
                     }
                 }
@@ -904,12 +900,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
 
-
     private void cancelEvent() {
 
         RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_EVENT_CANCEL, event.getGroup_id()), null);
 
-        new HttpTools(getActivity()).put(requestInfo,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).put(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -950,7 +945,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
      */
     private void updateIntentStatus(ResponseStatus status) {
         String serverCode = status.getServerCode();
-        if (TextUtils.isEmpty(serverCode))
+        if(TextUtils.isEmpty(serverCode))
             return;
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("group_id", event.getGroup_id());
@@ -963,7 +958,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = String.format(Constant.API_EVENT_INTENT, event.getGroup_id());
         requestInfo.jsonParam = jsonParamsString;
-        new HttpTools(getActivity()).put(requestInfo,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).put(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -983,7 +978,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     not_going_count.setText(result.getString("total_no"));
                     getParentActivity().setResult(Activity.RESULT_OK);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                } catch (JSONException e) {
+                } catch(JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -1016,7 +1011,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     enum ResponseStatus {
-        not_re("1"),go("1"), maybe("3"), not_go("2");
+        not_re("1"), go("1"), maybe("3"), not_go("2");
 
         private String mServerCode;
 
@@ -1026,11 +1021,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         ResponseStatus getStatusByCode(String serverCode) {
 
-            if (go.getServerCode().equals(serverCode)) {
+            if(go.getServerCode().equals(serverCode)) {
                 return go;
-            } else if (maybe.getServerCode().equals(serverCode)) {
+            } else if(maybe.getServerCode().equals(serverCode)) {
                 return maybe;
-            } else if (not_go.getServerCode().equals(serverCode)) {
+            } else if(not_go.getServerCode().equals(serverCode)) {
                 return not_go;
             }
             return null;
@@ -1044,16 +1039,16 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()) {
+        switch(v.getId()) {
             case R.id.btn_intent_all:
                 goInvitedStutus();
                 break;
             case R.id.btn_location:
             case R.id.event_picture_4_location:
-                if (TextUtils.isEmpty(event.getLoc_latitude()) || TextUtils.isEmpty(event.getLoc_longitude())) {
+                if(TextUtils.isEmpty(event.getLoc_latitude()) || TextUtils.isEmpty(event.getLoc_longitude())) {
                     return;
                 }
-                LocationUtil.goNavigation(getActivity(), Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()),event.getLoc_type());
+                LocationUtil.goNavigation(getActivity(), Double.valueOf(event.getLoc_latitude()), Double.valueOf(event.getLoc_longitude()), event.getLoc_type());
                 break;
             case R.id.option_cancel:
                 event_options.setVisibility(View.GONE);
@@ -1062,24 +1057,24 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 getParentActivity().finish();
                 break;
             case R.id.image_going:
-//            case R.id.option_going:
+                //            case R.id.option_going:
                 event_options.setVisibility(View.GONE);
-                if (ResponseStatus.go != currentStatus) {
+                if(ResponseStatus.go != currentStatus) {
                     doChangeResponse(ResponseStatus.go);
                 }
                 break;
             case R.id.image_maybe:
-//            case R.id.option_maybe:
+                //            case R.id.option_maybe:
                 event_options.setVisibility(View.GONE);
-                if (ResponseStatus.maybe != currentStatus) {
+                if(ResponseStatus.maybe != currentStatus) {
                     doChangeResponse(ResponseStatus.maybe);
                 }
                 break;
             case R.id.image_no_going:
-//            case R.id.option_no_going:
+                //            case R.id.option_no_going:
 
                 event_options.setVisibility(View.GONE);
-                if (ResponseStatus.not_go != currentStatus) {
+                if(ResponseStatus.not_go != currentStatus) {
                     doChangeResponse(ResponseStatus.not_go);
                 }
                 break;
@@ -1087,11 +1082,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     private void getEventResponseInfos() {
-        if (event == null)
+        if(event == null)
             return;
 
 
-        new HttpTools(getActivity()).get(String.format(Constant.API_EVENT_RESPONSE_INFOS, event.getGroup_id()), null,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_EVENT_RESPONSE_INFOS, event.getGroup_id()), null, Tag, new HttpCallback() {
 
             @Override
             public void onStart() {
@@ -1111,7 +1106,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     going_count.setText(result.getString("total_yes"));
                     maybe_count.setText(result.getString("total_maybe"));
                     not_going_count.setText(result.getString("total_no"));
-                } catch (JSONException e) {
+                } catch(JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -1136,6 +1131,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     /**
      * 删除评论
+     *
      * @param commentId
      */
     private void removeComment(final String commentId) {
@@ -1146,14 +1142,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_COMMENT_DELETE, commentId), null);
-                new HttpTools(getActivity()).delete(requestInfo,Tag, new HttpCallback() {
+                new HttpTools(getActivity()).delete(requestInfo, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }
 
                     @Override
                     public void onFinish() {
-                        if(vProgress!=null)
+                        if(vProgress != null)
                             vProgress.setVisibility(View.GONE);
                     }
 
@@ -1192,7 +1188,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 removeAlertDialog.dismiss();
             }
         });
-        if (!removeAlertDialog.isShowing()) {
+        if(!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
     }
@@ -1205,7 +1201,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
         params.put("user_id", "" + MainActivity.getUser().getUser_id());
         RequestInfo requestInfo = new RequestInfo(Constant.API_EVENT_COMMENT_LOVE, params);
-        new HttpTools(getActivity()).post(requestInfo,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).post(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1238,94 +1234,96 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         });
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Log.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
+        //        Log.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         sendCommentView.onActivityResult(requestCode, resultCode, data);
     }
 
-//    List<Uri> pickUries = new ArrayList();
-//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        sendComment.onActivityResult(requestCode, resultCode, data);
-//        if (getParentActivity().RESULT_OK == resultCode) {
-//            switch (requestCode) {
-//                // 如果是直接从相册获取
-//                case REQUEST_HEAD_PHOTO:
-//                    pickUries.clear();
-//                    if (data != null) {
-//                        if (SDKUtil.IS_JB) {
-//                            ClipData clipData = data.getClipData();
-//                            if (clipData != null) {
-//                                int size = clipData.getItemCount();
-//                                for (int i = 0; i < size; i++) {
-//                                    Uri uri = clipData.getItemAt(i).getUri();
-//                                    pickUries.add(uri);
-//                                }
-//                            } else {
-//                                pickUries.add(data.getData());
-//                            }
-//                        } else {
-//                            pickUries.add(data.getData());
-//                        }
-//                        for (Uri uri : pickUries) {
-//                            EventCommentEntity msgEntity = new EventCommentEntity();
-//                            msgEntity.setSticker_type(".png");
-//                            msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-//                            msgEntity.setUri(uri);
-//                            adapter.addMsgEntity(msgEntity);
-//                            Log.i("相册uri=====", uri.toString());
-//                        }
-//                        //handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
-//                    }
-//
-//                    break;
-//
-//                // 如果是调用相机拍照时
-//                case REQUEST_HEAD_CAMERA:
-//                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP));
-//                    handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
-//                    break;
-//
-//                // 取得裁剪后的图片
-//                case REQUEST_HEAD_FINAL:
-//                    break;
-//                case REQUEST_GET_GROUP_NAME:
-////                    tvTitle.setText(data.getStringExtra("group_name"));
-//                    break;
-//
-//                default:
-//                    break;
-//
-//            }
-//        }
-//        if (resultCode == Activity.RESULT_OK) {
-//            switch (requestCode) {
-//                case Constant.ACTION_EVENT_UPDATE:
-//                    if (data != null && data.getSerializableExtra("event") != null) {
-//                        event = (EventEntity) data.getSerializableExtra("event");
-//                        if (event != null) {
-//                            bindData();
-//                        }
-//                    }
-//                    getParentActivity().setResult(Activity.RESULT_OK);
-//                    getEventResponseInfos();
-//                    break;
-//            }
-//        }
-//    }
+    //    List<Uri> pickUries = new ArrayList();
+    //    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    //    @Override
+    //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    //        super.onActivityResult(requestCode, resultCode, data);
+    //        sendComment.onActivityResult(requestCode, resultCode, data);
+    //        if (getParentActivity().RESULT_OK == resultCode) {
+    //            switch (requestCode) {
+    //                // 如果是直接从相册获取
+    //                case REQUEST_HEAD_PHOTO:
+    //                    pickUries.clear();
+    //                    if (data != null) {
+    //                        if (SDKUtil.IS_JB) {
+    //                            ClipData clipData = data.getClipData();
+    //                            if (clipData != null) {
+    //                                int size = clipData.getItemCount();
+    //                                for (int i = 0; i < size; i++) {
+    //                                    Uri uri = clipData.getItemAt(i).getUri();
+    //                                    pickUries.add(uri);
+    //                                }
+    //                            } else {
+    //                                pickUries.add(data.getData());
+    //                            }
+    //                        } else {
+    //                            pickUries.add(data.getData());
+    //                        }
+    //                        for (Uri uri : pickUries) {
+    //                            EventCommentEntity msgEntity = new EventCommentEntity();
+    //                            msgEntity.setSticker_type(".png");
+    //                            msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+    //                            msgEntity.setUri(uri);
+    //                            adapter.addMsgEntity(msgEntity);
+    //                            Log.i("相册uri=====", uri.toString());
+    //                        }
+    //                        //handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
+    //                    }
+    //
+    //                    break;
+    //
+    //                // 如果是调用相机拍照时
+    //                case REQUEST_HEAD_CAMERA:
+    //                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP));
+    //                    handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
+    //                    break;
+    //
+    //                // 取得裁剪后的图片
+    //                case REQUEST_HEAD_FINAL:
+    //                    break;
+    //                case REQUEST_GET_GROUP_NAME:
+    ////                    tvTitle.setText(data.getStringExtra("group_name"));
+    //                    break;
+    //
+    //                default:
+    //                    break;
+    //
+    //            }
+    //        }
+    //        if (resultCode == Activity.RESULT_OK) {
+    //            switch (requestCode) {
+    //                case Constant.ACTION_EVENT_UPDATE:
+    //                    if (data != null && data.getSerializableExtra("event") != null) {
+    //                        event = (EventEntity) data.getSerializableExtra("event");
+    //                        if (event != null) {
+    //                            bindData();
+    //                        }
+    //                    }
+    //                    getParentActivity().setResult(Activity.RESULT_OK);
+    //                    getEventResponseInfos();
+    //                    break;
+    //            }
+    //        }
+    //    }
 
     /**
      * 上传照片
+     *
      * @param uri
      */
     private void uploadImage(Uri uri) {
         String path = LocalImageLoader.compressBitmap(mContext, FileUtil.getRealPathFromURI(mContext, uri), 480, 800, false);
         File file = new File(path);
-        if (!file.exists()) {
+        if(!file.exists()) {
             return;
         }
         Map<String, Object> params = new HashMap<>();
@@ -1335,7 +1333,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("file", file);
         params.put("photo_fullsize", "1");
 
-        new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -1352,7 +1350,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 mUri = null;
                 requestComment();
                 getParentActivity().setResult(Activity.RESULT_OK);
-//                    Log.i("onResult====",string);
+                //                    Log.i("onResult====",string);
             }
 
             @Override
@@ -1377,123 +1375,123 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
      * fragment 再次显示的时候刷新数据
      * @param isVisibleToUser
      */
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser) {
-//            //相当于Fragment的onResume
-//            if (event != null) {
-//                bindData();
-//                requestComment();
-//            } else {
-//                new AsyncTask<Void, Void, Void>() {
-//                    @Override
-//                    protected Void doInBackground(Void... params) {
-//                        while (true) {
-//                            if (getParentActivity() != null && getParentActivity().getDataDone) {
-//                                break;
-//                            }
-//                        }
-//                        return null;
-//                    }
-//
-//                    @Override
-//                    protected void onPostExecute(Void aVoid) {
-//                        bindData();
-//                        requestComment();
-//                    }
-//                }.execute();
-//            }
-//        } else {
-//            //相当于Fragment的onPause
-//        }
-//    }
+    //    @Override
+    //    public void setUserVisibleHint(boolean isVisibleToUser) {
+    //        super.setUserVisibleHint(isVisibleToUser);
+    //        if (isVisibleToUser) {
+    //            //相当于Fragment的onResume
+    //            if (event != null) {
+    //                bindData();
+    //                requestComment();
+    //            } else {
+    //                new AsyncTask<Void, Void, Void>() {
+    //                    @Override
+    //                    protected Void doInBackground(Void... params) {
+    //                        while (true) {
+    //                            if (getParentActivity() != null && getParentActivity().getDataDone) {
+    //                                break;
+    //                            }
+    //                        }
+    //                        return null;
+    //                    }
+    //
+    //                    @Override
+    //                    protected void onPostExecute(Void aVoid) {
+    //                        bindData();
+    //                        requestComment();
+    //                    }
+    //                }.execute();
+    //            }
+    //        } else {
+    //            //相当于Fragment的onPause
+    //        }
+    //    }
 
 
-//     /**
-//      * 打开相册
-//      */
-//    private void openAlbum() {
-//        intent = new Intent(Intent.ACTION_PICK, null);
-//        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-//        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-//        startActivityForResult(intent, REQUEST_HEAD_PHOTO);
-//
-//    }
-//
-//    /**
-//     * 打开相机
-//     */
-//    private void openCamera() {
-//        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        intent.putExtra("camerasensortype", 2);
-//        // 下面这句指定调用相机拍照后的照片存储的路径
-//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-//                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
-//                        CACHE_PIC_NAME_TEMP)));
-//        // 图片质量为高
-//        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-//        intent.putExtra("return-data", false);
-//        startActivityForResult(intent, REQUEST_HEAD_CAMERA);
-//    }
+    //     /**
+    //      * 打开相册
+    //      */
+    //    private void openAlbum() {
+    //        intent = new Intent(Intent.ACTION_PICK, null);
+    //        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+    //        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+    //        startActivityForResult(intent, REQUEST_HEAD_PHOTO);
+    //
+    //    }
+    //
+    //    /**
+    //     * 打开相机
+    //     */
+    //    private void openCamera() {
+    //        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    //        intent.putExtra("camerasensortype", 2);
+    //        // 下面这句指定调用相机拍照后的照片存储的路径
+    //        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
+    //                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
+    //                        CACHE_PIC_NAME_TEMP)));
+    //        // 图片质量为高
+    //        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+    //        intent.putExtra("return-data", false);
+    //        startActivityForResult(intent, REQUEST_HEAD_CAMERA);
+    //    }
 
-//    List<Uri> pickUries = new ArrayList();
-//
-//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (getParentActivity().RESULT_OK == resultCode) {
-//            switch (requestCode) {
-//                // 如果是直接从相册获取
-//                case REQUEST_HEAD_PHOTO:
-//                    pickUries.clear();
-//                    if (data != null) {
-//                        if (SDKUtil.IS_JB) {
-//                            ClipData clipData = data.getClipData();
-//                            if (clipData != null) {
-//                                int size = clipData.getItemCount();
-//                                for (int i = 0; i < size; i++) {
-//                                    Uri uri = clipData.getItemAt(i).getUri();
-//                                    pickUries.add(uri);
-//                                }
-//                            } else {
-//                                pickUries.add(data.getData());
-//                            }
-//                        } else {
-//                            pickUries.add(data.getData());
-//                        }
-//                        for (Uri uri : pickUries) {
-//                            MsgEntity msgEntity = new MsgEntity();
-//                            msgEntity.setSticker_type(".png");
-//                            msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-//                            msgEntity.setUri(uri);
-////                            messageChatAdapter.addMsgEntity(msgEntity);
-//                        }
-//                        handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
-//                    }
-//
-//                    break;
-//
-//                // 如果是调用相机拍照时
-//                case REQUEST_HEAD_CAMERA:
-//                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP));
-//                    handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
-//                    break;
-//
-//                // 取得裁剪后的图片
-//                case REQUEST_HEAD_FINAL:
-//                    break;
-//                case REQUEST_GET_GROUP_NAME:
-//                    tvTitle.setText(data.getStringExtra("group_name"));
-//                    break;
-//
-//                default:
-//                    break;
-//
-//            }
-//        }
-//    }
+    //    List<Uri> pickUries = new ArrayList();
+    //
+    //    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    //    @Override
+    //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    //        super.onActivityResult(requestCode, resultCode, data);
+    //        if (getParentActivity().RESULT_OK == resultCode) {
+    //            switch (requestCode) {
+    //                // 如果是直接从相册获取
+    //                case REQUEST_HEAD_PHOTO:
+    //                    pickUries.clear();
+    //                    if (data != null) {
+    //                        if (SDKUtil.IS_JB) {
+    //                            ClipData clipData = data.getClipData();
+    //                            if (clipData != null) {
+    //                                int size = clipData.getItemCount();
+    //                                for (int i = 0; i < size; i++) {
+    //                                    Uri uri = clipData.getItemAt(i).getUri();
+    //                                    pickUries.add(uri);
+    //                                }
+    //                            } else {
+    //                                pickUries.add(data.getData());
+    //                            }
+    //                        } else {
+    //                            pickUries.add(data.getData());
+    //                        }
+    //                        for (Uri uri : pickUries) {
+    //                            MsgEntity msgEntity = new MsgEntity();
+    //                            msgEntity.setSticker_type(".png");
+    //                            msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+    //                            msgEntity.setUri(uri);
+    ////                            messageChatAdapter.addMsgEntity(msgEntity);
+    //                        }
+    //                        handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
+    //                    }
+    //
+    //                    break;
+    //
+    //                // 如果是调用相机拍照时
+    //                case REQUEST_HEAD_CAMERA:
+    //                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP));
+    //                    handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
+    //                    break;
+    //
+    //                // 取得裁剪后的图片
+    //                case REQUEST_HEAD_FINAL:
+    //                    break;
+    //                case REQUEST_GET_GROUP_NAME:
+    //                    tvTitle.setText(data.getStringExtra("group_name"));
+    //                    break;
+    //
+    //                default:
+    //                    break;
+    //
+    //            }
+    //        }
+    //    }
 
 
 }

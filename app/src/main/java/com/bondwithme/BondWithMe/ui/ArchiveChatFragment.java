@@ -100,6 +100,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         }
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
+
         searchText = getViewById(R.id.et_search);
         searchButton = getViewById(R.id.bv_search);
         rvList = getViewById(R.id.rv_Archive_list);
@@ -138,6 +139,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
             @Override
             public void onClick(View v) {
                 isRefresh = true;
+                vProgress.setVisibility(View.VISIBLE);
                 searchData(searchText.getText().toString().trim());
             }
         });
@@ -192,7 +194,11 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
 
             @Override
             public void onFinish() {
-
+                if(data == null){
+                    getParentActivity().finish();
+                }else {
+                    vProgress.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -266,7 +272,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
 
             @Override
             public void onFinish() {
-
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override

@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui.more.Archive;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -18,7 +19,6 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.gc.materialdesign.widgets.ProgressDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * Created by liangzemian on 15/6/30.
  */
-public class PrivateListActivity extends BaseActivity implements View.OnClickListener{
+public class PrivateListActivity extends BaseActivity {
     private static final String Tag = PrivateListActivity.class.getSimpleName();
     ProgressDialog mProgressDialog;
     private boolean isRefresh;
@@ -47,6 +47,8 @@ public class PrivateListActivity extends BaseActivity implements View.OnClickLis
     private LinearLayoutManager llm;
     private PrivateListAdapter adapter;
     private List<PrivateListEntity> data = new ArrayList<>();
+    private View vProgress;
+
 //    private PrivateListEntity data;
 //    private RelativeLayout rl1;
 //    private RelativeLayout rl2;
@@ -84,10 +86,12 @@ public class PrivateListActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void initView() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
-        }
-        mProgressDialog.show();
+//        if (mProgressDialog == null) {
+//            mProgressDialog = new ProgressDialog(this, getString(R.string.text_loading));
+//        }
+//        mProgressDialog.show();
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
         rvList.setLayoutManager(llm);
@@ -136,25 +140,10 @@ public class PrivateListActivity extends BaseActivity implements View.OnClickLis
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
-        mProgressDialog.dismiss();
+//        mProgressDialog.dismiss();
+        vProgress.setVisibility(View.GONE);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId())
-        {
-//            case R.id.rl_1:
-//                starttest();
-//                break;
-//            case R.id.rl_2:
-//                starttest();
-//                break;
-//            default:
-//                super.onClick(v);
-//                break;
-        }
-
-    }
 //    private void starttest(){
 //        Intent intent = new Intent(PrivateListActivity.this,ArchivePrivateChatActivity.class);
 //        startActivity(intent);
@@ -178,7 +167,8 @@ public class PrivateListActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void onFinish() {
-                mProgressDialog.dismiss();
+//                mProgressDialog.dismiss();
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override

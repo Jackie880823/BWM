@@ -74,19 +74,6 @@ public class StickerItemAdapter extends BaseAdapter{
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(mContext).inflate(R.layout.sticker_item_for_grid,null);
             viewHolder.ivStickerItem = (NetworkImageView) convertView.findViewById(R.id.iv_sticker_item);
-
-//            viewHolder.ivStickerItem.setOnHoverListener(new View.OnHoverListener() {
-//                @Override
-//                public boolean onHover(View v, MotionEvent event) {
-//                    pressTime = System.currentTimeMillis();
-//                    if((pressTime - event.getDownTime()) > 2*1000){
-
-//                        popupBigSticker.showAsDropDown(v,0,0);
-//                    }
-//                    return false;
-//                }
-//            });
-//
             convertView.setTag(viewHolder);
         }else {
             viewHolder = (ViewHolder) convertView.getTag();

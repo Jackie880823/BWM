@@ -19,11 +19,6 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
-import com.gc.materialdesign.widgets.Dialog;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MessageFragmentPagerAdapter;
@@ -33,6 +28,11 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.material.widget.CircularProgress;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +60,7 @@ public class MessageFragment extends BaseFragment<MainActivity> {
     ImageButton mTop;
     ScrollView mSv;
 
-    ProgressBarCircularIndeterminate progressBar;
+    CircularProgress progressBar;
 
 
     GroupEntity groupEntity = new GroupEntity();

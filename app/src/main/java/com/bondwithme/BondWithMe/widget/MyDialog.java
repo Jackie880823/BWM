@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.gc.materialdesign.widgets.Dialog;
 import com.bondwithme.BondWithMe.R;
+import com.material.widget.Dialog;
 
 public class MyDialog extends Dialog {
 
@@ -63,7 +63,7 @@ public class MyDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initViewStyle();
-        LinearLayout llContent = (LinearLayout) findViewById(com.gc.materialdesign.R.id.contentContainer);
+        LinearLayout llContent = (LinearLayout) findViewById(com.material.widget.R.id.contentContainer);
 
         if(isOnlyMessage){
             TextView textView = new TextView(context);

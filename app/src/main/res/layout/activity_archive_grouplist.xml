@@ -1,4 +1,4 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,7 +17,8 @@
     <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_main_top">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvList"
@@ -26,6 +27,6 @@
 
     </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
 
+    <include layout="@layout/progress_layout"/>
 
-
-</LinearLayout>
+</RelativeLayout>

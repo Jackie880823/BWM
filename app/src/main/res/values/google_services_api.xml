@@ -27,7 +27,5 @@ https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend
 
 
     <!-- GCM -->
-    <!--<string name="gcm_sender_id" templateMergeStrategy="preserve">559996630584</string>-->
-    <!-- test -->
-    <string name="gcm_sender_id" templateMergeStrategy="preserve" translatable="false">883424271065</string>
+    <string name="gcm_sender_id" templateMergeStrategy="preserve" translatable="false">102995201935</string>
 </resources>

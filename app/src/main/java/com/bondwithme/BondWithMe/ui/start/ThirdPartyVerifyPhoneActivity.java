@@ -5,7 +5,9 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -19,10 +21,11 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FaceBookUserEntity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.CountryCodeActivity;
+import com.bondwithme.BondWithMe.util.CountryCodeUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.facebook.login.LoginManager;
-import com.gc.materialdesign.views.Button;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +53,7 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
     private TextView tvStartCountryCode;
     private EditText etPhoneNumber;
 
-    private Button brNext;
+    private PaperButton brNext;
     private RelativeLayout rlProgress;
 
     private FaceBookUserEntity faceBookUserEntity;
@@ -107,7 +110,8 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
 
     @Override
     protected void setTitle() {
-
+        //TODO
+        //需要什么标题呢
     }
 
     @Override
@@ -142,6 +146,30 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
 
         rlCountryCode.setOnClickListener(this);
         brNext.setOnClickListener(this);
+
+        tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
+        tvStartCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
+
+        tvCountryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(tvCountryCode.getText().toString())) {
+                    rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                } else {
+                    rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                }
+            }
+        });
     }
 
     @Override

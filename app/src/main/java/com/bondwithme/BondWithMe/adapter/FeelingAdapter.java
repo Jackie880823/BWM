@@ -28,14 +28,14 @@ public class FeelingAdapter extends RecyclerView.Adapter<FeelingAdapter.VHItem> 
     }
 
     @Override
-    public FeelingAdapter.VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
+    public VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feeling_item, parent, false);
         // ViewHolder参数一定要是Item的Root节点.
         return new VHItem(view);
     }
 
     @Override
-    public void onBindViewHolder(FeelingAdapter.VHItem holder, int position) {
+    public void onBindViewHolder(VHItem holder, int position) {
 
         String iconPath = data.get(position);
         try {

@@ -31,7 +31,7 @@ import com.bondwithme.BondWithMe.util.MD5Util;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
-import com.gc.materialdesign.views.Button;
+import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,7 +62,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
     private EditText etPassword;
     private TextView tvPasswordPrompt;
 //    private TextView tvLogIn;
-    private Button brSignUp;
+    private PaperButton brSignUp;
     private TextView tvTerms;
     private ImageView ivUsername;
     private RelativeLayout rlProgress;
@@ -179,7 +179,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         etPassword = (EditText)view.findViewById(R.id.et_password);
         tvPasswordPrompt = (TextView)view.findViewById(R.id.tv_password_prompt);
 //        tvLogIn = (TextView)view.findViewById(R.id.tv_btn_log_in);
-        brSignUp = (Button)view.findViewById(R.id.br_sign_up);
+        brSignUp = (PaperButton) view.findViewById(R.id.br_sign_up);
         tvTerms = (TextView)view.findViewById(R.id.tv_terms);
         ivUsername = (ImageView)view.findViewById(R.id.iv_username);
         rlProgress = (RelativeLayout)view.findViewById(R.id.rl_progress);
@@ -244,6 +244,29 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
             }
         });
 
+        tvCountryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(tvCountryCode.getText().toString()))
+                {
+                    rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
+                }
+                else
+                {
+                    rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                }
+            }
+        });
 
     }
 

@@ -33,10 +33,10 @@ import com.bondwithme.BondWithMe.util.MslToast;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
-import com.gc.materialdesign.widgets.Dialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -492,12 +492,18 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     }
 
     private void showGroupEmptyView() {
+        if (groupRefreshLayout.getVisibility() == View.VISIBLE) {
+            groupRefreshLayout.setVisibility(View.GONE);
+        }
         emptyGroupMessageLinear.setVisibility(View.VISIBLE);
         emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
         emptyGroupMessageTv.setText("");
     }
 
     private void hideGroupEmptyView() {
+        if (groupRefreshLayout.getVisibility() == View.GONE) {
+            groupRefreshLayout.setVisibility(View.VISIBLE);
+        }
         emptyGroupMessageLinear.setVisibility(View.GONE);
     }
 
@@ -587,12 +593,18 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     }
 
     private void showMemberEmptyView() {
+        if (userRefreshLayout.getVisibility() == View.VISIBLE) {
+            userRefreshLayout.setVisibility(View.GONE);
+        }
         emptyMemberMessageLinear.setVisibility(View.VISIBLE);
         emptyMemberMessageIv.setImageResource(R.drawable.message_member_empty);
         emptyMemberMessageTv.setText("");
     }
 
     private void hideMemberEmptyView() {
+        if (userRefreshLayout.getVisibility() == View.GONE) {
+            userRefreshLayout.setVisibility(View.VISIBLE);
+        }
         emptyMemberMessageLinear.setVisibility(View.GONE);
     }
 

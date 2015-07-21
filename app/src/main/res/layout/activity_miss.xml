@@ -29,5 +29,12 @@
 
     </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
 
+    <RelativeLayout
+        android:layout_below="@+id/fragment_main_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <include layout="@layout/progress_layout"/>
+    </RelativeLayout>
+
 
 </RelativeLayout>

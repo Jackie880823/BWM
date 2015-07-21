@@ -1,9 +1,11 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.IntentCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,14 +16,14 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
@@ -232,10 +234,18 @@ public class InformationUsernameActivity extends BaseActivity {
                                 AppTokenEntity tokenEntity = gson.fromJson(jsonObject.getString("token"), AppTokenEntity.class);
 
                                 if (userEntity != null ) {
-                                    Intent intent = new Intent(InformationUsernameActivity.this, PersonalPictureActivity.class);
-                                    intent.putExtra("user", userEntity);
-                                    intent.putExtra("token", tokenEntity);
-                                    startActivity(intent);
+//                                    Intent intent = new Intent(InformationUsernameActivity.this, PersonalPictureActivity.class);
+//                                    /**wing modified for clear activity stack*/
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                    intent.putExtra("user", userEntity);
+//                                    intent.putExtra("token", tokenEntity);
+//                                    startActivity(intent);
+                                    Intent intentToBeNewRoot = new Intent(InformationUsernameActivity.this, PersonalPictureActivity.class);
+                                    ComponentName cn = intentToBeNewRoot.getComponent();
+                                    Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+                                    mainIntent.putExtra("user", userEntity);
+                                    mainIntent.putExtra("token", tokenEntity);
+                                    startActivity(mainIntent);
                                 }
                                 else
                                 {
