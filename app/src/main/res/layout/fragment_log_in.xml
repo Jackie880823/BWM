@@ -103,6 +103,8 @@
             android:textStyle="bold"
             android:clickable="true"
             android:textSize="@dimen/text_medium_size"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:padding="@dimen/default_content_padding"
             android:textColor="@color/default_text_color_blue"
             android:text="@string/text_start_forget_password"
             />
