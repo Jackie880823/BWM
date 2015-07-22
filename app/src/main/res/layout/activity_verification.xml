@@ -47,7 +47,7 @@
                     android:id="@+id/tv_phone_number"
                     style="@style/tv_start_default"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="+6013528899226"
+                    android:text=""
                     android:textColor="@color/btn_bg_color_green_normal"
                     android:singleLine="true"
                     android:textSize="@dimen/_30dp"/>

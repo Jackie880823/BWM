@@ -517,7 +517,7 @@
     <string name="text_start_username">用户名</string>
     <string name="text_start_log_in">登录</string>
     <string name="text_start_sign_up">注册</string>
-    <string name="text_start_terms"><Data><![CDATA[ <b>By signing up now mean you agreed with our <font color="#0087FF">Terms & Conditions</font></b> ]]></Data></string>
+    <string name="text_start_terms"><Data><![CDATA[ <b>点击注册表示你已经同意我们的 <font color="#0087FF">条款 & 细则</font></b> ]]></Data></string>
     <string name="text_start_or_register_with">或注册使用</string>
     <string name="text_start_forget_password">忘记密码?</string>
     <string name="text_start_or_log_in_with">或登录使用</string>
@@ -527,13 +527,13 @@
     <string name="text_start_phone_number_exist">手机号已被使用.</string>
     <string name="text_start_username_exist">用户名已被使用.</string>
     <string name="text_start_verification_prompt">你的验证码将发送到：</string>
-    <string name="text_start_verification_time_prompt">SMS will arrive in %s seconds.</string>
+    <string name="text_start_verification_time_prompt">短信将在 %s 秒内收到.</string>
     <string name="text_start_verification_resend_code">重新获取.</string>
     <string name="text_start_next">下一步</string>
-    <string name="title_start_details">详情</string>
+    <string name="title_start_details">详细资料</string>
     <string name="title_start_Verification">验证</string>
     <string name="title_start_forgot_password">忘记密码</string>
-    <string name="text_start_detail_first_name_prompt">First name will be shown as Display Name.</string>
+    <string name="text_start_detail_first_name_prompt">名将作为显示名称.</string>
     <string name="text_start_detail_compulsory_field_error">必填资料.</string>
     <string name="text_start_phone_number_required">该手机号将用来申请验证码.</string>
     <string name="text_start_fail_verify_code">资料有误，请再次尝试.</string>
@@ -541,8 +541,11 @@
     <string name="text_start_re_enter_password">再次输入新密码</string>
     <string name="text_start_password_reset">修改密码</string>
     <string name="text_start_successful">成功!</string>
-    <string name="facebook_app_id">802726666512653</string>
     <string name="text_start_third_party_prompt">输入你的手机号确认你的身份.</string>
     <string name="title_start_select_account">账号选择</string>
+    <string name="text_start_thank_you">感谢您完成注册!</string>
+    <string name="text_start_welcome">欢迎到来，乐于使用!</string>
+    <string name="text_start_start_using">开始使用!</string>
+    <string name="text_start_facebook">Facebook</string>
 
 </resources>

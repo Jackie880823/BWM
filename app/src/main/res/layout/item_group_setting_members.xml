@@ -30,6 +30,7 @@
             android:lines="1"
             android:ellipsize="end"
             android:textSize="@dimen/text_medium_size"
+            android:singleLine="true"
             android:textColor="@android:color/black"/>
 
                 <TextView

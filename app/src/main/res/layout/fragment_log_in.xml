@@ -89,7 +89,6 @@
             app:paper_text="@string/text_start_log_in"
             app:paper_color="@color/btn_bg_color_green_normal"
             android:layout_below="@+id/rl_password"
-            android:layout_marginTop="@dimen/default_view_margin"
             android:layout_marginLeft="@dimen/default_view_margin"
             android:layout_marginRight="@dimen/default_view_margin"
             />
@@ -149,13 +148,13 @@
                             android:gravity="center">
                             <ImageView
                                 android:id="@+id/iv_facebook"
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"
-                                android:src="@drawable/com_facebook_button_icon" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/facebook" />
 
                             <TextView
                                 style="@style/tv_start_light_small"
-                                android:text="Facebook" />
+                                android:text="@string/text_start_facebook" />
 
                         </LinearLayout>
 
