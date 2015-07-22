@@ -541,8 +541,8 @@
     <string name="text_start_re_enter_password">Re-enter Password</string>
     <string name="text_start_password_reset">Password reset</string>
     <string name="text_start_successful">SUCCESSFUL!</string>
-    <string name="facebook_app_id">802726666512653</string>
+    <string name="facebook_app_id">1655238261362116</string>
     <string name="text_start_third_party_prompt">Please enter your Phone Number to confirm your identity.</string>
     <string name="title_start_select_account">Select Account</string>
-
+    <!--<string name="facebook_app_id">802726666512653</string>-->
 </resources>

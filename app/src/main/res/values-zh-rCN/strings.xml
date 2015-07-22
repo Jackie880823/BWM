@@ -541,7 +541,6 @@
     <string name="text_start_re_enter_password">再次输入新密码</string>
     <string name="text_start_password_reset">修改密码</string>
     <string name="text_start_successful">成功!</string>
-    <string name="facebook_app_id">802726666512653</string>
     <string name="text_start_third_party_prompt">输入你的手机号确认你的身份.</string>
     <string name="title_start_select_account">账号选择</string>
 
