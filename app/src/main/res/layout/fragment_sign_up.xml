@@ -87,7 +87,6 @@
             app:paper_text="@string/text_start_sign_up"
             app:paper_color="@color/btn_bg_color_green_normal"
             android:layout_below="@+id/rl_password"
-            android:layout_marginTop="@dimen/default_view_margin"
             android:layout_marginLeft="@dimen/default_view_margin"
             android:layout_marginRight="@dimen/default_view_margin"
             />
@@ -105,7 +104,7 @@
                 <TextView
                     style="@style/tv_start_light_small"
                     android:id="@+id/tv_terms"
-                    android:layout_weight="5"
+                    android:layout_weight="2"
                     android:layout_width="0dp"
                     android:gravity="center"
                     android:maxLines="2"
