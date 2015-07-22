@@ -107,7 +107,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private TextView emptyGroupTv;
     private TextView emptyMemberTv;
     private View vProgress;
-
+    private GridView groupListView;
     private String MemeberSearch;
     private String GroupSearch;
     private boolean isup;
@@ -534,7 +534,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
         mLists.add(userView);
         View groupView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
-        final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
+        groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
+//        final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
+
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
         groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
         emptyGroupLinear = (LinearLayout) groupView.findViewById(R.id.family_empty_linear);
@@ -552,6 +554,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             public void onRefresh() {
                 isGroupRefresh = true;
 //                requestData();
+                groupAdapter.clearBitmap(groupEntityList);
+                groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
+                groupListView.setAdapter(groupAdapter);
                 getData();
             }
 
@@ -565,7 +570,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 intent.putExtra("type", 1);
                 intent.putExtra("groupId", groupAdapter.getGroupList().get(arg2).getGroup_id());
                 intent.putExtra("titleName", groupAdapter.getGroupList().get(arg2).getGroup_name());
-                startActivity(intent);
+                startActivityForResult(intent, 1);
 //                startActivityForResult(intent,1);
             }
         });
@@ -609,6 +614,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     @Override
     public void onStart() {
+        Log.i("onStart===","onStart");
         super.onStart();
         getData();
     }
@@ -1098,14 +1104,19 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        Log.i("F_requestCode====",requestCode+"");
+//        Log.i("F_resultCode====",resultCode+"");
         switch (requestCode) {
             case 1:
-                if (resultCode == -1 || resultCode == 0) {
-//                    requestData();
+                if (resultCode == -1) {
+                    groupAdapter.clearBitmap(groupEntityList);
+                    groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
+                    groupListView.setAdapter(groupAdapter);
                     getData();
                 }
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     @Override
