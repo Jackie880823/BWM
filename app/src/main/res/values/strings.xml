@@ -542,7 +542,12 @@
     <string name="text_start_password_reset">Password reset</string>
     <string name="text_start_successful">SUCCESSFUL!</string>
     <string name="facebook_app_id">1655238261362116</string>
+    <!--<string name="facebook_app_id">802726666512653</string>-->
     <string name="text_start_third_party_prompt">Please enter your Phone Number to confirm your identity.</string>
     <string name="title_start_select_account">Select Account</string>
-    <!--<string name="facebook_app_id">802726666512653</string>-->
+    <string name="text_start_thank_you">Thank you for signing up!</string>
+    <string name="text_start_welcome">Welcome aboard and happy bonding!</string>
+    <string name="text_start_start_using">Start Using!</string>
+    <string name="text_start_facebook">Facebook</string>
+
 </resources>

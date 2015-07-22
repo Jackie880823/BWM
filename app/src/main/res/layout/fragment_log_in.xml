@@ -157,7 +157,7 @@
 
                             <TextView
                                 style="@style/tv_start_light_small"
-                                android:text="Facebook" />
+                                android:text="@string/text_start_facebook" />
 
                         </LinearLayout>
 
