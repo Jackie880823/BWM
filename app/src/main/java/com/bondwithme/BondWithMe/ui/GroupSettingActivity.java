@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -77,6 +79,9 @@ public class GroupSettingActivity extends BaseActivity {
     private List<FamilyGroupEntity> familyGroupEntityList;
     private int type;//0 聊天界面打开，1是Archive打开
 
+    String headUrl;
+    BitmapTools mBitmapTools;
+
     @Override
     public int getLayout() {
         return R.layout.activity_group_setting;
@@ -97,7 +102,7 @@ public class GroupSettingActivity extends BaseActivity {
     protected void titleLeftEvent() {
         Intent intent = new Intent();
         intent.putExtra("groupName", tvName.getText().toString());
-        setResult(RESULT_OK, intent);
+        setResult(RESULT_CANCELED, intent);
         finish();
     }
 
@@ -150,7 +155,11 @@ public class GroupSettingActivity extends BaseActivity {
         groupEntity.setGroup_name(groupName);
         familyGroupEntityList.add(groupEntity);
         gson = new Gson();
-        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
+
+        mBitmapTools = new BitmapTools(mContext);
+        headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
+        mBitmapTools.display(cniMain,headUrl,R.drawable.network_image_default, R.drawable.network_image_default);
+//        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName.setText(groupName);
 
         //groupName = groupEntity.getGroup_name();
@@ -376,6 +385,9 @@ public class GroupSettingActivity extends BaseActivity {
             viewHolder.tvAdmin = (TextView) convertView.findViewById(R.id.tv_admin);
             viewHolder.ivWaitting = (ImageView) convertView.findViewById(R.id.iv_waitting);
 
+//            mBitmapTools = new BitmapTools(mContext);
+//            headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id());
+//            mBitmapTools.display(viewHolder.cniMain,headUrl,R.drawable.network_image_default, R.drawable.network_image_default);
             VolleyUtil.initNetworkImageView(mContext, viewHolder.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
             if (userEntity.getUser_id().equals(userEntity.getGroup_owner_id())) {
@@ -710,6 +722,8 @@ public class GroupSettingActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == this.RESULT_OK) {
+            Log.i("G_requestCode====",requestCode+"");
+            Log.i("G_resultCode====",resultCode+"");
             switch (requestCode) {
                 case GET_MEMBERS:
                     if (addMemberList != null && addMemberList.size() > 0) {
@@ -756,9 +770,14 @@ public class GroupSettingActivity extends BaseActivity {
 
                 /** christopher begin */
                 case SET_GROUP_PIC_NAME:
+                    Log.i("GroupSettingActivity===","GroupSettingActivity");
+                    mBitmapTools.clearMemoryCache();
+                    mBitmapTools.clearDiskCache(null);
                     String newGroupName = data.getStringExtra("groupName");
+                    String groupid = data.getStringExtra("groupid");
                     Intent intent = new Intent();
                     intent.putExtra("groupName",newGroupName);
+                    intent.putExtra("groupid",groupid);
                     setResult(RESULT_OK, intent);
                     finish();
 //                    tvName.setText(data.getStringExtra("groupName"));

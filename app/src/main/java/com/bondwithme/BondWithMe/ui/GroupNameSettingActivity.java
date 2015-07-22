@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,12 +14,11 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -65,6 +63,9 @@ public class GroupNameSettingActivity extends BaseActivity {
 
 //    ProgressDialog progressDialog;
     private String TAG;
+
+    String headUrl;
+    BitmapTools mBitmapTools;
 
     @Override
     public int getLayout() {
@@ -149,7 +150,10 @@ public class GroupNameSettingActivity extends BaseActivity {
         groupName = getIntent().getStringExtra("groupName");
         etGroupName.setText(groupName);
 
-        VolleyUtil.initNetworkImageView(this, civGroupPic, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
+        mBitmapTools = new BitmapTools(this);
+        headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
+        mBitmapTools.display(civGroupPic,headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
+//        VolleyUtil.initNetworkImageView(this, civGroupPic, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
 
         civGroupPic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,11 +272,14 @@ public class GroupNameSettingActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(response);
 
                     if ("Success".equals(jsonObject.getString("response_status"))) {
-
+                        //清除缓存
+                        mBitmapTools.clearMemoryCache();
+                        mBitmapTools.clearDiskCache(null);
                         Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_success_upload_group_profile_phone), Toast.LENGTH_SHORT).show();
                         isUploadImageSuccess = true;
                         Intent intent = new Intent();
                         intent.putExtra("groupName", etGroupName.getText().toString());
+                        intent.putExtra("groupid",groupId);
                         setResult(RESULT_OK, intent);
 //                        progressDialog.dismiss();
                         finish();
