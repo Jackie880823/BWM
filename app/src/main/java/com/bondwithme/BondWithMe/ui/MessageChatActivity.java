@@ -290,7 +290,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         userOrGroupType = getIntent().getIntExtra("type", -1);
         //如果是从新建group打开的
         isNewGroup = getIntent().getIntExtra("isNewGroup", 0);
-        Log.i("isNewGroup====",isNewGroup+"");
+//        Log.i("isNewGroup====",isNewGroup+"");
         if(isNewGroup == 1){
             setResult(RESULT_OK);
         }else {
@@ -557,8 +557,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("M_requestCode====",requestCode+"");
-        Log.i("M_resultCode====",resultCode+"");
+//        Log.i("M_requestCode====",requestCode+"");
+//        Log.i("M_resultCode====",resultCode+"");
         String groupNmae ;
         if (RESULT_OK == resultCode) {
             switch (requestCode) {

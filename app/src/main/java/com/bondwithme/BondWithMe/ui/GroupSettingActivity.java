@@ -849,10 +849,12 @@ public class GroupSettingActivity extends BaseActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-            Intent intent = new Intent();
-            intent.putExtra("group_name", tvName.getText().toString());
-            setResult(RESULT_OK, intent);
-            finish();
+//            Intent intent = new Intent();
+//            intent.putExtra("group_name", tvName.getText().toString());
+//            setResult(RESULT_OK, intent);
+//            finish();
+            titleLeftEvent();
+
         }
         return super.dispatchKeyEvent(event);
     }

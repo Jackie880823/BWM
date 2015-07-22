@@ -1105,16 +1105,11 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Log.i("Fa_onActivityResult===","onActivityResult");
-//        Log.i("requestCode===",requestCode+"");
-//        Log.i("resultCode===",resultCode+"");
+//        Log.i("F_requestCode====",requestCode+"");
+//        Log.i("F_resultCode====",resultCode+"");
         switch (requestCode) {
             case 1:
                 if (resultCode == -1) {
-                    Log.i("Fa_onActivityResult===","onActivityResult");
-                    Log.i("resultCode===",resultCode+"");
-//                    requestData();
-//                    groupAdapter
                     groupAdapter.clearBitmap(groupEntityList);
                     groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
                     groupListView.setAdapter(groupAdapter);
