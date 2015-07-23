@@ -547,5 +547,6 @@
     <string name="text_start_welcome">欢迎到来，乐于使用!</string>
     <string name="text_start_start_using">开始使用!</string>
     <string name="text_start_facebook">Facebook</string>
+    <string name="text_show_message_is_friend">This member is not connected to you. You need to be connected to view profile.</string>
 
 </resources>

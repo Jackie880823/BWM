@@ -549,5 +549,6 @@
     <string name="text_start_welcome">Welcome aboard and happy bonding!</string>
     <string name="text_start_start_using">Start Using!</string>
     <string name="text_start_facebook">Facebook</string>
+    <string name="text_show_message_is_friend">This member is not connected to you. You need to be connected to view profile.</string>
 
 </resources>
