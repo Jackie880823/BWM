@@ -91,7 +91,13 @@ public class PathRelationshipActivity extends BaseActivity {
 
     @Override
     public void finish() {
-        setResult(RESULT_OK);
+        Intent intent = new Intent();
+        if (isZh) {
+            intent.putExtra("relationship", data_Us.get(data_Zh.indexOf(tvRelationship.getText().toString())));
+        } else {
+            intent.putExtra("relationship", tvRelationship.getText().toString());
+        }
+        setResult(RESULT_OK, intent);
         super.finish();
     }
 
@@ -114,6 +120,7 @@ public class PathRelationshipActivity extends BaseActivity {
         fam_nickname = getIntent().getStringExtra("fam_nickname");
         member_status = getIntent().getStringExtra("member_status");
 
+
         if (TextUtils.isEmpty(memberId) && TextUtils.isEmpty(relationship)) {
             finish();
         }
@@ -123,6 +130,13 @@ public class PathRelationshipActivity extends BaseActivity {
         tvRelationship = getViewById(R.id.tv_relationship);//头部右边显示的关系
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_name);//放名字还是放Me????
+
+//        tvRelationship.setText(relationship);
+        if (isZh) {
+            tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));
+        } else {
+            tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", -1)));
+        }
 
         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
@@ -200,11 +214,11 @@ public class PathRelationshipActivity extends BaseActivity {
                             int position = data_Us.indexOf(relationship4En);
                             if (position != -1) {
                                 tvRelationships[i].setText(data_Zh.get(position));
-                                tvRelationship.setText(tvRelationships[0].getText());
+//                                tvRelationship.setText(tvRelationships[0].getText());
                             }
                         } else {
                             tvRelationships[i].setText(relationship4En);
-                            tvRelationship.setText(tvRelationships[0].getText());
+//                            tvRelationship.setText(tvRelationships[0].getText());
                         }
                         /**wing modify end*/
                         tvNames[i].setText(pathList.get(i).getMember_fullname());
@@ -245,9 +259,12 @@ public class PathRelationshipActivity extends BaseActivity {
             case 1:
                 if (resultCode == RESULT_OK) {
                     //获取选择关系界面传来的关系
-                    tvRelationship.setText(data.getStringExtra("relationship"));
                     selectMemeber = data.getExtras().getInt("selectMemeber");
-//                    setResult(RESULT_OK);
+                    if (isZh) {
+                        tvRelationship.setText(data_Zh.get(selectMemeber));
+                    } else {
+                        tvRelationship.setText(data_Us.get(selectMemeber));
+                    }
                     updateRelationship();
                 }
         }
