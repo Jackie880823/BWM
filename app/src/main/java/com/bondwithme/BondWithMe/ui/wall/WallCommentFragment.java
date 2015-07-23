@@ -268,6 +268,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         llLocation = getViewById(R.id.ll_location);
         ivLocation = getViewById(R.id.iv_location);
         tvLocation = getViewById(R.id.tv_location);
+
+        getViewById(R.id.ll_love).setOnClickListener(this);
         llLocation.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
         tvLocation.setOnClickListener(this);
@@ -610,6 +612,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
+            case R.id.ll_love:
             case R.id.iv_love:
                 int count = Integer.valueOf(tvAgreeCount.getText().toString());
                 if(TextUtils.isEmpty(wall.getLove_id())) {

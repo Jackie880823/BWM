@@ -302,6 +302,8 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             });
 
             itemView.findViewById(R.id.top_event).setOnClickListener(this);
+            itemView.findViewById(R.id.ll_comment).setOnClickListener(this);
+            itemView.findViewById(R.id.ll_love).setOnClickListener(this);
             ibAgree.setOnClickListener(this);
             btn_del.setOnClickListener(this);
             imWallsImages.setOnClickListener(this);
@@ -312,6 +314,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             int position = getAdapterPosition();
             WallEntity wallEntity = data.get(position);
             switch(v.getId()) {
+                case R.id.ll_love:
                 case R.id.iv_love:
                     newClick = true;
                     int count = Integer.valueOf(tvAgreeCount.getText().toString());
@@ -331,6 +334,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
                     }
                     break;
                 case R.id.tv_wall_content:
+                case R.id.ll_comment:
                 case R.id.top_event:
                     if(mViewClickListener != null) {
                         mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());

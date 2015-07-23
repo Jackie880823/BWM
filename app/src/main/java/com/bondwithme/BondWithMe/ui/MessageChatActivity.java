@@ -17,6 +17,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -233,13 +234,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     }
 
 
-    @Override
-    public void finish() {
-        if (isNewGroup == 1) {
-            setResult(RESULT_OK);
-        }
-        super.finish();
-    }
+//    @Override
+//    public void finish() {
+//        if (isNewGroup == 1) {
+//            setResult(RESULT_OK);
+//        }else {
+//
+//        }
+//        super.finish();
+//    }
 
     @Override
     protected void setTitle() {
@@ -275,7 +278,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             startActivityForResult(intent, REQUEST_GET_GROUP_NAME);
         }
     }
-
+    @Override
+    protected void titleLeftEvent() {
+        finish();
+    }
     @Override
     protected Fragment getFragment() {
         return null;
@@ -285,7 +291,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public void initView() {
         userOrGroupType = getIntent().getIntExtra("type", -1);
         //如果是从新建group打开的
-        isNewGroup = getIntent().getIntExtra("isNewGroup", -1);
+        isNewGroup = getIntent().getIntExtra("isNewGroup", 0);
+//        Log.i("isNewGroup====",isNewGroup+"");
+        if(isNewGroup == 1){
+            setResult(RESULT_OK);
+        }else {
+            setResult(RESULT_CANCELED);
+        }
         mContext = this;
         messageAction = new MessageAction(mContext, handler);
 //        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
@@ -547,6 +559,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+//        Log.i("M_requestCode====",requestCode+"");
+//        Log.i("M_resultCode====",resultCode+"");
+        String groupNmae ;
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 // 如果是直接从相册获取
@@ -577,16 +592,30 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case REQUEST_HEAD_FINAL:
                     break;
                 case REQUEST_GET_GROUP_NAME:
-                    String groupNmae = data.getStringExtra("groupName");
-                    if (!TextUtils.isEmpty(groupNmae)) {
+                    setResult(RESULT_OK);
+                    Log.i("Me_onActivityResult===2", "onActivityResult");
+                     groupNmae = data.getStringExtra("groupName");
+                    if(!TextUtils.isEmpty(groupNmae)){
                         tvTitle.setText(groupNmae);
                     }
                     break;
-
                 default:
                     break;
 
             }
+        }
+        if(RESULT_CANCELED == resultCode ){
+            switch (requestCode){
+                case REQUEST_GET_GROUP_NAME:
+                    groupNmae = data.getStringExtra("groupName");
+                    if(!TextUtils.isEmpty(groupNmae)){
+                        tvTitle.setText(groupNmae);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 
