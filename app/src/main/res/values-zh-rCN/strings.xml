@@ -547,5 +547,6 @@
     <string name="text_start_welcome">欢迎到来，乐于使用!</string>
     <string name="text_start_start_using">开始使用!</string>
     <string name="text_start_facebook">Facebook</string>
+    <string name="text_show_message_is_friend">他(她)不是你的好友,你不能查看他(她)的资料</string>
 
 </resources>

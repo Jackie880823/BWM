@@ -152,12 +152,9 @@ public class StickerDetailActivity extends BaseActivity {
 
 
     private void initDownloadView() {
-        List<LocalStickerInfo> data = new ArrayList<>();
         try {       //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
-            Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-            data = stickerDao.queryForEq("name",stickerGroupEntity.getName());
-            Log.i(TAG,"==========data.size============="+data.size());
-            if(data.size() > 0){
+            LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(this);
+            if(dao.hasDownloadSticker(stickerGroupEntity.getPath())){
                 tvDownload.setText("Downloaded");
                 tvDownload.setBackgroundColor(getResources().getColor(R.color.default_unenable_item_bg));
                 tvDownload.setEnabled(false);
