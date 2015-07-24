@@ -4,12 +4,14 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -613,6 +615,7 @@ class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     GifImageView gifImageView;
     ImageView pngImageView;
     CircularProgress progressBar;
+    View agreeTouch;
 
 
     public ViewHolder(View itemView) {
@@ -628,9 +631,11 @@ class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
         comment_date = (TextView) itemView.findViewById(R.id.comment_date);
         tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);
         iv_agree = (ImageButton) itemView.findViewById(R.id.iv_agree);
+        agreeTouch = itemView.findViewById(R.id.agree_touch);
+//        expandViewTouchDelegate(iv_agree,50,50,50,50);
         btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
         progressBar = (CircularProgress) itemView.findViewById(R.id.message_progress_bar);
-        iv_agree.setOnClickListener(this);
+        agreeTouch.setOnClickListener(this);
         btn_comment_del.setOnClickListener(this);
 
 //            itemView.setOnClickListener(new View.OnClickListener() {
@@ -646,13 +651,47 @@ class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 
     }
 
+    /**
+     * 扩大View的触摸和点击响应范围,最大不超过其父View范围
+     *
+     *@param view
+     * @param top
+     * @param bottom
+     * @param left
+     * @param right
+     */
+    public void expandViewTouchDelegate(final View view, final int top,
+                                               final int bottom, final int left, final int right) {
+
+        ((View) view.getParent()).post(new Runnable() {
+            @Override
+            public void run() {
+                Rect bounds = new Rect();
+                view.setEnabled(true);
+                view.getHitRect(bounds);
+
+                bounds.top -= top;
+                bounds.bottom += bottom;
+                bounds.left -= left;
+                bounds.right += right;
+
+                TouchDelegate touchDelegate = new TouchDelegate(bounds, view);
+
+                if (View.class.isInstance(view.getParent())) {
+                    ((View) view.getParent()).setTouchDelegate(touchDelegate);
+                }
+            }
+        });
+    }
+
+
 
     @Override
     public void onClick(View v) {
         int position = getAdapterPosition();
         EventCommentEntity commentEntity = data.get(position);
         switch (v.getId()) {
-            case R.id.iv_agree:
+            case R.id.agree_touch:
                 newClick = true;
                 int count = Integer.valueOf(tv_agree_count.getText().toString());
                 if (TextUtils.isEmpty(commentEntity.getLove_id())) {
