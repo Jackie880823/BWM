@@ -56,6 +56,7 @@ public class Constant {
     public static final String API_REGIST_PUSH = API_SERVER + "/bondwithme/index.php/api/pushToken";
     public static final String UN_REGISTER_URL = API_SERVER + "/bondwithme/index.php/api/auth/%s";
 
+
     //event
     public static final String API_EVENT_MAIN = API_SERVER + "/bondwithme/index.php/api/event";
     public static final String API_EVENT_COMMENT = API_SERVER + "/bondwithme/index.php/api/comment";
