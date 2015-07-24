@@ -533,7 +533,8 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
         uriList = stickerBannerPic.uriList;
         LogUtil.d(TAG, "==========uriList.size()========="+uriList.size());
         if (uriList.size() > 0){
-            setImageSwitcher(0);
+            isStickerBanner.setImageURI(uriList.get(0));
+            setSwitcherClick();
         }
         mProgressDialog.setVisibility(View.INVISIBLE);
     }
