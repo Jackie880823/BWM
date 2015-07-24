@@ -479,15 +479,14 @@
     <string name="text_new_everyone">所有会员</string>
     <string name="text_new_family">我的家庭</string>
 
-    <string name="text_sticker_store">Stickies Store</string>
-    <string name="download_stickers">Downloaded Stickies</string>
-    <string name="inside_download">Download</string>
-    <string name="remove">Remove</string>
-    <string name="download">DOWNLOAD</string>
-    <string name="my_sticker">My Stickies</string>
-    <string name="free">Free</string>
-
-    <string name="price">Price:&#160;</string>
+    <string name="text_sticker_store">表情商店</string>
+    <string name="download_stickers">已下载的表情</string>
+    <string name="inside_download">下载</string>
+    <string name="remove">移除</string>
+    <string name="download">下载</string>
+    <string name="my_sticker">我的表情</string>
+    <string name="free">免费</string>
+    <string name="price">价格:&#160;</string>
 
 
     <string name="text_admin">管理员</string>
@@ -500,15 +499,15 @@
     <string name="text_private_posting">Private Posting</string>
     <string name="text_archive_comment">Comment</string>
     <string name="text_member_list">Member List</string>
-    <string name="Downloaded">Downloaded</string>
+    <string name="Downloaded">已下载</string>
     <string name="not_support_64bit">百度地图目前不支持64位CPU</string>
     <string name="text_add_relationship_empty">请选择关系</string>
     <string name="msg_service_not_available">谷歌服务没有启动</string>
     <string name="action_invitation_successful">邀请发送成功</string>
     <string name="log_out">你是否确定登出？</string>
     <string name="text_add_group_photo">添加照片</string>
-    <string name="text_recorder_stickies">Reorder stickies in the chat page</string>
-    <string name="text_sort">Sort</string>
+    <string name="text_recorder_stickies">可以调整表情在聊天界面中的排序</string>
+    <string name="text_sort">排序</string>
 
 
     <string name="text_start_me_life_family">我，我的生活，我的家庭</string>

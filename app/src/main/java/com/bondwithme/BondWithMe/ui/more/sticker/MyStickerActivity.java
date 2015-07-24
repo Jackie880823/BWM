@@ -52,7 +52,9 @@ public class MyStickerActivity extends BaseActivity {
         tvTitle.setText(getResources().getString(R.string.my_sticker));
         rightButton.setVisibility(View.GONE);
         yearButton.setVisibility(View.VISIBLE);
+        yearButton.setTextSize(15);
         yearButton.setText(getResources().getString(R.string.text_sort));
+
     }
 
     @Override
