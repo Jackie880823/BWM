@@ -41,7 +41,7 @@ public class StickerBannerPic {
 
 
     public void getUri(){
-        String str = FileUtil.getCacheFilePath(mContext)+FileUtil.BANNER_DIR_NAME;
+        String str = FileUtil.getCacheFilePath(mContext) + FileUtil.BANNER_DIR_NAME + data.get(0).getBanner_photo();
         File banner = new File(str);
         if (data != null){
             count = data.size();

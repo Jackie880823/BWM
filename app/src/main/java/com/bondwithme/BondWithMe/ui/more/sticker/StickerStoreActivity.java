@@ -484,7 +484,7 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
 
                 }
             } else if (MyStickerActivity.ACTION_UPDATE.equals(intent.getAction())) {
-                int position = intent.getIntExtra("position", 0);
+                int position = getPosition(intent.getStringExtra("sticker_path"),dataStickerGroup);
                 StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
                 ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
                 TextView tvDownload = (TextView) holder.itemView.findViewById(R.id.tv_download);
@@ -533,7 +533,8 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
         uriList = stickerBannerPic.uriList;
         LogUtil.d(TAG, "==========uriList.size()========="+uriList.size());
         if (uriList.size() > 0){
-            setImageSwitcher(0);
+            isStickerBanner.setImageURI(uriList.get(0));
+            setSwitcherClick();
         }
         mProgressDialog.setVisibility(View.INVISIBLE);
     }
