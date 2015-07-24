@@ -55,9 +55,9 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
         holder.tvRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean deleted = false;
+                boolean deleted = true;
                 File f = new File(MainActivity.STICKERS_NAME +"/"+stickerInfo.getPath());
-                deleted = deleteDirectory(f);
+//                deleted = deleteDirectory(f);
                 if (deleted){
                     try {
                         Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
@@ -67,6 +67,7 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
                     }
                     //发广播更新StickerStoreActivity的DOWNLOAD or √
                     Intent intent = new Intent(MyStickerActivity.ACTION_UPDATE);
+                    intent.putExtra("sticker_path",stickerInfo.getPath());
 //                    intent.putExtra("position",stickerInfo.getPosition());
                     mContext.sendBroadcast(intent);
 
