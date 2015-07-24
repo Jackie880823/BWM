@@ -482,7 +482,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             not_going_count.setText(event.getTotal_no());
 
             ResponseStatus[] statuses = ResponseStatus.values();
-
             for(ResponseStatus status : statuses) {
                 if(status.getServerCode().equals(event.getGroup_member_response())) {
                     currentStatus = status;
@@ -1011,7 +1010,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     enum ResponseStatus {
-        //0-no reponse, 1-going, 2-not going, 3-maybe
         not_re("0"), go("1"), maybe("3"), not_go("2");
 
         private String mServerCode;

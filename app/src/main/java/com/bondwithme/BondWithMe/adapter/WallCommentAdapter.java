@@ -233,6 +233,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
             iv_comment_pic = (GifImageView) itemView.findViewById(R.id.iv_comment_pic);
             niv_comment_pic = (NetworkImageView) itemView.findViewById(R.id.niv_comment_pic);
+            itemView.findViewById(R.id.rl_agree).setOnClickListener(this);
             iv_agree.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
 
@@ -243,6 +244,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             int position = getAdapterPosition();
             WallCommentEntity commentEntity = data.get(position);
             switch(v.getId()) {
+                case R.id.rl_agree:
                 case R.id.iv_agree:
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());

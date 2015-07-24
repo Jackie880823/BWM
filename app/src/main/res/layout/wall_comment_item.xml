@@ -68,11 +68,11 @@
                 android:visibility="gone"/>
 
             <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
-                android:textIsSelectable="true"
                 android:id="@+id/tv_comment_content"
                 style="@style/text_dark_default"
                 android:autoLink="web"
                 android:linksClickable="true"
+                android:textIsSelectable="true"
                 />
 
             <RelativeLayout
@@ -86,29 +86,37 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"/>
 
-                <TextView
-                    android:id="@+id/tv_like_desc"
-                    style="@style/text_dark_default"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_like_desc"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/tv_agree_count"
-                    style="@style/text_dark_default"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginRight="@dimen/default_view_margin"
-                    android:layout_toLeftOf="@+id/tv_like_desc"
-                    android:textStyle="bold"/>
-
-                <ImageButton
-                    android:id="@+id/iv_agree"
+                <RelativeLayout
+                    android:id="@+id/rl_agree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/default_view_margin"
-                    android:layout_toLeftOf="@+id/tv_agree_count"
-                    android:background="@null"/>
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true">
+
+                    <TextView
+                        android:id="@+id/tv_like_desc"
+                        style="@style/text_dark_default"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:text="@string/text_like_desc"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tv_agree_count"
+                        style="@style/text_dark_default"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="@dimen/default_view_margin"
+                        android:layout_toLeftOf="@+id/tv_like_desc"
+                        android:textStyle="bold"/>
+
+                    <ImageButton
+                        android:id="@+id/iv_agree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/default_view_margin"
+                        android:layout_toLeftOf="@+id/tv_agree_count"
+                        android:background="@null"/>
+                </RelativeLayout>
 
 
             </RelativeLayout>

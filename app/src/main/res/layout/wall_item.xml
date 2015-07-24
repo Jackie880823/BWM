@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.CardView
-    android:id="@+id/top_event"
     style="@style/CardViewDefault"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -14,105 +13,112 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/rl_event_head"
+
+        <LinearLayout
+            android:id="@+id/top_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/default_content_padding"
-            android:paddingRight="@dimen/default_content_padding"
-            android:paddingTop="@dimen/default_content_padding">
+            android:layout_marginLeft="@dimen/default_content_padding"
+            android:layout_marginRight="@dimen/default_content_padding"
+            android:layout_marginTop="@dimen/default_content_padding"
+            android:orientation="vertical">
 
-            <com.bondwithme.BondWithMe.widget.CircularNetworkImage
-                android:id="@+id/owner_head"
-                android:layout_width="@dimen/default_user_head_width_height"
-                android:layout_height="@dimen/default_user_head_width_height"/>
+            <RelativeLayout
+                android:id="@+id/rl_event_head"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+                    android:id="@+id/owner_head"
+                    android:layout_width="@dimen/default_user_head_width_height"
+                    android:layout_height="@dimen/default_user_head_width_height"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/btn_del"
+                    android:layout_toRightOf="@+id/owner_head"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/default_content_padding"
+                    android:paddingTop="@dimen/default_text_padding">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/owner_head"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/owner_name"
+                            style="@style/text_title_default"
+                            android:textColor="@color/tab_color_press4"
+                            android:textStyle="bold"/>
+
+                        <ImageView
+                            android:id="@+id/iv_mood"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                            android:scaleType="fitCenter"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/push_date"
+                        style="@style/text_light_default"
+                        android:layout_marginTop="@dimen/default_view_margin"/>
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_del"
+                    android:layout_width="@dimen/default_small_button_width_height"
+                    android:layout_height="@dimen/default_small_button_width_height"
+                    android:layout_alignParentRight="true"
+                    android:background="@null"
+                    android:src="@drawable/icon_delete"/>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/btn_del"
-                android:layout_toRightOf="@+id/owner_head"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/default_content_padding"
-                android:paddingTop="@dimen/default_text_padding">
+                android:layout_marginTop="@dimen/default_view_margin"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/owner_head"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/owner_name"
-                        style="@style/text_title_default"
-                        android:textColor="@color/tab_color_press4"
-                        android:textStyle="bold"/>
-
-                    <ImageView
-                        android:id="@+id/iv_mood"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:scaleType="fitCenter"/>
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/push_date"
-                    style="@style/text_light_default"
-                    android:layout_marginTop="@dimen/default_view_margin"/>
+                <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+                    android:id="@+id/tv_wall_content"
+                    style="@style/text_dark_default"
+                    android:autoLink="web"
+                    android:linksClickable="true"
+                    android:textIsSelectable="true"/>
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btn_del"
-                android:layout_width="@dimen/default_small_button_width_height"
-                android:layout_height="@dimen/default_small_button_width_height"
-                android:layout_alignParentRight="true"
-                android:background="@null"
-                android:src="@drawable/icon_delete"/>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_view_margin"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/default_content_padding"
-            android:paddingRight="@dimen/default_content_padding">
-
-            <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
-                android:id="@+id/tv_wall_content"
-                android:autoLink="web"
-                android:linksClickable="true"
-                android:textIsSelectable="true"
-                style="@style/text_dark_default"/>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/ll_walls_image"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_200dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/default_view_margin">
-
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/iv_walls_images"
-                style="@style/ListImageDefault"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-            <TextView
-                android:id="@+id/tv_wall_photo_count"
+            <RelativeLayout
+                android:id="@+id/ll_walls_image"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/_1dp"
-                android:background="@android:drawable/screen_background_dark_transparent"
-                android:padding="@dimen/_4dp"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_12sp"/>
-        </RelativeLayout>
+                android:layout_height="@dimen/_200dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/default_view_margin">
+
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/iv_walls_images"
+                    style="@style/ListImageDefault"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <TextView
+                    android:id="@+id/tv_wall_photo_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/_1dp"
+                    android:background="@android:drawable/screen_background_dark_transparent"
+                    android:padding="@dimen/_4dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_12sp"/>
+            </RelativeLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/ll_location"
@@ -144,12 +150,13 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_content_padding"
+            android:layout_marginRight="@dimen/default_content_padding"
             android:paddingBottom="@dimen/default_content_padding"
-            android:paddingLeft="@dimen/default_content_padding"
-            android:paddingRight="@dimen/default_content_padding"
             android:paddingTop="@dimen/default_content_padding">
 
             <LinearLayout
+                android:id="@+id/ll_love"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true">
@@ -170,6 +177,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
