@@ -21,19 +21,21 @@
             android:layout_height="wrap_content"
             >
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager_sticker"
+
+            <ImageSwitcher
+                android:id="@+id/is_sticker_banner"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_150dp"
-                android:visibility="visible"
-                />
+                android:visibility="visible"/>
 
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerview_sticker"
-                    android:layout_below="@+id/viewpager_sticker"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_sticker"
+                android:layout_below="@+id/is_sticker_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+>>>>>>> dev_image_swither
 
 
 
