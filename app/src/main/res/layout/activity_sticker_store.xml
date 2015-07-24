@@ -21,34 +21,20 @@
             android:layout_height="wrap_content"
             >
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewpager_sticker"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_150dp"
-                android:visibility="visible"
-                />
 
             <ImageSwitcher
                 android:id="@+id/is_sticker_banner"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_150dp"
-                android:visibility="invisible"/>
+                android:visibility="visible"/>
 
 
-            <!--<com.madx.bwm.widget.MySwipeRefreshLayout-->
-                <!--android:id="@+id/swipe_refresh_layout"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!-- -->
-                <!--android:paddingLeft="@dimen/default_content_padding"-->
-                <!--android:paddingRight="@dimen/default_content_padding"-->
-                <!--android:paddingTop="@dimen/default_view_margin">-->
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerview_sticker"
-                    android:layout_below="@+id/viewpager_sticker"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_sticker"
+                android:layout_below="@+id/is_sticker_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
 
 
