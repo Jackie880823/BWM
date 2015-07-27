@@ -65,7 +65,7 @@ public class LocalStickerInfoDao {
         try {
             stickerInfo.setLoginUserId(MainActivity.getUser().getUser_id());
             QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
-            queryBuilder.where().eq("loginUserId", LocalStickerInfo.LOGIN_USER_ID).and().eq("path", stickerInfo.getPath());
+            queryBuilder.where().eq("loginUserId", MainActivity.getUser().getUser_id()).and().eq("path", stickerInfo.getPath());
             List<LocalStickerInfo> localList = queryBuilder.query();
             if ((localList != null) && (localList.size() > 0)) {
                 stickerInfoDao.update(stickerInfo);
@@ -83,7 +83,7 @@ public class LocalStickerInfoDao {
         }
         try {
             QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
-            queryBuilder.where().eq("loginUserId", LocalStickerInfo.LOGIN_USER_ID).and().eq("path", path);
+            queryBuilder.where().eq("loginUserId", MainActivity.getUser().getUser_id()).and().eq("path", path);
             List<LocalStickerInfo> localList = queryBuilder.query();
             if ((localList != null) && (localList.size() > 0)) {
 //                stickerInfoDao.update(stickerInfo);
