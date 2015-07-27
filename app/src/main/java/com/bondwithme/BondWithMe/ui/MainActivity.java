@@ -627,6 +627,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         if (snackBar != null) {
             snackBar.dismiss();
         }
+        unregisterReceiver(mReceiver);
         super.onDestroy();
     }
 
