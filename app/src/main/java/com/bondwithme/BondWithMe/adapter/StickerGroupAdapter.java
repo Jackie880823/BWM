@@ -98,12 +98,10 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
         List<LocalStickerInfo> data = new ArrayList<>();
 
         try {       //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
-//            Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-//            data = stickerDao.queryForEq("name",stickerGroupEntity.getName());
+
             LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(mContext);
             boolean hasSticker = dao.hasDownloadSticker(stickerGroupEntity.getPath());
             if(hasSticker){
-
                 holder.tvDownload.setVisibility(View.INVISIBLE);
                 holder.ivExist.setVisibility(View.VISIBLE);
             }else {
