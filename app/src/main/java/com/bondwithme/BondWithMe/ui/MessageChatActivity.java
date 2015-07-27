@@ -505,14 +505,19 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         hideAllViewState();
                         break;
                     case R.id.et_chat:
-                        if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
-                            expandFunctionLinear.setVisibility(View.GONE);
-                            expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
-                        }
-                        if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
-                            stickerLinear.setVisibility(View.GONE);
-                            stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
-                        }
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
+                                    expandFunctionLinear.setVisibility(View.GONE);
+                                    expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
+                                }
+                                if (stickerLinear.getVisibility() == View.VISIBLE) {
+                                    stickerLinear.setVisibility(View.GONE);
+                                    stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
+                                }
+                            }
+                        }, 50);
                         break;
                 }
             case MotionEvent.ACTION_UP:
