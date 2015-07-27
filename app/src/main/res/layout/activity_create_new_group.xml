@@ -76,7 +76,6 @@
         android:gravity="center_vertical"
         android:singleLine="true"
         android:background="@drawable/et_round_white"
-        android:textColor="#ccc"
         android:textColorHint="#ccc"
         android:layout_below="@+id/view1"
         android:paddingRight="@dimen/_16dp" />
