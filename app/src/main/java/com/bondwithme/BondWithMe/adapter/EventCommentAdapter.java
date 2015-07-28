@@ -521,9 +521,9 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
         };
         //for not work in down 11
         if (SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,new String[0]);
         } else {
-            task.execute(new String[]{});
+            task.execute(new String[0]);
         }
 
     }
