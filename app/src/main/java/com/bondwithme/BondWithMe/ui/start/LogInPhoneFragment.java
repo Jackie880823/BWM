@@ -243,6 +243,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
             @Override
             public void afterTextChanged(Editable s) {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         });
 
@@ -259,6 +260,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void afterTextChanged(Editable s) {
+                etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         });
