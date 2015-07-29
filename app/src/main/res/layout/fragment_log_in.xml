@@ -132,6 +132,7 @@
                                 android:id="@+id/iv_username"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:clickable="true"
                                 android:src="@drawable/sign_in_username"
                                 />
 
@@ -150,6 +151,7 @@
                                 android:id="@+id/iv_facebook"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:clickable="true"
                                 android:src="@drawable/facebook" />
 
                             <TextView
