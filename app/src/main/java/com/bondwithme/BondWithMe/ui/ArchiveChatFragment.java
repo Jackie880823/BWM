@@ -178,7 +178,8 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
                 }
             }
         });
-        searchText.setImeOptions(EditorInfo.IME_ACTION_SEND);
+        searchText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+//        searchText.setInputType(EditorInfo.TYPE_CLASS_TEXT);
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
