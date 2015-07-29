@@ -478,6 +478,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         if ("".equals(familyMemberEntity.getMiss())) {
                             updateMiss(familyMemberEntity.getUser_id());
                             arg0.findViewById(R.id.myfamily_image_right).setVisibility(View.GONE);
+                            familyMemberEntity.setMiss(null);
                         }
                         Intent intent = new Intent(getActivity(), FamilyProfileActivity.class);
                         intent.putExtra("member_id", familyMemberEntity.getUser_id());
