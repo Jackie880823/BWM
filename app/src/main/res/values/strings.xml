@@ -506,7 +506,7 @@
     <string name="action_invitation_successful">Invitation sent successfully</string>
     <string name="text_add_group_photo">Add Photo</string>
     <string name="log_out">Do you really want to Log out?</string>
-    <string name="text_recorder_stickies">Reorder stickies in the chat page</string>
+    <string name="text_recorder_stickies">Reorder stickies in the chat screen</string>
     <string name="text_sort">Sort</string>
 
 
@@ -549,5 +549,8 @@
     <string name="text_start_welcome">Welcome aboard and happy bonding!</string>
     <string name="text_start_start_using">Start Using!</string>
     <string name="text_start_facebook">Facebook</string>
+    <string name="text_show_message_is_friend">This member is not connected to you. You need to be connected to view profile.</string>
+
+    <string name="app_crash_message">Sorry! The application has stopped unexpectedly. </string>
 
 </resources>

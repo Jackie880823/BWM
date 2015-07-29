@@ -16,6 +16,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.more.ArchiveActivity;
 import com.bondwithme.BondWithMe.ui.more.MoreSettingActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
+import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 
 import org.json.JSONException;
@@ -33,6 +34,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 
     private MyDialog myDialog;
     private TextView tv_num;
+    private TextView tvVersion;
 
     public static MoreFragment newInstance(String... params) {
         return createInstance(new MoreFragment(), params);
@@ -69,6 +71,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         getViewById(R.id.btn_terms).setOnClickListener(this);
         getViewById(R.id.btn_sign_out).setOnClickListener(this);
         getViewById(R.id.btn_archive).setOnClickListener(this);
+
+        tvVersion = getViewById(R.id.tv_version);
+        tvVersion.setText("V " + AppInfoUtil.getAppVersionName(getActivity()));
 
 
         tv_num = getViewById(R.id.tv_num);

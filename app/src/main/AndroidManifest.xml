@@ -377,7 +377,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MessageChatActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
@@ -392,7 +392,7 @@
         <activity
             android:name=".ui.more.Archive.ArchiveGroupChatActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".ui.more.Archive.ArchivePrivateChatActivity"
             android:screenOrientation="portrait"

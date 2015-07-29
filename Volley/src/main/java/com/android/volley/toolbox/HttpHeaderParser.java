@@ -16,6 +16,8 @@
 
 package com.android.volley.toolbox;
 
+import android.util.Log;
+
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 
@@ -45,7 +47,7 @@ public class HttpHeaderParser {
         Iterator<String> keySet = headers.keySet().iterator();
         while (keySet.hasNext()){
             String key = keySet.next();
-//            Log.i("","parseCacheHeaders========="+key+"=="+headers.get(key));
+            Log.i("", "parseCacheHeaders=========" + key + "==" + headers.get(key));
             break;//test
         }
         /**wing for test end*/

@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +10,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
 import com.bondwithme.BondWithMe.util.ToDc;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -27,6 +28,8 @@ public class FamilyGroupAdapter extends BaseAdapter implements Filterable {
     List<FamilyGroupEntity> groupList;
     private Context mContext;
     private PersonFilter filter;
+    String headUrl;
+    BitmapTools mBitmapTools;
 
     public FamilyGroupAdapter(Context context,List<FamilyGroupEntity> groupList) {
         this.groupList = groupList;
@@ -42,6 +45,14 @@ public class FamilyGroupAdapter extends BaseAdapter implements Filterable {
         notifyDataSetChanged();
     }
 
+    public void clearBitmap(List<FamilyGroupEntity> list){
+        Log.i("clearBitmap===","clearBitmap");
+        mBitmapTools.clearMemoryCache();
+        mBitmapTools.clearDiskCache(null);
+        groupList.clear();
+        groupList.addAll(list);
+        notifyDataSetChanged();
+    }
     public List<FamilyGroupEntity> getGroupList() {
         return groupList;
     }
@@ -75,8 +86,12 @@ public class FamilyGroupAdapter extends BaseAdapter implements Filterable {
         }
         FamilyGroupEntity familyGroupEntity = groupList.get(position);
         viewHolder.textName.setText(familyGroupEntity.getGroup_name());
-        VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
-                familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+
+        mBitmapTools = BitmapTools.getInstance(mContext);
+        headUrl = String.format(Constant.API_GET_GROUP_PHOTO, familyGroupEntity.getGroup_id());
+        mBitmapTools.display(viewHolder.imageMain,headUrl,R.drawable.default_head_icon, R.drawable.default_head_icon);
+//        VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
+//                familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         return convertView;
     }
 
@@ -126,4 +141,5 @@ public class FamilyGroupAdapter extends BaseAdapter implements Filterable {
         CircularNetworkImage imageMain;
         TextView textName;
     }
+
 }

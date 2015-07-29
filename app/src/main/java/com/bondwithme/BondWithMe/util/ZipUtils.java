@@ -144,9 +144,9 @@ public class ZipUtils {
 
         if (zipFileName.contains("Raya_Greeting")) {
             stickerInfo.setType(".png");
-            stickerInfo.setOrder(System.currentTimeMillis() - 3000L);
+            stickerInfo.setOrder(System.currentTimeMillis() + 3000L);
         } else if (zipFileName.contains("Eggplant")) {
-            stickerInfo.setOrder(System.currentTimeMillis() - 1500L);
+            stickerInfo.setOrder(System.currentTimeMillis() + 1500L);
             stickerInfo.setType(".gif");
         } else if (zipFileName.contains("LittleGG")) {
             stickerInfo.setOrder(System.currentTimeMillis());

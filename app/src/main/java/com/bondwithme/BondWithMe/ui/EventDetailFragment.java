@@ -355,16 +355,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             option_status.setVisibility(View.VISIBLE);
 
                         }
-                        if("2".equals(event.getGroup_event_status())) {
+
+                        if(event_options.getVisibility() == View.VISIBLE) {
                             event_options.setVisibility(View.GONE);
+                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
                         } else {
-                            if(event_options.getVisibility() == View.VISIBLE) {
-                                event_options.setVisibility(View.GONE);
-                                getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
-                            } else {
-                                event_options.setVisibility(View.VISIBLE);
-                                getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
-                            }
+                            event_options.setVisibility(View.VISIBLE);
+                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
                         }
 
                     } else if(R.id.ib_top_button_right == v.getId()) {
@@ -482,7 +479,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             not_going_count.setText(event.getTotal_no());
 
             ResponseStatus[] statuses = ResponseStatus.values();
-
             for(ResponseStatus status : statuses) {
                 if(status.getServerCode().equals(event.getGroup_member_response())) {
                     currentStatus = status;
@@ -1011,7 +1007,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     enum ResponseStatus {
-        //0-no reponse, 1-going, 2-not going, 3-maybe
         not_re("0"), go("1"), maybe("3"), not_go("2");
 
         private String mServerCode;
