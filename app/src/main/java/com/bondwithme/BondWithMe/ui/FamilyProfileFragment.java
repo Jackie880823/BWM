@@ -138,7 +138,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         tvName1.setText(groupName);
         getParentActivity().tvTitle.setText(groupName);
         VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
-
         if (!TextUtils.isEmpty(getDofeelCode)) {
             try {
                 String filePath = "";
