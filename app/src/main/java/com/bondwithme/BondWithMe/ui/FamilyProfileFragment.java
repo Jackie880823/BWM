@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
@@ -40,8 +41,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -80,6 +83,8 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     private static final int GET_USER_ENTITY = 0X11;
 
+    List<String> data_Us = new ArrayList<String>();
+
     public static FamilyProfileFragment newInstance(String... params) {
         return createInstance(new FamilyProfileFragment());
     }
@@ -94,8 +99,20 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     }
 
 
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        switch (requestCode) {
+//            case 1:
+//             if (resultCode == getActivity().RESULT_OK) {
+//                userEntity.setTree_type_name(data.getStringExtra("relationship"));
+//             }
+//        }
+//    }
+
     @Override
     public void initView() {
+        getDataEn();
         Intent intent = getActivity().getIntent();
         useId = MainActivity.getUser().getUser_id();//MainActivity.
         memberId = intent.getStringExtra("member_id");
@@ -194,6 +211,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                     intent.putExtra("relationship", relationship);
                     intent.putExtra("fam_nickname", famNickname);
                     intent.putExtra("member_status", memberStatus);
+                    intent.putExtra("selectMemeber", data_Us.indexOf(userEntity.getTree_type_name()));
 //                    startActivityForResult(intent, 0);
                     startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
             }
@@ -281,7 +299,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_MEMBER_PROFILE_DETAIL, params);
 
-        new HttpTools(getActivity()).get(url, params,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -322,6 +340,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         });
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i("requestCode1====", requestCode + "");
@@ -330,8 +349,20 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             case 1:
                 if (resultCode == getActivity().RESULT_OK){
                     getActivity().setResult(getActivity().RESULT_OK);
+                    userEntity.setTree_type_name(data.getStringExtra("relationship"));
                 }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    private List<String> getDataEn() {
+        Configuration configuration = new Configuration();
+        //设置应用为英文
+        configuration.locale = Locale.US;
+        getResources().updateConfiguration(configuration, null);
+        String[] ralationArrayUs = getResources().getStringArray(R.array.relationship_item);
+        data_Us = Arrays.asList(ralationArrayUs);
+        return data_Us;
+    }
+
 }

@@ -156,7 +156,7 @@ public class GroupSettingActivity extends BaseActivity {
         familyGroupEntityList.add(groupEntity);
         gson = new Gson();
 
-        mBitmapTools = new BitmapTools(mContext);
+        mBitmapTools = BitmapTools.getInstance(mContext);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
         mBitmapTools.display(cniMain,headUrl,R.drawable.network_image_default, R.drawable.network_image_default);
 //        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);

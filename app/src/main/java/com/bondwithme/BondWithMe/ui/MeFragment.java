@@ -54,6 +54,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
     }
 
     String headUrl;
+
     @Override
     public void initView() {
         cniMain = getViewById(R.id.cni_main);
@@ -66,7 +67,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
         rlWallPosting = getViewById(R.id.rl_wall_posting);
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
-        new BitmapTools(getActivity()).display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(getActivity()).display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
 //        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
 //        tvTitle.setText(MainActivity.getUser().getUser_given_name());
@@ -141,16 +142,16 @@ public class MeFragment extends BaseFragment<MeActivity> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case UPDATE_PROFILE:
-                if(resultCode== getActivity().RESULT_OK ){
-                    if(!TextUtils.isEmpty(data.getStringExtra("name"))){
+                if (resultCode == getActivity().RESULT_OK) {
+                    if (!TextUtils.isEmpty(data.getStringExtra("name"))) {
                         tvName1.setText(data.getStringExtra("name"));
-                        Uri new_pic = data.getParcelableExtra("new_pic");
-                        if(new_pic!=null){
-//                            cniMain.setImageDrawable();
-                            cniMain.setImageURI(new_pic);
-                        }
                     }
-            }
+                    Uri new_pic = data.getParcelableExtra("new_pic");
+                    if (new_pic != null) {
+//                            cniMain.setImageDrawable();
+                        cniMain.setImageURI(new_pic);
+                    }
+                }
 //                String etFirstName = data.getStringExtra("name");
 
 

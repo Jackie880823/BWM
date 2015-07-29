@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,27 +24,42 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.AppTokenEntity;
+import com.bondwithme.BondWithMe.entity.FaceBookUserEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.interfaces.LogInStateListener;
 import com.bondwithme.BondWithMe.ui.CountryCodeActivity;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.TermsActivity;
+import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.CountryCodeUtil;
+import com.bondwithme.BondWithMe.util.LoginManager;
 import com.bondwithme.BondWithMe.util.MD5Util;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
+import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UIUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.material.widget.PaperButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
-public class SignUpPhoneFragment extends Fragment implements View.OnClickListener, EditText.OnEditorActionListener{
+public class SignUpPhoneFragment extends Fragment implements View.OnClickListener, EditText.OnEditorActionListener, LogInStateListener {
 
     private final static String TAG = SignUpPhoneFragment.class.getSimpleName();
     private final static String CHECK_GET_CODE = TAG + "_CHECK_GET_CODE";
+    private final static String CHECK_ID = TAG + "_CHECK_ID";
 
     public final static String RESPONSE_MESSAGE_ID_EXIST = "Server.LoginIdExist";
 
@@ -52,6 +69,8 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
     private static final int SUCCESS_GET_CODE = 1;
     private static final int LOG_IN_EXIST = 2;
     private static final int CATCH = 3;
+    private static final int GO_MAIN = 4;
+    private static final int THIRD_PARTY_SIGN_UP = 5;
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
@@ -65,12 +84,17 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
     private PaperButton brSignUp;
     private TextView tvTerms;
     private ImageView ivUsername;
+    private ImageView ivFacebook;
     private RelativeLayout rlProgress;
 
 
     private String strCountryCode;
     private String strPhoneNumber;
     private String strPassword;
+
+    private List<UserEntity> userEntities;
+    private UserEntity userEntity;
+    private AppTokenEntity tokenEntity;
 
     Handler handler = new Handler()
     {
@@ -98,6 +122,14 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
                     //请求错误
                     break;
 
+                case GO_MAIN:
+                    goMainActivity();
+                    break;
+
+                case THIRD_PARTY_SIGN_UP:
+                    goThirdPartyCheckId();
+                    break;
+
                 default:
                     break;
             }
@@ -110,6 +142,9 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         View view =  inflater.inflate(R.layout.fragment_sign_up, container, false);
 
         initView(view);
+
+        LoginManager.initialize(getActivity());
+        LoginManager.setFaceBookLoginParams(getActivity(), this, ivFacebook, null, this);
 
         return view;
     }
@@ -142,6 +177,9 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        LoginManager.onActivityResult(requestCode, resultCode, data);
+
         switch (requestCode)
         {
             case GET_COUNTRY_CODE:
@@ -182,6 +220,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         brSignUp = (PaperButton) view.findViewById(R.id.br_sign_up);
         tvTerms = (TextView)view.findViewById(R.id.tv_terms);
         ivUsername = (ImageView)view.findViewById(R.id.iv_username);
+        ivFacebook = (ImageView)view.findViewById(R.id.iv_facebook);
         rlProgress = (RelativeLayout)view.findViewById(R.id.rl_progress);
 
         rlCountryCode.setOnClickListener(this);
@@ -409,5 +448,116 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
         intent.putExtra("user_phone", MyTextUtil.NoZero(strPhoneNumber));
         intent.putExtra("user_password", MD5Util.string2MD5(strPassword));
         startActivity(intent);
+    }
+
+    public void goMainActivity()
+    {
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        App.changeLoginedUser(userEntity, tokenEntity);
+        startActivity(intent);
+        //TODO
+        //要改。为什么在这边初始化？
+        PushApi.initPushApi(getActivity());
+        getActivity().finish();
+    }
+
+    private void goThirdPartyCheckId() {
+        Intent intent = new Intent(getActivity(), ThirdPartyVerifyPhoneActivity.class);
+        intent.putExtra(Constant.TYPE_FACEBOOK, faceBookUserEntity);
+        startActivity(intent);
+    }
+
+    private FaceBookUserEntity faceBookUserEntity;
+
+    @Override
+    public void OnLoginSuccess(FaceBookUserEntity faceBookUserEntity, String logType) {
+        com.facebook.login.LoginManager.getInstance().logOut();//清除Facebook授权缓存
+        if (!MyTextUtil.isHasEmpty(faceBookUserEntity.getUserId(), faceBookUserEntity.getFirstname(), faceBookUserEntity.getLastname(), faceBookUserEntity.getGender()))
+        {
+            Log.d("", faceBookUserEntity.toString());
+            this.faceBookUserEntity = faceBookUserEntity;
+            checkFacebookId();
+        }
+        else
+        {
+            //没必要吧？？？
+        }
+    }
+
+    @Override
+    public void OnLoginError(String error) {
+
+    }
+
+    private void checkFacebookId() {
+        if (!NetworkUtil.isNetworkConnected(getActivity())) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("user_login_id", faceBookUserEntity.getUserId());
+        params.put("login_type", Constant.TYPE_FACEBOOK);
+        params.put("access_token", faceBookUserEntity.getToken());
+        params.put("user_uuid", Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID));
+        params.put("user_app_version", AppInfoUtil.getAppVersionName(getActivity()));
+        params.put("user_app_os", Constant.USER_APP_OS);
+
+        new HttpTools(getActivity()).get(Constant.API_START_THIRD_PARTY_CHECK_ID, params, CHECK_ID, new HttpCallback() {
+            @Override
+            public void onStart() {
+                doingSignUpChangeUI();
+            }
+
+            @Override
+            public void onFinish() {
+                finishLogInChangeUI();
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+                Log.d("","---facebook--checkId" + response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if ("1".equals(jsonObject.getString("bwm_user")))
+                    {
+                        userEntities = gson.fromJson(jsonObject.getString(Constant.LOGIN_USER), new TypeToken<List<UserEntity>>() {
+                        }.getType());
+                        tokenEntity = gson.fromJson(jsonObject.getString(Constant.HTTP_TOKEN), AppTokenEntity.class);
+                        if (userEntities.size() == 0 && TextUtils.isEmpty(userEntities.get(0).getUser_login_id()))
+                        {
+                            //这样可以当做是bad date
+                            return;
+                        }
+                        userEntity = userEntities.get(0);
+                        handler.sendEmptyMessage(GO_MAIN);
+                    }
+                    else if ("0".equals(jsonObject.getString("bwm_user")))
+                    {
+                        handler.sendEmptyMessage(THIRD_PARTY_SIGN_UP);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 }

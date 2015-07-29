@@ -150,7 +150,7 @@ public class GroupNameSettingActivity extends BaseActivity {
         groupName = getIntent().getStringExtra("groupName");
         etGroupName.setText(groupName);
 
-        mBitmapTools = new BitmapTools(this);
+        mBitmapTools = BitmapTools.getInstance(this);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
         mBitmapTools.display(civGroupPic,headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
 //        VolleyUtil.initNetworkImageView(this, civGroupPic, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
