@@ -166,6 +166,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     @Override
     protected void onStop() {
         PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
+        LAST_LEAVE_INDEX = "lastLeaveIndex";
+        IS_FIRST_LOGIN = "firstLogin";
         super.onStop();
     }
 
@@ -379,7 +381,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
         mViewPager.setOffscreenPageLimit(0);
 
-        LAST_LEAVE_INDEX = LAST_LEAVE_INDEX + getUser().getUser_id();
+        LAST_LEAVE_INDEX += getUser().getUser_id();
         leavePagerIndex = PreferencesUtil.getValue(this, LAST_LEAVE_INDEX, 0);
         jumpIndex = getIntent().getIntExtra("jumpIndex", -1);
         if (jumpIndex != -1) {
@@ -393,7 +395,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         red_point_5 = getViewById(R.id.red_point_5);
 
         NotificationUtil.setNotificationOtherHandle(this);
-
 
         //注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -626,6 +627,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         if (snackBar != null) {
             snackBar.dismiss();
         }
+        unregisterReceiver(mReceiver);
         super.onDestroy();
     }
 

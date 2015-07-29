@@ -548,4 +548,6 @@
     <string name="text_start_facebook">Facebook</string>
     <string name="text_show_message_is_friend">他(她)不是你的好友,你不能查看他(她)的资料</string>
 
+    <string name="app_crash_message">很抱歉,程序出现异常,即将退出.</string>
+
 </resources>

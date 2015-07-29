@@ -26,20 +26,20 @@
         android:text="即使但是时"
         android:singleLine="true" />
 
-    <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+    <com.bondwithme.BondWithMe.widget.MessageTextView
         android:id="@+id/message_item_content_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/_40dp"
-        android:minWidth="@dimen/_55dp"
         android:autoLink="web"
         android:linksClickable="true"
-        android:layout_marginRight="@dimen/_5dp"
+        android:layout_marginRight="@dimen/_35dp"
         android:background="@drawable/message_left"
         android:layout_toRightOf="@id/message_icon_image"
         android:textColor="@color/default_text_color_dark"
         android:textSize="@dimen/text_medium_size"
         android:textIsSelectable="true"
+        android:gravity="center_vertical"
+        android:lineSpacingMultiplier="1.2"
         android:text="看比赛开始吧" />
 
     <TextView

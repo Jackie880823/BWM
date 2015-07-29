@@ -278,10 +278,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             startActivityForResult(intent, REQUEST_GET_GROUP_NAME);
         }
     }
+
     @Override
     protected void titleLeftEvent() {
         finish();
     }
+
     @Override
     protected Fragment getFragment() {
         return null;
@@ -293,9 +295,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         //如果是从新建group打开的
         isNewGroup = getIntent().getIntExtra("isNewGroup", 0);
 //        Log.i("isNewGroup====",isNewGroup+"");
-        if(isNewGroup == 1){
+        if (isNewGroup == 1) {
             setResult(RESULT_OK);
-        }else {
+        } else {
             setResult(RESULT_CANCELED);
         }
         mContext = this;
@@ -443,11 +445,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 }
                 break;
             case R.id.et_chat://文本框
-                expandFunctionLinear.setVisibility(View.GONE);
-                stickerLinear.setVisibility(View.GONE);
-                expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
-                stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
-
+//                expandFunctionLinear.setVisibility(View.GONE);
+//                stickerLinear.setVisibility(View.GONE);
+//                expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
+//                stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
                 break;
             case R.id.camera_tv://打开相机
                 openCamera();
@@ -503,7 +504,21 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     case R.id.message_recyclerView:
                         hideAllViewState();
                         break;
-
+                    case R.id.et_chat:
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
+                                    expandFunctionLinear.setVisibility(View.GONE);
+                                    expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
+                                }
+                                if (stickerLinear.getVisibility() == View.VISIBLE) {
+                                    stickerLinear.setVisibility(View.GONE);
+                                    stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
+                                }
+                            }
+                        }, 50);
+                        break;
                 }
             case MotionEvent.ACTION_UP:
                 switch (v.getId()) {
@@ -561,7 +576,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         super.onActivityResult(requestCode, resultCode, data);
 //        Log.i("M_requestCode====",requestCode+"");
 //        Log.i("M_resultCode====",resultCode+"");
-        String groupNmae ;
+        String groupNmae;
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 // 如果是直接从相册获取
@@ -594,8 +609,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case REQUEST_GET_GROUP_NAME:
                     setResult(RESULT_OK);
                     Log.i("Me_onActivityResult===2", "onActivityResult");
-                     groupNmae = data.getStringExtra("groupName");
-                    if(!TextUtils.isEmpty(groupNmae)){
+                    groupNmae = data.getStringExtra("groupName");
+                    if (!TextUtils.isEmpty(groupNmae)) {
                         tvTitle.setText(groupNmae);
                     }
                     break;
@@ -604,11 +619,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
             }
         }
-        if(RESULT_CANCELED == resultCode ){
-            switch (requestCode){
+        if (RESULT_CANCELED == resultCode) {
+            switch (requestCode) {
                 case REQUEST_GET_GROUP_NAME:
                     groupNmae = data.getStringExtra("groupName");
-                    if(!TextUtils.isEmpty(groupNmae)){
+                    if (!TextUtils.isEmpty(groupNmae)) {
                         tvTitle.setText(groupNmae);
                     }
                     break;

@@ -38,7 +38,7 @@ import com.bondwithme.BondWithMe.util.MslToast;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
-import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
+import com.bondwithme.BondWithMe.widget.MessageTextView;
 import com.material.widget.CircularProgress;
 
 import org.json.JSONException;
@@ -444,7 +444,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     class VHItem extends RecyclerView.ViewHolder implements View.OnClickListener {
         //接收
         CircularNetworkImage iconImage;
-        FreedomSelectionTextView messageText;
+        MessageTextView messageText;
         NetworkImageView networkImageView;
         GifImageView gifImageView;
         TextView dateTime;
@@ -455,7 +455,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         public VHItem(View itemView) {
             super(itemView);
             iconImage = (CircularNetworkImage) itemView.findViewById(R.id.message_icon_image);
-            messageText = (FreedomSelectionTextView) itemView.findViewById(R.id.message_item_content_tv);
+            messageText = (MessageTextView) itemView.findViewById(R.id.message_item_content_tv);
             networkImageView = (NetworkImageView) itemView.findViewById(R.id.message_pic_iv);
             gifImageView = (GifImageView) itemView.findViewById(R.id.message_pic_gif_iv);
             dateTime = (TextView) itemView.findViewById(R.id.date_time_tv);

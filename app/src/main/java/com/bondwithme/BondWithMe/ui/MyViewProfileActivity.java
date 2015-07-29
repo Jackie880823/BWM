@@ -2,11 +2,9 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,7 +24,6 @@ import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
@@ -43,9 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -78,7 +73,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private Dialog showSelectDialog;
     private Dialog showCameraAlbum;
     private Boolean isUploadName = false;
-    private Boolean isUploadImage = false;
+//    private Boolean isUploadImage = false;
 
     private Boolean isUploadNameSuccess = false;
     private Boolean isUploadImageSuccess = false;
@@ -126,16 +121,22 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        uploadImage();
-        updateProfile();
+        if (isHeaderChageed()) {
+            uploadImage();
+        } else if (isProfileChanged()) {
+            updateProfile();
+
+        } else {
+            finish();
+        }
     }
 
     @Override
     protected void titleLeftEvent() {
-//        Log.i("isChange===",isChange()+"");
-        if (isChange()){
+//        Log.i("isProfileChanged===",isProfileChanged()+"");
+        if (isProfileChanged()) {
             showNoFriendDialog();
-        }else {
+        } else {
             super.titleLeftEvent();
         }
     }
@@ -166,52 +167,59 @@ public class MyViewProfileActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
-    private boolean isChange(){
-        if(!TextUtils.isEmpty(etFirstName.getText().toString().trim()) && !MainActivity.getUser().getUser_given_name().equals(etFirstName.getText().toString().trim())){
+    private boolean isHeaderChageed() {
+        if (mCropImagedUri != null) {
             return true;
-        }else {
-            if(TextUtils.isEmpty(etFirstName.getText().toString().trim())){
+        }
+        return false;
+    }
+
+    private boolean isProfileChanged() {
+        if (!TextUtils.isEmpty(etFirstName.getText().toString().trim()) && !MainActivity.getUser().getUser_given_name().equals(etFirstName.getText().toString().trim())) {
+            return true;
+        } else {
+            if (TextUtils.isEmpty(etFirstName.getText().toString().trim())) {
                 return true;
             }
         }
-        if(!TextUtils.isEmpty(etLastName.getText().toString().trim()) && !MainActivity.getUser().getUser_surname().equals(etLastName.getText().toString().trim())){
+        if (!TextUtils.isEmpty(etLastName.getText().toString().trim()) && !MainActivity.getUser().getUser_surname().equals(etLastName.getText().toString().trim())) {
             return true;
-        }else {
-            if(TextUtils.isEmpty(etLastName.getText().toString().trim())){
+        } else {
+            if (TextUtils.isEmpty(etLastName.getText().toString().trim())) {
                 return true;
             }
         }
-        if(!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())){
+        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())) {
             return true;
-        }else {
-            if(!TextUtils.isEmpty(tvBirthday.getText().toString().trim()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())){
+        } else {
+            if (!TextUtils.isEmpty(tvBirthday.getText().toString().trim()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())) {
                 return true;
             }
         }
         //性别简写
-        String simpleSex =  MainActivity.getUser().getUser_gender();
+        String simpleSex = MainActivity.getUser().getUser_gender();
         String tempSex = tvGender.getText().toString().trim();
         String simpleRealitySex = null;
         //实际显示性别转换成简写
-        if(tempSex.equals(getResources().getString(R.string.text_female))){
+        if (tempSex.equals(getResources().getString(R.string.text_female))) {
             simpleRealitySex = "F";
-        }else if(tempSex.equals(getResources().getString(R.string.text_male))){
+        } else if (tempSex.equals(getResources().getString(R.string.text_male))) {
             simpleRealitySex = "M";
         }
-        if(!simpleSex.equals(simpleRealitySex)){
+        if (!simpleSex.equals(simpleRealitySex)) {
             return true;
         }
-        if(!TextUtils.isEmpty(MainActivity.getUser().getUser_email()) && !MainActivity.getUser().getUser_email().equals(etEmail.getText().toString().trim())){
+        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_email()) && !MainActivity.getUser().getUser_email().equals(etEmail.getText().toString().trim())) {
             return true;
-        }else {
-            if(!TextUtils.isEmpty(etEmail.getText().toString().trim()) && !MainActivity.getUser().getUser_email().equals(etEmail.getText().toString().trim())){
+        } else {
+            if (!TextUtils.isEmpty(etEmail.getText().toString().trim()) && !MainActivity.getUser().getUser_email().equals(etEmail.getText().toString().trim())) {
                 return true;
             }
         }
-        if(!TextUtils.isEmpty(MainActivity.getUser().getUser_location_name()) && !MainActivity.getUser().getUser_location_name().equals(etRegion.getText().toString().trim())){
+        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_location_name()) && !MainActivity.getUser().getUser_location_name().equals(etRegion.getText().toString().trim())) {
             return true;
-        }else {
-            if(!TextUtils.isEmpty(etRegion.getText().toString().trim()) && !MainActivity.getUser().getUser_location_name().equals(etRegion.getText().toString().trim())){
+        } else {
+            if (!TextUtils.isEmpty(etRegion.getText().toString().trim()) && !MainActivity.getUser().getUser_location_name().equals(etRegion.getText().toString().trim())) {
                 return true;
             }
         }
@@ -234,6 +242,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
     String headUrl;
     BitmapTools mBitmapTools;
+
     @Override
     public void initView() {
 //        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
@@ -260,7 +269,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
 
-        mBitmapTools = new BitmapTools(this);
+        mBitmapTools = BitmapTools.getInstance(this);
         mBitmapTools.display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
         etFirstName.setText(MainActivity.getUser().getUser_given_name());
@@ -366,11 +375,8 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     public void updateProfile() {
-        if(!isChange()){
+        if (!isProfileChanged()) {
             finish();
-        }
-        if (TextUtils.isEmpty(etLastName.getText()) || TextUtils.isEmpty(etFirstName.getText()) || TextUtils.isEmpty(tvGender.getText())) {
-            Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_input_name_gender), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -403,6 +409,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
+                finish();
             }
 
             @Override
@@ -421,13 +428,12 @@ public class MyViewProfileActivity extends BaseActivity {
                         App.changeLoginedUser(gson.fromJson(response, UserEntity.class));
                         List userList = new ArrayList<UserEntity>();
                         userList.add(gson.fromJson(response, UserEntity.class));
-                        if (!isUploadImage) {
-                            Intent intent = new Intent();
-                            intent.putExtra("name", etFirstName.getText().toString());
-                            setResult(RESULT_OK, intent);
-                            finish();
-
+                        if (intent == null) {
+                            intent = new Intent();
                         }
+
+                        intent.putExtra("name", etFirstName.getText().toString());
+                        setResult(RESULT_OK, intent);
                     }
                 }
             }
@@ -448,6 +454,8 @@ public class MyViewProfileActivity extends BaseActivity {
         });
 
     }
+
+    Intent intent;
 
     private void showSelectDialog() {
         LayoutInflater factory = LayoutInflater.from(this);
@@ -489,9 +497,9 @@ public class MyViewProfileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(MyViewProfileActivity.this,PickAndCropPictureActivity.class);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM,PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH,cniMain.getWidth());
+                Intent intent = new Intent(MyViewProfileActivity.this, PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, cniMain.getWidth());
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, cniMain.getHeight());
                 startActivityForResult(intent, REQUEST_PHOTO);
             }
@@ -501,9 +509,9 @@ public class MyViewProfileActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showCameraAlbum.dismiss();
-                Intent intent = new Intent(MyViewProfileActivity.this,PickAndCropPictureActivity.class);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM,PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH,cniMain.getWidth());
+                Intent intent = new Intent(MyViewProfileActivity.this, PickAndCropPictureActivity.class);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, cniMain.getWidth());
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, cniMain.getHeight());
                 startActivityForResult(intent, REQUEST_PHOTO);
             }
@@ -566,7 +574,7 @@ public class MyViewProfileActivity extends BaseActivity {
         }
         String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 480, 800, false);
         final File file = new File(path);
-        isUploadImage = true;
+//        isUploadImage = true;
 //        File f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
         if (!file.exists()) {
             return;
@@ -612,11 +620,10 @@ public class MyViewProfileActivity extends BaseActivity {
 //                        progressDialog.dismiss();
                         Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
                         isUploadImageSuccess = true;
-                        Intent intent = new Intent();
-                        intent.putExtra("name", etFirstName.getText().toString());
+                        intent = new Intent();
                         intent.putExtra("new_pic", Uri.fromFile(file));
                         setResult(RESULT_OK, intent);
-                        finish();
+                        updateProfile();
                     }
                 } catch (JSONException e) {
 //                    progressDialog.dismiss();

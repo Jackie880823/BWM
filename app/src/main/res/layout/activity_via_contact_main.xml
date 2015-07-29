@@ -89,7 +89,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top"
-                android:textColor="#ccc"
                 android:hint="@string/text_type_meaage_here"
                 android:textColorHint="#ccc"
                 android:maxLength="30"
