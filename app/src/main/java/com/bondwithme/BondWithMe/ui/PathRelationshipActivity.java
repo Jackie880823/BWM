@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -87,12 +88,6 @@ public class PathRelationshipActivity extends BaseActivity {
     protected void titleLeftEvent() {
 //        setResult(RESULT_OK);
         super.titleLeftEvent();
-    }
-
-    @Override
-    public void finish() {
-        setResult(RESULT_OK);
-        super.finish();
     }
 
     @Override
@@ -241,13 +236,15 @@ public class PathRelationshipActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("requestCode2====", requestCode + "");
+        Log.i("resultCode2====",resultCode+"");
         switch (requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
                     //获取选择关系界面传来的关系
                     tvRelationship.setText(data.getStringExtra("relationship"));
                     selectMemeber = data.getExtras().getInt("selectMemeber");
-//                    setResult(RESULT_OK);
+                    setResult(RESULT_OK);
                     updateRelationship();
                 }
         }
@@ -257,7 +254,7 @@ public class PathRelationshipActivity extends BaseActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-            if (event.getAction() == KeyEvent.ACTION_UP) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 titleLeftEvent();
             }
             return true;

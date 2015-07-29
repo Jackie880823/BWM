@@ -1113,8 +1113,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Log.i("F_requestCode====",requestCode+"");
-//        Log.i("F_resultCode====",resultCode+"");
+        Log.i("F_requestCode====",requestCode+"");
+        Log.i("F_resultCode====",resultCode+"");
         switch (requestCode) {
             case 1:
                 if (resultCode == -1) {

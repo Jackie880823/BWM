@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -194,7 +195,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                     intent.putExtra("fam_nickname", famNickname);
                     intent.putExtra("member_status", memberStatus);
 //                    startActivityForResult(intent, 0);
-                    startActivityForResult(intent, 1);
+                    startActivityForResult(intent, getActivity().RESULT_FIRST_USER);
             }
         });
 
@@ -321,4 +322,16 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("requestCode1====", requestCode + "");
+        Log.i("resultCode1====",resultCode+"");
+        switch (requestCode) {
+            case 1:
+                if (resultCode == getActivity().RESULT_OK){
+                    getActivity().setResult(getActivity().RESULT_OK);
+                }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
