@@ -121,6 +121,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public final static int SEND_PIC_MESSAGE = 0X104;
     public final static int GET_HISTORY_MESSAGE = 0X105;
     public final static int GET_SEND_OVER_MESSAGE = 0X106;
+    public final static int GET_TIMER_MESSAGE = 0X107;
     public int INITIAL_LIMIT = 10;
 
     public MessageAction messageAction;
@@ -217,6 +218,16 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                    break;
+                case GET_TIMER_MESSAGE:
+                    List<MsgEntity> msgTimerList = (List<MsgEntity>) msg.obj;
+                    if (null != msgTimerList && msgTimerList.size() > 0) {
+                        if (empty_message.getVisibility() == View.VISIBLE) {
+                            empty_message.setVisibility(View.GONE);
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                        }
+                        messageChatAdapter.addTimerData(msgTimerList);
                     }
                     break;
             }
@@ -334,15 +345,14 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 Context.INPUT_METHOD_SERVICE);
         llm = new LinearLayoutManager(MessageChatActivity.this);
         recyclerView.setLayoutManager(llm);
-        messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this);
+        messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                indexPage = 1;
-                getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);//接收对话消息
+                getMsg(indexPage * INITIAL_LIMIT, 0, GET_TIMER_MESSAGE);//接收对话消息
             }
         }, 10000, 10000);
     }

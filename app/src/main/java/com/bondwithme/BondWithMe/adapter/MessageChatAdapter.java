@@ -9,6 +9,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,6 +68,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     private Context context;
     private RecyclerView recyclerView;
     private MessageChatActivity messageChatActivity;
+    private LinearLayoutManager llm;
     private static final int FROM_ME_TYPE_TEXT = 1;
     private static final int FROM_ME_TYPE_PIC = 2;
     private static final int FROM_ME_TYPE_LOC = 3;
@@ -79,11 +81,12 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     private static final int FROM_OTHER_TYPE_GIF = 9;
     private static final int FROM_OTHER_TYPE_PNG = 10;
 
-    public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView, MessageChatActivity messageChatActivity) {
+    public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView, MessageChatActivity messageChatActivity,LinearLayoutManager llm) {
         this.context = context;
         this.myList = myList;
         this.recyclerView = recyclerView;
         this.messageChatActivity = messageChatActivity;
+        this.llm=llm;
     }
 
     public void addHistoryData(List<MsgEntity> list) {
@@ -103,6 +106,17 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         myList.addAll(0, list);
         notifyDataSetChanged();
         recyclerView.scrollToPosition(getItemCount() - 1);
+    }
+
+    public void addTimerData(List<MsgEntity> list) {
+        int scrollPosition = 0;
+        if (myList != null && myList.size() > 0) {
+            scrollPosition = llm.findLastVisibleItemPosition();
+            myList.clear();
+        }
+        myList.addAll(list);
+        notifyDataSetChanged();
+        recyclerView.scrollToPosition(scrollPosition);
     }
 
     public void addSendData(List<MsgEntity> list) {
