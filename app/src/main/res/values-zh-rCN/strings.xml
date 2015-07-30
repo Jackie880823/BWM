@@ -520,7 +520,7 @@
     <string name="text_start_or_register_with">或注册使用</string>
     <string name="text_start_forget_password">忘记密码?</string>
     <string name="text_start_or_log_in_with">或登录使用</string>
-    <string name="text_start_least5_prompt">至少五位</string>
+    <string name="text_start_least5_prompt">至少5个字母数字字符</string>
     <string name="text_start_enter_code">验证码</string>
     <string name="text_start_code">区号</string>
     <string name="text_start_phone_number_exist">手机号已被使用.</string>
