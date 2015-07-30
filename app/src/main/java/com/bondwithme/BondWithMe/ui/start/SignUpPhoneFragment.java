@@ -38,6 +38,7 @@ import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.CountryCodeUtil;
 import com.bondwithme.BondWithMe.util.LoginManager;
 import com.bondwithme.BondWithMe.util.MD5Util;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
@@ -486,7 +487,8 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void OnLoginError(String error) {
-
+        MessageUtil.showMessage(getActivity(), error);
+        com.facebook.login.LoginManager.getInstance().logOut();//清除Facebook授权缓存
     }
 
     private void checkFacebookId() {

@@ -553,5 +553,7 @@
 
     <string name="app_crash_message">Sorry! The application has stopped unexpectedly. </string>
     <string name="text_start_cancle">Cancle</string>
+    <string name="text_start_no_changes_found">No changes found.</string>
+    <string name="text_more_setting_current_version">Current Version</string>
 
 </resources>
