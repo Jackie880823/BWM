@@ -32,6 +32,7 @@ import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.StickerMainFragment;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.UIUtil;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
 
@@ -334,6 +335,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, CACHE_PIC_NAME_TEMP + cache_count));
+                    uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
                     Log.i(TAG, "onActivityResult& uri: " + uri.getPath());
                     if(new File(uri.getPath()).exists()) {
                         if(commentListener != null) {
