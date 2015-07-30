@@ -99,6 +99,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
             Tap =  getArguments().getString(ARG_PARAM_PREFIX + "0");
             Log.i("Tap====",Tap);
             group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
+            Log.i("group_id===",group_id+"");
 //            if (Tap.equals("0")){
 //                group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
 //            }else {
@@ -217,7 +218,8 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         params.put("start",startIndex + "");
         params.put("limit",offset + "");
         params.put("group_id",group_id);
-        params.put("view_user",MainActivity.getUser().getUser_id());
+        params.put("view_user", MainActivity.getUser().getUser_id());
+//        Log.i("group_id","");
         params.put("search_key","");
         String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
 
