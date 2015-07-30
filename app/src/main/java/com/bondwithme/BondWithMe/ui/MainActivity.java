@@ -589,10 +589,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                         getString(R.string.text_yes), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        FileUtil.clearCache(MainActivity.this);
-//                        MainActivity.this.finish();
-                        MainActivity.this.getApplication().onTerminate();
-//                        App.exit(MainActivity.this);
+                        App.getContextInstance().exit(MainActivity.this);
                     }
                 });
                 snackBar.show();
@@ -628,7 +625,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             snackBar.dismiss();
         }
         unregisterReceiver(mReceiver);
+//        MainActivity.this.getApplication().onTerminate();
         super.onDestroy();
+
     }
 
     private void updateViewPager() {
@@ -662,4 +661,5 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             }
         }
     };
+
 }

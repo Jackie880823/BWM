@@ -124,12 +124,10 @@ public class PickAndCropPictureActivity extends Activity {
                 case REQUEST_FROM_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP));
                     if (needCrop) {
-                        if (new File(uri.getPath()).exists()) {
-                            try {
-                                startPhotoZoom(uri, false);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            startPhotoZoom(uri, false);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     } else {
                         mCropImagedUri = uri;
@@ -146,7 +144,7 @@ public class PickAndCropPictureActivity extends Activity {
                     break;
 
             }
-        }else{
+        } else {
             finish();
         }
 
@@ -193,17 +191,17 @@ public class PickAndCropPictureActivity extends Activity {
 //            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 //            bitmap = BitmapFactory.decodeStream(
 //                    new FileInputStream(uri.getPath()), null, options);
-//            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
+            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
             byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
             File file = new File(uri.getPath());
             file.delete();
             FileOutputStream fos = new FileOutputStream(uri.getPath());
             fos.write(newBytes);
             fos.flush();
+
             fos.close();
             bitmap.recycle();
         }
-
 
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
