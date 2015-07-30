@@ -551,4 +551,6 @@
     <string name="text_start_facebook">Facebook</string>
     <string name="text_show_message_is_friend">This member is not connected to you. You need to be connected to view profile.</string>
 
+    <string name="text_confirm_relation">You are about to add this member as your </string>
+
 </resources>
