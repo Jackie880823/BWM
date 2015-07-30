@@ -3,8 +3,6 @@ package com.bondwithme.BondWithMe.ui;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.Rect;
 import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.Build;
@@ -29,7 +27,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
-import com.bondwithme.BondWithMe.util.UIUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -146,7 +143,7 @@ public class ViewPDFActivity extends BaseActivity {
             if (null != mSavedInstanceState) {
                 index = mSavedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0);
             }
-//            showPage(index);
+
             try {
                 openRenderer(this, path);
             } catch (IOException e) {
@@ -154,6 +151,9 @@ public class ViewPDFActivity extends BaseActivity {
                 Toast.makeText(this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 this.finish();
             }
+
+            showPage(index);
+
         } else {
             getViewById(R.id.pdflayout1).setVisibility(View.GONE);
             mainLayout = getViewById(R.id.pdflayout2);
@@ -348,33 +348,11 @@ public class ViewPDFActivity extends BaseActivity {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void openRenderer(Context context, String path) throws IOException {
 
-//        http://sc.bondwith.me/bondwithme/download/7984627910071.pdf
         if (SDKUtil.IS_L) {
-            // In this sample, we read a PDF from the assets directory.
-//            mFileDescriptor = context.getAssets().openFd("sample.pdf").getParcelFileDescriptor();
-            // This is the PdfRenderer we use to render the PDF.
 
-            Bitmap bitmap = Bitmap.createBitmap(UIUtil.getScreenWidth(context), UIUtil.getScreenWidth(context), Bitmap.Config.ARGB_8888);
-//            Bitmap bitmap = Bitmap.createBitmap(mImageView.getWidth(), mImageView.getHeight(), Bitmap.Config.ARGB_8888);
             File file = new File(path);
             mFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
             mPdfRenderer = new PdfRenderer(mFileDescriptor);
-
-
-            //注释是因为当前情况只有一页
-//            if (currentPage < 0) {
-//                currentPage = 0;
-//            } else if (currentPage > renderer.getPageCount()) {
-//                currentPage = renderer.getPageCount() - 1;
-//            }
-
-
-            Matrix m = mImageView.getImageMatrix();
-            Rect rect = new Rect(0, 0, UIUtil.getScreenWidth(context), UIUtil.getScreenWidth(context));
-            mPdfRenderer.openPage(currentPage).render(bitmap, rect, m, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-            mImageView.setImageMatrix(m);
-            mImageView.setImageBitmap(bitmap);
-            mImageView.invalidate();
         }
 
     }
@@ -412,9 +390,14 @@ public class ViewPDFActivity extends BaseActivity {
             }
             // Use `openPage` to open a specific page in PDF.
             mCurrentPage = mPdfRenderer.openPage(index);
+
+
+            int width = mCurrentPage.getWidth();
+            int height =mCurrentPage.getHeight();
+
             // Important: the destination bitmap must be ARGB (not RGB).
-            Bitmap bitmap = Bitmap.createBitmap(mCurrentPage.getWidth(), mCurrentPage.getHeight(),
-                    Bitmap.Config.ARGB_8888);
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+//            Bitmap bitmap = Bitmap.createBitmap(mCurrentPage.getWidth(), mCurrentPage.getHeight(), Bitmap.Config.ARGB_8888);
             // Here, we render the page onto the Bitmap.
             // To render a portion of the page, use the second and third parameter. Pass nulls to get
             // the default result.
@@ -422,7 +405,7 @@ public class ViewPDFActivity extends BaseActivity {
             mCurrentPage.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
             // We are ready to show the Bitmap to user.
             mImageView.setImageBitmap(bitmap);
-            updateUi();
+//            updateUi();
         }
     }
 

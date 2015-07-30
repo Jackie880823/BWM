@@ -29,7 +29,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
-            android:scaleType="fitCenter"
             android:src="@drawable/network_image_default" />
         <!--<ImageView-->
         <!--android:id="@+id/image"-->

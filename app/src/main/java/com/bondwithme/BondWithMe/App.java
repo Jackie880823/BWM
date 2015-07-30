@@ -117,21 +117,23 @@ public class App extends MultiDexApplication {
 
     public static void logout(Activity context) {
 
-
-        user = null;
         if (context != null) {
             LoginManager.getInstance().logOut();//清除Facebook授权缓存
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
-            Intent intent = new Intent(context, StartActivity.class);
-            ComponentName cn = intent.getComponent();
-            Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-            context.startActivity(mainIntent);
 
             //反注册推送
             clearPush(context);
             //默认tab
             PreferencesUtil.saveValue(context, "lastLeaveIndex", -1);
+
+            //to Login activity
+            Intent intent = new Intent(context, StartActivity.class);
+            ComponentName cn = intent.getComponent();
+            Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+            context.startActivity(mainIntent);
+
+            user = null;
             context.finish();
         }
     }
