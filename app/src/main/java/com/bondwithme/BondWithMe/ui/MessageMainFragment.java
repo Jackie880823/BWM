@@ -500,8 +500,8 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             groupRefreshLayout.setVisibility(View.GONE);
         }
         emptyGroupMessageLinear.setVisibility(View.VISIBLE);
-        emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
-        emptyGroupMessageTv.setText("");
+        emptyGroupMessageIv.setImageResource(R.drawable.group_msg_empty);
+        emptyGroupMessageTv.setText(mContext.getString(R.string.text_msg_start_bonding));
     }
 
     private void hideGroupEmptyView() {
@@ -604,7 +604,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         }
         emptyMemberMessageLinear.setVisibility(View.VISIBLE);
         emptyMemberMessageIv.setImageResource(R.drawable.message_member_empty);
-        emptyMemberMessageTv.setText("");
+        emptyMemberMessageTv.setText(mContext.getString(R.string.text_msg_start_bonding));
     }
 
     private void hideMemberEmptyView() {

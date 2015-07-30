@@ -552,5 +552,6 @@
     <string name="text_show_message_is_friend">This member is not connected to you. You need to be connected to view profile.</string>
 
     <string name="app_crash_message">Sorry! The application has stopped unexpectedly. </string>
+    <string name="text_msg_start_bonding">Let\'s start bonding!</string>
 
 </resources>
