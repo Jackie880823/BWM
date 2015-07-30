@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -59,6 +60,14 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     private static final String Tag = FamilyProfileFragment.class.getSimpleName();
     private String useId;//本人Id，这个将来是全局变量
     private String memberId;//本人的memberId
+    private String groupId;
+    private String groupName;
+//    private String relationship;
+//    private String famNickname;
+//    private String memberStatus;
+    private String getDofeelCode;
+
+
     private CircularNetworkImage cniMain;
     private ImageView ivBottomLeft;
     private ImageView ivBottomRight;
@@ -91,46 +100,17 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         this.layoutId = R.layout.family_profile_fragment;
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case GET_USER_ENTITY:
-                    userEntity = (UserEntity) msg.obj;
-                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-                    tvName1.setText(userEntity.getUser_given_name());
-                    getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
-                    tvId1.setText("ID:" + userEntity.getDis_bondwithme_id());
-                    String dofeel_code = userEntity.getDofeel_code();
-                    if (!TextUtils.isEmpty(dofeel_code)) {
-                        try {
-                            String filePath = "";
-                            if (dofeel_code.indexOf("_") != -1) {
-                                filePath = dofeel_code.replaceAll("_", File.separator);
-                            }
-                            InputStream is = App.getContextInstance().getAssets().open(filePath);
-                            Bitmap bitmap = BitmapFactory.decodeStream(is);
-                            ivBottomLeft.setImageBitmap(bitmap);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    break;
-            }
-        }
-    };
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 1:
-             if (resultCode == getActivity().RESULT_OK) {
-                userEntity.setTree_type_name(data.getStringExtra("relationship"));
-             }
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        switch (requestCode) {
+//            case 1:
+//             if (resultCode == getActivity().RESULT_OK) {
+//                userEntity.setTree_type_name(data.getStringExtra("relationship"));
+//             }
+//        }
+//    }
 
     @Override
     public void initView() {
@@ -138,6 +118,12 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         Intent intent = getActivity().getIntent();
         useId = MainActivity.getUser().getUser_id();//MainActivity.
         memberId = intent.getStringExtra("member_id");
+        groupId = intent.getStringExtra("groupId");
+        groupName = intent.getStringExtra("groupName");
+//        relationship = intent.getStringExtra("relationship");
+//        famNickname = intent.getStringExtra("fam_nickname");
+//        memberStatus = intent.getStringExtra("member_status");
+        getDofeelCode = intent.getStringExtra("getDofeel_code");
 
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
@@ -150,6 +136,23 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlAlbumGallery = getViewById(R.id.rl_album_gallery);
         rlWallPosting = getViewById(R.id.rl_wall_posting);
         btnSendMessage = getViewById(R.id.btn_message);
+
+        tvName1.setText(groupName);
+        getParentActivity().tvTitle.setText(groupName);
+        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
+        if (!TextUtils.isEmpty(getDofeelCode)) {
+            try {
+                String filePath = "";
+                if (getDofeelCode.indexOf("_") != -1) {
+                    filePath = getDofeelCode.replaceAll("_", File.separator);
+                }
+                InputStream is = App.getContextInstance().getAssets().open(filePath);
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                ivBottomLeft.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,14 +185,12 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         btnSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (userEntity != null) {
-                    //聊天界面
-                    Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
-                    intent2.putExtra("type", 0);
-                    intent2.putExtra("groupId", userEntity.getGroup_id());
-                    intent2.putExtra("titleName", userEntity.getUser_given_name());
-                    startActivity(intent2);
-                }
+                //聊天界面
+                Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
+                intent2.putExtra("type", 0);
+                intent2.putExtra("groupId", groupId);
+                intent2.putExtra("titleName", groupName);
+                startActivity(intent2);
             }
         });
 
@@ -205,10 +206,17 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlPathRelationship.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (userEntity != null) {
+                if (userEntity != null ) {
                     //关系界面
                     Intent intent = new Intent(getActivity(), PathRelationshipActivity.class);
                     intent.putExtra("member_id", memberId);
+//                    if(!TextUtils.isEmpty(relationship)){
+//                        intent.putExtra("relationship", relationship);
+//                        intent.putExtra("fam_nickname", famNickname);
+//                        intent.putExtra("member_status", memberStatus);
+////                        intent.putExtra("selectMemeber", data_Us.indexOf(userEntity.getTree_type_name()));
+//                        intent.putExtra("selectMemeber", "");
+//                    }
                     intent.putExtra("relationship", userEntity.getTree_type_name());
                     intent.putExtra("fam_nickname", userEntity.getFam_nickname());
                     intent.putExtra("member_status", userEntity.getUser_status());
@@ -232,7 +240,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlWallPosting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //聊天fragment
+                //wall fragment
                 FragmentManager fm = getParentActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 Fragment f = WallFragment.newInstance(memberId);
@@ -242,6 +250,43 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             }
         });
     }
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case GET_USER_ENTITY:
+                    userEntity = (UserEntity) msg.obj;
+                    if(TextUtils.isEmpty(groupId)){
+                        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                    }
+                    if(TextUtils.isEmpty(groupName)){
+                        tvName1.setText(userEntity.getUser_given_name());
+                        getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
+                    }
+                    tvId1.setText("ID:" + userEntity.getDis_bondwithme_id());
+                    if(TextUtils.isEmpty(getDofeelCode)){
+                        String dofeel_code = userEntity.getDofeel_code();
+                        if (!TextUtils.isEmpty(dofeel_code)) {
+                            try {
+                                String filePath = "";
+                                if (dofeel_code.indexOf("_") != -1) {
+                                    filePath = dofeel_code.replaceAll("_", File.separator);
+                                }
+                                InputStream is = App.getContextInstance().getAssets().open(filePath);
+                                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                                ivBottomLeft.setImageBitmap(bitmap);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+    };
+
 
     private void getHasMiss() {
         HashMap<String, String> params = new HashMap<String, String>();
@@ -319,7 +364,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 List<UserEntity> data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
                 if ((data != null) && (data.size() > 0)) {
-                    UserEntity userEntity = data.get(0);
+                    userEntity = data.get(0);
                     Message.obtain(handler, GET_USER_ENTITY, userEntity).sendToTarget();
                 }
             }
@@ -339,6 +384,21 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
             }
         });
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("requestCode1====", requestCode + "");
+        Log.i("resultCode1====",resultCode+"");
+        switch (requestCode) {
+            case 1:
+                if (resultCode == getActivity().RESULT_OK){
+                    getActivity().setResult(getActivity().RESULT_OK);
+                    userEntity.setTree_type_name(data.getStringExtra("relationship"));
+                }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private List<String> getDataEn() {

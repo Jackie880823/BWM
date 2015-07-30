@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.GridView;
@@ -41,7 +42,6 @@ import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import android.widget.CheckBox;
 import com.material.widget.Dialog;
 
 import org.json.JSONException;
@@ -107,20 +107,21 @@ public class InviteMemberActivity extends BaseActivity {
                                     memberList.add(memberEntity);
 
                                 }
-                                else {
-                                    if (isFirstData) {
-                                        selectMemberEntityList.add(memberEntity);
-                                    }
-                                }
+//                                else {
+//                                    if (isFirstData) {
+////                                        selectMemberEntityList.add(memberEntity);
+//                                    }
+//                                }
                             }
                             searchmemberList.addAll(memberList);
                             memberAdapter.addNewData(memberList);
-                        } else {
-                            for (FamilyMemberEntity memberEntity : memberEntityList) {
-                                if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
-                                    selectMemberEntityList.add(memberEntity);
-                                }
-                            }
+                        }
+                        else {
+//                            for (FamilyMemberEntity memberEntity : memberEntityList) {
+//                                if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
+////                                    selectMemberEntityList.add(memberEntity);
+//                                }
+//                            }
                             memberAdapter.addNewData(memberEntityList);
                         }
                     }
@@ -180,6 +181,7 @@ public class InviteMemberActivity extends BaseActivity {
         selectGroupEntityList = new ArrayList<>();
         if (null != memberSelectList && memberSelectList.size() > 0) {
             for (FamilyMemberEntity userEntity : memberSelectList) {
+                //为什么把传过来的member添加进来？
                 selectMemberList.add(userEntity.getUser_id());
             }
         }

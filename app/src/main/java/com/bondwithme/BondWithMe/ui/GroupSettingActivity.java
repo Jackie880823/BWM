@@ -140,7 +140,7 @@ public class GroupSettingActivity extends BaseActivity {
         mContext = this;
         groupId = getIntent().getStringExtra("groupId");
         groupName = getIntent().getStringExtra("groupName");
-        type = getIntent().getIntExtra("groupType",0);
+        type = getIntent().getIntExtra("groupType", 0);
         llSetting = getViewById(R.id.ll_setting);
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_group_name);
@@ -722,8 +722,8 @@ public class GroupSettingActivity extends BaseActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == this.RESULT_OK) {
-            Log.i("G_requestCode====",requestCode+"");
-            Log.i("G_resultCode====",resultCode+"");
+//            Log.i("G_requestCode====",requestCode+"");
+//            Log.i("G_resultCode====",resultCode+"");
             switch (requestCode) {
                 case GET_MEMBERS:
                     if (addMemberList != null && addMemberList.size() > 0) {
@@ -733,6 +733,7 @@ public class GroupSettingActivity extends BaseActivity {
                     groupData = data.getStringExtra("groups_data");
                     List<UserEntity> userEntityList = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                     }.getType());
+//                    Log.i("userEntityList====",userEntityList.size()+"");
                     if (null != userEntityList && userEntityList.size() > 0) {
                         for (UserEntity user : userEntityList) {
                             String userId = user.getUser_id();
@@ -760,6 +761,7 @@ public class GroupSettingActivity extends BaseActivity {
                     } else {
 
                         if (addMemberList.size() > 0) {
+                            Log.i("addMemberList====",addMemberList.size()+"");
 //                        removeDuplicate(userList);
                             addGroupMember(gson.toJson(addMemberList));
 //                            getMembersList();
@@ -805,6 +807,7 @@ public class GroupSettingActivity extends BaseActivity {
     }
 
     public void addGroupMember(final String strGroupMembers) {
+        Log.i("addGroupMember====",strGroupMembers);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("group_id", groupId);
         params.put("group_owner_id", MainActivity.getUser().getUser_id());

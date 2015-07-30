@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -44,6 +45,7 @@ public class PathRelationshipActivity extends BaseActivity {
     List<String> data_Zh = new ArrayList<String>();
     List<String> data_Us = new ArrayList<String>();
     private int selectMemeber;
+    private int RESULT = 0;
 
     LinearLayout llRelationship;
 
@@ -97,7 +99,8 @@ public class PathRelationshipActivity extends BaseActivity {
         } else {
             intent.putExtra("relationship", tvRelationship.getText().toString());
         }
-        setResult(RESULT_OK, intent);
+        setResult(RESULT, intent);
+        Log.i("RESULT====",RESULT+"");
         super.finish();
     }
 
@@ -255,11 +258,15 @@ public class PathRelationshipActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("requestCode2====", requestCode + "");
+        Log.i("resultCode2====",resultCode+"");
         switch (requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
                     //获取选择关系界面传来的关系
                     selectMemeber = data.getExtras().getInt("selectMemeber");
+                    RESULT = -1;
+//                    setResult(RESULT_OK);
                     if (isZh) {
                         tvRelationship.setText(data_Zh.get(selectMemeber));
                     } else {
@@ -274,7 +281,7 @@ public class PathRelationshipActivity extends BaseActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-            if (event.getAction() == KeyEvent.ACTION_UP) {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 titleLeftEvent();
             }
             return true;
