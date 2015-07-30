@@ -26,6 +26,7 @@ import android.util.Log;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -465,16 +466,17 @@ public class LocalImageLoader {
      * @param isDelSrc
      * @return
      */
-    public final static String compressBitmap(Context context, Uri uri, int rqsW, int rqsH, boolean isDelSrc){
-        Bitmap bitmap;
-        ImageSize imageSize = new ImageSize(rqsW, rqsH);
-        bitmap = ImageLoader.getInstance().loadImageSync(uri.toString(), imageSize);
-            LogUtil.i(TAG, "compressBitmap& uri: " + uri);
-        if(bitmap == null){
+    public final static String compressBitmap(Context context, Uri uri, int rqsW, int rqsH, boolean isDelSrc) {
+        if(ImageDownloader.Scheme.ofUri(uri.toString()) != ImageDownloader.Scheme.FILE) {
             LogUtil.i(TAG, "compressBitmap& bitmap is null");
             return compressBitmap(context, FileUtil.getRealPathFromURI(context, uri), rqsW, rqsH, isDelSrc);
+        } else {
+            Bitmap bitmap;
+            ImageSize imageSize = new ImageSize(rqsW, rqsH);
+            bitmap = ImageLoader.getInstance().loadImageSync(uri.toString(), imageSize);
+            LogUtil.i(TAG, "compressBitmap& uri: " + uri);
+            return getPath(context, uri.getPath(), isDelSrc, bitmap);
         }
-        return getPath(context, uri.getPath(), isDelSrc, bitmap);
     }
 
     /**
@@ -496,13 +498,15 @@ public class LocalImageLoader {
 
     /**
      * 获得缩小后的图片位置
+     *
      * @param context
      * @param srcPath
      * @param isDelSrc
      * @param bitmap
      * @return
      */
-    private static String getPath(Context context, String srcPath, boolean isDelSrc, Bitmap bitmap) {File srcFile = new File(srcPath);
+    private static String getPath(Context context, String srcPath, boolean isDelSrc, Bitmap bitmap) {
+        File srcFile = new File(srcPath);
         String desPath = PicturesCacheUtil.getCachePicPath(context);
         int degree = readPictureDegree(srcPath);
         try {
@@ -635,7 +639,7 @@ public class LocalImageLoader {
      * @return degree旋转的角度
      */
     public static int readPictureDegree(String path) {
-        if(TextUtils.isEmpty(path)){
+        if(TextUtils.isEmpty(path)) {
             return 0;
         }
         int degree = 0;
