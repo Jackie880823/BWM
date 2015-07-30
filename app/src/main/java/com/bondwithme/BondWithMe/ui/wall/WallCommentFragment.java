@@ -35,7 +35,6 @@ import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
-import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -731,7 +730,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             if(params == null) {
                 return null;
             }
-            return LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), params[0]), 480, 800, false);
+            return LocalImageLoader.compressBitmap(getActivity(), params[0], 480, 800, false);
         }
 
         @Override

@@ -22,10 +22,12 @@ import android.widget.ListView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.LocalImagesAdapter;
+import com.bondwithme.BondWithMe.entity.ImageData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
-import com.bondwithme.BondWithMe.util.AsyncLoadBitmapTask;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import java.util.Set;
 
 /**
  * @author Jackie Zhu
+ * @version 1.0
  */
 public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> implements LoaderManager.LoaderCallbacks<Void> {
 
@@ -52,18 +55,18 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     private DrawerArrowDrawable drawerArrowDrawable;
     private float offset;
     private boolean flipped;
-    private HashMap<String, ArrayList<Uri>> mImageUris = new HashMap<>();
+    private HashMap<String, ArrayList<ImageData>> mImageUris = new HashMap<>();
     /**
      * 当前显示的图片的Ur列表
      */
-    private ArrayList<Uri> mImageUriList = new ArrayList();
+    private ArrayList<ImageData> mImageUriList = new ArrayList();
 
     private boolean multi;
 
     /**
      * 已经选择的图Ur列表
      */
-    ArrayList<Uri> mSelectedImageUris;
+    ArrayList<ImageData> mSelectedImageUris;
     /**
      * 目录列表
      */
@@ -77,12 +80,12 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      */
     private LocalImagesAdapter localImagesAdapter;
 
-    public SelectPhotosFragment(ArrayList<Uri> selectUris) {
+    public SelectPhotosFragment(ArrayList<ImageData> selectUris) {
         super();
         mSelectedImageUris = selectUris;
     }
 
-    public static final SelectPhotosFragment newInstance(ArrayList<Uri> selectUris, String... params) {
+    public static final SelectPhotosFragment newInstance(ArrayList<ImageData> selectUris, String... params) {
         return createInstance(new SelectPhotosFragment(selectUris), params);
     }
 
@@ -191,7 +194,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
                 Log.i(TAG, "onItemClick& position: " + position);
 
                 if(selectImageUirListener != null) {
-                    Uri itemUri = mImageUriList.get(position);
+                    ImageData itemUri = mImageUriList.get(position);
                     if(multi) {
                         selectImageUirListener.preview(itemUri);
                     } else {
@@ -226,9 +229,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // 清除存入Map中的图片
-        AsyncLoadBitmapTask.clearBitmaps();
-        if(imageCursor!=null) {
+        if(imageCursor != null) {
             if(!imageCursor.isClosed())
                 imageCursor.close();
         }
@@ -238,19 +239,19 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      * Adds the url or path to the bucket if it exists, and if not, creates it and adds the url/path.
      *
      * @param bucket
-     * @param uri
+     * @param imageData
      */
-    private void addToImageMap(String bucket, Uri uri) {
-        ArrayList<Uri> nearest = mImageUris.get(getParentActivity().getString(R.string.text_nearest));
+    private void addToImageMap(String bucket, ImageData imageData) {
+        ArrayList<ImageData> nearest = mImageUris.get(getParentActivity().getString(R.string.text_nearest));
         if(nearest.size() < 30) {
-            nearest.add(uri);
+            nearest.add(imageData);
         }
 
         if(mImageUris.containsKey(bucket)) {
-            mImageUris.get(bucket).add(uri);
+            mImageUris.get(bucket).add(imageData);
         } else {
-            ArrayList<Uri> al = new ArrayList<>();
-            al.add(uri);
+            ArrayList<ImageData> al = new ArrayList<>();
+            al.add(imageData);
             mImageUris.put(bucket, al);
         }
     }
@@ -260,19 +261,26 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      */
     private void loadPhoneImages() {
         String bucketsFirst = getParentActivity().getString(R.string.text_nearest);
-        ArrayList<Uri> nearest = new ArrayList<>();
+        ArrayList<ImageData> nearest = new ArrayList<>();
         mImageUris.put(bucketsFirst, nearest);
         for(int i = 0; i < imageCursor.getCount(); i++) {
             imageCursor.moveToPosition(i);
             int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
             int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
             int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
-            File imageFile = new File(imageCursor.getString(pathColumnIndex));
+            String path = imageCursor.getString(pathColumnIndex);
+
+            // 先要过滤掉含有特殊字符的文件目录
+            File imageFile = new File(path);
             if(imageFile != null && imageFile.canRead()) {
                 String bucket = imageCursor.getString(bucketColumnIndex);
-                addToImageMap(bucket, Uri.parse("content://media/external/images/media/" + imageCursor.getInt(uriColumnIndex)));
-            }
+                Uri contentUri = Uri.parse("content://media/external/images/media/" + imageCursor.getInt(uriColumnIndex));
+                Uri pathUri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(path));
+                ImageData imageData = new ImageData(contentUri, pathUri);
 
+                LogUtil.i(TAG, "loadPhoneImages& path: " + mImageUris.toString());
+                addToImageMap(bucket, imageData);
+            }
         }
         imageCursor.close();
         buckets = setToOrderedStringArray(mImageUris.keySet(), bucketsFirst);
