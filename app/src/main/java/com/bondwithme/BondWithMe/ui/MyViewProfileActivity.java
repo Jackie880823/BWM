@@ -245,6 +245,10 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
+        {
+            llResetPassword.setVisibility(View.INVISIBLE);
+        }
 //        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         mContext = this;
         TAG = mContext.getClass().getSimpleName();
