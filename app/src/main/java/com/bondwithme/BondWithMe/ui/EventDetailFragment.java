@@ -281,7 +281,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     hideAllViewState();
                     mUri = uri;
                     if(mUri != null) {
-                        String path = LocalImageLoader.compressBitmap(getActivity(), FileUtil.getRealPathFromURI(getActivity(), mUri), 480, 800, false);
+                        String path = LocalImageLoader.compressBitmap(getActivity(), mUri, 480, 800, false);
                         File file = new File(path);
                         if(file.exists()) {
                             progressBar.setVisibility(View.VISIBLE);

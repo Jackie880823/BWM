@@ -2,9 +2,7 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,15 +13,19 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.ImageData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
-import com.bondwithme.BondWithMe.util.AsyncLoadBitmapTask;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.SDKUtil;
+import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zhuweiping on 5/4/15.
+ * Created by Jackie on 5/4/15.
+ * @author Jackie
+ * @version 1.0
  */
 public class LocalImagesAdapter extends BaseAdapter {
 
@@ -33,11 +35,11 @@ public class LocalImagesAdapter extends BaseAdapter {
     /**
      * 显示图片的Ur列表
      */
-    private List<Uri> mDatas;
+    private List<ImageData> mDatas;
     /**
      * 已经选中的图片
      */
-    private List<Uri> mSelectImages;
+    private ArrayList<ImageData> mSelectImages;
 
     private SelectImageUirChangeListener mListener;
 
@@ -50,7 +52,7 @@ public class LocalImagesAdapter extends BaseAdapter {
      */
     private boolean checkBoxVisible = true;
 
-    public LocalImagesAdapter(Context context, List<Uri> datas, int color) {
+    public LocalImagesAdapter(Context context, List<ImageData> datas, int color) {
         mContext = context;
         mDatas = datas;
         mColor = color;
@@ -98,7 +100,7 @@ public class LocalImagesAdapter extends BaseAdapter {
      *
      * @param selectedImages
      */
-    public void setSelectedImages(List<Uri> selectedImages) {
+    public void setSelectedImages(ArrayList<ImageData> selectedImages) {
         mSelectImages = selectedImages;
     }
 
@@ -137,18 +139,18 @@ public class LocalImagesAdapter extends BaseAdapter {
             holder.iv = (ImageView) convertView.findViewById(R.id.iv_pic);
             holder.check = (CheckBox) convertView.findViewById(R.id.select_image_right);
             /**wing modified begin 2015.07.15 (如果真要改变checkbox 的颜色使用checkbox_color和checkbox_checked_color属性)*/
-//            if(mColor != -1) {
-//                // 需要修改颜色
-//                holder.check.setBackgroundColor(mColor);
-//            }
+            //            if(mColor != -1) {
+            //                // 需要修改颜色
+            //                holder.check.setBackgroundColor(mColor);
+            //            }
             /**wing modified end*/
             convertView.setTag(holder);
         } else {
             holder = (HolderView) convertView.getTag();
         }
 
-        holder.iv.setImageResource(R.drawable.network_image_default);
         loadLocalBitmap(holder.iv, position);
+
         if(!checkBoxVisible) {
             holder.check.setVisibility(View.GONE);
         } else {
@@ -171,7 +173,7 @@ public class LocalImagesAdapter extends BaseAdapter {
                     boolean isChecked = checkBox.isChecked();
                     checkBox.setChecked(isChecked);
 
-                    Uri uri = mDatas.get(position);
+                    ImageData uri = mDatas.get(position);
                     if(mListener != null) {
                         LogUtil.i(TAG, "onCheck& check2");
                         if(isChecked) {
@@ -218,71 +220,9 @@ public class LocalImagesAdapter extends BaseAdapter {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void loadLocalBitmap(ImageView imageView, int position) {
         if(position < mDatas.size()) {
-            Uri uri = mDatas.get(position);
-            Bitmap bitmap = AsyncLoadBitmapTask.getBitmap4MemoryMap(uri);
-            if(bitmap == null) {
-                // map中还没有获取这个uri的图片，从手机内丰中加载
-                if(cancelPotentialWork(uri, imageView)) {
-                    AsyncLoadBitmapTask task = new AsyncLoadBitmapTask(mContext, imageView, columnWidthHeight);
-                    imageView.setTag(task);
-                    //for not work in down 11
-                    if(SDKUtil.IS_HONEYCOMB) {
-                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
-                    } else {
-                        task.execute(uri);
-                    }
-                }
-            } else {
-                imageView.setImageBitmap(bitmap);
-            }
+            Uri uri = mDatas.get(position).getPathUri();
+            ImageLoader.getInstance().displayImage(uri.toString(), imageView, UniversalImageLoaderUtil.options);
         }
-    }
-
-    /**
-     * 比较是否在加载同一个Uri,不同取消并取消上一次的加载
-     *
-     * @param uri       - 将要加载的uri
-     * @param imageView - 显示图片的视图
-     * @return - false: 取消加载; true: 取消了加载
-     */
-    private boolean cancelPotentialWork(Uri uri, ImageView imageView) {
-        AsyncLoadBitmapTask task = getLoadBitmapTask(imageView);
-        boolean result = true;
-        if(task != null) {
-            AsyncTask.Status status = task.getStatus();
-            switch(status) {
-                case PENDING:
-                    result = true;
-                    break;
-                case RUNNING:
-                    if(task.getUri() == null || !task.getUri().equals(uri)) {
-                        task.cancel(true);
-                        Log.i(TAG, "cancelPotentialWork& task cancel; uri: " + uri);
-                        result = true;
-                    } else {
-                        Log.i(TAG, "cancelPotentialWork& task nothing; uri: " + uri);
-                        result = false;
-                    }
-                    break;
-                case FINISHED:
-                    result = true;
-                    break;
-            }
-        } else {
-            Log.i(TAG, "cancelPotentialWork& task not process; uri: " + uri);
-            result = true;
-        }
-        return result;
-    }
-
-    private AsyncLoadBitmapTask getLoadBitmapTask(ImageView imageView) {
-        if(imageView != null) {
-            Object tag = imageView.getTag();
-            if(tag instanceof AsyncLoadBitmapTask) {
-                return (AsyncLoadBitmapTask) tag;
-            }
-        }
-        return null;
     }
 
     class HolderView {

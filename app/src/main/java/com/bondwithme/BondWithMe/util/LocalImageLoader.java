@@ -24,6 +24,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -448,10 +450,31 @@ public class LocalImageLoader {
         final Options options = new Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
-        options.inSampleSize = calculateInSampleSize(options, rqsW, rqsH);
         options.inSampleSize = caculateInSampleSize(options, rqsW, rqsH);
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(path, options);
+    }
+
+    /**
+     * 压缩指定Uri图片，并将其保存在缓存目录中，通过isDelSrc判定是否删除源文件，并获取到缓存后的图片路径
+     *
+     * @param context
+     * @param uri
+     * @param rqsW
+     * @param rqsH
+     * @param isDelSrc
+     * @return
+     */
+    public final static String compressBitmap(Context context, Uri uri, int rqsW, int rqsH, boolean isDelSrc){
+        Bitmap bitmap;
+        ImageSize imageSize = new ImageSize(rqsW, rqsH);
+        bitmap = ImageLoader.getInstance().loadImageSync(uri.toString(), imageSize);
+            LogUtil.i(TAG, "compressBitmap& uri: " + uri);
+        if(bitmap == null){
+            LogUtil.i(TAG, "compressBitmap& bitmap is null");
+            return compressBitmap(context, FileUtil.getRealPathFromURI(context, uri), rqsW, rqsH, isDelSrc);
+        }
+        return getPath(context, uri.getPath(), isDelSrc, bitmap);
     }
 
     /**
@@ -468,7 +491,18 @@ public class LocalImageLoader {
 
         Bitmap bitmap;
         bitmap = compressBitmap(srcPath, rqsW, rqsH);
-        File srcFile = new File(srcPath);
+        return getPath(context, srcPath, isDelSrc, bitmap);
+    }
+
+    /**
+     * 获得缩小后的图片位置
+     * @param context
+     * @param srcPath
+     * @param isDelSrc
+     * @param bitmap
+     * @return
+     */
+    private static String getPath(Context context, String srcPath, boolean isDelSrc, Bitmap bitmap) {File srcFile = new File(srcPath);
         String desPath = PicturesCacheUtil.getCachePicPath(context);
         int degree = readPictureDegree(srcPath);
         try {
