@@ -767,7 +767,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             if(params == null) {
                 return null;
             }
-            return LocalImageLoader.compressBitmap(App.getContextInstance(), FileUtil.getRealPathFromURI(App.getContextInstance(), params[0]), 480, 800, false);
+            return LocalImageLoader.compressBitmap(App.getContextInstance(), params[0], 480, 800, false);
         }
 
         @Override

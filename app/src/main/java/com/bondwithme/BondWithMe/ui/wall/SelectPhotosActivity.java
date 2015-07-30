@@ -2,7 +2,6 @@ package com.bondwithme.BondWithMe.ui.wall;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -11,14 +10,19 @@ import android.view.KeyEvent;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.PreviewFragment;
+import com.bondwithme.BondWithMe.entity.ImageData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 
 import java.util.ArrayList;
 
 
+/**
+ * 选择图片的Activity
+ * @author Jackie
+ * @see BaseActivity
+ */
 public class SelectPhotosActivity extends BaseActivity {
 
     private static final String TAG = SelectPhotosActivity.class.getSimpleName();
@@ -26,37 +30,48 @@ public class SelectPhotosActivity extends BaseActivity {
     public static final String IMAGES_STR = "images";
 
     private SelectPhotosFragment fragment;
-    private ArrayList<Uri> mSelectedImages = new ArrayList();
+    private ArrayList<ImageData> mSelectedImages = new ArrayList();
+
+    /**
+     * 选择多张图片标识{@value true}可以多张选择图片，{@value false}只允许选择一张图
+     */
     private boolean multi;
+    /**
+     * 请求图片Uir用Universal Image Loader库处理标识
+     */
+    private boolean useUniversal;
+    /**
+     * 请求多张图片数量
+     */
     private int residue;
     /**
      * 当前是否为浏览状态标识位
      */
     private boolean isPreview = false;
-    private Uri currentUri;
+    private ImageData currentUri;
 
     private SelectImageUirChangeListener listener = new SelectImageUirChangeListener() {
 
         PreviewFragment previewFragment;
 
         /**
-         * 添加图片{@code imageUri}到选择列表
+         * 添加图片{@code imageData}到选择列表
          *
-         * @param imageUri -   需要添加的图片uri
+         * @param imageData -   需要添加的图片uri数据
          * @return -   true:   添加成功；
          * -   false:  添加失败；
          */
         @Override
-        public boolean addUri(Uri imageUri) {
+        public boolean addUri(ImageData imageData) {
             // 添加结果成功与否的返回值，默认不成功
             boolean result = false;
             if(multi) {
                 if(mSelectedImages.size() < residue) {
                     // 没有超过限制的图片数量可以继续添加并返回添加结果的返回值
-                    if(mSelectedImages.contains(imageUri)) {
+                    if(mSelectedImages.contains(imageData)) {
                         result = true;
                     } else {
-                        result = mSelectedImages.add(imageUri);
+                        result = mSelectedImages.add(imageData);
                     }
                 } else {
                     // 提示用户添加的图片超过限制的数量
@@ -65,7 +80,11 @@ public class SelectPhotosActivity extends BaseActivity {
             } else {
                 // 不是同时添加多张图片，添加完成关闭当前Activity
                 Intent intent = new Intent();
-                intent.setData(imageUri);
+                if(useUniversal) {
+                    intent.setData(imageData.getPathUri());
+                } else {
+                    intent.setData(imageData.getContentUri());
+                }
                 setResult(RESULT_OK, intent);
                 finish();
                 result = true;
@@ -74,17 +93,17 @@ public class SelectPhotosActivity extends BaseActivity {
         }
 
         /**
-         * 从列表中删除图片{@code imageUri}
+         * 从列表中删除图片{@code imageData}
          *
-         * @param imageUri -   需要删除的图片uri
+         * @param imageData -   需要删除的图片uri数据
          * @return -   true:   删除成功；
          * -   false:  删除失败；
          */
         @Override
-        public boolean removeUri(Uri imageUri) {
+        public boolean removeUri(ImageData imageData) {
             // 返回删除结果成功与否的值
-            if(mSelectedImages.contains(imageUri)) {
-                return mSelectedImages.remove(imageUri);
+            if(mSelectedImages.contains(imageData)) {
+                return mSelectedImages.remove(imageData);
             } else {
                 return true;
             }
@@ -111,15 +130,15 @@ public class SelectPhotosActivity extends BaseActivity {
         }
 
         @Override
-        public void preview(Uri uri) {
-            currentUri = uri;
-            Log.i(TAG, "preview& uri: " + uri.toString());
-            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(getApplicationContext(), uri);
+        public void preview(ImageData imageData) {
+            currentUri = imageData;
+            Log.i(TAG, "preview& imageData: " + imageData.toString());
+            //            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(getApplicationContext(), imageData);
             if(previewFragment == null) {
                 previewFragment = PreviewFragment.newInstance("");
             }
             changeFragment(previewFragment, true);
-            previewFragment.setBitmap(bitmap);
+            previewFragment.displayImage(currentUri.getPathUri().toString());
             isPreview = true;
             leftButton.setImageResource(R.drawable.back_normal);
         }
@@ -172,7 +191,15 @@ public class SelectPhotosActivity extends BaseActivity {
         } else {
             if(mSelectedImages != null && mSelectedImages.size() > 0) {
                 Intent intent = new Intent();
-                intent.putParcelableArrayListExtra(IMAGES_STR, mSelectedImages);
+                ArrayList<Uri> uriList = new ArrayList<>();
+                for(ImageData imageData : mSelectedImages) {
+                    if(useUniversal) {
+                        uriList.add(imageData.getPathUri());
+                    } else {
+                        uriList.add(imageData.getContentUri());
+                    }
+                }
+                intent.putParcelableArrayListExtra(IMAGES_STR, uriList);
                 setResult(RESULT_OK, intent);
             }
             finish();
@@ -190,6 +217,7 @@ public class SelectPhotosActivity extends BaseActivity {
         Intent intent = getIntent();
         // 是否为同时添加多张图片
         multi = intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+        useUniversal = intent.getBooleanExtra(ImageData.USE_UNIVERSAL, false);
         // 总共需要添加的图片数量
         residue = intent.getIntExtra(TabPictureFragment.RESIDUE, 10);
         fragment.setSelectImageUirListener(listener);
@@ -242,5 +270,10 @@ public class SelectPhotosActivity extends BaseActivity {
             drawerArrowDrawable.setStrokeColor(resources.getColor(R.color.drawer_arrow_color));
             leftButton.setImageDrawable(drawerArrowDrawable);
         }
+    }
+
+    @Override
+    public boolean dispatchKeyShortcutEvent(KeyEvent event) {
+        return super.dispatchKeyShortcutEvent(event);
     }
 }
