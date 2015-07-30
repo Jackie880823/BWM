@@ -2,8 +2,8 @@ package com.bondwithme.BondWithMe;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
@@ -117,28 +117,36 @@ public class App extends MultiDexApplication {
 
     public static void logout(Activity context) {
 
-
-        //反注册推送
-        NotificationUtil.unRegisterPush(context, user.getUser_id());
-        user = null;
         if (context != null) {
             LoginManager.getInstance().logOut();//清除Facebook授权缓存
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
+
+            //反注册推送
+            clearPush(context);
+            //默认tab
+            PreferencesUtil.saveValue(context, "lastLeaveIndex", -1);
+
+            //to Login activity
             Intent intent = new Intent(context, StartActivity.class);
             ComponentName cn = intent.getComponent();
             Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
             context.startActivity(mainIntent);
-            /**销毁推送id*/
-            PreferencesUtil.saveValue(context, Constant.GCM_PREF_REG_ID, "");
-            PreferencesUtil.saveValue(context, Constant.GCM_PREF_APP_VERSION, "");
-            PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_REG_ID, "");
-            PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_APP_VERSION, "");
-            NotificationUtil.clearNotification(context);
-            //默认tab
-            PreferencesUtil.saveValue(context, "lastLeaveIndex", -1);
+
+            user = null;
             context.finish();
         }
+    }
+
+    private static void clearPush(Context context){
+        //反注册推送
+        NotificationUtil.unRegisterPush(context, user.getUser_id());
+        /**销毁推送id*/
+        PreferencesUtil.saveValue(context, Constant.GCM_PREF_REG_ID, "");
+        PreferencesUtil.saveValue(context, Constant.GCM_PREF_APP_VERSION, "");
+        PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_REG_ID, "");
+        PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_APP_VERSION, "");
+        NotificationUtil.clearNotification(context);
     }
 
 //    public static void exit(Activity context) {
