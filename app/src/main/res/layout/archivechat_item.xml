@@ -126,6 +126,7 @@
         </RelativeLayout>
         <View style="@style/split_line_default" />
         <RelativeLayout
+            android:id="@+id/group_default"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/_10dp"

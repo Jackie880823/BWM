@@ -27,10 +27,12 @@ import java.util.List;
 public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.VHItem>{
     private Context mContext;
     private List<ArchiveChatEntity> data = new ArrayList<>();
+    private String Tap;
 
-    public ArchiveChatAdapter(Context context,List<ArchiveChatEntity> data){
+    public ArchiveChatAdapter(Context context,List<ArchiveChatEntity> data,String Tap){
         mContext = context;
         this.data = data;
+        this.Tap = Tap;
     }
 
     public void add(List<ArchiveChatEntity> newData){
@@ -128,6 +130,8 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
 
         private View cardView;
 
+        private View groupDefault;
+
         public VHItem(View itemView) {
             super(itemView);
 
@@ -142,24 +146,28 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             tvLoveCount = (TextView) itemView.findViewById(R.id.memeber_love);
             liContent = itemView.findViewById(R.id.li_content);
             tvContent = (TextView) itemView.findViewById(R.id.tv_archive_content);
+            groupDefault = itemView.findViewById(R.id.group_default);
             tvContent.setMaxLines(9);
             imArchiveImages = (NetworkImageView) itemView.findViewById(R.id.iv_chats_images);
             cardView = itemView.findViewById(R.id.top_archive);
+            if("1".equals(Tap)){
+                groupDefault.setVisibility(View.GONE);
+            }
             tvContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
                     // 字符显示超过9行，只显示到第九行
                     int lineCount = tvContent.getLineCount();
-                    if(lineCount > 8) {
+                    if (lineCount > 8) {
                         // 第九行只显示十个字符
                         int maxLineEndIndex = tvContent.getLayout().getLineEnd(8);
                         int maxLineStartIndex = tvContent.getLayout().getLineStart(8);
                         String sourceText = tvContent.getText().toString();
-                        if(maxLineEndIndex - maxLineStartIndex > 7) {
+                        if (maxLineEndIndex - maxLineStartIndex > 7) {
                             // 截取到第九行文字的第7个字符，其余字符用...替代
                             String newText = sourceText.substring(0, maxLineStartIndex + 7) + "...";
                             tvContent.setText(newText);
-                        } else if(lineCount > 9) {
+                        } else if (lineCount > 9) {
                             // 截取到第九行文字未满7个字符，行数超过9号，说明有换行，将换行替换成"..."
                             String newText = sourceText.substring(0, maxLineEndIndex - 1) + "...";
                             tvContent.setText(newText);
@@ -184,8 +192,10 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
                     }
                     break;
                 case R.id.top_archive:
-                    if(marchiveChatViewClickListener != null){
-                        marchiveChatViewClickListener.showComments(entity.getContent_group_id(),entity.getGroup_id());
+                    if("0".equals(Tap)){
+                        if(marchiveChatViewClickListener != null){
+                            marchiveChatViewClickListener.showComments(entity.getContent_group_id(),entity.getGroup_id());
+                        }
                     }
             }
 
