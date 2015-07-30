@@ -56,6 +56,11 @@
                 android:autoLink="web"
                 android:linksClickable="true"
                 style="@style/text_dark_default"/>
+            <!--<TextView-->
+                <!--android:id="@+id/tv_archive_location_name"-->
+                <!--android:autoLink="web"-->
+                <!--android:linksClickable="true"-->
+                <!--style="@style/text_dark_default"/>-->
         </LinearLayout>
 
         <RelativeLayout
@@ -63,13 +68,24 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_200dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/default_view_margin">
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:visibility="gone">
 
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/iv_chats_images"
                 style="@style/ListImageDefault"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/iv_chats_pic"
+                style="@style/ListImageDefault"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:scaleType="fitCenter"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/tv_chat_photo_count"
@@ -81,35 +97,61 @@
                 android:background="@android:drawable/screen_background_dark_transparent"
                 android:padding="@dimen/_4dp"
                 android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_12sp" />
+                android:textSize="@dimen/text_size_12sp"
+                android:visibility="gone"/>
         </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_location"
+        <RelativeLayout
+            android:id="@+id/lo_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_default_selector_bg"
             android:gravity="center_vertical"
-            android:padding="@dimen/_5dp"
+            android:paddingLeft="@dimen/default_text_padding"
+            android:paddingRight="@dimen/default_content_padding"
+            android:paddingBottom="@dimen/default_content_padding"
+            android:paddingTop="@dimen/default_content_padding"
             android:visibility="gone">
-
             <ImageView
-                android:id="@+id/iv_location"
+                android:id="@+id/location"
                 android:layout_width="@dimen/_20dp"
                 android:layout_height="@dimen/_20dp"
-                android:background="@drawable/btn_default_selector_bg"
                 android:scaleType="centerInside"
                 android:src="@drawable/location"/>
 
             <TextView
-                android:id="@+id/tv_location"
+                android:id="@+id/tv_archive_location_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_default_selector_bg"
-                android:text="@string/text_location"
+                android:layout_toRightOf="@id/location"
                 android:textColor="@color/default_text_color_blue"
                 android:textSize="@dimen/text_small_size"/>
-        </LinearLayout>
+        </RelativeLayout>
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/ll_location"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/btn_default_selector_bg"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:padding="@dimen/_5dp"-->
+            <!--android:visibility="gone">-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/iv_location"-->
+                <!--android:layout_width="@dimen/_20dp"-->
+                <!--android:layout_height="@dimen/_20dp"-->
+                <!--android:background="@drawable/btn_default_selector_bg"-->
+                <!--android:scaleType="centerInside"-->
+                <!--android:src="@drawable/location"/>-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tv_location"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/btn_default_selector_bg"-->
+                <!--android:text="@string/text_location"-->
+                <!--android:textColor="@color/default_text_color_blue"-->
+                <!--android:textSize="@dimen/text_small_size"/>-->
+        <!--</LinearLayout>-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -126,6 +168,7 @@
         </RelativeLayout>
         <View style="@style/split_line_default" />
         <RelativeLayout
+            android:id="@+id/group_default"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/_10dp"

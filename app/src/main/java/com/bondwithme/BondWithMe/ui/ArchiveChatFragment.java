@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,7 +97,9 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         //如果该fragment带参数
         if(getArguments() != null){
             Tap =  getArguments().getString(ARG_PARAM_PREFIX + "0");
+            Log.i("Tap====",Tap);
             group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
+            Log.i("group_id===",group_id+"");
 //            if (Tap.equals("0")){
 //                group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
 //            }else {
@@ -200,12 +203,12 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
     }
 
     private void initSearchAdapter(){
-        searchAdapter = new ArchiveChatAdapter(getParentActivity(),searchData);
+        searchAdapter = new ArchiveChatAdapter(getParentActivity(),searchData,Tap);
         searchAdapter.setPicClickListener(this);
         rvList.setAdapter(searchAdapter);
     }
     private void initAdapter(){
-        adapter = new ArchiveChatAdapter(getParentActivity(),data);
+        adapter = new ArchiveChatAdapter(getParentActivity(),data,Tap);
         adapter.setPicClickListener(this);
         rvList.setAdapter(adapter);
     }
@@ -215,7 +218,8 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         params.put("start",startIndex + "");
         params.put("limit",offset + "");
         params.put("group_id",group_id);
-        params.put("view_user",MainActivity.getUser().getUser_id());
+        params.put("view_user", MainActivity.getUser().getUser_id());
+//        Log.i("group_id","");
         params.put("search_key","");
         String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
 
