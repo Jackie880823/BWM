@@ -484,9 +484,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         intent.putExtra("groupId",familyMemberEntity.getUser_id());
                         intent.putExtra("groupName", familyMemberEntity.getUser_given_name());
 
-                        intent.putExtra("relationship",familyMemberEntity.getTree_type_name());
-                        intent.putExtra("fam_nickname",familyMemberEntity.getFam_nickname());
-                        intent.putExtra("member_status",familyMemberEntity.getUser_status());
+//                        intent.putExtra("relationship",familyMemberEntity.getTree_type_name());
+//                        intent.putExtra("fam_nickname",familyMemberEntity.getFam_nickname());
+//                        intent.putExtra("member_status",familyMemberEntity.getUser_status());
                         intent.putExtra("getDofeel_code", familyMemberEntity.getDofeel_code());
 
 //                        startActivity(intent);

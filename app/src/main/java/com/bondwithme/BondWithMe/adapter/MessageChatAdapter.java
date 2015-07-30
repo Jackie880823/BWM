@@ -514,6 +514,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                                     if ("1".equals(memberFlag)) {
                                         Intent intent = new Intent(context, FamilyProfileActivity.class);
                                         intent.putExtra("member_id", msgEntity.getUser_id());
+                                        intent.putExtra("groupId",msgEntity.getUser_id());
+                                        intent.putExtra("groupName", msgEntity.getUser_given_name());
                                         context.startActivity(intent);
                                     } else {
                                         MslToast.getInstance(context).showShortToast(context.getString(R.string.text_show_message_is_friend));
