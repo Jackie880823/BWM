@@ -552,5 +552,6 @@
     <string name="text_start_cancle">取消</string>
     <string name="text_start_no_changes_found">密码未更换.</string>
     <string name="text_more_setting_current_version">当前版本</string>
+    <string name="text_msg_start_bonding">开始聊天！</string>
 
 </resources>

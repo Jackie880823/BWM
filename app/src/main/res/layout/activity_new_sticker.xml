@@ -47,9 +47,9 @@
             android:gravity="center">
 
             <ImageView
-                android:layout_width="@dimen/_30dp"
-                android:layout_height="@dimen/_30dp"
-                android:background="@drawable/sticker_fragment_setting" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/stickies_setting" />
         </LinearLayout>
 
     </LinearLayout>

@@ -555,5 +555,6 @@
     <string name="text_start_cancle">Cancle</string>
     <string name="text_start_no_changes_found">No changes found.</string>
     <string name="text_more_setting_current_version">Current Version</string>
+    <string name="text_msg_start_bonding">Let\'s start bonding!</string>
 
 </resources>

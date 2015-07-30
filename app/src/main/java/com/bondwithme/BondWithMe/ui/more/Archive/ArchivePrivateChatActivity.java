@@ -14,7 +14,7 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
  */
 public class ArchivePrivateChatActivity extends BaseActivity implements View.OnClickListener{
 //    private CardView c1;
-    private String user_id;
+    private String group_id;
     private String user_name;
 
 //    @Override
@@ -47,9 +47,9 @@ public class ArchivePrivateChatActivity extends BaseActivity implements View.OnC
 
     @Override
     protected Fragment getFragment() {
-        user_id = getIntent().getStringExtra("user_id");
+        group_id = getIntent().getStringExtra("group_id");
         //0是群组备份，1是聊天备份
-        return ArchiveChatFragment.newInstance("1",user_id);
+        return ArchiveChatFragment.newInstance("1",group_id);
     }
 
     @Override
