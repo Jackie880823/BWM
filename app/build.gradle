@@ -132,16 +132,15 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:recyclerview-v7:+'
-    compile 'com.android.support:cardview-v7:+'
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     //for 突破65535的限制
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':Volley')
     compile project(':PhotoView')
     compile project(':mupdflibrary')
     compile project(':MaterialWidget')
     compile project(':facebook')
+    compile project(':ImageCrop')
     //    compile 'com.android.support:gridlayout-v7:21.0.3'
     compile('org.apache.httpcomponents:httpmime:4.3.5') {
         // avoid "is ignored for the default configuration X" warnings
@@ -156,6 +155,10 @@ dependencies {
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.j256.ormlite:ormlite-core:4.48'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.android.support:support-v4:22.2.0'
+
+    /** 第三方图片处理库 */
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.1'
 }

@@ -1,9 +1,7 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.Camera;
@@ -17,12 +15,16 @@ import android.widget.SimpleAdapter;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.PickPicAdapter;
+import com.bondwithme.BondWithMe.entity.ImageData;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -65,14 +67,14 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      */
     //    public final static String CACHE_PIC_NAME = "head_cache";
     private final static int REQUEST_HEAD_FINAL = 3;
-    public int cache_count = 0;
+    public static int cache_count = 0;
 
     Uri mCropImagedUri;
     List<Uri> uris = new ArrayList<>();
     private String imagePath;
     private CustomGridView gvPictures;
     private PickPicAdapter adapter;
-    private LinkedList<Map<String, Bitmap>> datas = new LinkedList<>();
+    private LinkedList<Map<String, Uri>> datas = new LinkedList<>();
     private int columnWidthHeight;
 
     public TabPictureFragment() {
@@ -99,19 +101,19 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         return -1;
     }
 
-    public static Bitmap getThumbnail(ContentResolver cr, String path) throws Exception {
-
-        Cursor ca = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.MediaColumns._ID}, MediaStore.MediaColumns.DATA + "=?", new String[]{path}, null);
-        if(ca != null && ca.moveToFirst()) {
-            int id = ca.getInt(ca.getColumnIndex(MediaStore.MediaColumns._ID));
-            ca.close();
-            return MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
-        }
-
-        ca.close();
-        return null;
-
-    }
+//    public static Bitmap getThumbnail(ContentResolver cr, String path) throws Exception {
+//
+//        Cursor ca = cr.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.MediaColumns._ID}, MediaStore.MediaColumns.DATA + "=?", new String[]{path}, null);
+//        if(ca != null && ca.moveToFirst()) {
+//            int id = ca.getInt(ca.getColumnIndex(MediaStore.MediaColumns._ID));
+//            ca.close();
+//            return MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MICRO_KIND, null);
+//        }
+//
+//        ca.close();
+//        return null;
+//
+//    }
 
     @Override
     public void setLayoutId() {
@@ -132,10 +134,9 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
             @Override
             public boolean setViewValue(View view, Object data, String textRepresentation) {
 
-                if((view instanceof ImageView) && (data instanceof Bitmap)) {
+                if((view instanceof ImageView) && (data instanceof Uri)) {
                     ImageView imageView = (ImageView) view;
-                    Bitmap bmp = (Bitmap) data;
-                    imageView.setImageBitmap(bmp);
+                    ImageLoader.getInstance().displayImage(data.toString(), imageView, UniversalImageLoaderUtil.options);
                     return true;
                 }
                 return false;
@@ -156,7 +157,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
         gvPictures.setAdapter(adapter);
         if(uris != null && uris.size() > 0) {
-            addDataAndNotify(getMiniThumbnailUri(uris));
+            addDataAndNotify(uris);
         }
     }
 
@@ -177,6 +178,10 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                 Intent intent = new Intent(getParentActivity(), SelectPhotosActivity.class);
                 //                Intent intent = new Intent(Intent.ACTION_PICK, null);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                /**
+                 * 使用了Universal Image Loader库来处理图片需要返回的Uri与传统有差异，传此值用于区分
+                 */
+                intent.putExtra(ImageData.USE_UNIVERSAL, true);
                 intent.putExtra(RESIDUE, residue);
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intent, REQUEST_HEAD_PHOTO);
@@ -200,8 +205,8 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         }
     }
 
-    private void addDataAndNotify(Bitmap uri) {
-        Map<String, Bitmap> map = new HashMap<>();
+    private void addDataAndNotify(Uri uri) {
+        Map<String, Uri> map = new HashMap<>();
         map.put("pic_resId", uri);
         datas.add(map);
         adapter.notifyDataSetChanged();
@@ -297,11 +302,11 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      * pick到的图片byte[]
      */
     //	byte[] personHeadImage;
-    private void addDataAndNotify(List<Bitmap> uris) {
+    private void addDataAndNotify(List<Uri> uris) {
         if(uris != null && uris.size() > 0) {
             int count = uris.size();
             for(int i = 0; i < count; i++) {
-                Map<String, Bitmap> map = new HashMap<>();
+                Map<String, Uri> map = new HashMap<>();
                 map.put("pic_resId", uris.get(i));
                 datas.add(map);
             }
@@ -321,9 +326,9 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                 // 如果是直接从相册获取
                 case REQUEST_HEAD_PHOTO:
                     if(data != null) {
-                        ArrayList pickUris;
+                        ArrayList<Uri> pickUris;
                         pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
-                        addDataAndNotify(getMiniThumbnailUri(pickUris));
+                        addDataAndNotify(pickUris);
                         uris.addAll(pickUris);
                     }
                     break;
@@ -336,11 +341,12 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                     }
                     //                    if (data != null) {
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(getActivity(), CACHE_PIC_NAME_TEMP + cache_count));
+                    uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
                     if(new File(uri.getPath()).exists()) {
                         if(columnWidthHeight == 0) {
                             columnWidthHeight = gvPictures.getColumnWidth();
                         }
-                        addDataAndNotify(LocalImageLoader.getMiniThumbnailBitmap(getActivity(), uri, columnWidthHeight));
+                        addDataAndNotify(uri);
                         uris.add(uri);
                     }
                     //                    }
