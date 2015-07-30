@@ -1,12 +1,15 @@
 package com.bondwithme.BondWithMe.adapter;
 
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
  * Created by Jackie Zhu on 7/14/15.
@@ -16,7 +19,8 @@ public class PreviewFragment extends BaseFragment<SelectPhotosActivity> {
     private static final String TAG = PreviewFragment.class.getSimpleName();
 
     private ImageView imageView;
-    private Bitmap bitmap;
+    @Deprecated
+    private String iagmeUri;
 
     public static final PreviewFragment newInstance(String... params) {
         return createInstance(new PreviewFragment(), params);
@@ -31,8 +35,8 @@ public class PreviewFragment extends BaseFragment<SelectPhotosActivity> {
     public void initView() {
         Log.i(TAG, "initView");
         imageView = getViewById(R.id.preview_image_iv);
-        if(bitmap != null) {
-            imageView.setImageBitmap(bitmap);
+        if(!TextUtils.isEmpty(iagmeUri)) {
+            ImageLoader.getInstance().displayImage(iagmeUri, imageView, UniversalImageLoaderUtil.options);
         }
     }
 
@@ -41,11 +45,18 @@ public class PreviewFragment extends BaseFragment<SelectPhotosActivity> {
 
     }
 
+    @Deprecated
     public void setBitmap(Bitmap bitmap) {
         Log.i(TAG, "setBitmap");
-        this.bitmap = bitmap;
         if(imageView != null) {
             imageView.setImageBitmap(bitmap);
+        }
+    }
+
+    public void displayImage(String uri) {
+        this.iagmeUri = uri;
+        if(imageView != null) {
+            ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options);
         }
     }
 }
