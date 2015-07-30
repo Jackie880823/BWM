@@ -551,10 +551,14 @@
     <string name="text_start_facebook">Facebook</string>
     <string name="text_show_message_is_friend">This member is not connected to you. You need to be connected to view profile.</string>
 
+
     <string name="app_crash_message">Sorry! The application has stopped unexpectedly. </string>
     <string name="text_start_cancle">Cancle</string>
     <string name="text_start_no_changes_found">No changes found.</string>
     <string name="text_more_setting_current_version">Current Version</string>
     <string name="text_msg_start_bonding">Let\'s start bonding!</string>
+
+    <string name="text_confirm_relation">You are about to add this member as your </string>
+
 
 </resources>

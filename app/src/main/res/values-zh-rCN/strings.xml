@@ -554,4 +554,7 @@
     <string name="text_more_setting_current_version">当前版本</string>
     <string name="text_msg_start_bonding">开始聊天！</string>
 
+    <string name="text_confirm_relation">你是否要添加此成员的关系为</string>
+
+
 </resources>
