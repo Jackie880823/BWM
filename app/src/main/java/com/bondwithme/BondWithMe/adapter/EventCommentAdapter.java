@@ -51,6 +51,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
     private static final int GIF = 2;
     private static final int PIC = 3;
     private static final int PNG = 4;
+    private static final int GEF = 5;
 
     public EventCommentAdapter(Context context, List<EventCommentEntity> data,RecyclerView recyclerView) {
         mContext = context;
@@ -112,23 +113,16 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
     public int getItemViewType(int position) {
         EventCommentEntity myEevent = data.get(position);
 //        Log.i("getItemViewType: ", "position: " + position);
-        int type = 0;
+        int type = GEF;
         if(!TextUtils.isEmpty(myEevent.getComment_content().trim()) && TextUtils.isEmpty(myEevent.getSticker_group_path().trim())){
-//            Log.i("getItemViewType 文字====",myEevent.getComment_content().toString());
             type = TEXT;
         }else if(Constant.Sticker_Gif.equals(myEevent.getSticker_type())){
             type = GIF;
-        }
-        else if(Constant.Sticker_Png.equals(myEevent.getSticker_type())) {
-//            Log.i("getItemViewType 本地图片===",myEevent.getSticker_type());
+        }else if(Constant.Sticker_Png.equals(myEevent.getSticker_type())) {
             type = PNG;
         }else if(myEevent.getFile_id()!= null ){
-//            Log.i("getItemViewType 网络图片===",myEevent.getFile_id());
             type = PIC;
         }
-//        else{
-//            Log.i("getItemViewType file_id",myEevent.getFile_id()+"");
-//        }
         return type;
 
     }
@@ -167,6 +161,9 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                 break;
             case PNG:
                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_png, parent, false);
+                break;
+            case GEF:
+                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
                 break;
             default:
                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);

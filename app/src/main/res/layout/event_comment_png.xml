@@ -54,8 +54,8 @@
 
             <ImageView
                 android:id="@+id/message_png_iv"
-                android:layout_width="@dimen/_150dp"
-                android:layout_height="@dimen/_150dp"
+                android:layout_width="@dimen/_80dp"
+                android:layout_height="@dimen/_80dp"
                 android:paddingTop="@dimen/default_view_margin"
                 android:scaleType="fitXY"
                 android:visibility="gone"/>
@@ -64,7 +64,9 @@
                 android:id="@+id/message_progress_bar"
                 android:layout_width="@dimen/_32dp"
                 android:layout_height="@dimen/_32dp"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:paddingTop="@dimen/default_view_margin"
+                android:layout_gravity="center_vertical"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
