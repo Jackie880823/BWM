@@ -325,7 +325,7 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
             switch (msg.what){
                 case AUTO_PLAY:
                     int totalItem = 0;
-                    if (dataStickerBanner != null && uriList.size()>0){
+                    if (dataStickerBanner != null && uriList != null && uriList.size()>0){
                         totalItem = dataStickerBanner.size();
                         currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
                         setImageSwitcher(currentItem);

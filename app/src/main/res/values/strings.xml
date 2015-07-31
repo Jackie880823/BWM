@@ -561,4 +561,7 @@
     <string name="text_confirm_relation">You are about to add this member as your </string>
 
 
+
+    <string name="text_long_press_display">Hold stickies to preview !</string>
+
 </resources>
