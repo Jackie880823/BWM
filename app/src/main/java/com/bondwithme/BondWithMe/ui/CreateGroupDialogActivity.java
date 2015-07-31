@@ -7,9 +7,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +27,6 @@ import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.MD5Util;
 import com.bondwithme.BondWithMe.widget.MyDialog;
@@ -178,6 +177,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
         selectUserList.clear();
         selectUserEntityList.clear();
         String members_data = data.getStringExtra("members_data");
+        Log.i("members_data====",members_data+"");
         if (members_data != null) {
             List<UserEntity> userEntityList = new GsonBuilder().create().fromJson(members_data, new TypeToken<ArrayList<UserEntity>>() {
             }.getType());

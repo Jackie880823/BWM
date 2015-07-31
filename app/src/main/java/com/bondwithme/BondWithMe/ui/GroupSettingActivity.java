@@ -127,6 +127,7 @@ public class GroupSettingActivity extends BaseActivity {
         intent.putExtra("type", 1);
         intent.putExtra("members_data", new Gson().toJson(userList));
         intent.putExtra("groups_data", "");
+        intent.putExtra("selectNewData", 1);
         startActivityForResult(intent, GET_MEMBERS);
     }
 
@@ -158,7 +159,7 @@ public class GroupSettingActivity extends BaseActivity {
 
         mBitmapTools = BitmapTools.getInstance(mContext);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
-        mBitmapTools.display(cniMain,headUrl,R.drawable.network_image_default, R.drawable.network_image_default);
+        mBitmapTools.display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
 //        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName.setText(groupName);
 
