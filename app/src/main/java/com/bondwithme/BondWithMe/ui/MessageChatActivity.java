@@ -645,7 +645,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
             }
         }
-        if (RESULT_CANCELED == resultCode) {
+        if (RESULT_CANCELED == resultCode && data != null) {
             switch (requestCode) {
                 case REQUEST_GET_GROUP_NAME:
                     groupNmae = data.getStringExtra("groupName");
