@@ -585,6 +585,7 @@
             android:name=".ui.PickAndCropPictureActivity"
              >
         </activity>
+
     </application>
 
 </manifest>

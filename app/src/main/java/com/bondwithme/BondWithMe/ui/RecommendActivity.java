@@ -34,6 +34,7 @@ import java.util.List;
  */
 public class RecommendActivity extends BaseActivity {
 
+    public static String TAG = "RecommendActivity";
     View mProgressDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;

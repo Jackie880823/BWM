@@ -192,7 +192,7 @@ public class MyViewProfileActivity extends BaseActivity {
         if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())) {
             return true;
         } else {
-            if (!TextUtils.isEmpty(tvBirthday.getText().toString().trim()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())) {
+            if (!TextUtils.isEmpty(tvBirthday.getText().toString().trim()) && !tvBirthday.getText().toString().trim().equals(MainActivity.getUser().getUser_dob())) {
                 return true;
             }
         }
@@ -245,6 +245,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     public void initView() {
+
 //        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         mContext = this;
         TAG = mContext.getClass().getSimpleName();
@@ -254,6 +255,11 @@ public class MyViewProfileActivity extends BaseActivity {
         tvId1 = getViewById(R.id.tv_id1);
 
         llResetPassword = getViewById(R.id.ll_reset_password);
+        if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
+        {
+            llResetPassword.setVisibility(View.INVISIBLE);
+        }
+
 
         tvId2 = getViewById(R.id.tv_id2);
         etFirstName = getViewById(R.id.et_first_name);

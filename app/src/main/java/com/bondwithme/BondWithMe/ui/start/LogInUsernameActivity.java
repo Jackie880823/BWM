@@ -158,6 +158,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
             @Override
             public void afterTextChanged(Editable s) {
                 etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         });
 
@@ -174,6 +175,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable s) {
+                etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         });
