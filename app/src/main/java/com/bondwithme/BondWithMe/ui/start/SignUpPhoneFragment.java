@@ -38,6 +38,7 @@ import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.CountryCodeUtil;
 import com.bondwithme.BondWithMe.util.LoginManager;
 import com.bondwithme.BondWithMe.util.MD5Util;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
@@ -116,6 +117,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
                 case CATCH:
                     //验证码发送失败
+                    etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     break;
 
                 case ERROR:
@@ -325,8 +327,6 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
         if( (!MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber, strPassword)) && (strPassword.length() > 4) )//检查输入，提取出来。
         {
-            doingSignUpChangeUI();
-
             HashMap<String, String> params = new HashMap<>();
             params.put("user_login_id",strCountryCode + MyTextUtil.NoZero(strPhoneNumber));
             params.put("user_country_code",strCountryCode);
@@ -335,7 +335,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
             new HttpTools(getActivity()).get(Constant.API_START_CHECK_LOG_ID, params, CHECK_GET_CODE, new HttpCallback() {
                 @Override
                 public void onStart() {
-
+                    doingSignUpChangeUI();
                 }
 
                 @Override
@@ -347,6 +347,7 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
                 public void onResult(String response) {
 
                     try {
+                        Log.d("","signup-----" + response);
                         JSONObject jsonObject = new JSONObject(response);
                         if (Constant.SUCCESS.equals(jsonObject.getString("response_status"))) {
                             //成功获得验证码
@@ -413,8 +414,6 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
                 tvPasswordPrompt.setTextColor(getResources().getColor(R.color.default_text_color_light));
             }
         }
-
-
 
     }
 
@@ -486,7 +485,8 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void OnLoginError(String error) {
-
+        MessageUtil.showMessage(getActivity(), error);
+        com.facebook.login.LoginManager.getInstance().logOut();//清除Facebook授权缓存
     }
 
     private void checkFacebookId() {

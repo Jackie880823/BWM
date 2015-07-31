@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FaceBookUserEntity;
 import com.bondwithme.BondWithMe.interfaces.LogInStateListener;
 import com.bondwithme.BondWithMe.interfaces.LogOutStateListener;
@@ -116,7 +117,7 @@ public class FaceBookLoginUtil{
         @Override
         public void onCancel() {
             LoginManager.getInstance().logOut();//清除Facebook授权缓存
-            mBookLoginStateChanged.OnLoginError("user cancle log in facebook!");
+            mBookLoginStateChanged.OnLoginError(loginActivity.getString(R.string.text_start_cancle));
         }
         @Override
         public void onError(FacebookException error) {

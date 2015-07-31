@@ -41,21 +41,23 @@ public class StickerBannerPic {
 
 
     public void getUri(){
-        String str = FileUtil.getCacheFilePath(mContext) + FileUtil.BANNER_DIR_NAME + data.get(0).getBanner_photo();
+        String str = FileUtil.getCacheFilePath(mContext) + FileUtil.BANNER_DIR_NAME +"/"+ data.get(0).getBanner_photo();
         File banner = new File(str);
         if (data != null){
             count = data.size();
         }
-        LogUtil.d(TAG,"====banner===="+banner.getAbsolutePath()+"====banner.exists()====="+banner.exists());
+        LogUtil.d(TAG,"=====str===="+str+"====banner===="+banner.getAbsolutePath()+"====banner.exists()====="+banner.exists());
         if (banner.exists()){
             for (int i=0;i<count;i++){
                 File f = new File(FileUtil.getBannerFilePath(mContext) + String.format("/%s", "" + ((StickerBannerEntity)data.get(i)).getBanner_photo()));
+                LogUtil.d(TAG,"=====f===="+f.getAbsolutePath());
                 Uri uri = Uri.fromFile(f);
                 uriList.add(uri);
                 if(mListener!=null && i == count-1){
                     mListener.downloadFinish();
                 }
             }
+            return;
         }else {
             downloadPic();
         }
@@ -86,16 +88,16 @@ public class StickerBannerPic {
                 @Override
                 public void onResult(String response) {
 //                    String strFile = FileUtil.getBannerFilePath(mContext) + String.format("/%s", "" + ((StickerBannerEntity)data.get(finalI)).getBanner_photo());
-                    File f = new File(target);
+//                    File f = new File(target);
                     LogUtil.d(TAG, "===onResult==="+target);
-                    Uri uri = Uri.fromFile(f);
+//                    Uri uri = Uri.fromFile(f);
+                    Uri uri = Uri.parse(target);
                     uriList.add(uri);
-                    LogUtil.d(TAG, "==========uriList.size()=========" + uriList.size()+"====finalI===="+finalI+"===count==="+count);
+                    LogUtil.d(TAG, "==========uriList.size()=========" + uriList.size()+"====finalI===="+finalI+"===count==="+count+"=======uri()===="+uriList.get(finalI).toString());
+
                     if(mListener!=null && finalI == count-1){
                         mListener.downloadFinish();
                     }
-
-
                 }
 
                 @Override
@@ -111,7 +113,7 @@ public class StickerBannerPic {
 
                 @Override
                 public void onLoading(long count, long current) {
-                    LogUtil.d(TAG,"=====count=========="+count+"======current========="+current);
+                    LogUtil.d(TAG,"====onLoading==="+"=====count=========="+count+"======current========="+current);
                 }
             });
         }

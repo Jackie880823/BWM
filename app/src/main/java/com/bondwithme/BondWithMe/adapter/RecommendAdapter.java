@@ -3,7 +3,9 @@ package com.bondwithme.BondWithMe.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +15,22 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.RecommendEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.ui.RecommendActivity;
 import com.bondwithme.BondWithMe.ui.RelationshipActivity;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHItem> {
     private Context mContext;
     private List<RecommendEntity> data;
+    List<String> data_Zh = new ArrayList<String>();
+    List<String> data_Us = new ArrayList<String>();
+    private boolean isZh;
+    public static String From_RecommendActivity = "From_RecommendActivity";
     //begin
     public static final int CHOOSE_RELATION_CODE = 1;
     private int positionId;
@@ -63,6 +73,48 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
         VolleyUtil.initNetworkImageView(mContext, holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, recommendEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         holder.user_name.setText(recommendEntity.getUser_given_name());
 
+
+
+
+        getDataEn();
+        if (Locale.getDefault().toString().equals("zh_CN")) {
+            isZh = true;
+            getDataZh();
+        }
+
+        String relationship = recommendEntity.getUser_recom_rel();
+        if (TextUtils.isEmpty(relationship)) {
+//            continue;
+        }
+        if (isZh) {
+            int index = data_Us.indexOf(relationship);
+            if (index != -1) {
+                relationship = getDataZh().get(index);
+                holder.tvRelationshipWithMember.setText(recommendEntity.getUser_recommend() + mContext.getResources().getString(R.string.title_birthday_title_prefix2) + relationship);
+            }
+        } else {
+            holder.tvRelationshipWithMember.setText(recommendEntity.getUser_recommend() + mContext.getResources().getString(R.string.title_birthday_title_prefix2) +" "+ relationship);
+        }
+    }
+
+    private List<String> getDataZh() {
+        Configuration configuration = new Configuration();
+        //设置应用为简体中文
+        configuration.locale = Locale.SIMPLIFIED_CHINESE;
+        mContext.getResources().updateConfiguration(configuration, null);
+        String[] ralationArrayZh = mContext.getResources().getStringArray(R.array.relationship_item);
+        data_Zh = Arrays.asList(ralationArrayZh);
+        return data_Zh;
+    }
+
+    private List<String> getDataEn() {
+        Configuration configuration = new Configuration();
+        //设置应用为英文
+        configuration.locale = Locale.US;
+        mContext.getResources().updateConfiguration(configuration, null);
+        String[] ralationArrayUs = mContext.getResources().getStringArray(R.array.relationship_item);
+        data_Us = Arrays.asList(ralationArrayUs);
+        return data_Us;
     }
 
     @Override
@@ -75,6 +127,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
 
         private CircularNetworkImage owner_head;
         private TextView user_name;
+        private TextView tvRelationshipWithMember;
         //begin
         private TextView recommend_relationship;
 
@@ -85,6 +138,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
 
             owner_head = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
             user_name = (TextView) itemView.findViewById(R.id.user_name);
+            tvRelationshipWithMember = (TextView) itemView.findViewById(R.id.tv_relationship_with_member);
             //begin
             recommend_relationship = (TextView) itemView.findViewById(R.id.recommend_relationship);
             recommend_relationship.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +147,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
                     setPositionId(getAdapterPosition());
                     Intent intent = new Intent(mContext, RelationshipActivity.class);
                     intent.putExtra("member_id", data.get(getAdapterPosition()).getUser_id());
+                    intent.putExtra(RecommendActivity.TAG,From_RecommendActivity);
                     ((Activity) mContext).startActivityForResult(intent, CHOOSE_RELATION_CODE);
                 }
             });
