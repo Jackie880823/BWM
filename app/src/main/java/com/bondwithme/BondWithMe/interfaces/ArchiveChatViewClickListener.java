@@ -5,7 +5,7 @@ package com.bondwithme.BondWithMe.interfaces;
  */
 public interface ArchiveChatViewClickListener {
     /**
-     * 显示Wall图片
+     * 显示图片
      *
      * @param content_id
      */

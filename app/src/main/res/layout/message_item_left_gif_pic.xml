@@ -35,15 +35,14 @@
 
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/message_pic_gif_iv"
-            android:layout_width="@dimen/_150dp"
-            android:layout_height="@dimen/_150dp"
+            android:layout_width="@dimen/_120dp"
+            android:layout_height="@dimen/_120dp"
             android:scaleType="fitXY"/>
         <com.material.widget.CircularProgress
             android:id="@+id/message_progress_bar"
             android:layout_width="@dimen/_32dp"
             android:layout_height="@dimen/_32dp"
-            android:layout_centerInParent="true"
-            android:background="#1E88E5" />
+            android:layout_centerInParent="true"/>
     </RelativeLayout>
 
     <TextView
