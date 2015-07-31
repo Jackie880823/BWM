@@ -17,6 +17,7 @@ import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.MyStickerActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
@@ -72,9 +73,10 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
                     mContext.sendBroadcast(intent);
 
                     int position = data.indexOf(stickerInfo);
-                    data.remove(position);
-                    notifyItemRemoved(position);
-
+                    if (position != -1){
+                        data.remove(position);
+                        notifyItemRemoved(position);
+                    }
                 }
             }
         });

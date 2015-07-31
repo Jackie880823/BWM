@@ -114,6 +114,7 @@ public class StickerDetailActivity extends BaseActivity {
         } else{
             tvDownload.setVisibility(View.VISIBLE);
             pbProgress.setVisibility(View.INVISIBLE);
+            pbProgress.setProgress(0);
             initDownloadView();
         }
 
@@ -182,31 +183,6 @@ public class StickerDetailActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                if(finished>=100) {
-                    //
-                    pbProgress.setVisibility(View.INVISIBLE);
-                    pbProgress.setProgress(0);
-                    tvDownload.setVisibility(View.VISIBLE);
-                    setTvDownloaded();
-
-                    //插入sticker info
-                    try {
-                        Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-                        LocalStickerInfo stickerInfo = new LocalStickerInfo();
-                        stickerInfo.setName(stickerGroupEntity.getName());
-                        stickerInfo.setPath(stickerGroupEntity.getPath());
-                        stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
-                        stickerInfo.setVersion(stickerGroupEntity.getVersion());
-                        stickerInfo.setType(stickerGroupEntity.getType());
-                        stickerInfo.setOrder(System.currentTimeMillis());
-                        LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
-                        Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
-
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-
             }
 
             @Override
@@ -215,9 +191,38 @@ public class StickerDetailActivity extends BaseActivity {
                 try {
                     ZipUtils.unZipFile(zipFile, MainActivity.STICKERS_NAME);
                     zipFile.delete();
+
+                    if(finished>=100) {
+                        //
+                        pbProgress.setVisibility(View.INVISIBLE);
+                        pbProgress.setProgress(0);
+                        tvDownload.setVisibility(View.VISIBLE);
+                        setTvDownloaded();
+
+                        //插入sticker info
+                        try {
+                            Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+                            LocalStickerInfo stickerInfo = new LocalStickerInfo();
+                            stickerInfo.setName(stickerGroupEntity.getName());
+                            stickerInfo.setPath(stickerGroupEntity.getPath());
+                            stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
+                            stickerInfo.setVersion(stickerGroupEntity.getVersion());
+                            stickerInfo.setType(stickerGroupEntity.getType());
+                            stickerInfo.setOrder(System.currentTimeMillis());
+                            LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
+                            Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
+
+                            Intent intent = new Intent(StickerStoreActivity.ACTION_FINISHED);
+                            sendBroadcast(intent);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
 
             }
 
@@ -311,6 +316,7 @@ public class StickerDetailActivity extends BaseActivity {
                     pbProgress.setProgress(finished);
                     if (finished == 100){
                         pbProgress.setVisibility(View.INVISIBLE);
+                        pbProgress.setProgress(0);
                         tvDownload.setVisibility(View.VISIBLE);
                         setTvDownloaded();
                     }
@@ -326,6 +332,7 @@ public class StickerDetailActivity extends BaseActivity {
                     pbProgress.setProgress(finished);
                     if (finished == 100){
                         pbProgress.setVisibility(View.INVISIBLE);
+                        pbProgress.setProgress(0);
                         tvDownload.setVisibility(View.VISIBLE);
                         setTvDownloaded();
                     }
