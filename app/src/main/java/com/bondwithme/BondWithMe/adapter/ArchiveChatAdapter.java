@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +65,6 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
     @Override
     public void onBindViewHolder(ArchiveChatAdapter.VHItem holder, int position) {
         final ArchiveChatEntity archive = data.get(position);
-        Log.i("getLoc_name====",archive.getLoc_name()+"");
 //        holder.group_name.setText(archive.getComment_count());
         /*
         if(TextUtils.isEmpty(archive.getFile_id())){
