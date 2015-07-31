@@ -434,6 +434,7 @@
                 android:layout_centerHorizontal="true"
                 android:padding="@dimen/default_content_padding"
                 android:textSize="@dimen/text_medium_size"
+                android:visibility="gone"
                 android:textColor="@color/tab_color_press4"
                 android:text="V 1.9.0"/>
 

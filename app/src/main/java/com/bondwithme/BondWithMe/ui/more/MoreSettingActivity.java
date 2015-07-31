@@ -5,15 +5,19 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.util.AppInfoUtil;
 
 public class MoreSettingActivity extends BaseActivity implements View.OnClickListener{
 
     private RelativeLayout rl1;
     private RelativeLayout rl2;
     private RelativeLayout rl3;
+
+    private TextView tvVersion;
 
     @Override
     public int getLayout() {
@@ -52,6 +56,9 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
         rl1 = getViewById(R.id.rl_1);
         rl2 = getViewById(R.id.rl_2);
         rl3 = getViewById(R.id.rl_3);
+        tvVersion = getViewById(R.id.tv_version);
+
+        tvVersion.setText(AppInfoUtil.getAppVersionName(MoreSettingActivity.this));
 
         rl1.setOnClickListener(this);
         rl2.setOnClickListener(this);
