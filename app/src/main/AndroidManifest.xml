@@ -429,7 +429,7 @@
         <activity
             android:name=".ui.AlbumDetailActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.ViewPDFActivity" />
+        <activity android:name=".ui.ViewPDFActivity" android:launchMode="singleTop" />
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
