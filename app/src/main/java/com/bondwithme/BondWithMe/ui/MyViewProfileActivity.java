@@ -192,7 +192,7 @@ public class MyViewProfileActivity extends BaseActivity {
         if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())) {
             return true;
         } else {
-            if (!TextUtils.isEmpty(tvBirthday.getText().toString().trim()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())) {
+            if (!TextUtils.isEmpty(tvBirthday.getText().toString().trim()) && !tvBirthday.getText().toString().trim().equals(MainActivity.getUser().getUser_dob())) {
                 return true;
             }
         }
