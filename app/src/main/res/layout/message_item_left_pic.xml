@@ -36,8 +36,8 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/message_pic_iv"
-            android:layout_width="@dimen/_150dp"
-            android:layout_height="@dimen/_150dp"
+            android:layout_width="@dimen/_120dp"
+            android:layout_height="@dimen/_120dp"
             android:scaleType="fitXY"/>
 
         <com.material.widget.CircularProgress
