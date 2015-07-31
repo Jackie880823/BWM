@@ -3,11 +3,7 @@ package com.bondwithme.BondWithMe.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
 import com.bondwithme.BondWithMe.App;
-import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.entity.OrmEntityDemo;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;

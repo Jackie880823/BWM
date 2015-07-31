@@ -13,7 +13,19 @@
                 android:id="@+id/family_grid_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="gone"
                 android:numColumns="3" />
+
+
+            <TextView
+                android:id="@+id/data_null"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/text_title_default"
+                android:gravity="center"
+                android:textColor="@color/default_text_color_dark"
+                android:visibility="gone"
+                />
     </LinearLayout>
 
 

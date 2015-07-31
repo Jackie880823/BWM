@@ -97,23 +97,23 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/br_sign_up"
             android:gravity="center">
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"></View>
+                <!--<View-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_weight="1"></View>-->
                 <TextView
                     style="@style/tv_start_light_small"
                     android:id="@+id/tv_terms"
-                    android:layout_weight="3"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_40dp"
+                    android:layout_marginLeft="@dimen/_40dp"
                     android:gravity="center"
-                    android:maxLines="2"
-                    android:textSize="@dimen/text_small_size"
                     />
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"></View>
+                <!--<View-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_weight="1"></View>-->
         </LinearLayout>
 
         <LinearLayout

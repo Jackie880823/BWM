@@ -561,4 +561,7 @@
     <string name="text_long_press_display">请长按查看大表情 !</string>
 
 
+    <string name="no_member">你没有添加任何成员。</string>
+    <string name="no_group">你没有创建任何群体。</string>
+
 </resources>
