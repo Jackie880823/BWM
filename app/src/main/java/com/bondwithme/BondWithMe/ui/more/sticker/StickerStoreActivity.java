@@ -69,6 +69,7 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
     private static final String GET_STICKER_GROUP = TAG + "GET_STICKER_GROUP";
     private static final String GET_STICKER_BANNER = TAG + "GET_STICKER_BANNER";
     public static final String ACTION_UPDATE = "ACTION_UPDATE_FROM_STICKER_STORE";
+    public static final String ACTION_FINISHED = "ACTION_FINISHED_FROM_STICKER_STORE";
     public static final String FINISHED = "finished";
 
 
@@ -241,28 +242,6 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
 
             @Override
             public void onFinish() {
-                pbDownload.setVisibility(View.INVISIBLE);
-                pbDownload.setProgress(0);
-                ivExist.setVisibility(View.VISIBLE);
-
-                //插入sticker info
-                try {
-                    Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-                    LocalStickerInfo stickerInfo = new LocalStickerInfo();
-                    stickerInfo.setName(stickerGroupEntity.getName());
-                    stickerInfo.setPath(stickerGroupEntity.getPath());
-                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
-                    stickerInfo.setVersion(stickerGroupEntity.getVersion());
-                    stickerInfo.setType(stickerGroupEntity.getType());
-                    stickerInfo.setOrder(System.currentTimeMillis());
-                    LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
-                    Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
-
-                } catch (Exception e) {
-                    LogUtil.e(TAG,"插入sticker info",e);
-                }
-
-
             }
 
             @Override
@@ -275,11 +254,39 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                //插入sticker info
+                try {
+                    Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+                    LocalStickerInfo stickerInfo = new LocalStickerInfo();
+                    stickerInfo.setName(stickerGroupEntity.getName());
+                    stickerInfo.setPath(stickerGroupEntity.getPath());
+                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
+                    stickerInfo.setVersion(stickerGroupEntity.getVersion());
+                    stickerInfo.setType(stickerGroupEntity.getType());
+                    stickerInfo.setOrder(System.currentTimeMillis());
+                    LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
+                    Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
+
+                    Intent intent = new Intent(StickerStoreActivity.ACTION_FINISHED);
+                    sendBroadcast(intent);
+
+                } catch (Exception e) {
+                    LogUtil.e(TAG, "插入sticker info", e);
+                }
+
+                pbDownload.setVisibility(View.INVISIBLE);
+                pbDownload.setProgress(0);
+                ivExist.setVisibility(View.VISIBLE);
+
+
+
             }
 
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
+
             }
 
             @Override
@@ -533,7 +540,7 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
         uriList = stickerBannerPic.uriList;
         LogUtil.d(TAG, "==========uriList.size()========="+uriList.size());
         if (uriList.size() > 0){
-            isStickerBanner.setImageURI(uriList.get(0));
+            isStickerBanner.setImageURI(uriList.get(currentItem));
             setSwitcherClick();
         }
         mProgressDialog.setVisibility(View.INVISIBLE);
