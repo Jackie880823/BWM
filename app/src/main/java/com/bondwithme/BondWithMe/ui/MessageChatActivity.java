@@ -1,8 +1,10 @@
 package com.bondwithme.BondWithMe.ui;
 
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -34,6 +36,7 @@ import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
+import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.CustomLengthFilter;
 import com.bondwithme.BondWithMe.util.FileUtil;
@@ -131,6 +134,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private Timer mTimer;
 
     private int isNewGroup;
+    private ModifyStickerReceiver stickerReceiver;
 
     Handler handler = new Handler() {
         @Override
@@ -355,12 +359,17 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 getMsg(indexPage * INITIAL_LIMIT, 0, GET_TIMER_MESSAGE);//接收对话消息
             }
         }, 10000, 10000);
+
+        IntentFilter intentFilter = new IntentFilter(StickerStoreActivity.ACTION_FINISHED);
+        stickerReceiver = new ModifyStickerReceiver();
+        registerReceiver(stickerReceiver, intentFilter);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mTimer.cancel();
+        unregisterReceiver(stickerReceiver);
     }
 
     private void setView() {
@@ -399,6 +408,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             }
         }, 50);
 
+    }
+
+    class ModifyStickerReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            initViewPager();
+        }
     }
 
     private void initViewPager() {
