@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bondwithme.BondWithMe.App;
+import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.entity.OrmEntityDemo;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -20,18 +21,18 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
     private static final AtomicInteger usageCounter = new AtomicInteger(0);
 
 	public SQLiteHelperOrm(Context context) {
-//		super(context, DB_NAME, null,
-//		DB_VERSION, R.raw.ormlite_config);
 		super(context, DB_NAME, null,
-				DB_VERSION);
+		DB_VERSION, R.raw.ormlite_config);
+//		super(context, DB_NAME, null,
+//				DB_VERSION);
 
 	}
 
 	public SQLiteHelperOrm() {
-//		super(App.getContextInstance(), DB_NAME, null,
-//		DB_VERSION, R.raw.ormlite_config);
 		super(App.getContextInstance(), DB_NAME, null,
-				DB_VERSION);
+		DB_VERSION, R.raw.ormlite_config);
+//		super(App.getContextInstance(), DB_NAME, null,
+//				DB_VERSION);
 	}
 
 	@Override

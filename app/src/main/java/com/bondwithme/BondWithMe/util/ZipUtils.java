@@ -1,10 +1,9 @@
 package com.bondwithme.BondWithMe.util;
 
 import android.content.Context;
-import android.text.TextUtils;
 
-import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
+import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -152,7 +151,6 @@ public class ZipUtils {
             stickerInfo.setOrder(System.currentTimeMillis());
             stickerInfo.setType(".png");
         }
-
         LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
 
     }

@@ -59,7 +59,7 @@ android {
 //        }
 //        release {
 //            // 不显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "false" //TODO 正式环境改false
+//            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO 正式环境改false
 //            minifyEnabled true //TODO 正式环境改true
 //            zipAlignEnabled true //TODO 正式环境改true
 //            // 移除无用的resource文件

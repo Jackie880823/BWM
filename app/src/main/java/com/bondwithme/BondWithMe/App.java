@@ -18,9 +18,9 @@ import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocationUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -47,7 +47,6 @@ public class App extends MultiDexApplication {
         crashHandler.init(getApplicationContext());
         /**网络工具初始*/
         HttpTools.init(this);
-        LogUtil.i("", "MultiDexApplication==============" + System.getProperty("os.arch"));
         //TODO for baidu not support 64 bit cpu
         /**baidu map*/
         if(System.getProperty("os.arch").contains("64")){
