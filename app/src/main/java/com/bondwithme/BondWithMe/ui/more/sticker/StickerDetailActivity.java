@@ -114,6 +114,7 @@ public class StickerDetailActivity extends BaseActivity {
         } else{
             tvDownload.setVisibility(View.VISIBLE);
             pbProgress.setVisibility(View.INVISIBLE);
+            pbProgress.setProgress(0);
             initDownloadView();
         }
 
@@ -315,6 +316,7 @@ public class StickerDetailActivity extends BaseActivity {
                     pbProgress.setProgress(finished);
                     if (finished == 100){
                         pbProgress.setVisibility(View.INVISIBLE);
+                        pbProgress.setProgress(0);
                         tvDownload.setVisibility(View.VISIBLE);
                         setTvDownloaded();
                     }
@@ -330,6 +332,7 @@ public class StickerDetailActivity extends BaseActivity {
                     pbProgress.setProgress(finished);
                     if (finished == 100){
                         pbProgress.setVisibility(View.INVISIBLE);
+                        pbProgress.setProgress(0);
                         tvDownload.setVisibility(View.VISIBLE);
                         setTvDownloaded();
                     }

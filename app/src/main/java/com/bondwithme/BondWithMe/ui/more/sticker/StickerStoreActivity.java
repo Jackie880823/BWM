@@ -486,6 +486,7 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
                     pbDownload.setProgress(finished);
                     if (finished == 100) {
                         pbDownload.setVisibility(View.INVISIBLE);
+                        pbDownload.setProgress(0);
                         ivExist.setVisibility(View.VISIBLE);
                     }
 
@@ -510,6 +511,7 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
                     pbDownload.setProgress(finished);
                     if (finished == 100){
                         pbDownload.setVisibility(View.INVISIBLE);
+                        pbDownload.setProgress(0);
                         ivExist.setVisibility(View.VISIBLE);
                     }
                 }

@@ -93,7 +93,6 @@ public class StickerBannerPic {
 //                    Uri uri = Uri.fromFile(f);
                     Uri uri = Uri.parse(target);
                     uriList.add(uri);
-                    LogUtil.d(TAG, "==========uriList.size()=========" + uriList.size()+"====finalI===="+finalI+"===count==="+count+"=======uri()===="+uriList.get(finalI).toString());
 
                     if(mListener!=null && finalI == count-1){
                         mListener.downloadFinish();
