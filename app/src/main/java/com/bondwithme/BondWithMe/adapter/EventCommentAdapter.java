@@ -232,7 +232,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                     holder.progressBar.setVisibility(View.GONE);
                     holder.pngImageView.setVisibility(View.VISIBLE);
 //                        holder.tv_comment_content.setVisibility(View.GONE);
-                    holder.pngImageView.setImageResource(R.drawable.network_image_default);//设置默认到显示的图片
+//                    holder.pngImageView.setImageResource(R.drawable.network_image_default);//设置默认到显示的图片
                     if(ece.getUri() != null){
                         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                         bitmapOptions.inSampleSize = 4;
@@ -501,7 +501,6 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
             progressBar = (CircularProgress) itemView.findViewById(R.id.message_progress_bar);
             agreeTouch.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
-//            networkImageView.setOnClickListener(this);
 
 //            itemView.setOnClickListener(new View.OnClickListener() {
 //                @Override
