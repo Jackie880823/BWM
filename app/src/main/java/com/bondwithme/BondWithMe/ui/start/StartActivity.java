@@ -1,7 +1,6 @@
 package com.bondwithme.BondWithMe.ui.start;
 
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -18,9 +17,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
-import com.bondwithme.BondWithMe.util.PushApi;
 import com.google.gson.Gson;
 
 public class StartActivity extends FragmentActivity implements View.OnClickListener {
@@ -145,17 +142,10 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
     {
         UserEntity userEntity = App.getLoginedUser();
         if (userEntity != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-
             String tokenString = PreferencesUtil.getValue(this, Constant.HTTP_TOKEN, null);
             if (!TextUtils.isEmpty(tokenString)) {
-                App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));//为什么这里又要初始化Token??
+                App.userLoginSuccessed(StartActivity.this, userEntity, new Gson().fromJson(tokenString, AppTokenEntity.class));
             }
-            //TODO
-            //为什么在这？需修改。
-            PushApi.initPushApi(this);
-            finish();
             return;
         }
     }

@@ -49,6 +49,7 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
 			int arg2, int arg3) {
+
 		//TODO
 		// try {
 		// TableUtils.dropTable(connectionSource, POUser.class, true);

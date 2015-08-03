@@ -1,32 +1,46 @@
 package com.bondwithme.BondWithMe;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 
+import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.SDKInitializer;
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
+import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
+
 /**
  * Created by wing on 15/3/21.
  */
@@ -35,6 +49,7 @@ public class App extends MultiDexApplication {
     private static UserEntity user;
     private static App appContext;
     private SQLiteHelperOrm databaseHelper = null;
+    private static MyDialog updateDialog;
 
     @Override
     public void onCreate() {
@@ -49,9 +64,9 @@ public class App extends MultiDexApplication {
         HttpTools.init(this);
         //TODO for baidu not support 64 bit cpu
         /**baidu map*/
-        if(System.getProperty("os.arch").contains("64")){
+        if (System.getProperty("os.arch").contains("64")) {
             //64bit cpu
-        }else{
+        } else {
             //32 bit cpu
             SDKInitializer.initialize(getApplicationContext());
         }
@@ -64,9 +79,125 @@ public class App extends MultiDexApplication {
     }
 
 
-
     public static App getContextInstance() {
         return appContext;
+    }
+
+    public static void userLoginSuccessed(Activity context, UserEntity user, AppTokenEntity tokenEntity) {
+
+        changeLoginedUser(user, tokenEntity);
+        PushApi.initPushApi(context);
+
+        //check version
+        checkVerSion(context);
+    }
+
+    static boolean needUpdate;
+
+    private static void checkVerSion(final Activity context) {
+        needUpdate = false;
+        Map params = new HashMap();
+        params.put("os", "android");
+        new HttpTools(context).get("http://dev.bondwith.me/bondwithme/index.php/api/appVersion", params, null, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+                if (!needUpdate) {
+                    goMain(context);
+                }
+            }
+
+            @Override
+            public void onResult(String response) {
+                Log.e("", "response===========" + response);
+                try {
+                    JSONObject object = new JSONObject(response);
+                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) ) {
+//                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update") == "1") {
+                        //must update app
+                        needUpdate = true;
+                        showUpdateDialog(context);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
+    private static void showUpdateDialog(final Activity content) {
+
+        if (updateDialog == null) {
+            LayoutInflater factory = LayoutInflater.from(content);
+            updateDialog = new MyDialog(content, R.string.text_tips_title, R.string.update_message);
+            updateDialog.setCanceledOnTouchOutside(false);
+            updateDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    appContext.exit();
+                }
+            });
+            updateDialog.setButtonAccept(R.string.accept, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    // uri 是你的下载地址，可以使用Uri.parse("http://")包装成Uri对象
+                    DownloadManager.Request req = new DownloadManager.Request(Uri.parse("http://bondwith.me/download.php"));
+
+                    // 通过setAllowedNetworkTypes方法可以设置允许在何种网络下下载，
+                    // 也可以使用setAllowedOverRoaming方法，它更加灵活
+                    req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+
+                    // 此方法表示在下载过程中通知栏会一直显示该下载，在下载完成后仍然会显示，
+                    // 直到用户点击该通知或者消除该通知。还有其他参数可供选择
+                    req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+
+                    // 设置下载文件存放的路径，同样你可以选择以下方法存放在你想要的位置。
+                    req.setDestinationInExternalFilesDir(content, Environment.DIRECTORY_DOWNLOADS, content.getString(R.string.title_download_task));
+
+                    // 设置一些基本显示信息
+                    req.setTitle(content.getString(R.string.download_apk_content_title));
+                    req.setDescription(content.getString(R.string.download_apk_content_description));
+                    req.setMimeType("application/vnd.android.package-archive");
+
+                    // Ok go!
+                    DownloadManager dm = (DownloadManager) content.getSystemService(Context.DOWNLOAD_SERVICE);
+                    long downloadId = dm.enqueue(req);
+
+                    appContext.exit();
+                }
+            });
+        }
+        if (!updateDialog.isShowing())
+            updateDialog.show();
+    }
+
+    private static void goMain(Activity context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        ComponentName cn = intent.getComponent();
+        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+        context.startActivity(mainIntent);
+        context.finish();
     }
 
     public static void changeLoginedUser(UserEntity user) {
@@ -106,8 +237,8 @@ public class App extends MultiDexApplication {
         if (appContext != null && (user == null)) {
             user = new Gson().fromJson(PreferencesUtil.getValue(appContext, "user", null), UserEntity.class);
             //异常情况，重新初始token
-            if(user!=null&&HttpTools.getHeaders()!=null&&TextUtils.isEmpty(HttpTools.getHeaders().get("X_BWM_TOKEN"))){
-                initToken(user.getUser_login_id(), new Gson().fromJson(PreferencesUtil.getValue(appContext, Constant.HTTP_TOKEN, ""),AppTokenEntity.class));
+            if (user != null && HttpTools.getHeaders() != null && TextUtils.isEmpty(HttpTools.getHeaders().get("X_BWM_TOKEN"))) {
+                initToken(user.getUser_login_id(), new Gson().fromJson(PreferencesUtil.getValue(appContext, Constant.HTTP_TOKEN, ""), AppTokenEntity.class));
             }
         }
         //test,18682116784
@@ -141,7 +272,7 @@ public class App extends MultiDexApplication {
         }
     }
 
-    private static void clearPush(Context context){
+    private static void clearPush(Context context) {
         //反注册推送
         NotificationUtil.unRegisterPush(context, user.getUser_id());
         /**销毁推送id*/
@@ -157,21 +288,21 @@ public class App extends MultiDexApplication {
     }
 
     public void exit(Activity context) {
-        if (context != null&&!context.isFinishing()) {
+        if (context != null && !context.isFinishing()) {
             context.finish();
         }
         onTerminate();
     }
 
     public SQLiteHelperOrm getDBHelper() {
-        if(databaseHelper == null) {
+        if (databaseHelper == null) {
             databaseHelper = OpenHelperManager.getHelper(this, SQLiteHelperOrm.class);
         }
         return databaseHelper;
     }
 
     /**
-    /**
+     * /**
      * 完全退出app，应用销毁执行(不能保证一定)
      */
     @Override

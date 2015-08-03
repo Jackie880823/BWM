@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui.start;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,7 +9,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.IntentCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -32,13 +30,11 @@ import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.PersonalPictureActivity;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
-import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.widget.CircularImageView;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
@@ -106,12 +102,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
             switch (msg.what)
             {
                 case HANDLER_COMPLETE_PROFILE_SUCCESS:
-                    Intent intent = new Intent(DetailsActivity.this, MainActivity.class);
-                    ComponentName cn = intent.getComponent();
-                    Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-                    App.changeLoginedUser(userEntity, tokenEntity);//可能会传入没有数据的???
-                    PushApi.initPushApi(DetailsActivity.this);
-                    startActivity(mainIntent);
+                    App.userLoginSuccessed(DetailsActivity.this,userEntity, tokenEntity);
                     break;
 
                 case ERROR:

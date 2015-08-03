@@ -437,13 +437,8 @@ public class LoginActivity extends Activity {
                                 AppTokenEntity tokenEntity = gson.fromJson(jsonObject.getString("token"), AppTokenEntity.class);
                                 if(userList != null && userList.get(0) != null) {
                                     UserEntity userEntity = userList.get(0);//登录的用户数据
-                                    App.changeLoginedUser(userEntity, tokenEntity);
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    /**wing begin test gcm*/
-                                    initPushApi();
-                                    /**wing end test gcm*/
-                                    finish();
+                                    App.userLoginSuccessed(LoginActivity.this, userEntity, tokenEntity);
+
                                 }
 
                             } catch(Exception e) {

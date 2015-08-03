@@ -564,4 +564,9 @@
     <string name="no_member">你没有添加任何成员。</string>
     <string name="no_group">你没有创建任何群体。</string>
 
+    <string name="update_message">New version is available. Update now?</string>
+    <string name="title_download_task">BondWithMe Downloading &#8230;</string>
+    <string name="download_apk_content_title">BondWithMe.apk</string>
+    <string name="download_apk_content_description">When download finished , click to install.</string>
+
 </resources>

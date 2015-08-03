@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui.start;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -8,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.IntentCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -36,11 +34,9 @@ import com.bondwithme.BondWithMe.entity.FaceBookUserEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
-import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
@@ -1037,12 +1033,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
     }
 
     private void goMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        ComponentName cn = intent.getComponent();
-        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-        App.changeLoginedUser(userEntity, tokenEntity);//可能会传入没有数据的???
-        PushApi.initPushApi(this);
-        startActivity(mainIntent);
+        App.userLoginSuccessed(this, userEntity, tokenEntity);
     }
 
     @Override
