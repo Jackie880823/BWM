@@ -69,6 +69,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     private RecyclerView recyclerView;
     private MessageChatActivity messageChatActivity;
     private LinearLayoutManager llm;
+    private boolean isGroupChat;
     private static final int FROM_ME_TYPE_TEXT = 1;
     private static final int FROM_ME_TYPE_PIC = 2;
     private static final int FROM_ME_TYPE_LOC = 3;
@@ -81,12 +82,13 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     private static final int FROM_OTHER_TYPE_GIF = 9;
     private static final int FROM_OTHER_TYPE_PNG = 10;
 
-    public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView, MessageChatActivity messageChatActivity,LinearLayoutManager llm) {
+    public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView, MessageChatActivity messageChatActivity, LinearLayoutManager llm, boolean isGroupChat) {
         this.context = context;
         this.myList = myList;
         this.recyclerView = recyclerView;
         this.messageChatActivity = messageChatActivity;
-        this.llm=llm;
+        this.llm = llm;
+        this.isGroupChat = isGroupChat;
     }
 
     public void addHistoryData(List<MsgEntity> list) {
@@ -221,7 +223,12 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         //网络获取头像图片
         VolleyUtil.initNetworkImageView(context, holder.iconImage, iconUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
         if (!isSendMe) {
-            holder.leftName.setText(msgEntity.getUser_given_name());
+            if (isGroupChat) {
+                holder.leftName.setVisibility(View.VISIBLE);
+                holder.leftName.setText(msgEntity.getUser_given_name());
+            } else {
+                holder.leftName.setVisibility(View.GONE);
+            }
         }
         if (null != msgEntity.getText_id()) {//文字
             holder.messageText.setText(msgEntity.getText_description());
@@ -514,7 +521,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                                     if ("1".equals(memberFlag)) {
                                         Intent intent = new Intent(context, FamilyProfileActivity.class);
                                         intent.putExtra("member_id", msgEntity.getUser_id());
-                                        intent.putExtra("groupId",msgEntity.getUser_id());
+                                        intent.putExtra("groupId", msgEntity.getUser_id());
                                         intent.putExtra("groupName", msgEntity.getUser_given_name());
                                         context.startActivity(intent);
                                     } else {
