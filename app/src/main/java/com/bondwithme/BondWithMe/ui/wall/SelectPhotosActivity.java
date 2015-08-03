@@ -81,7 +81,7 @@ public class SelectPhotosActivity extends BaseActivity {
                 // 不是同时添加多张图片，添加完成关闭当前Activity
                 Intent intent = new Intent();
                 if(useUniversal) {
-                    intent.setData(imageData.getPathUri());
+                    intent.setData(Uri.parse(imageData.getPath()));
                 } else {
                     intent.setData(imageData.getContentUri());
                 }
@@ -138,7 +138,7 @@ public class SelectPhotosActivity extends BaseActivity {
                 previewFragment = PreviewFragment.newInstance("");
             }
             changeFragment(previewFragment, true);
-            previewFragment.displayImage(currentUri.getPathUri().toString());
+            previewFragment.displayImage(currentUri.getPath());
             isPreview = true;
             leftButton.setImageResource(R.drawable.back_normal);
         }
@@ -194,7 +194,7 @@ public class SelectPhotosActivity extends BaseActivity {
                 ArrayList<Uri> uriList = new ArrayList<>();
                 for(ImageData imageData : mSelectedImages) {
                     if(useUniversal) {
-                        uriList.add(imageData.getPathUri());
+                        uriList.add(Uri.parse(imageData.getPath()));
                     } else {
                         uriList.add(imageData.getContentUri());
                     }

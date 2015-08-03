@@ -51,6 +51,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
     private static final int GIF = 2;
     private static final int PIC = 3;
     private static final int PNG = 4;
+    private static final int GEF = 5;
 
     public EventCommentAdapter(Context context, List<EventCommentEntity> data,RecyclerView recyclerView) {
         mContext = context;
@@ -112,23 +113,16 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
     public int getItemViewType(int position) {
         EventCommentEntity myEevent = data.get(position);
 //        Log.i("getItemViewType: ", "position: " + position);
-        int type = 0;
+        int type = GEF;
         if(!TextUtils.isEmpty(myEevent.getComment_content().trim()) && TextUtils.isEmpty(myEevent.getSticker_group_path().trim())){
-//            Log.i("getItemViewType 文字====",myEevent.getComment_content().toString());
             type = TEXT;
         }else if(Constant.Sticker_Gif.equals(myEevent.getSticker_type())){
             type = GIF;
-        }
-        else if(Constant.Sticker_Png.equals(myEevent.getSticker_type())) {
-//            Log.i("getItemViewType 本地图片===",myEevent.getSticker_type());
+        }else if(Constant.Sticker_Png.equals(myEevent.getSticker_type())) {
             type = PNG;
         }else if(myEevent.getFile_id()!= null ){
-//            Log.i("getItemViewType 网络图片===",myEevent.getFile_id());
             type = PIC;
         }
-//        else{
-//            Log.i("getItemViewType file_id",myEevent.getFile_id()+"");
-//        }
         return type;
 
     }
@@ -158,21 +152,18 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
         switch (viewType){
             case TEXT:
                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_item, parent, false);
-
-//                Log.i("TEXT==========","");
                 break;
             case PIC:
-//                Log.i("网络图片===","");
                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
-//                Log.i("PIC==========","");
                 break;
             case GIF:
                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_gif, parent, false);
-//                Log.i("GIF==========","");
                 break;
             case PNG:
                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_png, parent, false);
-//                Log.i("PNG==========","");
+                break;
+            case GEF:
+                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
                 break;
             default:
                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_pic, parent, false);
@@ -187,7 +178,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        EventCommentEntity ece = data.get(position);
+        final EventCommentEntity ece = data.get(position);
         VolleyUtil.initNetworkImageView(mContext, holder.civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, ece.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         holder.tv_comment_owner_name.setText(ece.getUser_given_name());
 //        holder.tv_comment_content.setText(ece.getComment_content());
@@ -241,7 +232,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                     holder.progressBar.setVisibility(View.GONE);
                     holder.pngImageView.setVisibility(View.VISIBLE);
 //                        holder.tv_comment_content.setVisibility(View.GONE);
-                    holder.pngImageView.setImageResource(R.drawable.network_image_default);//设置默认到显示的图片
+//                    holder.pngImageView.setImageResource(R.drawable.network_image_default);//设置默认到显示的图片
                     if(ece.getUri() != null){
                         BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                         bitmapOptions.inSampleSize = 4;
@@ -290,6 +281,14 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 //            Log.i("getFile_id===",ece.getFile_id());
             holder.progressBar.setVisibility(View.GONE);
             holder.networkImageView.setVisibility(View.VISIBLE);
+            holder.networkImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mCommentActionListener != null) {
+                            mCommentActionListener.showOriginalPic(ece.getUser_id(),ece.getFile_id());
+                    }
+                }
+            });
 //            Log.i("显示网络大图", ece.getFile_id());
             VolleyUtil.initNetworkImageView(mContext, holder.networkImageView, String.format(Constant.API_GET_PIC, "post_preview_m", ece.getUser_id(), ece.getFile_id()),
                     R.drawable.network_image_default, R.drawable.network_image_default);
@@ -306,118 +305,6 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
         } else {
             holder.iv_agree.setImageResource(R.drawable.agree_press);
         }
-
-
-
-
-
-
-
-
-//        if (MainActivity.getUser().getUser_id().equals(ece.getUser_id())) {//如果是自己发送到评论，则显示删除按钮，否则隐藏
-//            holder.btn_comment_del.setVisibility(View.VISIBLE);
-////            Log.i("ece.getSticker_group_path()",ece.getSticker_group_path()+"");
-//            if(!TextUtils.isEmpty(ece.getComment_content().trim())){//如果文字不为空
-//                Log.i("文字=====",position+"");
-//                holder.tv_comment_content.setVisibility(View.INVISIBLE);
-//                holder.tv_comment_content.setText(ece.getComment_content());
-//                holder.progressBar.setVisibility(View.GONE);
-////                holder.message_pic_png_iv.setVisibility(View.GONE);
-////                holder.gifImageView.setVisibility(View.GONE);
-//
-//            }
-//        else {
-//            holder.btn_comment_del.setVisibility(View.GONE);
-//        }
-//
-//        if (TextUtils.isEmpty(ece.getLove_id())) {//如果有人点赞
-//            holder.iv_agree.setImageResource(R.drawable.agree_normal);
-//        } else {
-//            holder.iv_agree.setImageResource(R.drawable.agree_press);
-//        }
-//            if (Constant.Sticker_Gif.equals(ece.getSticker_type())){//如果图片类型是gif
-////                    Log.i("onBVH=====GIF", "");
-//                Log.i("GIF=====", ece.getSticker_group_path());
-//                holder.progressBar.setVisibility(View.GONE);
-//                holder.message_pic_png_iv.setVisibility(View.INVISIBLE);
-////                    holder.tv_comment_content.setVisibility(View.GONE);
-//                String stickerGroupPath = ece.getSticker_group_path();//获取图片地址
-//                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1){
-//                    stickerGroupPath = stickerGroupPath.replace("/", "");
-//                }
-//                try {
-//                    String gifFilePath = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + ece.getSticker_name() + "_B.gif";
-//                    GifDrawable gifDrawable = new GifDrawable(mContext.getAssets(), gifFilePath);
-//                    if (gifDrawable != null) {
-////                            Log.i("显示GIF======",gifFilePath);
-//                        holder.gifImageView.setImageDrawable(gifDrawable);
-////                    if ("true".equals(msgEntity.getIsNate())) {
-////                        holder.progressBar.setVisibility(View.VISIBLE);
-////                    } else {
-////                        holder.progressBar.setVisibility(View.GONE);
-////                    }
-//                    } else {
-//                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
-//                                ece.getSticker_name(), stickerGroupPath, ece.getSticker_type());
-//                        downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
-//                    }
-//                } catch (IOException e) {
-//                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
-//                            ece.getSticker_name(), stickerGroupPath, ece.getSticker_type());
-//                    downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//            else if(Constant.Sticker_Png.equals(ece.getSticker_type())){//如果图片类型是png
-//                Log.i("onBVH=====PNG", "");
-////                    holder.tv_comment_content.setVisibility(View.GONE);
-//                holder.gifImageView.setVisibility(View.INVISIBLE);
-//                holder.pngImageView.setImageResource(R.drawable.network_image_default);
-//                holder.progressBar.setVisibility(View.GONE);
-////                    holder.tv_comment_content.setVisibility(View.GONE);
-//                if (ece.getUri() != null)//直接显示在ListView,相册和相机
-//                {
-//                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-//                    bitmapOptions.inSampleSize = 4;
-//                    Bitmap bitmap = LocalImageLoader.rotaingImageView(LocalImageLoader.readPictureDegree(ece.getUri().getPath()),
-//                            ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(FileUtil.getRealPathFromURI(mContext, ece.getUri())), 200, 200));
-//                    holder.pngImageView.setImageBitmap(bitmap);
-//
-//                } else {
-//                    String stickerGroupPath = ece.getSticker_group_path();
-//                    if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
-//                        stickerGroupPath = stickerGroupPath.replace("/", "");
-//                    }
-//
-//                    try {
-//                        String pngFileName = MessageChatActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + ece.getSticker_name() + "_B.png";
-//                        InputStream is = mContext.getAssets().open(pngFileName);
-//                        if (is != null) {
-//                            Bitmap bitmap = BitmapFactory.decodeStream(is);
-//                            holder.pngImageView.setImageBitmap(bitmap);
-//                        } else {
-//                            String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-//                            downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
-//                        }
-//                    } catch (IOException e) {
-//                        //本地没有png的时候，从服务器下载
-//                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-//                        downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//            }else if(ece.getFile_id()!=null){
-//                //???
-//                holder.progressBar.setVisibility(View.GONE);
-//                VolleyUtil.initNetworkImageView(mContext, holder.networkImageView, String.format(Constant.API_GET_PIC, "post_preview_m", ece.getUser_id(), ece.getFile_id()),
-//                        R.drawable.network_image_default, R.drawable.network_image_default);
-//
-//            }
-//
-//        }
-
 
     }
 
@@ -664,25 +551,12 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                     }
                     break;
 //                case R.id.message_pic_iv:
-//                    if (commentEntity.getLoc_id() != null) {
-//                        String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=14&q=%f,%f", Double.valueOf(msgEntity.getLoc_latitude()), Double.valueOf(msgEntity.getLoc_longitude()), Double.valueOf(msgEntity.getLoc_latitude()), Double.valueOf(msgEntity.getLoc_longitude()));
-//                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-//                        context.startActivity(intent);
-//                    } else if (msgEntity.getFile_id() != null) {
-//                        intent = new Intent(context, ViewOriginalPicesActivity.class);
-//                        ArrayList<PhotoEntity> data = new ArrayList();
-//                        PhotoEntity peData = new PhotoEntity();
-//                        peData.setUser_id(msgEntity.getUser_id());
-//                        peData.setFile_id(msgEntity.getFile_id());
-//                        peData.setPhoto_caption(Constant.Module_Original);
-//                        peData.setPhoto_multipe("false");
-//                        data.add(peData);
-//                        intent.putExtra("is_data", true);
-//                        intent.putExtra("datas", data);
-//                        context.startActivity(intent);
+////                    EventCommentEntity comment = data.get(getAdapterPosition());
+//                    //自己发的或event creator 可以删除
+//                    if (mCommentActionListener != null) {
+//                            mCommentActionListener.showOriginalPic(commentEntity.getContent_id());
 //                    }
 //                    break;
-
             }
         }
     }
@@ -732,6 +606,8 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
         public void doLove(final EventCommentEntity commentEntity, final boolean love);
 
         public void doDelete(String commentId);
+
+        public void showOriginalPic(String User_id,String File_id);
     }
 
 

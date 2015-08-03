@@ -75,6 +75,7 @@ public class InviteMemberActivity extends BaseActivity {
     private List<String> selectGroupList;
     private int type;
     private int groupType;
+    private int selectNewData;
     private List<FamilyMemberEntity> selectMemberEntityList;
     private List<FamilyGroupEntity> selectGroupEntityList;
     private boolean isFirstData = true;
@@ -119,20 +120,23 @@ public class InviteMemberActivity extends BaseActivity {
                                     memberList.add(memberEntity);
 
                                 }
-//                                else {
-//                                    if (isFirstData) {
-////                                        selectMemberEntityList.add(memberEntity);
-//                                    }
-//                                }
+                                else {
+                                    if (isFirstData && selectNewData == 0) {
+                                        selectMemberEntityList.add(memberEntity);
+                                    }
+                                }
                             }
                             searchmemberList.addAll(memberList);
                             memberAdapter.addNewData(memberList);
-                        } else {
-//                            for (FamilyMemberEntity memberEntity : memberEntityList) {
-//                                if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
-////                                    selectMemberEntityList.add(memberEntity);
-//                                }
-//                            }
+                        }
+                        else {
+                            if(selectNewData == 0){
+                                for (FamilyMemberEntity memberEntity : memberEntityList) {
+                                    if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
+                                        selectMemberEntityList.add(memberEntity);
+                                    }
+                                }
+                            }
                             memberAdapter.addNewData(memberEntityList);
                         }
                     }
@@ -196,6 +200,7 @@ public class InviteMemberActivity extends BaseActivity {
         jumpIndex = intent.getIntExtra("jumpIndex", 0);
         type = intent.getIntExtra("type", 0);//传过来1表示要隐藏；0表示不隐藏
         groupType = intent.getIntExtra("groupType", -1);
+        selectNewData = intent.getIntExtra("selectNewData",0);//如果是1，回传的数据只包含新选
         if (groupType == -1) {
             groupType = type;
         }

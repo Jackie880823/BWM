@@ -71,9 +71,10 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
                     mContext.sendBroadcast(intent);
 
                     int position = data.indexOf(stickerInfo);
-                    data.remove(position);
-                    notifyItemRemoved(position);
-
+                    if (position != -1){
+                        data.remove(position);
+                        notifyItemRemoved(position);
+                    }
                 }
             }
         });

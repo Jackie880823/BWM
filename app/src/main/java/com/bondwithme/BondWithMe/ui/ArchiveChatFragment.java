@@ -97,9 +97,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         //如果该fragment带参数
         if(getArguments() != null){
             Tap =  getArguments().getString(ARG_PARAM_PREFIX + "0");
-            Log.i("Tap====",Tap);
             group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
-            Log.i("group_id===",group_id+"");
 //            if (Tap.equals("0")){
 //                group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
 //            }else {
@@ -382,6 +380,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
 
     @Override
     public void showOriginalPic(String content_id) {
+        Log.i("content_id====2", content_id + " ");
         Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
         Map<String, String> condition = new HashMap<>();
         condition.put("content_id", content_id);

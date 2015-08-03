@@ -10,7 +10,6 @@ import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -26,6 +25,7 @@ import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocationUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
@@ -113,11 +113,11 @@ public class App extends MultiDexApplication {
 
             @Override
             public void onResult(String response) {
-                Log.e("", "response===========" + response);
+                LogUtil.e("", "response===========" + response);
                 try {
                     JSONObject object = new JSONObject(response);
-                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) ) {
-//                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update") == "1") {
+//                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) ) {
+                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update") == "1") {
                         //must update app
                         needUpdate = true;
                         showUpdateDialog(context);

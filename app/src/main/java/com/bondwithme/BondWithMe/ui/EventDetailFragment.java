@@ -34,6 +34,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.EventCommentAdapter;
 import com.bondwithme.BondWithMe.entity.EventCommentEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
+import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
@@ -413,6 +414,23 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             public void doDelete(String commentId) {
                 removeComment(commentId);
             }
+
+            @Override
+            public void showOriginalPic(String User_id,String File_id) {
+                Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
+                ArrayList<PhotoEntity> datas = new ArrayList();
+                PhotoEntity peData = new PhotoEntity();
+                peData.setUser_id(User_id);
+                peData.setFile_id(File_id);
+                peData.setPhoto_caption(Constant.Module_Original);
+                peData.setPhoto_multipe("false");
+                datas.add(peData);
+                intent.putExtra("is_data", true);
+                intent.putExtra("datas", datas);
+                startActivity(intent);
+            }
+
+
         });
         rvList.setAdapter(adapter);
         RecyclerView.ItemAnimator animator = rvList.getItemAnimator();

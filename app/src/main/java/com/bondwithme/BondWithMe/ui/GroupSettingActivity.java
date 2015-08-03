@@ -37,6 +37,7 @@ import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,6 +57,12 @@ public class GroupSettingActivity extends BaseActivity {
     private ListView lvMembers;
 
     private Button btnLeaveGroup;
+
+//    private Dialog showAdminDialog1;
+//    private Dialog showAdminDialog0;
+
+//    private Dialog showNonAdminDialog1;
+//    private Dialog showNonAdminDialog0;
 
     //private GroupEntity groupEntity = new GroupEntity();//传进来的
 
@@ -77,7 +84,7 @@ public class GroupSettingActivity extends BaseActivity {
     private static final int GET_DATA = 0X11;
     private String groupData = null;
     private List<FamilyGroupEntity> familyGroupEntityList;
-    private int type;//0 聊天界面打开，1是Archive打开
+    private int type;//0  其他界面打开，1是Archive打开
 
     String headUrl;
     BitmapTools mBitmapTools;
@@ -127,6 +134,7 @@ public class GroupSettingActivity extends BaseActivity {
         intent.putExtra("type", 1);
         intent.putExtra("members_data", new Gson().toJson(userList));
         intent.putExtra("groups_data", "");
+        intent.putExtra("selectNewData", 1);
         startActivityForResult(intent, GET_MEMBERS);
     }
 
@@ -158,7 +166,7 @@ public class GroupSettingActivity extends BaseActivity {
 
         mBitmapTools = BitmapTools.getInstance(mContext);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
-        mBitmapTools.display(cniMain,headUrl,R.drawable.network_image_default, R.drawable.network_image_default);
+        mBitmapTools.display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
 //        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName.setText(groupName);
 
@@ -208,6 +216,9 @@ public class GroupSettingActivity extends BaseActivity {
         lvMembers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(type == 1){
+                    return;
+                }
                 if (isAdmin) {
                     if (position == 0) {
                         //群主点击群主
@@ -218,6 +229,7 @@ public class GroupSettingActivity extends BaseActivity {
                             showAdminDialog0(position);
                         } else if ("1".equals(userList.get(position).getAdded_flag())) {
                             showAdminDialog1(position);
+//                            showNoFriendDialog();
                         }
 
                     }
@@ -228,7 +240,9 @@ public class GroupSettingActivity extends BaseActivity {
                             showNonAdminDialog0(position);
                         } else if ("1".equals(userList.get(position).getAdded_flag())) {
                             showNonAdminDialog1(position);
+//                            showNoFriendDialog();
                         }
+
                     } else {
                         //用户成员点击群成员
                         //判断AddedFlag值
@@ -238,8 +252,10 @@ public class GroupSettingActivity extends BaseActivity {
                         } else {
                             if ("0".equals(userList.get(position).getAdded_flag())) {
                                 showNonAdminDialog0(position);
+//                                showNoFriendDialog();
                             } else if ("1".equals(userList.get(position).getAdded_flag())) {
                                 showNonAdminDialog1(position);
+//                                showNoFriendDialog();
                             }
                         }
 
@@ -262,6 +278,33 @@ public class GroupSettingActivity extends BaseActivity {
         if(type == 1){
             btnLeaveGroup.setVisibility(View.GONE);
         }
+    }
+
+
+    private void showNoFriendDialog() {
+        LayoutInflater factory = LayoutInflater.from(mContext);
+        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+        tv_no_member.setText(getString(R.string.text_create_group_not_save));
+        TextView okTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        cancelTv.setVisibility(View.VISIBLE);
+        ((View) selectIntention.findViewById(R.id.line_view)).setVisibility(View.VISIBLE);
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        okTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                finish();
+            }
+        });
+        showSelectDialog.show();
     }
 
     /**
@@ -429,10 +472,10 @@ public class GroupSettingActivity extends BaseActivity {
 
     //admin and addedflag = 1
     private void showAdminDialog1(final int position) {
-
+        Log.i("showAdminDialog","=========");
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin1, null);
-
+        final Dialog showAdminDialog1 = new MyDialog(this, null, selectIntention);
         TextView tvRemoveUser = (TextView) selectIntention.findViewById(R.id.tv_remove_user);
         TextView tvFamilyProfile = (TextView) selectIntention.findViewById(R.id.tv_family_profile);
         TextView tvMessage = (TextView) selectIntention.findViewById(R.id.tv_message);
@@ -450,7 +493,7 @@ public class GroupSettingActivity extends BaseActivity {
                 requestInfo.url = String.format(Constant.API_GROUP_REMOVE_MEMBERS, groupId);
                 requestInfo.jsonParam = jsonParamsString;
 
-                new HttpTools(GroupSettingActivity.this).put(requestInfo,Tag, new HttpCallback() {
+                new HttpTools(GroupSettingActivity.this).put(requestInfo, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
 
@@ -470,9 +513,11 @@ public class GroupSettingActivity extends BaseActivity {
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();//成功
                                 getMembersList();
+                                showAdminDialog1.dismiss();
 
                             } else {
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();//成功
+                                showAdminDialog1.dismiss();
                             }
                         } catch (JSONException e) {
                             Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
@@ -483,6 +528,7 @@ public class GroupSettingActivity extends BaseActivity {
                     @Override
                     public void onError(Exception e) {
                         Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                        showAdminDialog1.dismiss();
                     }
 
                     @Override
@@ -505,6 +551,7 @@ public class GroupSettingActivity extends BaseActivity {
                 Intent intent1 = new Intent(GroupSettingActivity.this, FamilyProfileActivity.class);
                 intent1.putExtra("member_id", userList.get(position).getUser_id());
                 startActivity(intent1);
+                showAdminDialog1.dismiss();
             }
         });
 
@@ -512,13 +559,17 @@ public class GroupSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent2 = new Intent(GroupSettingActivity.this, MessageChatActivity.class);
-                //intent2.putExtra("userEntity", userList.get(position));
+                intent2.putExtra("type", 0);
                 intent2.putExtra("groupId", userList.get(position).getGroup_id());
                 intent2.putExtra("titleName", userList.get(position).getUser_given_name());
-                intent2.putExtra("type", 0);
+                Log.i("getGroup_id====G", userList.get(position).getGroup_id());
+                Log.i("getUser_given_name====G",userList.get(position).getUser_given_name());
                 startActivity(intent2);
+                showAdminDialog1.dismiss();
             }
         });
+        if (!showAdminDialog1.isShowing())
+            showAdminDialog1.show();
     }
 
     //admin and addedflag = 0
@@ -534,7 +585,7 @@ public class GroupSettingActivity extends BaseActivity {
         }
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin0, null);
-
+        final Dialog showAdminDialog0 = new MyDialog(this, null, selectIntention);
 
         TextView tvRemoveUser = (TextView) selectIntention.findViewById(R.id.tv_remove_user);
         TextView tvAdd = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
@@ -543,6 +594,9 @@ public class GroupSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo();
+                if (position > userList.size()) {
+                    showAdminDialog0.dismiss();
+                }
                 HashMap<String, String> jsonParams = new HashMap<String, String>();
                 jsonParams.put("user_id", userList.get(position).getUser_id());//MainActivity
                 final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
@@ -565,9 +619,11 @@ public class GroupSettingActivity extends BaseActivity {
                             JSONObject jsonObject = new JSONObject(response);
                             if (("200").equals(jsonObject.getString("response_status_code"))) {
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_success_remove), Toast.LENGTH_SHORT).show();
+                                showAdminDialog0.dismiss();
                                 getMembersList();
                             } else {
                                 Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_fail_remove), Toast.LENGTH_SHORT).show();
+                                showAdminDialog0.dismiss();
                             }
                         } catch (JSONException e) {
                             Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
@@ -578,6 +634,7 @@ public class GroupSettingActivity extends BaseActivity {
                     @Override
                     public void onError(Exception e) {
                         Toast.makeText(GroupSettingActivity.this, getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                        showAdminDialog0.dismiss();
                     }
 
                     @Override
@@ -597,14 +654,17 @@ public class GroupSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 getMemberType(position);
+                showAdminDialog0.dismiss();
             }
         });
+        if (!showAdminDialog0.isShowing())
+            showAdminDialog0.show();
     }
 
     private void showNonAdminDialog1(final int position) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_non_admin1, null);
-
+        final Dialog showNonAdminDialog1 = new MyDialog(this, null, selectIntention);
 
         TextView tvFamilyProfile = (TextView) selectIntention.findViewById(R.id.tv_family_profile);
         TextView tvMessage = (TextView) selectIntention.findViewById(R.id.tv_message);
@@ -615,6 +675,7 @@ public class GroupSettingActivity extends BaseActivity {
                 Intent intent1 = new Intent(GroupSettingActivity.this, FamilyProfileActivity.class);
                 intent1.putExtra("member_id", userList.get(position).getUser_id());
                 startActivity(intent1);
+                showNonAdminDialog1.dismiss();
             }
         });
 
@@ -627,21 +688,28 @@ public class GroupSettingActivity extends BaseActivity {
                 intent2.putExtra("groupId", userList.get(position).getGroup_id());
                 intent2.putExtra("titleName", userList.get(position).getUser_given_name());
                 startActivity(intent2);
+                showNonAdminDialog1.dismiss();
             }
         });
+        if (!showNonAdminDialog1.isShowing())
+            showNonAdminDialog1.show();
     }
 
     //non admin and addedflag = 0
     private void showNonAdminDialog0(final int position) {
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_non_admin0, null);
+        final Dialog showNonAdminDialog0 = new MyDialog(this, null, selectIntention);
         TextView tvAdd = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         tvAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showNonAdminDialog0.dismiss();
                 getMemberType(position);
             }
         });
+        if (!showNonAdminDialog0.isShowing())
+            showNonAdminDialog0.show();
     }
 
     Handler handler = new Handler() {
