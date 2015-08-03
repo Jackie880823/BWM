@@ -135,6 +135,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     private int isNewGroup;
     private ModifyStickerReceiver stickerReceiver;
+    private boolean isGroupChat;
 
     Handler handler = new Handler() {
         @Override
@@ -296,7 +297,17 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     @Override
     protected void titleLeftEvent() {
-        finish();
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 50);
+        } else {
+            finish();
+        }
     }
 
     @Override
@@ -307,6 +318,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     public void initView() {
         userOrGroupType = getIntent().getIntExtra("type", -1);
+        if (userOrGroupType == 0) {
+            isGroupChat = false;
+        } else {
+            isGroupChat = true;
+        }
         //如果是从新建group打开的
         isNewGroup = getIntent().getIntExtra("isNewGroup", 0);
 //        Log.i("isNewGroup====",isNewGroup+"");
@@ -349,7 +365,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 Context.INPUT_METHOD_SERVICE);
         llm = new LinearLayoutManager(MessageChatActivity.this);
         recyclerView.setLayoutManager(llm);
-        messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm);
+
+        messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm, isGroupChat);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
         mTimer = new Timer();
@@ -555,6 +572,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                                 recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
                             }
                         }, 50);
+
+                        if (!imm.isActive()) {
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imm.showSoftInput(etChat, InputMethodManager.SHOW_FORCED);
+                                }
+                            }, 50);
+                        }
                         break;
                 }
         }

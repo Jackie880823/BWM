@@ -103,6 +103,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (App.getLoginedUser() == null) {
             finish();
             return;
@@ -112,7 +113,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         //-----------------------------------------------------------------------------
         PreferencesUtil.saveValue(this, Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
         //-----------------------------------------------------------------------------
-        super.onCreate(savedInstanceState);
+        App.checkVerSion(this);
     }
 
     @Override
