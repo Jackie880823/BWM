@@ -533,7 +533,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
             }
             else
             {
-                rlRB.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                rlRB.setBackgroundColor(getResources().getColor(R.color.default_text_color_while));
             }
         }
     }
