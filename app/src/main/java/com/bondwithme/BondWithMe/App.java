@@ -115,8 +115,8 @@ public class App extends MultiDexApplication {
                 LogUtil.e("", "response===========" + response);
                 try {
                     JSONObject object = new JSONObject(response);
-                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) ) {
-//                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update") == "1") {
+//                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) ) {
+                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update") == "1") {
                         //must update app
                         needUpdate = true;
                         showUpdateDialog(context);
