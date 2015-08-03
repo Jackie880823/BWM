@@ -11,6 +11,7 @@ import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
 
 /**
@@ -21,7 +22,7 @@ public class TransitionActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        FacebookSdk.sdkInitialize(this);
         if(isLogin()){
             startActivity(new Intent(this,MainActivity.class));
         }else{
