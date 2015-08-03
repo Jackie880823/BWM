@@ -405,7 +405,6 @@
 
     <!-- reset password 界面 -->
 
-    <string name="text_reset_password_warning">包含6-16位字符（字母或数字）</string>
     <string name="hint_mail">你的邮址</string>
     <string name="hint_subject">关于</string>
     <string name="hint_mail_content">有什么我们可以帮您吗?</string>
@@ -564,9 +563,10 @@
     <string name="no_member">你没有添加任何成员。</string>
     <string name="no_group">你没有创建任何群体。</string>
 
-    <string name="update_message">New version is available. Update now?</string>
-    <string name="title_download_task">BondWithMe Downloading &#8230;</string>
-    <string name="download_apk_content_title">BondWithMe.apk</string>
-    <string name="download_apk_content_description">When download finished , click to install.</string>
+    <string name="update_message">有新版本可用,请下载.</string>
+    <string name="title_download_task">伴我玩 下载中 &#8230;</string>
+    <string name="download_apk_content_title">伴我玩</string>
+    <string name="download_apk_content_description">当下载完成时，点击可安装。</string>
+    <string name="update">更新</string>
 
 </resources>
