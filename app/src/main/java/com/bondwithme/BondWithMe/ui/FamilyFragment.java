@@ -483,7 +483,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         }
                         Intent intent = new Intent(getActivity(), FamilyProfileActivity.class);
                         intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
-                        intent.putExtra(UserEntity.EXTRA_GROUP_ID,familyMemberEntity.getUser_id());
+                        intent.putExtra(UserEntity.EXTRA_GROUP_ID,familyMemberEntity.getGroup_id());
                         intent.putExtra(UserEntity.EXTRA_GROUP_NAME, familyMemberEntity.getUser_given_name());
 
 //                        intent.putExtra("relationship",familyMemberEntity.getTree_type_name());
