@@ -109,7 +109,7 @@ public class FamilyViewProfileActivity extends BaseActivity {
         tvLastName.setText(userEntity.getUser_surname());
 //        tvAge.setText(userEntity.getUser_dob());
         String strDOB = userEntity.getUser_dob();
-        if (strDOB.contains("-")){
+        if (strDOB != null && strDOB.contains("-")){
             strDOB = strDOB.substring(strDOB.indexOf("-") + 1);
         }
         tvBirthday.setText(strDOB);

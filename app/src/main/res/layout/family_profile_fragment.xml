@@ -12,7 +12,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/default_content_bg"
                     android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:padding="10dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_margin="8dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -314,15 +314,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/ll_center"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginLeft="32dp"
-                    android:layout_marginRight="32dp"
+                    android:layout_margin="@dimen/_20dp"
                     android:background="@drawable/btn_chat_send_bg"
                     android:padding="@dimen/default_content_padding"
                     android:text="@string/text_send_message"
                     android:textColor="#ffffff"
                     android:textSize="@dimen/text_large_size" />
-
 
 
             <include layout="@layout/progress_layout"/>
