@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,7 +65,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //    private String famNickname;
 //    private String memberStatus;
     private String getDofeelCode;
-
+    private View vProgress;
 
     private CircularNetworkImage cniMain;
     private ImageView ivBottomLeft;
@@ -135,8 +134,10 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         memberId = intent.getStringExtra("member_id");
         groupId = intent.getStringExtra("groupId");
         groupName = intent.getStringExtra("groupName");
+        vProgress = getViewById(R.id.rl_progress);
         if(TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)){
             //如果上个页面没传进groupId或者groupName，显示进度条
+            vProgress.setVisibility(View.VISIBLE);
         }
 //        relationship = intent.getStringExtra("relationship");
 //        famNickname = intent.getStringExtra("fam_nickname");
@@ -393,6 +394,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 if ((data != null) && (data.size() > 0)) {
                     userEntity = data.get(0);
                     Message.obtain(handler, GET_USER_ENTITY, userEntity).sendToTarget();
+                    if(vProgress.getVisibility() == View.VISIBLE){
+                        vProgress.setVisibility(View.GONE);
+                    }
                 }
             }
 
