@@ -472,7 +472,6 @@ public class GroupSettingActivity extends BaseActivity {
 
     //admin and addedflag = 1
     private void showAdminDialog1(final int position) {
-        Log.i("showAdminDialog","=========");
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin1, null);
         final Dialog showAdminDialog1 = new MyDialog(this, null, selectIntention);
@@ -562,8 +561,8 @@ public class GroupSettingActivity extends BaseActivity {
                 intent2.putExtra("type", 0);
                 intent2.putExtra("groupId", userList.get(position).getGroup_id());
                 intent2.putExtra("titleName", userList.get(position).getUser_given_name());
-                Log.i("getGroup_id====G", userList.get(position).getGroup_id());
-                Log.i("getUser_given_name====G",userList.get(position).getUser_given_name());
+//                Log.i("getGroup_id====G", userList.get(position).getGroup_id());
+//                Log.i("getUser_given_name====G",userList.get(position).getUser_given_name());
                 startActivity(intent2);
                 showAdminDialog1.dismiss();
             }

@@ -123,6 +123,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             holder.imArchiveImages.setVisibility(View.VISIBLE);
             holder.tvPhotoCount.setVisibility(View.VISIBLE);
             holder.imArchivePic.setVisibility(View.GONE);
+            holder.imArchiveGif.setVisibility(View.GONE);
             //照片的总数
             int PhotoCount = Integer.valueOf(archive.getPhoto_count());
             if(PhotoCount > 1){
@@ -135,15 +136,15 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             }
             //加载照片
             VolleyUtil.initNetworkImageView(mContext, holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-
-        }else if(!TextUtils.isEmpty(archive.getSticker_group_path())){
             //如果有大表情
-            holder.llArchiveImage.setVisibility(View.VISIBLE);
-            holder.imArchivePic.setVisibility(View.VISIBLE);
-            holder.imArchiveImages.setVisibility(View.GONE);
-            holder.tvPhotoCount.setVisibility(View.GONE);
+        }else if(!TextUtils.isEmpty(archive.getSticker_group_path())){
             if(Constant.Sticker_Gif.equals(archive.getSticker_type())){
                 //如果大表情是GIF
+                holder.llArchiveImage.setVisibility(View.VISIBLE);
+                holder.imArchiveGif.setVisibility(View.VISIBLE);
+                holder.imArchivePic.setVisibility(View.GONE);
+                holder.imArchiveImages.setVisibility(View.GONE);
+                holder.tvPhotoCount.setVisibility(View.GONE);
                 String stickerGroupPath = archive.getSticker_group_path();
                 if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
@@ -153,24 +154,23 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
                     GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
                     if(gifDrawable != null) {
                         holder.imArchivePic.setImageDrawable(gifDrawable);
-                        //                    if ("true".equals(comment.getIsNate())) {
-                        //                        holder.progressBar.setVisibility(View.VISIBLE);
-                        //                    } else {
-                        //                        holder.progressBar.setVisibility(View.GONE);
-                        //                    }
                     } else {
                         String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, archive.getSticker_type());
-                        downloadAsyncTask(holder.imArchivePic, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
+                        downloadAsyncTask(holder.imArchiveGif, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
                     }
                 }catch (IOException e){
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, archive.getSticker_type());
-                    downloadAsyncTask(holder.imArchivePic, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
+                    downloadAsyncTask(holder.imArchiveGif, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
                     e.printStackTrace();
                 }
 
-
             }else if(Constant.Sticker_Png.equals(archive.getSticker_type())){
                 //如果大表情是PNG
+                holder.llArchiveImage.setVisibility(View.VISIBLE);
+                holder.imArchivePic.setVisibility(View.VISIBLE);
+                holder.imArchiveGif.setVisibility(View.GONE);
+                holder.imArchiveImages.setVisibility(View.GONE);
+                holder.tvPhotoCount.setVisibility(View.GONE);
                 String stickerGroupPath = archive.getSticker_group_path();
                 if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
@@ -240,9 +240,13 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
         NetworkImageView imArchiveImages;
 
         /**
-         * 显示大表情
+         * 显示大表情 png
          */
         GifImageView imArchivePic;
+        /**
+         * 显示大表情 Gif
+         */
+        GifImageView imArchiveGif;
         /**
          * 地址名称
          */
@@ -273,6 +277,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             tvContent = (TextView) itemView.findViewById(R.id.tv_archive_content);
             groupDefault = itemView.findViewById(R.id.group_default);
             imArchivePic = (GifImageView) itemView.findViewById(R.id.iv_chats_pic);
+            imArchiveGif = (GifImageView) itemView.findViewById(R.id.iv_chats_gif);
             tvContent.setMaxLines(9);
             imArchiveImages = (NetworkImageView) itemView.findViewById(R.id.iv_chats_images);
             cardView = itemView.findViewById(R.id.top_archive);
