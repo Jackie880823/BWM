@@ -2,7 +2,6 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -220,8 +219,8 @@ public class LocalImagesAdapter extends BaseAdapter {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void loadLocalBitmap(ImageView imageView, int position) {
         if(position < mDatas.size()) {
-            Uri uri = mDatas.get(position).getPathUri();
-            ImageLoader.getInstance().displayImage(uri.toString(), imageView, UniversalImageLoaderUtil.options);
+            String uri = mDatas.get(position).getPath();
+            ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options);
         }
     }
 

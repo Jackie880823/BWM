@@ -23,10 +23,13 @@ import com.android.volley.ext.tools.HttpTools;
 import com.artifex.mupdfdemo.MuPDFCore;
 import com.artifex.mupdfdemo.MuPDFPageAdapter;
 import com.artifex.mupdfdemo.MuPDFReaderView;
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,6 +45,7 @@ public class ViewPDFActivity extends BaseActivity {
     public static final String PARAM_PDF_URL = "pdf_url";
     private String mFilePath;
     private int currentPage;
+    private View vProgress;
 
     @Override
     public int getLayout() {
@@ -86,10 +90,68 @@ public class ViewPDFActivity extends BaseActivity {
             finish();
             return;
         }
-        getPdf(url);
+        vProgress = getViewById(R.id.rl_progress);
+        getPdfUrl();
 
-//        showPDF(url);
     }
+
+    /**
+     * 一个SB的方法因为服务把pdf分开两个接口
+     */
+    private void getPdfUrl(){
+        vProgress.setVisibility(View.VISIBLE);
+//        mProgressDialog.show();
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
+        new HttpTools(ViewPDFActivity.this).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, "load_pdf", new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if ("Success".equals(jsonObject.getString("response_status"))) {
+                        String urlString = jsonObject.getString("filePath");
+                        if (!TextUtils.isEmpty(urlString)) {
+                            getPdf(urlString);
+                        }
+                    } else {
+                        MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+                    }
+                } catch (Exception e) {
+                    MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled() {
+                vProgress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
 
     private void showPDF(String path) {
 //    private void showPDF(String url) {
@@ -230,7 +292,7 @@ public class ViewPDFActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-//                vProgress.setVisibility(View.GONE);
+                vProgress.setVisibility(View.GONE);
                 File file = new File(target);
                 if (file.exists()) {
                     showPDF(target);
@@ -258,16 +320,19 @@ public class ViewPDFActivity extends BaseActivity {
             public void onError(Exception e) {
 //                mProgressDialog.dismiss();
                 MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancelled() {
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
             public void onLoading(long count, long current) {
 
             }
+
         });
     }
 
@@ -448,4 +513,7 @@ public class ViewPDFActivity extends BaseActivity {
 //            }
 //        }
     }
+
+
+
 }

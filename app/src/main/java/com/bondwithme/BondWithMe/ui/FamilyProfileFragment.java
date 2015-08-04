@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -111,15 +110,33 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //             }
 //        }
 //    }
+    List<String> data_Zh = new ArrayList<String>();
+    private List<String> getDataZh() {
+        Configuration configuration = new Configuration();
+        //设置应用为简体中文
+        configuration.locale = Locale.SIMPLIFIED_CHINESE;
+        getResources().updateConfiguration(configuration, null);
+        String[] ralationArrayZh = getResources().getStringArray(R.array.relationship_item);
+        data_Zh = Arrays.asList(ralationArrayZh);
+        return data_Zh;
+    }
 
     @Override
     public void initView() {
         getDataEn();
+        if (Locale.getDefault().toString().equals("zh_CN")) {
+//            data_Us = Arrays.asList(relationships);
+            getDataZh();
+
+        }
         Intent intent = getActivity().getIntent();
         useId = MainActivity.getUser().getUser_id();//MainActivity.
         memberId = intent.getStringExtra("member_id");
         groupId = intent.getStringExtra("groupId");
         groupName = intent.getStringExtra("groupName");
+        if(TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)){
+            //如果上个页面没传进groupId或者groupName，显示进度条
+        }
 //        relationship = intent.getStringExtra("relationship");
 //        famNickname = intent.getStringExtra("fam_nickname");
 //        memberStatus = intent.getStringExtra("member_status");
@@ -188,9 +205,17 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 //聊天界面
                 Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
                 intent2.putExtra("type", 0);
-                intent2.putExtra("groupId", groupId);
-                intent2.putExtra("titleName", groupName);
-                startActivity(intent2);
+                if((TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)) && userEntity != null){
+                    //如果上个页面没有groupId或者groupName
+                    intent2.putExtra("groupId", userEntity.getGroup_id());
+                    intent2.putExtra("titleName", userEntity.getUser_given_name());
+                    startActivity(intent2);
+                }else {
+                    intent2.putExtra("groupId", groupId);
+                    intent2.putExtra("titleName", groupName);
+                    startActivity(intent2);
+                }
+
             }
         });
 
@@ -220,6 +245,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                     intent.putExtra("relationship", userEntity.getTree_type_name());
                     intent.putExtra("fam_nickname", userEntity.getFam_nickname());
                     intent.putExtra("member_status", userEntity.getUser_status());
+                    //传index进下个界面
                     intent.putExtra("selectMemeber", data_Us.indexOf(userEntity.getTree_type_name()));
 //                    startActivityForResult(intent, 0);
                     startActivityForResult(intent, 1);
@@ -389,8 +415,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("requestCode1====", requestCode + "");
-        Log.i("resultCode1====",resultCode+"");
         switch (requestCode) {
             case 1:
                 if (resultCode == getActivity().RESULT_OK){

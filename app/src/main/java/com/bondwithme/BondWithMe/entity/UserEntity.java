@@ -6,6 +6,9 @@ import java.io.Serializable;
  * Created by wing on 15/1/23.
  */
 public class UserEntity implements Serializable {
+    public static final String EXTRA_MEMBER_ID = "member_id";
+    public static final String EXTRA_GROUP_ID = "groupId";
+    public static final String EXTRA_GROUP_NAME = "groupName";
 
     /**
      * 这个是示例字段，示例关系依赖

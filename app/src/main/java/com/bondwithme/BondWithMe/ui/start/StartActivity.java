@@ -1,7 +1,6 @@
 package com.bondwithme.BondWithMe.ui.start;
 
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -16,12 +15,7 @@ import android.widget.TextView;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.entity.AppTokenEntity;
-import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
-import com.bondwithme.BondWithMe.util.PushApi;
-import com.google.gson.Gson;
 
 public class StartActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -44,23 +38,22 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.checkVerSion(this);
         setContentView(R.layout.activity_start);
 
-        checkForGoMainActivity();
         initView();
         checkForShow();
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.ll_sign_up:
-                    showSignUp();
+                showSignUp();
                 break;
 
             case R.id.ll_log_in:
-                    showLogIn();
+                showLogIn();
                 break;
 
             default:
@@ -68,24 +61,21 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
         }
     }
 
-    public void initView()
-    {
-        llSignUp = (LinearLayout)findViewById(R.id.ll_sign_up);
-        tvSignUp = (TextView)findViewById(R.id.tv_sign_up);
-        ivSignUp = (ImageView)findViewById(R.id.iv_sign_up);
-        llLogIn = (LinearLayout)findViewById(R.id.ll_log_in);
-        tvLogIn = (TextView)findViewById(R.id.tv_log_in);
-        ivLogIn = (ImageView)findViewById(R.id.iv_log_in);
+    public void initView() {
+        llSignUp = (LinearLayout) findViewById(R.id.ll_sign_up);
+        tvSignUp = (TextView) findViewById(R.id.tv_sign_up);
+        ivSignUp = (ImageView) findViewById(R.id.iv_sign_up);
+        llLogIn = (LinearLayout) findViewById(R.id.ll_log_in);
+        tvLogIn = (TextView) findViewById(R.id.tv_log_in);
+        ivLogIn = (ImageView) findViewById(R.id.iv_log_in);
 
         llSignUp.setOnClickListener(this);
         llLogIn.setOnClickListener(this);
     }
 
-    public void showSignUp()
-    {
+    public void showSignUp() {
         //        可以优化为hide？
-        if (blnSignUp)
-        {
+        if (blnSignUp) {
             return;
         }
         setLook(SHOW_SIGN_UP);
@@ -97,11 +87,9 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
         blnLogIn = false;
     }
 
-    public void showLogIn()
-    {
+    public void showLogIn() {
         //        可以优化为hide？
-        if (blnLogIn)
-        {
+        if (blnLogIn) {
             return;
         }
         setLook(SHOW_LOG_IN);
@@ -113,10 +101,8 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
         blnSignUp = false;
     }
 
-    public void setLook(String string)
-    {
-        switch (string)
-        {
+    public void setLook(String string) {
+        switch (string) {
             case SHOW_SIGN_UP:
                 tvSignUp.setTextColor(getResources().getColor(R.color.default_text_color_dark));
                 tvSignUp.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
@@ -141,33 +127,11 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
         }
     }
 
-    public void checkForGoMainActivity()
-    {
-        UserEntity userEntity = App.getLoginedUser();
-        if (userEntity != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
 
-            String tokenString = PreferencesUtil.getValue(this, Constant.HTTP_TOKEN, null);
-            if (!TextUtils.isEmpty(tokenString)) {
-                App.initToken(userEntity.getUser_login_id(), new Gson().fromJson(tokenString, AppTokenEntity.class));//为什么这里又要初始化Token??
-            }
-            //TODO
-            //为什么在这？需修改。
-            PushApi.initPushApi(this);
-            finish();
-            return;
-        }
-    }
-
-    public void checkForShow()
-    {
-        if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN, null)))
-        {
+    public void checkForShow() {
+        if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN, null))) {
             showSignUp();
-        }
-        else
-        {
+        } else {
             showLogIn();
         }
         return;

@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.ArchiveChatFragment;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.GroupSettingActivity;
 
 
 /**
@@ -44,18 +43,25 @@ public class ArchiveGroupChatActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        Intent intent = new Intent(ArchiveGroupChatActivity.this, GroupSettingActivity.class);
-        intent.putExtra("groupId", group_id);
-        intent.putExtra("groupName", group_name);
-        intent.putExtra("groupType",1);
-        startActivity(intent);
+        if(commandlistener!=null)
+            commandlistener.execute(rightButton);
+//        Intent intent = new Intent(ArchiveGroupChatActivity.this, GroupSettingActivity.class);
+//        intent.putExtra("groupId", group_id);
+//        intent.putExtra("groupName", group_name);
+//        intent.putExtra("groupType",1);
+//        startActivity(intent);
+    }
+    @Override
+    protected void titleLeftEvent() {
+        if(commandlistener!=null)
+            commandlistener.execute(leftButton);
     }
 
     @Override
     protected Fragment getFragment() {
         group_id = getIntent().getStringExtra("group_id");
         //0是群组备份，1是聊天备份
-        return ArchiveChatFragment.newInstance("0",group_id);
+        return ArchiveChatFragment.newInstance("0",group_id,group_name);
     }
 
     @Override

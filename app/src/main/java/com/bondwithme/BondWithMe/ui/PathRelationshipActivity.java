@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,15 +14,15 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MemberPathEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -95,12 +94,12 @@ public class PathRelationshipActivity extends BaseActivity {
     public void finish() {
         Intent intent = new Intent();
         if (isZh) {
+//            Log.i("finish====",tvRelationship.getText().toString()+"");
             intent.putExtra("relationship", data_Us.get(data_Zh.indexOf(tvRelationship.getText().toString())));
         } else {
             intent.putExtra("relationship", tvRelationship.getText().toString());
         }
         setResult(RESULT, intent);
-        Log.i("RESULT====",RESULT+"");
         super.finish();
     }
 
@@ -112,11 +111,10 @@ public class PathRelationshipActivity extends BaseActivity {
     @Override
     public void initView() {
         getDataEn();
+        //系统环境是中文
         if (Locale.getDefault().toString().equals("zh_CN")) {
             isZh = true;
-//            data_Us = Arrays.asList(relationships);
             getDataZh();
-
         }
         memberId = getIntent().getStringExtra("member_id");
         relationship = getIntent().getStringExtra("relationship");
@@ -134,12 +132,17 @@ public class PathRelationshipActivity extends BaseActivity {
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_name);//放名字还是放Me????
 
-//        tvRelationship.setText(relationship);
+        int length=getIntent().getIntExtra("selectMemeber", -1);
+        if(length==-1||length>=data_Zh.size()){
+            tvRelationship.setText("");
+        }else{
         if (isZh) {
-            tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));
+            tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber", -1)));
         } else {
-            tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", -1)));
+            tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", data_Us.size()-1)));
         }
+        }
+
 
         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
@@ -206,22 +209,43 @@ public class PathRelationshipActivity extends BaseActivity {
 
                 if (pathList != null) {
                     for (int i = 0; i < pathList.size(); i++) {//关系列表
+
                         ll[i].setVisibility(View.VISIBLE);
                         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+//                        if(i == 0){
+
+                            if(TextUtils.isEmpty(tvRelationship.getText().toString())){
+                                String mrelationship4En = pathList.get(0).getRelationship();
+                                int mPosition = data_Us.indexOf(mrelationship4En);
+                                if(isZh){
+                                    tvRelationship.setText(data_Zh.get(mPosition));
+                                }else {
+                                    tvRelationship.setText(mrelationship4En);
+                                }
+
+                            }
+//                        }
                         String relationship4En = pathList.get(i).getRelationship();
+                        int position = data_Us.indexOf(relationship4En);
                         /**wing modify for no relationship begin*/
                         if (TextUtils.isEmpty(relationship4En)) {
                             continue;
                         }
+//                        if(TextUtils.isEmpty(tvRelationship.getText().toString())){
+//                            String mRelationship = pathList.get(0).getRelationship();
+//                            if (isZh) {
+////                                tvRelationship.setText(data_Us.indexOf(mRelationship));
+//                            }else {
+////                                tvRelationship.setText(mRelationship);
+//                            }
+//                        }
                         if (isZh) {
-                            int position = data_Us.indexOf(relationship4En);
+//                            int position = data_Us.indexOf(relationship4En);
                             if (position != -1) {
                                 tvRelationships[i].setText(data_Zh.get(position));
-//                                tvRelationship.setText(tvRelationships[0].getText());
                             }
                         } else {
                             tvRelationships[i].setText(relationship4En);
-//                            tvRelationship.setText(tvRelationships[0].getText());
                         }
                         /**wing modify end*/
                         tvNames[i].setText(pathList.get(i).getMember_fullname());
@@ -258,15 +282,12 @@ public class PathRelationshipActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("requestCode2====", requestCode + "");
-        Log.i("resultCode2====",resultCode+"");
         switch (requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
-                    //获取选择关系界面传来的关系
+                    //获取选择关系界面传来的关系 根据index。
                     selectMemeber = data.getExtras().getInt("selectMemeber");
-                    RESULT = -1;
-//                    setResult(RESULT_OK);
+                    RESULT = RESULT_OK;
                     if (isZh) {
                         tvRelationship.setText(data_Zh.get(selectMemeber));
                     } else {

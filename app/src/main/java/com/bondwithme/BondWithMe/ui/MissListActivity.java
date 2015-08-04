@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -18,6 +17,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MissAdapter;
 import com.bondwithme.BondWithMe.entity.MissEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.google.gson.Gson;
@@ -206,7 +206,7 @@ public class MissListActivity extends BaseActivity {
             public void topItemClick(String member_id) {
                 updateMiss(member_id);
                 Intent intent = new Intent(MissListActivity.this, FamilyProfileActivity.class);
-                intent.putExtra("member_id", member_id);
+                intent.putExtra(UserEntity.EXTRA_MEMBER_ID, member_id);
                 startActivity(intent);
             }
         });

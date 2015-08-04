@@ -37,6 +37,7 @@ import com.bondwithme.BondWithMe.adapter.FamilyGroupAdapter;
 import com.bondwithme.BondWithMe.adapter.MyFamilyAdapter;
 import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
 import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
@@ -481,9 +482,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                             familyMemberEntity.setMiss(null);
                         }
                         Intent intent = new Intent(getActivity(), FamilyProfileActivity.class);
-                        intent.putExtra("member_id", familyMemberEntity.getUser_id());
-                        intent.putExtra("groupId",familyMemberEntity.getUser_id());
-                        intent.putExtra("groupName", familyMemberEntity.getUser_given_name());
+                        intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
+                        intent.putExtra(UserEntity.EXTRA_GROUP_ID,familyMemberEntity.getUser_id());
+                        intent.putExtra(UserEntity.EXTRA_GROUP_NAME, familyMemberEntity.getUser_given_name());
 
 //                        intent.putExtra("relationship",familyMemberEntity.getTree_type_name());
 //                        intent.putExtra("fam_nickname",familyMemberEntity.getFam_nickname());
@@ -544,7 +545,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         mLists.add(userView);
         View groupView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
         groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
-//        final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
+//        final GridView groupGridView = (GridView) groupView.findViewById(R.id.family_grid_view);
 
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
         groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
@@ -687,59 +688,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             return;
         }
-        vProgress.setVisibility(View.VISIBLE);
-//        mProgressDialog.show();
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-        new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-                vProgress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onResult(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if ("Success".equals(jsonObject.getString("response_status"))) {
-                        String urlString = jsonObject.getString("filePath");
-                        if (!TextUtils.isEmpty(urlString)) {
-                            showPDF(urlString);
-                        }
-                    } else {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    }
-                } catch (Exception e) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
-
-//            }
-//        }.start();
+        showPDF(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()));
 
     }
 

@@ -182,10 +182,10 @@ public class SignUpUsernameActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if ((etFstPw.getText().toString().length() > 5) && (etFstPw.getText().toString().length() < 17))
+                if ((etFstPw.length() > 4) && (etFstPw.length() < 17))
                 {
                     ivFst.setImageResource(R.drawable.correct);
-                    if ((etSecPw.getText().toString().length() > 5) && (etSecPw.getText().toString().length() < 17) && (etFstPw.getText().toString().equals(etSecPw.getText().toString())))
+                    if ((etSecPw.getText().toString().length() > 4) && (etSecPw.getText().toString().length() < 17) && (etFstPw.getText().toString().equals(etSecPw.getText().toString())))
                     {
                         ivFst.setImageResource(R.drawable.correct);
                         ivSec.setImageResource(R.drawable.correct);
@@ -216,7 +216,7 @@ public class SignUpUsernameActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if ((etSecPw.getText().toString().length() > 5) && (etSecPw.getText().toString().length() < 17))
+                if ((etSecPw.getText().toString().length() > 4) && (etSecPw.getText().toString().length() < 17))
                 {
                     if ( (etFstPw.getText().toString().equals(etSecPw.getText().toString())) )
                     {
@@ -364,7 +364,7 @@ public class SignUpUsernameActivity extends BaseActivity {
 
     public void goNextActivity()
     {
-        if (blnLogin && ( etFstPw.getText().toString().equals(etSecPw.getText().toString()) ) && (etFstPw.getText().toString().length() > 5) && (etFstPw.getText().toString().length() < 17)  && (etFstPw.getText().toString().length() != 0) && (etSecPw.getText().toString().length() != 0) && blnLogin && ((etUserName.getText().toString().length() >4)))
+        if (blnLogin && ( etFstPw.getText().toString().equals(etSecPw.getText().toString()) ) && (etFstPw.getText().toString().length() > 4) && (etFstPw.getText().toString().length() < 17)  && (etFstPw.getText().toString().length() != 0) && (etSecPw.getText().toString().length() != 0) && blnLogin && ((etUserName.getText().toString().length() >4)))
         {
             Intent intent = new Intent(SignUpUsernameActivity.this, SignUpUsernameVerifyPhoneActivity.class);
 

@@ -18,6 +18,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.FamilyProfileActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
@@ -361,7 +362,9 @@ public class ChatAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent intent;
                     intent = new Intent(context, FamilyProfileActivity.class);
-                    intent.putExtra("member_id", msgEntity.getUser_id());
+                    intent.putExtra(UserEntity.EXTRA_MEMBER_ID, msgEntity.getUser_id());
+                    intent.putExtra(UserEntity.EXTRA_GROUP_ID,msgEntity.getGroup_id());
+                    intent.putExtra(UserEntity.EXTRA_GROUP_NAME,msgEntity.getUser_given_name());
                     context.startActivity(intent);
                 }
             });

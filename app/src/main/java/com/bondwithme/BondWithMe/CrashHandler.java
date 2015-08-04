@@ -79,8 +79,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 LogUtil.e(TAG, "error : ", e);
             }
             //退出程序
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
+            App.getContextInstance().exit();
 
 //            Intent intent = new Intent(mContext, SSSActivity.class);
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

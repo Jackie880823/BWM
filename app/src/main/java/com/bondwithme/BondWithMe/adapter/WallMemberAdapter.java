@@ -132,7 +132,9 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
                         if("1".equals(added)) {
                             // 已经添加为好友，显示用户详情
                             Intent intent = new Intent(mContext, FamilyProfileActivity.class);
-                            intent.putExtra("member_id", userEntity.getUser_id());
+                            intent.putExtra(UserEntity.EXTRA_MEMBER_ID, userEntity.getUser_id());
+                            intent.putExtra(UserEntity.EXTRA_GROUP_ID, userEntity.getGroup_id());
+                            intent.putExtra(UserEntity.EXTRA_GROUP_NAME, userEntity.getUser_given_name());
                             mContext.startActivity(intent);
                         } if("0".equals(added)) {
                             // 没有添加好友，弹出添加好友界面提示框由用户选择是否添加

@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -16,15 +15,15 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -380,12 +379,7 @@ public class ResetPasswordActivity extends BaseActivity{
 
                     if (userList != null && userList.get(0) != null) {
                         UserEntity userEntity = userList.get(0);//登录的用户数据
-                        App.changeLoginedUser(userEntity, tokenEntity);
-                        Intent intent = new Intent(ResetPasswordActivity.this, MainActivity.class);
-//                                    intent.putExtra("user", userEntity);
-
-                        startActivity(intent);
-                        finish();
+                        App.userLoginSuccessed(ResetPasswordActivity.this,userEntity, tokenEntity);
 //                        progressDialog.dismiss();
                     }
 
