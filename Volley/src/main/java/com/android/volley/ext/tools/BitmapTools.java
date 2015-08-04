@@ -44,6 +44,7 @@ public class BitmapTools {
     private Context mContext;
     private BitmapCache mBitmapCache;
     private IDisplayer mDisplayer;
+    private static BitmapTools mInstance;
 
     private HashMap<String, BitmapDisplayConfig> configMap = new HashMap<String, BitmapDisplayConfig>();
     
@@ -53,7 +54,7 @@ public class BitmapTools {
         }
     }
 
-    public BitmapTools(Context context) {
+    private BitmapTools(Context context) {
         mContext = context.getApplicationContext();
         mDisplayer = new SimpleDisplayer();
         mBitmapCache = BitmapCache.getSigleton(context.getApplicationContext());
@@ -66,6 +67,13 @@ public class BitmapTools {
         int defaultHeight = displayMetrics.heightPixels;
         mDisplayConfig.bitmapWidth = (int) (defaultWidth * 1.2f);
         mDisplayConfig.bitmapHeight = (int) (defaultHeight * 1.2f);
+    }
+
+    public static synchronized BitmapTools getInstance(Context context) {
+        if (mInstance == null) {
+            mInstance = new BitmapTools(context);
+        }
+        return mInstance;
     }
     
     public ImageLoader getImageLoader() {

@@ -21,6 +21,7 @@ public class FileUtil {
 
     private static File path;
     private final static String CACHE_DIR_NAME = "/cache";
+    public final static String BANNER_DIR_NAME = "/banner";
     private static File appPath;
 
     /**
@@ -34,19 +35,17 @@ public class FileUtil {
         if(isOutPath) {
             if (path == null) {
                 if (hasSDCard()) { // SD card
-                    path = new File(getSDCardPath() + "/" + AppInfoUtil.getApplicationName(context));
+                    path = new File(getSDCardPath() + "/" + "BondWithMe");
                     path.mkdir();
                 } else {
                     path = Environment.getDataDirectory();
                 }
             }
-            LogUtil.d("","2getSavePath=========="+appPath);
             return path;
         }else{
             if(appPath==null){
                 appPath  = context.getFilesDir();
             }
-            LogUtil.d("","1getSavePath=========="+appPath);
             return appPath;
         }
 
@@ -159,6 +158,17 @@ public class FileUtil {
             e.printStackTrace();
         }
         return filePaths;
+    }
+
+    public static String getBannerFilePath(Context context) {
+        File f = getSavePath(context,true);
+
+        f = new File(f.getAbsolutePath()+CACHE_DIR_NAME+BANNER_DIR_NAME);
+        if(!f.exists()){
+            f.mkdirs();
+        }
+
+        return f.getAbsolutePath();
     }
 
 }

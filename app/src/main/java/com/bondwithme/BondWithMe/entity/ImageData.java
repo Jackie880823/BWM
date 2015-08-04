@@ -2,6 +2,8 @@ package com.bondwithme.BondWithMe.entity;
 
 import android.net.Uri;
 
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
+
 /**
  * Created by Jackie on 7/29/15.
  * @author Jackie
@@ -10,18 +12,18 @@ import android.net.Uri;
 public class ImageData {
     public final static String USE_UNIVERSAL = "USE_TO_UNIVERSAL";
     private final Uri contentUri;
-    private final Uri pathUri;
+    private final String path;
 
-    public ImageData(Uri contentUri, Uri pathUri) {
+    public ImageData(Uri contentUri, String path) {
         this.contentUri = contentUri;
-        this.pathUri = pathUri;
+        this.path = ImageDownloader.Scheme.FILE.wrap(path);
     }
 
     public final Uri getContentUri() {
         return contentUri;
     }
 
-    public final Uri getPathUri() {
-        return pathUri;
+    public final String getPath() {
+        return path;
     }
 }

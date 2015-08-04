@@ -26,7 +26,6 @@ import android.util.Log;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -467,15 +466,16 @@ public class LocalImageLoader {
      * @return
      */
     public final static String compressBitmap(Context context, Uri uri, int rqsW, int rqsH, boolean isDelSrc) {
-        if(ImageDownloader.Scheme.ofUri(uri.toString()) != ImageDownloader.Scheme.FILE) {
+        Log.i(TAG, "compressBitmap& uri: " + uri);
+        Bitmap bitmap;
+        ImageSize imageSize = new ImageSize(rqsW, rqsH);
+        bitmap = ImageLoader.getInstance().loadImageSync(uri.toString(), imageSize);
+        if(bitmap == null) {
             LogUtil.i(TAG, "compressBitmap& bitmap is null");
             return compressBitmap(context, FileUtil.getRealPathFromURI(context, uri), rqsW, rqsH, isDelSrc);
         } else {
-            Bitmap bitmap;
-            ImageSize imageSize = new ImageSize(rqsW, rqsH);
-            bitmap = ImageLoader.getInstance().loadImageSync(uri.toString(), imageSize);
-            LogUtil.i(TAG, "compressBitmap& uri: " + uri);
-            return getPath(context, uri.getPath(), isDelSrc, bitmap);
+
+            return getPath(context, FileUtil.getRealPathFromURI(context, uri), isDelSrc, bitmap);
         }
     }
 

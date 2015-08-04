@@ -1,13 +1,11 @@
 package com.bondwithme.BondWithMe.ui.start;
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.IntentCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -28,12 +26,10 @@ import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.MD5Util;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
-import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -158,6 +154,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
             @Override
             public void afterTextChanged(Editable s) {
                 etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         });
 
@@ -174,6 +171,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
             @Override
             public void afterTextChanged(Editable s) {
+                etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         });
@@ -340,12 +338,7 @@ public class LogInUsernameActivity extends BaseActivity implements View.OnClickL
 
     private void goMainActivity() {
 
-        Intent intent = new Intent(this, MainActivity.class);
-        ComponentName cn = intent.getComponent();
-        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-        App.changeLoginedUser(userEntity, tokenEntity);//可能会传入没有数据的???
-        PushApi.initPushApi(this);
-        startActivity(mainIntent);
+        App.userLoginSuccessed(LogInUsernameActivity.this, userEntity, tokenEntity);
     }
 
     public void goDetails()

@@ -1,5 +1,4 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,22 +12,70 @@
         android:layout_alignParentTop="true" />
 
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pdflayout"
+    <LinearLayout
+        android:id="@+id/pdflayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/fragment_main_top"
-        android:padding="5dp">
+        android:orientation="vertical"
+        android:padding="5dp"
+        tools:context=".MainActivity$PlaceholderFragment"
+        android:visibility="gone"
+        >
+
+
+        <uk.co.senab.photoview.PhotoView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:src="@drawable/network_image_default" />
+        <!--<ImageView-->
+        <!--android:id="@+id/image"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@android:color/white"-->
+        <!--android:scaleType="fitCenter" />-->
+
+        <!--<LinearLayout-->
+        <!--style="?android:attr/buttonBarStyle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:measureWithLargestChild="true"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<Button-->
+        <!--android:id="@+id/previous"-->
+        <!--style="?android:attr/buttonBarButtonStyle"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:text="上一页" />-->
+
+        <!--<Button-->
+        <!--android:id="@+id/next"-->
+        <!--style="?android:attr/buttonBarButtonStyle"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:text="下一页" />-->
+        <!--</LinearLayout>-->
+
+    </LinearLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pdflayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fragment_main_top"
+        android:padding="5dp"
+        android:visibility="gone"
+        >
 
     </RelativeLayout>
 
-    <!--<WebView-->
-        <!--android:layout_below="@id/fragment_main_top"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/webView"-->
-    <!--/>-->
-
+    <include layout="@layout/progress_layout"/>
 
 
 </RelativeLayout>

@@ -3,9 +3,9 @@ package com.bondwithme.BondWithMe.dao;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -19,7 +19,7 @@ import java.util.List;
  * Created by quankun on 15/6/26.
  */
 public class LocalStickerInfoDao {
-    private static Dao<LocalStickerInfo, String> stickerInfoDao;
+    private static Dao<LocalStickerInfo, Integer> stickerInfoDao;
     private static LocalStickerInfoDao stickerInfoDaoInstance;
     private Context mContext;
     private static final String STICKER_FILE_PATH_NAME = "Sticker";
@@ -48,12 +48,12 @@ public class LocalStickerInfoDao {
                 stickerInfoDaoInstance = new LocalStickerInfoDao(paramContext);
                 try {
                     stickerInfoDao = SQLiteHelperOrm.getHelper(paramContext).getDao(LocalStickerInfo.class);
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+
                 }
             }
-            LocalStickerInfoDao localExpertsListDBDao = stickerInfoDaoInstance;
-            return localExpertsListDBDao;
+            return stickerInfoDaoInstance;
         } finally {
         }
     }
@@ -63,9 +63,9 @@ public class LocalStickerInfoDao {
             return;
         }
         try {
-            stickerInfo.setLoginUserId(MainActivity.getUser().getUser_id());
+            stickerInfo.setLoginUserId(App.getLoginedUser().getUser_id());
             QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
-            queryBuilder.where().eq("loginUserId", LocalStickerInfo.LOGIN_USER_ID).and().eq("path", stickerInfo.getPath());
+            queryBuilder.where().eq("loginUserId", App.getLoginedUser().getUser_id()).and().eq("path", stickerInfo.getPath());
             List<LocalStickerInfo> localList = queryBuilder.query();
             if ((localList != null) && (localList.size() > 0)) {
                 stickerInfoDao.update(stickerInfo);
@@ -83,7 +83,7 @@ public class LocalStickerInfoDao {
         }
         try {
             QueryBuilder queryBuilder = stickerInfoDao.queryBuilder();
-            queryBuilder.where().eq("loginUserId", LocalStickerInfo.LOGIN_USER_ID).and().eq("path", path);
+            queryBuilder.where().eq("loginUserId", App.getLoginedUser().getUser_id()).and().eq("path", path);
             List<LocalStickerInfo> localList = queryBuilder.query();
             if ((localList != null) && (localList.size() > 0)) {
 //                stickerInfoDao.update(stickerInfo);
@@ -98,13 +98,10 @@ public class LocalStickerInfoDao {
     public List<String> queryAllSticker() {
         List<String> list = new ArrayList<>();
         try {
-
-
             List<LocalStickerInfo> localList = null;
             QueryBuilder qb = stickerInfoDao.queryBuilder();
-            qb.orderBy("order",false).where().eq("loginUserId", MainActivity.getUser().getUser_id());
+            qb.orderBy("order",false).where().eq("loginUserId", App.getLoginedUser().getUser_id());
             localList = qb.query();
-
             if (null != localList && localList.size() > 0) {
 //                list.add(DEF_FIRST_STICKER);
 //                list.add(DEF_SECOND_STICKER);

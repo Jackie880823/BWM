@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.GridView;
@@ -41,7 +42,6 @@ import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import android.widget.CheckBox;
 import com.material.widget.Dialog;
 
 import org.json.JSONException;
@@ -66,7 +66,7 @@ public class InviteMemberActivity extends BaseActivity {
     private boolean isMemberRefresh, isGroupRefresh;
     private List<FamilyMemberEntity> memberEntityList;
     private List<FamilyGroupEntity> groupEntityList;
-//    private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
+    //    private MySwipeRefreshLayout groupRefreshLayout, memberRefreshLayout;
 //    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0x11;
     private InviteMemberAdapter memberAdapter;
@@ -75,6 +75,7 @@ public class InviteMemberActivity extends BaseActivity {
     private List<String> selectGroupList;
     private int type;
     private int groupType;
+    private int selectNewData;
     private List<FamilyMemberEntity> selectMemberEntityList;
     private List<FamilyGroupEntity> selectGroupEntityList;
     private boolean isFirstData = true;
@@ -87,6 +88,18 @@ public class InviteMemberActivity extends BaseActivity {
     List<FamilyMemberEntity> memberList;
     List<FamilyGroupEntity> groupList;
     List<FamilyMemberEntity> searchmemberList = new LinkedList<>();
+
+
+    /**
+     * wing added
+     */
+    GridView userGridView;
+    TextView userNoDataView;
+    GridView groupGridView;
+    TextView groupNoDataView;
+    /**
+     * end
+     */
 
     Handler handler = new Handler() {
         @Override
@@ -108,17 +121,20 @@ public class InviteMemberActivity extends BaseActivity {
 
                                 }
                                 else {
-                                    if (isFirstData) {
+                                    if (isFirstData && selectNewData == 0) {
                                         selectMemberEntityList.add(memberEntity);
                                     }
                                 }
                             }
                             searchmemberList.addAll(memberList);
                             memberAdapter.addNewData(memberList);
-                        } else {
-                            for (FamilyMemberEntity memberEntity : memberEntityList) {
-                                if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
-                                    selectMemberEntityList.add(memberEntity);
+                        }
+                        else {
+                            if(selectNewData == 0){
+                                for (FamilyMemberEntity memberEntity : memberEntityList) {
+                                    if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
+                                        selectMemberEntityList.add(memberEntity);
+                                    }
                                 }
                             }
                             memberAdapter.addNewData(memberEntityList);
@@ -150,6 +166,24 @@ public class InviteMemberActivity extends BaseActivity {
                             groupAdapter.addData(groupEntityList);
                         }
                     }
+
+
+                    //wing added for no data
+                    if (memberNull) {
+                        userGridView.setVisibility(View.GONE);
+                        userNoDataView.setVisibility(View.VISIBLE);
+                    } else {
+                        userGridView.setVisibility(View.VISIBLE);
+                        userNoDataView.setVisibility(View.GONE);
+                    }
+
+                    if (groupNull) {
+                        groupGridView.setVisibility(View.GONE);
+                        groupNoDataView.setVisibility(View.VISIBLE);
+                    } else {
+                        groupGridView.setVisibility(View.VISIBLE);
+                        groupNoDataView.setVisibility(View.GONE);
+                    }
                     break;
             }
 
@@ -166,6 +200,7 @@ public class InviteMemberActivity extends BaseActivity {
         jumpIndex = intent.getIntExtra("jumpIndex", 0);
         type = intent.getIntExtra("type", 0);//传过来1表示要隐藏；0表示不隐藏
         groupType = intent.getIntExtra("groupType", -1);
+        selectNewData = intent.getIntExtra("selectNewData",0);//如果是1，回传的数据只包含新选
         if (groupType == -1) {
             groupType = type;
         }
@@ -180,6 +215,7 @@ public class InviteMemberActivity extends BaseActivity {
         selectGroupEntityList = new ArrayList<>();
         if (null != memberSelectList && memberSelectList.size() > 0) {
             for (FamilyMemberEntity userEntity : memberSelectList) {
+                //为什么把传过来的member添加进来？
                 selectMemberList.add(userEntity.getUser_id());
             }
         }
@@ -203,7 +239,7 @@ public class InviteMemberActivity extends BaseActivity {
 //        mProgressDialog.show();
 
         memberAdapter = new InviteMemberAdapter(mContext, memberEntityList, selectMemberList);
-        groupAdapter = new InviteGroupAdapter(mContext,groupEntityList, selectGroupList);
+        groupAdapter = new InviteGroupAdapter(mContext, groupEntityList, selectGroupList);
 
         //绑定自定义适配器
         pager.setAdapter(new FamilyPagerAdapter(initPagerView()));
@@ -266,14 +302,14 @@ public class InviteMemberActivity extends BaseActivity {
                     List<FamilyMemberEntity> memberList = new ArrayList<>();
 //                    familyMemberEntityList = searchMemberList(MemeberSearch, searchmemberList);
                     memberAdapter.setSerchList(searchmemberList);
-                    Filter filter =  memberAdapter.getFilter();
+                    Filter filter = memberAdapter.getFilter();
                     filter.filter(MemeberSearch);
 //                    familyMemberEntityList = searchMemberList(MemeberSearch, memberList);
                 } else {
 
 //                    familyMemberEntityList = searchMemberList(MemeberSearch, memberEntityList);
                     memberAdapter.setSerchList(memberEntityList);
-                    Filter filter =  memberAdapter.getFilter();
+                    Filter filter = memberAdapter.getFilter();
                     filter.filter(MemeberSearch);
                 }
             }
@@ -285,14 +321,14 @@ public class InviteMemberActivity extends BaseActivity {
                 groupAdapter.addData(familyGroupEntityList);
             } else {
 //                familyGroupEntityList = searchGroupList(etImport, groupEntityList);
-                Filter filter =  groupAdapter.getFilter();
+                Filter filter = groupAdapter.getFilter();
                 filter.filter(etImport);
             }
 
         }
     }
 
-    private void shoeGroupNoFriendDialog(final View arg1, final String groupId, final FamilyGroupEntity groupEntity){
+    private void shoeGroupNoFriendDialog(final View arg1, final String groupId, final FamilyGroupEntity groupEntity) {
         final LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_group_nofriend, null);
         final Dialog shoeGroupNoFriendDialog = new MyDialog(mContext, null, selectIntention);
@@ -305,9 +341,9 @@ public class InviteMemberActivity extends BaseActivity {
             public void onClick(View v) {
                 shoeGroupNoFriendDialog.dismiss();
                 CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
-                    selectItem.setChecked(true);
-                    groupAdapter.addSelectData(groupId);
-                    selectGroupEntityList.add(groupEntity);
+                selectItem.setChecked(true);
+                groupAdapter.addSelectData(groupId);
+                selectGroupEntityList.add(groupEntity);
             }
         });
         cancelCal.setOnClickListener(new View.OnClickListener() {
@@ -327,6 +363,7 @@ public class InviteMemberActivity extends BaseActivity {
 
 
     }
+
     private void showNoFriendDialog() {
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
@@ -343,10 +380,15 @@ public class InviteMemberActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
+
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
         View userView = LayoutInflater.from(mContext).inflate(R.layout.select_list_view_layout, null);
-        final GridView userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
+        /**wing modified for no data*/
+        userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
+        userNoDataView = (TextView) userView.findViewById(R.id.data_null);
+        userNoDataView.setText(R.string.no_member);
+        /**end*/
         final ImageButton userIb = (ImageButton) userView.findViewById(R.id.ib_top);
 //        memberRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
         userGridView.setAdapter(memberAdapter);
@@ -429,14 +471,18 @@ public class InviteMemberActivity extends BaseActivity {
 
         mLists.add(userView);
         View groupView = LayoutInflater.from(mContext).inflate(R.layout.select_list_view_layout, null);
-        final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
+        /**wing modified for no data*/
+        groupGridView = (GridView) groupView.findViewById(R.id.family_grid_view);
+        groupNoDataView = (TextView) groupView.findViewById(R.id.data_null);
+        groupNoDataView.setText(R.string.no_group);
+        /** end*/
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
 //        groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
-        groupListView.setAdapter(groupAdapter);
+        groupGridView.setAdapter(groupAdapter);
         groupIb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                groupListView.setSelection(0);
+                groupGridView.setSelection(0);
             }
         });
 //        groupRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -448,16 +494,16 @@ public class InviteMemberActivity extends BaseActivity {
 //            }
 //
 //        });
-        groupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        groupGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1,
                                     int arg2, long arg3) {
                 FamilyGroupEntity groupEntity = groupAdapter.getGroupList().get(arg2);
                 String groupId = groupEntity.getGroup_id();
                 //如果group里面有不是好友的成员
-                if("0".equals(groupEntity.getFriend_flag())){
+                if ("0".equals(groupEntity.getFriend_flag())) {
                     shoeGroupNoFriendDialog(arg1, groupId, groupEntity);
-                }else {
+                } else {
                     CheckBox selectItem = (CheckBox) arg1.findViewById(R.id.creategroup_image_right);
                     if (selectItem.isChecked()) {
                         selectItem.setChecked(false);
@@ -472,7 +518,7 @@ public class InviteMemberActivity extends BaseActivity {
 
             }
         });
-        groupListView.setOnTouchListener(new View.OnTouchListener() {
+        groupGridView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 InputMethodManager imm = (InputMethodManager) mContext.getSystemService(
@@ -483,10 +529,10 @@ public class InviteMemberActivity extends BaseActivity {
                 return false;
             }
         });
-        groupListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        groupGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (groupListView.getFirstVisiblePosition() == 0) {
+                if (groupGridView.getFirstVisiblePosition() == 0) {
                     groupIb.setVisibility(View.GONE);
 //                    groupRefreshLayout.setEnabled(true);
                 } else {
@@ -497,7 +543,7 @@ public class InviteMemberActivity extends BaseActivity {
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if (groupListView.getFirstVisiblePosition() == 0) {
+                if (groupGridView.getFirstVisiblePosition() == 0) {
                     groupIb.setVisibility(View.GONE);
 //                    groupRefreshLayout.setEnabled(true);
                 } else {
@@ -571,6 +617,9 @@ public class InviteMemberActivity extends BaseActivity {
         }
     }
 
+    private boolean memberNull;
+    private boolean groupNull;
+
     @Override
     public void requestData() {
         if (!NetworkUtil.isNetworkConnected(mContext)) {
@@ -579,64 +628,64 @@ public class InviteMemberActivity extends BaseActivity {
             return;
         }
 
-        new Thread() {
+        new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
             @Override
-            public void run() {
-                super.run();
-                new HttpTools(mContext).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null,Tag, new HttpCallback() {
-                    @Override
-                    public void onStart() {
-                    }
+            public void onStart() {
+            }
 
-                    @Override
-                    public void onFinish() {
-                    }
+            @Override
+            public void onFinish() {
+            }
 
-                    @Override
-                    public void onResult(String response) {
-                        Gson gson = new GsonBuilder().create();
-                        finishReFresh();
+            @Override
+            public void onResult(String response) {
+                Gson gson = new GsonBuilder().create();
 //                        if (mProgressDialog.isShowing()) {
 //                            mProgressDialog.dismiss();
 //                        }
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            List<FamilyMemberEntity> memberList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
-                            }.getType());
-                            List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
-                            }.getType());
-                            Map<String, List> map = new HashMap<>();
-                            if (memberList != null && memberList.size() > 0) {
-                                map.put("private", memberList);
-                            }
-                            if (groupList != null && groupList.size() > 0) {
-                                map.put("group", groupList);
-                            }
-                            Message.obtain(handler, GET_DATA, map).sendToTarget();
-                        } catch (JSONException e) {
-                            MessageUtil.showMessage(mContext, R.string.msg_action_failed);
-                            finishReFresh();
-                            e.printStackTrace();
-                        }
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    List<FamilyMemberEntity> memberList = gson.fromJson(jsonObject.getString("user"), new TypeToken<ArrayList<FamilyMemberEntity>>() {
+                    }.getType());
+                    List<FamilyGroupEntity> groupList = gson.fromJson(jsonObject.getString("group"), new TypeToken<ArrayList<FamilyGroupEntity>>() {
+                    }.getType());
+                    Map<String, List> map = new HashMap<>();
+                    if (memberList != null && memberList.size() > 0) {
+                        map.put("private", memberList);
+                        memberNull = false;
+                    } else {
+                        memberNull = true;
                     }
-
-                    @Override
-                    public void onError(Exception e) {
-                        MessageUtil.showMessage(mContext, R.string.msg_action_failed);
-                        finishReFresh();
+                    if (groupList != null && groupList.size() > 0) {
+                        map.put("group", groupList);
+                        groupNull = false;
+                    } else {
+                        groupNull = true;
                     }
-
-                    @Override
-                    public void onCancelled() {
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
+                    Message.obtain(handler, GET_DATA, map).sendToTarget();
+                } catch (JSONException e) {
+                    MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                    e.printStackTrace();
+                }finally {
+                    finishReFresh();
+                }
             }
-        }.start();
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(mContext, R.string.msg_action_failed);
+                finishReFresh();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
 
     }
 

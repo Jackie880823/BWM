@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -9,9 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -140,13 +145,18 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ((InputMethodManager) searchText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(
+                                getActivity().getCurrentFocus().getWindowToken(),
+                                InputMethodManager.HIDE_NOT_ALWAYS);
                 isRefresh = true;
                 vProgress.setVisibility(View.VISIBLE);
+                searchData.clear();
                 searchData(searchText.getText().toString().trim());
             }
         });
 
-        searchText.addTextChangedListener(new TextWatcher(){
+        searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -160,24 +170,43 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
             @Override
             public void afterTextChanged(Editable s) {
                 String etImport = searchText.getText().toString().trim();
-                if (TextUtils.isEmpty(etImport)){
+                if (TextUtils.isEmpty(etImport)) {
                     isEtImport = true;
                     rvList.setAdapter(adapter);
 //                    adapter.setDefaultData();
-                }else {
+                } else {
                     isEtImport = false;
                 }
             }
         });
+        searchText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+//        searchText.setInputType(EditorInfo.TYPE_CLASS_TEXT);
+        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH || (event!=null&&event.getKeyCode()== KeyEvent.KEYCODE_ENTER)){
+                    ((InputMethodManager) searchText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(
+                                    getActivity().getCurrentFocus().getWindowToken(),
+                                    InputMethodManager.HIDE_NOT_ALWAYS);
+//                    Log.i("onEditorAction====","onEditorAction");
+                    isRefresh = true;
+                    vProgress.setVisibility(View.VISIBLE);
+                    searchData.clear();
+                    searchData(searchText.getText().toString().trim());
+                }
+                return false;
+            }
+        } );
     }
 
     private void initSearchAdapter(){
-        searchAdapter = new ArchiveChatAdapter(getParentActivity(),searchData);
+        searchAdapter = new ArchiveChatAdapter(getParentActivity(),searchData,Tap);
         searchAdapter.setPicClickListener(this);
         rvList.setAdapter(searchAdapter);
     }
     private void initAdapter(){
-        adapter = new ArchiveChatAdapter(getParentActivity(),data);
+        adapter = new ArchiveChatAdapter(getParentActivity(),data,Tap);
         adapter.setPicClickListener(this);
         rvList.setAdapter(adapter);
     }
@@ -187,7 +216,8 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         params.put("start",startIndex + "");
         params.put("limit",offset + "");
         params.put("group_id",group_id);
-        params.put("view_user",MainActivity.getUser().getUser_id());
+        params.put("view_user", MainActivity.getUser().getUser_id());
+//        Log.i("group_id","");
         params.put("search_key","");
         String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
 
@@ -261,6 +291,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
     }
 
     private void searchData(String searchText){
+//        Log.i("searchText====",searchText+"");
         Map<String,String> params = new HashMap<>();
         params.put("start",startIndex + "");
         params.put("limit",offset + "");
@@ -282,6 +313,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
 
             @Override
             public void onResult(String response) {
+//                Log.i("response====",response+"");
                 GsonBuilder gsonb = new GsonBuilder();
                 //Json中的日期表达方式没有办法直接转换成我们的Date类型, 因此需要单独注册一个Date的反序列化类.
                 //DateDeserializer ds = new DateDeserializer();
@@ -348,6 +380,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
 
     @Override
     public void showOriginalPic(String content_id) {
+        Log.i("content_id====2", content_id + " ");
         Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
         Map<String, String> condition = new HashMap<>();
         condition.put("content_id", content_id);

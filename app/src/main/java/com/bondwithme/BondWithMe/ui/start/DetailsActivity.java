@@ -1,8 +1,6 @@
 package com.bondwithme.BondWithMe.ui.start;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -11,10 +9,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.IntentCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -22,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -33,27 +30,24 @@ import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.PersonalPictureActivity;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
-import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.widget.CircularImageView;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.material.widget.Dialog;
 import com.material.widget.PaperButton;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
+import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DetailsActivity extends BaseActivity implements View.OnClickListener{
@@ -108,12 +102,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
             switch (msg.what)
             {
                 case HANDLER_COMPLETE_PROFILE_SUCCESS:
-                    Intent intent = new Intent(DetailsActivity.this, MainActivity.class);
-                    ComponentName cn = intent.getComponent();
-                    Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-                    App.changeLoginedUser(userEntity, tokenEntity);//可能会传入没有数据的???
-                    PushApi.initPushApi(DetailsActivity.this);
-                    startActivity(mainIntent);
+                    App.userLoginSuccessed(DetailsActivity.this,userEntity, tokenEntity);
                     break;
 
                 case ERROR:
@@ -363,77 +352,13 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         if (uri == null || uri.getPath() == null) {
             return;
         }
-
-        //TODO换为view 的宽度
-        int width = civPic.getWidth();
-        int height = civPic.getHeight();
-
-        /**
-         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
-         */
-        int degree = LocalImageLoader.readPictureDegree(uri.getPath());
-
-
-
-        if (degree != 0) {
-            /**
-             * 把图片旋转为正的方向
-             */
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            Bitmap bitmap = BitmapFactory.decodeStream(
-                    new FileInputStream(uri.getPath()), null, options);
-            options.inSampleSize = 4;
-            options.outWidth = width;
-            options.outHeight = height;
-            options.inJustDecodeBounds = false;
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            bitmap = BitmapFactory.decodeStream(
-                    new FileInputStream(uri.getPath()), null, options);
-            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
-            byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
-            File file = new File(uri.getPath());
-            file.delete();
-            FileOutputStream fos = new FileOutputStream(uri.getPath());
-            fos.write(newBytes);
-            fos.flush();
-            fos.close();
-            bitmap.recycle();
-            bitmap = null;
-        }
-
-
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        List<ResolveInfo> list = DetailsActivity.this.getPackageManager().queryIntentActivities(intent, 0);
-        int size = list.size();
-        if (size == 0) {
-            Toast.makeText(DetailsActivity.this, getResources().getString(R.string.text_no_found_reduce), Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-            intent.putExtra("crop", "true");
-            // aspectX aspectY 是宽高的比例
-            intent.putExtra("aspectX", 1);
-            intent.putExtra("aspectY", 1);
-            // outputX outputY 是裁剪图片宽高
-            intent.putExtra("outputX", width);
-            intent.putExtra("outputY", height);
-            // //防止毛边
-            // intent.putExtra("scale", true);//黑边
-            // intent.putExtra("scaleUpIfNeeded", true);//黑边
-            intent.putExtra("return-data", false);
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-            intent.putExtra("noFaceDetection", true);
-            //		if(fromPhoto){
-            File f = PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this, CACHE_PIC_NAME);
-            mCropImagedUri = Uri.fromFile(f);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
-            //		}else{
-            //			mCropImagedUri = uri;
-            //		}
-            startActivityForResult(intent, REQUEST_HEAD_FINAL);
-        }
+        Log.i(TAG, "startPhotoZoom& uri: " + uri);
+        String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
+        Uri source = Uri.fromFile(new File(path));
+        File f = PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this, CACHE_PIC_NAME);
+        mCropImagedUri = Uri.fromFile(f);
+        Log.i(TAG, "startPhotoZoom& cropImageUri: " + mCropImagedUri);
+        Crop.of(source, mCropImagedUri).asSquare().start(this, REQUEST_HEAD_FINAL);
     }
 
     /**
@@ -472,6 +397,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                 case REQUEST_HEAD_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this,
                             CACHE_PIC_NAME_TEMP));
+                    uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
                     if (new File(uri.getPath()).exists()) {
                         try {
                             startPhotoZoom(uri, false);
@@ -607,7 +533,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
             }
             else
             {
-                rlRB.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                rlRB.setBackgroundColor(getResources().getColor(R.color.default_text_color_while));
             }
         }
     }

@@ -9,6 +9,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -197,6 +198,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     private ImageView emptyGroupMessageIv;
     private TextView emptyGroupMessageTv;
     private String TAG;
+    private static final int DEF_DATA_NUM = 20;
 
     @Override
     public void onStart() {
@@ -273,8 +275,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     userIb.setVisibility(View.VISIBLE);
                     userRefreshLayout.setEnabled(false);
                 }
-                if (privateAdapter.getCount() > 0 && (userListView.getFirstVisiblePosition() != 0)
-                        && (userListView.getLastVisiblePosition() > (privateAdapter.getCount() - 5)) && !isPullData) {
+                int adapterCount = privateAdapter.getCount();
+                if (adapterCount == DEF_DATA_NUM * startIndex && userListView.getFirstVisiblePosition() < (adapterCount - 5)
+                        && (userListView.getLastVisiblePosition() > (adapterCount - 5)) && !isPullData) {
                     getData(startIndex);
                     isPullData = true;
                 }
@@ -345,8 +348,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     groupIb.setVisibility(View.VISIBLE);
                     groupRefreshLayout.setEnabled(false);
                 }
-                if (messageGroupAdapter.getCount() > 0 && (groupListView.getFirstVisiblePosition() != 0)
-                        && (groupListView.getLastVisiblePosition() > (messageGroupAdapter.getCount() - 5)) && !isPullDataGroup) {
+                int adapterCount = messageGroupAdapter.getCount();
+                if (adapterCount == DEF_DATA_NUM * startIndexGroup && groupListView.getFirstVisiblePosition() < (adapterCount - 5)
+                        && (groupListView.getLastVisiblePosition() > (adapterCount - 5)) && !isPullDataGroup) {
                     getDataGroup(startIndexGroup);
                     isPullDataGroup = true;
                 }
@@ -370,10 +374,11 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         }
         final RequestInfo requestInfo = new RequestInfo();
         HashMap<String, String> params = new HashMap<>();
-        params.put("limit", "20");
-        int start = beginIndex * 20;
+        params.put("limit", DEF_DATA_NUM + "");
+        int start = beginIndex * DEF_DATA_NUM;
         params.put("start", start + "");
         requestInfo.params = params;
+        Log.i(TAG, beginIndex + "");
         requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "member");
         new Thread() {
             @Override
@@ -389,6 +394,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                         if (vProgress != null) {
                             vProgress.setVisibility(View.GONE);
                         }
+                        isPullData = false;
                     }
 
                     @Override
@@ -400,9 +406,6 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                         if (TextUtils.isEmpty(response) || "{}".equals(response)) {
                             showMemberEmptyView();
                         }
-                        if (TextUtils.isEmpty(response) || "{}".equals(response)) {
-                            showMemberEmptyView();
-                        }
                         Gson gson = new GsonBuilder().create();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
@@ -410,8 +413,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             }.getType());
                             String totalUnread = jsonObject.optString("totalUnread", "0");//私聊的消息总共有多少未读
                             if (isPullData) {
-                                startIndex++;
-                                isPullData = false;
+                                if (userList != null && userList.size() == DEF_DATA_NUM) {
+                                    startIndex++;
+                                }
                                 Message.obtain(handler, GET_PULL_DATA, userList).sendToTarget();
                             } else {
                                 if (null == userList || userList.size() == 0) {
@@ -496,8 +500,8 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             groupRefreshLayout.setVisibility(View.GONE);
         }
         emptyGroupMessageLinear.setVisibility(View.VISIBLE);
-        emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
-        emptyGroupMessageTv.setText("");
+        emptyGroupMessageIv.setImageResource(R.drawable.group_msg_empty);
+        emptyGroupMessageTv.setText(mContext.getString(R.string.text_msg_start_bonding));
     }
 
     private void hideGroupEmptyView() {
@@ -516,8 +520,8 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 
         final RequestInfo requestInfo = new RequestInfo();
         HashMap<String, String> params = new HashMap<>();
-        params.put("limit", "20");
-        int start = beginIndex * 20;
+        params.put("limit", DEF_DATA_NUM + "");
+        int start = beginIndex * DEF_DATA_NUM;
         params.put("start", start + "");
         requestInfo.params = params;
         requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "group");
@@ -532,6 +536,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 
                     @Override
                     public void onFinish() {
+                        isPullDataGroup = false;
                     }
 
                     @Override
@@ -544,8 +549,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                             }.getType());
 
                             if (isPullDataGroup) {
-                                startIndexGroup++;
-                                isPullDataGroup = false;
+                                if (groupList != null && groupList.size() == DEF_DATA_NUM) {
+                                    startIndexGroup++;
+                                }
                                 Message.obtain(handler, GET_PULL_DATA_GROUP, groupList).sendToTarget();
                             } else {
                                 if (null == groupList || groupList.size() == 0) {
@@ -598,7 +604,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         }
         emptyMemberMessageLinear.setVisibility(View.VISIBLE);
         emptyMemberMessageIv.setImageResource(R.drawable.message_member_empty);
-        emptyMemberMessageTv.setText("");
+        emptyMemberMessageTv.setText(mContext.getString(R.string.text_msg_start_bonding));
     }
 
     private void hideMemberEmptyView() {

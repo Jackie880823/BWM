@@ -32,7 +32,6 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.LogInStateListener;
 import com.bondwithme.BondWithMe.ui.CountryCodeActivity;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.CountryCodeUtil;
 import com.bondwithme.BondWithMe.util.LoginManager;
@@ -40,7 +39,6 @@ import com.bondwithme.BondWithMe.util.MD5Util;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
-import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -243,6 +241,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
             @Override
             public void afterTextChanged(Editable s) {
                 etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
+                etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         });
 
@@ -259,6 +258,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void afterTextChanged(Editable s) {
+                etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
             }
         });
@@ -426,13 +426,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     public void goMainActivity()
     {
-        Intent intent = new Intent(getActivity(), MainActivity.class);
-        App.changeLoginedUser(userEntity, tokenEntity);
-        startActivity(intent);
-        //TODO
-        //要改。为什么在这边初始化？
-        PushApi.initPushApi(getActivity());
-        getActivity().finish();
+        App.userLoginSuccessed(getActivity(),userEntity, tokenEntity);
     }
 
     public void goDetails()

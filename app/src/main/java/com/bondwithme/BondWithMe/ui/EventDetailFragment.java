@@ -34,6 +34,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.EventCommentAdapter;
 import com.bondwithme.BondWithMe.entity.EventCommentEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
+import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
@@ -355,16 +356,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             option_status.setVisibility(View.VISIBLE);
 
                         }
-                        if("2".equals(event.getGroup_event_status())) {
+
+                        if(event_options.getVisibility() == View.VISIBLE) {
                             event_options.setVisibility(View.GONE);
+                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
                         } else {
-                            if(event_options.getVisibility() == View.VISIBLE) {
-                                event_options.setVisibility(View.GONE);
-                                getParentActivity().title_icon.setImageResource(R.drawable.arrow_down);
-                            } else {
-                                event_options.setVisibility(View.VISIBLE);
-                                getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
-                            }
+                            event_options.setVisibility(View.VISIBLE);
+                            getParentActivity().title_icon.setImageResource(R.drawable.arrow_up);
                         }
 
                     } else if(R.id.ib_top_button_right == v.getId()) {
@@ -416,6 +414,23 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             public void doDelete(String commentId) {
                 removeComment(commentId);
             }
+
+            @Override
+            public void showOriginalPic(String User_id,String File_id) {
+                Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
+                ArrayList<PhotoEntity> datas = new ArrayList();
+                PhotoEntity peData = new PhotoEntity();
+                peData.setUser_id(User_id);
+                peData.setFile_id(File_id);
+                peData.setPhoto_caption(Constant.Module_Original);
+                peData.setPhoto_multipe("false");
+                datas.add(peData);
+                intent.putExtra("is_data", true);
+                intent.putExtra("datas", datas);
+                startActivity(intent);
+            }
+
+
         });
         rvList.setAdapter(adapter);
         RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
@@ -482,7 +497,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             not_going_count.setText(event.getTotal_no());
 
             ResponseStatus[] statuses = ResponseStatus.values();
-
             for(ResponseStatus status : statuses) {
                 if(status.getServerCode().equals(event.getGroup_member_response())) {
                     currentStatus = status;
@@ -1011,7 +1025,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     }
 
     enum ResponseStatus {
-        //0-no reponse, 1-going, 2-not going, 3-maybe
         not_re("0"), go("1"), maybe("3"), not_go("2");
 
         private String mServerCode;

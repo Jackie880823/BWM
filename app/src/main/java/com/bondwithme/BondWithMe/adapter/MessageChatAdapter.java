@@ -9,6 +9,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,7 +39,7 @@ import com.bondwithme.BondWithMe.util.MslToast;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
-import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
+import com.bondwithme.BondWithMe.widget.MessageTextView;
 import com.material.widget.CircularProgress;
 
 import org.json.JSONException;
@@ -47,6 +48,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -67,6 +69,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     private Context context;
     private RecyclerView recyclerView;
     private MessageChatActivity messageChatActivity;
+    private LinearLayoutManager llm;
+    private boolean isGroupChat;
     private static final int FROM_ME_TYPE_TEXT = 1;
     private static final int FROM_ME_TYPE_PIC = 2;
     private static final int FROM_ME_TYPE_LOC = 3;
@@ -79,11 +83,13 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     private static final int FROM_OTHER_TYPE_GIF = 9;
     private static final int FROM_OTHER_TYPE_PNG = 10;
 
-    public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView, MessageChatActivity messageChatActivity) {
+    public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView, MessageChatActivity messageChatActivity, LinearLayoutManager llm, boolean isGroupChat) {
         this.context = context;
         this.myList = myList;
         this.recyclerView = recyclerView;
         this.messageChatActivity = messageChatActivity;
+        this.llm = llm;
+        this.isGroupChat = isGroupChat;
     }
 
     public void addHistoryData(List<MsgEntity> list) {
@@ -103,6 +109,17 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         myList.addAll(0, list);
         notifyDataSetChanged();
         recyclerView.scrollToPosition(getItemCount() - 1);
+    }
+
+    public void addTimerData(List<MsgEntity> list) {
+        int scrollPosition = 0;
+        if (myList != null && myList.size() > 0) {
+            scrollPosition = llm.findLastVisibleItemPosition();
+            myList.clear();
+        }
+        myList.addAll(list);
+        notifyDataSetChanged();
+        recyclerView.scrollToPosition(scrollPosition);
     }
 
     public void addSendData(List<MsgEntity> list) {
@@ -207,7 +224,12 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         //网络获取头像图片
         VolleyUtil.initNetworkImageView(context, holder.iconImage, iconUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
         if (!isSendMe) {
-            holder.leftName.setText(msgEntity.getUser_given_name());
+            if (isGroupChat) {
+                holder.leftName.setVisibility(View.VISIBLE);
+                holder.leftName.setText(msgEntity.getUser_given_name());
+            } else {
+                holder.leftName.setVisibility(View.GONE);
+            }
         }
         if (null != msgEntity.getText_id()) {//文字
             holder.messageText.setText(msgEntity.getText_description());
@@ -221,8 +243,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                 stickerGroupPath = stickerGroupPath.replace("/", "");
             }
+            String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.gif";
             try {
-                String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.gif";
                 //GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
                 Log.i("stickerPath", gifFilePath);
                 GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
@@ -235,11 +257,11 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     //                    }
                 } else {
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, msgEntity.getSticker_type());
-                    downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
+                    downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default, gifFilePath);
                 }
             } catch (Exception e) {
                 String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, msgEntity.getSticker_type());
-                downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
+                downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default, gifFilePath);
                 LogUtil.e("", "插入sticker info", e);
             }
         } else if (Constant.Sticker_Png.equals(msgEntity.getSticker_type())) {//Png
@@ -258,9 +280,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
                 }
+                String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.png";
                 try {
                     //拼接大图路径
-                    String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.png";
                     //InputStream is = context.getAssets().open(pngFileName);//得到数据流
                     Log.i("stickerPath", pngFileName);
                     InputStream is = new FileInputStream(new File(pngFileName));//得到数据流
@@ -269,13 +291,13 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                         holder.pngImageView.setImageBitmap(bitmap);//显示图片
                     } else {
                         String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-                        downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+                        downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default, pngFileName);
                     }
                 } catch (Exception e) {
                     //本地没有png的时候，从服务器下载
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
                     Log.i("stickerUrl", stickerUrl);
-                    downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+                    downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default, pngFileName);
                     LogUtil.e("", "插入sticker info", e);
                 }
             }
@@ -291,7 +313,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
      * @param urlPath
      * @return
      */
-    private static byte[] getImageByte(String urlPath) {
+    private byte[] getImageByte(String urlPath, String filePath) {
         InputStream in = null;
         byte[] result = null;
         try {
@@ -316,7 +338,28 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 }
             }
         }
+
+        if (null != result && result.length > 0) {
+            writeFile(filePath, result);
+        }
         return result;
+    }
+
+    public void writeFile(String fileName, byte[] bytes) {
+        try {
+            if (fileName.indexOf(File.separator) >= 0) {
+                String path = fileName.substring(0, fileName.lastIndexOf(File.separator));
+                File file = new File(path);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+            }
+            FileOutputStream fos = new FileOutputStream(new File(fileName), true);
+            fos.write(bytes);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -346,11 +389,11 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
      * @param path
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void downloadAsyncTask(final CircularProgress progressBar, final GifImageView gifImageView, final String path, final int defaultResource) {
+    public void downloadAsyncTask(final CircularProgress progressBar, final GifImageView gifImageView, final String path, final int defaultResource, final String filePath) {
         AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
             @Override
             protected byte[] doInBackground(Object... params) {
-                return getImageByte(path);
+                return getImageByte(path, filePath);
             }
 
             @Override
@@ -390,12 +433,12 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
     }
 
-    public void downloadPngAsyncTask(final CircularProgress progressBar, final ImageView imageView, final String path, final int defaultResource) {
+    public void downloadPngAsyncTask(final CircularProgress progressBar, final ImageView imageView, final String path, final int defaultResource, final String filePath) {
         AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
 
             @Override
             protected byte[] doInBackground(Object... params) {
-                return getImageByte(path);
+                return getImageByte(path, filePath);
             }
 
             @Override
@@ -444,7 +487,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     class VHItem extends RecyclerView.ViewHolder implements View.OnClickListener {
         //接收
         CircularNetworkImage iconImage;
-        FreedomSelectionTextView messageText;
+        MessageTextView messageText;
         NetworkImageView networkImageView;
         GifImageView gifImageView;
         TextView dateTime;
@@ -455,7 +498,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         public VHItem(View itemView) {
             super(itemView);
             iconImage = (CircularNetworkImage) itemView.findViewById(R.id.message_icon_image);
-            messageText = (FreedomSelectionTextView) itemView.findViewById(R.id.message_item_content_tv);
+            messageText = (MessageTextView) itemView.findViewById(R.id.message_item_content_tv);
             networkImageView = (NetworkImageView) itemView.findViewById(R.id.message_pic_iv);
             gifImageView = (GifImageView) itemView.findViewById(R.id.message_pic_gif_iv);
             dateTime = (TextView) itemView.findViewById(R.id.date_time_tv);
@@ -500,6 +543,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                                     if ("1".equals(memberFlag)) {
                                         Intent intent = new Intent(context, FamilyProfileActivity.class);
                                         intent.putExtra("member_id", msgEntity.getUser_id());
+                                        intent.putExtra("groupId", msgEntity.getUser_id());
+                                        intent.putExtra("groupName", msgEntity.getUser_given_name());
                                         context.startActivity(intent);
                                     } else {
                                         MslToast.getInstance(context).showShortToast(context.getString(R.string.text_show_message_is_friend));

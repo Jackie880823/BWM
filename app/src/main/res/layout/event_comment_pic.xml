@@ -53,8 +53,8 @@
                 android:visibility="gone"/>
             <com.android.volley.toolbox.NetworkImageView
                 android:id="@+id/message_pic_iv"
-                android:layout_width="@dimen/_150dp"
-                android:layout_height="@dimen/_150dp"
+                android:layout_width="@dimen/_80dp"
+                android:layout_height="@dimen/_80dp"
                 android:paddingTop="@dimen/default_view_margin"
                 android:scaleType="fitXY"
                 android:visibility="gone"/>
@@ -63,7 +63,8 @@
                 android:layout_width="@dimen/_32dp"
                 android:layout_height="@dimen/_32dp"
                 android:layout_centerInParent="true"
-                android:background="#1E88E5" />
+                android:paddingTop="@dimen/default_view_margin"
+                android:layout_gravity="center_vertical"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -92,13 +93,22 @@
                     android:layout_toLeftOf="@+id/tv_like_desc"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:id="@+id/iv_agree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/default_view_margin"
-                    android:layout_toLeftOf="@+id/tv_agree_count"
-                    android:background="@null" />
+                <RelativeLayout
+                    android:id="@+id/agree_touch"
+                    android:layout_width="@dimen/_50dp"
+                    android:layout_height="@dimen/_30dp"
+                    android:layout_alignParentBottom="true"
+                    android:paddingBottom="@dimen/_3dp"
+                    android:layout_toLeftOf="@+id/tv_like_desc">
+                    <ImageButton
+                        android:id="@+id/iv_agree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/_25dp"
+                        android:background="@null" />
+                </RelativeLayout>
 
 
             </RelativeLayout>

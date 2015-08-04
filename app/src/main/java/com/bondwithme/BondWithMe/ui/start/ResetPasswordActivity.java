@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -24,6 +25,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.util.MD5Util;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.material.widget.PaperButton;
 
 import org.json.JSONException;
@@ -58,6 +60,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
                     break;
 
                 case FAIL_UPDATA:
+                    MessageUtil.showMessage(ResetPasswordActivity.this, getString(R.string.text_start_no_changes_found));
                     break;
             }
         }
@@ -96,7 +99,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
 
     @Override
     protected void setTitle() {
-
+        tvTitle.setText(getResources().getString(R.string.text_reset_password));
     }
 
     @Override
@@ -227,7 +230,7 @@ public class ResetPasswordActivity extends BaseActivity implements View.OnClickL
 
                 @Override
                 public void onResult(String response) {
-
+                    Log.d("","rrrrrr----" + response);
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (Constant.SUCCESS.equals(jsonObject.getString("response_status")))

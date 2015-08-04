@@ -3,7 +3,9 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -20,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
@@ -32,11 +36,15 @@ import com.bondwithme.BondWithMe.widget.NoScrollGridView;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 public class StickerMainFragment extends BaseFragment<MainActivity> {
     private Context mContext;
@@ -106,7 +114,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                     List<String> list = new ArrayList<>();
                     for (File file1 : files) {
                         String filePath = file1.getAbsolutePath();
-                        if ((filePath.substring(0,filePath.lastIndexOf("."))).endsWith("S")) {
+                        if ((filePath.substring(0, filePath.lastIndexOf("."))).endsWith("S")) {
                             list.add(filePath);
                         }
                     }
@@ -134,6 +142,17 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
             }
         });
         myThread.start();
+        viewPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (popupWindow != null && popupWindow.isShowing()) {
+                        popupWindow.dismiss();
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     Handler handler = new Handler() {
@@ -294,12 +313,92 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                             }
                         }
                     });
+
+                    gv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            String fileName = (String) gridViewAdapter.getItem(position);
+                            showPopuWindow(fileName, view);
+                            return true;
+                        }
+                    });
+                    gv.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            if (event.getAction() == MotionEvent.ACTION_UP) {
+                                if (popupWindow != null && popupWindow.isShowing()) {
+                                    popupWindow.dismiss();
+                                }
+                            }
+                            return false;
+                        }
+                    });
+//                    gv.setOnScrollListener(new AbsListView.OnScrollListener() {
+//                        @Override
+//                        public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+//                                if (popupWindow != null && popupWindow.isShowing()) {
+//                                    popupWindow.dismiss();
+//                                }
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//
+//                        }
+//                    });
                     mLists.add(gv);
                 }
             }
         }
 
         return mLists;
+    }
+
+    PopupWindow popupWindow;
+
+    private void showPopuWindow(String filePath, View view) {
+        View popView = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.popupwindow_sticker_imageview, null);
+        popupWindow = new PopupWindow(popView, AbsListView.LayoutParams.WRAP_CONTENT, AbsListView.LayoutParams.WRAP_CONTENT);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(0));
+        ImageView iv = (ImageView) popView.findViewById(R.id.sticker_imageView);
+        GifImageView gif_iv = (GifImageView) popView.findViewById(R.id.gif_iv);
+        try {
+            File file = new File(filePath);
+            if (filePath.endsWith("gif")) {
+                gif_iv.setVisibility(View.VISIBLE);
+                iv.setVisibility(View.GONE);
+                GifDrawable gifDrawable = new GifDrawable(file);
+                if (gifDrawable != null) {
+                    gif_iv.setImageDrawable(gifDrawable);
+                }
+            } else {
+                iv.setVisibility(View.VISIBLE);
+                gif_iv.setVisibility(View.GONE);
+                try {
+                    InputStream is = new FileInputStream(file);
+                    if (is != null) {//如果有图片直接显示，否则网络下载
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);//将流转化成Bitmap对象
+                        iv.setImageBitmap(bitmap);//显示图片
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        int[] arrayOfInt = new int[2];
+        //获取点击按钮的坐标
+        view.getLocationOnScreen(arrayOfInt);
+        int x = arrayOfInt[0];
+        int y = arrayOfInt[1];
+        popView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int popupWidth = popView.getMeasuredWidth();
+        int popupHeight = popView.getMeasuredHeight();
+        popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, (x + view.getWidth() / 2) - popupWidth / 2,
+                y - popupHeight);
     }
 
     public StickerViewClickListener mViewClickListener;

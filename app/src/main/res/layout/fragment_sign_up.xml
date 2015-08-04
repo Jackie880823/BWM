@@ -96,24 +96,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/br_sign_up"
+            android:weightSum="7"
             android:gravity="center">
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"></View>
                 <TextView
                     style="@style/tv_start_light_small"
                     android:id="@+id/tv_terms"
-                    android:layout_weight="2"
                     android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:maxLines="2"
-                    android:textSize="@dimen/text_small_size"
                     />
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"></View>
         </LinearLayout>
 
         <LinearLayout
@@ -128,17 +120,49 @@
                     android:text="@string/text_start_or_register_with"
                     />
 
-                <ImageView
-                    android:id="@+id/iv_username"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/sign_in_username"
-                    />
+                    android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageView
+                                android:id="@+id/iv_username"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:src="@drawable/sign_in_username"
+                                />
 
-                <TextView
-                    style="@style/tv_start_light_small"
-                    android:text="@string/text_start_username"
-                    />
+                            <TextView
+                                style="@style/tv_start_light_small"
+                                android:text="@string/text_start_username" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="@dimen/default_view_margin"
+                            android:gravity="center">
+                            <ImageView
+                                android:id="@+id/iv_facebook"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:src="@drawable/facebook" />
+
+                            <TextView
+                                style="@style/tv_start_light_small"
+                                android:text="@string/text_start_facebook" />
+
+                        </LinearLayout>
+
+                </LinearLayout>
+
         </LinearLayout>
 
         <include layout="@layout/progress_layout"/>

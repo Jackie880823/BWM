@@ -14,15 +14,15 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MemberPathEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +44,7 @@ public class PathRelationshipActivity extends BaseActivity {
     List<String> data_Zh = new ArrayList<String>();
     List<String> data_Us = new ArrayList<String>();
     private int selectMemeber;
+    private int RESULT = 0;
 
     LinearLayout llRelationship;
 
@@ -91,7 +92,13 @@ public class PathRelationshipActivity extends BaseActivity {
 
     @Override
     public void finish() {
-        setResult(RESULT_OK);
+        Intent intent = new Intent();
+        if (isZh) {
+            intent.putExtra("relationship", data_Us.get(data_Zh.indexOf(tvRelationship.getText().toString())));
+        } else {
+            intent.putExtra("relationship", tvRelationship.getText().toString());
+        }
+        setResult(RESULT, intent);
         super.finish();
     }
 
@@ -105,14 +112,13 @@ public class PathRelationshipActivity extends BaseActivity {
         getDataEn();
         if (Locale.getDefault().toString().equals("zh_CN")) {
             isZh = true;
-//            data_Us = Arrays.asList(relationships);
             getDataZh();
-
         }
         memberId = getIntent().getStringExtra("member_id");
         relationship = getIntent().getStringExtra("relationship");
         fam_nickname = getIntent().getStringExtra("fam_nickname");
         member_status = getIntent().getStringExtra("member_status");
+
 
         if (TextUtils.isEmpty(memberId) && TextUtils.isEmpty(relationship)) {
             finish();
@@ -123,6 +129,13 @@ public class PathRelationshipActivity extends BaseActivity {
         tvRelationship = getViewById(R.id.tv_relationship);//头部右边显示的关系
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_name);//放名字还是放Me????
+
+//        tvRelationship.setText(relationship);
+        if (isZh) {
+            tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));
+        } else {
+            tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", -1)));
+        }
 
         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
@@ -200,11 +213,9 @@ public class PathRelationshipActivity extends BaseActivity {
                             int position = data_Us.indexOf(relationship4En);
                             if (position != -1) {
                                 tvRelationships[i].setText(data_Zh.get(position));
-                                tvRelationship.setText(tvRelationships[0].getText());
                             }
                         } else {
                             tvRelationships[i].setText(relationship4En);
-                            tvRelationship.setText(tvRelationships[0].getText());
                         }
                         /**wing modify end*/
                         tvNames[i].setText(pathList.get(i).getMember_fullname());
@@ -244,10 +255,14 @@ public class PathRelationshipActivity extends BaseActivity {
         switch (requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
-                    //获取选择关系界面传来的关系
-                    tvRelationship.setText(data.getStringExtra("relationship"));
+                    //获取选择关系界面传来的关系 根据index。
                     selectMemeber = data.getExtras().getInt("selectMemeber");
-//                    setResult(RESULT_OK);
+                    RESULT = RESULT_OK;
+                    if (isZh) {
+                        tvRelationship.setText(data_Zh.get(selectMemeber));
+                    } else {
+                        tvRelationship.setText(data_Us.get(selectMemeber));
+                    }
                     updateRelationship();
                 }
         }

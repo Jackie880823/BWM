@@ -24,7 +24,7 @@
             />
         <TextView
             android:id="@+id/tv_remove"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/_70dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"

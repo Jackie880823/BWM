@@ -1,8 +1,10 @@
 package com.bondwithme.BondWithMe.ui;
 
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -34,6 +36,7 @@ import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
+import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.CustomLengthFilter;
 import com.bondwithme.BondWithMe.util.FileUtil;
@@ -121,6 +124,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public final static int SEND_PIC_MESSAGE = 0X104;
     public final static int GET_HISTORY_MESSAGE = 0X105;
     public final static int GET_SEND_OVER_MESSAGE = 0X106;
+    public final static int GET_TIMER_MESSAGE = 0X107;
     public int INITIAL_LIMIT = 10;
 
     public MessageAction messageAction;
@@ -130,6 +134,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private Timer mTimer;
 
     private int isNewGroup;
+    private ModifyStickerReceiver stickerReceiver;
+    private boolean isGroupChat;
 
     Handler handler = new Handler() {
         @Override
@@ -219,6 +225,16 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         e.printStackTrace();
                     }
                     break;
+                case GET_TIMER_MESSAGE:
+                    List<MsgEntity> msgTimerList = (List<MsgEntity>) msg.obj;
+                    if (null != msgTimerList && msgTimerList.size() > 0) {
+                        if (empty_message.getVisibility() == View.VISIBLE) {
+                            empty_message.setVisibility(View.GONE);
+                            swipeRefreshLayout.setVisibility(View.VISIBLE);
+                        }
+                        messageChatAdapter.addTimerData(msgTimerList);
+                    }
+                    break;
             }
         }
     };
@@ -278,10 +294,22 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             startActivityForResult(intent, REQUEST_GET_GROUP_NAME);
         }
     }
+
     @Override
     protected void titleLeftEvent() {
-        finish();
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 50);
+        } else {
+            finish();
+        }
     }
+
     @Override
     protected Fragment getFragment() {
         return null;
@@ -290,12 +318,17 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     public void initView() {
         userOrGroupType = getIntent().getIntExtra("type", -1);
+        if (userOrGroupType == 0) {
+            isGroupChat = false;
+        } else {
+            isGroupChat = true;
+        }
         //如果是从新建group打开的
         isNewGroup = getIntent().getIntExtra("isNewGroup", 0);
 //        Log.i("isNewGroup====",isNewGroup+"");
-        if(isNewGroup == 1){
+        if (isNewGroup == 1) {
             setResult(RESULT_OK);
-        }else {
+        } else {
             setResult(RESULT_CANCELED);
         }
         mContext = this;
@@ -332,23 +365,28 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 Context.INPUT_METHOD_SERVICE);
         llm = new LinearLayoutManager(MessageChatActivity.this);
         recyclerView.setLayoutManager(llm);
-        messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this);
+
+        messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm, isGroupChat);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                indexPage = 1;
-                getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);//接收对话消息
+                getMsg(indexPage * INITIAL_LIMIT, 0, GET_TIMER_MESSAGE);//接收对话消息
             }
         }, 10000, 10000);
+
+        IntentFilter intentFilter = new IntentFilter(StickerStoreActivity.ACTION_FINISHED);
+        stickerReceiver = new ModifyStickerReceiver();
+        registerReceiver(stickerReceiver, intentFilter);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mTimer.cancel();
+        unregisterReceiver(stickerReceiver);
     }
 
     private void setView() {
@@ -387,6 +425,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             }
         }, 50);
 
+    }
+
+    class ModifyStickerReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            initViewPager();
+        }
     }
 
     private void initViewPager() {
@@ -443,11 +488,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 }
                 break;
             case R.id.et_chat://文本框
-                expandFunctionLinear.setVisibility(View.GONE);
-                stickerLinear.setVisibility(View.GONE);
-                expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
-                stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
-
+//                expandFunctionLinear.setVisibility(View.GONE);
+//                stickerLinear.setVisibility(View.GONE);
+//                expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
+//                stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
                 break;
             case R.id.camera_tv://打开相机
                 openCamera();
@@ -503,7 +547,21 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     case R.id.message_recyclerView:
                         hideAllViewState();
                         break;
-
+                    case R.id.et_chat:
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
+                                    expandFunctionLinear.setVisibility(View.GONE);
+                                    expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
+                                }
+                                if (stickerLinear.getVisibility() == View.VISIBLE) {
+                                    stickerLinear.setVisibility(View.GONE);
+                                    stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
+                                }
+                            }
+                        }, 50);
+                        break;
                 }
             case MotionEvent.ACTION_UP:
                 switch (v.getId()) {
@@ -514,6 +572,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                                 recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
                             }
                         }, 50);
+
+                        if (!imm.isActive()) {
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imm.showSoftInput(etChat, InputMethodManager.SHOW_FORCED);
+                                }
+                            }, 50);
+                        }
                         break;
                 }
         }
@@ -561,7 +628,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         super.onActivityResult(requestCode, resultCode, data);
 //        Log.i("M_requestCode====",requestCode+"");
 //        Log.i("M_resultCode====",resultCode+"");
-        String groupNmae ;
+        String groupNmae;
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 // 如果是直接从相册获取
@@ -594,8 +661,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case REQUEST_GET_GROUP_NAME:
                     setResult(RESULT_OK);
                     Log.i("Me_onActivityResult===2", "onActivityResult");
-                     groupNmae = data.getStringExtra("groupName");
-                    if(!TextUtils.isEmpty(groupNmae)){
+                    groupNmae = data.getStringExtra("groupName");
+                    if (!TextUtils.isEmpty(groupNmae)) {
                         tvTitle.setText(groupNmae);
                     }
                     break;
@@ -604,11 +671,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
             }
         }
-        if(RESULT_CANCELED == resultCode ){
-            switch (requestCode){
+        if (RESULT_CANCELED == resultCode && data != null) {
+            switch (requestCode) {
                 case REQUEST_GET_GROUP_NAME:
                     groupNmae = data.getStringExtra("groupName");
-                    if(!TextUtils.isEmpty(groupNmae)){
+                    if (!TextUtils.isEmpty(groupNmae)) {
                         tvTitle.setText(groupNmae);
                     }
                     break;

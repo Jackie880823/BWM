@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 
 import java.io.File;
@@ -124,12 +125,10 @@ public class PickAndCropPictureActivity extends Activity {
                 case REQUEST_FROM_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP));
                     if (needCrop) {
-                        if (new File(uri.getPath()).exists()) {
-                            try {
-                                startPhotoZoom(uri, false);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                        try {
+                            startPhotoZoom(uri, false);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     } else {
                         mCropImagedUri = uri;
@@ -146,7 +145,7 @@ public class PickAndCropPictureActivity extends Activity {
                     break;
 
             }
-        }else{
+        } else {
             finish();
         }
 
@@ -167,14 +166,15 @@ public class PickAndCropPictureActivity extends Activity {
      */
     public void startPhotoZoom(Uri uri, boolean fromPhoto) throws IOException {
 
-        if (uri == null || uri.getPath() == null) {
+        String path = FileUtil.getRealPathFromURI(this,uri);
+        if (uri == null || path == null) {
             return;
         }
 
         /**
          * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
          */
-        int degree = LocalImageLoader.readPictureDegree(uri.getPath());
+        int degree = LocalImageLoader.readPictureDegree(path);
 
         if (degree != 0) {
 
@@ -185,25 +185,25 @@ public class PickAndCropPictureActivity extends Activity {
 //            BitmapFactory.Options options = new BitmapFactory.Options();
 //            options.inJustDecodeBounds = true;
 //            Bitmap bitmap = BitmapFactory.decodeStream(
-//                    new FileInputStream(uri.getPath()), null, options);
+//                    new FileInputStream(path), null, options);
 //            options.inSampleSize = 4;
 //            options.outWidth = picFinalWidth;
 //            options.outHeight = picFinalHeight;
 //            options.inJustDecodeBounds = false;
 //            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 //            bitmap = BitmapFactory.decodeStream(
-//                    new FileInputStream(uri.getPath()), null, options);
-//            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
+//                    new FileInputStream(path), null, options);
+            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
             byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
-            File file = new File(uri.getPath());
+            File file = new File(path);
             file.delete();
-            FileOutputStream fos = new FileOutputStream(uri.getPath());
+            FileOutputStream fos = new FileOutputStream(path);
             fos.write(newBytes);
             fos.flush();
+
             fos.close();
             bitmap.recycle();
         }
-
 
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -227,14 +227,9 @@ public class PickAndCropPictureActivity extends Activity {
             intent.putExtra("return-data", false);
             intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
             intent.putExtra("noFaceDetection", true);
-            //		if(fromPhoto){
-//            File f = new File(PicturesCacheUtil.getPicPath(MyViewProfileActivity.this,CACHE_PIC_NAME));
             File f = PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME + System.currentTimeMillis() + ".png");
             mCropImagedUri = Uri.fromFile(f);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
-            //		}else{
-            //			mCropImagedUri = uri;
-            //		}
             startActivityForResult(intent, REQUEST_PIC_FINAL);
         }
     }

@@ -150,7 +150,7 @@
     <string name="text_create_new_group">Create New Group</string>
     <string name="text_view_profile_family">View Profile</string>
     <string name="text_i_miss_you">I Miss You !</string>
-    <string name="text_path_relationship"><![CDATA[Path & Relationship]]></string>
+    <string name="text_path_relationship"><![CDATA[Path &amp; Relationship]]></string>
     <string name="text_send_message">Send Message</string>
 
     <!-- Bond Alert 界面 -->
@@ -393,7 +393,7 @@
     <string name="text_sign_up_phone_information_agree_warning">I agree with the Terms &amp; Privacy.</string>
 
     <!-- sign up username 界面 -->
-    <string name="text_sign_up_username_warning">Contains at least 5 alpha numeric characters.</string>
+    <string name="text_sign_up_username_warning">Containts at least 5 alphanumeric charaters.</string>
 
     <!-- forget password 界面 -->
     <string name="text_forget_password_contact1">If you still issues with your password, please</string>
@@ -403,7 +403,6 @@
     <string name="text_username">Username</string>
 
     <!-- reset password 界面 -->
-    <string name="text_reset_password_warning">Contain 6~16 alpha numeric characters</string>
 
     <string name="hint_mail">Your email address</string>
     <string name="hint_subject">Select a subject</string>
@@ -426,9 +425,9 @@
 
     <string name="text_bond_alert">Bond Alert</string>
     <!--Diary-->
-    <string name="text_bond_alert_diary">diary</string>
+    <string name="text_bond_alert_diary">Diary</string>
     <!--Event-->
-    <string name="text_bond_alert_event">event</string>
+    <string name="text_bond_alert_event">Event</string>
     <string name="text_big_day">Big Day</string>
     <string name="text_miss">Miss</string>
     <string name="text_news">News</string>
@@ -438,11 +437,11 @@
 
     <string name="titlte_terms_and_privacy">Terms and Privacy</string>
 
-    <string name="text_tell_friend">Tell A Friend</string>
+    <string name="text_tell_friend">Tell a Friend</string>
     <string name="text_setting">Settings</string>
     <string name="text_about_us">About Us</string>
     <string name="text_contact_us">Contact Us</string>
-    <string name="text_terms">Terms and Privacy</string>
+    <string name="text_terms">Terms &amp; Privacy</string>
     <string name="text_sign_out">Log Out</string>
 
     <string name="text_invited_event">%s invited you to event.</string>
@@ -465,7 +464,7 @@
     <string name="alert_ask_add_member">Add Member?</string>
     <string name="text_group">Group</string>
     <string name="hint_comment_input">Type a comments here…</string>
-    <string name="text_character_and"><![CDATA[" & "]]></string>
+    <string name="text_character_and"><![CDATA[" &amp; "]]></string>
     <string name="saved_to_path">Has been saved to: </string>
     <string name="location_search_error">location search error!</string>
 
@@ -506,7 +505,7 @@
     <string name="action_invitation_successful">Invitation sent successfully</string>
     <string name="text_add_group_photo">Add Photo</string>
     <string name="log_out">Do you really want to Log out?</string>
-    <string name="text_recorder_stickies">Reorder stickies in the chat page</string>
+    <string name="text_recorder_stickies">Reorder stickies in the chat screen</string>
     <string name="text_sort">Sort</string>
 
 
@@ -517,7 +516,7 @@
     <string name="text_start_username">Username</string>
     <string name="text_start_log_in">Log In</string>
     <string name="text_start_sign_up">Sign Up</string>
-    <string name="text_start_terms"><Data><![CDATA[ <b>By signing up now mean you agreed with our <font color="#0087FF">Terms & Conditions</font></b> ]]></Data></string>
+    <string name="text_start_terms"><Data><![CDATA[ By signing up now means you agreed with our <font color="#0087FF">Terms &amp; Privacy</font> ]]></Data></string>
     <string name="text_start_or_register_with">or register with</string>
     <string name="text_start_forget_password">Forget password?</string>
     <string name="text_start_or_log_in_with">or log in with</string>
@@ -550,5 +549,27 @@
     <string name="text_start_start_using">Start Using!</string>
     <string name="text_start_facebook">Facebook</string>
     <string name="text_show_message_is_friend">This member is not connected to you. You need to be connected to view profile.</string>
+
+
+    <string name="app_crash_message">Sorry! The application has stopped unexpectedly. </string>
+    <string name="text_start_cancle">Cancle</string>
+    <string name="text_start_no_changes_found">No changes found.</string>
+    <string name="text_more_setting_current_version">Current Version</string>
+    <string name="text_msg_start_bonding">Let\'s start bonding!</string>
+
+    <string name="text_confirm_relation">You are about to add this member as your </string>
+
+
+
+    <string name="text_long_press_display">Hold stickies to preview !</string>
+
+    <string name="no_member">You haven\'t added any member.</string>
+    <string name="no_group">You haven\'t added any group.</string>
+
+    <string name="update_message">New version is available. In order to continue, you must update now.</string>
+    <string name="title_download_task">BondWithMe Downloading &#8230;</string>
+    <string name="download_apk_content_title">BondWithMe</string>
+    <string name="download_apk_content_description">When download finished , click to install.</string>
+    <string name="update">Update</string>
 
 </resources>

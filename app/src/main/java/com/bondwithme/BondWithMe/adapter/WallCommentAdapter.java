@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -18,10 +19,12 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
@@ -236,6 +239,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             itemView.findViewById(R.id.rl_agree).setOnClickListener(this);
             iv_agree.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
+            niv_comment_pic.setOnClickListener(this);
 
         }
 
@@ -263,15 +267,32 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         check(position);
                     }
                     break;
-                case R.id.btn_comment_del:
-                    WallCommentEntity comment = data.get(position);
+                case R.id.btn_comment_del: {
                     //自己发的或event creator 可以删除
                     if(mCommentActionListener != null) {
-                        if(MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
-                            mCommentActionListener.doDelete(comment.getComment_id());
+                        if(MainActivity.getUser().getUser_id().equals(commentEntity.getUser_id())) {
+                            mCommentActionListener.doDelete(commentEntity.getComment_id());
                         }
                     }
                     break;
+                }
+                case R.id.niv_comment_pic: {
+                    Intent intent = new Intent(mContext, ViewOriginalPicesActivity.class);
+
+                    ArrayList<PhotoEntity> dataList = new ArrayList();
+
+                    PhotoEntity peData = new PhotoEntity();
+                    peData.setUser_id(commentEntity.getUser_id());
+                    peData.setFile_id(commentEntity.getFile_id());
+                    peData.setPhoto_caption(Constant.Module_Original);
+                    peData.setPhoto_multipe("false");
+                    dataList.add(peData);
+
+                    intent.putExtra("is_data", true);
+                    intent.putExtra("datas", dataList);
+                    mContext.startActivity(intent);
+                    break;
+                }
             }
         }
     }

@@ -78,7 +78,6 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
         boolean isNew = false;
         stickerGroupEntity = dataStickerGroup.get(position);
         url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_S", stickerGroupEntity.getPath(), stickerGroupEntity.getType());
-        LogUtil.d(TAG,"======sticker_name======="+stickerGroupEntity.getFirst_sticker());
         //设置new sticker
         if(isNew){
             holder.ivNewSticker.setVisibility(View.VISIBLE);
@@ -99,12 +98,10 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
         List<LocalStickerInfo> data = new ArrayList<>();
 
         try {       //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
-//            Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-//            data = stickerDao.queryForEq("name",stickerGroupEntity.getName());
+
             LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(mContext);
             boolean hasSticker = dao.hasDownloadSticker(stickerGroupEntity.getPath());
             if(hasSticker){
-
                 holder.tvDownload.setVisibility(View.INVISIBLE);
                 holder.ivExist.setVisibility(View.VISIBLE);
             }else {
@@ -116,94 +113,8 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
             e.printStackTrace();
         }
 
-//        //下载sticker zip      写在了StickerStoreActivity
-//        holder.tvDownload.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                holder.tvDownload.setVisibility(View.INVISIBLE);
-//                downloadZip(holder,position);
-//            }
-//        });
-
     }
 
-    /**下载sticker Group zip*/
-    private void downloadZip(final VHItem item,final int position) {
-        final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
-        urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
-        final String target = FileUtil.getCacheFilePath(mContext) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
-        DownloadRequest download = new HttpTools(mContext).download(urlString, target, true, new HttpCallback() {
-            @Override
-            public void onStart() {
-                item.pbDownload.setVisibility(View.VISIBLE);
-
-            }
-
-            @Override
-            public void onFinish() {
-                item.pbDownload.setVisibility(View.INVISIBLE);
-                item.pbDownload.setProgress(0);
-                item.ivExist.setVisibility(View.VISIBLE);
-
-                //插入sticker info
-                try {
-                    Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-                    LocalStickerInfo stickerInfo = new LocalStickerInfo();
-                    stickerInfo.setName(stickerGroupEntity.getName());
-                    stickerInfo.setPath(stickerGroupEntity.getPath());
-                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
-                    stickerInfo.setVersion(stickerGroupEntity.getVersion());
-                    stickerInfo.setType(stickerGroupEntity.getType());
-                    stickerInfo.setOrder(System.currentTimeMillis());
-                    LocalStickerInfoDao.getInstance(mContext).addOrUpdate(stickerInfo);
-                    //stickerDao.create(stickerInfo);
-
-                    Log.i(TAG, "=======tickerInfo==========" +stickerInfo.toString() );
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-            @Override
-            public void onResult(String response) {
-                File zipFile = new File(target);
-                try {
-                    ZipUtils.unZipFile(zipFile, MainActivity.STICKERS_NAME);
-
-                    zipFile.delete();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onCancelled() {
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-                //更新item中的进度条
-                finished = (int) (current * 100 / count);
-                item.pbDownload.setProgress(finished);
-
-
-                //发广播更新StickerDetailActivity的progressbar
-                Intent intent = new Intent(StickerStoreActivity.ACTION_UPDATE);
-                intent.putExtra("finished",finished);
-                intent.putExtra(POSITION,position);
-                mContext.sendBroadcast(intent);
-
-            }
-        });
-    }
 
 
     @Override

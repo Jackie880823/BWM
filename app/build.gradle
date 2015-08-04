@@ -46,7 +46,7 @@ android {
 //
 //    }
 //
-
+//
 //    buildTypes {
 //        debug {
 //            // 显示Log
@@ -59,7 +59,7 @@ android {
 //        }
 //        release {
 //            // 不显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "false" //TODO 正式环境改false
+//            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO 正式环境改false
 //            minifyEnabled true //TODO 正式环境改true
 //            zipAlignEnabled true //TODO 正式环境改true
 //            // 移除无用的resource文件
@@ -132,11 +132,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.android.support:recyclerview-v7:+'
-    compile 'com.android.support:cardview-v7:+'
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     //for 突破65535的限制
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':Volley')
     compile project(':PhotoView')
     compile project(':mupdflibrary')
@@ -157,9 +155,10 @@ dependencies {
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.j256.ormlite:ormlite-core:4.48'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
     compile 'com.android.support:support-v4:22.2.0'
 
     /** 第三方图片处理库 */
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+    compile 'com.android.support:recyclerview-v7:22.2.0'
+    compile 'com.android.support:cardview-v7:22.2.1'
 }

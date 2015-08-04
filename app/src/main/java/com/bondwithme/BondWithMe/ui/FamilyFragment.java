@@ -478,9 +478,18 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         if ("".equals(familyMemberEntity.getMiss())) {
                             updateMiss(familyMemberEntity.getUser_id());
                             arg0.findViewById(R.id.myfamily_image_right).setVisibility(View.GONE);
+                            familyMemberEntity.setMiss(null);
                         }
                         Intent intent = new Intent(getActivity(), FamilyProfileActivity.class);
                         intent.putExtra("member_id", familyMemberEntity.getUser_id());
+                        intent.putExtra("groupId",familyMemberEntity.getUser_id());
+                        intent.putExtra("groupName", familyMemberEntity.getUser_given_name());
+
+//                        intent.putExtra("relationship",familyMemberEntity.getTree_type_name());
+//                        intent.putExtra("fam_nickname",familyMemberEntity.getFam_nickname());
+//                        intent.putExtra("member_status",familyMemberEntity.getUser_status());
+                        intent.putExtra("getDofeel_code", familyMemberEntity.getDofeel_code());
+
 //                        startActivity(intent);
                         startActivityForResult(intent, 1);
                     }
@@ -535,7 +544,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         mLists.add(userView);
         View groupView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
         groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
-//        final GridView groupListView = (GridView) groupView.findViewById(R.id.family_grid_view);
+//        final GridView groupGridView = (GridView) groupView.findViewById(R.id.family_grid_view);
 
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
         groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
@@ -678,59 +687,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
             return;
         }
-        vProgress.setVisibility(View.VISIBLE);
-//        mProgressDialog.show();
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-        new HttpTools(getActivity()).get(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-                vProgress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onResult(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if ("Success".equals(jsonObject.getString("response_status"))) {
-                        String urlString = jsonObject.getString("filePath");
-                        if (!TextUtils.isEmpty(urlString)) {
-                            showPDF(urlString);
-                        }
-                    } else {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    }
-                } catch (Exception e) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
-
-//            }
-//        }.start();
+        showPDF(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()));
 
     }
 
@@ -1105,8 +1062,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Log.i("F_requestCode====",requestCode+"");
-//        Log.i("F_resultCode====",resultCode+"");
+        Log.i("F_requestCode====",requestCode+"");
+        Log.i("F_resultCode====",resultCode+"");
         switch (requestCode) {
             case 1:
                 if (resultCode == -1) {

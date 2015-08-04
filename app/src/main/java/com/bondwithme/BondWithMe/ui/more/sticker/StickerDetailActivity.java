@@ -114,11 +114,12 @@ public class StickerDetailActivity extends BaseActivity {
         } else{
             tvDownload.setVisibility(View.VISIBLE);
             pbProgress.setVisibility(View.INVISIBLE);
+            pbProgress.setProgress(0);
             initDownloadView();
         }
 
         VolleyUtil.initNetworkImageView(this, insideSticker,
-                String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), stickerGroupEntity.getFirst_sticker(), stickerGroupEntity.getPath(), stickerGroupEntity.getType()),
+                String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()),
                 R.drawable.network_image_default, R.drawable.network_image_default);
         insideStickerName.setText(stickerGroupEntity.getName());
         if("0".equals(stickerGroupEntity.getPrice())){
@@ -152,20 +153,22 @@ public class StickerDetailActivity extends BaseActivity {
 
 
     private void initDownloadView() {
-        List<LocalStickerInfo> data = new ArrayList<>();
         try {       //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
-            Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-            data = stickerDao.queryForEq("name",stickerGroupEntity.getName());
-            Log.i(TAG,"==========data.size============="+data.size());
-            if(data.size() > 0){
-                tvDownload.setText("Downloaded");
-                tvDownload.setBackgroundColor(getResources().getColor(R.color.default_unenable_item_bg));
-                tvDownload.setEnabled(false);
+            LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(this);
+            if(dao.hasDownloadSticker(stickerGroupEntity.getPath())){
+                setTvDownloaded();
             }
         } catch (Exception e) {
             LogUtil.e(TAG,"",e);
         }
 
+    }
+
+    private void setTvDownloaded() {
+        tvDownload.setText(getResources().getString(R.string.Downloaded));
+        tvDownload.setTextColor(getResources().getColor(R.color.default_text_color_dark));
+        tvDownload.setBackgroundColor(getResources().getColor(R.color.default_unenable_item_bg));
+        tvDownload.setEnabled(false);
     }
 
     //下载表情包
@@ -180,33 +183,6 @@ public class StickerDetailActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                if(finished>=100) {
-                    //
-                    pbProgress.setVisibility(View.INVISIBLE);
-                    pbProgress.setProgress(0);
-                    tvDownload.setVisibility(View.VISIBLE);
-                    tvDownload.setText(getResources().getString(R.string.Downloaded));
-                    tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                    tvDownload.setEnabled(false);
-
-                    //插入sticker info
-                    try {
-                        Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-                        LocalStickerInfo stickerInfo = new LocalStickerInfo();
-                        stickerInfo.setName(stickerGroupEntity.getName());
-                        stickerInfo.setPath(stickerGroupEntity.getPath());
-                        stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
-                        stickerInfo.setVersion(stickerGroupEntity.getVersion());
-                        stickerInfo.setType(stickerGroupEntity.getType());
-                        stickerInfo.setOrder(System.currentTimeMillis());
-                        LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
-                        Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
-
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-
             }
 
             @Override
@@ -215,9 +191,38 @@ public class StickerDetailActivity extends BaseActivity {
                 try {
                     ZipUtils.unZipFile(zipFile, MainActivity.STICKERS_NAME);
                     zipFile.delete();
+
+                    if(finished>=100) {
+                        //
+                        pbProgress.setVisibility(View.INVISIBLE);
+                        pbProgress.setProgress(0);
+                        tvDownload.setVisibility(View.VISIBLE);
+                        setTvDownloaded();
+
+                        //插入sticker info
+                        try {
+                            Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+                            LocalStickerInfo stickerInfo = new LocalStickerInfo();
+                            stickerInfo.setName(stickerGroupEntity.getName());
+                            stickerInfo.setPath(stickerGroupEntity.getPath());
+                            stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
+                            stickerInfo.setVersion(stickerGroupEntity.getVersion());
+                            stickerInfo.setType(stickerGroupEntity.getType());
+                            stickerInfo.setOrder(System.currentTimeMillis());
+                            LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
+                            Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
+
+                            Intent intent = new Intent(StickerStoreActivity.ACTION_FINISHED);
+                            sendBroadcast(intent);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
 
             }
 
@@ -311,10 +316,9 @@ public class StickerDetailActivity extends BaseActivity {
                     pbProgress.setProgress(finished);
                     if (finished == 100){
                         pbProgress.setVisibility(View.INVISIBLE);
+                        pbProgress.setProgress(0);
                         tvDownload.setVisibility(View.VISIBLE);
-                        tvDownload.setText(getResources().getString(R.string.Downloaded));
-                        tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                        tvDownload.setEnabled(false);
+                        setTvDownloaded();
                     }
 
                 }
@@ -328,10 +332,9 @@ public class StickerDetailActivity extends BaseActivity {
                     pbProgress.setProgress(finished);
                     if (finished == 100){
                         pbProgress.setVisibility(View.INVISIBLE);
+                        pbProgress.setProgress(0);
                         tvDownload.setVisibility(View.VISIBLE);
-                        tvDownload.setText(getResources().getString(R.string.Downloaded));
-                        tvDownload.setBackgroundColor(getResources().getColor(R.color.tab_color_normal));
-                        tvDownload.setEnabled(false);
+                        setTvDownloaded();
                     }
 
                 }

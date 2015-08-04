@@ -17,9 +17,6 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallAdapter;
@@ -32,6 +29,9 @@ import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -204,6 +204,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 //gsonb.registerTypeAdapter(Date.class, ds);
                 Gson gson = gsonb.create();
                 try {
+                    boolean hasData = data != null && data.size() > 0;
                     data = gson.fromJson(response, new TypeToken<ArrayList<WallEntity>>() {}.getType());
                     if(isRefresh) {
                         startIndex = data.size();
@@ -214,7 +215,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         startIndex += data.size();
                         adapter.add(data);
                     }
-                    if(data.size() <= 0) {
+                    if(data.size() <= 0 && !hasData) {
                         if(TextUtils.isEmpty(member_id)) {
                             tvNoData.setVisibility(View.GONE);
                             flWallStartUp.setVisibility(View.VISIBLE);

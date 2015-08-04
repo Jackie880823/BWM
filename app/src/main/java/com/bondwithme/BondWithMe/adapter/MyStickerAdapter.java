@@ -16,7 +16,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.MyStickerActivity;
-import com.bondwithme.BondWithMe.util.FileUtil;
 import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
@@ -47,33 +46,6 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
     public void onBindViewHolder(final MyStickerAdapter.VHItem holder, final int position) {
         final LocalStickerInfo stickerInfo = data.get(position);
 
-        //设置sticker icon                                        /FamilyWishes
-//        String path = MainActivity.STICKERS_NAME + File.separator + stickerInfo.getPath();
-//        File file = new File(path);
-//        File[] files = file.listFiles();
-//        if (null != files && files.length > 0) {
-//            for (File file1 : files) {
-//                String filePath = file1.getAbsolutePath();
-//                if (filePath.substring(filePath.lastIndexOf(File.separator) + 1).contains("s")) {
-//                    try {
-//                        File f = new File(filePath);
-//                        InputStream inputStream = new FileInputStream(f);//mContext.getAssets().open(filePath);
-//                        if (filePath.endsWith("gif")) {
-//                            AnimatedGifDrawable animatedGifDrawable = new AnimatedGifDrawable(mContext.getResources(), 0, inputStream, null);
-//                            Drawable drawable = animatedGifDrawable.getDrawable();
-//                            holder.ivMySticker.setImageDrawable(drawable);
-//                        } else {
-//                            holder.ivMySticker.setImageBitmap(BitmapFactory.decodeStream(inputStream));
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    break;
-//                }
-//            }
-//
-//        }
-
         String picPath = MainActivity.STICKERS_NAME+"/"+stickerInfo.getPath()+"/"+stickerInfo.getSticker_name()+stickerInfo.getType();
         Bitmap bmp = BitmapFactory.decodeFile(picPath);
         holder.ivMySticker.setImageBitmap(bmp);
@@ -82,9 +54,9 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
         holder.tvRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean deleted = false;
+                boolean deleted = true;
                 File f = new File(MainActivity.STICKERS_NAME +"/"+stickerInfo.getPath());
-                deleted = deleteDirectory(f);
+//                deleted = deleteDirectory(f);
                 if (deleted){
                     try {
                         Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
@@ -94,13 +66,15 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
                     }
                     //发广播更新StickerStoreActivity的DOWNLOAD or √
                     Intent intent = new Intent(MyStickerActivity.ACTION_UPDATE);
+                    intent.putExtra("sticker_path",stickerInfo.getPath());
 //                    intent.putExtra("position",stickerInfo.getPosition());
                     mContext.sendBroadcast(intent);
 
                     int position = data.indexOf(stickerInfo);
-                    data.remove(position);
-                    notifyItemRemoved(position);
-
+                    if (position != -1){
+                        data.remove(position);
+                        notifyItemRemoved(position);
+                    }
                 }
             }
         });

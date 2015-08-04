@@ -1,10 +1,9 @@
 package com.bondwithme.BondWithMe.util;
 
 import android.content.Context;
-import android.text.TextUtils;
 
-import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
+import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -142,17 +141,16 @@ public class ZipUtils {
         stickerInfo.setSticker_name("1_B");
         stickerInfo.setVersion("1");
 
-        if (zipFileName.contains("Raya_Greeting")) {
+        if (zipFileName.contains("Barry")) {
             stickerInfo.setType(".png");
             stickerInfo.setOrder(System.currentTimeMillis() - 3000L);
-        } else if (zipFileName.contains("Eggplant")) {
+        } else if (zipFileName.contains("Bunny")) {
             stickerInfo.setOrder(System.currentTimeMillis() - 1500L);
-            stickerInfo.setType(".gif");
-        } else if (zipFileName.contains("LittleGG")) {
+            stickerInfo.setType(".png");
+        } else if (zipFileName.contains("Merdeka")) {
             stickerInfo.setOrder(System.currentTimeMillis());
-            stickerInfo.setType(".gif");
+            stickerInfo.setType(".png");
         }
-
         LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
 
     }
