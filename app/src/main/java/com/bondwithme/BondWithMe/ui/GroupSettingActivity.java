@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -828,7 +827,6 @@ public class GroupSettingActivity extends BaseActivity {
                     } else {
 
                         if (addMemberList.size() > 0) {
-                            Log.i("addMemberList====",addMemberList.size()+"");
 //                        removeDuplicate(userList);
                             addGroupMember(gson.toJson(addMemberList));
 //                            getMembersList();
@@ -839,7 +837,7 @@ public class GroupSettingActivity extends BaseActivity {
 
                 /** christopher begin */
                 case SET_GROUP_PIC_NAME:
-                    Log.i("GroupSettingActivity===","GroupSettingActivity");
+//                    Log.i("GroupSettingActivity===","GroupSettingActivity");
                     mBitmapTools.clearMemoryCache();
                     mBitmapTools.clearDiskCache(null);
                     String newGroupName = data.getStringExtra("groupName");
@@ -874,7 +872,7 @@ public class GroupSettingActivity extends BaseActivity {
     }
 
     public void addGroupMember(final String strGroupMembers) {
-        Log.i("addGroupMember====",strGroupMembers);
+//        Log.i("addGroupMember====",strGroupMembers);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("group_id", groupId);
         params.put("group_owner_id", MainActivity.getUser().getUser_id());

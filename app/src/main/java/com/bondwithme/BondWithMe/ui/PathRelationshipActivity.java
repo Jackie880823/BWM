@@ -214,10 +214,11 @@ public class PathRelationshipActivity extends BaseActivity {
 
                         ll[i].setVisibility(View.VISIBLE);
                         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-                        if(i == 0){
-                            String mrelationship4En = pathList.get(i).getRelationship();
-                            int mPosition = data_Us.indexOf(mrelationship4En);
+//                        if(i == 0){
+
                             if(TextUtils.isEmpty(tvRelationship.getText().toString())){
+                                String mrelationship4En = pathList.get(0).getRelationship();
+                                int mPosition = data_Us.indexOf(mrelationship4En);
                                 if(isZh){
                                     tvRelationship.setText(data_Zh.get(mPosition));
                                 }else {
@@ -225,7 +226,7 @@ public class PathRelationshipActivity extends BaseActivity {
                                 }
 
                             }
-                        }
+//                        }
                         String relationship4En = pathList.get(i).getRelationship();
                         int position = data_Us.indexOf(relationship4En);
                         /**wing modify for no relationship begin*/
