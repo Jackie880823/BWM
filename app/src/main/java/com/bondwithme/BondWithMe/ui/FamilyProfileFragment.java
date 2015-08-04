@@ -74,7 +74,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     private TextView tvName1;
     private TextView tvId1;
     private ImageButton ibMiss;
-    private LinearLayout llViewProfile;
+    private RelativeLayout llViewProfile;
 
     private RelativeLayout rlPathRelationship;
     private RelativeLayout rlAlbumGallery;
@@ -292,7 +292,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                         tvName1.setText(userEntity.getUser_given_name());
                         getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
                     }
-                    tvId1.setText("ID:" + userEntity.getDis_bondwithme_id());
+                    tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
                     if(TextUtils.isEmpty(getDofeelCode)){
                         String dofeel_code = userEntity.getDofeel_code();
                         if (!TextUtils.isEmpty(dofeel_code)) {

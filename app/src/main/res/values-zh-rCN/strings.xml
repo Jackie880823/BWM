@@ -569,4 +569,8 @@
     <string name="download_apk_content_description">当下载完成时，点击可安装。</string>
     <string name="update">更新</string>
 
+    <string name="login">登录</string>
+    <string name="text_phone">电话</string>
+    <string name="text_change_password">更改密码</string>
+
 </resources>

@@ -126,9 +126,9 @@
     <string name="text_members">Members</string>
     <string name="text_leave_group">Leave Group</string>
 
-    <string name="text_my_view_profile">View Profile</string>
-    <string name="text_album_gallery">Album Gallery</string>
-    <string name="text_diary_posting">Diary Posting</string>
+    <string name="text_my_view_profile">Profile</string>
+    <string name="text_album_gallery">Album</string>
+    <string name="text_diary_posting">Wall</string>
     <string name="text_reset_password">Reset Password</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
@@ -150,7 +150,7 @@
     <string name="text_create_new_group">Create New Group</string>
     <string name="ftext_view_profile_family">View Profile</string>
     <string name="text_i_miss_you">I Miss You !</string>
-    <string name="text_path_relationship"><![CDATA[Path &amp; Relationship]]></string>
+    <string name="text_path_relationship"><![CDATA[Path & Relationship]]></string>
     <string name="text_send_message">Send Message</string>
 
     <!-- Bond Alert 界面 -->
@@ -571,5 +571,9 @@
     <string name="download_apk_content_title">BondWithMe</string>
     <string name="download_apk_content_description">When download finished , click to install.</string>
     <string name="update">Update</string>
+
+    <string name="login">Log in</string>
+    <string name="text_phone">Phone</string>
+    <string name="text_change_password">Change Password</string>
 
 </resources>

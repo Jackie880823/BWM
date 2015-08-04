@@ -74,7 +74,7 @@
                                     android:layout_height="wrap_content"
                                     android:text=""
                                     android:layout_marginTop="@dimen/default_view_margin"
-                                    android:textSize="@dimen/text_medium_size"/>
+                                    android:textSize="@dimen/text_small_size"/>
                             </LinearLayout>
                         </RelativeLayout>
                     </LinearLayout>
@@ -85,32 +85,7 @@
                         android:orientation="vertical"
                         android:layout_below="@+id/ll_card"
                         >
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/default_content_padding">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:text="@string/text_id"
-                                android:textStyle="bold"
-                                android:textSize="@dimen/text_medium_size"
-                                />
-                            <TextView
-                                android:id="@+id/tv_id2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:textColor="@color/default_text_color_light"
-                                android:text=""
-                                android:textSize="@dimen/text_medium_size"/>
-                        </RelativeLayout>
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/default_split_line"
-                            android:layout_gravity="center"/>
+
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -295,6 +270,33 @@
                                 android:textColor="@color/default_text_color_light"
                                 android:textSize="@dimen/text_medium_size"
                                 />
+                        </RelativeLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/default_split_line"
+                            android:layout_gravity="center"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/default_content_padding">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:text="@string/text_phone"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/text_medium_size"
+                                />
+                            <TextView
+                                android:id="@+id/tv_phone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:textColor="@color/default_text_color_light"
+                                android:text=""
+                                android:textSize="@dimen/text_medium_size"/>
                         </RelativeLayout>
                         <View
                             android:layout_width="match_parent"

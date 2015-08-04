@@ -58,8 +58,8 @@ public class MyViewProfileActivity extends BaseActivity {
     private ImageView ivBottomLeft;
     private TextView tvName1;
     private TextView tvId1;
+    private TextView tvLoginId;
     private LinearLayout llResetPassword;
-    private TextView tvId2;
     private TextView etFirstName;
     private TextView etLastName;
     //    private TextView tvAge;
@@ -69,6 +69,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private TextView tvGender;
     private RelativeLayout rlGender;
     private TextView etEmail;
+    private EditText etPhone;
     private EditText etRegion;
     private Dialog showSelectDialog;
     private Dialog showCameraAlbum;
@@ -253,6 +254,7 @@ public class MyViewProfileActivity extends BaseActivity {
         ivBottomLeft = getViewById(R.id.civ_left);
         tvName1 = getViewById(R.id.tv_name1);
         tvId1 = getViewById(R.id.tv_id1);
+        tvLoginId = getViewById(R.id.tv_login_id1);
 
         llResetPassword = getViewById(R.id.ll_reset_password);
         if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
@@ -261,7 +263,6 @@ public class MyViewProfileActivity extends BaseActivity {
         }
 
 
-        tvId2 = getViewById(R.id.tv_id2);
         etFirstName = getViewById(R.id.et_first_name);
         etLastName = getViewById(R.id.et_last_name);
 //        tvAge = getViewById(R.id.tv_age);
@@ -271,6 +272,7 @@ public class MyViewProfileActivity extends BaseActivity {
         tvGender = getViewById(R.id.tv_gender);
         rlGender = getViewById(R.id.rl_gender);
         etEmail = getViewById(R.id.et_email);
+        etPhone = getViewById(R.id.et_phone);
         etRegion = getViewById(R.id.et_region);
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
@@ -281,8 +283,8 @@ public class MyViewProfileActivity extends BaseActivity {
         etFirstName.setText(MainActivity.getUser().getUser_given_name());
         etLastName.setText(MainActivity.getUser().getUser_surname());
         tvTitle.setText(MainActivity.getUser().getUser_given_name());
-        tvId1.setText("ID:" + MainActivity.getUser().getDis_bondwithme_id());
-        tvId2.setText(MainActivity.getUser().getDis_bondwithme_id());
+        tvId1.setText(getResources().getString(R.string.app_name) + " ID: " + MainActivity.getUser().getDis_bondwithme_id());
+        tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
 
 //        tvAge.setText(MainActivity.getUser().getUser_dob());//需要做处理，年转为岁数
         tvBirthday.setText(MainActivity.getUser().getUser_dob());
@@ -308,6 +310,7 @@ public class MyViewProfileActivity extends BaseActivity {
         }
 
         etEmail.setText(MainActivity.getUser().getUser_email());
+        etPhone.setText(MainActivity.getUser().getUser_phone());
         String[] countryArray = getResources().getStringArray(R.array.country_code);
         String userCountryCode = MainActivity.getUser().getUser_country_code().trim();
         if (countryArray != null) {
