@@ -35,19 +35,17 @@ public class FileUtil {
         if(isOutPath) {
             if (path == null) {
                 if (hasSDCard()) { // SD card
-                    path = new File(getSDCardPath() + "/" + AppInfoUtil.getApplicationName(context));
+                    path = new File(getSDCardPath() + "/" + "BondWithMe");
                     path.mkdir();
                 } else {
                     path = Environment.getDataDirectory();
                 }
             }
-            LogUtil.d("","2getSavePath=========="+appPath);
             return path;
         }else{
             if(appPath==null){
                 appPath  = context.getFilesDir();
             }
-            LogUtil.d("", "1getSavePath==========" + appPath);
             return appPath;
         }
 
@@ -162,9 +160,6 @@ public class FileUtil {
         return filePaths;
     }
 
-    /*
-    * get path of banner
-    * */
     public static String getBannerFilePath(Context context) {
         File f = getSavePath(context,true);
 
@@ -174,19 +169,6 @@ public class FileUtil {
         }
 
         return f.getAbsolutePath();
-    }
-
-    /*
-    * clean all pics of banner
-    * */
-    public static void cleanBanner(Context context) {
-        File fileBanner = new File(getBannerFilePath(context));
-        if(fileBanner!=null) {
-            File[] cacheFiles = fileBanner.listFiles();
-            for (File file : cacheFiles) {
-                file.delete();
-            }
-        }
     }
 
 }

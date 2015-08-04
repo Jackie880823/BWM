@@ -1,13 +1,11 @@
 package com.bondwithme.BondWithMe.ui.start;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
-import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -21,9 +19,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
-import com.bondwithme.BondWithMe.util.PushApi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -269,12 +265,7 @@ public class ResetPasswordSuccessfulActivity extends Activity {
 
     public void goMainActivity()
     {
-        Intent intent = new Intent(this, MainActivity.class);
-        ComponentName cn = intent.getComponent();
-        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-        App.changeLoginedUser(userEntity, tokenEntity);//可能会传入没有数据的???
-        PushApi.initPushApi(this);
-        startActivity(mainIntent);
+        App.userLoginSuccessed(this, userEntity, tokenEntity);
     }
 
     public void goDetails()

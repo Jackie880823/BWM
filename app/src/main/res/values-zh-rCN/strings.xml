@@ -252,7 +252,7 @@
 
     <!-- end -->
 
-    <string name="select_too_many">最多可选%d张</string>
+    <string name="select_too_many">您一次只能选%d张相片</string>
     <string name="text_nearest">近期</string>
     <string name="start_a_new">现在</string>
     <string name="post_now">创建一个</string>
@@ -405,7 +405,6 @@
 
     <!-- reset password 界面 -->
 
-    <string name="text_reset_password_warning">包含6-16位字符（字母或数字）</string>
     <string name="hint_mail">你的邮址</string>
     <string name="hint_subject">关于</string>
     <string name="hint_mail_content">有什么我们可以帮您吗?</string>
@@ -560,5 +559,14 @@
 
     <string name="text_long_press_display">请长按查看大表情 !</string>
 
+
+    <string name="no_member">你没有添加任何成员。</string>
+    <string name="no_group">你没有创建任何群体。</string>
+
+    <string name="update_message">有新版本可用,请下载.</string>
+    <string name="title_download_task">伴我玩 下载中 &#8230;</string>
+    <string name="download_apk_content_title">伴我玩</string>
+    <string name="download_apk_content_description">当下载完成时，点击可安装。</string>
+    <string name="update">更新</string>
 
 </resources>

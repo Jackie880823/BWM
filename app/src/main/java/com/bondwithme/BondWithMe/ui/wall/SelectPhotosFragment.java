@@ -1,45 +1,42 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.Build;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.provider.MediaStore;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.android.volley.Utils;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.LocalImagesAdapter;
 import com.bondwithme.BondWithMe.entity.ImageData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * @author Jackie Zhu
  * @version 1.0
  */
-public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> implements LoaderManager.LoaderCallbacks<Void> {
+public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     private static final String TAG = SelectPhotosFragment.class.getSimpleName();
 
@@ -59,7 +56,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     /**
      * 当前显示的图片的Ur列表
      */
-    private ArrayList<ImageData> mImageUriList = new ArrayList();
+    private ArrayList<ImageData> mImageUriList = new ArrayList<>();
 
     private boolean multi;
 
@@ -70,15 +67,43 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
     /**
      * 目录列表
      */
-    private String[] buckets;
+    private ArrayList<String> buckets;
     private int curLoaderPosition = 0;
     private Cursor imageCursor;
-    private int loaderCounter = 1;
 
     /**
      * 本地图片显示adapter
      */
     private LocalImagesAdapter localImagesAdapter;
+
+    /**
+     * 传递加载图片Uri的消息
+     */
+    private static final int HANDLER_LOAD_FLAG = 100;
+
+    /**
+     * post到UI线程中的更新图片的Runnable
+     */
+    private Runnable uiRunnable = new Runnable() {
+        private int lastPosition = -1;
+
+        @Override
+        public void run() {
+            Log.i(TAG, "uiRunnable& update adapter");
+            updateBucketsAdapter();
+            if(buckets.size() > 0 && lastPosition != curLoaderPosition) {
+                Log.i(TAG, "uiRunnable& loadLocalImageOrder");
+                // 查找到了图片显示列表第一项的图片
+                loadLocalImageOrder(curLoaderPosition);
+                lastPosition = curLoaderPosition;
+            }
+        }
+    };
+
+    /**
+     * 加栽图片Uri的字线程
+     */
+    private HandlerThread mLoadThread = new HandlerThread("Loader Image");
 
     public SelectPhotosFragment(ArrayList<ImageData> selectUris) {
         super();
@@ -87,25 +112,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
     public static final SelectPhotosFragment newInstance(ArrayList<ImageData> selectUris, String... params) {
         return createInstance(new SelectPhotosFragment(selectUris), params);
-    }
-
-    /**
-     * Takes a Set of Strings, sorts it, and returns a String array.
-     *
-     * @param keySet
-     * @return
-     */
-    private static String[] setToOrderedStringArray(Set<String> keySet, String first) {
-        int i = 1;
-        ArrayList<String> keys = new ArrayList<>(keySet);
-        Collections.sort(keys);
-        String[] out = new String[keys.size()];
-        out[0] = first;
-        keys.remove(first);
-        for(String key : keys) {
-            out[i++] = key;
-        }
-        return out;
     }
 
     @Override
@@ -123,7 +129,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
 
         String orderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
         imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy).loadInBackground();
-        getLoaderManager().initLoader(loaderCounter++, null, this);
+        initHandler();
 
         final Resources resources = getResources();
         drawerArrowDrawable = new DrawerArrowDrawable(resources);
@@ -207,6 +213,65 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         multi = getParentActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
     }
 
+    /**
+     * 初始化用于加载图片URI的Handler
+     */
+    private void initHandler() {
+        mLoadThread.start();
+        Handler mLoadHandler = new Handler(mLoadThread.getLooper()) {
+            /**
+             * Subclasses must implement this to receive messages.
+             *
+             * @param msg
+             */
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch(msg.what) {
+                    case HANDLER_LOAD_FLAG:
+                        if(imageCursor == null) {
+                            return;
+                        }
+
+                        String bucketsFirst = getParentActivity().getString(R.string.text_nearest);
+                        ArrayList<ImageData> nearest = new ArrayList<>();
+                        buckets = new ArrayList<>();
+                        buckets.add(bucketsFirst);
+                        mImageUris.put(bucketsFirst, nearest);
+
+                        int cursorCount = imageCursor.getCount();
+                        for(int i = 0; i < cursorCount; i++) {
+                            String path;
+                            String bucket;
+                            Uri contentUri;
+                            synchronized(SelectPhotosFragment.this) {
+                                if(imageCursor.isClosed()) {
+                                    return;
+                                }
+
+                                imageCursor.moveToPosition(i);
+                                int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+                                int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+                                int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+                                path = imageCursor.getString(pathColumnIndex);
+                                bucket = imageCursor.getString(bucketColumnIndex);
+                                contentUri = Uri.parse("content://media/external/images/media/" + imageCursor.getInt(uriColumnIndex));
+                            }
+
+                            if(!TextUtils.isEmpty(path)) {
+                                ImageData imageData = new ImageData(contentUri, path);
+                                addToImageMap(bucket, imageData);
+                            }
+                        }
+                        imageCursor.close();
+                        Log.d(TAG, "loadImages(), buckets size: " + buckets.size());
+                        break;
+                }
+            }
+        };
+        mLoadHandler.sendEmptyMessage(HANDLER_LOAD_FLAG);
+    }
+
     public boolean changeDrawer() {
         if(mDrawerLayout.isDrawerOpen(mDrawerList)) {
             mDrawerLayout.closeDrawer(mDrawerList);
@@ -226,12 +291,25 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
      * Called when the fragment is no longer in use.  This is called
      * after {@link #onStop()} and before {@link #onDetach()}.
      */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(imageCursor != null) {
-            if(!imageCursor.isClosed())
-                imageCursor.close();
+
+        // 退出Activity关闭数据库游标
+        synchronized(SelectPhotosFragment.this) {
+            if(imageCursor != null) {
+                if(!imageCursor.isClosed()) {
+                    imageCursor.close();
+                }
+            }
+        }
+
+        // 关闭加载图片线程
+        if(Utils.hasJellyBeanMR2()) {
+            mLoadThread.quitSafely();
+        } else {
+            mLoadThread.quit();
         }
     }
 
@@ -246,64 +324,43 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         if(nearest.size() < 30) {
             nearest.add(imageData);
         }
-
         if(mImageUris.containsKey(bucket)) {
             mImageUris.get(bucket).add(imageData);
         } else {
             ArrayList<ImageData> al = new ArrayList<>();
             al.add(imageData);
             mImageUris.put(bucket, al);
+            buckets.add(bucket);
+            getParentActivity().runOnUiThread(uiRunnable);
         }
     }
 
-    /**
-     * This will load all Images on the phone.
-     */
-    private void loadPhoneImages() {
-        String bucketsFirst = getParentActivity().getString(R.string.text_nearest);
-        ArrayList<ImageData> nearest = new ArrayList<>();
-        mImageUris.put(bucketsFirst, nearest);
-        for(int i = 0; i < imageCursor.getCount(); i++) {
-            imageCursor.moveToPosition(i);
-            int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
-            int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-            int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
-            String path = imageCursor.getString(pathColumnIndex);
-
-            // 先要过滤掉含有特殊字符的文件目录
-            File imageFile = new File(path);
-            if(imageFile != null && imageFile.canRead()) {
-                String bucket = imageCursor.getString(bucketColumnIndex);
-                Uri contentUri = Uri.parse("content://media/external/images/media/" + imageCursor.getInt(uriColumnIndex));
-                Uri pathUri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(path));
-                ImageData imageData = new ImageData(contentUri, pathUri);
-
-                LogUtil.i(TAG, "loadPhoneImages& path: " + mImageUris.toString());
-                addToImageMap(bucket, imageData);
-            }
-        }
-        imageCursor.close();
-        buckets = setToOrderedStringArray(mImageUris.keySet(), bucketsFirst);
-        Log.d(TAG, "loadImages(), buckets.length: " + buckets.length);
-    }
+    private ArrayAdapter<String> bucketsAdapter;
 
     /**
      * 初始化目录图片列表的adapter
      */
-    private void initBucketsAdapter() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getParentActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, buckets);
-        mDrawerList.setAdapter(adapter);
+    private void updateBucketsAdapter() {
+        if(bucketsAdapter == null) {
+            ArrayList<String> data = new ArrayList<>();
+            data.addAll(buckets);
+            bucketsAdapter = new ArrayAdapter<>(getParentActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, data);
+            mDrawerList.setAdapter(bucketsAdapter);
+        } else {
+            if(buckets.size() > bucketsAdapter.getCount()) {
+                bucketsAdapter.add(buckets.get(buckets.size() - 1));
+            }
+        }
     }
 
     /**
-     * 加载目录列表指定inde项的图片目录中的图片
+     * 加载目录列表指定index项的图片目录中的图片
      *
-     * @param index 图片目录bucket的inde项的
      */
     private void loadLocalImageOrder(int index) {
-        Log.i(TAG, "index = " + index + "; buckets length " + buckets.length);
-        if(index < buckets.length && index >= 0) {
-            String bucket = buckets[index];
+        Log.i(TAG, "index = " + index + "; buckets length " + buckets.size());
+        if(index < buckets.size() && index >= 0) {
+            String bucket = buckets.get(index);
             mImageUriList.clear();
             mImageUriList.addAll(mImageUris.get(bucket));
             Log.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
@@ -322,71 +379,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> imp
         } else {
             Log.i(TAG, "index out of buckets");
         }
-
-    }
-
-    /**
-     * Instantiate and return a new Loader for the given ID.
-     *
-     * @param id   The ID whose loader is to be created.
-     * @param args Any arguments supplied by the caller.
-     * @return Return a new Loader instance that is ready to start loading.
-     */
-    @Override
-    public Loader<Void> onCreateLoader(int id, Bundle args) {
-        AsyncTaskLoader<Void> loader = new AsyncTaskLoader<Void>(getParentActivity()) {
-
-            /**
-             * Called on a worker thread to perform the actual load and to return
-             * the result of the load operation.
-             * <p/>
-             * Implementations should not deliver the result directly, but should return them
-             * from this method, which will eventually end up calling {@link #deliverResult} on
-             * the UI thread.  If implementations need to process the results on the UI thread
-             * they may override {@link #deliverResult} and do so there.
-             * <p/>
-             */
-            @Override
-            public Void loadInBackground() {
-                loadPhoneImages();
-                return null;
-            }
-        };
-        loader.forceLoad();
-        return loader;
-    }
-
-    /**
-     * <li> The Loader will release the data once it knows the application
-     * is no longer using it.  For example, if the data is
-     * a {@link Cursor} from a {@link android.content.CursorLoader},
-     * you should not call close() on it yourself.  If the Cursor is being placed in a
-     * {@link CursorAdapter}, you should use the
-     * {@link CursorAdapter#swapCursor(Cursor)}
-     * method so that the old Cursor is not closed.
-     * </ul>
-     *
-     * @param loader The Loader that has finished.
-     * @param data   The data generated by the Loader.
-     */
-    @Override
-    public void onLoadFinished(Loader<Void> loader, Void data) {
-        initBucketsAdapter();
-        if(buckets.length > 0) {
-            // 查找到了图片显示列表第一项的图片
-            loadLocalImageOrder(curLoaderPosition);
-        }
-    }
-
-    /**
-     * Called when a previously created loader is being reset, and thus
-     * making its data unavailable.  The application should at this point
-     * remove any references it has to the Loader's data.
-     *
-     * @param loader The Loader that is being reset.
-     */
-    @Override
-    public void onLoaderReset(Loader<Void> loader) {
 
     }
 

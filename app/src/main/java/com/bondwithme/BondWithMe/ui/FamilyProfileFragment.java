@@ -110,10 +110,28 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //             }
 //        }
 //    }
+    List<String> data_Zh = new ArrayList<String>();
+    private List<String> getDataZh() {
+        Configuration configuration = new Configuration();
+        //设置应用为简体中文
+        configuration.locale = Locale.SIMPLIFIED_CHINESE;
+        getResources().updateConfiguration(configuration, null);
+        String[] ralationArrayZh = getResources().getStringArray(R.array.relationship_item);
+        data_Zh = Arrays.asList(ralationArrayZh);
+        return data_Zh;
+    }
+
+    private boolean isZh;
 
     @Override
     public void initView() {
         getDataEn();
+        if (Locale.getDefault().toString().equals("zh_CN")) {
+            isZh = true;
+//            data_Us = Arrays.asList(relationships);
+            getDataZh();
+
+        }
         Intent intent = getActivity().getIntent();
         useId = MainActivity.getUser().getUser_id();//MainActivity.
         memberId = intent.getStringExtra("member_id");
@@ -219,6 +237,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                     intent.putExtra("relationship", userEntity.getTree_type_name());
                     intent.putExtra("fam_nickname", userEntity.getFam_nickname());
                     intent.putExtra("member_status", userEntity.getUser_status());
+                    //传index进下个界面
                     intent.putExtra("selectMemeber", data_Us.indexOf(userEntity.getTree_type_name()));
 //                    startActivityForResult(intent, 0);
                     startActivityForResult(intent, 1);

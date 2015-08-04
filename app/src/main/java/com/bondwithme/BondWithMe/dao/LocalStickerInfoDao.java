@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -20,7 +19,7 @@ import java.util.List;
  * Created by quankun on 15/6/26.
  */
 public class LocalStickerInfoDao {
-    private static Dao<LocalStickerInfo, String> stickerInfoDao;
+    private static Dao<LocalStickerInfo, Integer> stickerInfoDao;
     private static LocalStickerInfoDao stickerInfoDaoInstance;
     private Context mContext;
     private static final String STICKER_FILE_PATH_NAME = "Sticker";
@@ -49,12 +48,12 @@ public class LocalStickerInfoDao {
                 stickerInfoDaoInstance = new LocalStickerInfoDao(paramContext);
                 try {
                     stickerInfoDao = SQLiteHelperOrm.getHelper(paramContext).getDao(LocalStickerInfo.class);
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
+
                 }
             }
-            LocalStickerInfoDao localExpertsListDBDao = stickerInfoDaoInstance;
-            return localExpertsListDBDao;
+            return stickerInfoDaoInstance;
         } finally {
         }
     }

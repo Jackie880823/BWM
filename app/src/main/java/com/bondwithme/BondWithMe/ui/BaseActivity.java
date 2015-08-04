@@ -4,25 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.util.AttributeSet;
-import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.material.widget.CircularProgress;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
 import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
-
-import org.xmlpull.v1.XmlPullParser;
 
 /**
  * activity基类
@@ -98,30 +92,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         //                .findViewById(android.R.id.content)).getChildAt(0);
         //        viewGroup.addView(setWaittingView());
 
-    }
-
-    private View setWaittingView() {
-
-        RelativeLayout relativeLayout = new RelativeLayout(this);
-        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
-        relativeLayout.setClickable(true);
-        //        relativeLayout.setVisibility(View.GONE);
-
-
-        //        obtainStyledAttributes(R.style.progress_bar,null);
-
-        XmlPullParser parser = getResources().getXml(R.xml.progress_bar_style);
-        AttributeSet attributes = Xml.asAttributeSet(parser);
-        CircularProgress progress_bar = new CircularProgress(this, attributes);
-
-        relativeLayout.addView(progress_bar);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) progress_bar.getLayoutParams();
-        layoutParams.width = 100;
-        layoutParams.height = 100;
-        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        progress_bar.setBackgroundColor(getResources().getColor(R.color.high_light_color));
-
-        return relativeLayout;
     }
 
     public int getLayout() {
@@ -266,7 +236,4 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         NetWorkStateReceiver.unRegisterNetStateObserver(this);
     }
 
-    protected void showWaitting() {
-        ((CircularProgress) getViewById(R.id.progressBar)).setVisibility(View.VISIBLE);
-    }
 }

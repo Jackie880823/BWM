@@ -157,6 +157,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
      */
     @Override
     public void onDestroy() {
+        Log.i(TAG, "onDestroy");
         super.onDestroy();
 
         // 取消获取群组或者用户列表的网络请求

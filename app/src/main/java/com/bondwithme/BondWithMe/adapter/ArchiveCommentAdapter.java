@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -168,7 +167,7 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private void setCommentPic(RecyclerView.ViewHolder item,ArchiveChatEntity archive){
         VHHeader holder = (VHHeader) item;
         if(!TextUtils.isEmpty(archive.getFile_id())){
-            Log.i("照片====",archive.getFile_id());
+//            Log.i("照片====", archive.getFile_id());
             //如果有照片
             holder.llArchiveImage.setVisibility(View.VISIBLE);
             holder.imArchiveImages.setVisibility(View.VISIBLE);
@@ -191,10 +190,11 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             //如果有大表情
             holder.llArchiveImage.setVisibility(View.VISIBLE);
             holder.imArchivePic.setVisibility(View.VISIBLE);
+            holder.imArchivePic.setImageDrawable(null);
             holder.imArchiveImages.setVisibility(View.GONE);
             holder.tvPhotoCount.setVisibility(View.GONE);
             if(Constant.Sticker_Gif.equals(archive.getSticker_type())){
-                Log.i("GIF====",archive.getSticker_type());
+//                Log.i("GIF====",archive.getSticker_type());
                 //如果大表情是GIF
                 String stickerGroupPath = archive.getSticker_group_path();
                 if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
@@ -222,7 +222,7 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
             }else if(Constant.Sticker_Png.equals(archive.getSticker_type())){
-                Log.i("PNG====",archive.getSticker_type());
+//                Log.i("PNG====",archive.getSticker_type());
                 //如果大表情是PNG
                 String stickerGroupPath = archive.getSticker_group_path();
                 if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
