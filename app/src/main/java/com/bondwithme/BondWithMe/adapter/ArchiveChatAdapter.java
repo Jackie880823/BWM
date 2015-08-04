@@ -142,6 +142,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
                 //如果大表情是GIF
                 holder.llArchiveImage.setVisibility(View.VISIBLE);
                 holder.imArchiveGif.setVisibility(View.VISIBLE);
+                holder.imArchiveGif.setImageDrawable(null);
                 holder.imArchivePic.setVisibility(View.GONE);
                 holder.imArchiveImages.setVisibility(View.GONE);
                 holder.tvPhotoCount.setVisibility(View.GONE);
@@ -168,6 +169,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
                 //如果大表情是PNG
                 holder.llArchiveImage.setVisibility(View.VISIBLE);
                 holder.imArchivePic.setVisibility(View.VISIBLE);
+                holder.imArchivePic.setImageDrawable(null);
                 holder.imArchiveGif.setVisibility(View.GONE);
                 holder.imArchiveImages.setVisibility(View.GONE);
                 holder.tvPhotoCount.setVisibility(View.GONE);
