@@ -19,16 +19,15 @@
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_10dp"
+        android:layout_marginBottom="@dimen/_5dp"
         android:layout_marginLeft="@dimen/_12dp"
         android:layout_marginRight="@dimen/_20dp"
         android:layout_toRightOf="@+id/message_icon_image"
         android:gravity="center"
         android:singleLine="true"
         android:text="即使但是时"
-        android:textColor="@color/default_text_color_dark"
-
-        android:textSize="@dimen/_16dp" />
+        android:textColor="@color/btn_bg_color_gray_press"
+        android:textSize="@dimen/_13dp" />
 
     <RelativeLayout
         android:id="@+id/pic_linear"
