@@ -30,12 +30,13 @@ public class MeFragment extends BaseFragment<MeActivity> {
 
     private final static int UPDATE_PROFILE = 1;
 
-    private LinearLayout llViewProfile;
+    private RelativeLayout llViewProfile;
 
     private CircularNetworkImage cniMain;
     private ImageView ivBottomLeft;
     private TextView tvName1;
     private TextView tvId1;
+    private TextView tvLoginId;
 
     private RelativeLayout rlAlbumGallery;
     private RelativeLayout rlWallPosting;
@@ -61,6 +62,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
         ivBottomLeft = getViewById(R.id.civ_left);
         tvName1 = getViewById(R.id.tv_name1);
         tvId1 = getViewById(R.id.tv_id1);
+        tvLoginId = getViewById(R.id.tv_login_id1);
 
         llViewProfile = getViewById(R.id.ll_view_profile);//跳转到My Profile
         rlAlbumGallery = getViewById(R.id.rl_album_gallery);
@@ -71,7 +73,9 @@ public class MeFragment extends BaseFragment<MeActivity> {
 //        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
 //        tvTitle.setText(MainActivity.getUser().getUser_given_name());
-        tvId1.setText("ID:" + MainActivity.getUser().getDis_bondwithme_id());
+        tvId1.setText(getResources().getString(R.string.app_name) + " ID: " + MainActivity.getUser().getDis_bondwithme_id());
+        tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
+
         String dofeel_code = MainActivity.getUser().getDofeel_code();
         if (!TextUtils.isEmpty((dofeel_code))) {
             try {
