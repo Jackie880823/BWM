@@ -58,7 +58,12 @@ public class FamilyProfileActivity extends BaseActivity {
 
     @Override
     protected void titleLeftEvent() {
-        super.titleLeftEvent();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+            setResult(RESULT_OK);
+        } else {
+            super.titleLeftEvent();
+        }
     }
 
     @Override

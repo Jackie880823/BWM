@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -85,7 +86,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     private static final int GET_USER_ENTITY = 0X11;
 
-    List<String> data_Us = new ArrayList<String>();
+    List<String> data_Us = new ArrayList<>();
 
     public static FamilyProfileFragment newInstance(String... params) {
         return createInstance(new FamilyProfileFragment());
@@ -111,7 +112,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //             }
 //        }
 //    }
-    List<String> data_Zh = new ArrayList<String>();
+    List<String> data_Zh = new ArrayList<>();
     private List<String> getDataZh() {
         Configuration configuration = new Configuration();
         //设置应用为简体中文
@@ -161,7 +162,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         if (!TextUtils.isEmpty(getDofeelCode)) {
             try {
                 String filePath = "";
-                if (getDofeelCode.indexOf("_") != -1) {
+                if (getDofeelCode.contains("_")) {
                     filePath = getDofeelCode.replaceAll("_", File.separator);
                 }
                 InputStream is = App.getContextInstance().getAssets().open(filePath);
@@ -175,7 +176,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
-                ArrayList<PhotoEntity> datas = new ArrayList();
+                ArrayList<PhotoEntity> datas = new ArrayList<>();
                 PhotoEntity peData = new PhotoEntity();
                 peData.setUser_id(memberId);
                 peData.setFile_id("profile");
@@ -290,7 +291,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                         if (!TextUtils.isEmpty(dofeel_code)) {
                             try {
                                 String filePath = "";
-                                if (dofeel_code.indexOf("_") != -1) {
+                                if (dofeel_code.contains("_")) {
                                     filePath = dofeel_code.replaceAll("_", File.separator);
                                 }
                                 InputStream is = App.getContextInstance().getAssets().open(filePath);
@@ -308,7 +309,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
 
     private void getHasMiss() {
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("from_user_id", MainActivity.getUser().getUser_id());
         params.put("to_user_id", memberId);
         params.put("to_user_fullname", userEntity.getUser_given_name());
@@ -357,11 +358,11 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     @Override
     public void requestData() {
-        HashMap<String, String> jsonParams = new HashMap<String, String>();
+        HashMap<String, String> jsonParams = new HashMap<>();
         jsonParams.put("user_id", useId);
         jsonParams.put("member_id", memberId);
         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_MEMBER_PROFILE_DETAIL, params);
 
@@ -412,8 +413,8 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         Log.i("resultCode1====",resultCode+"");
         switch (requestCode) {
             case 1:
-                if (resultCode == getActivity().RESULT_OK){
-                    getActivity().setResult(getActivity().RESULT_OK);
+                if (resultCode == Activity.RESULT_OK){
+                    getActivity().setResult(Activity.RESULT_OK);
                     userEntity.setTree_type_name(data.getStringExtra("relationship"));
                 }
         }
