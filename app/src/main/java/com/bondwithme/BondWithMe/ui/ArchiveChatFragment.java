@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,7 +41,7 @@ import java.util.Map;
 /**
  * Created by liangzemian on 15/7/1.
  */
-public class ArchiveChatFragment extends BaseFragment<Activity> implements ArchiveChatViewClickListener {
+public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements ArchiveChatViewClickListener {
     private static final String TAG = ArchiveChatFragment.class.getSimpleName();
     //如果是0，则是group，否则是private
 //    private String tag;
@@ -53,12 +52,14 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
     private int offset = 10;
     private int currentPage = 1;
     private boolean loading;
+    private boolean isSearch;
     LinearLayoutManager llm;
     private String archive_id;
     private View vProgress;
 
     private String Tap;//0是群组传进来的，1成员传进来的
     private String group_id;
+    private String group_name;
 
     private TextView searchText;
     private ImageButton searchButton;
@@ -68,7 +69,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
     private List<ArchiveChatEntity> data = new ArrayList<>();
     private List<ArchiveChatEntity> searchData = new ArrayList<>();
 
-    private boolean isEtImport;
+    private boolean isEtImport = true;
 
     public static ArchiveChatFragment newInstance(String... params) {
             return createInstance(new ArchiveChatFragment(),params);
@@ -98,6 +99,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         if(getArguments() != null){
             Tap =  getArguments().getString(ARG_PARAM_PREFIX + "0");
             group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
+            group_name = getArguments().getString(ARG_PARAM_PREFIX + "2");
 //            if (Tap.equals("0")){
 //                group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
 //            }else {
@@ -115,6 +117,28 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
         initAdapter();
+
+        getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
+            @Override
+            public boolean execute(View v) {
+                if (v.getId() == getParentActivity().leftButton.getId()) {
+                    if(!isEtImport && isSearch){
+                        searchText.setText("");
+                    }else {
+                        getParentActivity().finish();
+                    }
+                }
+                if(v.getId() == getParentActivity().rightButton.getId()){
+                    Intent intent = new Intent(getParentActivity(), GroupSettingActivity.class);
+                    intent.putExtra("groupId", group_id);
+                    intent.putExtra("groupName", group_name);
+                    intent.putExtra("groupType",1);
+                    startActivity(intent);
+                }
+                return false;
+            }
+        });
+
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -123,7 +147,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                if ((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
                 }
@@ -141,6 +165,7 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
             }
 
         });
+
         //搜索按钮监听事件
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,10 +174,15 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
                         .hideSoftInputFromWindow(
                                 getActivity().getCurrentFocus().getWindowToken(),
                                 InputMethodManager.HIDE_NOT_ALWAYS);
-                isRefresh = true;
-                vProgress.setVisibility(View.VISIBLE);
-                searchData.clear();
-                searchData(searchText.getText().toString().trim());
+                if(!isEtImport){
+                    isRefresh = true;
+                    isSearch = true;
+                    vProgress.setVisibility(View.VISIBLE);
+                    searchData.clear();
+                    searchData(searchText.getText().toString().trim());
+                }else {
+                    isSearch = false;
+                }
             }
         });
 
@@ -185,15 +215,22 @@ public class ArchiveChatFragment extends BaseFragment<Activity> implements Archi
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH || (event!=null&&event.getKeyCode()== KeyEvent.KEYCODE_ENTER)){
+                    //隐藏软键盘
                     ((InputMethodManager) searchText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
                             .hideSoftInputFromWindow(
                                     getActivity().getCurrentFocus().getWindowToken(),
                                     InputMethodManager.HIDE_NOT_ALWAYS);
 //                    Log.i("onEditorAction====","onEditorAction");
-                    isRefresh = true;
-                    vProgress.setVisibility(View.VISIBLE);
-                    searchData.clear();
-                    searchData(searchText.getText().toString().trim());
+                    if(!isEtImport){
+                        isRefresh = true;
+                        isSearch = true;
+                        vProgress.setVisibility(View.VISIBLE);
+                        searchData.clear();
+                        searchData(searchText.getText().toString().trim());
+                        return true;
+                    }else {
+                        isSearch = false;
+                    }
                 }
                 return false;
             }

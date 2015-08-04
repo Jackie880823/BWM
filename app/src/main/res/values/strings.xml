@@ -148,7 +148,7 @@
     <string name="text_message_user">Message Member</string>
     <string name="text_add_new_member">Add New Member</string>
     <string name="text_create_new_group">Create New Group</string>
-    <string name="text_view_profile_family">View Profile</string>
+    <string name="ftext_view_profile_family">View Profile</string>
     <string name="text_i_miss_you">I Miss You !</string>
     <string name="text_path_relationship"><![CDATA[Path &amp; Relationship]]></string>
     <string name="text_send_message">Send Message</string>
@@ -471,7 +471,7 @@
     <string name="morning">am</string>
     <string name="afternoon">pm</string>
 
-    <string name="test_group_friend">Some group members are still not connected to you.Only connected members will be added.</string>
+    <string name="test_group_friend">Some group members are still not connected to you.</string>
     <string name="text_no_data">No data!</string>
     <string name="year">Year</string>
     <string name="text_new_everyone">Everyone</string>

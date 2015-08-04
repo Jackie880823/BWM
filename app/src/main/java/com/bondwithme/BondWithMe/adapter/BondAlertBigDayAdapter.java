@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.BigDayEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.FamilyProfileActivity;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -170,7 +171,7 @@ public class BondAlertBigDayAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, FamilyProfileActivity.class);
-                    intent.putExtra("member_id", mData.get(getAdapterPosition()).getUser_id());
+                    intent.putExtra(UserEntity.EXTRA_MEMBER_ID, mData.get(getAdapterPosition()).getUser_id());
                     mContext.startActivity(intent);
                 }
             });

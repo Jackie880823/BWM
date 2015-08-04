@@ -94,6 +94,7 @@ public class PathRelationshipActivity extends BaseActivity {
     public void finish() {
         Intent intent = new Intent();
         if (isZh) {
+//            Log.i("finish====",tvRelationship.getText().toString()+"");
             intent.putExtra("relationship", data_Us.get(data_Zh.indexOf(tvRelationship.getText().toString())));
         } else {
             intent.putExtra("relationship", tvRelationship.getText().toString());
@@ -110,6 +111,7 @@ public class PathRelationshipActivity extends BaseActivity {
     @Override
     public void initView() {
         getDataEn();
+        //系统环境是中文
         if (Locale.getDefault().toString().equals("zh_CN")) {
             isZh = true;
             getDataZh();
@@ -130,12 +132,17 @@ public class PathRelationshipActivity extends BaseActivity {
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_name);//放名字还是放Me????
 
-//        tvRelationship.setText(relationship);
+        int length=getIntent().getIntExtra("selectMemeber", -1);
+        if(length==-1||length>=data_Zh.size()){
+            tvRelationship.setText("");
+        }else{
         if (isZh) {
-            tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));
+            tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber", -1)));
         } else {
-            tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", -1)));
+            tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", data_Us.size()-1)));
         }
+        }
+
 
         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
@@ -202,15 +209,38 @@ public class PathRelationshipActivity extends BaseActivity {
 
                 if (pathList != null) {
                     for (int i = 0; i < pathList.size(); i++) {//关系列表
+
                         ll[i].setVisibility(View.VISIBLE);
                         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+//                        if(i == 0){
+
+                            if(TextUtils.isEmpty(tvRelationship.getText().toString())){
+                                String mrelationship4En = pathList.get(0).getRelationship();
+                                int mPosition = data_Us.indexOf(mrelationship4En);
+                                if(isZh){
+                                    tvRelationship.setText(data_Zh.get(mPosition));
+                                }else {
+                                    tvRelationship.setText(mrelationship4En);
+                                }
+
+                            }
+//                        }
                         String relationship4En = pathList.get(i).getRelationship();
+                        int position = data_Us.indexOf(relationship4En);
                         /**wing modify for no relationship begin*/
                         if (TextUtils.isEmpty(relationship4En)) {
                             continue;
                         }
+//                        if(TextUtils.isEmpty(tvRelationship.getText().toString())){
+//                            String mRelationship = pathList.get(0).getRelationship();
+//                            if (isZh) {
+////                                tvRelationship.setText(data_Us.indexOf(mRelationship));
+//                            }else {
+////                                tvRelationship.setText(mRelationship);
+//                            }
+//                        }
                         if (isZh) {
-                            int position = data_Us.indexOf(relationship4En);
+//                            int position = data_Us.indexOf(relationship4En);
                             if (position != -1) {
                                 tvRelationships[i].setText(data_Zh.get(position));
                             }

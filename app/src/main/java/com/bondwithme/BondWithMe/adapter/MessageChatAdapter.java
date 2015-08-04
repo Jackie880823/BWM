@@ -25,6 +25,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.task.DownloadStickerTask;
 import com.bondwithme.BondWithMe.ui.FamilyProfileActivity;
@@ -361,10 +362,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                                     String memberFlag = jsonObject.optString("member_flag");
                                     if ("1".equals(memberFlag)) {
                                         Intent intent = new Intent(context, FamilyProfileActivity.class);
-                                        intent.putExtra("member_id", msgEntity.getUser_id());
-                                        intent.putExtra("groupId", msgEntity.getUser_id());
-                                        intent.putExtra("groupName", msgEntity.getUser_given_name());
-                                        context.startActivity(intent);
+                                        intent.putExtra(UserEntity.EXTRA_MEMBER_ID, msgEntity.getUser_id());
+                                        intent.putExtra(UserEntity.EXTRA_GROUP_ID, msgEntity.getUser_id());
+                                        intent.putExtra(UserEntity.EXTRA_GROUP_NAME, msgEntity.getUser_given_name());
+                                                context.startActivity(intent);
                                     } else {
                                         MslToast.getInstance(context).showShortToast(context.getString(R.string.text_show_message_is_friend));
                                     }
