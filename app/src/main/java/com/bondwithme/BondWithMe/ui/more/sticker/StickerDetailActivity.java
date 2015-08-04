@@ -56,6 +56,8 @@ public class StickerDetailActivity extends BaseActivity {
     public static final String ACTION_UPDATE = "ACTION_UPDATE_FROM_STICKER_DETAIL";
     int finished;
     private final int UPDATE_PROGRESSBAR =1;
+    int loadingPosition;
+
 
 
     @Override
@@ -96,7 +98,7 @@ public class StickerDetailActivity extends BaseActivity {
         stickerGroupEntity = (StickerGroupEntity) intent.getSerializableExtra(StickerGroupAdapter.STICKER_GROUP);
         position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
         finished = intent.getIntExtra("finished",0);
-        int loadingPosition = intent.getIntExtra("positionFromStickerDetail",0);
+        loadingPosition = intent.getIntExtra("positionFromStickerDetail",0);
 
         NetworkImageView insideSticker = getViewById(R.id.iv_inside_sticker);
         TextView insideStickerName = getViewById(R.id.tv_inside_sticker_name);
@@ -107,16 +109,8 @@ public class StickerDetailActivity extends BaseActivity {
         gvSticker = getViewById(R.id.gv_sticker);
         pbProgress = getViewById(R.id.pb_download);
 
-        if(finished>0 && finished<100 && position == loadingPosition) {
-            tvDownload.setVisibility(View.INVISIBLE);
-            pbProgress.setVisibility(View.VISIBLE);
-            pbProgress.setProgress(finished);
-        } else{
-            tvDownload.setVisibility(View.VISIBLE);
-            pbProgress.setVisibility(View.INVISIBLE);
-            pbProgress.setProgress(0);
-            initDownloadView();
-        }
+        initDownloadView();
+
 
         VolleyUtil.initNetworkImageView(this, insideSticker,
                 String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()),
@@ -160,6 +154,16 @@ public class StickerDetailActivity extends BaseActivity {
             }
         } catch (Exception e) {
             LogUtil.e(TAG,"",e);
+        }
+        if(finished>0 && finished<100 && position == loadingPosition) {
+            tvDownload.setVisibility(View.INVISIBLE);
+            pbProgress.setVisibility(View.VISIBLE);
+            pbProgress.setProgress(finished);
+        } else{
+            tvDownload.setVisibility(View.VISIBLE);
+            pbProgress.setVisibility(View.INVISIBLE);
+            pbProgress.setProgress(0);
+
         }
 
     }
