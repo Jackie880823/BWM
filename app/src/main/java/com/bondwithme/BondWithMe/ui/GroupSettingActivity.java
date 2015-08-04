@@ -547,7 +547,9 @@ public class GroupSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(GroupSettingActivity.this, FamilyProfileActivity.class);
-                intent1.putExtra("member_id", userList.get(position).getUser_id());
+                intent1.putExtra(UserEntity.EXTRA_MEMBER_ID, userList.get(position).getUser_id());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_ID,userList.get(position).getGroup_id());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_NAME,userList.get(position).getUser_given_name());
                 startActivity(intent1);
                 showAdminDialog1.dismiss();
             }
@@ -671,7 +673,9 @@ public class GroupSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(GroupSettingActivity.this, FamilyProfileActivity.class);
-                intent1.putExtra("member_id", userList.get(position).getUser_id());
+                intent1.putExtra(UserEntity.EXTRA_MEMBER_ID, userList.get(position).getUser_id());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_ID,userList.get(position).getGroup_id());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_NAME,userList.get(position).getUser_given_name());
                 startActivity(intent1);
                 showNonAdminDialog1.dismiss();
             }

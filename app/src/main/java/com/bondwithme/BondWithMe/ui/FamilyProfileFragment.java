@@ -121,13 +121,10 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         return data_Zh;
     }
 
-    private boolean isZh;
-
     @Override
     public void initView() {
         getDataEn();
         if (Locale.getDefault().toString().equals("zh_CN")) {
-            isZh = true;
 //            data_Us = Arrays.asList(relationships);
             getDataZh();
 
@@ -137,6 +134,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         memberId = intent.getStringExtra("member_id");
         groupId = intent.getStringExtra("groupId");
         groupName = intent.getStringExtra("groupName");
+        if(TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)){
+            //如果上个页面没传进groupId或者groupName，显示进度条
+        }
 //        relationship = intent.getStringExtra("relationship");
 //        famNickname = intent.getStringExtra("fam_nickname");
 //        memberStatus = intent.getStringExtra("member_status");
@@ -205,9 +205,17 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 //聊天界面
                 Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
                 intent2.putExtra("type", 0);
-                intent2.putExtra("groupId", groupId);
-                intent2.putExtra("titleName", groupName);
-                startActivity(intent2);
+                if((TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)) && userEntity != null){
+                    //如果上个页面没有groupId或者groupName
+                    intent2.putExtra("groupId", userEntity.getGroup_id());
+                    intent2.putExtra("titleName", userEntity.getUser_given_name());
+                    startActivity(intent2);
+                }else {
+                    intent2.putExtra("groupId", groupId);
+                    intent2.putExtra("titleName", groupName);
+                    startActivity(intent2);
+                }
+
             }
         });
 
