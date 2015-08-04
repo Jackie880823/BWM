@@ -26,6 +26,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.task.DownloadStickerTask;
 import com.bondwithme.BondWithMe.ui.FamilyProfileActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.MeActivity;
@@ -216,7 +217,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     }
 
     @Override
-    public void onBindViewHolder(VHItem holder, int position) {
+    public void onBindViewHolder(final VHItem holder, int position) {
         MsgEntity msgEntity = myList.get(position);
         boolean isSendMe = msgEntity.getUser_id().equals(MainActivity.getUser().getUser_id());
         holder.dateTime.setText(MyDateUtils.getLocalDateStringFromUTC(context, msgEntity.getContent_creation_date()));
@@ -250,18 +251,11 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
                 if (gifDrawable != null) {
                     holder.gifImageView.setImageDrawable(gifDrawable);
-                    //                    if ("true".equals(msgEntity.getIsNate())) {
-                    //                        holder.progressBar.setVisibility(View.VISIBLE);
-                    //                    } else {
-                    //                        holder.progressBar.setVisibility(View.GONE);
-                    //                    }
                 } else {
-                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, msgEntity.getSticker_type());
-                    downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default, gifFilePath);
+                    DownloadStickerTask.getInstance().downloadGifSticker(holder.progressBar, stickerGroupPath, msgEntity.getSticker_name(), R.drawable.network_image_default, holder.gifImageView);
                 }
             } catch (Exception e) {
-                String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, msgEntity.getSticker_type());
-                downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default, gifFilePath);
+                DownloadStickerTask.getInstance().downloadGifSticker(holder.progressBar, stickerGroupPath, msgEntity.getSticker_name(), R.drawable.network_image_default, holder.gifImageView);
                 LogUtil.e("", "插入sticker info", e);
             }
         } else if (Constant.Sticker_Png.equals(msgEntity.getSticker_type())) {//Png
@@ -290,14 +284,11 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                         Bitmap bitmap = BitmapFactory.decodeStream(is);//将流转化成Bitmap对象
                         holder.pngImageView.setImageBitmap(bitmap);//显示图片
                     } else {
-                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-                        downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default, pngFileName);
+                        DownloadStickerTask.getInstance().downloadPngSticker(holder.progressBar, stickerGroupPath, msgEntity.getSticker_name(), R.drawable.network_image_default, holder.pngImageView);
                     }
                 } catch (Exception e) {
                     //本地没有png的时候，从服务器下载
-                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), msgEntity.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-                    Log.i("stickerUrl", stickerUrl);
-                    downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default, pngFileName);
+                    DownloadStickerTask.getInstance().downloadPngSticker(holder.progressBar, stickerGroupPath, msgEntity.getSticker_name(), R.drawable.network_image_default, holder.pngImageView);
                     LogUtil.e("", "插入sticker info", e);
                 }
             }
@@ -305,178 +296,6 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             holder.progressBar.setVisibility(View.GONE);
             VolleyUtil.initNetworkImageView(context, holder.networkImageView, String.format(Constant.API_GET_PIC, "post_preview_m", msgEntity.getUser_id(), msgEntity.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         }
-    }
-
-    /**
-     * 获取图片的byte数组
-     *
-     * @param urlPath
-     * @return
-     */
-    private byte[] getImageByte(String urlPath, String filePath) {
-        InputStream in = null;
-        byte[] result = null;
-        try {
-            URL url = new URL(urlPath);
-            HttpURLConnection httpURLconnection = (HttpURLConnection) url.openConnection();
-            httpURLconnection.setDoInput(true);
-            httpURLconnection.connect();
-            if (httpURLconnection.getResponseCode() == 200) {
-                in = httpURLconnection.getInputStream();
-                result = readInputStream(in);
-                in.close();
-            } else {
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        if (null != result && result.length > 0) {
-            writeFile(filePath, result);
-        }
-        return result;
-    }
-
-    public void writeFile(String fileName, byte[] bytes) {
-        try {
-            if (fileName.indexOf(File.separator) >= 0) {
-                String path = fileName.substring(0, fileName.lastIndexOf(File.separator));
-                File file = new File(path);
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
-            }
-            FileOutputStream fos = new FileOutputStream(new File(fileName), true);
-            fos.write(bytes);
-            fos.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 将输入流转为byte数组
-     *
-     * @param in
-     * @return
-     * @throws Exception
-     */
-    private static byte[] readInputStream(InputStream in) throws Exception {
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int len = -1;
-        while ((len = in.read(buffer)) != -1) {
-            baos.write(buffer, 0, len);
-        }
-        baos.close();
-        in.close();
-        return baos.toByteArray();
-
-    }
-
-    /**
-     * 此方法用来异步加载图片
-     *
-     * @param path
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void downloadAsyncTask(final CircularProgress progressBar, final GifImageView gifImageView, final String path, final int defaultResource, final String filePath) {
-        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
-            @Override
-            protected byte[] doInBackground(Object... params) {
-                return getImageByte(path, filePath);
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                progressBar.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected void onPostExecute(byte[] resultByte) {
-                super.onPostExecute(resultByte);
-                progressBar.setVisibility(View.GONE);
-                try {
-                    if (null != resultByte) {
-                        GifDrawable gifDrawable = new GifDrawable(resultByte);
-                        if (gifDrawable != null && gifImageView != null) {
-                            gifImageView.setImageDrawable(gifDrawable);
-                        } else {
-                            gifImageView.setImageResource(defaultResource);
-                        }
-                    } else {
-                        gifImageView.setImageResource(defaultResource);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        };
-        //for not work in down 11
-        if (SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            task.execute();
-        }
-
-    }
-
-    public void downloadPngAsyncTask(final CircularProgress progressBar, final ImageView imageView, final String path, final int defaultResource, final String filePath) {
-        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
-
-            @Override
-            protected byte[] doInBackground(Object... params) {
-                return getImageByte(path, filePath);
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                progressBar.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected void onPostExecute(byte[] resultByte) {
-                super.onPostExecute(resultByte);
-                progressBar.setVisibility(View.GONE);
-                try {
-                    if (null != resultByte) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(resultByte, 0, resultByte.length);
-                        if (bitmap != null && imageView != null) {
-                            imageView.setImageBitmap(bitmap);
-                        } else {
-                            imageView.setImageResource(defaultResource);
-                        }
-                    } else {
-                        imageView.setImageResource(defaultResource);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        };
-
-        //for not work in down 11
-        if (SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            task.execute();
-        }
-
     }
 
     @Override
@@ -593,7 +412,6 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                         context.startActivity(intent);
                     }
                     break;
-
             }
         }
     }
