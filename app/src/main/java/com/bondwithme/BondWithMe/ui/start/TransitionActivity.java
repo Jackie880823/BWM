@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.ui;
+package com.bondwithme.BondWithMe.ui.start;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,7 +9,7 @@ import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.ui.start.StartActivity;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
