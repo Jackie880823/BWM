@@ -571,6 +571,10 @@
     <string name="download_apk_content_title">BondWithMe</string>
     <string name="download_apk_content_description">When download finished , click to install.</string>
     <string name="update">Update</string>
+    <string name="error_feedback">Got error</string>
+    <string name="error_feedback_desc">Do you want to report the error to us? Your report can help us to do better,thank you!</string>
+    <string name="report">Report</string>
+    <string name="click_again_exit">Click again exit!</string>
 
     <string name="login">Log in</string>
     <string name="text_phone">Phone</string>

@@ -1,16 +1,12 @@
 package com.bondwithme.BondWithMe;
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
@@ -29,6 +25,7 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
+import com.bondwithme.BondWithMe.util.SystemUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.facebook.login.LoginManager;
@@ -116,7 +113,7 @@ public class App extends MultiDexApplication {
                 try {
                     JSONObject object = new JSONObject(response);
 //                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) ) {
-                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update") == "1") {
+                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update").equals("1")) {
                         //must update app
                         needUpdate = true;
                         showUpdateDialog(context);
@@ -147,7 +144,6 @@ public class App extends MultiDexApplication {
     private static void showUpdateDialog(final Activity content) {
 
         if (updateDialog == null) {
-            LayoutInflater factory = LayoutInflater.from(content);
             updateDialog = new MyDialog(content, R.string.text_tips_title, R.string.update_message);
             updateDialog.setCanceledOnTouchOutside(false);
             updateDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
@@ -161,28 +157,31 @@ public class App extends MultiDexApplication {
                 @Override
                 public void onClick(View v) {
                     updateDialog.dismiss();
-                    // uri 是你的下载地址，可以使用Uri.parse("http://")包装成Uri对象
-                    DownloadManager.Request req = new DownloadManager.Request(Uri.parse("http://bondwith.me/download.php"));
 
-                    // 通过setAllowedNetworkTypes方法可以设置允许在何种网络下下载，
-                    // 也可以使用setAllowedOverRoaming方法，它更加灵活
-                    req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+                    SystemUtil.updateByGooglePlay(content);
 
-                    // 此方法表示在下载过程中通知栏会一直显示该下载，在下载完成后仍然会显示，
-                    // 直到用户点击该通知或者消除该通知。还有其他参数可供选择
-                    req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-                    // 设置下载文件存放的路径，同样你可以选择以下方法存放在你想要的位置。
-                    req.setDestinationInExternalFilesDir(content, Environment.DIRECTORY_DOWNLOADS, content.getString(R.string.title_download_task));
-
-                    // 设置一些基本显示信息
-                    req.setTitle(content.getString(R.string.download_apk_content_title));
-                    req.setDescription(content.getString(R.string.download_apk_content_description));
-                    req.setMimeType("application/vnd.android.package-archive");
-
-                    // Ok go!
-                    DownloadManager dm = (DownloadManager) content.getSystemService(Context.DOWNLOAD_SERVICE);
-                    long downloadId = dm.enqueue(req);
+//                    // uri 是你的下载地址，可以使用Uri.parse("http://")包装成Uri对象
+//                    DownloadManager.Request req = new DownloadManager.Request(Uri.parse("http://bondwith.me/download.php"));
+//
+//                    // 通过setAllowedNetworkTypes方法可以设置允许在何种网络下下载，
+//                    // 也可以使用setAllowedOverRoaming方法，它更加灵活
+//                    req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+//
+//                    // 此方法表示在下载过程中通知栏会一直显示该下载，在下载完成后仍然会显示，
+//                    // 直到用户点击该通知或者消除该通知。还有其他参数可供选择
+//                    req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+//
+//                    // 设置下载文件存放的路径，同样你可以选择以下方法存放在你想要的位置。
+//                    req.setDestinationInExternalFilesDir(content, Environment.DIRECTORY_DOWNLOADS, content.getString(R.string.title_download_task));
+//
+//                    // 设置一些基本显示信息
+//                    req.setTitle(content.getString(R.string.download_apk_content_title));
+//                    req.setDescription(content.getString(R.string.download_apk_content_description));
+//                    req.setMimeType("application/vnd.android.package-archive");
+//
+//                    // Ok go!
+//                    DownloadManager dm = (DownloadManager) content.getSystemService(Context.DOWNLOAD_SERVICE);
+//                    long downloadId = dm.enqueue(req);
 
                     appContext.exit(content);
                 }

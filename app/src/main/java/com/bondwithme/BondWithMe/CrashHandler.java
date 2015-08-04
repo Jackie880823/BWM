@@ -2,11 +2,11 @@ package com.bondwithme.BondWithMe;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
-import android.os.Looper;
 
+import com.bondwithme.BondWithMe.ui.CrashActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.SystemUtil;
 
 import java.io.File;
@@ -29,6 +29,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
     public static final String TAG = "CrashHandler";
 
+
     //系统默认的UncaughtException处理类
     private Thread.UncaughtExceptionHandler mDefaultHandler;
     //CrashHandler实例
@@ -41,11 +42,15 @@ public class CrashHandler implements UncaughtExceptionHandler {
     //用于格式化日期,作为日志文件名的一部分
     private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
-    /** 保证只有一个CrashHandler实例 */
+    /**
+     * 保证只有一个CrashHandler实例
+     */
     private CrashHandler() {
     }
 
-    /** 获取CrashHandler实例 ,单例模式 */
+    /**
+     * 获取CrashHandler实例 ,单例模式
+     */
     public static CrashHandler getInstance() {
         return INSTANCE;
     }
@@ -73,20 +78,23 @@ public class CrashHandler implements UncaughtExceptionHandler {
             //如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                LogUtil.e(TAG, "error : ", e);
-            }
+
+            //        //使用Toast来显示异常信息
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                Looper.prepare();
+//                MessageUtil.showMessage(mContext, R.string.app_crash_message);
+//                Looper.loop();
+//            }
+//        }.start();
+
+            Intent intent = new Intent(mContext, CrashActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
             //退出程序
             App.getContextInstance().exit();
-
-//            Intent intent = new Intent(mContext, SSSActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//            mContext.startActivity(intent);
-
-//            android.os.Process.killProcess(android.os.Process.myPid());
-//            System.exit(0);
+//            showFeedbackDialog();
 
         }
     }
@@ -101,17 +109,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
         if (ex == null) {
             return false;
         }
-        //使用Toast来显示异常信息
-        new Thread() {
-            @Override
-            public void run() {
-                Looper.prepare();
-                MessageUtil.showMessage(mContext, R.string.app_crash_message);
-                Looper.loop();
-            }
-        }.start();
-        //收集设备参数信息
-        infos = SystemUtil.collectDeviceInfo(mContext);
         //保存日志文件
         saveCrashInfo2File(ex);
         return true;
@@ -119,13 +116,16 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
 
 
+
     /**
      * 保存错误信息到文件中
      *
      * @param ex
-     * @return	返回文件名称,便于将文件传送到服务器
+     * @return 返回文件名称, 便于将文件传送到服务器
      */
     private String saveCrashInfo2File(Throwable ex) {
+        //收集设备参数信息
+        infos = SystemUtil.collectDeviceInfo(mContext);
 
         StringBuffer sb = new StringBuffer();
         for (Map.Entry<String, String> entry : infos.entrySet()) {

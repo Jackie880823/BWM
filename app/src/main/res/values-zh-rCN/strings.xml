@@ -568,6 +568,10 @@
     <string name="download_apk_content_title">伴我玩</string>
     <string name="download_apk_content_description">当下载完成时，点击可安装。</string>
     <string name="update">更新</string>
+    <string name="error_feedback">发现异常</string>
+    <string name="error_feedback_desc">你想把异常报告给我们吗？你的报告会帮助我们把app做得更好！</string>
+    <string name="report">报告</string>
+    <string name="click_again_exit">再次点击退出!</string>
 
     <string name="login">登录</string>
     <string name="text_phone">电话</string>

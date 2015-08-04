@@ -1,5 +1,8 @@
 package com.bondwithme.BondWithMe.http;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,9 +14,7 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.OutputStream;
 
 public class PicturesCacheUtil extends FileUtil {
 
@@ -35,8 +36,6 @@ public class PicturesCacheUtil extends FileUtil {
 
     private PicturesCacheUtil() {
     }
-
-    ;
 
 
     /**
@@ -107,30 +106,79 @@ public class PicturesCacheUtil extends FileUtil {
 
     }
 
-    public static void saveImageToGallery(Context context, Bitmap bmp, String prefix) throws IOException {
+    public static void saveImageToGallery(Context context, Bitmap bmp, String prefix)  {
 
-        String fileName = getPicPath(context, prefix);
-        File file = new File(fileName);
-        FileOutputStream fos = new FileOutputStream(file);
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-        fos.flush();
-        fos.close();
+//        String fileName = getPicPath(context, prefix);
+//        saveToFile(fileName, bmp);
 
-//        Log.i("","fileName=========="+file.getName());
+//        Log.i("", "fileName==========" + fileName);
 
+
+//        ContentValues values = new ContentValues();
+//        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis()); // DATE HERE
+//        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+////        values.put(MediaStore.MediaColumns.DATA, file.getAbsolutePath());
+//
+//        ContentResolver mContentResolver = context.getContentResolver();
+//        mContentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//
+////
+//        String path =    MediaStore.Images.Media.insertImage(mContentResolver,fileName,"BondWithMe_Wall",null);
+//                    file.getAbsolutePath(), file.getName(), "BondWithMe_Wall");
+//            MediaStore.Images.Media.insertImage(context.getContentResolver(),bmp,"LLL","");
+        String path = insertImage(context.getContentResolver(),bmp,prefix,"BondWithMe_Wall");
+//            //照片下载完提示下载位置
+            MessageUtil.showMessage(context, context.getString(R.string.saved_to_path) + path);
+//        // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(path)));
+
+    }
+
+    public static final String insertImage(ContentResolver cr, Bitmap source,
+                                           String title, String description) {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, title);
+        values.put(MediaStore.Images.Media.DESCRIPTION, description);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis()); // DATE HERE
+
+        Uri url = null;
+        String stringUrl = null;    /* value to be returned */
 
         try {
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), file.getName(), null);
-//            MediaStore.Images.Media.insertImage(context.getContentResolver(),bmp,"LLL","");
-            //照片下载完提示下载位置
-            MessageUtil.showMessage(context, context.getString(R.string.saved_to_path) + file.getPath());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // 最后通知图库更新
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(fileName)));
+            url = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
+            if (source != null) {
+                OutputStream imageOut = cr.openOutputStream(url);
+                try {
+                    source.compress(Bitmap.CompressFormat.JPEG, 50, imageOut);
+                } finally {
+                    imageOut.close();
+                }
+
+                long id = ContentUris.parseId(url);
+                // Wait until MINI_KIND thumbnail is generated.
+                Bitmap miniThumb = MediaStore.Images.Thumbnails.getThumbnail(cr, id,
+                        MediaStore.Images.Thumbnails.MINI_KIND, null);
+                // This is for backward compatibility.
+//                Bitmap microThumb = StoreThumbnail(cr, miniThumb, id, 50F, 50F,
+//                        MediaStore.Images.Thumbnails.MICRO_KIND);
+            } else {
+                cr.delete(url, null, null);
+                url = null;
+            }
+        } catch (Exception e) {
+            if (url != null) {
+                cr.delete(url, null, null);
+                url = null;
+            }
+        }
+
+        if (url != null) {
+            stringUrl = url.toString();
+        }
+
+        return stringUrl;
     }
 
 

@@ -1,9 +1,11 @@
 package com.bondwithme.BondWithMe.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
@@ -90,6 +92,15 @@ public class SystemUtil {
             }
         }
         return infos;
+    }
+
+    public static void updateByGooglePlay(Context context){
+        final String appPackageName = context.getPackageName(); // getPackageName() from Context or Activity object
+        try {
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
     }
 
 
