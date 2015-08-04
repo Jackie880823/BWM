@@ -250,7 +250,7 @@
 
     <!-- end -->
 
-    <string name="select_too_many">have select photos count is %d</string>
+    <string name="select_too_many">You can only select %d photos at a time</string>
     <string name="text_nearest">recent</string>
     <string name="start_a_new">Start a new</string>
     <string name="post_now">Post now</string>
