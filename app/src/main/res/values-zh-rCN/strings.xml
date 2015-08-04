@@ -139,7 +139,7 @@
     <string name="text_old_password">旧密码</string>
     <string name="text_new_password">新密码</string>
     <string name="text_re_enter_password">再次输入密码</string>
-    <string name="text_create_new_password">设置新密码</string>
+    <!--<string name="text_create_new_password">设置新密码</string>-->
     <string name="text_select_contact">选择手机号码</string>
     <string name="text_select_relationship">选择关系</string>
     <string name="text_warning_invaild_id_name">无效的ID或用户名。请重试。</string>
@@ -175,13 +175,13 @@
     <string name="text_no_found_reduce">手机不支持剪辑</string>
     <string name="text_choose_your_group_picture">选择群组照片</string>
     <string name="text_fail_to_create_group">建立群组失败，请再试一次</string>
-    <string name="text_please_select_username_phone">用户名或手机号，选择其中一种。</string>
-    <string name="text_please_choose_country_code">请选择国家区号。</string>
-    <string name="text_input_username_phone">请输入用户名或手机号</string>
-    <string name="text_input_username">请输入用户名</string>
-    <string name="text_fill_in_verification_code">请填写验证码.</string>
-    <string name="text_createVerification_fail">验证码创建失败</string>
-    <string name="text_createVerification_success">验证码创建成功</string>
+    <!--<string name="text_please_select_username_phone">用户名或手机号，选择其中一种。</string>-->
+    <!--<string name="text_please_choose_country_code">请选择国家区号。</string>-->
+    <!--<string name="text_input_username_phone">请输入用户名或手机号</string>-->
+    <!--<string name="text_input_username">请输入用户名</string>-->
+    <!--<string name="text_fill_in_verification_code">请填写验证码.</string>-->
+    <!--<string name="text_createVerification_fail">验证码创建失败</string>-->
+    <!--<string name="text_createVerification_success">验证码创建成功</string>-->
     <string name="text_not_change_anything">选择照片或者修改群组名称</string>
     <string name="text_fail_upload_group_profile_phone">上传群组照片失败</string>
     <string name="text_success_upload_group_profile_phone">上传群组照片成功</string>
@@ -197,16 +197,16 @@
     <string name="text_success_request">请求成功</string>
     <string name="text_success_accept">添加成员成功</string>
     <string name="text_success_set_relationship">关系添加成功</string>
-    <string name="text_input_first_name">请填写你的名</string>
-    <string name="text_input_last_name">请填写你的姓</string>
-    <string name="text_choose_gender">请选择你的性别</string>
-    <string name="text_agree_with_terms">请同意软我们的服务条款和隐私权政策</string>
+    <!--<string name="text_input_first_name">请填写你的名</string>-->
+    <!--<string name="text_input_last_name">请填写你的姓</string>-->
+    <!--<string name="text_choose_gender">请选择你的性别</string>-->
+    <!--<string name="text_agree_with_terms">请同意软我们的服务条款和隐私权政策</string>-->
     <string name="text_no_network">网络不稳定</string>
-    <string name="text_enter_details">请输入你的信息.</string>
-    <string name="text_input_phone_number">请输入你的手机号</string>
-    <string name="text_input_password">请输入你的密码</string>
+    <!--<string name="text_enter_details">请输入你的信息.</string>-->
+    <!--<string name="text_input_phone_number">请输入你的手机号</string>-->
+    <!--<string name="text_input_password">请输入你的密码</string>-->
     <string name="text_successfully_dismiss_miss">想念已接收</string>
-    <string name="text_input_name_gender">请输入您的姓名和性别</string>
+    <!--<string name="text_input_name_gender">请输入您的姓名和性别</string>-->
     <string name="text_fail_update_information">更新资料失败。请重试</string>
     <string name="text_success_update_information">资料更新成功</string>
     <string name="text_update_proPicFail">操作失败</string>
@@ -222,18 +222,18 @@
     <string name="text_success_add_member">添加成员成功</string>
     <string name="text_fail_add_member">添加成员失败，账号或者用户名错误。请重试</string>
     <string name="title_select_relationship">设置关系</string>
-    <string name="title_reset_password">重设密码</string>
+    <!--<string name="title_reset_password">重设密码</string>-->
     <string name="title_select_members">选择成员</string>
 
 
-    <string name="text_account_already_exist">账号已被使用。</string>
-    <string name="text_verification_fail">验证码不正确。请重试</string>
-    <string name="text_verification_successful">验证成功</string>
-    <string name="text_choose_country_code">请选择国家代码</string>
-    <string name="text_fail_verify_phone_number">无法验证手机号码</string>
-    <string name="title_password">密码设置</string>
-    <string name="text_invalid_account_name">用户名不可用，请重试.</string>
-    <string name="text_input_re_enter_password">请确认你的密码</string>
+    <!--<string name="text_account_already_exist">账号已被使用。</string>-->
+    <!--<string name="text_verification_fail">验证码不正确。请重试</string>-->
+    <!--<string name="text_verification_successful">验证成功</string>-->
+    <!--<string name="text_choose_country_code">请选择国家代码</string>-->
+    <!--<string name="text_fail_verify_phone_number">无法验证手机号码</string>-->
+    <!--<string name="title_password">密码设置</string>-->
+    <!--<string name="text_invalid_account_name">用户名不可用，请重试.</string>-->
+    <!--<string name="text_input_re_enter_password">请确认你的密码</string>-->
 
     <string name="text_lwait_for_respons">等待成员响应</string>
 
@@ -347,15 +347,15 @@
     <string name="text_item_accept">接收</string>
     <string name="text_item_decline">拒绝</string>
 
-    <string name="title_personal_information">个人资料</string>
+    <!--<string name="title_personal_information">个人资料</string>-->
     <string name="title_country_code">国家区号</string>
     <string name="title_family_profile">个人资料</string>
-    <string name="title_forget_password">忘记密码</string>
+    <!--<string name="title_forget_password">忘记密码</string>-->
 
-    <string name="text_next">下一步</string>
-    <string name="text_or">或者</string>
-    <string name="text_call_service_phone">联系方式为:</string>
-    <string name="text_service_phone_num">联系我们的支持团队</string>
+    <!--<string name="text_next">下一步</string>-->
+    <!--<string name="text_or">或者</string>-->
+    <!--<string name="text_call_service_phone">联系方式为:</string>-->
+    <!--<string name="text_service_phone_num">联系我们的支持团队</string>-->
     <string name="text_cancel">取消</string>
 
     <string name="text_from_camera">相机</string>
@@ -366,42 +366,42 @@
     <string name="text_start_bonding">开始体验</string>
 
     <!-- Login 界面 -->
-    <string name="text_sign_up">注册</string>
-    <string name="text_login_warning">用户名登录时，无需国家区号</string>
-    <string name="text_country_code">国家区号</string>
-    <string name="text_login_forget_password">忘记密码?</string>
-    <string name="text_login_faile_prompt">账号是否为:</string>
-    <string name="text_login">登录</string>
-    <string name="hint_phone_username">手机号 / 用户名</string>
-    <string name="text_password">密码</string>
+    <!--<string name="text_sign_up">注册</string>-->
+    <!--<string name="text_login_warning">用户名登录时，无需国家区号</string>-->
+    <!--<string name="text_country_code">国家区号</string>-->
+    <!--<string name="text_login_forget_password">忘记密码?</string>-->
+    <!--<string name="text_login_faile_prompt">账号是否为:</string>-->
+    <!--<string name="text_login">登录</string>-->
+    <!--<string name="hint_phone_username">手机号 / 用户名</string>-->
+    <!--<string name="text_password">密码</string>-->
 
     <!-- Personal Information -->
     <string name="text_personal_information">个人资料</string>
     <!-- sign up phone -->
-    <string name="text_sign_up_phone_warning">手机号是否为: </string>
-    <string name="text_btn_verification">获取</string>
-    <string name="text_et_hint_verification_code">验证码</string>
-    <string name="text_sign_up_username">用户名注册</string>
-    <string name="text_try_again">重新获取</string>
-    <string name="title_sign_up">注册</string>
-    <string name="text_phone_number">手机号</string>
+    <!--<string name="text_sign_up_phone_warning">手机号是否为: </string>-->
+    <!--<string name="text_btn_verification">获取</string>-->
+    <!--<string name="text_et_hint_verification_code">验证码</string>-->
+    <!--<string name="text_sign_up_username">用户名注册</string>-->
+    <!--<string name="text_try_again">重新获取</string>-->
+    <!--<string name="title_sign_up">注册</string>-->
+    <!--<string name="text_phone_number">手机号</string>-->
 
     <!-- sign up phone password 界面 -->
-    <string name="text_sign_up_phone_password_warning">不少于6位字符（字母或数字）</string>
+    <!--<string name="text_sign_up_phone_password_warning">不少于6位字符（字母或数字）</string>-->
 
     <!-- sign up phone information 界面 -->
-    <string name="text_sign_up_phone_information_name_warning">推荐填写真实名字，方便交流沟通。</string>
-    <string name="text_sign_up_phone_information_agree_warning">我同意此法律条款.</string>
+    <!--<string name="text_sign_up_phone_information_name_warning">推荐填写真实名字，方便交流沟通。</string>-->
+    <!--<string name="text_sign_up_phone_information_agree_warning">我同意此法律条款.</string>-->
 
     <!-- sign up username 界面 -->
     <string name="text_sign_up_username_warning">不少于5位.</string>
 
     <!-- forget password 界面 -->
-    <string name="text_forget_password_contact1">若无法找回密码, 请</string>
-    <string name="text_forget_password_contact2">联系我们</string>
-    <string name="text_forget_password_phone_warning1">已发送至</string>
-    <string name="text_forget_password_phone_warning2">, 请查收.</string>
-    <string name="text_username">用户名</string>
+    <!--<string name="text_forget_password_contact1">若无法找回密码, 请</string>-->
+    <!--<string name="text_forget_password_contact2">联系我们</string>-->
+    <!--<string name="text_forget_password_phone_warning1">已发送至</string>-->
+    <!--<string name="text_forget_password_phone_warning2">, 请查收.</string>-->
+    <!--<string name="text_username">用户名</string>-->
 
     <!-- reset password 界面 -->
 

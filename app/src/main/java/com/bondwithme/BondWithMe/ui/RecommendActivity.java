@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -130,11 +129,11 @@ public class RecommendActivity extends BaseActivity {
         mProgressDialog.setVisibility(View.INVISIBLE);
     }
 
-    void sdf()
-    {
-        findViewById(R.id.iv_move);
-
-    }
+//    void sdf()
+//    {
+//        findViewById(R.id.iv_move);
+//
+//    }
 
     @Override
     public void requestData() {
