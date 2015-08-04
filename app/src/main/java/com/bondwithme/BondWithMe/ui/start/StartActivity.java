@@ -38,7 +38,7 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.checkVerSion(this);
+        App.checkVerSion(this);//
         setContentView(R.layout.activity_start);
 
         initView();

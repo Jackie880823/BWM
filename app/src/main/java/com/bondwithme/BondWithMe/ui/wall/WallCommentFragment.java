@@ -486,8 +486,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                         adapter.addData(data);
                     }
                 }
-                wall.setComment_count(adapter.getItemCount() + "");
-                tvCommentCount.setText(wall.getComment_count());
 
                 if(adapter != null && adapter.getItemCount() > 0) {
                     split.setVisibility(View.VISIBLE);
@@ -989,10 +987,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void showMembers(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_USER);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);
-        startActivityForResult(intent, Constant.ACTION_COMMENT_MEMBERS);
+        startActivity(intent);
     }
 
     /**
@@ -1004,11 +1001,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     @Override
     public void showGroups(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_GROUP);
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);
-        startActivityForResult(intent, Constant.ACTION_COMMENT_GROUPS);
+        startActivity(intent);
     }
 
 }
