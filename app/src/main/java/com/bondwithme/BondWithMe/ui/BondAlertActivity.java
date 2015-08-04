@@ -71,9 +71,12 @@ public class BondAlertActivity extends BaseActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-            Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
-            finish();
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+
         }
         return super.dispatchKeyEvent(event);
     }

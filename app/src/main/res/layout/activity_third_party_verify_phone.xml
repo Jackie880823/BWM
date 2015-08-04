@@ -67,7 +67,6 @@
             android:layout_width="0dp"
             android:layout_weight="5"
             android:gravity="center"
-            android:maxLines="2"
             android:text="@string/text_start_third_party_prompt"
             android:textSize="@dimen/text_small_size" />
 
