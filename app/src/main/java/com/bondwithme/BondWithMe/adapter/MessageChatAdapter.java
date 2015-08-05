@@ -75,6 +75,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     private static final int FROM_OTHER_TYPE_LOC = 8;
     private static final int FROM_OTHER_TYPE_GIF = 9;
     private static final int FROM_OTHER_TYPE_PNG = 10;
+    private boolean isIconOnClick = true;
 
     public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView, MessageChatActivity messageChatActivity, LinearLayoutManager llm, boolean isGroupChat) {
         this.context = context;
@@ -332,55 +333,69 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             Intent intent;
             switch (v.getId()) {
                 case R.id.message_icon_image://点击头像跳转个人资料
+                    if (!isIconOnClick) {
+                        return;
+                    }
+                    isIconOnClick = false;
                     if (isFromMe) {
                         intent = new Intent(context, MeActivity.class);
                         context.startActivity(intent);
+                        isIconOnClick = true;
                     } else {
-                        String url = String.format(Constant.API_MESSAGE_GROUP_IS_FRIEND, MainActivity.getUser().getUser_id(), msgEntity.getUser_id());
-                        new HttpTools(context).get(url, null, "MessageChatActivity", new HttpCallback() {
-                            @Override
-                            public void onStart() {
-                            }
-
-                            @Override
-                            public void onFinish() {
-                            }
-
-                            @Override
-                            public void onResult(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    String memberFlag = jsonObject.optString("member_flag");
-                                    if ("1".equals(memberFlag)) {
-                                        Intent intent = new Intent(context, FamilyProfileActivity.class);
-                                        intent.putExtra(UserEntity.EXTRA_MEMBER_ID, msgEntity.getUser_id());
-                                        intent.putExtra(UserEntity.EXTRA_GROUP_ID, msgEntity.getGroup_id());
-                                        intent.putExtra(UserEntity.EXTRA_GROUP_NAME, msgEntity.getUser_given_name());
-                                                context.startActivity(intent);
-                                    } else {
-                                        MslToast.getInstance(context).showShortToast(context.getString(R.string.text_show_message_is_friend));
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                        if (!isGroupChat) {
+                            intent = new Intent(context, FamilyProfileActivity.class);
+                            intent.putExtra(UserEntity.EXTRA_MEMBER_ID, msgEntity.getUser_id());
+                            intent.putExtra(UserEntity.EXTRA_GROUP_ID, msgEntity.getGroup_id());
+                            intent.putExtra(UserEntity.EXTRA_GROUP_NAME, msgEntity.getUser_given_name());
+                            context.startActivity(intent);
+                            isIconOnClick = true;
+                        } else {
+                            String url = String.format(Constant.API_MESSAGE_GROUP_IS_FRIEND, MainActivity.getUser().getUser_id(), msgEntity.getUser_id());
+                            new HttpTools(context).get(url, null, "MessageChatActivity", new HttpCallback() {
+                                @Override
+                                public void onStart() {
                                 }
-                            }
 
-                            @Override
-                            public void onError(Exception e) {
-                                MslToast.getInstance(context).showShortToast(context.getResources().getString(R.string.text_error));
-                            }
+                                @Override
+                                public void onFinish() {
+                                    isIconOnClick = true;
+                                }
 
-                            @Override
-                            public void onCancelled() {
+                                @Override
+                                public void onResult(String response) {
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(response);
+                                        String memberFlag = jsonObject.optString("member_flag");
+                                        if ("1".equals(memberFlag)) {
+                                            Intent intent = new Intent(context, FamilyProfileActivity.class);
+                                            intent.putExtra(UserEntity.EXTRA_MEMBER_ID, msgEntity.getUser_id());
+                                            intent.putExtra(UserEntity.EXTRA_GROUP_ID, msgEntity.getGroup_id());
+                                            intent.putExtra(UserEntity.EXTRA_GROUP_NAME, msgEntity.getUser_given_name());
+                                            context.startActivity(intent);
+                                        } else {
+                                            MslToast.getInstance(context).showShortToast(context.getString(R.string.text_show_message_is_friend));
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
 
-                            }
+                                @Override
+                                public void onError(Exception e) {
+                                    MslToast.getInstance(context).showShortToast(context.getResources().getString(R.string.text_error));
+                                }
 
-                            @Override
-                            public void onLoading(long count, long current) {
+                                @Override
+                                public void onCancelled() {
 
-                            }
-                        });
+                                }
 
+                                @Override
+                                public void onLoading(long count, long current) {
+
+                                }
+                            });
+                        }
                     }
                     break;
                 case R.id.message_pic_iv://点击图片跳转大图
