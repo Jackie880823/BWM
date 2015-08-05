@@ -2,13 +2,19 @@ package com.bondwithme.BondWithMe.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
+import android.widget.ImageView;
 
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
+
+import java.io.File;
 
 /**
  * Created by Jackie on 7/28/15.
@@ -16,6 +22,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
  * @version 1.0
  */
 public class UniversalImageLoaderUtil {
+    private static final String TAG = UniversalImageLoaderUtil.class.getSimpleName();
 
     public static DisplayImageOptions options;
 
@@ -60,5 +67,14 @@ public class UniversalImageLoaderUtil {
     public static DisplayImageOptions.Builder cloneFrom(DisplayImageOptions options){
         DisplayImageOptions.Builder result = new DisplayImageOptions.Builder().cloneFrom(options);
         return result;
+    }
+
+    public static void downloadStickPic(String stickerGroupPath, String stickerName, int defaultResource, final ImageView imageView, String type){
+        final String urlPath = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
+                stickerName, stickerGroupPath, type);
+        final String downloadPath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator
+                + stickerName + "_B.png";
+        Log.i(TAG, "downloadPic& urlPath: " + urlPath);
+        ImageLoader.getInstance().displayImage(urlPath, imageView, UniversalImageLoaderUtil.options);
     }
 }
