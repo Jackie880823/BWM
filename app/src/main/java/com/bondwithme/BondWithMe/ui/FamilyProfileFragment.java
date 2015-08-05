@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -236,7 +237,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 if (userEntity != null ) {
                     //关系界面
 
-                    Log.d("","rrrrrrllll---" + userEntity.getTree_type_name() + data_Us.indexOf(userEntity.getTree_type_name()));
+                    Log.d("", "rrrrrrllll---" + userEntity.getTree_type_name() + data_Us.indexOf(userEntity.getTree_type_name()));
 
                     Intent intent = new Intent(getActivity(), PathRelationshipActivity.class);
                     intent.putExtra("member_id", memberId);
