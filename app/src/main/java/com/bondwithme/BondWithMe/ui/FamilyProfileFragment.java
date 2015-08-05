@@ -444,4 +444,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         return data_Us;
     }
 
+    @Override
+    public void onDestroy() {
+        new HttpTools(getActivity()).cancelRequestByTag(Tag);
+        super.onDestroy();
+    }
 }
