@@ -132,9 +132,23 @@ public class PathRelationshipActivity extends BaseActivity {
 
 //        tvRelationship.setText(relationship);
         if (isZh) {
-            tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));
+            if (getIntent().getIntExtra("selectMemeber",-1) == -1)
+            {
+                tvRelationship.setText(relationship);
+            }
+            else
+            {
+                tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));
+            }
         } else {
-            tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", -1)));
+            if (getIntent().getIntExtra("selectMemeber",-1) == -1)
+            {
+                tvRelationship.setText(relationship);
+            }
+            else
+            {
+                tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", -1)));
+            }
         }
 
         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
