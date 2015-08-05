@@ -173,6 +173,8 @@ public class AddMemberWorkFlow extends Activity {
         });
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -181,6 +183,7 @@ public class AddMemberWorkFlow extends Activity {
                 if (resultCode == RESULT_OK) {
                     if (data != null) {
                         response_relationship = data.getStringExtra("relationship");
+
                         if (!TextUtils.isEmpty(response_relationship)) {
                             addMember();
                         }else{

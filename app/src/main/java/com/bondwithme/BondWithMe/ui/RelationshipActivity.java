@@ -12,7 +12,6 @@ import android.widget.ListView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.RecommendAdapter;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 
 import java.util.ArrayList;
@@ -80,6 +79,11 @@ public class RelationshipActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        getDataEn();
+        if (Locale.getDefault().toString().equals("zh_CN")) {
+            isZh = true;
+            getDataZh();
+        }
 
         intentFromRecommend = getIntent();
         if (intentFromRecommend != null){
@@ -100,7 +104,8 @@ public class RelationshipActivity extends BaseActivity {
                     showConfirmDialog(position);
                     return;
                 }
-                intent.putExtra("relationship", data.get(position));
+
+                intent.putExtra("relationship", data_Us.get(position));
                 intent.putExtra("selectMemeber",position);
 //                Log.d("", "data---->" + data.get(position));
                 result = RESULT_OK;
@@ -136,7 +141,7 @@ public class RelationshipActivity extends BaseActivity {
         confirmDialog.setButtonAccept(this.getString(R.string.text_yes), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent.putExtra("relationship", data.get(position));
+                intent.putExtra("relationship", data_Us.get(position));
                 intent.putExtra("selectMemeber",position);
                 result = RESULT_OK;
                 finish();
