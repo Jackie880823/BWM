@@ -310,7 +310,7 @@ public class MyViewProfileActivity extends BaseActivity {
         }
 
         etEmail.setText(MainActivity.getUser().getUser_email());
-        etPhone.setText(MainActivity.getUser().getUser_phone());
+        etPhone.setText("+" + MainActivity.getUser().getUser_country_code() + " " + MainActivity.getUser().getUser_phone());
         String[] countryArray = getResources().getStringArray(R.array.country_code);
         String userCountryCode = MainActivity.getUser().getUser_country_code().trim();
         if (countryArray != null) {
