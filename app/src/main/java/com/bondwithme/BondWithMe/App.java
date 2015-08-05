@@ -1,9 +1,12 @@
 package com.bondwithme.BondWithMe;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
@@ -41,16 +44,23 @@ import java.util.Map;
 /**
  * Created by wing on 15/3/21.
  */
-public class App extends MultiDexApplication {
+public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks {
 
     private static UserEntity user;
     private static App appContext;
     private SQLiteHelperOrm databaseHelper = null;
     private static MyDialog updateDialog;
+    private static boolean foreground;
+    private boolean paused;
+    private static final int CHECK_DELAY = 500;
+    private Runnable check;
+    private Handler handler;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        this.registerActivityLifecycleCallbacks(this);
+        handler = new Handler();
         appContext = this;
         /**图片工具*/
         BitmapTools.init(this);
@@ -315,6 +325,75 @@ public class App extends MultiDexApplication {
         super.onTerminate();
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(0);
+    }
+
+    /**
+     * 应用是否在前台运行
+     * @return
+     */
+    public static boolean isForeground() {
+        return foreground;
+    }
+
+    /**
+     * 应用是否在后台运行
+     * @return
+     */
+    public static boolean isBackground() {
+        return !foreground;
+    }
+
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
+        paused = false;
+        foreground = true;
+        if (check != null) {
+            handler.removeCallbacks(check);
+        }
+    }
+
+    @Override
+    public void onActivityPaused(Activity activity) {
+        paused = true;
+        if (check != null) {
+            handler.removeCallbacks(check);
+        }
+        handler.postDelayed(check = new Runnable() {
+            @Override
+            public void run() {
+                if (foreground && paused) {
+                    foreground = false;
+                    LogUtil.d("","App went background");
+                } else {
+                    LogUtil.d("","App still foreground");
+                }
+            }
+        }, CHECK_DELAY);
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+    }
+
+    @Override
+    public void onActivityDestroyed(Activity activity) {
+
     }
 
 }

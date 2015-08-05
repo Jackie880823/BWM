@@ -295,20 +295,20 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         }
     }
 
-    @Override
-    protected void titleLeftEvent() {
-        if (imm.isActive()) {
-            imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    finish();
-                }
-            }, 50);
-        } else {
-            finish();
-        }
-    }
+//    @Override
+//    protected void titleLeftEvent() {
+//        if (imm.isActive()) {
+//            imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    finish();
+//                }
+//            }, 50);
+//        } else {
+//            finish();
+//        }
+//    }
 
     @Override
     protected Fragment getFragment() {
