@@ -583,7 +583,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden"></activity>
 
         <activity android:name=".ui.PickAndCropPictureActivity"></activity>
-        <activity android:name=".ui.CrashActivity" android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"></activity>
+        <activity android:name=".ui.CrashActivity" android:theme="@android:style/Theme.Holo.Dialog.NoActionBar" android:noHistory="true"></activity>
 
     </application>
 
