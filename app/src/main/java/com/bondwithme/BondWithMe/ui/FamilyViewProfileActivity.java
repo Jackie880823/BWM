@@ -30,7 +30,7 @@ public class FamilyViewProfileActivity extends BaseActivity {
     TextView tvName1;
     TextView tvId1;
 
-    TextView tvID2;
+    TextView tvPhone;
     TextView tvFirstName;
     TextView tvLastName;
     //    TextView tvAge;
@@ -91,7 +91,7 @@ public class FamilyViewProfileActivity extends BaseActivity {
         tvName1 = getViewById(R.id.tv_name1);
         tvId1 = getViewById(R.id.tv_id1);
 
-        tvID2 = getViewById(R.id.tv_id2);
+        tvPhone = getViewById(R.id.tv_phone);
         tvFirstName = getViewById(R.id.tv_first_name);
         tvLastName = getViewById(R.id.tv_last_name);
 //        tvAge = getViewById(R.id.tv_age);
@@ -102,13 +102,17 @@ public class FamilyViewProfileActivity extends BaseActivity {
 
         VolleyUtil.initNetworkImageView(FamilyViewProfileActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(userEntity.getUser_given_name());
-        tvId1.setText("ID:" + userEntity.getDis_bondwithme_id());
+        tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
 
-        tvID2.setText(userEntity.getDis_bondwithme_id());
+        tvPhone.setText(userEntity.getUser_phone());
         tvFirstName.setText(userEntity.getUser_given_name());
         tvLastName.setText(userEntity.getUser_surname());
 //        tvAge.setText(userEntity.getUser_dob());
-        tvBirthday.setText(userEntity.getUser_dob());
+        String strDOB = userEntity.getUser_dob();
+        if (strDOB != null && strDOB.contains("-")){
+            strDOB = strDOB.substring(strDOB.indexOf("-") + 1);
+        }
+        tvBirthday.setText(strDOB);
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

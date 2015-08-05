@@ -1,14 +1,11 @@
 package com.bondwithme.BondWithMe.adapter;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,6 +22,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.task.DownloadStickerTask;
 import com.bondwithme.BondWithMe.ui.FamilyProfileActivity;
@@ -38,7 +36,6 @@ import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MslToast;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
-import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MessageTextView;
 import com.material.widget.CircularProgress;
@@ -46,14 +43,9 @@ import com.material.widget.CircularProgress;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -361,10 +353,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                                     String memberFlag = jsonObject.optString("member_flag");
                                     if ("1".equals(memberFlag)) {
                                         Intent intent = new Intent(context, FamilyProfileActivity.class);
-                                        intent.putExtra("member_id", msgEntity.getUser_id());
-                                        intent.putExtra("groupId", msgEntity.getUser_id());
-                                        intent.putExtra("groupName", msgEntity.getUser_given_name());
-                                        context.startActivity(intent);
+                                        intent.putExtra(UserEntity.EXTRA_MEMBER_ID, msgEntity.getUser_id());
+                                        intent.putExtra(UserEntity.EXTRA_GROUP_ID, msgEntity.getGroup_id());
+                                        intent.putExtra(UserEntity.EXTRA_GROUP_NAME, msgEntity.getUser_given_name());
+                                                context.startActivity(intent);
                                     } else {
                                         MslToast.getInstance(context).showShortToast(context.getString(R.string.text_show_message_is_friend));
                                     }

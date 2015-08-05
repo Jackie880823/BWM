@@ -37,6 +37,7 @@ import com.bondwithme.BondWithMe.adapter.FamilyGroupAdapter;
 import com.bondwithme.BondWithMe.adapter.MyFamilyAdapter;
 import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
 import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
@@ -481,9 +482,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                             familyMemberEntity.setMiss(null);
                         }
                         Intent intent = new Intent(getActivity(), FamilyProfileActivity.class);
-                        intent.putExtra("member_id", familyMemberEntity.getUser_id());
-                        intent.putExtra("groupId",familyMemberEntity.getUser_id());
-                        intent.putExtra("groupName", familyMemberEntity.getUser_given_name());
+                        intent.putExtra(UserEntity.EXTRA_MEMBER_ID, familyMemberEntity.getUser_id());
+                        intent.putExtra(UserEntity.EXTRA_GROUP_ID,familyMemberEntity.getGroup_id());
+                        intent.putExtra(UserEntity.EXTRA_GROUP_NAME, familyMemberEntity.getUser_given_name());
 
 //                        intent.putExtra("relationship",familyMemberEntity.getTree_type_name());
 //                        intent.putExtra("fam_nickname",familyMemberEntity.getFam_nickname());

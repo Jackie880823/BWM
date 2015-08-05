@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -472,7 +471,6 @@ public class GroupSettingActivity extends BaseActivity {
 
     //admin and addedflag = 1
     private void showAdminDialog1(final int position) {
-        Log.i("showAdminDialog","=========");
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_group_info_options_admin1, null);
         final Dialog showAdminDialog1 = new MyDialog(this, null, selectIntention);
@@ -549,7 +547,9 @@ public class GroupSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(GroupSettingActivity.this, FamilyProfileActivity.class);
-                intent1.putExtra("member_id", userList.get(position).getUser_id());
+                intent1.putExtra(UserEntity.EXTRA_MEMBER_ID, userList.get(position).getUser_id());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_ID,userList.get(position).getGroup_id());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_NAME,userList.get(position).getUser_given_name());
                 startActivity(intent1);
                 showAdminDialog1.dismiss();
             }
@@ -562,8 +562,8 @@ public class GroupSettingActivity extends BaseActivity {
                 intent2.putExtra("type", 0);
                 intent2.putExtra("groupId", userList.get(position).getGroup_id());
                 intent2.putExtra("titleName", userList.get(position).getUser_given_name());
-                Log.i("getGroup_id====G", userList.get(position).getGroup_id());
-                Log.i("getUser_given_name====G",userList.get(position).getUser_given_name());
+//                Log.i("getGroup_id====G", userList.get(position).getGroup_id());
+//                Log.i("getUser_given_name====G",userList.get(position).getUser_given_name());
                 startActivity(intent2);
                 showAdminDialog1.dismiss();
             }
@@ -673,7 +673,9 @@ public class GroupSettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent1 = new Intent(GroupSettingActivity.this, FamilyProfileActivity.class);
-                intent1.putExtra("member_id", userList.get(position).getUser_id());
+                intent1.putExtra(UserEntity.EXTRA_MEMBER_ID, userList.get(position).getUser_id());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_ID,userList.get(position).getGroup_id());
+                intent1.putExtra(UserEntity.EXTRA_GROUP_NAME,userList.get(position).getUser_given_name());
                 startActivity(intent1);
                 showNonAdminDialog1.dismiss();
             }
@@ -829,7 +831,6 @@ public class GroupSettingActivity extends BaseActivity {
                     } else {
 
                         if (addMemberList.size() > 0) {
-                            Log.i("addMemberList====",addMemberList.size()+"");
 //                        removeDuplicate(userList);
                             addGroupMember(gson.toJson(addMemberList));
 //                            getMembersList();
@@ -840,7 +841,7 @@ public class GroupSettingActivity extends BaseActivity {
 
                 /** christopher begin */
                 case SET_GROUP_PIC_NAME:
-                    Log.i("GroupSettingActivity===","GroupSettingActivity");
+//                    Log.i("GroupSettingActivity===","GroupSettingActivity");
                     mBitmapTools.clearMemoryCache();
                     mBitmapTools.clearDiskCache(null);
                     String newGroupName = data.getStringExtra("groupName");
@@ -875,7 +876,7 @@ public class GroupSettingActivity extends BaseActivity {
     }
 
     public void addGroupMember(final String strGroupMembers) {
-        Log.i("addGroupMember====",strGroupMembers);
+//        Log.i("addGroupMember====",strGroupMembers);
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("group_id", groupId);
         params.put("group_owner_id", MainActivity.getUser().getUser_id());

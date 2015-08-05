@@ -27,6 +27,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.ui.wall.WallNewActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
@@ -581,19 +582,27 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     SnackBar snackBar;
 
+
+    private long startTime;
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                snackBar = new SnackBar(MainActivity.this,
-                        getString(R.string.msg_ask_exit_app),
-                        getString(R.string.text_yes), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                if(System.currentTimeMillis()-startTime<1000){
                         App.getContextInstance().exit(MainActivity.this);
-                    }
-                });
-                snackBar.show();
+                }else {
+                    MessageUtil.showMessage(this,R.string.click_again_exit,1000);
+                    startTime = System.currentTimeMillis();
+                }
+//                snackBar = new SnackBar(MainActivity.this,
+//                        getString(R.string.msg_ask_exit_app),
+//                        getString(R.string.text_yes), new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        App.getContextInstance().exit(MainActivity.this);
+//                    }
+//                });
+//                snackBar.show();
             }
             return true;
         }

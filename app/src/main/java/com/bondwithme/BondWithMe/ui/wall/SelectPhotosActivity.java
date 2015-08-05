@@ -1,9 +1,12 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -30,7 +33,7 @@ public class SelectPhotosActivity extends BaseActivity {
     public static final String IMAGES_STR = "images";
 
     private SelectPhotosFragment fragment;
-    private ArrayList<ImageData> mSelectedImages = new ArrayList();
+    private ArrayList<ImageData> mSelectedImages = new ArrayList<>();
 
     /**
      * 选择多张图片标识{@value true}可以多张选择图片，{@value false}只允许选择一张图
@@ -68,11 +71,7 @@ public class SelectPhotosActivity extends BaseActivity {
             if(multi) {
                 if(mSelectedImages.size() < residue) {
                     // 没有超过限制的图片数量可以继续添加并返回添加结果的返回值
-                    if(mSelectedImages.contains(imageData)) {
-                        result = true;
-                    } else {
-                        result = mSelectedImages.add(imageData);
-                    }
+                    result = mSelectedImages.contains(imageData) || mSelectedImages.add(imageData);
                 } else {
                     // 提示用户添加的图片超过限制的数量
                     MessageUtil.showMessage(SelectPhotosActivity.this, String.format(SelectPhotosActivity.this.getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
@@ -102,11 +101,7 @@ public class SelectPhotosActivity extends BaseActivity {
         @Override
         public boolean removeUri(ImageData imageData) {
             // 返回删除结果成功与否的值
-            if(mSelectedImages.contains(imageData)) {
-                return mSelectedImages.remove(imageData);
-            } else {
-                return true;
-            }
+            return !mSelectedImages.contains(imageData) || mSelectedImages.remove(imageData);
         }
 
         /**
@@ -212,6 +207,7 @@ public class SelectPhotosActivity extends BaseActivity {
         return fragment;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void initView() {
         Intent intent = getIntent();
@@ -273,7 +269,7 @@ public class SelectPhotosActivity extends BaseActivity {
     }
 
     @Override
-    public boolean dispatchKeyShortcutEvent(KeyEvent event) {
+    public boolean dispatchKeyShortcutEvent(@NonNull KeyEvent event) {
         return super.dispatchKeyShortcutEvent(event);
     }
 }

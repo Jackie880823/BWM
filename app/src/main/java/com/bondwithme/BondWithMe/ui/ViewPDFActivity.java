@@ -498,22 +498,6 @@ public class ViewPDFActivity extends BaseActivity {
         return mPdfRenderer.getPageCount();
     }
 
-    @Override
-    public void onClick(View view) {
-//        switch (view.getId()) {
-//            case R.id.previous: {
-//                // Move to the previous page
-//                showPage(mCurrentPage.getIndex() - 1);
-//                break;
-//            }
-//            case R.id.next: {
-//                // Move to the next page
-//                showPage(mCurrentPage.getIndex() + 1);
-//                break;
-//            }
-//        }
-    }
-
 
 
 }

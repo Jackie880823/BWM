@@ -13,8 +13,10 @@
         android:layout_alignParentTop="true" />
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/fragment_main_top">
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/fragment_main_top"
+        android:fillViewport="true"
+        >
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -25,7 +27,7 @@
                         android:orientation="horizontal"
                         android:padding="16dp"
 
-                        android:background="@color/default_content_bg">
+                        >
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
@@ -52,7 +54,7 @@
                                         android:layout_height="match_parent"
                                         android:orientation="vertical"
                                         android:gravity="center_vertical"
-                                        android:layout_above="@+id/ll_reset_password"
+
                                         android:layout_alignParentLeft="true">
                                             <TextView
                                                 android:id="@+id/tv_name1"
@@ -69,60 +71,37 @@
                                                 android:layout_height="wrap_content"
                                                 android:text=""
                                                 android:layout_marginTop="@dimen/default_view_margin"
-                                                android:ellipsize="end"
-                                                android:textSize="@dimen/text_medium_size"/>
-                                    </LinearLayout>
-                                    <LinearLayout
-                                        android:id="@+id/ll_reset_password"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal"
-                                        android:background="@drawable/ll_round_view_profile"
-                                        android:padding="5dp"
-                                        android:gravity="center"
-                                        android:layout_alignParentBottom="true">
-                                            <ImageView
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:src="@drawable/info"/>
+                                                android:textSize="@dimen/text_small_size"/>
                                             <TextView
+                                                android:id="@+id/tv_login_id1"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text="@string/text_reset_password"
-                                                android:singleLine="true"
-                                                android:layout_marginLeft="5dp"
-                                                android:textSize="@dimen/text_medium_size"
-                                                android:textColor="@android:color/white"/>
+                                                android:text=""
+                                                android:layout_marginTop="@dimen/default_view_margin"
+                                                android:textSize="@dimen/text_small_size"/>
                                     </LinearLayout>
+
                             </RelativeLayout>
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/ll_profile"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:layout_below="@+id/ll_card"
                         >
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/default_split_line"
+                                android:layout_gravity="center"/>
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:padding="@dimen/default_content_padding">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:text="@string/text_id"
-                                    android:textStyle="bold"
-                                    android:textSize="@dimen/text_medium_size"
-                                    />
-                                <TextView
-                                    android:id="@+id/tv_id2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:textColor="@color/default_text_color_light"
-                                    android:text=""
-                                    android:textSize="@dimen/text_medium_size"/>
+                                android:padding="@dimen/default_content_padding"
+                                android:background="@color/default_unenable_item_bg">
+
                             </RelativeLayout>
                             <View
                                 android:layout_width="match_parent"
@@ -317,6 +296,44 @@
                                 android:background="@color/default_split_line"
                                 android:layout_gravity="center"/>
 
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/default_content_padding">
+                            <TextView
+                                android:id="@+id/tv_phone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:text="@string/text_phone"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/text_medium_size"
+                                />
+                            <EditText
+                                android:id="@+id/et_phone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentRight="true"
+                                android:text=""
+                                android:gravity="right"
+                                android:layout_toRightOf="@+id/tv_phone"
+                                android:paddingLeft="32dp"
+                                android:singleLine="true"
+                                android:background="@null"
+                                android:ellipsize="end"
+                                android:textColor="@color/default_text_color_light"
+                                android:textSize="@dimen/text_medium_size"
+                                android:editable="false"
+                                />
+                        </RelativeLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/default_split_line"
+                            android:layout_gravity="center"/>
+
                             <RelativeLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -351,7 +368,47 @@
                                 android:layout_height="1dp"
                                 android:background="@color/default_split_line"
                                 android:layout_gravity="center"/>
+
                     </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_reset_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/ll_change_password"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:layout_below="@+id/ll_profile"
+                    android:layout_centerHorizontal="true"
+                    android:layout_above="@+id/rl_bottom_margin"
+                    android:layout_margin="@dimen/_32dp"
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/info"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_change_password"
+                        android:singleLine="true"
+                        android:textSize="22sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rl_bottom_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_content_padding"
+                    android:layout_alignParentBottom="true"
+                    >
+
+                </RelativeLayout>
+
             </RelativeLayout>
+
     </ScrollView>
 </RelativeLayout>

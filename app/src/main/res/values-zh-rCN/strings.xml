@@ -463,7 +463,7 @@
     <string name="waiting_upload">请等待完成上传</string>
     <string name="alert_no_join_group">非群成员无法查看</string>
     <string name="alert_ask_add_member">添加成员</string>
-    <string name="text_group">群组</string>
+    <string name="text_group">群组列表</string>
     <string name="hint_comment_input">在此输入评论…</string>
     <string name="text_character_and"><![CDATA[" & "]]></string>
     <string name="saved_to_path">已保存到：</string>
@@ -472,7 +472,7 @@
     <string name="morning">上午</string>
     <string name="afternoon">下午</string>
 
-    <string name="test_group_friend">你还未和一些群组里的成员建立关系。只有和你有关系的成员会被添加。</string>
+    <string name="test_group_friend">你还未和一些群组里的成员建立关系。</string>
     <string name="text_no_data">无数据！</string>
     <string name="year">年</string>
     <string name="text_new_everyone">所有会员</string>
@@ -493,11 +493,11 @@
 
     <string name="text_post_and">现在</string>
     <string name="text_event_now">创建一个</string>
-    <string name="text_archive">Archive</string>
-    <string name="text_group_posting">Group Posting</string>
-    <string name="text_private_posting">Private Posting</string>
-    <string name="text_archive_comment">Comment</string>
-    <string name="text_member_list">Member List</string>
+    <string name="text_archive">存档</string>
+    <string name="text_group_posting">群组张贴</string>
+    <string name="text_private_posting">私人张贴</string>
+    <string name="text_archive_comment">评论</string>
+    <string name="text_member_list">成员列表</string>
     <string name="Downloaded">已下载</string>
     <string name="not_support_64bit">百度地图目前不支持64位CPU</string>
     <string name="text_add_relationship_empty">请选择关系</string>
@@ -568,5 +568,13 @@
     <string name="download_apk_content_title">伴我玩</string>
     <string name="download_apk_content_description">当下载完成时，点击可安装。</string>
     <string name="update">更新</string>
+    <string name="error_feedback">发现异常</string>
+    <string name="error_feedback_desc">你想把异常报告给我们吗？你的报告会帮助我们把app做得更好！</string>
+    <string name="report">报告</string>
+    <string name="click_again_exit">再次点击退出!</string>
+
+    <string name="login">登录</string>
+    <string name="text_phone">电话</string>
+    <string name="text_change_password">更改密码</string>
 
 </resources>

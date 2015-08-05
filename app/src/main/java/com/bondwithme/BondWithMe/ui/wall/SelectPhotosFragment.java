@@ -110,7 +110,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         mSelectedImageUris = selectUris;
     }
 
-    public static final SelectPhotosFragment newInstance(ArrayList<ImageData> selectUris, String... params) {
+    public static SelectPhotosFragment newInstance(ArrayList<ImageData> selectUris, String... params) {
         return createInstance(new SelectPhotosFragment(selectUris), params);
     }
 
@@ -119,6 +119,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         layoutId = R.layout.activity_select_photo;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void initView() {
         mDrawerList = getViewById(R.id.lv_images_titles);
@@ -146,10 +147,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 // Sometimes slideOffset ends up so close to but not quite 1 or 0.
                 if(slideOffset >= .995) {
                     flipped = true;
-                    drawerArrowDrawable.setFlip(flipped);
+                    drawerArrowDrawable.setFlip(true);
                 } else if(slideOffset <= .005) {
                     flipped = false;
-                    drawerArrowDrawable.setFlip(flipped);
+                    drawerArrowDrawable.setFlip(false);
                 }
 
                 drawerArrowDrawable.setParameter(offset);
@@ -234,10 +235,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         }
 
                         String bucketsFirst = getParentActivity().getString(R.string.text_nearest);
-                        ArrayList<ImageData> nearest = new ArrayList<>();
+                        ArrayList<ImageData> recent;
+                        recent = new ArrayList<>();
                         buckets = new ArrayList<>();
                         buckets.add(bucketsFirst);
-                        mImageUris.put(bucketsFirst, nearest);
+                        mImageUris.put(bucketsFirst, recent);
 
                         int cursorCount = imageCursor.getCount();
                         for(int i = 0; i < cursorCount; i++) {

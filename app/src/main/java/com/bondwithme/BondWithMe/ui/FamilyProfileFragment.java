@@ -11,12 +11,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,7 +65,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //    private String famNickname;
 //    private String memberStatus;
     private String getDofeelCode;
-
+    private View vProgress;
 
     private CircularNetworkImage cniMain;
     private ImageView ivBottomLeft;
@@ -75,7 +73,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     private TextView tvName1;
     private TextView tvId1;
     private ImageButton ibMiss;
-    private LinearLayout llViewProfile;
+    private RelativeLayout llViewProfile;
 
     private RelativeLayout rlPathRelationship;
     private RelativeLayout rlAlbumGallery;
@@ -123,13 +121,10 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         return data_Zh;
     }
 
-    private boolean isZh;
-
     @Override
     public void initView() {
         getDataEn();
         if (Locale.getDefault().toString().equals("zh_CN")) {
-            isZh = true;
 //            data_Us = Arrays.asList(relationships);
             getDataZh();
 
@@ -139,6 +134,11 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         memberId = intent.getStringExtra("member_id");
         groupId = intent.getStringExtra("groupId");
         groupName = intent.getStringExtra("groupName");
+        vProgress = getViewById(R.id.rl_progress);
+        if(TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)){
+            //如果上个页面没传进groupId或者groupName，显示进度条
+            vProgress.setVisibility(View.VISIBLE);
+        }
 //        relationship = intent.getStringExtra("relationship");
 //        famNickname = intent.getStringExtra("fam_nickname");
 //        memberStatus = intent.getStringExtra("member_status");
@@ -207,9 +207,17 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 //聊天界面
                 Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
                 intent2.putExtra("type", 0);
-                intent2.putExtra("groupId", groupId);
-                intent2.putExtra("titleName", groupName);
-                startActivity(intent2);
+                if((TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)) && userEntity != null){
+                    //如果上个页面没有groupId或者groupName
+                    intent2.putExtra("groupId", userEntity.getGroup_id());
+                    intent2.putExtra("titleName", userEntity.getUser_given_name());
+                    startActivity(intent2);
+                }else {
+                    intent2.putExtra("groupId", groupId);
+                    intent2.putExtra("titleName", groupName);
+                    startActivity(intent2);
+                }
+
             }
         });
 
@@ -288,7 +296,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                         tvName1.setText(userEntity.getUser_given_name());
                         getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
                     }
-                    tvId1.setText("ID:" + userEntity.getDis_bondwithme_id());
+                    tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
                     if(TextUtils.isEmpty(getDofeelCode)){
                         String dofeel_code = userEntity.getDofeel_code();
                         if (!TextUtils.isEmpty(dofeel_code)) {
@@ -389,6 +397,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 if ((data != null) && (data.size() > 0)) {
                     userEntity = data.get(0);
                     Message.obtain(handler, GET_USER_ENTITY, userEntity).sendToTarget();
+                    if(vProgress.getVisibility() == View.VISIBLE){
+                        vProgress.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -412,8 +423,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("requestCode1====", requestCode + "");
-        Log.i("resultCode1====",resultCode+"");
         switch (requestCode) {
             case 1:
                 if (resultCode == Activity.RESULT_OK){
