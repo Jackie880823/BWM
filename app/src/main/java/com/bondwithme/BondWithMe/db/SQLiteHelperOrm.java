@@ -11,12 +11,13 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 
     private static final String DB_NAME = "bwm.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     private static SQLiteHelperOrm helper = null;
     private static final AtomicInteger usageCounter = new AtomicInteger(0);
 
@@ -47,8 +48,17 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 	}
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource,
-			int arg2, int arg3) {
+	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+
+        switch (oldVersion){
+            case 1:
+                try {
+                    TableUtils.dropTable(connectionSource, LocalStickerInfo.class, true);
+                    TableUtils.createTable(connectionSource, LocalStickerInfo.class);
+                } catch (SQLException e) {
+                }
+                break;
+        }
 
 		//TODO
 		// try {
