@@ -21,6 +21,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.EventCommentEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.task.DownloadStickerTask;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
@@ -215,12 +216,14 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                         } else {
                             String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
                                     ece.getSticker_name(), stickerGroupPathGig, ece.getSticker_type());
-                            downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
+//                            downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
+                            DownloadStickerTask.getInstance().downloadGifSticker(holder.progressBar,stickerGroupPathGig,ece.getSticker_name(),R.drawable.network_image_default,holder.gifImageView);
                         }
                     } catch (Exception e) {
                         String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
                                 ece.getSticker_name(), stickerGroupPathGig, ece.getSticker_type());
-                        downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
+//                        downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
+                        DownloadStickerTask.getInstance().downloadGifSticker(holder.progressBar,stickerGroupPathGig,ece.getSticker_name(),R.drawable.network_image_default,holder.gifImageView);
                         e.printStackTrace();
                     }
                     break;
@@ -255,12 +258,14 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                                 holder.pngImageView.setImageBitmap(bitmap);
                             } else {
                                 String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPathPng, Constant.Sticker_Png);
-                                downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+//                                downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+                                DownloadStickerTask.getInstance().downloadGifSticker(holder.progressBar,stickerGroupPathPng,ece.getSticker_name(),R.drawable.network_image_default,holder.gifImageView);
                             }
                         } catch (Exception e) {
                             //本地没有png的时候，从服务器下载
                             String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPathPng, Constant.Sticker_Png);
-                            downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+//                            downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
+                            DownloadStickerTask.getInstance().downloadGifSticker(holder.progressBar,stickerGroupPathPng,ece.getSticker_name(),R.drawable.network_image_default,holder.gifImageView);
                             e.printStackTrace();
                         }
                     }
@@ -418,10 +423,10 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void downloadPngAsyncTask(final CircularProgress progressBar, final ImageView imageView, final String path, final int defaultResource) {
-        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
+        AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
 
             @Override
-            protected byte[] doInBackground(String... params) {
+            protected byte[] doInBackground(Object... params) {
                 return getImageByte(path);
             }
 
