@@ -438,9 +438,14 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         //            at.setVisibility(View.VISIBLE);
         //            tvLocation.setText(wall.getLoc_name());
         //        }
+        int size = rvList.getChildCount() - 2;
+        String strCount = wall.getComment_count();
+        if(Integer.valueOf(strCount) <= size) {
+            strCount = String.valueOf(size);
+        }
 
         tvAgreeCount.setText(wall.getLove_count());
-        tvCommentCount.setText(wall.getComment_count());
+        tvCommentCount.setText(strCount);
 
 
         if(MainActivity.getUser().getUser_id().equals(wall.getUser_id())) {
@@ -580,6 +585,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             rvList.setAdapter(adapter);
         } else {
             adapter.setData(data);
+            adapter.notifyDataSetChanged();
         }
         //        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
         //        animator.setAddDuration(2000);
