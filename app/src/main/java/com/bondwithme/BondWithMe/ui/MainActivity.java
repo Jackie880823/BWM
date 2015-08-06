@@ -328,7 +328,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN += App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
-        if (isFirstLogin) {
+//        if (isFirstLogin) {
             new Thread() {
                 @Override
                 public void run() {
@@ -347,7 +347,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 }
             }.start();
             PreferencesUtil.saveValue(this, IS_FIRST_LOGIN, false);
-        }
+//        }
 
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();

@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -235,6 +236,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             public void onClick(View v) {
                 if (userEntity != null ) {
                     //关系界面
+
+                    Log.d("", "rrrrrrllll---" + userEntity.getTree_type_name() + data_Us.indexOf(userEntity.getTree_type_name()));
+
                     Intent intent = new Intent(getActivity(), PathRelationshipActivity.class);
                     intent.putExtra("member_id", memberId);
 //                    if(!TextUtils.isEmpty(relationship)){
@@ -377,12 +381,12 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         new HttpTools(getActivity()).get(url, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
-
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
-
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -394,7 +398,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 if ((data != null) && (data.size() > 0)) {
                     userEntity = data.get(0);
                     Message.obtain(handler, GET_USER_ENTITY, userEntity).sendToTarget();
-                    if(vProgress.getVisibility() == View.VISIBLE){
+                    if (vProgress.getVisibility() == View.VISIBLE) {
                         vProgress.setVisibility(View.GONE);
                     }
                 }
@@ -440,4 +444,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         return data_Us;
     }
 
+    @Override
+    public void onDestroy() {
+        new HttpTools(getActivity()).cancelRequestByTag(Tag);
+        super.onDestroy();
+    }
 }

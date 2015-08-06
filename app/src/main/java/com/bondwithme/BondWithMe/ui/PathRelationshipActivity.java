@@ -136,11 +136,11 @@ public class PathRelationshipActivity extends BaseActivity {
         if(length==-1||length>=data_Zh.size()){
             tvRelationship.setText("");
         }else{
-        if (isZh) {
-            tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber", -1)));
-        } else {
-            tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", data_Us.size()-1)));
-        }
+            if (isZh) {
+                tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));
+            } else {
+                tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", -1)));
+            }
         }
 
 

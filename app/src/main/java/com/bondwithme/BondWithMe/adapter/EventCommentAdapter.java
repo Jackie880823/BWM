@@ -27,6 +27,7 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
+import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 import com.material.widget.CircularProgress;
@@ -189,15 +190,14 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
 
 //            Log.i("ece.getSticker_group_path()",ece.getSticker_group_path()+"");
         if(!TextUtils.isEmpty(ece.getComment_content().trim())){//如果文字不为空
-//                Log.i("文字=====", position + "");
             holder.tv_comment_content.setVisibility(View.VISIBLE);
             holder.tv_comment_content.setText(ece.getComment_content());
 
         }
-        if(!TextUtils.isEmpty(ece.getSticker_group_path().trim())){
+        else if(!TextUtils.isEmpty(ece.getSticker_group_path())){
+
             switch (ece.getSticker_type().trim()){
                 case ".gif" :
-//                        Log.i("gifImageView=====",ece.getSticker_group_path());
                     holder.progressBar.setVisibility(View.GONE);
                     holder.gifImageView.setVisibility(View.VISIBLE);
 //                        holder.tv_comment_content.setVisibility(View.GONE);
@@ -209,29 +209,22 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                         String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPathGig + File.separator + ece.getSticker_name() + "_B.gif";
                         GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
                         if (gifDrawable != null) {
-//                            Log.i("gifFilePath=====", gifFilePath);
-//                            Log.i("显示GIF======",gifFilePath);
                             holder.gifImageView.setImageDrawable(gifDrawable);
                             holder.gifImageView.setVisibility(View.VISIBLE);
                         } else {
-                            String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
-                                    ece.getSticker_name(), stickerGroupPathGig, ece.getSticker_type());
+////                            String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
+//                                    ece.getSticker_name(), stickerGroupPathGig, ece.getSticker_type());
 //                            downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
-                            DownloadStickerTask.getInstance().downloadGifSticker(holder.progressBar,stickerGroupPathGig,ece.getSticker_name(),R.drawable.network_image_default,holder.gifImageView);
+                            UniversalImageLoaderUtil.decodeStickerPic(holder.gifImageView, ece.getSticker_group_path(), ece.getSticker_name(), ece.getSticker_type());
+
                         }
                     } catch (Exception e) {
-                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
-                                ece.getSticker_name(), stickerGroupPathGig, ece.getSticker_type());
-//                        downloadAsyncTask(holder.progressBar, holder.gifImageView, stickerUrl, R.drawable.network_image_default);
-                        DownloadStickerTask.getInstance().downloadGifSticker(holder.progressBar,stickerGroupPathGig,ece.getSticker_name(),R.drawable.network_image_default,holder.gifImageView);
                         e.printStackTrace();
                     }
                     break;
 
 
                 case ".png" :
-//                        Log.i("png=====", position+"");
-//                        Log.i("pngImageView=====",ece.getSticker_group_path());
                     holder.progressBar.setVisibility(View.GONE);
                     holder.pngImageView.setVisibility(View.VISIBLE);
 //                        holder.tv_comment_content.setVisibility(View.GONE);
@@ -257,15 +250,12 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
                                 Bitmap bitmap = BitmapFactory.decodeStream(is);
                                 holder.pngImageView.setImageBitmap(bitmap);
                             } else {
-                                String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPathPng, Constant.Sticker_Png);
+//                                String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPathPng, Constant.Sticker_Png);
 //                                downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
-                                DownloadStickerTask.getInstance().downloadGifSticker(holder.progressBar,stickerGroupPathPng,ece.getSticker_name(),R.drawable.network_image_default,holder.gifImageView);
+                                UniversalImageLoaderUtil.decodeStickerPic(holder.pngImageView, ece.getSticker_group_path(), ece.getSticker_name(), ece.getSticker_type());
+
                             }
                         } catch (Exception e) {
-                            //本地没有png的时候，从服务器下载
-                            String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), ece.getSticker_name(), stickerGroupPathPng, Constant.Sticker_Png);
-//                            downloadPngAsyncTask(holder.progressBar, holder.pngImageView, stickerUrl, R.drawable.network_image_default);
-                            DownloadStickerTask.getInstance().downloadGifSticker(holder.progressBar,stickerGroupPathPng,ece.getSticker_name(),R.drawable.network_image_default,holder.gifImageView);
                             e.printStackTrace();
                         }
                     }
@@ -483,7 +473,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
         TextView comment_date;
         NetworkImageView networkImageView;
         GifImageView gifImageView;
-        ImageView pngImageView;
+        GifImageView pngImageView;
         CircularProgress progressBar;
         View agreeTouch;
 
@@ -493,7 +483,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<EventCommentAdapte
             super(itemView);
             gifImageView = (GifImageView) itemView.findViewById(R.id.message_pic_gif_iv);
             networkImageView = (NetworkImageView) itemView.findViewById(R.id.message_pic_iv);
-            pngImageView = (ImageView) itemView.findViewById(R.id.message_png_iv);
+            pngImageView = (GifImageView) itemView.findViewById(R.id.message_png_iv);
 
             civ_comment_owner_head = (CircularNetworkImage) itemView.findViewById(R.id.civ_comment_owner_head);
             tv_comment_content = (FreedomSelectionTextView) itemView.findViewById(R.id.tv_comment_content);

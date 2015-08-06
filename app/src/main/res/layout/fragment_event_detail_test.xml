@@ -1,0 +1,177 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--
+    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com.bondwithme.BondWithMe/widget/SendCommentView.java
+    -->
+    <!-- 隐藏的选项 -->
+    <RelativeLayout
+        android:id="@+id/event_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/default_text_color_while"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/option_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_content_padding">
+
+                <LinearLayout
+                    android:id="@+id/option_no_going"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_no_going"
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/status_not_going_normal" />
+
+                    <TextView
+                        style="@style/text_dark_default"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/default_view_margin"
+                        android:text="@string/text_not_going" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/option_maybe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:clickable="true"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_maybe"
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/status_maybe_normal" />
+
+                    <TextView
+                        style="@style/text_dark_default"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/default_view_margin"
+                        android:text="@string/text_maybe" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/option_going"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:clickable="true"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_going"
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/status_going_normal" />
+
+                    <TextView
+                        style="@style/text_light_default"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/default_view_margin"
+                        android:text="@string/text_going" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/option_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:padding="@dimen/default_content_padding"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="@dimen/default_small_button_width_height"
+                    android:layout_height="@dimen/default_small_button_width_height"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/status_not_going_normal" />
+
+                <TextView
+                    style="@style/text_dark_default"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:text="@string/cancel" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/option_split_line"
+                style="@style/split_line_default" />
+        </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/connent_Rl"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/event_options"
+        android:layout_height="match_parent">
+        <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+            android:id="@+id/swipe_archive_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            android:background="@android:color/white">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_event_comment_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/top_event"
+                android:scrollbars="vertical">
+            </android.support.v7.widget.RecyclerView>
+        </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/connent_Rl"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp">
+    </RelativeLayout>
+    <!-- com.bondwithme.BondWithMe/widget/OverScrollView.java-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:focusable="true"-->
+        <!--android:focusableInTouchMode="true"-->
+        <!--android:paddingBottom="@dimen/default_content_padding"-->
+        <!--android:paddingLeft="@dimen/default_content_padding"-->
+        <!--android:paddingRight="@dimen/default_content_padding">-->
+
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/rv_event_comment_list"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:scrollbars="vertical">-->
+        <!--</android.support.v7.widget.RecyclerView>-->
+    <!--</LinearLayout>-->
+
+    <com.bondwithme.BondWithMe.widget.SendComment
+        android:id="@+id/send_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true"/>
+    <include layout="@layout/progress_layout"/>
+
+</RelativeLayout>

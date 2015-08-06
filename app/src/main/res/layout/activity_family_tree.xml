@@ -63,7 +63,6 @@
         <!--</LinearLayout>-->
 
     </LinearLayout>
-
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pdflayout2"
         android:layout_width="match_parent"
@@ -76,6 +75,7 @@
     </RelativeLayout>
 
     <include layout="@layout/progress_layout"/>
+
 
 
 </RelativeLayout>

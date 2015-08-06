@@ -27,6 +27,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -256,7 +257,7 @@ public class MyViewProfileActivity extends BaseActivity {
         tvId1 = getViewById(R.id.tv_id1);
         tvLoginId = getViewById(R.id.tv_login_id1);
 
-        llResetPassword = getViewById(R.id.ll_reset_password);
+        llResetPassword = (LinearLayout)getViewById(R.id.ll_reset_password);
         if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
         {
             llResetPassword.setVisibility(View.INVISIBLE);
@@ -310,7 +311,7 @@ public class MyViewProfileActivity extends BaseActivity {
         }
 
         etEmail.setText(MainActivity.getUser().getUser_email());
-        etPhone.setText(MainActivity.getUser().getUser_phone());
+        etPhone.setText("+" + MainActivity.getUser().getUser_country_code() + " " + MainActivity.getUser().getUser_phone());
         String[] countryArray = getResources().getStringArray(R.array.country_code);
         String userCountryCode = MainActivity.getUser().getUser_country_code().trim();
         if (countryArray != null) {

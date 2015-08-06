@@ -3,6 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_14dp"
+    android:layout_marginRight="@dimen/_14dp"
+    android:background="#FAFAFA"
+    android:elevation="3dip"
     android:orientation="vertical">
 
     <LinearLayout
@@ -11,6 +15,7 @@
         android:layout_marginLeft="@dimen/default_content_padding"
         android:layout_marginRight="@dimen/default_content_padding"
         android:layout_marginTop="@dimen/default_content_padding"
+
         android:orientation="horizontal">
 
         <com.bondwithme.BondWithMe.widget.CircularNetworkImage
@@ -48,37 +53,43 @@
             </RelativeLayout>
 
             <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+                android:textIsSelectable="true"
                 android:id="@+id/tv_comment_content"
                 style="@style/text_dark_default"
+                android:autoLink="web"
+                android:linksClickable="true"
                 android:visibility="gone"/>
 
-            <!--<ImageView-->
-                <!--android:id="@+id/message_png_iv"-->
-                <!--android:layout_width="@dimen/_80dp"-->
-                <!--android:layout_height="@dimen/_80dp"-->
-                <!--android:paddingTop="@dimen/default_view_margin"-->
-                <!--android:scaleType="fitXY"-->
-                <!--android:visibility="gone"/>-->
-
-            <pl.droidsonroids.gif.GifImageView
-                android:id="@+id/message_png_iv"
+            <RelativeLayout
+                android:id="@+id/ll_chats_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/default_view_margin"
-                android:visibility="gone"
-                android:scaleType="fitXY"/>
-            <com.material.widget.CircularProgress
-                android:id="@+id/message_progress_bar"
-                android:layout_width="@dimen/_32dp"
-                android:layout_height="@dimen/_32dp"
-                android:layout_centerInParent="true"
-                android:paddingTop="@dimen/default_view_margin"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/default_view_margin"
+                android:visibility="gone">
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/message_pic_gif_iv"
+                    android:layout_width="@dimen/_80dp"
+                    android:layout_height="@dimen/_80dp"
+                    android:visibility="gone"
+                    android:scaleType="fitXY"/>
+                <ImageView
+                    android:id="@+id/message_pic_png_iv"
+                    android:layout_width="@dimen/_80dp"
+                    android:layout_height="@dimen/_80dp"
+                    android:visibility="gone"
+                    android:scaleType="fitXY"/>
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/message_pic_iv"
+                    android:layout_width="@dimen/_80dp"
+                    android:layout_height="@dimen/_80dp"
+                    android:visibility="gone"
+                    android:scaleType="fitXY"/>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_view_margin">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/comment_date"
@@ -117,7 +128,6 @@
                         android:layout_marginRight="@dimen/_25dp"
                         android:background="@null" />
                 </RelativeLayout>
-
 
             </RelativeLayout>
 

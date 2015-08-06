@@ -26,6 +26,8 @@ import com.bondwithme.BondWithMe.util.UIUtil;
 public abstract class BaseActivity extends BaseFragmentActivity implements IViewCommon, NetChangeObserver {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
+    /**是否为外部启动*/
+    public static final String IS_OUTSIDE_INTENT = "is_outside_intent";
 
     protected ImageButton leftButton;            //头部栏的左边的按钮
     protected TextView tvTitle;                          //头部栏的标题
@@ -112,7 +114,16 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
      * TitilBar 左边事件
      */
     protected void titleLeftEvent() {
-        UIUtil.hideKeyboard(this, getCurrentFocus());
+        if(getIntent().getBooleanExtra(IS_OUTSIDE_INTENT,false)){
+            Intent intent = new Intent(this, MainActivity.class);
+//            ComponentName cn = intent.getComponent();
+//            Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+//            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(mainIntent);
+            startActivity(intent);
+        }else {
+            UIUtil.hideKeyboard(this, getCurrentFocus());
+        }
         finish();
     }
 
