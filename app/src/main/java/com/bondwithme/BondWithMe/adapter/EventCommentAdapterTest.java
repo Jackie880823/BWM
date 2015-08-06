@@ -371,9 +371,9 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
         }
 
         if (TextUtils.isEmpty(entity.getLove_id())) {//如果有人点赞
-            iv_agree.setImageResource(R.drawable.agree_normal);
+            iv_agree.setImageResource(R.drawable.love_normal);
         } else {
-            iv_agree.setImageResource(R.drawable.agree_press);
+            iv_agree.setImageResource(R.drawable.love_press);
         }
 
 //        setCommentPic(holder,entity);
