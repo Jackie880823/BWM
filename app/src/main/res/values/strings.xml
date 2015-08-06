@@ -322,8 +322,8 @@
 
     <string name="text_upcoming_birthdays">Upcoming birthdays</string>
     <string name="text_today_birthday">Today \'s birthday</string>
-    <string name="text_today_birthday_on"> birthday is today!</string>
-    <string name="text_upcoming_birthdays_on"> birthday is on</string>
+    <string name="text_today_birthday_on">&#160;birthday is today!</string>
+    <string name="text_upcoming_birthdays_on">&#160;birthday is on</string>
     <string name="text_d">day </string>
     <string name="text_left">left</string>
 
