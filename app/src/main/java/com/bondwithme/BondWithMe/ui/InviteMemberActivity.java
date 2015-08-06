@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -132,10 +133,15 @@ public class InviteMemberActivity extends BaseActivity {
                         else {
                             if(selectNewData == 0){
                                 for (FamilyMemberEntity memberEntity : memberEntityList) {
+                                    if(memberEntity.getUser_id().equals("665")){
+                                        Log.i("cccccc",memberEntity.getUser_given_name());
+                                    }
                                     if (selectMemberList.contains(memberEntity.getUser_id()) && isFirstData) {
                                         selectMemberEntityList.add(memberEntity);
                                     }
                                 }
+                                Log.i("cccccddd",selectMemberEntityList.size()+"");
+
                             }
                             memberAdapter.addNewData(memberEntityList);
                         }
@@ -195,6 +201,7 @@ public class InviteMemberActivity extends BaseActivity {
         mContext = this;
         Intent intent = getIntent();
         String memberData = intent.getStringExtra("members_data");//需要传过来的已选中的gson格式的UserEntity或FamilyMemberEntity
+
         String groupData = intent.getStringExtra("groups_data");//需要传过来的已选中的gson格式的GroupEntity或FamilyGroupEntity
         isCreateNewGroup = intent.getBooleanExtra("isCreateNewGroup", false);
         jumpIndex = intent.getIntExtra("jumpIndex", 0);
@@ -208,6 +215,7 @@ public class InviteMemberActivity extends BaseActivity {
         if (memberData != null) {
             memberSelectList = new Gson().fromJson(memberData, new TypeToken<ArrayList<FamilyMemberEntity>>() {
             }.getType());
+            Log.i("memberSelectList====1", memberSelectList.size()+"");
         }
         selectMemberList = new ArrayList<>();
         selectGroupList = new ArrayList<>();
@@ -728,7 +736,11 @@ public class InviteMemberActivity extends BaseActivity {
     protected void titleRightEvent() {
         Intent intent = new Intent();
         Gson gson = new Gson();
+        for (FamilyMemberEntity familyMemberEntity : selectMemberEntityList){
+            Log.i("familyMemberEntity===",familyMemberEntity.getUser_id());
+        }
         intent.putExtra("members_data", gson.toJson(selectMemberEntityList));
+//        Log.i("members_data====", gson.toJson(selectMemberEntityList));
         intent.putExtra("groups_data", gson.toJson(selectGroupEntityList));
         if (isCreateNewGroup) {
             if ((selectMemberEntityList != null && selectMemberEntityList.size() > 0) ||

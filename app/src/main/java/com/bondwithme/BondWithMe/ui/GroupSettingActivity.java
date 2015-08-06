@@ -365,7 +365,7 @@ public class GroupSettingActivity extends BaseActivity {
                     groupSettingAdapter = new GroupSettingAdapter(GroupSettingActivity.this, R.layout.item_group_setting_members, userList);
                     lvMembers.setAdapter(groupSettingAdapter);
 
-                    tvNumMembers.setText(userList.size() + getResources().getString(R.string.text_members));
+                    tvNumMembers.setText(userList.size() + " " + getResources().getString(R.string.text_members));
                 }
             }
 

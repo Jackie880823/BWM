@@ -121,11 +121,12 @@
 
             <GridView
                 android:id="@+id/gv_sticker"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/rl_sticker_detail"
                 android:numColumns="3"
-                android:verticalSpacing="@dimen/_10dp"
+                android:verticalSpacing="@dimen/_25dp"
+                android:horizontalSpacing="@dimen/_25dp"
                 android:gravity="center"
                 android:layout_marginLeft="@dimen/_10dp"
                 android:layout_marginRight="@dimen/_10dp"

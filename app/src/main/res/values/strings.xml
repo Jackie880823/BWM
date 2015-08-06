@@ -322,8 +322,8 @@
 
     <string name="text_upcoming_birthdays">Upcoming birthdays</string>
     <string name="text_today_birthday">Today \'s birthday</string>
-    <string name="text_today_birthday_on"> birthday is today!</string>
-    <string name="text_upcoming_birthdays_on"> birthday is on</string>
+    <string name="text_today_birthday_on">&#160;birthday is today!</string>
+    <string name="text_upcoming_birthdays_on">&#160;birthday is on</string>
     <string name="text_d">day </string>
     <string name="text_left">left</string>
 
@@ -474,7 +474,7 @@
     <string name="test_group_friend">Some group members are still not connected to you.</string>
     <string name="text_no_data">No data!</string>
     <string name="year">Year</string>
-    <string name="text_new_everyone">Everyone</string>
+    <string name="text_new_everyone">All Members</string>
     <string name="text_new_family">Family</string>
 
 
@@ -491,7 +491,7 @@
     <string name="text_admin">Admin</string>
     <string name="text_check_in_a_location">Check in a location</string>
 
-    <string name="text_post_and">Post and</string>
+    <string name="text_post_and">Post an</string>
     <string name="text_event_now">Event now</string>
     <string name="text_archive">Archive</string>
     <string name="text_group_posting">Group Posting</string>
