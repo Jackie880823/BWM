@@ -21,7 +21,6 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.EventCommentEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
-import com.bondwithme.BondWithMe.task.DownloadStickerTask;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
