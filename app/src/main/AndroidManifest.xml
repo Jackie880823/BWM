@@ -268,22 +268,28 @@
         <activity
             android:name=".ui.MissListActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.NewsActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.RecommendActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AlertEventActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:exported="true"
+            />
         <activity
             android:name=".ui.AlertWallActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.NewsInfoActivity"
@@ -295,13 +301,16 @@
         <activity
             android:name=".ui.more.BondAlert.BigDayActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MemberActivity"
             android:launchMode="singleTop"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AlertGroupActivity"
+            android:exported="true"
             android:screenOrientation="portrait" />
 
         <!-- christopher -->
@@ -392,6 +401,7 @@
             android:name=".ui.MessageChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.more.ArchiveActivity"
