@@ -45,11 +45,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -91,6 +95,8 @@ public class MyViewProfileActivity extends BaseActivity {
     private String imagePath;
     private Context mContext;
     private String TAG;
+
+    String strDOB;
     /**
      * 头像缓存文件名称
      */
@@ -191,10 +197,10 @@ public class MyViewProfileActivity extends BaseActivity {
                 return true;
             }
         }
-        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()) && !MainActivity.getUser().getUser_dob().equals(tvBirthday.getText().toString().trim())) {
+        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()) && !MainActivity.getUser().getUser_dob().equals(strDOB)) {
             return true;
         } else {
-            if (!TextUtils.isEmpty(tvBirthday.getText().toString().trim()) && !tvBirthday.getText().toString().trim().equals(MainActivity.getUser().getUser_dob())) {
+            if (!TextUtils.isEmpty(strDOB) && !strDOB.equals(MainActivity.getUser().getUser_dob())) {
                 return true;
             }
         }
@@ -288,7 +294,12 @@ public class MyViewProfileActivity extends BaseActivity {
         tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
 
 //        tvAge.setText(MainActivity.getUser().getUser_dob());//需要做处理，年转为岁数
-        tvBirthday.setText(MainActivity.getUser().getUser_dob());
+
+        //1990-09-10   1990年
+        strDOB = MainActivity.getUser().getUser_dob();
+        LogUtil.d(TAG,"strDOB==="+strDOB);
+        setTvBirthday(strDOB);
+
 //
 //        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()))
 //        {
@@ -374,6 +385,27 @@ public class MyViewProfileActivity extends BaseActivity {
         });
     }
 
+    private void setTvBirthday(String strDOB) {
+        if (!strDOB.equals("0000-00-00")){
+            Date date = null;
+            try {
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(strDOB);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            //不同语言设置不同日期显示
+            if (Locale.getDefault().toString().equals("zh_CN")){
+//            tvBirthday.setText(date.getYear()+"年" + date.getMonth() + "月" + date.getDay() + "日");
+                DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+                tvBirthday.setText(dateFormat.format(date));
+            }else {
+                int year = date.getYear() + 1900;
+                tvBirthday.setText(this.getResources().getStringArray(R.array.months)[date.getMonth()] + " " + date.getDate() + " "  + String.valueOf(year));
+            }
+        }
+    }
+
+
     @Override
     public void requestData() {
 
@@ -403,7 +435,7 @@ public class MyViewProfileActivity extends BaseActivity {
         jsonParams.put("user_surname", etLastName.getText().toString());
         jsonParams.put("user_given_name", etFirstName.getText().toString());
         jsonParams.put("user_gender", userGender);
-        jsonParams.put("user_dob", tvBirthday.getText().toString());
+        jsonParams.put("user_dob", strDOB);
         jsonParams.put("user_email", etEmail.getText().toString());
         jsonParams.put("user_location_name", etRegion.getText().toString());
 
@@ -670,7 +702,7 @@ public class MyViewProfileActivity extends BaseActivity {
             if (TextUtils.isEmpty(tvBirthday.getText().toString())) {
                 ts = new Timestamp(System.currentTimeMillis());
             } else {
-                ts = Timestamp.valueOf(tvBirthday.getText().toString() + " 00:00:00");
+                ts = Timestamp.valueOf(strDOB + " 00:00:00");
             }
         } else {
             ts = Timestamp.valueOf(strData);
@@ -696,7 +728,8 @@ public class MyViewProfileActivity extends BaseActivity {
                 String dateDesc = MyDateUtils.getLocalDateStringFromLocal(MyViewProfileActivity.this, mCalendar.getTimeInMillis());
                 strData = MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis());
                 SimpleDateFormat defaultDateFormat = new SimpleDateFormat("yyy-MM-dd");
-                tvBirthday.setText(defaultDateFormat.format(mCalendar.getTime()));
+                strDOB = defaultDateFormat.format(mCalendar.getTime());
+                setTvBirthday(strDOB);
                 int age = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date())) - Integer.parseInt(new SimpleDateFormat("yyy").format(mCalendar.getTime()));
 //                tvAge.setText(String.valueOf(age));
             }
