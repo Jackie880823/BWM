@@ -112,7 +112,7 @@ public class InvitedUserEditAdapter extends RecyclerView.Adapter<InvitedUserEdit
                         alertDialog.dismiss();
                     }
                 });
-                alertDialog.setButtonCancel("Cancel", new View.OnClickListener() {
+                alertDialog.setButtonCancel(R.string.text_dialog_show_no, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         alertDialog.dismiss();

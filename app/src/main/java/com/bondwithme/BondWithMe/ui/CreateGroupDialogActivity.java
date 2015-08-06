@@ -56,11 +56,14 @@ public class CreateGroupDialogActivity extends BaseActivity {
     private TextView member_num;
     private Context mContext;
     private List<String> selectUserList;
+    private List<String> flagUserList;
     private List<FamilyGroupEntity> selectGroupEntityList;
     private static final int GET_DATA = 0X11;
     private static final int JUMP_SELECT_MEMBER = 0X12;
     private int jumpIndex = 0;
     private List<UserEntity> selectUserEntityList;
+    List<UserEntity> flagEntityList;//双方不是好友
+    List<UserEntity> addedEntityList;//双方是好友
     private String TAG;
     private RelativeLayout defaultHead;
     private ImageView default_imag;
@@ -121,8 +124,14 @@ public class CreateGroupDialogActivity extends BaseActivity {
     }
 
     private void backToLastPage() {
+        for (UserEntity eventEntity : selectUserEntityList){
+            Log.i("selectUserEntityList===",eventEntity.getUser_id());
+        }
         Intent intent = new Intent(mContext, InviteMemberActivity.class);
         String selectMemberData = new Gson().toJson(selectUserEntityList);
+//        Log.i("selectUserEntityList====",new Gson().toJson(selectUserEntityList));
+
+        Log.i("selectUserEntityList_bakc",selectUserEntityList.size()+"");
         intent.putExtra("members_data", selectMemberData);
         intent.putExtra("type", 0);
 //        if (selectGroupEntityList.size() > 0) {
@@ -194,10 +203,21 @@ public class CreateGroupDialogActivity extends BaseActivity {
                 for (UserEntity userEntity : userList) {
                     selectUserList.add(userEntity.getUser_id());
                 }
-
                 selectUserEntityList.addAll(userList);
             }
+            Log.i("selectUserList====2", selectUserList.size() + "");
+            Log.i("selectUserEntityList====2", selectUserEntityList.size() + "");
         }
+
+        if(flagEntityList != null && flagEntityList.size() > 0){
+            Log.i("flagEntityList====2",flagEntityList.size()+"");
+            for (UserEntity user : flagEntityList) {
+                selectUserList.add(user.getUser_id());
+                selectUserEntityList.add(user);
+            }
+        }
+        Log.i("selectUserList====3", selectUserList.size() + "");
+        Log.i("selectUserEntityList====3", selectUserEntityList.size() + "");
         String groups_data = data.getStringExtra("groups_data");
         List<FamilyGroupEntity> groupEntityList = null;
         if (null != groups_data) {
@@ -405,9 +425,22 @@ public class CreateGroupDialogActivity extends BaseActivity {
                         }
                     }
                     for (UserEntity user : userEntityList) {
-                        selectUserList.add(user.getUser_id());
+//                        selectUserList.add(user.getUser_id());
+                        //如果双方不是好友
+                        if(user.getAdded_flag().equals("0")){
+                            flagEntityList.add(user);
+                            selectUserList.add(user.getUser_id());
+                        }
+                        if(user.getAdded_flag().equals("1")){
+                            addedEntityList.add(user);
+                            selectUserList.add(user.getUser_id());
+                        }
                     }
-                    selectUserEntityList.addAll(userEntityList);
+//                    selectUserEntityList.addAll(flagEntityList);
+                    selectUserEntityList.addAll(addedEntityList);
+                    Log.i("flagEntityList====1", flagEntityList.size() + "");
+                    Log.i("selectUserList====1", selectUserList.size() + "");
+                    Log.i("selectUserEntityList====1", selectUserEntityList.size() + "");
                     changeData();
                     break;
             }
@@ -419,8 +452,11 @@ public class CreateGroupDialogActivity extends BaseActivity {
         mContext = this;
         TAG = mContext.getClass().getSimpleName();
         selectUserList = new ArrayList<>();
+        flagEntityList = new ArrayList<>();
+        addedEntityList = new ArrayList<>();
         selectUserEntityList = new ArrayList<>();
         selectGroupEntityList = new ArrayList<>();
+        flagUserList = new ArrayList<>();
 //        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         member_num = getViewById(R.id.member_num);
         ivGroupPic = getViewById(R.id.creategroup_imageview);
@@ -514,6 +550,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
                 Gson gson = gsonb.create();
                 List<UserEntity> userList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
+                Log.i("getMembersList",userList.size()+"");
                 if (userList != null && userList.size() > 0) {
                     Message.obtain(handler, GET_DATA, userList).sendToTarget();
                 }
