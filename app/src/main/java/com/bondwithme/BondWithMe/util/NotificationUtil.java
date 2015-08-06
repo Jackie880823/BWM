@@ -219,7 +219,13 @@ public class NotificationUtil {
             case BONDALERT_MESSAGE:
                 smallIcon = R.drawable.bondalert_message_icon;
                 intent = new Intent(context, MessageChatActivity.class);
-                intent.putExtra("type", jsonObjectExtras.getString("group_type"));
+                int type = 0;
+                try {
+                    type = Integer.valueOf(jsonObjectExtras.getString("group_type"));
+                }catch (Exception e){
+
+                }
+                intent.putExtra("type", type);
                 intent.putExtra("groupId", jsonObjectExtras.getString("group_id"));
                 intent.putExtra("titleName", jsonObjectExtras.getString("group_name"));
                 doNotificationHandle(MainActivity.TabEnum.chat);

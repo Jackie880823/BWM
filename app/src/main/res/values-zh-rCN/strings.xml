@@ -182,7 +182,7 @@
     <!--<string name="text_fill_in_verification_code">请填写验证码.</string>-->
     <!--<string name="text_createVerification_fail">验证码创建失败</string>-->
     <!--<string name="text_createVerification_success">验证码创建成功</string>-->
-    <string name="text_not_change_anything">选择照片或者修改群组名称</string>
+    <!--<string name="text_not_change_anything">选择照片或者修改群组名称</string>-->
     <string name="text_fail_upload_group_profile_phone">上传群组照片失败</string>
     <string name="text_success_upload_group_profile_phone">上传群组照片成功</string>
     <string name="text_success_update_group_name">更新群组名称成功</string>
