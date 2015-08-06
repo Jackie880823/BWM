@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +32,6 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondWithMe.util.SDKUtil;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -49,11 +44,16 @@ import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.animation.ViewHelper;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.WallEditView;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
@@ -235,7 +235,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         }
         if(tasks != null && tasks.size() > 0) {
             // 图片上传务正在执行
-            Log.i(TAG, "backCheck& tasks size: " + tasks.size());
+            LogUtil.i(TAG, "backCheck& tasks size: " + tasks.size());
             return true;
         } else {
             hasTextContent = false;
@@ -257,7 +257,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     hasPicContent = true;
                 }
             }
-            Log.i(TAG, "backCheck& hasTextContent: " + hasTextContent + "; hasPicContent: " + hasPicContent);
+            LogUtil.i(TAG, "backCheck& hasTextContent: " + hasTextContent + "; hasPicContent: " + hasPicContent);
             SharedPreferences.Editor editor = draftPreferences.edit();
             if(!hasTextContent && !hasPicContent) {
                 // 没有需要上传的内容
@@ -300,7 +300,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume");
+        LogUtil.i(TAG, "onResume");
 
         // 监听地址更新
         // LocationUtil.setRequestLocationUpdates(getActivity());
@@ -338,13 +338,13 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
      * 保存草稿
      */
     private void saveDraft() {
-        Log.i(TAG, "saveDraft");
+        LogUtil.i(TAG, "saveDraft");
         SharedPreferences.Editor editor = draftPreferences.edit();
         if(hasPicContent) {
             int i = 0;
             for(Uri uri : pic_content) {
                 editor.putString(PREFERENCE_KEY_PIC_CONTENT + i++, uri.toString());
-                Log.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CONTENT + ": " + uri.toString());
+                LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CONTENT + ": " + uri.toString());
             }
             editor.putInt(PREFERENCE_KEY_PIC_COUNT, i);
             editor.putInt(PREFERENCE_KEY_PIC_VIEW_WIDTH, fragment2.getColumnWidthHeight());
@@ -375,7 +375,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
      * 恢复草稿
      */
     private void recoverDraft() throws Exception {
-        Log.i(TAG, "recoverDraft");
+        LogUtil.i(TAG, "recoverDraft");
         if(draftPreferences == null) {
             draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         }
@@ -422,7 +422,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             pic_content = new ArrayList<>();
             for(int i = 0; i < picCount; i++) {
                 String strUri = draftPreferences.getString(PREFERENCE_KEY_PIC_CONTENT + i, "");
-                Log.i(TAG, "recoverDraft& uri: " + strUri);
+                LogUtil.i(TAG, "recoverDraft& uri: " + strUri);
                 if(!TextUtils.isEmpty(strUri)) {
                     Uri uri = Uri.parse(strUri);
                     pic_content.add(uri);
@@ -690,7 +690,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     private void changeTab(final int tabIndex) {
         if(currentTabIndex == tabIndex) {
-            Log.i(TAG, "changeTab& return;");
+            LogUtil.i(TAG, "changeTab& return;");
             return;
         }
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -720,10 +720,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         fragmentTransaction.commit();
         currentTabIndex = tabIndex;
 
-        Log.i(TAG, "changeTab& tabIndex = " + tabIndex);
+        LogUtil.i(TAG, "changeTab& tabIndex = " + tabIndex);
 
         if(tabIndex == WALL_TAB_WORD) {
-            Log.i(TAG, "changeTab& tabIndex = WALL_TAB_WORD");
+            LogUtil.i(TAG, "changeTab& tabIndex = WALL_TAB_WORD");
             // 切换至输入文字的Tab，输入框获取焦点并弹出键盘
             fragment1.getEditText4Content().requestFocus();
             InputMethodManager imm = (InputMethodManager) getParentActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -852,7 +852,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(TAG, "onActivityResult");
+        LogUtil.i(TAG, "onActivityResult");
 
         // 没有退出编辑不用保存蓝草稿
         if(draftPreferences != null) {
@@ -892,7 +892,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                 case GET_MEMBERS:
                     String members = data.getStringExtra("members_data");
                     at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
-                    Log.i(TAG, "onActivityResult: size = " + at_members_data.size());
+                    LogUtil.i(TAG, "onActivityResult: size = " + at_members_data.size());
                     String groups = data.getStringExtra("groups_data");
                     at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {}.getType());
                     changeTab(WALL_TAB_WORD);
@@ -906,7 +906,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
         if(fragment1 != null) {
             fragment1.changeAtDesc(at_members_data, at_groups_data, checkVisible);
         } else {
-            Log.w(TAG, "changeAtDesc fragment1 is null, can't change at description");
+            LogUtil.w(TAG, "changeAtDesc fragment1 is null, can't change at description");
         }
     }
 

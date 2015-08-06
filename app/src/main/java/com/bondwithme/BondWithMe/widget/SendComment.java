@@ -12,7 +12,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -31,6 +30,7 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.StickerMainFragment;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
@@ -316,7 +316,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
      * @param data        An Intent, which can return result data to the caller
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
+        LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if(mActivity.RESULT_OK == resultCode) {
 
             switch(requestCode) {
@@ -336,7 +336,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 case REQUEST_HEAD_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, CACHE_PIC_NAME_TEMP + cache_count));
                     uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
-                    Log.i(TAG, "onActivityResult& uri: " + uri.getPath());
+                    LogUtil.i(TAG, "onActivityResult& uri: " + uri.getPath());
                     if(new File(uri.getPath()).exists()) {
                         if(commentListener != null) {
                             commentListener.onReceiveBitmapUri(uri);
@@ -349,7 +349,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
 
             }
         } else {
-            Log.w(TAG, "onActivityResult& resultCode = " + resultCode + " invalid");
+            LogUtil.w(TAG, "onActivityResult& resultCode = " + resultCode + " invalid");
         }
     }
 
@@ -359,7 +359,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
      * @param filName    sticker的文件名
      */
     public void showComments(String type, String folderName, String filName) {
-        Log.i(TAG, "showComments& type: " + type);
+        LogUtil.i(TAG, "showComments& type: " + type);
         if(commentListener != null) {
             commentListener.onStickerItemClick(type, folderName, filName);
             hideAllViewState(true);
