@@ -2,12 +2,12 @@ package com.bondwithme.BondWithMe.ui.wall;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 
 /**
  * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
@@ -74,14 +74,14 @@ public class WallNewActivity extends BaseActivity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        Log.i(TAG, "dispatchKeyEvent& keyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
+        LogUtil.i(TAG, "dispatchKeyEvent& keyCode: " + event.getKeyCode() + "; Action: " + event.getAction());
         if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if(event.getAction() == KeyEvent.ACTION_DOWN) {
                 Fragment fragment = getFragmentInstance();
                 if(fragment instanceof WallNewFragment) {
                     banBack = ((WallNewFragment) fragment).backCheck();
                 }
-                Log.i(TAG, "dispatchKeyEvent& banBack: " + banBack);
+                LogUtil.i(TAG, "dispatchKeyEvent& banBack: " + banBack);
                 return banBack ? banBack : super.dispatchKeyEvent(event);
             }
         }

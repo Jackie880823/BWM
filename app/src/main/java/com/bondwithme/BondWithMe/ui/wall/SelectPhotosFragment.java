@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,6 +26,7 @@ import com.bondwithme.BondWithMe.adapter.LocalImagesAdapter;
 import com.bondwithme.BondWithMe.entity.ImageData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
 
 import java.util.ArrayList;
@@ -89,10 +89,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
         @Override
         public void run() {
-            Log.i(TAG, "uiRunnable& update adapter");
+            LogUtil.i(TAG, "uiRunnable& update adapter");
             updateBucketsAdapter();
             if(buckets.size() > 0 && lastPosition != curLoaderPosition) {
-                Log.i(TAG, "uiRunnable& loadLocalImageOrder");
+                LogUtil.i(TAG, "uiRunnable& loadLocalImageOrder");
                 // 查找到了图片显示列表第一项的图片
                 loadLocalImageOrder(curLoaderPosition);
                 lastPosition = curLoaderPosition;
@@ -198,7 +198,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         mGvShowPhotos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(TAG, "onItemClick& position: " + position);
+                LogUtil.i(TAG, "onItemClick& position: " + position);
 
                 if(selectImageUirListener != null) {
                     ImageData itemUri = mImageUriList.get(position);
@@ -266,7 +266,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                             }
                         }
                         imageCursor.close();
-                        Log.d(TAG, "loadImages(), buckets size: " + buckets.size());
+                        LogUtil.d(TAG, "loadImages(), buckets size: " + buckets.size());
                         break;
                 }
             }
@@ -360,12 +360,12 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      *
      */
     private void loadLocalImageOrder(int index) {
-        Log.i(TAG, "index = " + index + "; buckets length " + buckets.size());
+        LogUtil.i(TAG, "index = " + index + "; buckets length " + buckets.size());
         if(index < buckets.size() && index >= 0) {
             String bucket = buckets.get(index);
             mImageUriList.clear();
             mImageUriList.addAll(mImageUris.get(bucket));
-            Log.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
+            LogUtil.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
             if(localImagesAdapter == null) {
                 localImagesAdapter = new LocalImagesAdapter(getActivity(), mImageUriList, getParentActivity().getActionBarColor());
                 localImagesAdapter.setCheckBoxVisible(multi);
@@ -379,7 +379,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
             mDrawerList.setSelection(index);
         } else {
-            Log.i(TAG, "index out of buckets");
+            LogUtil.i(TAG, "index out of buckets");
         }
 
     }

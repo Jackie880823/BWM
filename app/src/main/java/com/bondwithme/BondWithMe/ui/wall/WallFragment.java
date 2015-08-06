@@ -7,7 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
@@ -389,7 +389,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
+        LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if(resultCode == Activity.RESULT_OK) {
             switch(requestCode) {
                 case Constant.ACTION_CREATE_WALL:

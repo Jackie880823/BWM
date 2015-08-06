@@ -8,10 +8,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -37,13 +37,13 @@ import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
-import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.SendComment;
 import com.google.gson.Gson;
@@ -125,6 +125,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private final static int offset = 10;
     private boolean loading;
     private View split;
+    LinearLayoutManager llm;
     private RecyclerView rvList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CircularProgress progressBar;
@@ -173,9 +174,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         // initView
         vProgress = getViewById(R.id.rl_progress);
         rvList = getViewById(R.id.rv_wall_comment_list);
-        final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
+        llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
-        //        rvList.setHasFixedSize(true);
+        rvList.setHasFixedSize(true);
         //        initAdapter();
 
         rvList.setOnTouchListener(new View.OnTouchListener() {
@@ -236,6 +237,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                LogUtil.i(TAG, "onRefresh&");
                 isRefresh = true;
                 startIndex = 0;
                 requestData();
@@ -252,7 +254,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
                 if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
-                    Log.i(TAG, "onScrolled& getComments");
+                    LogUtil.i(TAG, "onScrolled& getComments");
                     currentPage++;
                     loading = true;
                     getComments();//再请求数据
@@ -321,7 +323,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
+        LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         sendCommentView.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -334,7 +336,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, new HttpCallback() {
             @Override
             public void onStart() {
-                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -579,7 +580,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             rvList.setAdapter(adapter);
         } else {
             adapter.setData(data);
-            adapter.notifyDataSetChanged();
         }
         //        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
         //        animator.setAddDuration(2000);
@@ -611,11 +611,12 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         mHttpTools.post(Constant.API_WALL_COMMENT_TEXT_POST, params, POST_COMMENTS, new HttpCallback() {
             @Override
             public void onStart() {
-
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -671,14 +672,14 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     wall.setLove_id(null);
                     tvAgreeCount.setText(count - 1 + "");
                 }
-                Log.i(TAG, "love count = " + count);
+                LogUtil.i(TAG, "love count = " + count);
                 //判断是否已经有进行中的判断
                 if(!loving) {
-                    Log.i(TAG, "prepare love");
+                    LogUtil.i(TAG, "prepare love");
                     loving = true;
                     check();
                 } else {
-                    Log.i(TAG, "not love");
+                    LogUtil.i(TAG, "not love");
                 }
                 break;
             case R.id.iv_walls_images:
@@ -740,17 +741,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         mHttpTools.post(requestInfo, POST_LOVE, new HttpCallback() {
             @Override
             public void onStart() {
-                Log.i(TAG, "onStart");
+                LogUtil.i(TAG, "onStart");
             }
 
             @Override
             public void onFinish() {
-                Log.i(TAG, "onFinish");
+                LogUtil.i(TAG, "onFinish");
             }
 
             @Override
             public void onResult(String response) {
-                Log.i(TAG, "onResult");
+                LogUtil.i(TAG, "onResult");
             }
 
             @Override
@@ -803,10 +804,12 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             mHttpTools.upload(Constant.API_WALL_COMMENT_PIC_POST, params, UPLOAD_PIC, new HttpCallback() {
                 @Override
                 public void onStart() {
+                    vProgress.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onFinish() {
+                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -836,7 +839,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void doLoveComment(final WallCommentEntity commentEntity, final boolean love) {
-        Log.i("WallCommentFragment", "doLoveComment& love = " + love);
+        LogUtil.i("WallCommentFragment", "doLoveComment& love = " + love);
         HashMap<String, String> params = new HashMap<>();
         params.put("comment_id", commentEntity.getComment_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
@@ -891,7 +894,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                         getParentActivity().setResult(Activity.RESULT_OK);
 
                         startIndex = 0;
-                        swipeRefreshLayout.setRefreshing(true);
                         isRefresh = true;
                         swipeRefreshLayout.setRefreshing(true);
                         getComments();

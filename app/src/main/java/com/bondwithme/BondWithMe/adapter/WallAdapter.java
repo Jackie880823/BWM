@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +24,7 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.LocationUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -74,7 +74,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallAdapter.VHItem> {
             holder.tvContent.setVisibility(View.VISIBLE);
             holder.tvContent.setText(atDescription);
         }
-        Log.i(TAG, "onBindViewHolder& description: " + atDescription);
+        LogUtil.i(TAG, "onBindViewHolder& description: " + atDescription);
 
         int tagMemberCount = wall.getTag_member() == null ? 0 : wall.getTag_member().size();
         int tagGroupCount = wall.getTag_member() == null ? 0 : wall.getTag_group().size();

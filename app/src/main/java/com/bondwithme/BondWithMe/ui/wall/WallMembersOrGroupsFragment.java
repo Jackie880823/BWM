@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallGroupAdapter;
@@ -21,7 +19,9 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,7 +52,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
 
 
     public static WallMembersOrGroupsFragment newInstance(String... params) {
-        Log.i(TAG, "createInstance");
+        LogUtil.i(TAG, "createInstance");
         return createInstance(new WallMembersOrGroupsFragment(), params);
     }
 
@@ -140,7 +140,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(TAG, "onActivityResult& requestCode = " + requestCode);
+        LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode);
         if (resultCode == Activity.RESULT_OK) {
             MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
             //                    startIndex = 0;
@@ -157,7 +157,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
      */
     @Override
     public void onDestroy() {
-        Log.i(TAG, "onDestroy");
+        LogUtil.i(TAG, "onDestroy");
         super.onDestroy();
 
         // 取消获取群组或者用户列表的网络请求
