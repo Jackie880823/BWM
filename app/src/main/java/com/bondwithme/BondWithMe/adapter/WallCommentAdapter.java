@@ -98,9 +98,9 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
 
             if(TextUtils.isEmpty(comment.getLove_id())) {
-                item.iv_agree.setImageResource(R.drawable.agree_normal);
+                item.iv_agree.setImageResource(R.drawable.love_normal);
             } else {
-                item.iv_agree.setImageResource(R.drawable.agree_press);
+                item.iv_agree.setImageResource(R.drawable.love_press);
             }
             setCommentPic(item.iv_comment_pic, item.niv_comment_pic, comment);
         } else {
@@ -185,11 +185,11 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());
                     if(TextUtils.isEmpty(commentEntity.getLove_id())) {
-                        iv_agree.setImageResource(R.drawable.agree_press);
+                        iv_agree.setImageResource(R.drawable.love_press);
                         commentEntity.setLove_id(MainActivity.getUser().getUser_id());
                         tv_agree_count.setText(count + 1 + "");
                     } else {
-                        iv_agree.setImageResource(R.drawable.agree_normal);
+                        iv_agree.setImageResource(R.drawable.love_normal);
                         commentEntity.setLove_id(null);
                         tv_agree_count.setText(count - 1 + "");
                     }
