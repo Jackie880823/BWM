@@ -13,13 +13,16 @@
         android:layout_alignParentTop="true" />
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/fragment_main_top"
         android:fillViewport="true"
+        android:paddingBottom="@dimen/default_view_margin"
         >
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+
+                >
                     <LinearLayout
                         android:id="@+id/ll_card"
                         android:layout_width="match_parent"
@@ -87,7 +90,7 @@
                     <LinearLayout
                         android:id="@+id/ll_profile"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_below="@+id/ll_card"
                         >
@@ -377,37 +380,23 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="@drawable/ll_change_password"
-                    android:padding="10dp"
+                    android:padding="@dimen/_8dp"
                     android:gravity="center"
-                    android:layout_below="@+id/ll_profile"
                     android:layout_centerHorizontal="true"
-                    android:layout_above="@+id/rl_bottom_margin"
-                    android:layout_margin="@dimen/_32dp"
+                    android:layout_marginTop="@dimen/_10dp"
+                    android:layout_marginLeft="@dimen/_20dp"
+                    android:layout_marginRight="@dimen/_20dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_below="@+id/ll_profile"
                     >
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/info"
-                        android:visibility="gone"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/text_change_password"
                         android:singleLine="true"
-                        android:textSize="22sp"
-                        android:textStyle="bold"/>
+                        android:textSize="22sp"/>
                 </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_bottom_margin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/default_content_padding"
-                    android:layout_alignParentBottom="true"
-                    >
-
-                </RelativeLayout>
-
             </RelativeLayout>
 
     </ScrollView>
