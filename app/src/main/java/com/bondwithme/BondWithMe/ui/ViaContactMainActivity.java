@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,15 +29,16 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
-import android.widget.CheckBox;
 import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class ViaContactMainActivity extends BaseActivity {
     private static final String Tag = ViaContactMainActivity.class.getSimpleName();
@@ -47,6 +50,9 @@ public class ViaContactMainActivity extends BaseActivity {
 
     List dataNumber = new ArrayList<>();
     List dataEmail = new ArrayList<>();
+
+    List<String> data_Zh = new ArrayList<String>();
+    List<String> data_Us = new ArrayList<String>();
 
     Gson gson = new Gson();
 
@@ -83,6 +89,12 @@ public class ViaContactMainActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        getDataEn();
+        //系统环境是中文
+        if (Locale.getDefault().toString().equals("zh_CN")) {
+            isZh = true;
+            getDataZh();
+        }
         tvSelectContact = getViewById(R.id.tv_select_contact);
         tvRelationship = getViewById(R.id.tv_relationship);
         etMessage = getViewById(R.id.et_message);
@@ -142,7 +154,7 @@ public class ViaContactMainActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(tvSelectContact.getText()) && !TextUtils.isEmpty(tvRelationship.getText()) && !TextUtils.isEmpty(etMessage.getText()) && ((!"[]".equals(gson.toJson(dataNumber))) || (!"[]".equals(gson.toJson(dataEmail))))) {
                     HashMap<String, String> params = new HashMap<String, String>();
                     params.put("user_fullname", tvSelectContact.getText().toString());
-                    params.put("user_relationship_name", tvRelationship.getText().toString());
+                    params.put("user_relationship_name", relationship);
                     params.put("user_status", "invite");
                     params.put("personal_Msg", etMessage.getText().toString());
                     params.put("creator_id", MainActivity.getUser().getUser_id());
@@ -248,12 +260,21 @@ public class ViaContactMainActivity extends BaseActivity {
     private List userNumber;
     private List userEmail;
 
+    private String relationship;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
-                    tvRelationship.setText(data.getStringExtra("relationship"));
+//                    tvRelationship.setText(data.getStringExtra("relationship"));
+                    int selectMemeber = data.getExtras().getInt("selectMemeber");
+                    relationship = data.getStringExtra("relationship");
+                    if (isZh) {
+                        tvRelationship.setText(data_Zh.get(selectMemeber));
+                    } else {
+                        tvRelationship.setText(data_Us.get(selectMemeber));
+                    }
                 }
                 break;
 
@@ -357,6 +378,28 @@ public class ViaContactMainActivity extends BaseActivity {
             TextView tvInfo;
         }
     }
+
+    private List<String> getDataZh() {
+        Configuration configuration = new Configuration();
+        //设置应用为简体中文
+        configuration.locale = Locale.SIMPLIFIED_CHINESE;
+        getResources().updateConfiguration(configuration, null);
+        String[] ralationArrayZh = getResources().getStringArray(R.array.relationship_item);
+        data_Zh = Arrays.asList(ralationArrayZh);
+        return data_Zh;
+    }
+
+    private List<String> getDataEn() {
+        Configuration configuration = new Configuration();
+        //设置应用为英文
+        configuration.locale = Locale.US;
+        getResources().updateConfiguration(configuration, null);
+        String[] ralationArrayUs = getResources().getStringArray(R.array.relationship_item);
+        data_Us = Arrays.asList(ralationArrayUs);
+        return data_Us;
+    }
+
+    private boolean isZh;
 
 
 }
