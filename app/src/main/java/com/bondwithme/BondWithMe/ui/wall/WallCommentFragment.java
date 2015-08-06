@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -17,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -122,11 +122,11 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private boolean isRefresh;
     private int startIndex = 0;
     private int currentPage = 1;
-    private final static int offset = 20;
+    private final static int offset = 10;
     private boolean loading;
     private View split;
     private RecyclerView rvList;
-    private ScrollView scrollView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private CircularProgress progressBar;
     private SendComment sendCommentView;
 
@@ -171,16 +171,14 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         }
 
         // initView
-        progressBar = getViewById(R.id.wall_comment_progress_bar);
         vProgress = getViewById(R.id.rl_progress);
-        scrollView = getViewById(R.id.content);
         rvList = getViewById(R.id.rv_wall_comment_list);
         final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
         //        rvList.setHasFixedSize(true);
         //        initAdapter();
 
-        scrollView.setOnTouchListener(new View.OnTouchListener() {
+        rvList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(sendCommentView != null) {
@@ -233,6 +231,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 stickerName = "";
             }
         });
+        swipeRefreshLayout = getViewById(R.id.swipe_refresh_layout);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                isRefresh = true;
+                startIndex = 0;
+                requestData();
+            }
+
+        });
 
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -243,41 +252,57 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
                 if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                    Log.i(TAG, "onScrolled& getComments");
                     currentPage++;
                     loading = true;
                     getComments();//再请求数据
                 }
             }
         });
+    }
 
-        split = getViewById(R.id.comment_split_line);
-        nivHead = getViewById(R.id.owner_head);
-        tvUserName = getViewById(R.id.owner_name);
-        tvContent = getViewById(R.id.tv_wall_content);
-        tvDate = getViewById(R.id.push_date);
-        llWallsImage = getViewById(R.id.ll_walls_image);
-        imWallsImages = getViewById(R.id.iv_walls_images);
-        tvPhotoCount = getViewById(R.id.tv_wall_photo_count);
-        tvAgreeCount = getViewById(R.id.tv_wall_agree_count);
-        tvCommentCount = getViewById(R.id.tv_wall_relay_count);
-        ibAgree = getViewById(R.id.iv_love);
-        ibComment = getViewById(R.id.iv_comment);
-        btn_del = getViewById(R.id.btn_del);
-        iv_mood = getViewById(R.id.iv_mood);
-        llLocation = getViewById(R.id.ll_location);
-        ivLocation = getViewById(R.id.iv_location);
-        tvLocation = getViewById(R.id.tv_location);
+    private void initWallView(View wallView) {
+        if(wallView != null) {
+            split = wallView.findViewById(R.id.comment_split_line);
+            nivHead = (CircularNetworkImage) wallView.findViewById(R.id.owner_head);
+            tvUserName = (TextView) wallView.findViewById(R.id.owner_name);
+            tvContent = (TextView) wallView.findViewById(R.id.tv_wall_content);
+            tvDate = (TextView) wallView.findViewById(R.id.push_date);
+            llWallsImage = wallView.findViewById(R.id.ll_walls_image);
+            imWallsImages = (NetworkImageView) wallView.findViewById(R.id.iv_walls_images);
+            tvPhotoCount = (TextView) wallView.findViewById(R.id.tv_wall_photo_count);
+            tvAgreeCount = (TextView) wallView.findViewById(R.id.tv_wall_agree_count);
+            tvCommentCount = (TextView) wallView.findViewById(R.id.tv_wall_relay_count);
+            ibAgree = (ImageButton) wallView.findViewById(R.id.iv_love);
+            ibComment = (ImageButton) wallView.findViewById(R.id.iv_comment);
+            btn_del = (ImageButton) wallView.findViewById(R.id.btn_del);
+            iv_mood = (ImageView) wallView.findViewById(R.id.iv_mood);
+            llLocation = (LinearLayout) wallView.findViewById(R.id.ll_location);
+            ivLocation = (ImageView) wallView.findViewById(R.id.iv_location);
+            tvLocation = (TextView) wallView.findViewById(R.id.tv_location);
 
-        getViewById(R.id.ll_love).setOnClickListener(this);
-        llLocation.setOnClickListener(this);
-        ivLocation.setOnClickListener(this);
-        tvLocation.setOnClickListener(this);
+            wallView.findViewById(R.id.ll_love).setOnClickListener(this);
+            llLocation.setOnClickListener(this);
+            ivLocation.setOnClickListener(this);
+            tvLocation.setOnClickListener(this);
 
-        ibAgree.setOnClickListener(this);
-        //            ibComment.setOnClickListener(this);
-        btn_del.setOnClickListener(this);
-        imWallsImages.setOnClickListener(this);
+            ibAgree.setOnClickListener(this);
+            //            ibComment.setOnClickListener(this);
+            btn_del.setOnClickListener(this);
+            imWallsImages.setOnClickListener(this);
+        }
+    }
 
+    private void initListHeadView(View listHeadView) {
+
+        if(listHeadView != null) {
+            progressBar = (CircularProgress) listHeadView.findViewById(R.id.wall_comment_progress_bar);
+            if(loading) {
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                progressBar.setVisibility(View.GONE);
+            }
+        }
     }
 
     /**
@@ -325,7 +350,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             @Override
             public void onResult(String string) {
                 wall = new Gson().fromJson(string, WallEntity.class);
-                setWallContext();
             }
 
             @Override
@@ -440,22 +464,24 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void getComments() {
         HashMap<String, String> jsonParams = new HashMap<>();
-        jsonParams.put("content_group_id", content_group_id);
-        jsonParams.put("group_id", group_id);
-        jsonParams.put("user_id", MainActivity.getUser().getUser_id());
+        jsonParams.put(WallCommentEntity.CONTENT_GROUP_ID, content_group_id);
+        jsonParams.put(WallCommentEntity.GROUP_ID, group_id);
+        jsonParams.put(WallCommentEntity.USER_ID, MainActivity.getUser().getUser_id());
         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
         HashMap<String, String> params = new HashMap<>();
         params.put("condition", jsonParamsString);
         params.put("start", startIndex + "");
-        params.put("limit", offset + "");
+        params.put(WallCommentEntity.LIMIT, offset + "");
 
         String url = UrlUtil.generateUrl(Constant.API_WALL_COMMENT_LIST, params);
 
         mHttpTools.get(url, params, GET_COMMENTS, new HttpCallback() {
             @Override
             public void onStart() {
-                progressBar.setVisibility(View.VISIBLE);
+                if(progressBar != null) {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -475,25 +501,29 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
                 if(isRefresh) {
                     isRefresh = false;
+                    swipeRefreshLayout.setRefreshing(false);
                     currentPage = 1;//还原为第一页
                     initAdapter();
                 } else {
                     startIndex += data.size();
-                    if(adapter == null) {
-                        initAdapter();
-                        adapter.notifyDataSetChanged();
-                    } else {
+                    if(adapter != null) {
                         adapter.addData(data);
+                    } else {
+                        initAdapter();
                     }
                 }
 
-                if(adapter != null && adapter.getItemCount() > 0) {
-                    split.setVisibility(View.VISIBLE);
-                } else {
-                    split.setVisibility(View.GONE);
+                if(split != null) {
+                    if(adapter != null && adapter.getItemCount() > 0) {
+                        split.setVisibility(View.VISIBLE);
+                    } else {
+                        split.setVisibility(View.GONE);
+                    }
+                }
+                if(progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
                 }
 
-                progressBar.setVisibility(View.GONE);
                 loading = false;
             }
 
@@ -517,21 +547,40 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     }
 
-    private void initAdapter() {
-        adapter = new WallCommentAdapter(getParentActivity(), data);
-        adapter.setPicClickListener(this);
-        adapter.setCommentActionListener(new WallCommentAdapter.CommentActionListener() {
-            @Override
-            public void doLove(WallCommentEntity commentEntity, boolean love) {
-                doLoveComment(commentEntity, love);
-            }
+    private synchronized void initAdapter() {
+        if(adapter == null) {
+            adapter = new WallCommentAdapter(getParentActivity(), data);
+            adapter.setPicClickListener(this);
+            adapter.setCommentActionListener(new WallCommentAdapter.CommentActionListener() {
+                @Override
+                public void doLove(WallCommentEntity commentEntity, boolean love) {
+                    doLoveComment(commentEntity, love);
+                }
 
-            @Override
-            public void doDelete(String commentId) {
-                deleteComment(commentId);
-            }
-        });
-        rvList.setAdapter(adapter);
+                @Override
+                public void doDelete(String commentId) {
+                    deleteComment(commentId);
+                }
+            });
+            adapter.setUpdateListener(new WallCommentAdapter.ListViewItemViewUpdateListener() {
+                @Override
+                public void updateWallView(View wallView) {
+                    initWallView(wallView);
+                    if(wall != null) {
+                        setWallContext();
+                    }
+                }
+
+                @Override
+                public void updateListHeadView(View listHeadView) {
+                    initListHeadView(listHeadView);
+                }
+            });
+            rvList.setAdapter(adapter);
+        } else {
+            adapter.setData(data);
+            adapter.notifyDataSetChanged();
+        }
         //        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
         //        animator.setAddDuration(2000);
         //        animator.setRemoveDuration(1000);
@@ -573,6 +622,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             public void onResult(String string) {
                 startIndex = 0;
                 isRefresh = true;
+                swipeRefreshLayout.setRefreshing(true);
                 getComments();
                 stickerName = "";
                 stickerType = "";
@@ -763,6 +813,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 public void onResult(String string) {
                     startIndex = 0;
                     isRefresh = true;
+                    swipeRefreshLayout.setRefreshing(true);
                     getComments();
                     getParentActivity().setResult(Activity.RESULT_OK);
                 }
@@ -840,7 +891,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                         getParentActivity().setResult(Activity.RESULT_OK);
 
                         startIndex = 0;
+                        swipeRefreshLayout.setRefreshing(true);
                         isRefresh = true;
+                        swipeRefreshLayout.setRefreshing(true);
                         getComments();
                     }
 

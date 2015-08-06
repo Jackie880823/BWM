@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 
@@ -33,7 +34,7 @@ public class CrashActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     errorReportDialog.dismiss();
-                    finish();
+                    App.getContextInstance().exit(CrashActivity.this);
                 }
             });
             errorReportDialog.setButtonAccept(R.string.report, new View.OnClickListener() {
@@ -52,7 +53,7 @@ public class CrashActivity extends Activity {
                     } catch (android.content.ActivityNotFoundException ex) {
                         Toast.makeText(CrashActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
                     }
-                    finish();
+                    App.getContextInstance().exit(CrashActivity.this);
 
                 }
             });

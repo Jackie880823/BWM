@@ -63,7 +63,7 @@ public class WallUtil {
         String strMember = "";
         if(tagMemberCount > 0) {
             strMember = String.format(mContext.getString(R.string.text_diary_content_at_member_desc), tagMemberCount);
-            LogUtil.d("WallUtil","setSpanContent================="+wall.getContent_group_id());
+            LogUtil.d("WallUtil", "setSpanContent=================" + wall.getContent_group_id());
             // 文字特殊效果设置
             SpannableString ssMember = new SpannableString(strMember);
 
@@ -230,7 +230,12 @@ public class WallUtil {
             public void onClick(View widget) {
                 Log.i(TAG, "setClickNormal& onClick");
                 if(mViewClickListener != null) {
-                    mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
+                    long currentTime = System.currentTimeMillis();
+                    if(currentTime - lastClickTimeMills > 500) {
+                        // 部分手机会连续执行两次，500毫秒之内的连续执行被认为一次点击只执行一次点击事件
+                        lastClickTimeMills = currentTime;
+                        mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
+                    }
                 }
             }
 

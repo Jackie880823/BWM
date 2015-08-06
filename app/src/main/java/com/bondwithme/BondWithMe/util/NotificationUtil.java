@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.util;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -17,6 +18,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.AlertEventActivity;
 import com.bondwithme.BondWithMe.ui.AlertGroupActivity;
 import com.bondwithme.BondWithMe.ui.AlertWallActivity;
+import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.MemberActivity;
 import com.bondwithme.BondWithMe.ui.MessageChatActivity;
@@ -133,11 +135,31 @@ public class NotificationUtil {
         }
         mBuilder.setTicker(msg.getString(JPushInterface.EXTRA_TITLE));
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
+
         if (contentIntent != null) {
          mBuilder.setContentIntent(contentIntent);
         }
         mBuilder.setAutoCancel(true);
-        getNotivficationManager(context).notify(msgType.ordinal(), mBuilder.build());
+        Notification notification = mBuilder.build();
+
+//        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+//        String[] events = new String[5];
+//        // Sets a title for the Inbox style big view
+//        inboxStyle.setBigContentTitle("大视图内容:");
+//        // Moves events into the big view
+//        for (int i=0; i < events.length; i++) {
+//            inboxStyle.addLine(events[i]);
+//        }
+//        mBuilder.setContentTitle("测试标题")
+//                .setContentText("测试内容")
+////				.setNumber(number)//显示数量
+//                .setStyle(inboxStyle)//设置风格
+//                .setTicker("测试通知来啦");
+//
+//        //自定义RemoteViews
+//        RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
+//        notification.contentView = contentView;
+        getNotivficationManager(context).notify(msgType.ordinal(), notification);
 
     }
 
@@ -261,6 +283,7 @@ public class NotificationUtil {
         if(intent!=null) {
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(BaseActivity.IS_OUTSIDE_INTENT,true);
             contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
         return contentIntent;
