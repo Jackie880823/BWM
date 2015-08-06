@@ -2,8 +2,6 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,6 +16,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.WallCommentEntity;
+import com.bondwithme.BondWithMe.exception.StickerTypeException;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
@@ -27,13 +26,9 @@ import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
 public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -123,47 +118,10 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else if(!TextUtils.isEmpty(comment.getSticker_group_path())) {
             iv.setVisibility(View.VISIBLE);
             niv.setVisibility(View.GONE);
-            if(Constant.Sticker_Gif.equals(comment.getSticker_type())) {
-                String stickerGroupPath = comment.getSticker_group_path();
-                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
-                    stickerGroupPath = stickerGroupPath.replace("/", "");
-                }
-                String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.gif";
-                try {
-                    //GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
-                    Log.i("stickerPath", gifFilePath);
-                    GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
-                    if(gifDrawable != null) {
-                        iv.setImageDrawable(gifDrawable);
-                    } else {
-                        UniversalImageLoaderUtil.downloadStickPic(stickerGroupPath, comment.getSticker_name(), R.drawable.network_image_default, iv, comment.getSticker_type());
-                    }
-                } catch(Exception e) {
-                    UniversalImageLoaderUtil.downloadStickPic(stickerGroupPath, comment.getSticker_name(), R.drawable.network_image_default, iv, comment.getSticker_type());
-                    //                    LogUtil.e("", "插入sticker info", e);
-                }
-            } else if(Constant.Sticker_Png.equals(comment.getSticker_type())) {
-                String stickerGroupPath = comment.getSticker_group_path();
-                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
-                    stickerGroupPath = stickerGroupPath.replace("/", "");
-                }
-                String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.png";
-                try {
-                    //拼接大图路径
-                    //InputStream is = context.getAssets().open(pngFileName);//得到数据流
-                    Log.i("stickerPath", pngFileName);
-                    InputStream is = new FileInputStream(new File(pngFileName));//得到数据流
-                    if(is != null) {//如果有图片直接显示，否则网络下载
-                        Bitmap bitmap = BitmapFactory.decodeStream(is);//将流转化成Bitmap对象
-                        iv.setImageBitmap(bitmap);//显示图片
-                    } else {
-                        UniversalImageLoaderUtil.downloadStickPic(stickerGroupPath, comment.getSticker_name(), R.drawable.network_image_default, iv, comment.getSticker_type());
-                    }
-                } catch(Exception e) {
-                    //本地没有png的时候，从服务器下载
-                    UniversalImageLoaderUtil.downloadStickPic(stickerGroupPath, comment.getSticker_name(), R.drawable.network_image_default, iv, comment.getSticker_type());
-                    //                    LogUtil.e("", "插入sticker info", e);
-                }
+            try {
+                UniversalImageLoaderUtil.decodeStickerPic(iv, comment.getSticker_group_path(), comment.getSticker_name(), comment.getSticker_type());
+            } catch(StickerTypeException e) {
+                e.printStackTrace();
             }
         } else {
             niv.setVisibility(View.GONE);

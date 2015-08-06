@@ -111,8 +111,8 @@
             <pl.droidsonroids.gif.GifImageView
                 android:id="@+id/iv_comment_pic"
                 style="@style/ListImageDefault"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/_80dp"
+                android:layout_height="@dimen/_80dp"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"/>
 
