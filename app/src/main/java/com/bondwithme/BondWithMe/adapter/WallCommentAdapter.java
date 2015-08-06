@@ -47,8 +47,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public void addData(List<WallCommentEntity> newData) {
         data.addAll(newData);
-        //        notifyItemInserted(0);
-        notifyDataSetChanged();
+        notifyItemInserted(data.size());
     }
 
     public void setData(List<WallCommentEntity> data) {
@@ -105,7 +104,6 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             setCommentPic(item.iv_comment_pic, item.niv_comment_pic, comment);
         } else {
             updateListener.updateWallView(viewHolder.itemView);
-            return;
         }
     }
 

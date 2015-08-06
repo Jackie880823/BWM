@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
@@ -43,7 +44,6 @@ import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
-import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.SendComment;
 import com.google.gson.Gson;
@@ -125,6 +125,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private final static int offset = 10;
     private boolean loading;
     private View split;
+    LinearLayoutManager llm;
     private RecyclerView rvList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CircularProgress progressBar;
@@ -173,9 +174,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         // initView
         vProgress = getViewById(R.id.rl_progress);
         rvList = getViewById(R.id.rv_wall_comment_list);
-        final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
+        llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
-        //        rvList.setHasFixedSize(true);
+        rvList.setHasFixedSize(true);
         //        initAdapter();
 
         rvList.setOnTouchListener(new View.OnTouchListener() {
@@ -579,7 +580,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             rvList.setAdapter(adapter);
         } else {
             adapter.setData(data);
-            adapter.notifyDataSetChanged();
         }
         //        RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
         //        animator.setAddDuration(2000);
@@ -894,7 +894,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                         getParentActivity().setResult(Activity.RESULT_OK);
 
                         startIndex = 0;
-                        swipeRefreshLayout.setRefreshing(true);
                         isRefresh = true;
                         swipeRefreshLayout.setRefreshing(true);
                         getComments();
