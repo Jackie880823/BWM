@@ -839,6 +839,12 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     startIndex = 0;
                     isRefresh = true;
                     swipeRefreshLayout.setRefreshing(true);
+
+                    // 更新评论总数
+                    int commentCount = Integer.valueOf((String) tvCommentCount.getText()) + 1;
+                    wall.setComment_count(String.valueOf(commentCount));
+                    tvCommentCount.setText(String.valueOf(commentCount));
+
                     getComments();
                     getParentActivity().setResult(Activity.RESULT_OK);
                 }
