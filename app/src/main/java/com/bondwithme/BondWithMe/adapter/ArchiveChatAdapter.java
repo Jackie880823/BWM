@@ -18,17 +18,14 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
+import com.bondwithme.BondWithMe.exception.StickerTypeException;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.ArchiveChatViewClickListener;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
+import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +86,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
         if("1".equals(Tap)){
             holder.tvUserName.setText(archive.getUser_given_name());
         }else {
-            holder.tvUserName.setText(archive.getGroup_name());
+            holder.tvUserName.setText(archive.getUser_given_name());
         }
         String Content = archive.getText_description();
         String locationName = archive.getLoc_name();
@@ -124,6 +121,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             holder.tvPhotoCount.setVisibility(View.VISIBLE);
             holder.imArchivePic.setVisibility(View.GONE);
             holder.imArchiveGif.setVisibility(View.GONE);
+            holder.imArchiveGif.setImageDrawable(null);
             //照片的总数
             int PhotoCount = Integer.valueOf(archive.getPhoto_count());
             if(PhotoCount > 1){
@@ -138,64 +136,76 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             VolleyUtil.initNetworkImageView(mContext, holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             //如果有大表情
         }else if(!TextUtils.isEmpty(archive.getSticker_group_path())){
-            if(Constant.Sticker_Gif.equals(archive.getSticker_type())){
-                //如果大表情是GIF
-                holder.llArchiveImage.setVisibility(View.VISIBLE);
-                holder.imArchiveGif.setVisibility(View.VISIBLE);
-                holder.imArchiveGif.setImageDrawable(null);
-                holder.imArchivePic.setVisibility(View.GONE);
-                holder.imArchiveImages.setVisibility(View.GONE);
-                holder.tvPhotoCount.setVisibility(View.GONE);
-                String stickerGroupPath = archive.getSticker_group_path();
-                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
-                    stickerGroupPath = stickerGroupPath.replace("/", "");
-                }
-                try {
-                    String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + archive.getSticker_name() + "_B.gif";
-                    GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
-                    if(gifDrawable != null) {
-                        holder.imArchivePic.setImageDrawable(gifDrawable);
-                    } else {
-                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, archive.getSticker_type());
-                        downloadAsyncTask(holder.imArchiveGif, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
-                    }
-                }catch (IOException e){
-                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, archive.getSticker_type());
-                    downloadAsyncTask(holder.imArchiveGif, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
-                    e.printStackTrace();
-                }
-
-            }else if(Constant.Sticker_Png.equals(archive.getSticker_type())){
-                //如果大表情是PNG
-                holder.llArchiveImage.setVisibility(View.VISIBLE);
-                holder.imArchivePic.setVisibility(View.VISIBLE);
-                holder.imArchivePic.setImageDrawable(null);
-                holder.imArchiveGif.setVisibility(View.GONE);
-                holder.imArchiveImages.setVisibility(View.GONE);
-                holder.tvPhotoCount.setVisibility(View.GONE);
-                String stickerGroupPath = archive.getSticker_group_path();
-                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
-                    stickerGroupPath = stickerGroupPath.replace("/", "");
-                }
-
-                try {
-                    String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + archive.getSticker_name() + "_B.png";
-//                    InputStream is = mContext.getAssets().open(pngFileName);
-                    InputStream is = new FileInputStream(new File(pngFileName));
-                    if(is != null) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(is);
-                        holder.imArchivePic.setImageBitmap(bitmap);
-                    } else {
-                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-                        downloadAsyncTask(holder.imArchivePic, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
-                    }
-                } catch(IOException e) {
-                    //本地没有png的时候，从服务器下载
-                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-                    downloadAsyncTask(holder.imArchivePic, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
-                    e.printStackTrace();
-                }
+            holder.llArchiveImage.setVisibility(View.VISIBLE);
+            holder.imArchiveGif.setVisibility(View.VISIBLE);
+            holder.imArchivePic.setVisibility(View.GONE);
+            holder.imArchiveImages.setVisibility(View.GONE);
+            holder.imArchiveGif.setImageDrawable(null);
+            try {
+                UniversalImageLoaderUtil.decodeStickerPic(holder.imArchiveGif, archive.getSticker_group_path(), archive.getSticker_name(), archive.getSticker_type());
+            } catch(StickerTypeException e) {
+                e.printStackTrace();
             }
+
+//            if(Constant.Sticker_Gif.equals(archive.getSticker_type())){
+//                //如果大表情是GIF
+//                holder.llArchiveImage.setVisibility(View.VISIBLE);
+//                holder.imArchiveGif.setVisibility(View.VISIBLE);
+//                holder.imArchiveGif.setImageDrawable(null);
+//                holder.imArchivePic.setVisibility(View.GONE);
+//                holder.imArchiveImages.setVisibility(View.GONE);
+//                holder.tvPhotoCount.setVisibility(View.GONE);
+//                String stickerGroupPath = archive.getSticker_group_path();
+//                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
+//                    stickerGroupPath = stickerGroupPath.replace("/", "");
+//                }
+//                try {
+//                    String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + archive.getSticker_name() + "_B.gif";
+//                    GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
+//                    if(gifDrawable != null) {
+//                        holder.imArchivePic.setImageDrawable(gifDrawable);
+//                    } else {
+//                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, archive.getSticker_type());
+////                        downloadAsyncTask(holder.imArchiveGif, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
+//                        UniversalImageLoaderUtil.decodeStickerPic(holder.imArchiveGif, archive.getSticker_group_path(), archive.getSticker_name(), archive.getSticker_type());
+//
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }else if(Constant.Sticker_Png.equals(archive.getSticker_type())){
+//                //如果大表情是PNG
+//                holder.llArchiveImage.setVisibility(View.VISIBLE);
+//                holder.imArchivePic.setVisibility(View.VISIBLE);
+//                holder.imArchivePic.setImageDrawable(null);
+//                holder.imArchiveGif.setVisibility(View.GONE);
+//                holder.imArchiveImages.setVisibility(View.GONE);
+//                holder.tvPhotoCount.setVisibility(View.GONE);
+//                String stickerGroupPath = archive.getSticker_group_path();
+//                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
+//                    stickerGroupPath = stickerGroupPath.replace("/", "");
+//                }
+//
+//                try {
+//                    String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + archive.getSticker_name() + "_B.png";
+////                    InputStream is = mContext.getAssets().open(pngFileName);
+//                    InputStream is = new FileInputStream(new File(pngFileName));
+//                    if(is != null) {
+//                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+//                        holder.imArchivePic.setImageBitmap(bitmap);
+//                    } else {
+//                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+////                        downloadAsyncTask(holder.imArchivePic, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
+//                        UniversalImageLoaderUtil.decodeStickerPic(holder.imArchivePic, archive.getSticker_group_path(), archive.getSticker_name(), archive.getSticker_type());
+//                    }
+//                } catch(Exception e) {
+//                    //本地没有png的时候，从服务器下载
+////                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
+////                    downloadAsyncTask(holder.imArchivePic, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
+//                    e.printStackTrace();
+//                }
+//            }
 
         } else {
             holder.llArchiveImage.setVisibility(View.GONE);

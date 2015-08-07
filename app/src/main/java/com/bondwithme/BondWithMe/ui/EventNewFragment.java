@@ -36,7 +36,6 @@ import com.bondwithme.BondWithMe.widget.TimePicker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.material.widget.CircularProgress;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private final static String USER_HEAD = "user_head";
     private final static String USER_NAME = "user_name";
 
-    private CircularProgress progressBar;
+    private View vProgress;
     Calendar mCalendar;
     Calendar calendar;
 
@@ -121,11 +120,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     @Override
     public void initView() {
-        progressBar = getViewById(R.id.progressBar);
-
+        vProgress = getViewById(R.id.rl_progress);
         gvFriends = getViewById(R.id.gv_all_friends);
         changeData();
-
 
         event_title = getViewById(R.id.event_title);
         event_desc = getViewById(R.id.event_desc);
@@ -502,12 +499,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private void submit() {
 
-        if (progressBar.getVisibility() == View.VISIBLE) {
+        if (vProgress.getVisibility() == View.VISIBLE) {
             return;
         }
         if (validateForm()) {
             setText();
-            progressBar.setVisibility(View.VISIBLE);
+            vProgress.setVisibility(View.VISIBLE);
             RequestInfo requestInfo = new RequestInfo();
             requestInfo.url = Constant.API_EVENT_CREATE;
             HashMap<String, String> params = new HashMap<String, String>();
@@ -541,7 +538,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
                 @Override
                 public void onFinish() {
-                    progressBar.setVisibility(View.GONE);
+                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override

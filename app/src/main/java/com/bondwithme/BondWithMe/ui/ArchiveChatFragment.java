@@ -51,6 +51,9 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
     private int startIndex = 0;
     private int offset = 10;
     private int currentPage = 1;
+    private int startIndexSearch = 0;
+    private int offsetSearch = 10;
+    private int currentPageSearch = 1;
     private boolean loading;
     private boolean isSearch;
     LinearLayoutManager llm;
@@ -329,11 +332,21 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
 
     private void searchData(String searchText){
 //        Log.i("searchText====",searchText+"");
+//        Map<String,String> params = new HashMap<>();
+//        params.put("start",startIndex + "");
+//        params.put("limit",offset + "");
+//        params.put("group_id",group_id);
+//        params.put("view_user",MainActivity.getUser().getUser_id());
+////        params.put("search_key",searchText);
+//        params.put("search_key","");
+//        String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
         Map<String,String> params = new HashMap<>();
-        params.put("start",startIndex + "");
+        params.put("start",startIndexSearch + "");
         params.put("limit",offset + "");
         params.put("group_id",group_id);
-        params.put("view_user",MainActivity.getUser().getUser_id());
+        params.put("view_user", MainActivity.getUser().getUser_id());
+//        Log.i("group_id","");
+//        params.put("search_key","");
         params.put("search_key",searchText);
         String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
 
@@ -363,11 +376,11 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
                     if (!isEtImport){
                         if(isRefresh) {
                             startIndex = searchData.size();
-                            currentPage = 1;
+                            currentPageSearch = 1;
                             finishReFresh();
                             initSearchAdapter();
                         } else {
-                            startIndex += searchData.size();
+                            startIndexSearch += searchData.size();
                             searchAdapter.add(searchData);
                         }
                     }
