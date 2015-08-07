@@ -107,6 +107,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/_25dp"
+                        android:clickable="false"
                         android:background="@null" />
                 </RelativeLayout>
 
