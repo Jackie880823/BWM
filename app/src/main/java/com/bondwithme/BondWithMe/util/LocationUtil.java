@@ -113,7 +113,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
      * @param context 上下文件资源
      */
     public static void setRequestLocationUpdates(final Context context) {
-        if(googleAvailable) {
+        if(SystemUtil.checkPlayServices(context)) {
             if(lm == null) {
                 lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             }
