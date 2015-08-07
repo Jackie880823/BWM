@@ -327,7 +327,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                         currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
                         setImageSwitcher(currentItem);
                     }
-                    handler.sendEmptyMessageDelayed(AUTO_PLAY, 5000);
+                    handler.sendEmptyMessageDelayed(AUTO_PLAY, 2000);
             }
         }
     };
