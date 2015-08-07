@@ -150,16 +150,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         //判断是用百度还是google
         if(!googleAvailable) {
             // 应用启动后用谷歌获取了一次地址信息，如果这次地址信息为空则证明谷歌地图不可用，启用百度地
-            //TODO for baidu not support 64 bit cpu
-            /**baidu map*/
-            if(System.getProperty("os.arch").contains("64")) {
-                //64bit cpu
-                MessageUtil.showMessage(context, context.getString(R.string.not_support_64bit));
-                return null;
-            } else {
-                //32 bit cpu
-                intent.setClass(context, Map4BaiduActivity.class);
-            }
+            intent.setClass(context, Map4BaiduActivity.class);
         } else {
             intent.setClass(context, Map4GoogleActivity.class);
         }
