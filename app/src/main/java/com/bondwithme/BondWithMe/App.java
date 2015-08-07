@@ -69,14 +69,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         crashHandler.init(getApplicationContext());
         /**网络工具初始*/
         HttpTools.init(this);
-        //TODO for baidu not support 64 bit cpu
-        /**baidu map*/
-        if (System.getProperty("os.arch").contains("64")) {
-            //64bit cpu
-        } else {
-            //32 bit cpu
-            SDKInitializer.initialize(getApplicationContext());
-        }
+
+        /**初始化百度地图*/
+        SDKInitializer.initialize(this);
 
         /** 设置从歌地图获取位置，当这次设置获取不到位置说明谷歌地图这次无法使用，应用中调用地图时会默认启动百度地图 */
         LocationUtil.setRequestLocationUpdates(this);
@@ -112,9 +107,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
             @Override
             public void onFinish() {
-//                if (!needUpdate) {
-//                    goMain(context);
-//                }
+                //                if (!needUpdate) {
+                //                    goMain(context);
+                //                }
             }
 
             @Override
@@ -123,15 +118,15 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 try {
                     JSONObject object = new JSONObject(response);
                     //for test
-                    if (("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update").equals("1")) {
+                    if(("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update").equals("1")) {
                         //
-//                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update").equals("1")) {
+                        //                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update").equals("1")) {
                         //must update app
                         needUpdate = true;
                         showUpdateDialog(context);
                     }
 
-                } catch (JSONException e) {
+                } catch(JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -155,7 +150,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     private static void showUpdateDialog(final Activity content) {
 
-        if (updateDialog == null) {
+        if(updateDialog == null) {
             updateDialog = new MyDialog(content, R.string.text_tips_title, R.string.update_message);
             updateDialog.setCanceledOnTouchOutside(false);
             updateDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
@@ -172,34 +167,34 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
                     SystemUtil.updateByGooglePlay(content);
 
-//                    // uri 是你的下载地址，可以使用Uri.parse("http://")包装成Uri对象
-//                    DownloadManager.Request req = new DownloadManager.Request(Uri.parse("http://bondwith.me/download.php"));
-//
-//                    // 通过setAllowedNetworkTypes方法可以设置允许在何种网络下下载，
-//                    // 也可以使用setAllowedOverRoaming方法，它更加灵活
-//                    req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-//
-//                    // 此方法表示在下载过程中通知栏会一直显示该下载，在下载完成后仍然会显示，
-//                    // 直到用户点击该通知或者消除该通知。还有其他参数可供选择
-//                    req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-//
-//                    // 设置下载文件存放的路径，同样你可以选择以下方法存放在你想要的位置。
-//                    req.setDestinationInExternalFilesDir(content, Environment.DIRECTORY_DOWNLOADS, content.getString(R.string.title_download_task));
-//
-//                    // 设置一些基本显示信息
-//                    req.setTitle(content.getString(R.string.download_apk_content_title));
-//                    req.setDescription(content.getString(R.string.download_apk_content_description));
-//                    req.setMimeType("application/vnd.android.package-archive");
-//
-//                    // Ok go!
-//                    DownloadManager dm = (DownloadManager) content.getSystemService(Context.DOWNLOAD_SERVICE);
-//                    long downloadId = dm.enqueue(req);
+                    //                    // uri 是你的下载地址，可以使用Uri.parse("http://")包装成Uri对象
+                    //                    DownloadManager.Request req = new DownloadManager.Request(Uri.parse("http://bondwith.me/download.php"));
+                    //
+                    //                    // 通过setAllowedNetworkTypes方法可以设置允许在何种网络下下载，
+                    //                    // 也可以使用setAllowedOverRoaming方法，它更加灵活
+                    //                    req.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+                    //
+                    //                    // 此方法表示在下载过程中通知栏会一直显示该下载，在下载完成后仍然会显示，
+                    //                    // 直到用户点击该通知或者消除该通知。还有其他参数可供选择
+                    //                    req.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                    //
+                    //                    // 设置下载文件存放的路径，同样你可以选择以下方法存放在你想要的位置。
+                    //                    req.setDestinationInExternalFilesDir(content, Environment.DIRECTORY_DOWNLOADS, content.getString(R.string.title_download_task));
+                    //
+                    //                    // 设置一些基本显示信息
+                    //                    req.setTitle(content.getString(R.string.download_apk_content_title));
+                    //                    req.setDescription(content.getString(R.string.download_apk_content_description));
+                    //                    req.setMimeType("application/vnd.android.package-archive");
+                    //
+                    //                    // Ok go!
+                    //                    DownloadManager dm = (DownloadManager) content.getSystemService(Context.DOWNLOAD_SERVICE);
+                    //                    long downloadId = dm.enqueue(req);
 
                     appContext.exit(content);
                 }
             });
         }
-        if (!updateDialog.isShowing())
+        if(!updateDialog.isShowing())
             updateDialog.show();
     }
 
@@ -212,14 +207,14 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public static void changeLoginedUser(UserEntity user) {
-        if (appContext != null) {
+        if(appContext != null) {
             App.user = user;
             PreferencesUtil.saveValue(appContext, Constant.LOGIN_USER, new Gson().toJson(user));
         }
     }
 
     public static void changeLoginedUser(UserEntity user, AppTokenEntity tokenEntity) {
-        if (appContext != null) {
+        if(appContext != null) {
 
             initToken(user.getUser_login_id(), tokenEntity);
 
@@ -229,7 +224,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public static void initToken(String user_login_id, AppTokenEntity tokenEntity) {
-        if (tokenEntity != null) {
+        if(tokenEntity != null) {
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Charset", "UTF-8");
             headers.put("X_BWM_TOKEN", tokenEntity.getUser_token());
@@ -237,32 +232,32 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             headers.put("X_BWM_DEVID", AppInfoUtil.getDeviceUUID(appContext));
             HttpTools.initHeaders(headers);
             //how to use
-//            Map<String, String> headers = HttpTools.getHeaders();
-//            headers.put("Content-Type","application/json");
-//            HttpTools.initHeaders(headers);
+            //            Map<String, String> headers = HttpTools.getHeaders();
+            //            headers.put("Content-Type","application/json");
+            //            HttpTools.initHeaders(headers);
             PreferencesUtil.saveValue(appContext, Constant.HTTP_TOKEN, new Gson().toJson(tokenEntity));
         }
     }
 
     public static UserEntity getLoginedUser() {
-        if (appContext != null && (user == null)) {
+        if(appContext != null && (user == null)) {
             user = new Gson().fromJson(PreferencesUtil.getValue(appContext, "user", null), UserEntity.class);
             //异常情况，重新初始token
-            if (user != null && HttpTools.getHeaders() != null && TextUtils.isEmpty(HttpTools.getHeaders().get("X_BWM_TOKEN"))) {
+            if(user != null && HttpTools.getHeaders() != null && TextUtils.isEmpty(HttpTools.getHeaders().get("X_BWM_TOKEN"))) {
                 initToken(user.getUser_login_id(), new Gson().fromJson(PreferencesUtil.getValue(appContext, Constant.HTTP_TOKEN, ""), AppTokenEntity.class));
             }
         }
         //test,18682116784
-//        String userString = "{'bondwithme_id':'80000698','linked':'0','owner_user_id':'0','sys_gender':'F','user_active_date':'2015-04-06 10:34:39','user_country_code':'86','user_creation_date':'2015-03-10 11:16:21','user_default_group':'0','user_emoticon':'','user_fullname':'Wing','user_gender':'M'," +
-//                "'user_given_name':'Wing','user_id':'698','user_latitude':'','user_location_name':'','user_login_id':'8618682116784','user_login_type':'phone','user_longitude':'','user_password':'25d55ad283aa400af464c76d713c07ad','user_phone':'18682116784','user_photo':'','user_status':'active','user_surname':'Zhong','user_tnc_read':'1'}";
-//        user = new Gson().fromJson(userString,UserEntity.class);
+        //        String userString = "{'bondwithme_id':'80000698','linked':'0','owner_user_id':'0','sys_gender':'F','user_active_date':'2015-04-06 10:34:39','user_country_code':'86','user_creation_date':'2015-03-10 11:16:21','user_default_group':'0','user_emoticon':'','user_fullname':'Wing','user_gender':'M'," +
+        //                "'user_given_name':'Wing','user_id':'698','user_latitude':'','user_location_name':'','user_login_id':'8618682116784','user_login_type':'phone','user_longitude':'','user_password':'25d55ad283aa400af464c76d713c07ad','user_phone':'18682116784','user_photo':'','user_status':'active','user_surname':'Zhong','user_tnc_read':'1'}";
+        //        user = new Gson().fromJson(userString,UserEntity.class);
 
         return user;
     }
 
     public static void logout(Activity context) {
 
-        if (context != null) {
+        if(context != null) {
             LoginManager.getInstance().logOut();//清除Facebook授权缓存
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
@@ -299,19 +294,18 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public void exit(Activity context) {
-        if (context != null && !context.isFinishing()) {
+        if(context != null && !context.isFinishing()) {
             context.finish();
         }
         onTerminate();
     }
 
     public SQLiteHelperOrm getDBHelper() {
-        if (databaseHelper == null) {
+        if(databaseHelper == null) {
             databaseHelper = OpenHelperManager.getHelper(this, SQLiteHelperOrm.class);
         }
         return databaseHelper;
     }
-
 
 
     /**
@@ -329,6 +323,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     /**
      * 应用是否在前台运行
+     *
      * @return
      */
     public static boolean isForeground() {
@@ -337,6 +332,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     /**
      * 应用是否在后台运行
+     *
      * @return
      */
     public static boolean isBackground() {
@@ -357,7 +353,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public void onActivityResumed(Activity activity) {
         paused = false;
         foreground = true;
-        if (check != null) {
+        if(check != null) {
             handler.removeCallbacks(check);
         }
     }
@@ -365,17 +361,17 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     @Override
     public void onActivityPaused(Activity activity) {
         paused = true;
-        if (check != null) {
+        if(check != null) {
             handler.removeCallbacks(check);
         }
         handler.postDelayed(check = new Runnable() {
             @Override
             public void run() {
-                if (foreground && paused) {
+                if(foreground && paused) {
                     foreground = false;
-                    LogUtil.d("","App went background");
+                    LogUtil.d("", "App went background");
                 } else {
-                    LogUtil.d("","App still foreground");
+                    LogUtil.d("", "App still foreground");
                 }
             }
         }, CHECK_DELAY);
