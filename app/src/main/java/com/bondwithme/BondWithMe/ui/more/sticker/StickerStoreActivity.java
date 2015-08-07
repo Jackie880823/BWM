@@ -471,16 +471,18 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
                 @Override
                 public void onFinish() {
-                    File f = new File(target);
-                    LogUtil.d(TAG,"===onFinish==="+f.exists());
+                    if (!StickerStoreActivity.this.isFinishing()){
+                        File f = new File(target);
+                        LogUtil.d(TAG,"===onFinish==="+f.exists());
 
-                    if (f.exists()){
-                        Uri uri = Uri.parse(target);
-                        uriMap.put(dataStickerBanner.get(finalI).getSticker_group_path(),uri);
-                    }
-                    if (finalI == 0){
-                        downloadFinish();
-                        mProgressDialog.setVisibility(View.INVISIBLE);
+                        if (f.exists()){
+                            Uri uri = Uri.parse(target);
+                            uriMap.put(dataStickerBanner.get(finalI).getSticker_group_path(),uri);
+                        }
+                        if (finalI == 0){
+                            downloadFinish();
+                            mProgressDialog.setVisibility(View.INVISIBLE);
+                        }
                     }
 
                 }
@@ -520,7 +522,9 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         }
 //        FileUtil.deleteBanner(this);
         uriMap = null;
+        new HttpTools(this).cancelRequestByTag(TAG);
         super.onDestroy();
+
     }
 
 
