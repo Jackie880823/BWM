@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private View red_point_4;
     private View red_point_5;
     public static String STICKERS_NAME = "stickers";
-    public static String IS_FIRST_LOGIN = "firstLogin";
+    public static String IS_FIRST_LOGIN = "isFirstLogin";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +169,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     protected void onStop() {
         PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
         LAST_LEAVE_INDEX = "lastLeaveIndex";
-        IS_FIRST_LOGIN = "firstLogin";
+        IS_FIRST_LOGIN = "isFirstLogin";
         super.onStop();
     }
 
@@ -328,7 +328,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN += App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
-//        if (isFirstLogin) {
+        if (isFirstLogin) {
             new Thread() {
                 @Override
                 public void run() {
@@ -347,7 +347,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 }
             }.start();
             PreferencesUtil.saveValue(this, IS_FIRST_LOGIN, false);
-//        }
+        }
 
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
