@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.bondwithme.BondWithMe.R;
@@ -16,6 +15,7 @@ import com.bondwithme.BondWithMe.adapter.PreviewFragment;
 import com.bondwithme.BondWithMe.entity.ImageData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 
 import java.util.ArrayList;
@@ -127,7 +127,7 @@ public class SelectPhotosActivity extends BaseActivity {
         @Override
         public void preview(ImageData imageData) {
             currentUri = imageData;
-            Log.i(TAG, "preview& imageData: " + imageData.toString());
+            LogUtil.i(TAG, "preview& imageData: " + imageData.toString());
             //            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(getApplicationContext(), imageData);
             if(previewFragment == null) {
                 previewFragment = PreviewFragment.newInstance("");
@@ -231,12 +231,12 @@ public class SelectPhotosActivity extends BaseActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.i(TAG, "onKeyDown& " + keyCode);
+        LogUtil.i(TAG, "onKeyDown& " + keyCode);
         if(keyCode == KeyEvent.KEYCODE_BACK) {
             if(isPreview) {
                 changeFragment(fragment, false);
                 isPreview = false;
-                Log.i(TAG, "onKeyDown& back is false");
+                LogUtil.i(TAG, "onKeyDown& back is false");
                 return false;
             }
         }
@@ -246,9 +246,9 @@ public class SelectPhotosActivity extends BaseActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            Log.i(TAG, "dispatchKeyEvent& back");
+            LogUtil.i(TAG, "dispatchKeyEvent& back");
             if(isPreview) {
-                Log.i(TAG, "dispatchKeyEvent& back is false");
+                LogUtil.i(TAG, "dispatchKeyEvent& back is false");
                 changeFragment(fragment, false);
                 isPreview = false;
                 return false;

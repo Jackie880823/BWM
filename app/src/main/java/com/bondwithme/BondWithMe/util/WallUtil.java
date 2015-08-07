@@ -72,7 +72,7 @@ public class WallUtil {
                 @Override
                 public void onClick(View widget) {
                     if(mViewClickListener != null) {
-                        Log.i(TAG, "onClick& mViewClickListener not null showMembers");
+                        LogUtil.i(TAG, "onClick& mViewClickListener not null showMembers");
                         long currentTime = System.currentTimeMillis();
                         if(currentTime - lastClickTimeMills > 500) {
                             // 部分手机会连续执行两次，500毫秒之内的连续执行被认为一次点击只执行一次点击事件
@@ -80,7 +80,7 @@ public class WallUtil {
                             mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
                         }
                     } else {
-                        Log.i(TAG, "onClick& mViewClickListener do nothing");
+                        LogUtil.i(TAG, "onClick& mViewClickListener do nothing");
                     }
                 }
             }, 0, strMember.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -103,7 +103,7 @@ public class WallUtil {
                 @Override
                 public void onClick(View widget) {
                     if(mViewClickListener != null) {
-                        Log.i(TAG, "onClick& mViewClickListener not null showGroups");
+                        LogUtil.i(TAG, "onClick& mViewClickListener not null showGroups");
                         long currentTime = System.currentTimeMillis();
                         if(currentTime - lastClickTimeMills > 500) {
                             // 部分手机会连续执行两次，500毫秒之内的连续执行被认为一次点击只执行一次点击事件
@@ -111,7 +111,7 @@ public class WallUtil {
                             mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
                         }
                     } else {
-                        Log.i(TAG, "onClick& mViewClickListener do nothing");
+                        LogUtil.i(TAG, "onClick& mViewClickListener do nothing");
                     }
                 }
             }, 0, strGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -164,44 +164,44 @@ public class WallUtil {
      */
     private void setClickNormal(SpannableStringBuilder ssb, String strMember, String strGroup, WallEntity wallEntity) {
         String description = ssb.toString();
-        Log.i(TAG, "setClickNormal& description: " + description + "; member: " + strMember + "; group: " + strGroup);
+        LogUtil.i(TAG, "setClickNormal& description: " + description + "; member: " + strMember + "; group: " + strGroup);
         int startMember = description.indexOf(strMember);
         int endMember = startMember + strMember.length();
         int startGroup = description.indexOf(strGroup);
         int endGroup = startGroup + strGroup.length();
         if(endGroup == endMember) {
             // @群组和用户结束所在的位置相等说明没有任何@可以不做处理
-            Log.w(TAG, "setClickNormal& no action");
+            LogUtil.w(TAG, "setClickNormal& no action");
             return;
         } else {
 
             int length = description.length();
             if(startMember > startGroup | TextUtils.isEmpty(strMember)) {
-                Log.i(TAG, "setClickNormal& group first");
+                LogUtil.i(TAG, "setClickNormal& group first");
 
                 setSpecialText(ssb, wallEntity, description, 0, startGroup);
 
                 if(endGroup < startMember) {
-                    Log.i(TAG, "setClickNormal& split 4 part");
+                    LogUtil.i(TAG, "setClickNormal& split 4 part");
                     setSpecialText(ssb, wallEntity, description, endGroup, startMember);
 
                     setSpecialText(ssb, wallEntity, description, endMember, length);
                 } else {
-                    Log.i(TAG, "setClickNormal& split 1 part");
+                    LogUtil.i(TAG, "setClickNormal& split 1 part");
                     setSpecialText(ssb, wallEntity, description, endGroup, length);
                 }
             } else {
-                Log.i(TAG, "setClickNormal& member first");
+                LogUtil.i(TAG, "setClickNormal& member first");
 
                 setSpecialText(ssb, wallEntity, description, 0, startMember);
 
                 if(endMember < startGroup) {
-                    Log.i(TAG, "setClickNormal& split 4 part");
+                    LogUtil.i(TAG, "setClickNormal& split 4 part");
                     setSpecialText(ssb, wallEntity, description, endMember, startGroup);
 
                     setSpecialText(ssb, wallEntity, description, endGroup, length);
                 } else {
-                    Log.i(TAG, "setClickNormal& split 1 part");
+                    LogUtil.i(TAG, "setClickNormal& split 1 part");
                     setSpecialText(ssb, wallEntity, description, endMember, length);
                 }
             }
@@ -228,7 +228,7 @@ public class WallUtil {
         s.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Log.i(TAG, "setClickNormal& onClick");
+                LogUtil.i(TAG, "setClickNormal& onClick");
                 if(mViewClickListener != null) {
                     long currentTime = System.currentTimeMillis();
                     if(currentTime - lastClickTimeMills > 500) {

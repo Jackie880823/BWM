@@ -2,7 +2,8 @@ package com.bondwithme.BondWithMe.exception;
 
 /**
  * Created by Jackie on 8/6/15.
- *
+ * @see java.lang.Exception
+ * 表情异常类
  * @author Jackie
  * @version 1.0
  */
