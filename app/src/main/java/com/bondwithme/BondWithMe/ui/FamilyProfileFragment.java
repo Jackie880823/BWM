@@ -344,7 +344,14 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //                    } else if (missMessage.startsWith("You successfully sent miss")) {
 //
 //                    }
-                    MslToast.getInstance(getActivity()).showShortToast(jsonObject.getString("message"));
+//                    /already
+                    if(-1 != jsonObject.getString("message").indexOf("already")){
+                        MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
+                    }else {
+                        MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
+
+                    }
+
                 } catch (JSONException e) {
                     MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
                     e.printStackTrace();

@@ -580,4 +580,6 @@
     <string name="text_phone">Phone</string>
     <string name="text_change_password">Change Password</string>
 
+    <string name="miss_you">You successfully send a Miss!</string>
+    <string name="miss_already_you">You have already sent a miss.!</string>
 </resources>
