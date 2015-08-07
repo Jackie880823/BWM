@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -47,8 +47,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public void addData(List<WallCommentEntity> newData) {
         data.addAll(newData);
-        //        notifyItemInserted(0);
-        notifyDataSetChanged();
+        notifyItemInserted(data.size());
     }
 
     public void setData(List<WallCommentEntity> data) {
@@ -57,7 +56,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.i(TAG, "onCreateViewHolder& viewType is " + viewType);
+        LogUtil.i(TAG, "onCreateViewHolder& viewType is " + viewType);
         if(VIEW_TYPE_HEAD != viewType) {
             // 加载Item的布局.布局中用到的真正的CardView.
             View view = LayoutInflater.from(mContext).inflate(R.layout.wall_comment_item, parent, false);
@@ -98,19 +97,18 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
 
             if(TextUtils.isEmpty(comment.getLove_id())) {
-                item.iv_agree.setImageResource(R.drawable.agree_normal);
+                item.iv_agree.setImageResource(R.drawable.love_normal);
             } else {
-                item.iv_agree.setImageResource(R.drawable.agree_press);
+                item.iv_agree.setImageResource(R.drawable.love_press);
             }
             setCommentPic(item.iv_comment_pic, item.niv_comment_pic, comment);
         } else {
             updateListener.updateWallView(viewHolder.itemView);
-            return;
         }
     }
 
     private void setCommentPic(GifImageView iv, NetworkImageView niv, WallCommentEntity comment) {
-        Log.i(TAG, "setCommentPic& file_id: " + comment.getFile_id() + "; StickerName is " + comment.getSticker_name());
+        LogUtil.i(TAG, "setCommentPic& file_id: " + comment.getFile_id() + "; StickerName is " + comment.getSticker_name());
         if(!TextUtils.isEmpty(comment.getFile_id())) {
             niv.setVisibility(View.VISIBLE);
             iv.setVisibility(View.GONE);
@@ -185,11 +183,11 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());
                     if(TextUtils.isEmpty(commentEntity.getLove_id())) {
-                        iv_agree.setImageResource(R.drawable.agree_press);
+                        iv_agree.setImageResource(R.drawable.love_press);
                         commentEntity.setLove_id(MainActivity.getUser().getUser_id());
                         tv_agree_count.setText(count + 1 + "");
                     } else {
-                        iv_agree.setImageResource(R.drawable.agree_normal);
+                        iv_agree.setImageResource(R.drawable.love_normal);
                         commentEntity.setLove_id(null);
                         tv_agree_count.setText(count - 1 + "");
                     }

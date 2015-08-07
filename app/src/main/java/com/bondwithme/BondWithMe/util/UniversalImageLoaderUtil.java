@@ -82,14 +82,16 @@ public class UniversalImageLoaderUtil {
     }
 
     /**
-     * 解码表情的方法，传入显示表情的控件和表情相关的参数即可正确加载表情图片
+     * <br>解码表情的方法，传入显示表情的控件和表情相关的参数即可正确加载表情图片.
+     * <br>如果传入的表情格式不是{@linkplain Constant#Sticker_Gif} 或 {@linkplain Constant#Sticker_Png}
+     * <br>会抛出{@link StickerTypeException}的异常
      *
      * @param imageView        显示表情的控件
      * @param stickerGroupPath 表情组目录
      * @param stickerName      表情名称
      * @param type             表情类型格式:
-     *                         <br> - .gif gif格式
-     *                         <br> - .png png格式
+     *                         <br> - {@link Constant#Sticker_Gif} gif格式
+     *                         <br> - {@link Constant#Sticker_Png} png格式
      */
     public static void decodeStickerPic(GifImageView imageView, String stickerGroupPath, String stickerName, String type) throws StickerTypeException {
 
