@@ -121,7 +121,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private String group_id;
     private boolean isRefresh;
     private int startIndex = 0;
-    private int currentPage = 1;
     private final static int offset = 10;
     private boolean loading;
     private View split;
@@ -263,9 +262,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                if(data.size() >= offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
                     LogUtil.i(TAG, "onScrolled& getComments");
-                    currentPage++;
                     loading = true;
                     getComments();//再请求数据
                 }
@@ -513,7 +511,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 if(isRefresh) {
                     isRefresh = false;
                     swipeRefreshLayout.setRefreshing(false);
-                    currentPage = 1;//还原为第一页
                     initAdapter();
                 } else {
                     startIndex += data.size();

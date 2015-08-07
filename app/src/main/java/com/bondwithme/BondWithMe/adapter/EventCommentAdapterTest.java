@@ -1,13 +1,9 @@
 package com.bondwithme.BondWithMe.adapter;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +21,8 @@ import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.exception.StickerTypeException;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
-import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
@@ -40,7 +36,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
 public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -149,31 +144,8 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
     }
     @Override
     public int getItemViewType(int position) {
-////        Log.i("getItemViewType: ", "position: " + position);
-//        int type = GEF;
-//        if(!TextUtils.isEmpty(myEevent.getComment_content().trim()) && TextUtils.isEmpty(myEevent.getSticker_group_path().trim())){
-//            type = TEXT;
-//        }else if(Constant.Sticker_Gif.equals(myEevent.getSticker_type())){
-//            type = GIF;
-//        }else if(Constant.Sticker_Png.equals(myEevent.getSticker_type())) {
-//            type = PNG;
-//        }else if(myEevent.getFile_id()!= null ){
-//            type = PIC;
-//        }
-//        return type;
-
-
-
-//        if (isHeader(position)) {
-//            return HEADER_VIEW_TYPE + position;
-//        }else if(isComment(position)){
-//            return HEADER_VIEW_TYPE + position + 1;
-//        }else if(position < (2 + detailData.size())){
-//            return position - 2;
-//        }else {
-//            return FOOTER_VIEW_TYPE + position - 2 - detailData.size();
-//        }
-
+        Log.i("getItemViewType=====",position+"");
+        Log.i("getItemViewDagt=====",data.size()+"");
 
         if(position == 0){
             return TYPE_HEADER;
@@ -208,17 +180,15 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // 加载Item的布局.布局中用到的真正的CardView.
-//        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_item, parent, false);
         View view = null ;
         RecyclerView.ViewHolder viewHolder = null;
+        Log.i("onCreateViewHolder=====",viewType+"");
         switch (viewType){
             case TYPE_HEADER:
                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_event_detail_head, parent, false);
-//                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_item_test, parent, false);
                 viewHolder = new VHHeader(view);
                 break;
             case TYPE_SECOND:
-//                view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_head_item_test, parent, false);
                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_head_item_test, parent, false);
                 viewHolder = new Second(view);
                 break;
@@ -230,7 +200,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_comment_footer_item_test, parent, false);
                 viewHolder = new Footer(view);
                 break;
-
         }
         return viewHolder;
 
@@ -239,12 +208,15 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        Log.i("onBindViewHolder=====",position+"");
         if(position == 0 ){
             VHHeader header = (VHHeader) holder;
             EventEntity detail = detailData;
             if(detailData == null){
                 return;
+            }
+            if(data != null && data.size()>0){
+                header.defaultComment.setVisibility(View.GONE);
             }
             setDetail(header, detail);
 //            Log.i("getGroup_owner_id()", detail.getGroup_owner_id()+"");
@@ -266,6 +238,15 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             }else {
                 header.tvGoing.setText(detail.getTotal_yes());
             }
+            if(!TextUtils.isEmpty(detail.getLoc_latitude()) && !TextUtils.isEmpty(detail.getLoc_longitude())){
+                header.eventMapCation.setVisibility(View.VISIBLE);
+                VolleyUtil.initNetworkImageView(mContext, header.eventMapCation, LocationUtil.getLocationPicUrl(mContext, detail.getLoc_latitude(), detail.getLoc_longitude(), detail.getLoc_type()), R.drawable.network_image_default, R.drawable.network_image_default);
+
+
+            }else {
+                header.eventMapCation.setVisibility(View.GONE);
+            }
+
 
         }
         if(position == 1){
@@ -276,7 +257,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             second.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, entity.getComment_creation_date()));
             second.tv_agree_count.setText((TextUtils.isEmpty(entity.getLove_count()) ? "0" : entity.getLove_count()));
             if(!TextUtils.isEmpty(entity.getComment_content().trim())){//如果文字不为空
-//                Log.i("文字=====", position + "");
                 second.tv_comment_content.setVisibility(View.VISIBLE);
                 second.tv_comment_content.setText(entity.getComment_content());
                 second.chatsImage.setVisibility(View.GONE);
@@ -284,17 +264,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                 second.tv_comment_content.setVisibility(View.GONE);
                 setCommentPic(second.gifImageView,second.networkImageView,second.chatsImage, entity);
             }
-//            if (MainActivity.getUser().getUser_id().equals(entity.getUser_id())) {//如果是自己发送到评论，则显示删除按钮，否则隐藏
-//                second.btn_comment_del.setVisibility(View.VISIBLE);
-//
-//            } else {
-//                second.btn_comment_del.setVisibility(View.GONE);
-//            }
-//            if (TextUtils.isEmpty(entity.getLove_id())) {//如果有人点赞
-//                second.iv_agree.setImageResource(R.drawable.agree_normal);
-//            } else {
-//                second.iv_agree.setImageResource(R.drawable.agree_press);
-//            }
             setComment(second.btn_comment_del,second.iv_agree,entity);
         }else if(position >1 && position < (data.size()+1)){
             VHItem vhItem = (VHItem) holder;
@@ -314,17 +283,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                 setCommentPic(vhItem.gifImageView,vhItem.networkImageView,vhItem.chatsImage, entity);
             }
 
-//            if (MainActivity.getUser().getUser_id().equals(entity.getUser_id())) {//如果是自己发送到评论，则显示删除按钮，否则隐藏
-//                vhItem.btn_comment_del.setVisibility(View.VISIBLE);
-//
-//            } else {
-//                vhItem.btn_comment_del.setVisibility(View.GONE);
-//            }
-//            if (TextUtils.isEmpty(entity.getLove_id())) {//如果有人点赞
-//                vhItem.iv_agree.setImageResource(R.drawable.agree_normal);
-//            } else {
-//                vhItem.iv_agree.setImageResource(R.drawable.agree_press);
-//            }
             setComment(vhItem.btn_comment_del,vhItem.iv_agree,entity);
         }else if(position == data.size() + 1 ){
             Footer footer = (Footer) holder;
@@ -343,17 +301,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                 footer.tv_comment_content.setVisibility(View.GONE);
                 setCommentPic(footer.gifImageView,footer.networkImageView,footer.chatsImage, entity);
             }
-//            if (MainActivity.getUser().getUser_id().equals(entity.getUser_id())) {//如果是自己发送到评论，则显示删除按钮，否则隐藏
-//                footer.btn_comment_del.setVisibility(View.VISIBLE);
-//
-//            } else {
-//                footer.btn_comment_del.setVisibility(View.GONE);
-//            }
-//            if (TextUtils.isEmpty(entity.getLove_id())) {//如果有人点赞
-//                footer.iv_agree.setImageResource(R.drawable.agree_normal);
-//            } else {
-//                footer.iv_agree.setImageResource(R.drawable.agree_press);
-//            }
             setComment(footer.btn_comment_del, footer.iv_agree, entity);
         }
 
@@ -365,11 +312,9 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
 
         if (MainActivity.getUser().getUser_id().equals(entity.getUser_id())) {//如果是自己发送到评论，则显示删除按钮，否则隐藏
             btn_comment_del.setVisibility(View.VISIBLE);
-
         } else {
             btn_comment_del.setVisibility(View.GONE);
         }
-
         if (TextUtils.isEmpty(entity.getLove_id())) {//如果有人点赞
             iv_agree.setImageResource(R.drawable.love_normal);
         } else {
@@ -398,54 +343,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
         } else {
             chatsImage.setVisibility(View.GONE);
         }
-//            if(Constant.Sticker_Gif.equals(comment.getSticker_type())) {
-//                String stickerGroupPath = comment.getSticker_group_path();
-//                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
-//                    stickerGroupPath = stickerGroupPath.replace("/", "");
-//                }
-//                try {
-//                    String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.gif";
-//                    GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
-//                    if(gifDrawable != null) {
-//                        gifImageView.setImageDrawable(gifDrawable);
-//                    } else {
-//                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, comment.getSticker_type());
-//                        UniversalImageLoaderUtil.downloadStickPic(stickerGroupPath,comment.getSticker_name(),R.drawable.network_image_default,gifImageView,comment.getSticker_type());
-//
-//                    }
-//                } catch(IOException e) {
-//                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, comment.getSticker_type());
-//                    UniversalImageLoaderUtil.downloadStickPic(stickerGroupPath,comment.getSticker_name(),R.drawable.network_image_default,gifImageView,comment.getSticker_type());
-//
-//                    e.printStackTrace();
-//                }
-//            } else if(Constant.Sticker_Png.equals(comment.getSticker_type())) {
-//                String stickerGroupPath = comment.getSticker_group_path();
-//                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
-//                    stickerGroupPath = stickerGroupPath.replace("/", "");
-//                }
-//
-//                try {
-//                    String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + comment.getSticker_name() + "_B.png";
-////                    InputStream is = mContext.getAssets().open(pngFileName);
-//                    InputStream is = new FileInputStream(new File(pngFileName));
-//                    if(is != null) {
-//                        Bitmap bitmap = BitmapFactory.decodeStream(is);
-//                        gifImageView.setImageBitmap(bitmap);
-//                    } else {
-//                        String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-//                        UniversalImageLoaderUtil.downloadStickPic(stickerGroupPath, comment.getSticker_name(), R.drawable.network_image_default, networkImageView, comment.getSticker_type());
-//
-//                    }
-//                } catch(IOException e) {
-//                    //本地没有png的时候，从服务器下载
-//                    String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), comment.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
-//                    UniversalImageLoaderUtil.downloadStickPic(stickerGroupPath, comment.getSticker_name(), R.drawable.network_image_default, networkImageView, comment.getSticker_type());
-//                    e.printStackTrace();
-//                }
-//            }else {
-//                chatsImage.setVisibility(View.GONE);
-//            }
 
 
     }
@@ -505,103 +402,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
 
     }
 
-    /**
-     * 此方法用来异步加载图片
-     *
-     * @param path
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void downloadAsyncTask(final CircularProgress progressBar, final GifImageView gifImageView, final String path, final int defaultResource) {
-        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
-
-            @Override
-            protected byte[] doInBackground(String... params) {
-                return getImageByte(path);
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                progressBar.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected void onPostExecute(byte[] resultByte) {
-                super.onPostExecute(resultByte);
-                progressBar.setVisibility(View.GONE);
-                try {
-                    if (null != resultByte) {
-                        GifDrawable gifDrawable = new GifDrawable(resultByte);
-                        if (gifDrawable != null && gifImageView != null) {
-                            gifImageView.setImageDrawable(gifDrawable);
-                        } else {
-                            gifImageView.setImageResource(defaultResource);
-                        }
-                    } else {
-                        gifImageView.setImageResource(defaultResource);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        };
-        //for not work in down 11
-        if (SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,new String[0]);
-        } else {
-            task.execute(new String[0]);
-        }
-
-    }
-
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void downloadPngAsyncTask(final CircularProgress progressBar, final ImageView imageView, final String path, final int defaultResource) {
-        AsyncTask task = new AsyncTask<String, Void, byte[]>() {
-
-            @Override
-            protected byte[] doInBackground(String... params) {
-                return getImageByte(path);
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                progressBar.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            protected void onPostExecute(byte[] resultByte) {
-                super.onPostExecute(resultByte);
-                progressBar.setVisibility(View.GONE);
-                try {
-                    if (null != resultByte) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(resultByte, 0, resultByte.length);
-                        if (bitmap != null && imageView != null) {
-                            imageView.setImageBitmap(bitmap);
-                        } else {
-                            imageView.setImageResource(defaultResource);
-                        }
-                    } else {
-                        imageView.setImageResource(defaultResource);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        };
-        //for not work in down 11
-        if (SDKUtil.IS_HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[]{});
-        } else {
-            task.execute(new String[]{});
-        }
-
-    }
 
     @Override
     public int getItemCount() {
@@ -663,6 +463,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
         private TextView tvMaybe;
         private TextView tvNotGoing;
         private View intenAll;
+        private View defaultComment;
         public VHHeader(View itemView) {
             super(itemView);
             pushDate = (TextView) itemView.findViewById(R.id.push_date);
@@ -681,14 +482,45 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             tvMaybe = (TextView) itemView.findViewById(R.id.maybe_count);
             tvNotGoing = (TextView) itemView.findViewById(R.id.not_going_count);
             intenAll = itemView.findViewById(R.id.btn_intent_all);
+            defaultComment = itemView.findViewById(R.id.default_comment);
             intenAll.setOnClickListener(this);
-
+            intentAgree.setOnClickListener(this);
+            intentMaybe.setOnClickListener(this);
+            intentNo.setOnClickListener(this);
+            eventMapCation.setOnClickListener(this);
+            intentAgree.setOnClickListener(this);
+            intentMaybe.setOnClickListener(this);
+            intentNo.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.btn_intent_all:
+                    if(mCommentActionListener != null){
+                        mCommentActionListener.setIntentAll(detailData,0);
+                    }
+                    break;
+                case R.id.event_picture_4_location:
+                    if(TextUtils.isEmpty(detailData.getLoc_latitude()) || TextUtils.isEmpty(detailData.getLoc_longitude())) {
+                        return;
+                    }
+                    LocationUtil.goNavigation(mContext, Double.valueOf(detailData.getLoc_latitude()), Double.valueOf(detailData.getLoc_longitude()), detailData.getLoc_type());
+                    break;
+                case R.id.iv_intent_agree:
+                    if(mCommentActionListener != null){
+                        mCommentActionListener.setIntentAll(detailData,1);
+                    }
+                    break;
+                case R.id.iv_intent_maybe:
+                    if(mCommentActionListener != null){
+                        mCommentActionListener.setIntentAll(detailData,2);
+                    }
+                    break;
+                case R.id.iv_intent_no:
+                    if(mCommentActionListener != null){
+                        mCommentActionListener.setIntentAll(detailData,3);
+                    }
                     break;
             }
         }
@@ -738,10 +570,45 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             chatsImage = itemView.findViewById(R.id.ll_chats_image);
             agreeTouch.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
+            chatsImage.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            EventCommentEntity commentEntity =  data.get(0);
+
+            switch(v.getId()) {
+                case R.id.btn_comment_del:
+                    if(mCommentActionListener != null){
+                        if (MainActivity.getUser().getUser_id().equals(commentEntity.getUser_id())) {
+                            mCommentActionListener.doDelete(commentEntity.getComment_id());
+                        }
+                    }
+                    break;
+                case R.id.ll_chats_image:
+                    if(mCommentActionListener != null){
+                        mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
+                    }
+                    break;
+                case R.id.agree_touch:
+                    newClick = true;
+                    int count = Integer.valueOf(tv_agree_count.getText().toString());
+                    if (TextUtils.isEmpty(commentEntity.getLove_id())) {
+                        iv_agree.setImageResource(R.drawable.love_press);
+                        commentEntity.setLove_id(MainActivity.getUser().getUser_id());
+                        tv_agree_count.setText(count + 1 + "");
+                    } else {
+                        iv_agree.setImageResource(R.drawable.love_normal);
+                        commentEntity.setLove_id(null);
+                        tv_agree_count.setText(count - 1 + "");
+                    }
+                    //判断是否已经有进行中的判断
+                    if (!runningList.contains(0)) {
+                        runningList.add(0);
+                        check(0);
+                    }
+                    break;
+            }
 
         }
     }
@@ -791,11 +658,45 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             chatsImage = itemView.findViewById(R.id.ll_chats_image);
             agreeTouch.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
+            chatsImage.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+            EventCommentEntity commentEntity =  data.get(getAdapterPosition()-1);
+            int position = getAdapterPosition() - 1;
+            switch(v.getId()) {
+                case R.id.btn_comment_del:
+                    if(mCommentActionListener != null){
+                        if (MainActivity.getUser().getUser_id().equals(commentEntity.getUser_id())) {
+                            mCommentActionListener.doDelete(commentEntity.getComment_id());
+                        }
+                    }
+                    break;
+                case R.id.ll_chats_image:
+                    if(mCommentActionListener != null){
+                        mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
+                    }
+                    break;
+                case R.id.agree_touch:
+                    newClick = true;
+                    int count = Integer.valueOf(tv_agree_count.getText().toString());
+                    if (TextUtils.isEmpty(commentEntity.getLove_id())) {
+                        iv_agree.setImageResource(R.drawable.love_press);
+                        commentEntity.setLove_id(MainActivity.getUser().getUser_id());
+                        tv_agree_count.setText(count + 1 + "");
+                    } else {
+                        iv_agree.setImageResource(R.drawable.love_normal);
+                        commentEntity.setLove_id(null);
+                        tv_agree_count.setText(count - 1 + "");
+                    }
+                    //判断是否已经有进行中的判断
+                    if (!runningList.contains(position)) {
+                        runningList.add(position);
+                        check(position);
+                    }
+                    break;
+            }
         }
     }
 
@@ -847,103 +748,25 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
 
         @Override
         public void onClick(View v) {
-
+            EventCommentEntity commentEntity =  data.get(getAdapterPosition());
+            switch(v.getId()) {
+                case R.id.btn_comment_del:
+                    if(mCommentActionListener != null){
+                        if (MainActivity.getUser().getUser_id().equals(commentEntity.getUser_id())) {
+                            mCommentActionListener.doDelete(commentEntity.getComment_id());
+                        }
+                    }
+                    break;
+                case R.id.ll_chats_image:
+                    if(mCommentActionListener != null){
+                        mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
+                    }
+                    break;
+            }
         }
     }
 
 
-//    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-//        CircularNetworkImage civ_comment_owner_head;
-//        TextView tv_comment_owner_name;
-//        FreedomSelectionTextView tv_comment_content;
-//        TextView tv_agree_count;
-//        ImageButton iv_agree;
-//        ImageButton btn_comment_del;
-//        TextView comment_date;
-//        NetworkImageView networkImageView;
-//        GifImageView gifImageView;
-//        ImageView pngImageView;
-//        CircularProgress progressBar;
-//        View agreeTouch;
-//
-//
-//        public ViewHolder(View itemView) {
-//            // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
-//            super(itemView);
-//            gifImageView = (GifImageView) itemView.findViewById(R.id.message_pic_gif_iv);
-//            networkImageView = (NetworkImageView) itemView.findViewById(R.id.message_pic_iv);
-//            pngImageView = (ImageView) itemView.findViewById(R.id.message_png_iv);
-//
-//            civ_comment_owner_head = (CircularNetworkImage) itemView.findViewById(R.id.civ_comment_owner_head);
-//            tv_comment_content = (FreedomSelectionTextView) itemView.findViewById(R.id.tv_comment_content);
-//            tv_comment_owner_name = (TextView) itemView.findViewById(R.id.tv_comment_owner_name);
-//            comment_date = (TextView) itemView.findViewById(R.id.comment_date);
-//            tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);
-//            iv_agree = (ImageButton) itemView.findViewById(R.id.iv_agree);
-//            agreeTouch = itemView.findViewById(R.id.agree_touch);
-//            btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
-//            progressBar = (CircularProgress) itemView.findViewById(R.id.message_progress_bar);
-//            agreeTouch.setOnClickListener(this);
-//            btn_comment_del.setOnClickListener(this);
-//
-////            itemView.setOnClickListener(new View.OnClickListener() {
-////                @Override
-////                public void onClick(View v) {
-////                    EventCommentEntity comment = data.get(getAdapterPosition());
-////                    //自己发的或event creator 可以删除
-////                    if(MainActivity.getUser().getUser_id().equals(comment.getUser_id())){
-////                        removeComment(comment.getComment_id());
-////                    }
-////                }
-////            });
-//
-//        }
-//
-//
-//
-//
-//        @Override
-//        public void onClick(View v) {
-//            int position = getAdapterPosition();
-//            EventCommentEntity commentEntity = data.get(position);
-//            switch (v.getId()) {
-//                case R.id.agree_touch:
-//                    newClick = true;
-//                    int count = Integer.valueOf(tv_agree_count.getText().toString());
-//                    if (TextUtils.isEmpty(commentEntity.getLove_id())) {
-//                        iv_agree.setImageResource(R.drawable.agree_press);
-//                        commentEntity.setLove_id(MainActivity.getUser().getUser_id());
-//                        tv_agree_count.setText(count + 1 + "");
-//                    } else {
-//                        iv_agree.setImageResource(R.drawable.agree_normal);
-//                        commentEntity.setLove_id(null);
-//                        tv_agree_count.setText(count - 1 + "");
-//                    }
-//                    //判断是否已经有进行中的判断
-//                    if (!runningList.contains(position)) {
-//                        runningList.add(position);
-//                        check(position);
-//                    }
-//                    break;
-//                case R.id.btn_comment_del:
-//                    EventCommentEntity comment = data.get(getAdapterPosition());
-//                    //自己发的或event creator 可以删除
-//                    if (mCommentActionListener != null) {
-//                        if (MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
-//                            mCommentActionListener.doDelete(comment.getComment_id());
-//                        }
-//                    }
-//                    break;
-////                case R.id.message_pic_iv:
-//////                    EventCommentEntity comment = data.get(getAdapterPosition());
-////                    //自己发的或event creator 可以删除
-////                    if (mCommentActionListener != null) {
-////                            mCommentActionListener.showOriginalPic(commentEntity.getContent_id());
-////                    }
-////                    break;
-//            }
-//        }
-//    }
 
     boolean newClick;
     List<Integer> runningList = new ArrayList<Integer>();
@@ -979,7 +802,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
         }).start();
     }
 
-
     private CommentActionListener mCommentActionListener;
 
     public void setCommentActionListener(CommentActionListener commentActionListener) {
@@ -993,7 +815,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
 
         public void showOriginalPic(String User_id, String File_id);
 
-        public void setIntentAll(EventEntity entity);
+        public void setIntentAll(EventEntity entity,int memeber);
     }
 
 
