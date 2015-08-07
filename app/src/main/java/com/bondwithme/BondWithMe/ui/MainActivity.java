@@ -169,7 +169,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     protected void onStop() {
         PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
         LAST_LEAVE_INDEX = "lastLeaveIndex";
-        IS_FIRST_LOGIN = "firstLogin";
+        IS_FIRST_LOGIN = "isFirstLogin";
         super.onStop();
     }
 
