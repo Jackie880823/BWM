@@ -264,10 +264,7 @@ public class MyViewProfileActivity extends BaseActivity {
         tvLoginId = getViewById(R.id.tv_login_id1);
 
         llResetPassword = (LinearLayout)getViewById(R.id.ll_reset_password);
-        if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
-        {
-            llResetPassword.setVisibility(View.INVISIBLE);
-        }
+
 
 
         etFirstName = getViewById(R.id.et_first_name);
@@ -291,7 +288,14 @@ public class MyViewProfileActivity extends BaseActivity {
         etLastName.setText(MainActivity.getUser().getUser_surname());
         tvTitle.setText(MainActivity.getUser().getUser_given_name());
         tvId1.setText(getResources().getString(R.string.app_name) + " ID: " + MainActivity.getUser().getDis_bondwithme_id());
-        tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
+        if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
+        {
+            llResetPassword.setVisibility(View.INVISIBLE);
+            tvLoginId.setText(getResources().getString(R.string.login) + " ID: " + MainActivity.getUser().getUser_login_type());
+        }else {
+            tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
+        }
+
 
 //        tvAge.setText(MainActivity.getUser().getUser_dob());//需要做处理，年转为岁数
 
@@ -386,7 +390,7 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     private void setTvBirthday(String strDOB) {
-        if (!strDOB.equals("0000-00-00")){
+        if (strDOB != null && !strDOB.equals("0000-00-00")){
             Date date = null;
             try {
                 date = new SimpleDateFormat("yyyy-MM-dd").parse(strDOB);
@@ -400,7 +404,7 @@ public class MyViewProfileActivity extends BaseActivity {
                 tvBirthday.setText(dateFormat.format(date));
             }else {
                 int year = date.getYear() + 1900;
-                tvBirthday.setText(this.getResources().getStringArray(R.array.months)[date.getMonth()] + " " + date.getDate() + " "  + String.valueOf(year));
+                tvBirthday.setText(this.getResources().getStringArray(R.array.months)[date.getMonth()] + " " + date.getDate() + ", "  + String.valueOf(year));
             }
         }
     }

@@ -74,7 +74,12 @@ public class MeFragment extends BaseFragment<MeActivity> {
         tvName1.setText(MainActivity.getUser().getUser_given_name());
 //        tvTitle.setText(MainActivity.getUser().getUser_given_name());
         tvId1.setText(getResources().getString(R.string.app_name) + " ID: " + MainActivity.getUser().getDis_bondwithme_id());
-        tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
+        if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
+        {
+            tvLoginId.setText(getResources().getString(R.string.login) + " ID: "+MainActivity.getUser().getUser_login_type());
+        }else {
+            tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
+        }
 
         String dofeel_code = MainActivity.getUser().getDofeel_code();
         if (!TextUtils.isEmpty((dofeel_code))) {
