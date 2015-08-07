@@ -111,7 +111,7 @@ public class EventDetailActivity extends BaseActivity {
     protected Fragment getFragment() {
 //        event = (EventEntity) getIntent().getSerializableExtra("event");
         group_id = getIntent().getStringExtra("group_id");
-        return EventDetailFragment.newInstance(group_id);
+        return EventDetailFragmentTest.newInstance(group_id);
     }
 
     @Override

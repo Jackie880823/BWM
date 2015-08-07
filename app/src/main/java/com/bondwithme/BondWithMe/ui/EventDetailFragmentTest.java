@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -45,7 +46,6 @@ import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
-import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.bondwithme.BondWithMe.widget.SendComment;
@@ -119,6 +119,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
     private LinearLayout expandFunctionLinear;//加号
     private LinearLayout stickerLinear;//表情库
     private EditText etChat;
+    private View connentLayout;
 
     private View vProgress;
     /**
@@ -151,7 +152,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 //            bindData();
-            requestComment();
+//            requestComment();
         }
     };
 
@@ -186,11 +187,11 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
         isCommentBim = true;
         group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
         vProgress = getViewById(R.id.rl_progress);
-//        vProgress.setVisibility(View.VISIBLE);
+        vProgress.setVisibility(View.VISIBLE);
         mContext = getParentActivity();
         //        messageAction = new MessageAction(mContext, handler);
         rvList = getViewById(R.id.rv_event_comment_list);
-        final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
+        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         //        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
@@ -216,6 +217,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
             stickerImageButton = getViewById(R.id.ib_sticker);
             expandFunctionLinear = getViewById(R.id.ll_more);
             stickerLinear = getViewById(R.id.ll_sticker);
+            connentLayout = getViewById(R.id.rv_event_comment_list);
 //            Socontent = getViewById(R.id.content);
 //
 //            push_date = getViewById(R.id.push_date);
@@ -266,6 +268,14 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 //                    return false;
 //                }
 //            });
+            connentLayout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    hideAllViewState();
+                    return false;
+                }
+            });
+
 
             swipeRefreshLayout = getViewById(R.id.swipe_archive_layout);
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -342,12 +352,13 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    int lastVisibleItem = ((FullyLinearLayoutManager) llm).findLastVisibleItemPosition();
+                    int lastVisibleItem = ((LinearLayoutManager) llm).findLastVisibleItemPosition();
                     int totalItemCount = llm.getItemCount();
                     //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                     // dy>0 表示向下滑动
                     if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
                         loading = true;
+//                        vProgress.setVisibility(View.VISIBLE);
                         requestComment();
                     }
                 }
@@ -433,8 +444,8 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
             }
 
             @Override
-            public void setIntentAll(EventEntity entity) {
-                goInvitedStutus();
+            public void setIntentAll(EventEntity entity,int memeber) {
+                goInvitedStutus(memeber);
             }
 
 
@@ -602,9 +613,9 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
                 @Override
                 public void onFinish() {
-                    data.clear();
-                    adapter.removeCommentData();
-                    requestComment();
+//                    data.clear();
+//                    adapter.removeCommentData();
+//                    requestComment();
                 }
 
                 @Override
@@ -614,7 +625,9 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                     stickerEntity.setSticker_type("");
                     stickerEntity.setSticker_group_path("");
                     stickerEntity.setSticker_name("");
-
+                    data.clear();
+                    adapter.removeCommentData();
+                    requestComment();
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
 //                    progressBar.setVisibility(View.GONE);
@@ -688,9 +701,9 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
                     @Override
                     public void onFinish() {
-                        data.clear();
-                        adapter.removeCommentData();
-                        requestComment();
+//                        data.clear();
+//                        adapter.removeCommentData();
+//                        requestComment();
                     }
 
                     @Override
@@ -701,9 +714,10 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                         stickerEntity.setSticker_type("");
                         stickerEntity.setSticker_group_path("");
                         stickerEntity.setSticker_name("");
-
                         etChat.setText("");
-
+                        data.clear();
+                        adapter.removeCommentData();
+                        requestComment();
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                         UIUtil.hideKeyboard(getActivity(), etChat);
 //                        progressBar.setVisibility(View.GONE);
@@ -734,7 +748,9 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
     }
 
-
+    /**
+     * 异步上传照片
+     */
     class uploadBimapTask extends AsyncTask<Map, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Map... params) {
@@ -746,15 +762,20 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
                 @Override
                 public void onFinish() {
+//                    requestComment();
                 }
 
                 @Override
                 public void onResult(String response) {
                     startIndex = 0;
-                    isRefresh = true;
+//                    isRefresh = true;
                     isCommentBim = true;
                     mUri = null;
+                    data.clear();
+                    adapter.removeCommentData();
                     requestComment();
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                    UIUtil.hideKeyboard(getActivity(), etChat);
                     getParentActivity().setResult(Activity.RESULT_OK);
 
                 }
@@ -823,6 +844,8 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                     isRefresh = true;
                     isCommentBim = true;
                     mUri = null;
+                    data.clear();
+                    adapter.removeCommentData();
                     requestComment();
                     getParentActivity().setResult(Activity.RESULT_OK);
                     //                    Log.i("onResult====",string);
@@ -859,20 +882,24 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
         new HttpTools(getParentActivity()).get(url, params,Tag, new HttpCallback() {
             @Override
             public void onStart() {
+                if(vProgress.getVisibility()==View.GONE){
+                    vProgress.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onFinish() {
-                //如果只是Activity回调就不用在刷新评论
-                if(data.size() < 1 ){
-                    requestComment();
-                }
+//                //如果只是Activity回调就不用在刷新评论
+//                if(data.size() < 1 ){
+//                    requestComment();
+//                }
 
             }
 
             @Override
             public void onResult(String response) {
                 event = new Gson().fromJson(response, EventEntity.class);
+                vProgress.setVisibility(View.GONE);
                 try{
                     isRefresh = false;
                     currentPage = 1;//还原为第一页
@@ -890,8 +917,20 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 ////                        abookends.addData(detailDate);
 //                        }
 //                    }
+                    ResponseStatus[] statuses = ResponseStatus.values();
+                    for(ResponseStatus status : statuses) {
+                        if(status.getServerCode().equals(event.getGroup_member_response())) {
+                            currentStatus = status;
+                            break;
+                        }
+
+                    }
+                    changeIntentUI(currentStatus);
                     swipeRefreshLayout.setRefreshing(false);
                     loading = false;
+                    if(data.size() < 1 ){
+                        requestComment();
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                     reInitDataStatus();
@@ -975,6 +1014,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                     data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {}.getType());
                     currentPage = 1;
                     startIndex += data.size();
+                    vProgress.setVisibility(View.GONE);
                     if(isRefresh) {
                         isRefresh = false;
                         currentPage = 1;
@@ -1025,9 +1065,10 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
     /**
      * 打开选择好友界面
      */
-    private void goInvitedStutus() {
+    private void goInvitedStutus(int memeber) {
         intent = new Intent(getActivity(), InvitedStatusActivity.class);
         intent.putExtra("event", event);
+        intent.putExtra("tabIndex",memeber);
         startActivity(intent);
     }
 
@@ -1288,15 +1329,22 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                     public void onFinish() {
                         if(vProgress != null)
                             vProgress.setVisibility(View.GONE);
+
+//                        data.clear();
+//                        adapter.removeCommentData();
+//                        requestComment();
                     }
 
                     @Override
                     public void onResult(String string) {
                         getParentActivity().setResult(Activity.RESULT_OK);
-
                         startIndex = 0;
 //                        isRefresh = true;
+                        data.clear();
+                        adapter.removeCommentData();
                         requestComment();
+                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                        UIUtil.hideKeyboard(getActivity(), etChat);
                     }
 
                     @Override
