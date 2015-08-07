@@ -594,11 +594,11 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());
                     if (TextUtils.isEmpty(commentEntity.getLove_id())) {
-                        iv_agree.setImageResource(R.drawable.agree_press);
+                        iv_agree.setImageResource(R.drawable.love_press);
                         commentEntity.setLove_id(MainActivity.getUser().getUser_id());
                         tv_agree_count.setText(count + 1 + "");
                     } else {
-                        iv_agree.setImageResource(R.drawable.agree_normal);
+                        iv_agree.setImageResource(R.drawable.love_normal);
                         commentEntity.setLove_id(null);
                         tv_agree_count.setText(count - 1 + "");
                     }
@@ -682,11 +682,11 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());
                     if (TextUtils.isEmpty(commentEntity.getLove_id())) {
-                        iv_agree.setImageResource(R.drawable.agree_press);
+                        iv_agree.setImageResource(R.drawable.love_press);
                         commentEntity.setLove_id(MainActivity.getUser().getUser_id());
                         tv_agree_count.setText(count + 1 + "");
                     } else {
-                        iv_agree.setImageResource(R.drawable.agree_normal);
+                        iv_agree.setImageResource(R.drawable.love_normal);
                         commentEntity.setLove_id(null);
                         tv_agree_count.setText(count - 1 + "");
                     }
