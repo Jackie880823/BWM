@@ -141,6 +141,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             holder.imArchivePic.setVisibility(View.GONE);
             holder.imArchiveImages.setVisibility(View.GONE);
             holder.imArchiveGif.setImageDrawable(null);
+            holder.tvPhotoCount.setVisibility(View.GONE);
             try {
                 UniversalImageLoaderUtil.decodeStickerPic(holder.imArchiveGif, archive.getSticker_group_path(), archive.getSticker_name(), archive.getSticker_type());
             } catch(StickerTypeException e) {
