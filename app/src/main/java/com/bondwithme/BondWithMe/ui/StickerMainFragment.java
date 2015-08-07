@@ -63,6 +63,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
     private LinkedHashMap<Integer, String> positionMap = new LinkedHashMap<>();
     private LinkedHashMap<Integer, StickerGridViewAdapter> adapterMap = new LinkedHashMap<>();
     private int lastPage;
+    private PopupWindow popupWindow;
 
     private void setPage(String clickName, int position) {
         mNumLayout.removeAllViews();
@@ -294,6 +295,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                     gv.setClickable(true);
                     gv.setFocusable(true);
                     gv.setNumColumns(SHOW_NUM / 2);
+                    gv.setHorizontalSpacing((int) mContext.getResources().getDimension(R.dimen._20dp));
                     gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -355,8 +357,6 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
 
         return mLists;
     }
-
-    PopupWindow popupWindow;
 
     private void showPopuWindow(String filePath, View view) {
         View popView = ((LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.popupwindow_sticker_imageview, null);
