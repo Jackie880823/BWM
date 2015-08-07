@@ -136,8 +136,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public List<WallCommentEntity> data = new ArrayList<>();
 
     private WallEntity wall;
+    /**
+     * 上传表情时的表情格式{@link Constant#Sticker_Png} 或 {@link Constant#Sticker_Gif}
+     */
     private String stickerType = "";
+    /**
+     * 上传表情的表情名称
+     */
     private String stickerName = "";
+    /**
+     * 上传表情的包路径
+     */
     private String stickerGroupPath = "";
     /**
      * 网络请求工具实例
@@ -173,6 +182,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         // initView
         vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
         rvList = getViewById(R.id.rv_wall_comment_list);
         llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
@@ -438,14 +448,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         //            at.setVisibility(View.VISIBLE);
         //            tvLocation.setText(wall.getLoc_name());
         //        }
-        int size = rvList.getChildCount() - 2;
-        String strCount = wall.getComment_count();
-        if(Integer.valueOf(strCount) <= size) {
-            strCount = String.valueOf(size);
-        }
 
         tvAgreeCount.setText(wall.getLove_count());
-        tvCommentCount.setText(strCount);
+        tvCommentCount.setText(wall.getComment_count());
 
 
         if(MainActivity.getUser().getUser_id().equals(wall.getUser_id())) {
@@ -553,7 +558,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     }
 
-    private synchronized void initAdapter() {
+    private void initAdapter() {
         if(adapter == null) {
             adapter = new WallCommentAdapter(getParentActivity(), data);
             adapter.setPicClickListener(this);
@@ -627,13 +632,24 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             @Override
             public void onResult(String string) {
+
                 startIndex = 0;
                 isRefresh = true;
                 swipeRefreshLayout.setRefreshing(true);
+
+                // 更新评论总数
+                int commentCount = Integer.valueOf((String) tvCommentCount.getText()) + 1;
+                wall.setComment_count(String.valueOf(commentCount));
+                tvCommentCount.setText(String.valueOf(commentCount));
+
+                // 获取评论列表
                 getComments();
+
+                // 清除上传的表情信息
                 stickerName = "";
                 stickerType = "";
                 stickerGroupPath = "";
+
                 getParentActivity().setResult(Activity.RESULT_OK);
                 UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
             }
@@ -902,12 +918,18 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                         startIndex = 0;
                         isRefresh = true;
                         swipeRefreshLayout.setRefreshing(true);
+
+                        int commentCount = Integer.valueOf((String) tvCommentCount.getText()) - 1;
+                        if(commentCount >= 0) {
+                            wall.setComment_count(String.valueOf(commentCount));
+                            tvCommentCount.setText(String.valueOf(commentCount));
+                        }
+
                         getComments();
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -1002,7 +1024,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
                     @Override
                     public void onResult(String string) {
-                        vProgress.setVisibility(View.GONE);
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                         getParentActivity().setResult(Activity.RESULT_OK);
                         getParentActivity().finish();
@@ -1010,7 +1031,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
                     @Override
                     public void onError(Exception e) {
-                        vProgress.setVisibility(View.GONE);
                     }
 
                     @Override
