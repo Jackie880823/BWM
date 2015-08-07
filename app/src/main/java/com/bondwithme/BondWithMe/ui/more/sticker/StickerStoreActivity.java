@@ -31,17 +31,16 @@ import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.StickerGroupAdapter;
-import com.bondwithme.BondWithMe.adapter.StickerPagerAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.entity.StickerBannerEntity;
-import com.bondwithme.BondWithMe.entity.StickerBannerPic;
 import com.bondwithme.BondWithMe.entity.StickerGroupEntity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.SystemUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.google.gson.Gson;
@@ -59,7 +58,7 @@ import java.util.Map;
 /**
  * Created by heweidong on 2015/6/7.
  */
-public class StickerStoreActivity extends BaseActivity implements StickerBannerPic.DownloadBannerListener,View.OnTouchListener {
+public class StickerStoreActivity extends BaseActivity implements View.OnTouchListener {
 
     private static final String TAG = StickerStoreActivity.class.getSimpleName();
     private static final String GET_STICKER_GROUP = TAG + "GET_STICKER_GROUP";
@@ -70,24 +69,19 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
 
 
     View mProgressDialog;
-
-    private StickerPagerAdapter stickerPagerAdapter;
-    private List<View> views;
     private RecyclerView recyclerViewList;
     private LinearLayoutManager llm;
     private List<StickerGroupEntity> dataStickerGroup = new ArrayList<>();
     private List<StickerBannerEntity> dataStickerBanner = new ArrayList<>();
     private  List<StickerGroupEntity> data = new ArrayList<>();
     private final int AUTO_PLAY = 1;
-    private final int INIT_ADAPTER = 2;
-    private final int DISMISS_DIALOG = 3;
     private ScrollView scrollView;
     int finished;
     int positionFromStickerDetail = -1;
     private ImageSwitcher isStickerBanner;
     private int currentItem;
-    private List<Uri> uriList;
-    StickerBannerPic stickerBannerPic;
+    private Map<String,Uri> uriMap = new HashMap<>();
+
 
 
 
@@ -328,19 +322,19 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
             switch (msg.what){
                 case AUTO_PLAY:
                     int totalItem = 0;
-                    if (dataStickerBanner != null && uriList != null && uriList.size()>0){
+                    if (dataStickerBanner != null && uriMap != null && uriMap.size()>0){
                         totalItem = dataStickerBanner.size();
                         currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
                         setImageSwitcher(currentItem);
                     }
-                    handler.sendEmptyMessageDelayed(AUTO_PLAY, 5000);
+                    handler.sendEmptyMessageDelayed(AUTO_PLAY, 2000);
             }
         }
     };
 
     protected void setImageSwitcher(int currentItem){
         rightInAnim();
-        isStickerBanner.setImageURI(uriList.get(currentItem));
+        isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
         setSwitcherClick();
 
     }
@@ -368,9 +362,51 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
         Map<String, String> params = new HashMap<>();
         params.put("user_id", MainActivity.getUser().getUser_id());
 
+        //获取 sticker banner 广告图
+        new HttpTools(this).get(Constant.API_STICKER_BANNER, null, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                GsonBuilder gsonb = new GsonBuilder();
+                Gson gson = gsonb.create();
+
+                dataStickerBanner = gson.fromJson(response, new TypeToken<ArrayList<StickerBannerEntity>>() {
+                }.getType());
+
+                downloadPic();
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+                MessageUtil.showMessage(StickerStoreActivity.this, R.string.msg_action_failed);
+
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
 
         //获取sticker group list
-        new HttpTools(this).get(Constant.API_STICKER_GROUP, params, GET_STICKER_GROUP, new HttpCallback() {
+        new HttpTools(this).get(Constant.API_STICKER_GROUP, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -410,56 +446,174 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
 
             }
         });
-        //获取 sticker banner 广告图
-        new HttpTools(this).get(Constant.API_STICKER_BANNER, null, GET_STICKER_BANNER, new HttpCallback() {
-            @Override
-            public void onStart() {
 
+
+
+    }
+
+    /** download pictures for banner*/
+    private void downloadPic(){
+        int count = 0;
+        if (data != null){
+            count = dataStickerBanner.size();
+        }
+        for (int i = 0; i < count;i++){
+            String url = String.format(Constant.API_STICKER_BANNER_PIC, dataStickerBanner.get(i).getBanner_photo());
+            final String target = FileUtil.getBannerFilePath(this) + "/" + String.format("%s", ""+ dataStickerBanner.get(i).getBanner_photo());
+            LogUtil.d(TAG,"====url===="+url);
+            LogUtil.d(TAG,"====target===="+target);
+            final int finalI = i;
+            new HttpTools(this).download(url, target, false, new HttpCallback() {
+                @Override
+                public void onStart() {
+                    LogUtil.d(TAG,"===onStart==="+"target==="+target);
+                }
+
+                @Override
+                public void onFinish() {
+                    File f = new File(target);
+                    LogUtil.d(TAG,"===onFinish==="+f.exists());
+
+                    if (f.exists()){
+                        Uri uri = Uri.parse(target);
+                        uriMap.put(dataStickerBanner.get(finalI).getSticker_group_path(),uri);
+                    }
+                    if (finalI == 0){
+                        downloadFinish();
+                        mProgressDialog.setVisibility(View.INVISIBLE);
+                    }
+
+                }
+
+                @Override
+                public void onResult(String response) {
+
+
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    LogUtil.e(TAG,"===onError===",e);
+
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+                    LogUtil.d(TAG,"====onLoading==="+"=====count=========="+count+"======current========="+current);
+                }
+            });
+        }
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
+//        FileUtil.deleteBanner(this);
+        uriMap = null;
+        super.onDestroy();
+    }
+
+
+    public void downloadFinish() {
+        LogUtil.d(TAG,"===display_banner[0]==="+uriMap.size());
+        if (uriMap.size() > 0){
+            LogUtil.d(TAG,"===display_banner[0]==="+uriMap.size());
+            isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(0).getSticker_group_path()));
+            setSwitcherClick();
+        }
+
+    }
+
+    //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
+    float downX = 0;
+    float upX = 0;
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            //当手指按下的时候
+            downX = event.getX();
+            LogUtil.d(TAG,"===downX==="+downX);
+        }
+        if(event.getAction() == MotionEvent.ACTION_UP) {
+            //当手指离开的时候
+            upX = event.getX();
+            LogUtil.d(TAG, "===upX===" + upX);
+            if(downX - upX > 80) {      //左滑
+                int totalItem = 0;
+                if (dataStickerBanner.size() > 0 && uriMap.size()>0){
+                    totalItem = dataStickerBanner.size();
+                    currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
+                    rightInAnim();
+                    if (uriMap.size() > 0){
+                        isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
+                    }
+                    LogUtil.d(TAG,"=========currentItem========"+currentItem);
+                }
+                return true;
+            } else if(upX - downX > 80) {       //右滑
+                int totalItem = 0;
+                if (dataStickerBanner.size() > 0 && uriMap.size()>0){
+                    totalItem = dataStickerBanner.size();
+                    currentItem = currentItem - 1 < 0 ? totalItem - 1 : currentItem - 1;
+                    Animation animIn = AnimationUtils.loadAnimation(this,
+                            R.anim.slide_in_left);
+                    animIn.setFillAfter(true);
+                    isStickerBanner.setInAnimation(animIn);
+
+                    Animation animOut = AnimationUtils.loadAnimation(this,
+                            R.anim.slide_out_right);
+                    animOut.setFillAfter(true);
+                    isStickerBanner.setOutAnimation(animOut);
+                    if (uriMap.size() > 0){
+                        isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
+                    }
+                    LogUtil.d(TAG,"=========currentItem========"+currentItem);
+                }
+                return true;
+            }
+        }
+
+        if (Math.abs(downX - upX) < 5){
+            LogUtil.d(TAG,"====return_false===");
+            setSwitcherClick();
+            return false;
+        }
+
+        LogUtil.d(TAG, "====return_false===");
+        return false;
+
+    }
+
+    private void setSwitcherClick() {
+
+        if (dataStickerBanner != null && dataStickerGroup != null){
+            if(dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0){
+                final int position = getPosition(dataStickerBanner.get(currentItem).getSticker_group_path(),dataStickerGroup);
+                final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
+                isStickerBanner.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LogUtil.d(TAG,"=========currentItem========"+currentItem);
+                        LogUtil.d(TAG, "========onClick======");
+                        Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
+                        intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
+                        intent.putExtra(StickerGroupAdapter.POSITION, position);
+                        StickerStoreActivity.this.startActivity(intent);
+                    }
+                });
             }
 
-            @Override
-            public void onFinish() {
-
-            }
-
-            @Override
-            public void onResult(String response) {
-                GsonBuilder gsonb = new GsonBuilder();
-                Gson gson = gsonb.create();
-
-                dataStickerBanner = gson.fromJson(response, new TypeToken<ArrayList<StickerBannerEntity>>() {
-                }.getType());
-
-                stickerBannerPic = new StickerBannerPic(dataStickerBanner, StickerStoreActivity.this);
-                stickerBannerPic.setDownloadListener(StickerStoreActivity.this);
-                stickerBannerPic.getUri();
-                LogUtil.d(TAG, "=======stickerBannerPic====" + stickerBannerPic.toString());
-
-
-//                initPagerAdapter();
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-                MessageUtil.showMessage(StickerStoreActivity.this, R.string.msg_action_failed);
-
-
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
-
-
+        }
     }
 
     /**
@@ -516,113 +670,9 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
         }
     };
 
-    @Override
-    protected void onDestroy() {
-        if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
-        }
-        super.onDestroy();
-    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-
-
-
-    @Override
-    public void downloadFinish() {
-        LogUtil.d(TAG, "=====downloadFinish=====");
-        uriList = stickerBannerPic.uriList;
-        LogUtil.d(TAG, "==========uriList.size()========="+uriList.size());
-        if (uriList.size() > 0){
-            isStickerBanner.setImageURI(uriList.get(currentItem));
-            setSwitcherClick();
-        }
-        mProgressDialog.setVisibility(View.INVISIBLE);
-    }
-
-    //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
-    float downX = 0;
-    float upX = 0;
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            //当手指按下的时候
-            downX = event.getX();
-            LogUtil.d(TAG,"===downX==="+downX);
-        }
-        if(event.getAction() == MotionEvent.ACTION_UP) {
-            //当手指离开的时候
-            upX = event.getX();
-            LogUtil.d(TAG, "===upX===" + upX);
-            if(downX - upX > 80) {      //左滑
-                int totalItem = 0;
-                if (dataStickerBanner.size() > 0 && uriList.size()>0){
-                    totalItem = dataStickerBanner.size();
-                    currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
-                    rightInAnim();
-                    if (uriList.size() > 0){
-                        isStickerBanner.setImageURI(uriList.get(currentItem));
-                    }
-                    LogUtil.d(TAG,"=========currentItem========"+currentItem);
-                }
-                return true;
-            } else if(upX - downX > 80) {       //右滑
-                int totalItem = 0;
-                if (dataStickerBanner.size() > 0 && uriList.size()>0){
-                    totalItem = dataStickerBanner.size();
-                    currentItem = currentItem - 1 < 0 ? totalItem - 1 : currentItem - 1;
-                    Animation animIn = AnimationUtils.loadAnimation(this,
-                            R.anim.slide_in_left);
-                    animIn.setFillAfter(true);
-                    isStickerBanner.setInAnimation(animIn);
-
-                    Animation animOut = AnimationUtils.loadAnimation(this,
-                            R.anim.slide_out_right);
-                    animOut.setFillAfter(true);
-                    isStickerBanner.setOutAnimation(animOut);
-                    if (uriList.size() > 0){
-                        isStickerBanner.setImageURI(uriList.get(currentItem));
-                    }
-                    LogUtil.d(TAG,"=========currentItem========"+currentItem);
-                }
-                return true;
-            }
-        }
-
-        if (Math.abs(downX - upX) < 5){
-            LogUtil.d(TAG,"====return_false===");
-            setSwitcherClick();
-            return false;
-        }
-
-        LogUtil.d(TAG,"====return_false===");
-        return false;
-
-    }
-
-    private void setSwitcherClick() {
-
-        if (dataStickerBanner != null && dataStickerGroup != null){
-            if(dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0){
-                final int position = getPosition(dataStickerBanner.get(currentItem).getSticker_group_path(),dataStickerGroup);
-                final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
-                isStickerBanner.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        LogUtil.d(TAG,"=========currentItem========"+currentItem);
-                        LogUtil.d(TAG, "========onClick======");
-                        Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
-                        intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
-                        intent.putExtra(StickerGroupAdapter.POSITION, position);
-                        StickerStoreActivity.this.startActivity(intent);
-                    }
-                });
-            }
-
-        }
     }
 }
