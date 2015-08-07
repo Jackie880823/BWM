@@ -125,6 +125,7 @@
         android:id="@+id/connent_Rl"
         android:layout_width="match_parent"
         android:layout_below="@+id/event_options"
+        android:layout_marginBottom="@dimen/_58dp"
         android:layout_height="match_parent">
         <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
             android:id="@+id/swipe_archive_layout"
@@ -140,31 +141,6 @@
             </android.support.v7.widget.RecyclerView>
         </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
     </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_below="@+id/connent_Rl"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp">
-    </RelativeLayout>
-    <!-- com.bondwithme.BondWithMe/widget/OverScrollView.java-->
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="vertical"-->
-        <!--android:focusable="true"-->
-        <!--android:focusableInTouchMode="true"-->
-        <!--android:paddingBottom="@dimen/default_content_padding"-->
-        <!--android:paddingLeft="@dimen/default_content_padding"-->
-        <!--android:paddingRight="@dimen/default_content_padding">-->
-
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/rv_event_comment_list"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:scrollbars="vertical">-->
-        <!--</android.support.v7.widget.RecyclerView>-->
-    <!--</LinearLayout>-->
 
     <com.bondwithme.BondWithMe.widget.SendComment
         android:id="@+id/send_comment"

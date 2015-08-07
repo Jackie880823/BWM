@@ -8,9 +8,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -31,11 +31,12 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.adapter.EventCommentAdapterTest;
+import com.bondwithme.BondWithMe.adapter.EventCommentAdapter;
 import com.bondwithme.BondWithMe.entity.EventCommentEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
@@ -47,11 +48,11 @@ import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.bondwithme.BondWithMe.widget.MyDialog;
-import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.bondwithme.BondWithMe.widget.SendComment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.CircularProgress;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,22 +66,18 @@ import java.util.Map;
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
+ * {@link EventDetailFragmentOutdated.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link EventDetailFragmentTest#newInstance} factory method to
+ * Use the {@link EventDetailFragmentOutdated#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> implements View.OnClickListener {
-    private static final String Tag = EventDetailFragmentTest.class.getSimpleName();
+public class EventDetailFragmentOutdated extends BaseFragment<EventDetailActivity> implements View.OnClickListener {
+    private static final String Tag = EventDetailFragmentOutdated.class.getSimpleName();
     //    private final static String TAG = EventDetailFragment.class.getSimpleName();
 
     private ProgressDialog mProgressDialog;
 
     private List<EventCommentEntity> data = new ArrayList<EventCommentEntity>();
-    private String group_id;
-    private boolean isCommentRefresh = true;
-    private MySwipeRefreshLayout swipeRefreshLayout;
-
     private TextView push_date;
     private TextView owner_name;
     private CircularNetworkImage owner_head;
@@ -105,14 +102,14 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
     private boolean isCommentBim;
     private int startIndex = 0;
     private int currentPage = 1;
-    private final static int offset = 10;
+    private final static int offset = 20;
     private boolean loading;
     MyDialog removeAlertDialog;
 
     private RecyclerView rvList;
     private EventEntity event;
     int colorIntentSelected;
-//    private CircularProgress progressBar;
+    private CircularProgress progressBar;
 
     private SendComment sendCommentView;
     private ScrollView Socontent;
@@ -136,12 +133,12 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
     EventCommentEntity stickerEntity = new EventCommentEntity();
 
-    public static EventDetailFragmentTest newInstance(String... params) {
+    public static EventDetailFragmentOutdated newInstance(String... params) {
         //        event = eventEntity;
-        return createInstance(new EventDetailFragmentTest(), params);
+        return createInstance(new EventDetailFragmentOutdated(), params);
     }
 
-    public EventDetailFragmentTest() {
+    public EventDetailFragmentOutdated() {
         super();
 
     }
@@ -150,7 +147,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-//            bindData();
+            bindData();
             requestComment();
         }
     };
@@ -177,23 +174,21 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
     @Override
     public void setLayoutId() {
-        this.layoutId = R.layout.fragment_event_detail_test;
+        this.layoutId = R.layout.fragment_event_detail;
     }
 
     @Override
     public void initView() {
         isComment = true;
         isCommentBim = true;
-        group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
         vProgress = getViewById(R.id.rl_progress);
-//        vProgress.setVisibility(View.VISIBLE);
+        vProgress.setVisibility(View.VISIBLE);
         mContext = getParentActivity();
         //        messageAction = new MessageAction(mContext, handler);
         rvList = getViewById(R.id.rv_event_comment_list);
         final FullyLinearLayoutManager llm = new FullyLinearLayoutManager(getParentActivity());
         //        final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
-        rvList.setHasFixedSize(true);
         //        rvList.setHasFixedSize(true);
         initAdapter();
         EventDetailActivity eventDetailActivity = new EventDetailActivity();
@@ -209,76 +204,65 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
         });
         if(NetworkUtil.isNetworkConnected(getActivity())) {
 
-//            progressBar = getViewById(R.id.event_detail_progress_bar);
+            progressBar = getViewById(R.id.event_detail_progress_bar);
 
             etChat = getViewById(R.id.et_chat);
             expandFunctionButton = getViewById(R.id.ib_more);
             stickerImageButton = getViewById(R.id.ib_sticker);
             expandFunctionLinear = getViewById(R.id.ll_more);
             stickerLinear = getViewById(R.id.ll_sticker);
-//            Socontent = getViewById(R.id.content);
-//
-//            push_date = getViewById(R.id.push_date);
-//            owner_name = getViewById(R.id.owner_name);
-//            owner_head = getViewById(R.id.owner_head);
-//            event_title = getViewById(R.id.event_title);
-//            event_picture_4_location = getViewById(R.id.event_picture_4_location);
+            Socontent = getViewById(R.id.content);
 
-//            event_desc = getViewById(R.id.event_desc);
-//            event_date = getViewById(R.id.event_date);
-//            location_desc = getViewById(R.id.location_desc);
-//            btn_intent_all = getViewById(R.id.btn_intent_all);
-//            iv_intent_agree = getViewById(R.id.iv_intent_agree);
-//            iv_intent_maybe = getViewById(R.id.iv_intent_maybe);
-//            iv_intent_no = getViewById(R.id.iv_intent_no);
-//            going_count = getViewById(R.id.going_count);
-//            maybe_count = getViewById(R.id.maybe_count);
-//            not_going_count = getViewById(R.id.not_going_count);
+            push_date = getViewById(R.id.push_date);
+            owner_name = getViewById(R.id.owner_name);
+            owner_head = getViewById(R.id.owner_head);
+            event_title = getViewById(R.id.event_title);
+            event_picture_4_location = getViewById(R.id.event_picture_4_location);
+
+            event_desc = getViewById(R.id.event_desc);
+            event_date = getViewById(R.id.event_date);
+            location_desc = getViewById(R.id.location_desc);
+            btn_intent_all = getViewById(R.id.btn_intent_all);
+            iv_intent_agree = getViewById(R.id.iv_intent_agree);
+            iv_intent_maybe = getViewById(R.id.iv_intent_maybe);
+            iv_intent_no = getViewById(R.id.iv_intent_no);
+            going_count = getViewById(R.id.going_count);
+            maybe_count = getViewById(R.id.maybe_count);
+            not_going_count = getViewById(R.id.not_going_count);
+            //        comment_container = getViewById(R.id.comment_container);
 
 
-//            btn_intent_all.setOnClickListener(this);
-//            iv_intent_agree.setOnClickListener(this);
-//            iv_intent_maybe.setOnClickListener(this);
-//            iv_intent_no.setOnClickListener(this);
+            btn_intent_all.setOnClickListener(this);
+            iv_intent_agree.setOnClickListener(this);
+            iv_intent_maybe.setOnClickListener(this);
+            iv_intent_no.setOnClickListener(this);
             option_status = getViewById(R.id.option_status);
             option_cancel = getViewById(R.id.option_cancel);
             event_options = getViewById(R.id.event_options);
             option_no_going = getViewById(R.id.image_no_going);
             option_maybe = getViewById(R.id.image_maybe);
             option_going = getViewById(R.id.image_going);
+            //        option_no_going = getViewById(R.id.option_no_going);
+            //        option_maybe = getViewById(R.id.option_maybe);
+            //        option_going = getViewById(R.id.option_going);
             colorIntentSelected = getResources().getColor(R.color.btn_bg_color_green_press);
-            getViewById(R.id.connent_Rl).setOnTouchListener(new View.OnTouchListener(){
+            //        colorIntentSelected = getResources().getColor(R.color.default_text_color_while);
 
+            //bind data
+            //        bindData();
+
+            option_cancel.setOnClickListener(this);
+            option_no_going.setOnClickListener(this);
+            option_maybe.setOnClickListener(this);
+            option_going.setOnClickListener(this);
+            Socontent.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     hideAllViewState();
                     return false;
                 }
             });
-            option_cancel.setOnClickListener(this);
-            option_no_going.setOnClickListener(this);
-            option_maybe.setOnClickListener(this);
-            option_going.setOnClickListener(this);
-//            Socontent.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    hideAllViewState();
-//                    return false;
-//                }
-//            });
 
-            swipeRefreshLayout = getViewById(R.id.swipe_archive_layout);
-            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    isRefresh = true;
-                    isCommentRefresh = true;
-                    startIndex = 0;
-                    data.clear();
-                    requestData();
-                }
-
-            });
             sendCommentView = getViewById(R.id.send_comment);
             sendCommentView.initViewPager(getParentActivity(), this);
             sendCommentView.setCommentListener(new SendComment.CommentListener() {
@@ -301,7 +285,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                         String path = LocalImageLoader.compressBitmap(getActivity(), mUri, 480, 800, false);
                         File file = new File(path);
                         if(file.exists()) {
-//                            progressBar.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.VISIBLE);
                             //                            vProgress.setVisibility(View.VISIBLE);
                             Map<String, Object> param = new HashMap<>();
                             param.put("content_group_id", event.getContent_group_id());
@@ -403,10 +387,24 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
     }
 
+    //    private void initViewPager() {
+    //
+    ////        if (isFinishing()) {
+    ////            return;
+    ////        }
+    //        // 开启一个Fragment事务
+    //        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+    //        StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
+    //        mainFragment.setPicClickListener(this);
+    //        transaction.replace(R.id.sticker_event_fragment, mainFragment);
+    //        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+    //        transaction.addToBackStack(null);
+    //        transaction.commitAllowingStateLoss();
+    //    }
     //适配器
     private void initAdapter() {
-        adapter = new EventCommentAdapterTest(getParentActivity(),event, data, rvList);
-        adapter.setCommentActionListener(new EventCommentAdapterTest.CommentActionListener() {
+        adapter = new EventCommentAdapter(getParentActivity(), data, rvList);
+        adapter.setCommentActionListener(new EventCommentAdapter.CommentActionListener() {
             @Override
             public void doLove(EventCommentEntity commentEntity, boolean love) {
                 doLoveComment(commentEntity, love);
@@ -432,11 +430,6 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                 startActivity(intent);
             }
 
-            @Override
-            public void setIntentAll(EventEntity entity) {
-                goInvitedStutus();
-            }
-
 
         });
         rvList.setAdapter(adapter);
@@ -445,86 +438,85 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
         animator.setRemoveDuration(1000);
     }
 
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        if(event != null) {
-////            bindData();
-//            requestComment();
-//        } else {
-//            Thread thread = new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    while(true) {
-//                        try {
-//                            Thread.sleep(100);
-//                            if(getParentActivity() != null && getParentActivity().getDataDone) {
-//                                Message.obtain(handler).sendToTarget();
-//                                break;
-//                            }
-//                        } catch(Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                }
-//            });
-//            thread.start();
-//        }
-//    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(event != null) {
+            bindData();
+            requestComment();
+        } else {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while(true) {
+                        try {
+                            Thread.sleep(100);
+                            if(getParentActivity() != null && getParentActivity().getDataDone) {
+                                Message.obtain(handler).sendToTarget();
+                                break;
+                            }
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            });
+            thread.start();
+        }
+    }
 
     /**
      * 刷新数据
      */
     public void bindData() {
 
-//        if(getParentActivity().getEventEntity() != null) {
-//            //eventdetail数据
-//            event = getParentActivity().getEventEntity();
-//            push_date.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), event.getGroup_creation_date()));
-//            owner_name.setText(event.getUser_given_name());
-//            VolleyUtil.initNetworkImageView(getActivity(), owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, event.getGroup_owner_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//            event_title.setText(event.getGroup_name());//暂用Group_name
-//
-//            event_desc.setText(event.getText_description());
-//
-//            event_date.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), event.getGroup_event_date()));
-//            location_desc.setText(event.getLoc_name());
-//
-//            if(MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
-//                try {
-//                    going_count.setText((Integer.valueOf(event.getTotal_yes()) - 1) + "");
-//                } catch(Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            } else {
-//                going_count.setText(event.getTotal_yes());
-//            }
-//            maybe_count.setText(event.getTotal_maybe());
-//            not_going_count.setText(event.getTotal_no());
-//
-//            ResponseStatus[] statuses = ResponseStatus.values();
-//            for(ResponseStatus status : statuses) {
-//                if(status.getServerCode().equals(event.getGroup_member_response())) {
-//                    currentStatus = status;
-//                    break;
-//                }
-//
-//
-//            }
-//            changeIntentUI(currentStatus);
-//            vProgress.setVisibility(View.GONE);
-//            if(!TextUtils.isEmpty(event.getLoc_latitude()) && !TextUtils.isEmpty(event.getLoc_longitude())) {
-//                event_picture_4_location.setVisibility(View.VISIBLE);
-//                VolleyUtil.initNetworkImageView(getActivity(), event_picture_4_location, LocationUtil.getLocationPicUrl(mContext, event.getLoc_latitude(), event.getLoc_longitude(), event.getLoc_type()), R.drawable.network_image_default, R.drawable.network_image_default);
-//
-//                event_picture_4_location.setOnClickListener(this);
-//                //                btn_location.setOnClickListener(this);
-//            } else {
-//                event_picture_4_location.setVisibility(View.GONE);
-//            }
-//        }
+        if(getParentActivity().getEventEntity() != null) {
+            event = getParentActivity().getEventEntity();
+            push_date.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), event.getGroup_creation_date()));
+            owner_name.setText(event.getUser_given_name());
+            VolleyUtil.initNetworkImageView(getActivity(), owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, event.getGroup_owner_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            event_title.setText(event.getGroup_name());//暂用Group_name
+
+            event_desc.setText(event.getText_description());
+
+            event_date.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), event.getGroup_event_date()));
+            location_desc.setText(event.getLoc_name());
+
+            if(MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
+                try {
+                    going_count.setText((Integer.valueOf(event.getTotal_yes()) - 1) + "");
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                going_count.setText(event.getTotal_yes());
+            }
+            maybe_count.setText(event.getTotal_maybe());
+            not_going_count.setText(event.getTotal_no());
+
+            ResponseStatus[] statuses = ResponseStatus.values();
+            for(ResponseStatus status : statuses) {
+                if(status.getServerCode().equals(event.getGroup_member_response())) {
+                    currentStatus = status;
+                    break;
+                }
+
+
+            }
+            changeIntentUI(currentStatus);
+            vProgress.setVisibility(View.GONE);
+            if(!TextUtils.isEmpty(event.getLoc_latitude()) && !TextUtils.isEmpty(event.getLoc_longitude())) {
+                event_picture_4_location.setVisibility(View.VISIBLE);
+                VolleyUtil.initNetworkImageView(getActivity(), event_picture_4_location, LocationUtil.getLocationPicUrl(mContext, event.getLoc_latitude(), event.getLoc_longitude(), event.getLoc_type()), R.drawable.network_image_default, R.drawable.network_image_default);
+
+                event_picture_4_location.setOnClickListener(this);
+                //                btn_location.setOnClickListener(this);
+            } else {
+                event_picture_4_location.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void doChangeResponse(ResponseStatus status) {
@@ -576,14 +568,12 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
     ImageView option_no_going;
     ImageView option_maybe;
     ImageView option_going;
-    public EventCommentAdapterTest adapter;
+    public EventCommentAdapter adapter;
 
-    /**
-     * 发送大表情
-     */
+    //发送大表情
     private void sendSticker() {
         if(NetworkUtil.isNetworkConnected(getActivity())) {
-//            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("content_group_id", event.getContent_group_id());
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -602,22 +592,21 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
                 @Override
                 public void onFinish() {
-                    data.clear();
-                    adapter.removeCommentData();
-                    requestComment();
+
                 }
 
                 @Override
                 public void onResult(String response) {
                     startIndex = 0;
-//                    isRefresh = true;
+                    isRefresh = true;
                     stickerEntity.setSticker_type("");
                     stickerEntity.setSticker_group_path("");
                     stickerEntity.setSticker_name("");
 
+                    requestComment();
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
-//                    progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     //                    vProgress.setVisibility(View.GONE);
                 }
 
@@ -625,7 +614,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                 public void onError(Exception e) {
                     //                    UIUtil.hideKeyboard(getActivity(), et_comment);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-//                    progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     //                    vProgress.setVisibility(View.GONE);
                 }
 
@@ -642,9 +631,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
         }
     }
 
-    /**
-     * 发送评论
-     */
+    //发送评论
     private void sendComment() {
         //        String commentText = et.getText().toString();
         //        if(TextUtils.isEmpty(etChat.getText().toString().trim()) && isStickerItemClick==false) {
@@ -660,7 +647,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
             return;
         } else {
             if(NetworkUtil.isNetworkConnected(getActivity())) {
-//                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put("content_group_id", event.getContent_group_id());
                 params.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -688,32 +675,30 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
                     @Override
                     public void onFinish() {
-                        data.clear();
-                        adapter.removeCommentData();
-                        requestComment();
+
                     }
 
                     @Override
                     public void onResult(String response) {
                         startIndex = 0;
-//                        isRefresh = true;
+                        isRefresh = true;
                         isComment = true;
                         stickerEntity.setSticker_type("");
                         stickerEntity.setSticker_group_path("");
                         stickerEntity.setSticker_name("");
 
                         etChat.setText("");
-
+                        requestComment();
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                         UIUtil.hideKeyboard(getActivity(), etChat);
-//                        progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError(Exception e) {
                         //                    UIUtil.hideKeyboard(getActivity(), et_comment);
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-//                        progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -847,96 +832,10 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
     @Override
     public void requestData() {
-        //请求detail数据
-        HashMap<String, String> jsonParams = new HashMap<String, String>();
-        jsonParams.put("user_id", MainActivity.getUser().getUser_id());
-        jsonParams.put("group_id", group_id);
-        String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("condition", jsonParamsString);
-        String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-        new HttpTools(getParentActivity()).get(url, params,Tag, new HttpCallback() {
-            @Override
-            public void onStart() {
-            }
-
-            @Override
-            public void onFinish() {
-                //如果只是Activity回调就不用在刷新评论
-                if(data.size() < 1 ){
-                    requestComment();
-                }
-
-            }
-
-            @Override
-            public void onResult(String response) {
-                event = new Gson().fromJson(response, EventEntity.class);
-                try{
-                    isRefresh = false;
-                    currentPage = 1;//还原为第一页
-                    initAdapter();
-//                    if(isRefresh) {
-//                        isRefresh = false;
-//                        currentPage = 1;//还原为第一页
-//                        initAdapter();
-//                    } else {
-////                    startIndex += detailDate.size();
-//                        if(adapter == null) {
-//                            initAdapter();
-//                            adapter.notifyDataSetChanged();
-//                        } else {
-////                        abookends.addData(detailDate);
-//                        }
-//                    }
-                    swipeRefreshLayout.setRefreshing(false);
-                    loading = false;
-                }catch (Exception e){
-                    e.printStackTrace();
-                    reInitDataStatus();
-                }
-
-                if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
-                    getParentActivity().rightButton.setImageResource(R.drawable.btn_edit);
-
-                    getParentActivity().rightButton.setVisibility(View.VISIBLE);
-                    if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date()).getTime()))) {
-                        getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
-                        getParentActivity().rightButton.setEnabled(false);
-                    }
-                    if("2".equals(event.getGroup_event_status())){
-                        getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
-                        getParentActivity().title_icon.setVisibility(View.GONE);
-                        getParentActivity().rightButton.setEnabled(false);
-                    }
-                } else {
-                    getParentActivity().rightButton.setVisibility(View.INVISIBLE);
-                }
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
 
     }
 
-    /**
-     * 请求评论数据
-     */
+
     public void requestComment() {
         if(NetworkUtil.isNetworkConnected(getActivity())) {
             if(event == null || MainActivity.getUser() == null)
@@ -964,7 +863,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
                 @Override
                 public void onFinish() {
-//                    progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                     //                    vProgress.setVisibility(View.GONE);
                 }
 
@@ -973,26 +872,18 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                     GsonBuilder gsonb = new GsonBuilder();
                     Gson gson = gsonb.create();
                     data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {}.getType());
-                    currentPage = 1;
-                    startIndex += data.size();
                     if(isRefresh) {
                         isRefresh = false;
                         currentPage = 1;
-//                        initAdapter();
-//                        adapter.notifyDataSetChanged();
+                        initAdapter();
+                        adapter.notifyDataSetChanged();
                     } else {
                         startIndex += data.size();
-                        if(adapter == null){
-                            initAdapter();
-                            adapter.notifyDataSetChanged();
-                        }else {
-                            adapter.addData(data);
-                        }
+                        adapter.addData(data);
                     }
-//                    //如果有评论，则隐藏进度条
-//                    if(adapter != null && adapter.getItemCount() > 1) {
-//                        getViewById(R.id.comment_split_line).setVisibility(View.VISIBLE);
-//                    }
+                    if(adapter != null && adapter.getItemCount() > 0) {
+                        getViewById(R.id.comment_split_line).setVisibility(View.VISIBLE);
+                    }
                 }
 
                 @Override
@@ -1015,25 +906,14 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
         }
     }
 
-    private void reInitDataStatus() {
-        swipeRefreshLayout.setRefreshing(false);
-        isRefresh = false;
-        isCommentRefresh = false;
-        startIndex = 0;
-        loading = false;
-    }
-    /**
-     * 打开选择好友界面
-     */
     private void goInvitedStutus() {
         intent = new Intent(getActivity(), InvitedStatusActivity.class);
         intent.putExtra("event", event);
+        //打开好友选择页面
         startActivity(intent);
     }
 
-    /**
-     * 取消event
-     */
+
     private void cancelEvent() {
 
         RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_EVENT_CANCEL, event.getGroup_id()), null);
@@ -1100,16 +980,16 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
             @Override
             public void onFinish() {
-                requestData();
+
             }
 
             @Override
             public void onResult(String response) {
                 try {
                     JSONObject result = new JSONObject(response);
-//                    going_count.setText(result.getString("total_yes"));
-//                    maybe_count.setText(result.getString("total_maybe"));
-//                    not_going_count.setText(result.getString("total_no"));
+                    going_count.setText(result.getString("total_yes"));
+                    maybe_count.setText(result.getString("total_maybe"));
+                    not_going_count.setText(result.getString("total_no"));
                     getParentActivity().setResult(Activity.RESULT_OK);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                 } catch(JSONException e) {
@@ -1136,9 +1016,6 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
 
     private ResponseStatus currentStatus;
 
-    /**
-     * 缩进输入框
-     */
     private void hideAllViewState() {
         UIUtil.hideKeyboard(getParentActivity(), etChat);
         expandFunctionLinear.setVisibility(View.GONE);
@@ -1177,9 +1054,9 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
     public void onClick(View v) {
 
         switch(v.getId()) {
-//            case R.id.btn_intent_all:
-//                goInvitedStutus();
-//                break;
+            case R.id.btn_intent_all:
+                goInvitedStutus();
+                break;
             case R.id.btn_location:
             case R.id.event_picture_4_location:
                 if(TextUtils.isEmpty(event.getLoc_latitude()) || TextUtils.isEmpty(event.getLoc_longitude())) {
@@ -1295,7 +1172,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
                         getParentActivity().setResult(Activity.RESULT_OK);
 
                         startIndex = 0;
-//                        isRefresh = true;
+                        isRefresh = true;
                         requestComment();
                     }
 
@@ -1330,11 +1207,6 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
         }
     }
 
-    /**
-     * 点赞
-     * @param commentEntity
-     * @param love
-     */
     private void doLoveComment(final EventCommentEntity commentEntity, final boolean love) {
 
 
@@ -1487,7 +1359,7 @@ public class EventDetailFragmentTest extends BaseFragment<EventDetailActivity> i
             @Override
             public void onResult(String string) {
                 startIndex = 0;
-//                isRefresh = true;
+                isRefresh = true;
                 isCommentBim = true;
                 mUri = null;
                 requestComment();
