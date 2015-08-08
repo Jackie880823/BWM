@@ -110,7 +110,9 @@ public class FamilyViewProfileActivity extends BaseActivity {
         tvName1.setText(userEntity.getUser_given_name());
         tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
 
-        tvPhone.setText("+" + MainActivity.getUser().getUser_country_code() + " " + MainActivity.getUser().getUser_phone());
+        if (userEntity.getUser_phone().length() > 0){
+            tvPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone());
+        }
         tvFirstName.setText(userEntity.getUser_given_name());
         tvLastName.setText(userEntity.getUser_surname());
 //        tvAge.setText(userEntity.getUser_dob());
