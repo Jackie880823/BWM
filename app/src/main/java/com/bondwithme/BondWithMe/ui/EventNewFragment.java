@@ -82,7 +82,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private final static String USER_HEAD = "user_head";
     private final static String USER_NAME = "user_name";
 
-    private View vProgress;
+    private View progressBar;
     Calendar mCalendar;
     Calendar calendar;
 
@@ -105,13 +105,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         // Required empty public constructor
     }
 
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_event, container, false);
-//    }
 
     @Override
     public void setLayoutId() {
@@ -120,7 +113,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     @Override
     public void initView() {
-        vProgress = getViewById(R.id.rl_progress);
+        progressBar = getViewById(R.id.rl_progress);
+
         gvFriends = getViewById(R.id.gv_all_friends);
         changeData();
 
@@ -499,12 +493,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private void submit() {
 
-        if (vProgress.getVisibility() == View.VISIBLE) {
+        if (progressBar.getVisibility() == View.VISIBLE) {
             return;
         }
         if (validateForm()) {
             setText();
-            vProgress.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
             RequestInfo requestInfo = new RequestInfo();
             requestInfo.url = Constant.API_EVENT_CREATE;
             HashMap<String, String> params = new HashMap<String, String>();
@@ -538,7 +532,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
                 @Override
                 public void onFinish() {
-                    vProgress.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
                 }
 
                 @Override

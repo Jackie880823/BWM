@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 
@@ -21,7 +20,6 @@ public class CrashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        setContentView(R.layout.activity_report_bug);
         showFeedbackDialog();
     }
 
@@ -34,7 +32,8 @@ public class CrashActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     errorReportDialog.dismiss();
-                    App.getContextInstance().exit(CrashActivity.this);
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(0);
                 }
             });
             errorReportDialog.setButtonAccept(R.string.report, new View.OnClickListener() {
@@ -53,8 +52,9 @@ public class CrashActivity extends Activity {
                     } catch (android.content.ActivityNotFoundException ex) {
                         Toast.makeText(CrashActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
                     }
-                    App.getContextInstance().exit(CrashActivity.this);
-
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(0);
+//
                 }
             });
         }

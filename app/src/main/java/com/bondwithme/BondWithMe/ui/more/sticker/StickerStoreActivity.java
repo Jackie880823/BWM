@@ -75,7 +75,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     private List<StickerBannerEntity> dataStickerBanner = new ArrayList<>();
     private  List<StickerGroupEntity> data = new ArrayList<>();
     private final int AUTO_PLAY = 1;
-    private ScrollView scrollView;
+
     int finished;
     int positionFromStickerDetail = -1;
     private ImageSwitcher isStickerBanner;
@@ -127,7 +127,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
 
-        scrollView = getViewById(R.id.sc_sticker_store);
         isStickerBanner = getViewById(R.id.is_sticker_banner);
         initStickerBanner();
 
@@ -473,14 +472,16 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                 public void onFinish() {
                     if (!StickerStoreActivity.this.isFinishing()){
                         File f = new File(target);
-                        LogUtil.d(TAG,"===onFinish==="+f.exists());
+                        LogUtil.d(TAG, "===onFinish===" + f.exists());
 
                         if (f.exists()){
                             Uri uri = Uri.parse(target);
                             uriMap.put(dataStickerBanner.get(finalI).getSticker_group_path(),uri);
                         }
-                        if (finalI == 0){
-                            downloadFinish();
+                        //下载好一张banner就显示
+                        if (uriMap.size() == 1){
+                            currentItem = finalI;
+                            downloadFinish(currentItem);
                             mProgressDialog.setVisibility(View.INVISIBLE);
                         }
                     }
@@ -528,11 +529,10 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     }
 
 
-    public void downloadFinish() {
-        LogUtil.d(TAG,"===display_banner[0]==="+uriMap.size());
+    public void downloadFinish(int currentItem) {
         if (uriMap.size() > 0){
             LogUtil.d(TAG,"===display_banner[0]==="+uriMap.size());
-            isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(0).getSticker_group_path()));
+            isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
             setSwitcherClick();
         }
 
@@ -599,23 +599,23 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     }
 
     private void setSwitcherClick() {
-
-        if (dataStickerBanner != null && dataStickerGroup != null){
-            if(dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0){
-                final int position = getPosition(dataStickerBanner.get(currentItem).getSticker_group_path(),dataStickerGroup);
+        final String path = dataStickerBanner.get(currentItem).getSticker_group_path();
+        if (dataStickerBanner != null && dataStickerGroup != null && dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0){
+            LogUtil.d(TAG,"====setOnClickListener====="+path + "    "+!path.isEmpty());
+                final int position = getPosition(path,dataStickerGroup);
                 final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
                 isStickerBanner.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LogUtil.d(TAG,"=========currentItem========"+currentItem);
-                        LogUtil.d(TAG, "========onClick======");
-                        Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
-                        intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
-                        intent.putExtra(StickerGroupAdapter.POSITION, position);
-                        StickerStoreActivity.this.startActivity(intent);
+                        if (!path.isEmpty()){
+                            Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
+                            intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
+                            intent.putExtra(StickerGroupAdapter.POSITION, position);
+                            StickerStoreActivity.this.startActivity(intent);
+                        }
                     }
                 });
-            }
+
 
         }
     }

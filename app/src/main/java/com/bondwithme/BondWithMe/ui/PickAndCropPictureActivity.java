@@ -13,10 +13,8 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
-import com.bondwithme.BondWithMe.util.LocalImageLoader;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -109,7 +107,7 @@ public class PickAndCropPictureActivity extends Activity {
                         uri = data.getData();
                         if (needCrop) {
                             try {
-                                startPhotoZoom(uri, false);
+                                startPhotoZoom(uri, true);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -171,39 +169,28 @@ public class PickAndCropPictureActivity extends Activity {
             return;
         }
 
-        /**
-         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
-         */
-        int degree = LocalImageLoader.readPictureDegree(path);
-
-        if (degree != 0) {
-
-            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(this, uri);
-//            /**
-//             * 把图片旋转为正的方向
-//             */
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inJustDecodeBounds = true;
-//            Bitmap bitmap = BitmapFactory.decodeStream(
-//                    new FileInputStream(path), null, options);
-//            options.inSampleSize = 4;
-//            options.outWidth = picFinalWidth;
-//            options.outHeight = picFinalHeight;
-//            options.inJustDecodeBounds = false;
-//            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//            bitmap = BitmapFactory.decodeStream(
-//                    new FileInputStream(path), null, options);
-            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
-            byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
-            File file = new File(path);
-            file.delete();
-            FileOutputStream fos = new FileOutputStream(path);
-            fos.write(newBytes);
-            fos.flush();
-
-            fos.close();
-            bitmap.recycle();
-        }
+//        /**
+//         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
+//         */
+//        int degree = LocalImageLoader.readPictureDegree(path);
+//
+//        if (fromPhoto&&degree != 0) {
+//
+//            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(this, uri);
+////            /**
+////             * 把图片旋转为正的方向
+////             */
+//            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
+//            byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
+//            File file = new File(path);
+//            file.delete();
+//            FileOutputStream fos = new FileOutputStream(path);
+//            fos.write(newBytes);
+//            fos.flush();
+//
+//            fos.close();
+//            bitmap.recycle();
+//        }
 
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
