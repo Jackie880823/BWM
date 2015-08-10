@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -94,12 +95,24 @@ public class PathRelationshipActivity extends BaseActivity {
     public void finish() {
         Intent intent = new Intent();
         if (isZh) {
-//            Log.i("finish====",tvRelationship.getText().toString()+"");
+            if (-1 == data_Zh.indexOf(tvRelationship.getText().toString()))
+            {
+                setResult(RESULT_CANCELED);
+                super.finish();
+                return;
+            }
             intent.putExtra("relationship", data_Us.get(data_Zh.indexOf(tvRelationship.getText().toString())));
         } else {
+            if (-1 == data_Us.indexOf(tvRelationship.getText().toString()))
+            {
+                setResult(RESULT_CANCELED);
+                super.finish();
+                return;
+            }
             intent.putExtra("relationship", tvRelationship.getText().toString());
         }
-        setResult(RESULT, intent);
+
+        setResult(Activity.RESULT_OK, intent);
         super.finish();
     }
 
@@ -132,17 +145,19 @@ public class PathRelationshipActivity extends BaseActivity {
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_name);//放名字还是放Me????
 
-        int length=getIntent().getIntExtra("selectMemeber", -1);
-        if(length==-1||length>=data_Zh.size()){
-            tvRelationship.setText("");
-        }else{
+        //FamilyProfileFragment界面传进来的index需要判断下如果为0
+        if (-1 == getIntent().getIntExtra("selectMemeber",-1))
+        {
+            tvRelationship.setText(relationship);//直接展示服务器数据，此时index为-1
+        }
+        else
+        {
             if (isZh) {
-                tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));
+                tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));//中文
             } else {
-                tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber", -1)));
+                tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber",-1)));//英文
             }
         }
-
 
         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
@@ -212,42 +227,21 @@ public class PathRelationshipActivity extends BaseActivity {
 
                         ll[i].setVisibility(View.VISIBLE);
                         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//                        if(i == 0){
 
-                            if(TextUtils.isEmpty(tvRelationship.getText().toString())){
-                                String mrelationship4En = pathList.get(0).getRelationship();
-                                int mPosition = data_Us.indexOf(mrelationship4En);
-                                if(isZh){
-                                    tvRelationship.setText(data_Zh.get(mPosition));
-                                }else {
-                                    tvRelationship.setText(mrelationship4En);
-                                }
-
-                            }
-//                        }
                         String relationship4En = pathList.get(i).getRelationship();
-                        int position = data_Us.indexOf(relationship4En);
-                        /**wing modify for no relationship begin*/
-                        if (TextUtils.isEmpty(relationship4En)) {
-                            continue;
-                        }
-//                        if(TextUtils.isEmpty(tvRelationship.getText().toString())){
-//                            String mRelationship = pathList.get(0).getRelationship();
-//                            if (isZh) {
-////                                tvRelationship.setText(data_Us.indexOf(mRelationship));
-//                            }else {
-////                                tvRelationship.setText(mRelationship);
-//                            }
-//                        }
-                        if (isZh) {
-//                            int position = data_Us.indexOf(relationship4En);
+
+                        int position = data_Us.indexOf(relationship4En);//有可能出现position为-1
+
+                        if (isZh) {//中文
                             if (position != -1) {
                                 tvRelationships[i].setText(data_Zh.get(position));
+                            } else {
+                                tvRelationships[i].setText(relationship4En);//index==-1，直接显示服务器数据
                             }
-                        } else {
+                        } else {//英文
                             tvRelationships[i].setText(relationship4En);
                         }
-                        /**wing modify end*/
+
                         tvNames[i].setText(pathList.get(i).getMember_fullname());
                     }
 
@@ -338,9 +332,7 @@ public class PathRelationshipActivity extends BaseActivity {
 
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("member_id", memberId);
-//        jsonParams.put("user_relationship_name", tvRelationship.getText().toString());
-//        jsonParams.put("user_relationship_name", relationships[selectMemeber]);
-        jsonParams.put("user_relationship_name", data_Us.get(selectMemeber));
+        jsonParams.put("user_relationship_name", data_Us.get(selectMemeber));//上传的是英文字符串
         jsonParams.put("fam_nickname", fam_nickname);
         jsonParams.put("member_status", member_status);
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);

@@ -25,7 +25,7 @@
             <ImageSwitcher
                 android:id="@+id/is_sticker_banner"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_150dp"
+                android:layout_height="@dimen/_200dp"
                 android:visibility="visible"/>
 
 

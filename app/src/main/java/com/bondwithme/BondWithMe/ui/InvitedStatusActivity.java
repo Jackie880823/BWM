@@ -14,6 +14,7 @@ public class InvitedStatusActivity extends BaseActivity {
 
 
     EventEntity eventEntity;
+    int tabIndex;
 
     @Override
     protected void initBottomBar() {
@@ -39,6 +40,7 @@ public class InvitedStatusActivity extends BaseActivity {
     protected Fragment getFragment() {
         if(getIntent().getSerializableExtra("event")!=null) {
             eventEntity = (EventEntity) getIntent().getSerializableExtra("event");
+            tabIndex = (int) getIntent().getSerializableExtra("tabIndex");
         }else{
             finish();
         }

@@ -51,6 +51,9 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
     private int startIndex = 0;
     private int offset = 10;
     private int currentPage = 1;
+    private int startIndexSearch = 0;
+    private int offsetSearch = 10;
+    private int currentPageSearch = 1;
     private boolean loading;
     private boolean isSearch;
     LinearLayoutManager llm;
@@ -72,10 +75,10 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
     private boolean isEtImport = true;
 
     public static ArchiveChatFragment newInstance(String... params) {
-            return createInstance(new ArchiveChatFragment(),params);
+        return createInstance(new ArchiveChatFragment(), params);
     }
 
-    public ArchiveChatFragment(){
+    public ArchiveChatFragment() {
         super();
     }
 //    public ArchiveChatFragment(String params){
@@ -90,14 +93,14 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
 
     @Override
     public void setLayoutId() {
-        this.layoutId =  R.layout.fragment_archive_chat;
+        this.layoutId = R.layout.fragment_archive_chat;
     }
 
     @Override
     public void initView() {
         //如果该fragment带参数
-        if(getArguments() != null){
-            Tap =  getArguments().getString(ARG_PARAM_PREFIX + "0");
+        if (getArguments() != null) {
+            Tap = getArguments().getString(ARG_PARAM_PREFIX + "0");
             group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
             group_name = getArguments().getString(ARG_PARAM_PREFIX + "2");
 //            if (Tap.equals("0")){
@@ -122,17 +125,17 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
             @Override
             public boolean execute(View v) {
                 if (v.getId() == getParentActivity().leftButton.getId()) {
-                    if(!isEtImport && isSearch){
+                    if (!isEtImport && isSearch) {
                         searchText.setText("");
-                    }else {
+                    } else {
                         getParentActivity().finish();
                     }
                 }
-                if(v.getId() == getParentActivity().rightButton.getId()){
+                if (v.getId() == getParentActivity().rightButton.getId()) {
                     Intent intent = new Intent(getParentActivity(), GroupSettingActivity.class);
                     intent.putExtra("groupId", group_id);
                     intent.putExtra("groupName", group_name);
-                    intent.putExtra("groupType",1);
+                    intent.putExtra("groupType", 1);
                     startActivity(intent);
                 }
                 return false;
@@ -174,13 +177,14 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
                         .hideSoftInputFromWindow(
                                 getActivity().getCurrentFocus().getWindowToken(),
                                 InputMethodManager.HIDE_NOT_ALWAYS);
-                if(!isEtImport){
+                if (!isEtImport) {
+                    startIndex = 0;
                     isRefresh = true;
                     isSearch = true;
                     vProgress.setVisibility(View.VISIBLE);
                     searchData.clear();
                     searchData(searchText.getText().toString().trim());
-                }else {
+                } else {
                     isSearch = false;
                 }
             }
@@ -211,51 +215,57 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
         });
         searchText.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
 //        searchText.setInputType(EditorInfo.TYPE_CLASS_TEXT);
-        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+        searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH || (event!=null&&event.getKeyCode()== KeyEvent.KEYCODE_ENTER)){
-                    //隐藏软键盘
-                    ((InputMethodManager) searchText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
-                            .hideSoftInputFromWindow(
-                                    getActivity().getCurrentFocus().getWindowToken(),
-                                    InputMethodManager.HIDE_NOT_ALWAYS);
+                if (event != null&&(actionId == EditorInfo.IME_ACTION_SEARCH || KeyEvent.KEYCODE_ENTER==event.getKeyCode())) {
+                    if (KeyEvent.ACTION_DOWN == event.getAction()) {
+                        //隐藏软键盘
+                        ((InputMethodManager) searchText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                                .hideSoftInputFromWindow(
+                                        getActivity().getCurrentFocus().getWindowToken(),
+                                        InputMethodManager.HIDE_NOT_ALWAYS);
 //                    Log.i("onEditorAction====","onEditorAction");
-                    if(!isEtImport){
-                        isRefresh = true;
-                        isSearch = true;
-                        vProgress.setVisibility(View.VISIBLE);
-                        searchData.clear();
-                        searchData(searchText.getText().toString().trim());
-                        return true;
-                    }else {
-                        isSearch = false;
+                        if (!isEtImport) {
+                            startIndex = 0;
+                            isRefresh = true;
+                            isSearch = true;
+                            vProgress.setVisibility(View.VISIBLE);
+                            searchData.clear();
+                            searchData(searchText.getText().toString().trim());
+
+//                            return true;
+                        } else {
+                            isSearch = false;
+                        }
                     }
                 }
                 return false;
             }
-        } );
+        });
     }
 
-    private void initSearchAdapter(){
-        searchAdapter = new ArchiveChatAdapter(getParentActivity(),searchData,Tap);
+    private void initSearchAdapter() {
+        searchAdapter = new ArchiveChatAdapter(getParentActivity(), searchData, Tap);
         searchAdapter.setPicClickListener(this);
         rvList.setAdapter(searchAdapter);
     }
-    private void initAdapter(){
-        adapter = new ArchiveChatAdapter(getParentActivity(),data,Tap);
+
+    private void initAdapter() {
+        adapter = new ArchiveChatAdapter(getParentActivity(), data, Tap);
         adapter.setPicClickListener(this);
         rvList.setAdapter(adapter);
     }
+
     @Override
     public void requestData() {
-        Map<String,String> params = new HashMap<>();
-        params.put("start",startIndex + "");
-        params.put("limit",offset + "");
-        params.put("group_id",group_id);
+        Map<String, String> params = new HashMap<>();
+        params.put("start", startIndex + "");
+        params.put("limit", offset + "");
+        params.put("group_id", group_id);
         params.put("view_user", MainActivity.getUser().getUser_id());
 //        Log.i("group_id","");
-        params.put("search_key","");
+        params.put("search_key", "");
         String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
 
         new HttpTools(getActivity()).get(url, null, TAG, new HttpCallback() {
@@ -266,9 +276,9 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
 
             @Override
             public void onFinish() {
-                if(data == null){
+                if (data == null) {
                     getParentActivity().finish();
-                }else {
+                } else {
                     vProgress.setVisibility(View.GONE);
                 }
             }
@@ -284,7 +294,7 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
                 try {
                     data = gson.fromJson(response, new TypeToken<ArrayList<ArchiveChatEntity>>() {
                     }.getType());
-                    if(isRefresh) {
+                    if (isRefresh) {
                         startIndex = data.size();
                         currentPage = 1;
                         finishReFresh();
@@ -293,21 +303,21 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
                         startIndex += data.size();
                         adapter.add(data);
                     }
-                    if(data.size() > 0){
+                    if (data.size() > 0) {
                         swipeRefreshLayout.setVisibility(View.VISIBLE);
                     }
                     loading = false;
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     reInitDataStatus();
-                }finally {
+                } finally {
                     vProgress.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                if(isRefresh) {
+                if (isRefresh) {
                     finishReFresh();
                 }
                 loading = false;
@@ -327,17 +337,31 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
 
     }
 
-    private void searchData(String searchText){
+    private void searchData(String searchText) {
 //        Log.i("searchText====",searchText+"");
-        Map<String,String> params = new HashMap<>();
-        params.put("start",startIndex + "");
-        params.put("limit",offset + "");
-        params.put("group_id",group_id);
-        params.put("view_user",MainActivity.getUser().getUser_id());
-        params.put("search_key",searchText);
-        String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
+//        Map<String,String> params = new HashMap<>();
+//        params.put("start",startIndex + "");
+//        params.put("limit",offset + "");
+//        params.put("group_id",group_id);
+//        params.put("view_user",MainActivity.getUser().getUser_id());
+////        params.put("search_key",searchText);
+//        params.put("search_key","");
+//        String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
+        Map<String, String> params = new HashMap<>();
+        params.put("start", startIndexSearch + "");
+        params.put("limit", offset + "");
+        params.put("group_id", group_id);
+        params.put("view_user", MainActivity.getUser().getUser_id());
+//        Log.i("group_id","");
+//        params.put("search_key","");
+        params.put("search_key", searchText);
 
-        new HttpTools(getActivity()).get(url, null, TAG, new HttpCallback() {
+
+        Log.i("searchText====", UrlUtil.mapToJsonstring(params));
+
+//        String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
+
+        new HttpTools(getActivity()).get(Constant.API_MORE_ARCHIVE_POSTING_LIST, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -350,6 +374,7 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
 
             @Override
             public void onResult(String response) {
+                Log.i("22searchText====", response + "");
 //                Log.i("response====",response+"");
                 GsonBuilder gsonb = new GsonBuilder();
                 //Json中的日期表达方式没有办法直接转换成我们的Date类型, 因此需要单独注册一个Date的反序列化类.
@@ -360,32 +385,32 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
                 try {
                     searchData = gson.fromJson(response, new TypeToken<ArrayList<ArchiveChatEntity>>() {
                     }.getType());
-                    if (!isEtImport){
-                        if(isRefresh) {
+                    if (!isEtImport) {
+                        if (isRefresh) {
                             startIndex = searchData.size();
-                            currentPage = 1;
+                            currentPageSearch = 1;
                             finishReFresh();
                             initSearchAdapter();
                         } else {
-                            startIndex += searchData.size();
+                            startIndexSearch += searchData.size();
                             searchAdapter.add(searchData);
                         }
                     }
-                    if(data.size() > 0){
+                    if (data.size() > 0) {
                         swipeRefreshLayout.setVisibility(View.VISIBLE);
                     }
                     loading = false;
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     reInitDataStatus();
-                }finally {
+                } finally {
                     vProgress.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                if(isRefresh) {
+                if (isRefresh) {
                     finishReFresh();
                 }
                 loading = false;
@@ -403,6 +428,7 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
             }
         });
     }
+
     private void reInitDataStatus() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
@@ -431,8 +457,8 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
     @Override
     public void showComments(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), ArchiveGroupCommentActivity.class);
-        intent.putExtra("content_group_id",content_group_id);
-        intent.putExtra("group_id",group_id);
+        intent.putExtra("content_group_id", content_group_id);
+        intent.putExtra("group_id", group_id);
         startActivity(intent);
     }
 

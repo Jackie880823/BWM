@@ -91,7 +91,7 @@ public class GroupNameSettingActivity extends BaseActivity {
     @Override
     protected void titleRightEvent() {
         if (mCropImagedUri == null && groupName.equals(etGroupName.getText().toString())) {
-            Toast.makeText(GroupNameSettingActivity.this, getResources().getString(R.string.text_not_change_anything), Toast.LENGTH_SHORT).show();
+            finish();
             return;
         }
         uploadImage();

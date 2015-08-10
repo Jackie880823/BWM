@@ -8,12 +8,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.android.volley.ext.HttpCallback;
-import com.android.volley.ext.tools.HttpTools;
+import com.android.volley.VolleyError;
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.DownloadRequest;
+import com.android.volley.toolbox.ImageLoader;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
-import com.bondwithme.BondWithMe.util.LocalImageLoader;
+import com.bondwithme.BondWithMe.http.cache.ImageCacheManger;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 
 import uk.co.senab.photoview.PhotoView;
@@ -85,7 +86,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 
     @Override
     public void initView() {
-
+        mBitmapTools = BitmapTools.getInstance(getActivity());
 //        iv_pic = (PhotoView) getViewById(R.id.iv_pic);
 //        btn_save_2_local = (RelativeLayout) getViewById(R.id.btn_save_2_local);
 //        btn_save_2_local.setOnClickListener(new View.OnClickListener() {
@@ -164,9 +165,9 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 
 
     private void clearCache() {
-        if (bitmapCache != null) {
-            bitmapCache.recycle();
-        }
+//        if (bitmapCache != null) {
+//            bitmapCache.recycle();
+//        }
     }
 
     @Override
@@ -175,6 +176,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
         clearCache();
     }
 
+    BitmapTools mBitmapTools;
 
     DownloadRequest downloadRequest;
 
@@ -204,6 +206,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
                 downloadRequest.cancel();
             }
             mHandler.sendEmptyMessage(SHOW_WAITTING);
+
             iv_pic.setImageResource(R.drawable.network_image_default);
 //            VolleyUtil.loadImage(getActivity(), pic_url, new ImageLoader.ImageListener() {
 //                @Override
@@ -220,45 +223,69 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 //                }
 //            });
 
-            downloadRequest = new HttpTools(getActivity()).download(pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
+//                    iv_pic.setImageResource(R.drawable.network_image_default);
+            mHandler.sendEmptyMessage(SHOW_WAITTING);
+            ImageCacheManger.loadImage(pic_url, new ImageLoader.ImageListener() {
                 @Override
-                public void onStart() {
-                    mHandler.sendEmptyMessage(SHOW_WAITTING);
-                    iv_pic.setImageResource(R.drawable.network_image_default);
-                }
+                public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                    if (iv_pic != null) {
+                        if (response.getBitmap() != null) {
+                            bitmapCache = response.getBitmap();
+                            iv_pic.setImageBitmap(bitmapCache);
 
-                @Override
-                public void onFinish() {
+                        } else {
+                            iv_pic.setImageResource(R.drawable.network_image_default);
+                        }
+                    }
                     mHandler.sendEmptyMessage(HIDE_WAITTING);
                 }
 
                 @Override
-                public void onResult(String string) {
-
-                    if (iv_pic != null) {
-                        bitmapCache = LocalImageLoader.loadBitmapFromFile(getActivity(), string, iv_pic.getWidth(), iv_pic.getHeight());
-                        iv_pic.setImageBitmap(bitmapCache);
-
-//                    iv_pic.setImageBitmap(getImageFromFile(string, iv_pic.getWidth(), iv_pic.getHeight()));
-                    }
-
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onCancelled() {
+                public void onErrorResponse(VolleyError error) {
                     iv_pic.setImageResource(R.drawable.network_image_default);
-                }
-
-                @Override
-                public void onLoading(long count, long current) {
-
+                    mHandler.sendEmptyMessage(HIDE_WAITTING);
                 }
             });
+
+//            downloadRequest = new HttpTools(getActivity()).download(pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
+//                @Override
+//                public void onStart() {
+//                    iv_pic.setImageResource(R.drawable.network_image_default);
+//                    mHandler.sendEmptyMessage(SHOW_WAITTING);
+//                }
+//
+//                @Override
+//                public void onFinish() {
+//                    mHandler.sendEmptyMessage(HIDE_WAITTING);
+//                }
+//
+//                @Override
+//                public void onResult(String string) {
+//
+//                    if (iv_pic != null) {
+//                        bitmapCache = LocalImageLoader.loadBitmapFromFile(getActivity(), string, iv_pic.getWidth(), iv_pic.getHeight());
+//                        iv_pic.setImageBitmap(bitmapCache);
+//
+////                    iv_pic.setImageBitmap(getImageFromFile(string, iv_pic.getWidth(), iv_pic.getHeight()));
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onError(Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//                @Override
+//                public void onCancelled() {
+//                    iv_pic.setImageResource(R.drawable.network_image_default);
+//                }
+//
+//                @Override
+//                public void onLoading(long count, long current) {
+//
+//                }
+//            });
         }
 
 

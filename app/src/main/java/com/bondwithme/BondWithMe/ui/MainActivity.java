@@ -106,7 +106,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (App.getLoginedUser() == null) {
-            finish();
+            App.getContextInstance().logout(this);
             return;
         }
 

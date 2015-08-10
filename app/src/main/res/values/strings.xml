@@ -180,7 +180,7 @@
     <!--<string name="text_fill_in_verification_code">Please fill in verification code.</string>-->
     <!--<string name="text_createVerification_fail">Verification code creation Failed</string>-->
     <!--<string name="text_createVerification_success">Verification code created Successfully</string>-->
-    <string name="text_not_change_anything">Please choose photo or change group name</string>
+    <!--<string name="text_not_change_anything">Please choose photo or change group name</string>-->
     <string name="text_fail_upload_group_profile_phone">Fail to upload group photo</string>
     <string name="text_success_upload_group_profile_phone">Successfully uploaded group photo</string>
     <string name="text_success_update_group_name">Group name updated successfully.</string>
@@ -582,4 +582,6 @@
 
     <string name="title_member_love">Members by Love</string>
 
+    <string name="miss_you">You successfully send a Miss!</string>
+    <string name="miss_already_you">You have already sent a miss.!</string>
 </resources>
