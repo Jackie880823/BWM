@@ -148,7 +148,7 @@ public class PathRelationshipActivity extends BaseActivity {
         //FamilyProfileFragment界面传进来的index需要判断下如果为0
         if (-1 == getIntent().getIntExtra("selectMemeber",-1))
         {
-            tvRelationship.setText(getString(R.string.error_feedback));//提示错误，此时index为-1
+            tvRelationship.setText(relationship);//直接展示服务器数据，此时index为-1
         }
         else
         {
