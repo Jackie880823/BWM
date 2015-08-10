@@ -62,7 +62,7 @@
                     style="@style/text_light_default"
                     android:layout_centerVertical="true"
                     android:lines="1"
-                    android:maxEms="12"
+                    android:maxEms="6"
                     android:ellipsize="end"
                     android:singleLine="true" />
 
