@@ -218,7 +218,7 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                if (event != null&&(actionId == EditorInfo.IME_ACTION_SEARCH || KeyEvent.KEYCODE_ENTER==event.getKeyCode())) {
                     if (KeyEvent.ACTION_DOWN == event.getAction()) {
                         //隐藏软键盘
                         ((InputMethodManager) searchText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
