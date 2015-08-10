@@ -100,18 +100,19 @@ public class LocalStickerInfoDao {
         try {
             List<LocalStickerInfo> localList = null;
             QueryBuilder qb = stickerInfoDao.queryBuilder();
-            qb.orderBy("order",false).where().eq("loginUserId", App.getLoginedUser().getUser_id());
+            qb.selectColumns("path").orderBy("order",false).where().eq("loginUserId", App.getLoginedUser().getUser_id());
             localList = qb.query();
-            if (null != localList && localList.size() > 0) {
+            if (null != localList) {
+//            if (null != localList && localList.size() > 0) {
 //                list.add(DEF_FIRST_STICKER);
 //                list.add(DEF_SECOND_STICKER);
 //                list.add(DEF_THREAD_STICKER);
                 for (LocalStickerInfo stickerInfo : localList) {
-                    String name = stickerInfo.getPath();
+//                    String name = stickerInfo.getPath();
 //                    if (DEF_FIRST_STICKER.equalsIgnoreCase(name) || DEF_SECOND_STICKER.equalsIgnoreCase(name) || DEF_THREAD_STICKER.equalsIgnoreCase(name)) {
 //                        continue;
 //                    } else {
-                        list.add(name);
+                        list.add(stickerInfo.getPath());
 //                    }
                 }
             }
