@@ -141,6 +141,19 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true">
+                    <TextView
+                        android:id="@+id/tv_agree"
+                        android:layout_width="@dimen/_150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/iv_agree"
+                        android:layout_marginRight="@dimen/_10dp"
+                        android:layout_marginLeft="@dimen/_10dp"
+                        android:gravity="right"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:textColor="@color/default_text_color_blue"
+                        android:textSize="@dimen/text_mirco_size"
+                        />
 
                     <TextView
                         android:id="@+id/tv_like_desc"

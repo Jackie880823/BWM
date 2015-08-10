@@ -30,6 +30,7 @@ public class Constant {
 
     public static final String ACTION_SHOW_NOTIFY_USER = "ACTION_SHOW_NOTIFY_USER";
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
+    public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
 
 
     /**
@@ -52,6 +53,7 @@ public class Constant {
     public static final String API_WALL_COMMENT_LOVE = API_SERVER + "/bondwithme/index.php/api/love_comment";
     public static final String API_WALL_COMMENT_DELETE = API_SERVER + "/bondwithme/index.php/api/comment/%s";
     public static final String API_WALL_DELETE = API_SERVER + "/bondwithme/index.php/api/removeContent/%s";
+    public static final String API_WALL_GET_LOVE_MEMBER_LIST = API_SERVER + "/bondwithme/index.php/api/loveMemberList";
 
     public static final String API_REGIST_PUSH = API_SERVER + "/bondwithme/index.php/api/pushToken";
     public static final String UN_REGISTER_URL = API_SERVER + "/bondwithme/index.php/api/auth/%s";

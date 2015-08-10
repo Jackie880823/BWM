@@ -580,4 +580,6 @@
     <string name="text_phone">Phone</string>
     <string name="text_change_password">Change Password</string>
 
+    <string name="title_member_love">Members by Love</string>
+
 </resources>
