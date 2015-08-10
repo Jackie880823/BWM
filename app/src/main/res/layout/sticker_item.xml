@@ -16,7 +16,8 @@
             android:id="@+id/iv_sticker"
             android:layout_width="@dimen/_72dp"
             android:layout_height="@dimen/_72dp"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            />
 
         <TextView
             android:id="@+id/tv_sticker_name"

@@ -58,16 +58,17 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
         }else {
             holder.ivNewSticker.setVisibility(View.INVISIBLE);
         }
-
-//        设置sticker缩略图
+        /**wing modified for 性能 begin*/
+        //设置sticker缩略图
         VolleyUtil.initNetworkImageView(mContext,
                 holder.ivSticker,
                 url,
                 R.drawable.network_image_default, R.drawable.network_image_default);
 
+
         //设置sticker name
         holder.tvStickerName.setText(stickerGroupEntity.getName());
-        /**wing modified for 性能 begin*/
+
         //设置Download
 //        List<LocalStickerInfo> data = new ArrayList<>();
 
