@@ -3,9 +3,7 @@ package com.bondwithme.BondWithMe.ui;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -46,15 +44,12 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
     private ImageView tab_icon_going;
     private ImageView tab_icon_maybe;
     private ImageView tab_icon_not_going;
-    private int width;
 
 
     TranslateAnimation translateAnimation1;
     TranslateAnimation translateAnimation2;
     int currentTabIndex;
     FragmentManager fragmentManager;
-
-    private int tabIndex;
 
     public static InvitedStatusFragment newInstance(String... params) {
         return createInstance(new InvitedStatusFragment(), params);
@@ -80,7 +75,6 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         if(getParentActivity().eventEntity==null){
             return;
         }
-        tabIndex = getParentActivity().tabIndex;
         String group_id = getParentActivity().eventEntity.getGroup_id();
         String owner_id = getParentActivity().eventEntity.getGroup_owner_id();
         fragments.add(InvitedTabFragment.newInstance(StatusType.all.name(), group_id,owner_id));
@@ -107,6 +101,7 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         maybe = getViewById(R.id.maybe);
         not_going = getViewById(R.id.not_going);
 
+
         tab_text_all = getViewById(R.id.tab_text_all);
         tab_text_going = getViewById(R.id.tab_text_going);
         tab_text_maybe = getViewById(R.id.tab_text_maybe);
@@ -117,15 +112,6 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         tab_icon_maybe = getViewById(R.id.tab_icon_maybe);
         tab_icon_not_going = getViewById(R.id.tab_icon_not_going);
 
-//        ViewTreeObserver vto =  ivCursor.getViewTreeObserver();
-//        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//            @Override
-//            public boolean onPreDraw() {
-//                int height =ivCursor.getMeasuredHeight();
-//                width =ivCursor.getMeasuredWidth();
-//                return false;
-//            }
-//        });
         all.setOnClickListener(this);
         going.setOnClickListener(this);
         maybe.setOnClickListener(this);
@@ -136,7 +122,7 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
 
     @Override
     public void requestData() {
-        setStartCursor(tabIndex);
+
 
     }
 
@@ -167,63 +153,6 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
 //        changOrdinal(tabIndex);
 
     }
-    private void setStartCursor(final int tabIndex){
-        mViewPager.setCurrentItem(tabIndex);
-        changOrdinal(tabIndex);
-//        int width = ivCursor.getWidth();
-//        int height = ivCursor.getHeight();
-//        int endX = tabIndex * ivCursor.getWidth()+width;
-////        AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(width,height,endX,height);
-////        ivCursor.setLayoutParams(params);
-//        setLayoutX(ivCursor,endX);
-//        setLayoutY(ivCursor,height);
-//        changeTabTitle(tabIndex);
-//        if(tabIndex > currentTabIndex){
-//            ivCursor.setVisibility(View.INVISIBLE);
-//            int beginX = (tabIndex - 1) * ivCursor.getWidth();
-//            int endX = beginX + ivCursor.getWidth();
-//            translateAnimation1 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
-//            translateAnimation1.setFillAfter(true);
-//            translateAnimation1.setDuration(10);
-//            translateAnimation1.setAnimationListener(new Animation.AnimationListener() {
-//                @Override
-//                public void onAnimationStart(Animation animation) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(Animation animation) {
-//                    ivCursor.setVisibility(View.VISIBLE);
-//                }
-//                @Override
-//                public void onAnimationRepeat(Animation animation) {
-//
-//                }
-//            });
-//            ivCursor.startAnimation(translateAnimation1);
-//        }
-
-    }
-
-//    onSizeChange
-
-    public static void setLayoutX(View view,int x)
-    {
-        ViewGroup.MarginLayoutParams margin=new ViewGroup.MarginLayoutParams(view.getLayoutParams());
-        margin.setMargins(x,margin.topMargin, x+margin.width, margin.bottomMargin);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(margin);
-        view.setLayoutParams(layoutParams);
-    }
-
-    public static void setLayoutY(View view,int y)
-    {
-        ViewGroup.MarginLayoutParams margin=new ViewGroup.MarginLayoutParams(view.getLayoutParams());
-        margin.setMargins(margin.leftMargin,y, margin.rightMargin, y+margin.height);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(margin);
-        view.setLayoutParams(layoutParams);
-    }
-
-
 
     private void changeTabTitle(int tabIndex){
         switch (tabIndex) {
@@ -275,7 +204,6 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
                 return;
         }
     }
-//
 
     private void changOrdinal(final int tabIndex) {
         if (currentTabIndex == tabIndex) {
@@ -283,58 +211,52 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         }
 
         if (tabIndex > currentTabIndex) {
-//            ivCursor.setVisibility(View.INVISIBLE);
-            Log.i("ivCursor.getWidth()", ivCursor.getWidth() + "");
-//            float width=getParentActivity().getWindowManager().getDefaultDisplay().getWidth();
             int beginX = (tabIndex - 1) * ivCursor.getWidth();
             int endX = beginX + ivCursor.getWidth();
-                translateAnimation1 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
-                translateAnimation1.setFillAfter(true);
-                translateAnimation1.setDuration(300);
-                translateAnimation1.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
+            translateAnimation1 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
+            translateAnimation1.setFillAfter(true);
+            translateAnimation1.setDuration(300);
+            translateAnimation1.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-                    }
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-//                        ivCursor.setVisibility(View.VISIBLE);
-                        changeTabTitle(tabIndex);
-                    }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    changeTabTitle(tabIndex);
+                }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationRepeat(Animation animation) {
 
-                    }
-                });
+                }
+            });
             ivCursor.startAnimation(translateAnimation1);
 
         } else {
-            ivCursor.setVisibility(View.INVISIBLE);
             int beginX = currentTabIndex * ivCursor.getWidth();
             int endX = tabIndex * ivCursor.getWidth();
-                translateAnimation2 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
-                translateAnimation2.setFillAfter(true);
-                translateAnimation2.setDuration(300);
-                ivCursor.startAnimation(translateAnimation2);
-                translateAnimation2.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
+            translateAnimation2 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
+            translateAnimation2.setFillAfter(true);
+            translateAnimation2.setDuration(300);
+            ivCursor.startAnimation(translateAnimation2);
+            translateAnimation2.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-                    }
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        ivCursor.setVisibility(View.VISIBLE);
-                        changeTabTitle(tabIndex);
-                    }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    changeTabTitle(tabIndex);
+                }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationRepeat(Animation animation) {
 
-                    }
-                });
+                }
+            });
         }
         currentTabIndex = tabIndex;
     }
