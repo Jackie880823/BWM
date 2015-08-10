@@ -599,23 +599,23 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     }
 
     private void setSwitcherClick() {
-
-        if (dataStickerBanner != null && dataStickerGroup != null){
-            if(dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0){
-                final int position = getPosition(dataStickerBanner.get(currentItem).getSticker_group_path(),dataStickerGroup);
+        final String path = dataStickerBanner.get(currentItem).getSticker_group_path();
+        if (dataStickerBanner != null && dataStickerGroup != null && dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0){
+            LogUtil.d(TAG,"====setOnClickListener====="+path + "    "+!path.isEmpty());
+                final int position = getPosition(path,dataStickerGroup);
                 final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
                 isStickerBanner.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LogUtil.d(TAG,"=========currentItem========"+currentItem);
-                        LogUtil.d(TAG, "========onClick======");
-                        Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
-                        intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
-                        intent.putExtra(StickerGroupAdapter.POSITION, position);
-                        StickerStoreActivity.this.startActivity(intent);
+                        if (!path.isEmpty()){
+                            Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
+                            intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
+                            intent.putExtra(StickerGroupAdapter.POSITION, position);
+                            StickerStoreActivity.this.startActivity(intent);
+                        }
                     }
                 });
-            }
+
 
         }
     }
