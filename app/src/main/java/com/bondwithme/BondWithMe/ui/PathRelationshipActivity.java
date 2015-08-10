@@ -239,9 +239,7 @@ public class PathRelationshipActivity extends BaseActivity {
                                 tvRelationships[i].setText(relationship4En);//index==-1，直接显示服务器数据
                             }
                         } else {//英文
-                            if (position != -1) {
-                                tvRelationships[i].setText(relationship4En);
-                            }
+                            tvRelationships[i].setText(relationship4En);
                         }
 
                         tvNames[i].setText(pathList.get(i).getMember_fullname());
