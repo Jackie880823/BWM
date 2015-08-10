@@ -95,7 +95,7 @@
                 android:layout_marginRight="@dimen/default_view_margin"
                 android:layout_weight="1"
                 android:background="@drawable/et_chat_bg"
-                android:maxLines="3"
+                android:maxLines="5"
                 android:hint="@string/text_message_type_here"
                 android:textColorHint="#999"
                 android:padding="@dimen/default_content_padding"
