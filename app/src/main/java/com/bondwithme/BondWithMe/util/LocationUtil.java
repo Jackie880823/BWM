@@ -262,26 +262,30 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
     /**
      * 获取地图位置截图，得到图片的网络路径
      *
-     * @param context
-     * @param latitude
-     * @param longitude
-     * @param locationType
-     * @return
+     * @param context      上下文资源
+     * @param latitude     纬度坐标
+     * @param longitude    经度坐标
+     * @param locationType 坐标类型({@link #LOCATION_TYPE_BD09LL}, {@link #LOCATION_TYPE_GCJ02}, {@link #LOCATION_TYPE_WGS84})
+     * @return 返回的所需位置图片的URL路径
      */
     public static String getLocationPicUrl(Context context, String latitude, String longitude, String locationType) {
         LogUtil.i(TAG, "getLocationPicUrl& locationType: " + locationType);
         String location;
         String result;
         if(googleAvailable) {
+            // 谷歌地图片服务可用，并能获取到位置
             if(LOCATION_TYPE_BD09LL.equals(locationType)) {
+                // 坐标类型为百度的坐标从百度服务获取路径
                 location = longitude + "," + latitude;
                 result = String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, location, context.getString(R.string.google_map_pic_size), location);
             } else {
+                // 从谷歌获取路径
                 location = latitude + "," + longitude;
                 result = String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, location, context.getString(R.string.google_map_pic_size), location);
                 //                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
             }
         } else {
+            // 谷歌服用获取不到位置，从百度服务中获取图片路径
             location = longitude + "," + latitude;
             result = String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, location, context.getString(R.string.google_map_pic_size), location);
 
