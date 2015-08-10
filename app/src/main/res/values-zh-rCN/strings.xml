@@ -579,5 +579,6 @@
 
     <string name="miss_you">你已成功发送 Miss!</string>
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>
+    <string name="text_archive_data">没有存档</string>
 
 </resources>
