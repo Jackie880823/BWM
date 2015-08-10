@@ -95,11 +95,21 @@ public class PathRelationshipActivity extends BaseActivity {
     public void finish() {
         Intent intent = new Intent();
         if (isZh) {
-//            Log.i("finish====",tvRelationship.getText().toString()+"");
+            if (-1 == data_Zh.indexOf(tvRelationship.getText().toString()))
+            {
+                setResult(RESULT_CANCELED);
+                super.finish();
+            }
             intent.putExtra("relationship", data_Us.get(data_Zh.indexOf(tvRelationship.getText().toString())));
         } else {
+            if (-1 == data_Us.indexOf(tvRelationship.getText().toString()))
+            {
+                setResult(RESULT_CANCELED);
+                super.finish();
+            }
             intent.putExtra("relationship", tvRelationship.getText().toString());
         }
+
         setResult(Activity.RESULT_OK, intent);
         super.finish();
     }
@@ -133,17 +143,18 @@ public class PathRelationshipActivity extends BaseActivity {
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_name);//放名字还是放Me????
 
-
+        //FamilyProfileFragment界面传进来的index需要判断下如果为0
         if (-1 == getIntent().getIntExtra("selectMemeber",-1))
         {
+            tvRelationship.setText(getString(R.string.error_feedback));//提示错误，此时index为-1
             return ;
         }
         else
         {
             if (isZh) {
-                tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));
+                tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));//中文
             } else {
-                tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber",-1)));
+                tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber",-1)));//英文
             }
         }
 
@@ -218,19 +229,20 @@ public class PathRelationshipActivity extends BaseActivity {
 
                         String relationship4En = pathList.get(i).getRelationship();
 
-                        int position = data_Us.indexOf(relationship4En);
+                        int position = data_Us.indexOf(relationship4En);//有可能出现position为-1
 
-                        if (TextUtils.isEmpty(relationship4En)) {
-                            continue;
-                        }
-
-                        if (isZh) {
+                        if (isZh) {//中文
                             if (position != -1) {
                                 tvRelationships[i].setText(data_Zh.get(position));
+                            } else {
+                                tvRelationships[i].setText(relationship4En);//index==-1，直接显示服务器数据
                             }
-                        } else {
-                            tvRelationships[i].setText(relationship4En);
+                        } else {//英文
+                            if (position != -1) {
+                                tvRelationships[i].setText(relationship4En);
+                            }
                         }
+
                         tvNames[i].setText(pathList.get(i).getMember_fullname());
                     }
 
@@ -321,9 +333,7 @@ public class PathRelationshipActivity extends BaseActivity {
 
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("member_id", memberId);
-//        jsonParams.put("user_relationship_name", tvRelationship.getText().toString());
-//        jsonParams.put("user_relationship_name", relationships[selectMemeber]);
-        jsonParams.put("user_relationship_name", data_Us.get(selectMemeber));
+        jsonParams.put("user_relationship_name", data_Us.get(selectMemeber));//上传的是英文字符串
         jsonParams.put("fam_nickname", fam_nickname);
         jsonParams.put("member_status", member_status);
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
