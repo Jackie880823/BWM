@@ -2,16 +2,12 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -23,12 +19,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -45,13 +39,13 @@ import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
-import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.bondwithme.BondWithMe.widget.SendComment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.CircularProgress;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,31 +68,12 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private static final String Tag = EventDetailFragment.class.getSimpleName();
     //    private final static String TAG = EventDetailFragment.class.getSimpleName();
 
-    private ProgressDialog mProgressDialog;
 
     private List<EventCommentEntity> data = new ArrayList<EventCommentEntity>();
     private String group_id;
     private boolean isCommentRefresh = true;
     private MySwipeRefreshLayout swipeRefreshLayout;
-
-    private TextView push_date;
-    private TextView owner_name;
-    private CircularNetworkImage owner_head;
-    private TextView event_title;
-    private NetworkImageView event_picture_4_location;
-    private TextView event_desc;
-    private TextView event_date;
-    private TextView location_desc;
-    private RelativeLayout btn_intent_all;
-    private LinearLayout iv_intent_agree;
-    private LinearLayout iv_intent_maybe;
-    private LinearLayout iv_intent_no;
-    private CardView btn_location;
-    private TextView going_count;
-    private TextView maybe_count;
-    private TextView not_going_count;
-
-    private boolean isStickerItemClick = false;
+    private boolean isCommentTest;
 
     private boolean isRefresh;
     private boolean isComment;
@@ -112,7 +87,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private RecyclerView rvList;
     private EventEntity event;
     int colorIntentSelected;
-//    private CircularProgress progressBar;
+    private CircularProgress progressBar;
+    private View defaultComment;
 
     private SendComment sendCommentView;
     private ScrollView Socontent;
@@ -147,14 +123,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-//            bindData();
-//            requestComment();
-        }
-    };
 
     /**
      * Called when the fragment is visible to the user and actively running.
@@ -210,7 +178,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         });
         if(NetworkUtil.isNetworkConnected(getActivity())) {
 
-//            progressBar = getViewById(R.id.event_detail_progress_bar);
 
             etChat = getViewById(R.id.et_chat);
             expandFunctionButton = getViewById(R.id.ib_more);
@@ -218,30 +185,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             expandFunctionLinear = getViewById(R.id.ll_more);
             stickerLinear = getViewById(R.id.ll_sticker);
             connentLayout = getViewById(R.id.rv_event_comment_list);
-//            Socontent = getViewById(R.id.content);
-//
-//            push_date = getViewById(R.id.push_date);
-//            owner_name = getViewById(R.id.owner_name);
-//            owner_head = getViewById(R.id.owner_head);
-//            event_title = getViewById(R.id.event_title);
-//            event_picture_4_location = getViewById(R.id.event_picture_4_location);
-
-//            event_desc = getViewById(R.id.event_desc);
-//            event_date = getViewById(R.id.event_date);
-//            location_desc = getViewById(R.id.location_desc);
-//            btn_intent_all = getViewById(R.id.btn_intent_all);
-//            iv_intent_agree = getViewById(R.id.iv_intent_agree);
-//            iv_intent_maybe = getViewById(R.id.iv_intent_maybe);
-//            iv_intent_no = getViewById(R.id.iv_intent_no);
-//            going_count = getViewById(R.id.going_count);
-//            maybe_count = getViewById(R.id.maybe_count);
-//            not_going_count = getViewById(R.id.not_going_count);
-
-
-//            btn_intent_all.setOnClickListener(this);
-//            iv_intent_agree.setOnClickListener(this);
-//            iv_intent_maybe.setOnClickListener(this);
-//            iv_intent_no.setOnClickListener(this);
             option_status = getViewById(R.id.option_status);
             option_cancel = getViewById(R.id.option_cancel);
             event_options = getViewById(R.id.event_options);
@@ -261,13 +204,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             option_no_going.setOnClickListener(this);
             option_maybe.setOnClickListener(this);
             option_going.setOnClickListener(this);
-//            Socontent.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    hideAllViewState();
-//                    return false;
-//                }
-//            });
             connentLayout.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -294,7 +230,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             sendCommentView.setCommentListener(new SendComment.CommentListener() {
                 @Override
                 public void onStickerItemClick(String type, String folderName, String filName) {
-                    isStickerItemClick = true;
                     stickerEntity.setSticker_type(type);
                     stickerEntity.setSticker_group_path(folderName);
                     stickerEntity.setSticker_name(filName);
@@ -336,12 +271,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     if(isComment) {
                         sendComment();
                     }
-                    isStickerItemClick = false;
                 }
 
                 @Override
                 public void onRemoveClick() {
-                    isStickerItemClick = false;
                     stickerEntity.setSticker_type("");
                     stickerEntity.setSticker_group_path("");
                     stickerEntity.setSticker_name("");
@@ -357,8 +290,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                     // dy>0 表示向下滑动
                     if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+//                        LogUtil.i("eventdetail====", "onScrolled& getComments");
+//                        currentPage++;
                         loading = true;
-//                        vProgress.setVisibility(View.VISIBLE);
                         requestComment();
                     }
                 }
@@ -442,7 +376,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 intent.putExtra("datas", datas);
                 startActivity(intent);
             }
-
             @Override
             public void setIntentAll(EventEntity entity,int memeber) {
                 goInvitedStutus(memeber);
@@ -450,12 +383,32 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
 
         });
+        adapter.setUpdateListener(new EventCommentAdapterTest.ListViewItemViewUpdateListener() {
+            @Override
+            public void updateHeadView(View headView) {
+                initHeadView(headView);
+            }
+
+            @Override
+            public void updateListSecondView(View listSecondView) {
+                initListSecondView(listSecondView);
+            }
+        });
         rvList.setAdapter(adapter);
         RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
         animator.setAddDuration(2000);
         animator.setRemoveDuration(1000);
     }
 
+    private void initListSecondView(View listSecondView){
+        progressBar = (CircularProgress) listSecondView.findViewById(R.id.event_detail_progress_bar);
+
+    }
+
+    private void initHeadView(View headView){
+        defaultComment = headView.findViewById(R.id.default_comment);
+//        defaultComment.setVisibility(View.GONE);
+    }
 //    @Override
 //    public void onActivityCreated(Bundle savedInstanceState) {
 //        super.onActivityCreated(savedInstanceState);
@@ -484,59 +437,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //        }
 //    }
 
-    /**
-     * 刷新数据
-     */
-    public void bindData() {
-
-//        if(getParentActivity().getEventEntity() != null) {
-//            //eventdetail数据
-//            event = getParentActivity().getEventEntity();
-//            push_date.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), event.getGroup_creation_date()));
-//            owner_name.setText(event.getUser_given_name());
-//            VolleyUtil.initNetworkImageView(getActivity(), owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, event.getGroup_owner_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//            event_title.setText(event.getGroup_name());//暂用Group_name
-//
-//            event_desc.setText(event.getText_description());
-//
-//            event_date.setText(MyDateUtils.getEventLocalDateStringFromUTC(getActivity(), event.getGroup_event_date()));
-//            location_desc.setText(event.getLoc_name());
-//
-//            if(MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
-//                try {
-//                    going_count.setText((Integer.valueOf(event.getTotal_yes()) - 1) + "");
-//                } catch(Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            } else {
-//                going_count.setText(event.getTotal_yes());
-//            }
-//            maybe_count.setText(event.getTotal_maybe());
-//            not_going_count.setText(event.getTotal_no());
-//
-//            ResponseStatus[] statuses = ResponseStatus.values();
-//            for(ResponseStatus status : statuses) {
-//                if(status.getServerCode().equals(event.getGroup_member_response())) {
-//                    currentStatus = status;
-//                    break;
-//                }
-//
-//
-//            }
-//            changeIntentUI(currentStatus);
-//            vProgress.setVisibility(View.GONE);
-//            if(!TextUtils.isEmpty(event.getLoc_latitude()) && !TextUtils.isEmpty(event.getLoc_longitude())) {
-//                event_picture_4_location.setVisibility(View.VISIBLE);
-//                VolleyUtil.initNetworkImageView(getActivity(), event_picture_4_location, LocationUtil.getLocationPicUrl(mContext, event.getLoc_latitude(), event.getLoc_longitude(), event.getLoc_type()), R.drawable.network_image_default, R.drawable.network_image_default);
-//
-//                event_picture_4_location.setOnClickListener(this);
-//                //                btn_location.setOnClickListener(this);
-//            } else {
-//                event_picture_4_location.setVisibility(View.GONE);
-//            }
-//        }
-    }
 
     private void doChangeResponse(ResponseStatus status) {
         changeIntentUI(status);
@@ -608,20 +508,26 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
-
+                    if(progressBar != null){
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 @Override
                 public void onFinish() {
-//                    data.clear();
-//                    adapter.removeCommentData();
-//                    requestComment();
+//                        data.clear();
+//                        adapter.removeCommentData();
+//                        requestComment();
+                    if(progressBar != null){
+                        progressBar.setVisibility(View.GONE);
+                    }
                 }
 
                 @Override
                 public void onResult(String response) {
                     startIndex = 0;
 //                    isRefresh = true;
+                    currentPage = 1;
                     stickerEntity.setSticker_type("");
                     stickerEntity.setSticker_group_path("");
                     stickerEntity.setSticker_name("");
@@ -696,7 +602,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
-
+                        if(progressBar != null){
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override
@@ -704,13 +612,18 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        data.clear();
 //                        adapter.removeCommentData();
 //                        requestComment();
+                        if(progressBar != null){
+                            progressBar.setVisibility(View.GONE);
+                        }
+
                     }
 
                     @Override
                     public void onResult(String response) {
+                        isCommentTest = true;
                         startIndex = 0;
 //                        isRefresh = true;
-                        isComment = true;
+                        currentPage = 1;
                         stickerEntity.setSticker_type("");
                         stickerEntity.setSticker_group_path("");
                         stickerEntity.setSticker_name("");
@@ -751,18 +664,31 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     /**
      * 异步上传照片
      */
-    class uploadBimapTask extends AsyncTask<Map, Void, Boolean> {
+    class uploadBimapTask extends AsyncTask<Map, Void, Boolean>{
+
+        @Override
+        protected void onPreExecute() {
+//            LogUtil.i("AsyncTask_开始", "");
+            if(progressBar != null){
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        }
+
         @Override
         protected Boolean doInBackground(Map... params) {
 
             new HttpTools(App.getContextInstance()).upload(Constant.API_COMMENT_POST_TEXT, params[0], Tag, new HttpCallback() {
+
                 @Override
                 public void onStart() {
                 }
 
                 @Override
                 public void onFinish() {
-//                    requestComment();
+                    if(progressBar != null){
+                        progressBar.setVisibility(View.GONE);
+
+                    }
                 }
 
                 @Override
@@ -770,6 +696,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     startIndex = 0;
 //                    isRefresh = true;
                     isCommentBim = true;
+                    currentPage = 1;
                     mUri = null;
                     data.clear();
                     adapter.removeCommentData();
@@ -798,74 +725,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             return null;
         }
 
-    }
-
-    class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
-
-        @Override
-        protected String doInBackground(Uri... params) {
-            if(params == null) {
-                return null;
-            }
-            return LocalImageLoader.compressBitmap(App.getContextInstance(), FileUtil.getRealPathFromURI(App.getContextInstance(), params[0]), 480, 800, false);
-        }
-
-        @Override
-        protected void onPostExecute(String path) {
-            submitPic(path);
-        }
-
-        private void submitPic(String path) {
-            File f = new File(path);
-            if(!f.exists()) {
-                return;
-            }
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("content_group_id", event.getContent_group_id());
-            params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-            params.put("content_type", "comment");
-            params.put("file", f);
-            params.put("photo_fullsize", "1");
-
-
-            new HttpTools(App.getContextInstance()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, Tag, new HttpCallback() {
-                @Override
-                public void onStart() {
-                }
-
-                @Override
-                public void onFinish() {
-                }
-
-                @Override
-                public void onResult(String string) {
-                    startIndex = 0;
-                    isRefresh = true;
-                    isCommentBim = true;
-                    mUri = null;
-                    data.clear();
-                    adapter.removeCommentData();
-                    requestComment();
-                    getParentActivity().setResult(Activity.RESULT_OK);
-                    //                    Log.i("onResult====",string);
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onCancelled() {
-                }
-
-                @Override
-                public void onLoading(long count, long current) {
-
-                }
-            });
-        }
     }
 
     @Override
@@ -982,7 +841,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 return;
 
             HashMap<String, String> jsonParams = new HashMap<String, String>();
-
+//            defaultComment.setVisibility(View.GONE);
             jsonParams.put("user_id", MainActivity.getUser().getUser_id());
             jsonParams.put("group_id", event.getGroup_id());
             jsonParams.put("content_group_id", event.getContent_group_id());
@@ -998,13 +857,16 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             new HttpTools(getActivity()).get(url, null, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
-
+//                    if(adapter != null && adapter.getItemCount() == 1){
+//                        defaultComment.setVisibility(View.GONE);
+//                    }
                 }
 
                 @Override
                 public void onFinish() {
 //                    progressBar.setVisibility(View.GONE);
                     //                    vProgress.setVisibility(View.GONE);
+
                 }
 
                 @Override
@@ -1012,23 +874,23 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     GsonBuilder gsonb = new GsonBuilder();
                     Gson gson = gsonb.create();
                     data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {}.getType());
-                    currentPage = 1;
-                    startIndex += data.size();
-                    vProgress.setVisibility(View.GONE);
-                    if(isRefresh) {
+                    if(isRefresh){
                         isRefresh = false;
-                        currentPage = 1;
-//                        initAdapter();
-//                        adapter.notifyDataSetChanged();
-                    } else {
+                        swipeRefreshLayout.setRefreshing(false);
+                        currentPage = 1;//还原为第一页
+                        initAdapter();
+                    }else {
                         startIndex += data.size();
-                        if(adapter == null){
-                            initAdapter();
-                            adapter.notifyDataSetChanged();
-                        }else {
+                        if(adapter != null){
                             adapter.addData(data);
+                        }else {
+                            initAdapter();
                         }
                     }
+//                    if(adapter != null && adapter.getItemCount() > 1){
+//                        defaultComment.setVisibility(View.GONE);
+//                    }
+                    loading = false;
 //                    //如果有评论，则隐藏进度条
 //                    if(adapter != null && adapter.getItemCount() > 1) {
 //                        getViewById(R.id.comment_split_line).setVisibility(View.VISIBLE);
@@ -1037,7 +899,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onError(Exception e) {
-
+                    loading = false;
                 }
 
                 @Override
@@ -1259,53 +1121,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         }
     }
 
-    private void getEventResponseInfos() {
-        if(event == null)
-            return;
-
-
-        new HttpTools(getActivity()).get(String.format(Constant.API_EVENT_RESPONSE_INFOS, event.getGroup_id()), null, Tag, new HttpCallback() {
-
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-
-            @Override
-            public void onResult(String response) {
-                try {
-                    JSONObject result;
-                    result = new JSONObject(response);
-                    going_count.setText(result.getString("total_yes"));
-                    maybe_count.setText(result.getString("total_maybe"));
-                    not_going_count.setText(result.getString("total_no"));
-                } catch(JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
-
-    }
 
     /**
      * 删除评论
@@ -1432,78 +1247,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         sendCommentView.onActivityResult(requestCode, resultCode, data);
     }
 
-    //    List<Uri> pickUries = new ArrayList();
-    //    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    //    @Override
-    //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //        super.onActivityResult(requestCode, resultCode, data);
-    //        sendComment.onActivityResult(requestCode, resultCode, data);
-    //        if (getParentActivity().RESULT_OK == resultCode) {
-    //            switch (requestCode) {
-    //                // 如果是直接从相册获取
-    //                case REQUEST_HEAD_PHOTO:
-    //                    pickUries.clear();
-    //                    if (data != null) {
-    //                        if (SDKUtil.IS_JB) {
-    //                            ClipData clipData = data.getClipData();
-    //                            if (clipData != null) {
-    //                                int size = clipData.getItemCount();
-    //                                for (int i = 0; i < size; i++) {
-    //                                    Uri uri = clipData.getItemAt(i).getUri();
-    //                                    pickUries.add(uri);
-    //                                }
-    //                            } else {
-    //                                pickUries.add(data.getData());
-    //                            }
-    //                        } else {
-    //                            pickUries.add(data.getData());
-    //                        }
-    //                        for (Uri uri : pickUries) {
-    //                            EventCommentEntity msgEntity = new EventCommentEntity();
-    //                            msgEntity.setSticker_type(".png");
-    //                            msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-    //                            msgEntity.setUri(uri);
-    //                            adapter.addMsgEntity(msgEntity);
-    //                            Log.i("相册uri=====", uri.toString());
-    //                        }
-    //                        //handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
-    //                    }
-    //
-    //                    break;
-    //
-    //                // 如果是调用相机拍照时
-    //                case REQUEST_HEAD_CAMERA:
-    //                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP));
-    //                    handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
-    //                    break;
-    //
-    //                // 取得裁剪后的图片
-    //                case REQUEST_HEAD_FINAL:
-    //                    break;
-    //                case REQUEST_GET_GROUP_NAME:
-    ////                    tvTitle.setText(data.getStringExtra("group_name"));
-    //                    break;
-    //
-    //                default:
-    //                    break;
-    //
-    //            }
-    //        }
-    //        if (resultCode == Activity.RESULT_OK) {
-    //            switch (requestCode) {
-    //                case Constant.ACTION_EVENT_UPDATE:
-    //                    if (data != null && data.getSerializableExtra("event") != null) {
-    //                        event = (EventEntity) data.getSerializableExtra("event");
-    //                        if (event != null) {
-    //                            bindData();
-    //                        }
-    //                    }
-    //                    getParentActivity().setResult(Activity.RESULT_OK);
-    //                    getEventResponseInfos();
-    //                    break;
-    //            }
-    //        }
-    //    }
 
     /**
      * 上传照片
@@ -1559,129 +1302,5 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         });
 
     }
-
-
-    /**
-     * fragment 再次显示的时候刷新数据
-     * @param isVisibleToUser
-     */
-    //    @Override
-    //    public void setUserVisibleHint(boolean isVisibleToUser) {
-    //        super.setUserVisibleHint(isVisibleToUser);
-    //        if (isVisibleToUser) {
-    //            //相当于Fragment的onResume
-    //            if (event != null) {
-    //                bindData();
-    //                requestComment();
-    //            } else {
-    //                new AsyncTask<Void, Void, Void>() {
-    //                    @Override
-    //                    protected Void doInBackground(Void... params) {
-    //                        while (true) {
-    //                            if (getParentActivity() != null && getParentActivity().getDataDone) {
-    //                                break;
-    //                            }
-    //                        }
-    //                        return null;
-    //                    }
-    //
-    //                    @Override
-    //                    protected void onPostExecute(Void aVoid) {
-    //                        bindData();
-    //                        requestComment();
-    //                    }
-    //                }.execute();
-    //            }
-    //        } else {
-    //            //相当于Fragment的onPause
-    //        }
-    //    }
-
-
-    //     /**
-    //      * 打开相册
-    //      */
-    //    private void openAlbum() {
-    //        intent = new Intent(Intent.ACTION_PICK, null);
-    //        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-    //        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-    //        startActivityForResult(intent, REQUEST_HEAD_PHOTO);
-    //
-    //    }
-    //
-    //    /**
-    //     * 打开相机
-    //     */
-    //    private void openCamera() {
-    //        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    //        intent.putExtra("camerasensortype", 2);
-    //        // 下面这句指定调用相机拍照后的照片存储的路径
-    //        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-    //                .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
-    //                        CACHE_PIC_NAME_TEMP)));
-    //        // 图片质量为高
-    //        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-    //        intent.putExtra("return-data", false);
-    //        startActivityForResult(intent, REQUEST_HEAD_CAMERA);
-    //    }
-
-    //    List<Uri> pickUries = new ArrayList();
-    //
-    //    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    //    @Override
-    //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //        super.onActivityResult(requestCode, resultCode, data);
-    //        if (getParentActivity().RESULT_OK == resultCode) {
-    //            switch (requestCode) {
-    //                // 如果是直接从相册获取
-    //                case REQUEST_HEAD_PHOTO:
-    //                    pickUries.clear();
-    //                    if (data != null) {
-    //                        if (SDKUtil.IS_JB) {
-    //                            ClipData clipData = data.getClipData();
-    //                            if (clipData != null) {
-    //                                int size = clipData.getItemCount();
-    //                                for (int i = 0; i < size; i++) {
-    //                                    Uri uri = clipData.getItemAt(i).getUri();
-    //                                    pickUries.add(uri);
-    //                                }
-    //                            } else {
-    //                                pickUries.add(data.getData());
-    //                            }
-    //                        } else {
-    //                            pickUries.add(data.getData());
-    //                        }
-    //                        for (Uri uri : pickUries) {
-    //                            MsgEntity msgEntity = new MsgEntity();
-    //                            msgEntity.setSticker_type(".png");
-    //                            msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-    //                            msgEntity.setUri(uri);
-    ////                            messageChatAdapter.addMsgEntity(msgEntity);
-    //                        }
-    //                        handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
-    //                    }
-    //
-    //                    break;
-    //
-    //                // 如果是调用相机拍照时
-    //                case REQUEST_HEAD_CAMERA:
-    //                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP));
-    //                    handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
-    //                    break;
-    //
-    //                // 取得裁剪后的图片
-    //                case REQUEST_HEAD_FINAL:
-    //                    break;
-    //                case REQUEST_GET_GROUP_NAME:
-    //                    tvTitle.setText(data.getStringExtra("group_name"));
-    //                    break;
-    //
-    //                default:
-    //                    break;
-    //
-    //            }
-    //        }
-    //    }
-
 
 }

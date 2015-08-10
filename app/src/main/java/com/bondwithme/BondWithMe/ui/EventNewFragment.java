@@ -36,7 +36,6 @@ import com.bondwithme.BondWithMe.widget.TimePicker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.material.widget.CircularProgress;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     private final static String USER_HEAD = "user_head";
     private final static String USER_NAME = "user_name";
 
-    private CircularProgress progressBar;
+    private View progressBar;
     Calendar mCalendar;
     Calendar calendar;
 
@@ -106,13 +105,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         // Required empty public constructor
     }
 
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_event, container, false);
-//    }
 
     @Override
     public void setLayoutId() {
@@ -121,11 +113,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     @Override
     public void initView() {
-        progressBar = getViewById(R.id.progressBar);
+        progressBar = getViewById(R.id.rl_progress);
 
         gvFriends = getViewById(R.id.gv_all_friends);
         changeData();
-
 
         event_title = getViewById(R.id.event_title);
         event_desc = getViewById(R.id.event_desc);

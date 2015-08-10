@@ -168,7 +168,7 @@ public class FileUtil {
     }
 
     public static String getBannerFilePath(Context context) {
-        File f = getSavePath(context, true);
+        File f = getSavePath(context, false);
 
         f = new File(f.getAbsolutePath() + CACHE_DIR_NAME + BANNER_DIR_NAME);
         if (!f.exists()) {
@@ -176,6 +176,19 @@ public class FileUtil {
         }
 
         return f.getAbsolutePath();
+    }
+
+    public static void deleteBanner(Context context) {
+        File fileRoot = new File(getBannerFilePath(context));
+        LogUtil.d("FileUtil", "===fileRoot===" + fileRoot.getAbsolutePath());
+        if (fileRoot != null) {
+            File[] cacheFiles = fileRoot.listFiles();
+            for (File file : cacheFiles) {
+                file.delete();
+            }
+        }
+        boolean deleted = fileRoot.delete();
+        LogUtil.d("FileUtil","===fileRoot==="+fileRoot.getAbsolutePath()+"==="+fileRoot.exists()+"===="+deleted);
     }
 
 }

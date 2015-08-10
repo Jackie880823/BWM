@@ -213,50 +213,50 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         if (tabIndex > currentTabIndex) {
             int beginX = (tabIndex - 1) * ivCursor.getWidth();
             int endX = beginX + ivCursor.getWidth();
-                translateAnimation1 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
-                translateAnimation1.setFillAfter(true);
-                translateAnimation1.setDuration(300);
-                translateAnimation1.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
+            translateAnimation1 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
+            translateAnimation1.setFillAfter(true);
+            translateAnimation1.setDuration(300);
+            translateAnimation1.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-                    }
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        changeTabTitle(tabIndex);
-                    }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    changeTabTitle(tabIndex);
+                }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationRepeat(Animation animation) {
 
-                    }
-                });
+                }
+            });
             ivCursor.startAnimation(translateAnimation1);
 
         } else {
             int beginX = currentTabIndex * ivCursor.getWidth();
             int endX = tabIndex * ivCursor.getWidth();
-                translateAnimation2 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
-                translateAnimation2.setFillAfter(true);
-                translateAnimation2.setDuration(300);
-                ivCursor.startAnimation(translateAnimation2);
-                translateAnimation2.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
+            translateAnimation2 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
+            translateAnimation2.setFillAfter(true);
+            translateAnimation2.setDuration(300);
+            ivCursor.startAnimation(translateAnimation2);
+            translateAnimation2.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-                    }
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        changeTabTitle(tabIndex);
-                    }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    changeTabTitle(tabIndex);
+                }
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationRepeat(Animation animation) {
 
-                    }
-                });
+                }
+            });
         }
         currentTabIndex = tabIndex;
     }

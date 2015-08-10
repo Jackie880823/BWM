@@ -130,9 +130,10 @@ public class NotificationUtil {
             mBuilder.setSmallIcon(smallIcon);
         }
         mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
-        if(msgCount>1) {
-            mBuilder.setNumber(msgCount);
-        }
+        //暂时不启用
+//        if(msgCount>1) {
+//            mBuilder.setNumber(msgCount);
+//        }
         mBuilder.setTicker(msg.getString(JPushInterface.EXTRA_TITLE));
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
 
@@ -141,6 +142,7 @@ public class NotificationUtil {
         }
         mBuilder.setAutoCancel(true);
         Notification notification = mBuilder.build();
+        notification.priority = Notification.PRIORITY_HIGH;
 
 //        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 //        String[] events = new String[5];
@@ -219,7 +221,13 @@ public class NotificationUtil {
             case BONDALERT_MESSAGE:
                 smallIcon = R.drawable.bondalert_message_icon;
                 intent = new Intent(context, MessageChatActivity.class);
-                intent.putExtra("type", jsonObjectExtras.getString("group_type"));
+                int type = 0;
+                try {
+                    type = Integer.valueOf(jsonObjectExtras.getString("group_type"));
+                }catch (Exception e){
+
+                }
+                intent.putExtra("type", type);
                 intent.putExtra("groupId", jsonObjectExtras.getString("group_id"));
                 intent.putExtra("titleName", jsonObjectExtras.getString("group_name"));
                 doNotificationHandle(MainActivity.TabEnum.chat);
@@ -283,7 +291,11 @@ public class NotificationUtil {
         if(intent!=null) {
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(BaseActivity.IS_OUTSIDE_INTENT,true);
+            intent.putExtra(BaseActivity.IS_OUTSIDE_INTENT, true);
+//            android:excludeFromRecents="true"
+            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
         return contentIntent;

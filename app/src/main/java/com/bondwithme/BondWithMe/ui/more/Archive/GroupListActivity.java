@@ -175,6 +175,9 @@ public class GroupListActivity extends BaseActivity{
                 } else {
                     finishReFresh();
                 }
+                if(adapter.getItemCount() < 1){
+                    getViewById(R.id.not_archive).setVisibility(View.VISIBLE);
+                }
                 loading = false;
             }
 

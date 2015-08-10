@@ -118,15 +118,14 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 try {
                     JSONObject object = new JSONObject(response);
                     //for test
-                    if(("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update").equals("1")) {
-                        //
-                        //                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update").equals("1")) {
+//                    if(("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && object.get("app_major_update").equals("1")) {
+                    if (!("" + AppInfoUtil.getAppVersionCode(context)).equals(object.get("app_latest_version")) && "1".equals(object.get("app_major_update"))) {
                         //must update app
                         needUpdate = true;
                         showUpdateDialog(context);
                     }
 
-                } catch(JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -150,7 +149,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     private static void showUpdateDialog(final Activity content) {
 
-        if(updateDialog == null) {
+        if (updateDialog == null) {
             updateDialog = new MyDialog(content, R.string.text_tips_title, R.string.update_message);
             updateDialog.setCanceledOnTouchOutside(false);
             updateDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
@@ -194,7 +193,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 }
             });
         }
-        if(!updateDialog.isShowing())
+        if (!updateDialog.isShowing())
             updateDialog.show();
     }
 
@@ -207,14 +206,14 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public static void changeLoginedUser(UserEntity user) {
-        if(appContext != null) {
+        if (appContext != null) {
             App.user = user;
             PreferencesUtil.saveValue(appContext, Constant.LOGIN_USER, new Gson().toJson(user));
         }
     }
 
     public static void changeLoginedUser(UserEntity user, AppTokenEntity tokenEntity) {
-        if(appContext != null) {
+        if (appContext != null) {
 
             initToken(user.getUser_login_id(), tokenEntity);
 
@@ -224,7 +223,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public static void initToken(String user_login_id, AppTokenEntity tokenEntity) {
-        if(tokenEntity != null) {
+        if (tokenEntity != null) {
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Charset", "UTF-8");
             headers.put("X_BWM_TOKEN", tokenEntity.getUser_token());
@@ -240,10 +239,10 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public static UserEntity getLoginedUser() {
-        if(appContext != null && (user == null)) {
+        if (appContext != null && (user == null)) {
             user = new Gson().fromJson(PreferencesUtil.getValue(appContext, "user", null), UserEntity.class);
             //异常情况，重新初始token
-            if(user != null && HttpTools.getHeaders() != null && TextUtils.isEmpty(HttpTools.getHeaders().get("X_BWM_TOKEN"))) {
+            if (user != null && HttpTools.getHeaders() != null && TextUtils.isEmpty(HttpTools.getHeaders().get("X_BWM_TOKEN"))) {
                 initToken(user.getUser_login_id(), new Gson().fromJson(PreferencesUtil.getValue(appContext, Constant.HTTP_TOKEN, ""), AppTokenEntity.class));
             }
         }
@@ -257,7 +256,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     public static void logout(Activity context) {
 
-        if(context != null) {
+        if (context != null) {
             LoginManager.getInstance().logOut();//清除Facebook授权缓存
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
@@ -294,14 +293,14 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     }
 
     public void exit(Activity context) {
-        if(context != null && !context.isFinishing()) {
+        if (context != null && !context.isFinishing()) {
             context.finish();
         }
         onTerminate();
     }
 
     public SQLiteHelperOrm getDBHelper() {
-        if(databaseHelper == null) {
+        if (databaseHelper == null) {
             databaseHelper = OpenHelperManager.getHelper(this, SQLiteHelperOrm.class);
         }
         return databaseHelper;
@@ -353,7 +352,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public void onActivityResumed(Activity activity) {
         paused = false;
         foreground = true;
-        if(check != null) {
+        if (check != null) {
             handler.removeCallbacks(check);
         }
     }
@@ -361,13 +360,13 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     @Override
     public void onActivityPaused(Activity activity) {
         paused = true;
-        if(check != null) {
+        if (check != null) {
             handler.removeCallbacks(check);
         }
         handler.postDelayed(check = new Runnable() {
             @Override
             public void run() {
-                if(foreground && paused) {
+                if (foreground && paused) {
                     foreground = false;
                     LogUtil.d("", "App went background");
                 } else {

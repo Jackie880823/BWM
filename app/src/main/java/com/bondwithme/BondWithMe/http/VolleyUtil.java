@@ -1,17 +1,22 @@
 package com.bondwithme.BondWithMe.http;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageLoader.ImageCache;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.NetworkImageView;
+import com.bondwithme.BondWithMe.App;
+import com.bondwithme.BondWithMe.http.cache.ImageLreCache;
+import com.bondwithme.BondWithMe.http.cache.RequesQueuetManager;
 
 /**
  * @ClassName:  VolleyUtil
@@ -22,23 +27,29 @@ import com.android.volley.toolbox.NetworkImageView;
  */
 public class VolleyUtil {
 
+	// 取运行内存阈值的1/8作为图片缓存
+	private static final int MEM_CACHE_SIZE = 1024 * 1024 * ((ActivityManager) App.getContextInstance()
+			.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass() / 8;
+	private static ImageLreCache mImageLreCache = new ImageLreCache(MEM_CACHE_SIZE,"images",MEM_CACHE_SIZE*3);
+	public static ImageLoader  mImageLoder = new ImageLoader(RequesQueuetManager.mRequestQueue,mImageLreCache);
+
 	private static RequestQueue mQueue;
-	private static ImageLoader mImageLoader;
-	private static ImageCache mImageCache;
-
-	static{
-		mImageCache = new ImageCache() {
-			@Override
-			public void putBitmap(String url, Bitmap bitmap) {
-				ImageCacheUtil.put(url, bitmap);
-			}
-
-			@Override
-			public Bitmap getBitmap(String url) {
-				return ImageCacheUtil.get(url);
-			}
-		};
-	}
+//	private static ImageLoader mImageLoader;
+//	private static ImageCache mImageCache;
+//
+//	static{
+//		mImageCache = new ImageCache() {
+//			@Override
+//			public void putBitmap(String url, Bitmap bitmap) {
+//				ImageCacheUtil.put(url, bitmap);
+//			}
+//
+//			@Override
+//			public Bitmap getBitmap(String url) {
+//				return ImageCacheUtil.get(url);
+//			}
+//		};
+//	}
 
 	private static RequestQueue getRequestQueue(Context context){
 //		if(mQueue==null) {
@@ -50,14 +61,14 @@ public class VolleyUtil {
 		return new HttpTools(context).getHttpRequestQueue();
 	}
 
-	private static ImageLoader getImageLoader(Context context){
-		if(mImageLoader==null){
-            /**for no cache image loader*/
-//			mImageLoader = new ImageLoader(getRequestQueue(context), null);
-			mImageLoader = new ImageLoader(getRequestQueue(context), mImageCache);
-		}
-		return mImageLoader;
-	}
+//	private static ImageLoader getImageLoader(Context context){
+//		if(mImageLoader==null){
+//            /**for no cache image loader*/
+////			mImageLoader = new ImageLoader(getRequestQueue(context), null);
+//			mImageLoader = new ImageLoader(getRequestQueue(context), new LruImageCache());
+//		}
+//		return mImageLoader;
+//	}
 
 	/**
 	 * @Description 对NetworkImageView控件进入初始化
@@ -71,7 +82,8 @@ public class VolleyUtil {
 	public static void initNetworkImageView(Context context,NetworkImageView networkImageView,String url,int defalutImage,int failedImage){
 	  networkImageView.setDefaultImageResId(defalutImage);
 	  networkImageView.setErrorImageResId(failedImage);
-      networkImageView.setImageUrl(url,getImageLoader(context));
+      networkImageView.setImageUrl(url,mImageLoder);
+//      networkImageView.setImageUrl(url,getImageLoader(context));
 	}
 
 
@@ -83,32 +95,32 @@ public class VolleyUtil {
      * @param url
      */
     public static void initNetworkImageView(Context context,NetworkImageView networkImageView,String url){
-        networkImageView.setImageUrl(url,getImageLoader(context));
+        networkImageView.setImageUrl(url,mImageLoder);
+//        networkImageView.setImageUrl(url,getImageLoader(context));
     }
 
+	public static ImageLoader.ImageContainer loadImage(String requestUrl,
+													   ImageLoader.ImageListener imageListener) {
+		return loadImage(requestUrl, imageListener, 0, 0);
+	}
+
+	public static ImageLoader.ImageContainer loadImage(String url,ImageLoader.ImageListener listener, int maxWidth, int maxHeight){
+		return mImageLoder.get(App.getContextInstance(), url, listener, maxWidth, maxHeight);
+	}
 
 	/**
-	 * @Description 从网络加载图片,内部使用缓存
-	 * @date 2014-11-14 下午2:53:51
-	 * @param context
-	 * @param url
-	 * @param imageListener
+	 * 外部调用次方法即可完成将url处图片现在view上，并自动实现内存和硬盘双缓存。
+	 * @param url 远程url地址
+	 * @param view 待现实图片的view
+	 * @param defaultImageBitmap 默认显示的图片
+	 * @param errorImageBitmap 网络出错时显示的图片
 	 */
-	public static void loadImage(Context context,String url,ImageLoader.ImageListener imageListener){
-		loadImage(context, url, 0, 0, imageListener);
+	public static ImageLoader.ImageContainer loadImage(final String url, final ImageView view,
+													   final Bitmap defaultImageBitmap, final Bitmap errorImageBitmap){
+		return loadImage(url, getImageLinseter(view, defaultImageBitmap,
+				errorImageBitmap));
 	}
-	/**
-	 * @Description 从网络加载图片,内部使用缓存
-	 * @date 2014-11-14 下午2:54:35
-	 * @param context
-	 * @param url
-	 * @param maxWidth 最大宽度
-	 * @param maxHeight 最大高度
-	 * @param imageListener
-	 */
-	public static void loadImage(Context context,String url,int maxWidth,int maxHeight,ImageLoader.ImageListener imageListener){
-		getImageLoader(context).get(context,url, imageListener,maxWidth,maxHeight);
-	}
+
 
 	/**
 	 * @Description 从网络加载图片,无缓存
@@ -119,7 +131,7 @@ public class VolleyUtil {
 	 * @param errorListenner
 	 */
 	public static void request4Image(Context context,String requestTag,String url,Response.Listener<Bitmap> listenner,Response.ErrorListener errorListenner){
-        request4Image(context,requestTag,url, 0, 0, Config.RGB_565, listenner,errorListenner);
+        request4Image(context, requestTag, url, 0, 0, Config.RGB_565, listenner, errorListenner);
 	}
 
 	/**
@@ -162,6 +174,30 @@ public class VolleyUtil {
             getRequestQueue(context).cancelAll(tag);
         }
     }
+
+	public static ImageLoader.ImageListener getImageLinseter(final ImageView view,
+															 final Bitmap defaultImageBitmap, final Bitmap errorImageBitmap){
+
+
+		return new ImageLoader.ImageListener() {
+			@Override
+			public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+				if(imageContainer.getBitmap() != null ){
+					view.setImageBitmap(imageContainer.getBitmap());
+				}else if(defaultImageBitmap != null ){
+					view.setImageBitmap(defaultImageBitmap);
+				}
+			}
+
+
+			@Override
+			public void onErrorResponse(VolleyError volleyError) {
+				if(errorImageBitmap != null){
+					view.setImageBitmap(errorImageBitmap);
+				}
+			}
+		};
+	}
 
 
 }
