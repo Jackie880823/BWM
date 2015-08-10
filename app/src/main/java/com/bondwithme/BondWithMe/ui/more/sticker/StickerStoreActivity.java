@@ -472,17 +472,18 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                 public void onFinish() {
                     if (!StickerStoreActivity.this.isFinishing()){
                         File f = new File(target);
-                        LogUtil.d(TAG,"===onFinish==="+f.exists());
+                        LogUtil.d(TAG, "===onFinish===" + f.exists());
 
                         if (f.exists()){
                             Uri uri = Uri.parse(target);
                             uriMap.put(dataStickerBanner.get(finalI).getSticker_group_path(),uri);
                         }
-
-                        currentItem = finalI;
-                        downloadFinish(currentItem);
-                        mProgressDialog.setVisibility(View.INVISIBLE);
-
+                        //下载好一张banner就显示
+                        if (uriMap.size() == 1){
+                            currentItem = finalI;
+                            downloadFinish(currentItem);
+                            mProgressDialog.setVisibility(View.INVISIBLE);
+                        }
                     }
 
                 }
