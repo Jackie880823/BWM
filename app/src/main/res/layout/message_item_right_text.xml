@@ -15,7 +15,7 @@
         android:src="@drawable/default_head_icon"/>
 
 
-    <com.bondwithme.BondWithMe.widget.JustifyTextView
+    <TextView
         android:id="@+id/message_item_content_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
