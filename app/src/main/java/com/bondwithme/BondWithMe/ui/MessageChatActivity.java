@@ -547,6 +547,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     case R.id.message_recyclerView:
                         hideAllViewState();
                         break;
+                    case R.id.no_message_data_linear:
+                        hideAllViewState();
+                        break;
                     case R.id.et_chat:
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -715,6 +718,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
         recyclerView.setOnTouchListener(this);
         etChat.setOnTouchListener(this);
+        empty_message.setOnTouchListener(this);
 
         etChat.setFilters(new InputFilter[]{new CustomLengthFilter(INPUT_EDIT_MAX_LENGTH)});
 

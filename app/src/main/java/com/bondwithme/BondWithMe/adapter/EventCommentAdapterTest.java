@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,9 +44,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
     private int detailItemCount;
     RecyclerView recyclerView;
 
-    private static final int HEADER_VIEW_TYPE = -1000;
-    private static final int FOOTER_VIEW_TYPE = -2000;
-
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_SECOND = 2;
@@ -75,77 +71,15 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
         data.addAll(newdData);
         notifyDataSetChanged();
     }
-    //发送评论的时候，添加到数据实体list集合
-    public void addHistoryData(List<EventCommentEntity> list) {
-        List<EventCommentEntity> msgList = new ArrayList<>();
-        for (EventCommentEntity msgEntity : list) {
-            if (!data.contains(msgEntity)) {
-                msgList.add(msgEntity);
-            }
-        }
-        int listSize = list.size();
-        data.addAll(0, msgList);
-        notifyDataSetChanged();
-//        recyclerView.scrollToPosition(listSize);
-    }
-    public void addSendData(List<EventCommentEntity> list) {
-        if (null == list) {
-            return;
-        }
-        data.clear();
-        data.addAll(list);
-        notifyDataSetChanged();
-//        recyclerView.scrollToPosition(getItemCount() - 1);
-    }
-
-    public void addOrUpdateItem(EventCommentEntity q) {
-        int pos = data.indexOf(q);
-        if (pos >= 0) {
-            updateItem(q, pos);
-        } else {
-            addItem(q);
-        }
-    }
-    public void addMsgEntity(EventCommentEntity msgEntity) {
-        //如果有聊天信息隐藏默认的布局
-//        messageChatActivity.empty_message.setVisibility(View.GONE);
-        //显示聊天布局下拉刷新控件
-//        messageChatActivity.swipeRefreshLayout.setVisibility(View.VISIBLE);
-//        Log.i("添加item======","");
-        int listSize = data.size();
-        data.add(0, msgEntity);
-
-//        notifyDataSetChanged();
-        recyclerView.scrollToPosition(getItemCount() - 1);
-    }
-
     public void removeCommentData(){
         data.clear();
         notifyDataSetChanged();
     }
-    private boolean isHeader(int position) {
-        return position == -1000;
-    }
-    /**
-     * 是否有评论
-     * @return
-     */
-    private boolean isComment() {
-        return data.size() > 0;
-    }
 
-    /**
-     * 是否是最后一评论
-     * @param viewType
-     * @return
-     */
-    private boolean isFooter(int viewType){
-        return viewType >= FOOTER_VIEW_TYPE && viewType < (FOOTER_VIEW_TYPE + 1);
-    }
     @Override
     public int getItemViewType(int position) {
-        Log.i("getItemViewType=====",position+"");
-        Log.i("getItemViewDagt=====",data.size()+"");
+//        Log.i("getItemViewType=====",position+"");
+//        Log.i("getItemViewDagt=====",data.size()+"");
 
         if(position == 0){
             return TYPE_HEADER;
@@ -182,7 +116,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
         // 加载Item的布局.布局中用到的真正的CardView.
         View view = null ;
         RecyclerView.ViewHolder viewHolder = null;
-        Log.i("onCreateViewHolder=====",viewType+"");
+//        Log.i("onCreateViewHolder=====",viewType+"");
         switch (viewType){
             case TYPE_HEADER:
                 view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_event_detail_head, parent, false);
@@ -208,7 +142,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Log.i("onBindViewHolder=====",position+"");
+//        Log.i("onBindViewHolder=====",position+"");
         if(position == 0 ){
             VHHeader header = (VHHeader) holder;
             EventEntity detail = detailData;
@@ -251,7 +185,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             }else {
                 header.eventMapCation.setVisibility(View.GONE);
             }
-
 
         }
         if(position == 1){
@@ -572,7 +505,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             comment_date = (TextView) itemView.findViewById(R.id.comment_date);
             tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);
             iv_agree = (ImageButton) itemView.findViewById(R.id.iv_agree);
-            agreeTouch = itemView.findViewById(R.id.agree_touch);
+            agreeTouch = itemView.findViewById(R.id.rl_agree);
             btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
 //            progressBar = (CircularProgress) itemView.findViewById(R.id.message_progress_bar);
             chatsImage = itemView.findViewById(R.id.ll_chats_image);
@@ -599,7 +532,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                         mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
                     }
                     break;
-                case R.id.agree_touch:
+                case R.id.rl_agree:
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());
                     if (TextUtils.isEmpty(commentEntity.getLove_id())) {
@@ -661,7 +594,9 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             comment_date = (TextView) itemView.findViewById(R.id.comment_date);
             tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);
             iv_agree = (ImageButton) itemView.findViewById(R.id.iv_agree);
-            agreeTouch = itemView.findViewById(R.id.agree_touch);
+//            agreeTouch = itemView.findViewById(R.id.rl_agree);
+//            iv_agree
+            agreeTouch = itemView.findViewById(R.id.rl_agree);
             btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
 //            progressBar = (CircularProgress) itemView.findViewById(R.id.message_progress_bar);
             chatsImage = itemView.findViewById(R.id.ll_chats_image);
@@ -688,7 +623,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                         mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
                     }
                     break;
-                case R.id.agree_touch:
+                case R.id.rl_agree:
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());
                     if (TextUtils.isEmpty(commentEntity.getLove_id())) {
@@ -748,7 +683,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             comment_date = (TextView) itemView.findViewById(R.id.comment_date);
             tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);
             iv_agree = (ImageButton) itemView.findViewById(R.id.iv_agree);
-            agreeTouch = itemView.findViewById(R.id.agree_touch);
+            agreeTouch = itemView.findViewById(R.id.rl_agree);
             btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
             progressBar = (CircularProgress) itemView.findViewById(R.id.message_progress_bar);
             chatsImage = itemView.findViewById(R.id.ll_chats_image);

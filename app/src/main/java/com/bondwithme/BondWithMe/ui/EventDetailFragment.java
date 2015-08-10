@@ -2,7 +2,6 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -69,7 +68,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private static final String Tag = EventDetailFragment.class.getSimpleName();
     //    private final static String TAG = EventDetailFragment.class.getSimpleName();
 
-    private ProgressDialog mProgressDialog;
 
     private List<EventCommentEntity> data = new ArrayList<EventCommentEntity>();
     private String group_id;
@@ -187,30 +185,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             expandFunctionLinear = getViewById(R.id.ll_more);
             stickerLinear = getViewById(R.id.ll_sticker);
             connentLayout = getViewById(R.id.rv_event_comment_list);
-//            Socontent = getViewById(R.id.content);
-//
-//            push_date = getViewById(R.id.push_date);
-//            owner_name = getViewById(R.id.owner_name);
-//            owner_head = getViewById(R.id.owner_head);
-//            event_title = getViewById(R.id.event_title);
-//            event_picture_4_location = getViewById(R.id.event_picture_4_location);
-
-//            event_desc = getViewById(R.id.event_desc);
-//            event_date = getViewById(R.id.event_date);
-//            location_desc = getViewById(R.id.location_desc);
-//            btn_intent_all = getViewById(R.id.btn_intent_all);
-//            iv_intent_agree = getViewById(R.id.iv_intent_agree);
-//            iv_intent_maybe = getViewById(R.id.iv_intent_maybe);
-//            iv_intent_no = getViewById(R.id.iv_intent_no);
-//            going_count = getViewById(R.id.going_count);
-//            maybe_count = getViewById(R.id.maybe_count);
-//            not_going_count = getViewById(R.id.not_going_count);
-
-
-//            btn_intent_all.setOnClickListener(this);
-//            iv_intent_agree.setOnClickListener(this);
-//            iv_intent_maybe.setOnClickListener(this);
-//            iv_intent_no.setOnClickListener(this);
             option_status = getViewById(R.id.option_status);
             option_cancel = getViewById(R.id.option_cancel);
             event_options = getViewById(R.id.event_options);
@@ -230,13 +204,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             option_no_going.setOnClickListener(this);
             option_maybe.setOnClickListener(this);
             option_going.setOnClickListener(this);
-//            Socontent.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    hideAllViewState();
-//                    return false;
-//                }
-//            });
             connentLayout.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -758,11 +725,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             return null;
         }
 
-//        @Override
-//        protected void onPostExecute(Boolean aBoolean) {
-//            LogUtil.i("AsyncTask_结束","");
-//            progressBar.setVisibility(View.GONE);
-//        }
     }
 
     @Override

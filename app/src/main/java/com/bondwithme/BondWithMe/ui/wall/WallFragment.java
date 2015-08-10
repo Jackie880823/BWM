@@ -116,7 +116,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                if(data.size() >=  offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
                 }
@@ -208,7 +208,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     data = gson.fromJson(response, new TypeToken<ArrayList<WallEntity>>() {}.getType());
                     if(isRefresh) {
                         startIndex = data.size();
-                        currentPage = 1;
                         finishReFresh();
                         initAdapter();
                     } else {
