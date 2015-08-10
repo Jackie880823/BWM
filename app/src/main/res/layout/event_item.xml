@@ -62,18 +62,17 @@
                     style="@style/text_light_default"
                     android:layout_centerVertical="true"
                     android:lines="1"
-                    android:maxEms="8"
+                    android:maxEms="12"
                     android:ellipsize="end"
-                    android:singleLine="true"
-                    />
+                    android:singleLine="true" />
 
-                <ImageView
-                    android:id="@+id/icon_release_date"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="@dimen/default_view_margin"
-                    android:layout_toLeftOf="@+id/tv_release_date"
-                    android:src="@drawable/calendar" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/icon_release_date"-->
+                    <!--android:layout_width="20dp"-->
+                    <!--android:layout_height="20dp"-->
+                    <!--android:layout_marginRight="@dimen/default_view_margin"-->
+                    <!--android:layout_toLeftOf="@+id/tv_release_date"-->
+                    <!--android:src="@drawable/calendar" />-->
 
                 <TextView
                     android:id="@+id/tv_release_date"

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -83,7 +82,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.tvUserName.setText(R.string.text_canceled);
                 item.tvUserName.setTextColor(mContext.getResources().getColor(R.color.bold_text_color_red));
                 item.tvUserName.setTypeface(null, Typeface.BOLD);
-                item.icon_release_date.setVisibility(View.GONE);
+//                item.icon_release_date.setVisibility(View.GONE);
                 item.tvReleaseDate.setVisibility(View.GONE);
                 if(!"0".equals(ee.getGroup_new_post())){
                     this.position = position;
@@ -101,7 +100,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 item.tvUserName.setTextColor(mContext.getResources().getColor(R.color.default_text_color_light));
                 item.tvUserName.setText(ee.getUser_given_name());
                 item.tvUserName.setTypeface(null, Typeface.NORMAL);
-                item.icon_release_date.setVisibility(View.VISIBLE);
+//                item.icon_release_date.setVisibility(View.VISIBLE);
 //                item.tvReleaseDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
                 item.tvReleaseDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
                 item.tvReleaseDate.setVisibility(View.VISIBLE);
@@ -159,7 +158,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView tvUserName;
         TextView tvReleaseDate;
         TextView item_unenable;
-        ImageView icon_release_date;
+//        ImageView icon_release_date;
         RelativeLayout item_event;
         //        FrameLayout event_start;
         RelativeLayout event_start;
@@ -174,7 +173,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             tvReleaseDate = (TextView) itemView.findViewById(R.id.tv_release_date);
             item_unenable = (TextView) itemView.findViewById(R.id.item_unenable);
-            icon_release_date = (ImageView) itemView.findViewById(R.id.icon_release_date);
+//            icon_release_date = (ImageView) itemView.findViewById(R.id.icon_release_date);
             item_event = (RelativeLayout) itemView.findViewById(R.id.item_event);
             event_start = (RelativeLayout) itemView.findViewById(R.id.event_start);
 //

@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +46,7 @@ import com.bondwithme.BondWithMe.widget.SendComment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.CircularProgress;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,7 +89,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private RecyclerView rvList;
     private EventEntity event;
     int colorIntentSelected;
-//    private CircularProgress progressBar;
+    private CircularProgress progressBar;
+    private View defaultComment;
 
     private SendComment sendCommentView;
     private ScrollView Socontent;
@@ -125,14 +125,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-//            bindData();
-//            requestComment();
-        }
-    };
 
     /**
      * Called when the fragment is visible to the user and actively running.
@@ -188,7 +180,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         });
         if(NetworkUtil.isNetworkConnected(getActivity())) {
 
-//            progressBar = getViewById(R.id.event_detail_progress_bar);
 
             etChat = getViewById(R.id.et_chat);
             expandFunctionButton = getViewById(R.id.ib_more);
@@ -418,7 +409,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 intent.putExtra("datas", datas);
                 startActivity(intent);
             }
-
             @Override
             public void setIntentAll(EventEntity entity,int memeber) {
                 goInvitedStutus(memeber);
@@ -426,12 +416,32 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
 
         });
+        adapter.setUpdateListener(new EventCommentAdapterTest.ListViewItemViewUpdateListener() {
+            @Override
+            public void updateHeadView(View headView) {
+                initHeadView(headView);
+            }
+
+            @Override
+            public void updateListSecondView(View listSecondView) {
+                initListSecondView(listSecondView);
+            }
+        });
         rvList.setAdapter(adapter);
         RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
         animator.setAddDuration(2000);
         animator.setRemoveDuration(1000);
     }
 
+    private void initListSecondView(View listSecondView){
+        progressBar = (CircularProgress) listSecondView.findViewById(R.id.event_detail_progress_bar);
+
+    }
+
+    private void initHeadView(View headView){
+        defaultComment = headView.findViewById(R.id.default_comment);
+//        defaultComment.setVisibility(View.GONE);
+    }
 //    @Override
 //    public void onActivityCreated(Bundle savedInstanceState) {
 //        super.onActivityCreated(savedInstanceState);
@@ -531,14 +541,19 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
-
+                    if(progressBar != null){
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 @Override
                 public void onFinish() {
-//                    data.clear();
-//                    adapter.removeCommentData();
-//                    requestComment();
+//                        data.clear();
+//                        adapter.removeCommentData();
+//                        requestComment();
+                    if(progressBar != null){
+                        progressBar.setVisibility(View.GONE);
+                    }
                 }
 
                 @Override
@@ -620,7 +635,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
-
+                        if(progressBar != null){
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override
@@ -628,6 +645,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        data.clear();
 //                        adapter.removeCommentData();
 //                        requestComment();
+                        if(progressBar != null){
+                            progressBar.setVisibility(View.GONE);
+                        }
+
                     }
 
                     @Override
@@ -676,18 +697,31 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     /**
      * 异步上传照片
      */
-    class uploadBimapTask extends AsyncTask<Map, Void, Boolean> {
+    class uploadBimapTask extends AsyncTask<Map, Void, Boolean>{
+
+        @Override
+        protected void onPreExecute() {
+//            LogUtil.i("AsyncTask_开始", "");
+            if(progressBar != null){
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        }
+
         @Override
         protected Boolean doInBackground(Map... params) {
 
             new HttpTools(App.getContextInstance()).upload(Constant.API_COMMENT_POST_TEXT, params[0], Tag, new HttpCallback() {
+
                 @Override
                 public void onStart() {
                 }
 
                 @Override
                 public void onFinish() {
-//                    requestComment();
+                    if(progressBar != null){
+                        progressBar.setVisibility(View.GONE);
+
+                    }
                 }
 
                 @Override
@@ -724,6 +758,11 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             return null;
         }
 
+//        @Override
+//        protected void onPostExecute(Boolean aBoolean) {
+//            LogUtil.i("AsyncTask_结束","");
+//            progressBar.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -840,7 +879,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 return;
 
             HashMap<String, String> jsonParams = new HashMap<String, String>();
-
+//            defaultComment.setVisibility(View.GONE);
             jsonParams.put("user_id", MainActivity.getUser().getUser_id());
             jsonParams.put("group_id", event.getGroup_id());
             jsonParams.put("content_group_id", event.getContent_group_id());
@@ -856,13 +895,16 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             new HttpTools(getActivity()).get(url, null, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
-
+//                    if(adapter != null && adapter.getItemCount() == 1){
+//                        defaultComment.setVisibility(View.GONE);
+//                    }
                 }
 
                 @Override
                 public void onFinish() {
 //                    progressBar.setVisibility(View.GONE);
                     //                    vProgress.setVisibility(View.GONE);
+
                 }
 
                 @Override
@@ -883,6 +925,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                             initAdapter();
                         }
                     }
+//                    if(adapter != null && adapter.getItemCount() > 1){
+//                        defaultComment.setVisibility(View.GONE);
+//                    }
                     loading = false;
 //                    //如果有评论，则隐藏进度条
 //                    if(adapter != null && adapter.getItemCount() > 1) {
