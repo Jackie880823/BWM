@@ -571,6 +571,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             agreeTouch.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
             chatsImage.setOnClickListener(this);
+            networkImageView.setOnClickListener(this);
         }
 
         @Override
@@ -585,7 +586,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                         }
                     }
                     break;
-                case R.id.ll_chats_image:
+                case R.id.message_pic_iv:
                     if(mCommentActionListener != null){
                         mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
                     }
@@ -659,6 +660,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             agreeTouch.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
             chatsImage.setOnClickListener(this);
+            networkImageView.setOnClickListener(this);
         }
 
         @Override
@@ -673,7 +675,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                         }
                     }
                     break;
-                case R.id.ll_chats_image:
+                case R.id.message_pic_iv:
                     if(mCommentActionListener != null){
                         mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
                     }
@@ -744,6 +746,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             chatsImage = itemView.findViewById(R.id.ll_chats_image);
             agreeTouch.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
+            networkImageView.setOnClickListener(this);
         }
 
         @Override
@@ -757,7 +760,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                         }
                     }
                     break;
-                case R.id.ll_chats_image:
+                case R.id.message_pic_iv:
                     if(mCommentActionListener != null){
                         mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
                     }
