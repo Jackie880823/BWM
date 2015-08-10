@@ -99,6 +99,7 @@ public class PathRelationshipActivity extends BaseActivity {
             {
                 setResult(RESULT_CANCELED);
                 super.finish();
+                return;
             }
             intent.putExtra("relationship", data_Us.get(data_Zh.indexOf(tvRelationship.getText().toString())));
         } else {
@@ -106,6 +107,7 @@ public class PathRelationshipActivity extends BaseActivity {
             {
                 setResult(RESULT_CANCELED);
                 super.finish();
+                return;
             }
             intent.putExtra("relationship", tvRelationship.getText().toString());
         }
@@ -147,7 +149,6 @@ public class PathRelationshipActivity extends BaseActivity {
         if (-1 == getIntent().getIntExtra("selectMemeber",-1))
         {
             tvRelationship.setText(getString(R.string.error_feedback));//提示错误，此时index为-1
-            return ;
         }
         else
         {
