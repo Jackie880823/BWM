@@ -146,11 +146,16 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
         if(position == 0 ){
             VHHeader header = (VHHeader) holder;
             EventEntity detail = detailData;
+
             if(detailData == null){
                 return;
             }
             if(data != null && data.size()>0){
                 header.defaultComment.setVisibility(View.GONE);
+            }
+
+            if(updateListener != null){
+                updateListener.updateHeadView(header.itemView);
             }
             setDetail(header, detail);
 //            Log.i("getGroup_owner_id()", detail.getGroup_owner_id()+"");
@@ -196,6 +201,9 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             }else {
                 second.tv_comment_content.setVisibility(View.GONE);
                 setCommentPic(second.gifImageView,second.networkImageView,second.chatsImage, entity);
+            }
+            if(updateListener != null){
+                updateListener.updateListSecondView(second.itemView);
             }
             setComment(second.btn_comment_del,second.iv_agree,entity);
         }else if(position >1 && position < (data.size()+1)){
@@ -504,6 +512,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             agreeTouch.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
             chatsImage.setOnClickListener(this);
+            networkImageView.setOnClickListener(this);
         }
 
         @Override
@@ -518,7 +527,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                         }
                     }
                     break;
-                case R.id.ll_chats_image:
+                case R.id.message_pic_iv:
                     if(mCommentActionListener != null){
                         mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
                     }
@@ -594,6 +603,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             agreeTouch.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
             chatsImage.setOnClickListener(this);
+            networkImageView.setOnClickListener(this);
         }
 
         @Override
@@ -608,7 +618,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                         }
                     }
                     break;
-                case R.id.ll_chats_image:
+                case R.id.message_pic_iv:
                     if(mCommentActionListener != null){
                         mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
                     }
@@ -679,6 +689,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
             chatsImage = itemView.findViewById(R.id.ll_chats_image);
             agreeTouch.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
+            networkImageView.setOnClickListener(this);
         }
 
         @Override
@@ -692,7 +703,7 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
                         }
                     }
                     break;
-                case R.id.ll_chats_image:
+                case R.id.message_pic_iv:
                     if(mCommentActionListener != null){
                         mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
                     }
@@ -753,5 +764,16 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
         public void setIntentAll(EventEntity entity,int memeber);
     }
 
+    private ListViewItemViewUpdateListener updateListener;
+
+    public void setUpdateListener(ListViewItemViewUpdateListener updateListener) {
+        this.updateListener = updateListener;
+    }
+
+    public interface ListViewItemViewUpdateListener {
+        void updateHeadView(View headView);
+
+        void updateListSecondView(View listHeadView);
+    }
 
 }

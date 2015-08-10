@@ -241,17 +241,10 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
                     Intent intent = new Intent(getActivity(), PathRelationshipActivity.class);
                     intent.putExtra("member_id", memberId);
-//                    if(!TextUtils.isEmpty(relationship)){
-//                        intent.putExtra("relationship", relationship);
-//                        intent.putExtra("fam_nickname", famNickname);
-//                        intent.putExtra("member_status", memberStatus);
-////                        intent.putExtra("selectMemeber", data_Us.indexOf(userEntity.getTree_type_name()));
-//                        intent.putExtra("selectMemeber", "");
-//                    }
                     intent.putExtra("relationship", userEntity.getTree_type_name());
                     intent.putExtra("fam_nickname", userEntity.getFam_nickname());
                     intent.putExtra("member_status", userEntity.getUser_status());
-                    //传index进下个界面
+                    //传index进下个界面,需要判断index可能为-1
                     intent.putExtra("selectMemeber", data_Us.indexOf(userEntity.getTree_type_name()));
 //                    startActivityForResult(intent, 0);
                     startActivityForResult(intent, 1);
