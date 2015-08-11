@@ -39,6 +39,10 @@
                     android:id="@+id/tv_comment_owner_name"
                     style="@style/text_dark_default"
                     android:layout_centerVertical="true"
+                    android:lines="1"
+                    android:maxEms="6"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:textStyle="bold" />
 
                 <ImageButton

@@ -30,7 +30,8 @@
 
             <TextView
                 android:id="@+id/user_name"
-                style="@style/text_dark_default"
+                style="@style/text_user_name"
+                android:textColor="@color/default_text_color_dark"
                 android:layout_marginLeft="@dimen/default_view_margin" />
 
             <ImageButton
