@@ -302,7 +302,7 @@
     <string name="text_dialog_no">否</string>
     <string name="text_dialog_show_no">取消</string>
     <string name="text_create_group_not_save">确定取消？资料将不被保存。</string>
-    <string name="text_create_group_members_least_two">你必须拥有两个或以上的会员以创建新群组。添加新会员吧</string>
+    <string name="text_create_group_members_least_two">你必须拥有两个或以上的成员以创建新群组。添加新成员吧</string>
 
     <string name="text_setting_1_1">1天前</string>
     <string name="text_setting_1_2">3天前</string>
@@ -432,7 +432,7 @@
     <string name="text_big_day">“大”日子</string>
     <string name="text_miss">想念</string>
     <string name="text_news">消息</string>
-    <string name="text_member">会员</string>
+    <string name="text_member">成员</string>
     <string name="text_recommend">推荐</string>
     <string name="text_alert_group">群组</string>
 
@@ -577,7 +577,7 @@
     <string name="text_phone">电话</string>
     <string name="text_change_password">更改密码</string>
 
-    <string name="title_member_love">点赞会员</string>
+    <string name="title_member_love">点赞成员</string>
 
     <string name="miss_you">你已成功发送 Miss!</string>
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>

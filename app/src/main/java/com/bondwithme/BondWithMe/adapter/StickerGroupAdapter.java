@@ -87,7 +87,7 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        if(mStickers.contains(stickerGroupEntity.getPath())){
+        if(mStickers!=null&&mStickers.contains(stickerGroupEntity.getPath())){
             holder.tvDownload.setVisibility(View.INVISIBLE);
             holder.ivExist.setVisibility(View.VISIBLE);
         }else{

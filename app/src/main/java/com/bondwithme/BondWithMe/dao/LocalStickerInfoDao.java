@@ -46,6 +46,8 @@ public class LocalStickerInfoDao {
         try {
             if (stickerInfoDaoInstance == null) {
                 stickerInfoDaoInstance = new LocalStickerInfoDao(paramContext);
+            }
+            if(stickerInfoDao==null){
                 try {
                     stickerInfoDao = SQLiteHelperOrm.getHelper(paramContext).getDao(LocalStickerInfo.class);
                 } catch (Exception e) {
@@ -96,6 +98,9 @@ public class LocalStickerInfoDao {
     }
 
     public List<String> queryAllSticker() {
+        if(stickerInfoDao==null){
+            return  null;
+        }
         List<String> list = new ArrayList<>();
         try {
             List<LocalStickerInfo> localList = null;
