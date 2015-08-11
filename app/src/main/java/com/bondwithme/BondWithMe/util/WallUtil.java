@@ -206,8 +206,9 @@ public class WallUtil {
         int startGroup = description.indexOf(strGroup);
         int endGroup = startGroup + strGroup.length();
         if(endGroup == endMember) {
-            // @群组和用户结束所在的位置相等说明没有任何@可以不做处理
+            // @群组和用户结束所在的位置相等说明没有任何@,全字符可点击
             LogUtil.w(TAG, "setClickNormal& no action");
+            setSpecialText(ssb, wallEntity, description, 0, description.length());
             return;
         } else {
 
