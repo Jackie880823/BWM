@@ -10,9 +10,9 @@
     <LinearLayout
         android:id="@+id/comment_head_ll"
         android:layout_width="match_parent"
-        android:visibility="gone"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -79,10 +79,9 @@
 
                 <TextView
                     android:id="@+id/tv_comment_owner_name"
-                    style="@style/text_dark_default"
+                    style="@style/text_user_name"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="@dimen/default_view_margin"
-                    android:textStyle="bold"/>
+                    android:layout_marginTop="@dimen/default_view_margin"/>
 
                 <ImageButton
                     android:id="@+id/btn_comment_del"
@@ -140,31 +139,38 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true">
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/tv_like_desc"
-                        style="@style/text_dark_default"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:text="@string/text_like_desc"
-                        android:textStyle="bold"/>
+                        android:id="@+id/tv_agree"
+                        android:layout_width="@dimen/_100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/default_view_margin"
+                        android:layout_marginRight="@dimen/default_view_margin"
+                        android:layout_toLeftOf="@+id/iv_agree"
+                        android:ellipsize="end"
+                        android:gravity="right|center_vertical"
+                        android:singleLine="true"
+                        android:textColor="@color/default_text_color_blue"
+                        android:textSize="@dimen/text_small_size"
+                        android:visibility="gone"
+                        />
+
 
                     <TextView
                         android:id="@+id/tv_agree_count"
                         style="@style/text_dark_default"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginRight="@dimen/default_view_margin"
-                        android:layout_toLeftOf="@+id/tv_like_desc"
+                        android:layout_alignParentRight="true"
                         android:textStyle="bold"/>
 
                     <ImageButton
                         android:id="@+id/iv_agree"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/default_view_margin"
                         android:layout_toLeftOf="@+id/tv_agree_count"
-                        android:background="@null"/>
+                        android:background="@null"
+                        android:paddingRight="@dimen/_15dp"/>
                 </RelativeLayout>
 
 

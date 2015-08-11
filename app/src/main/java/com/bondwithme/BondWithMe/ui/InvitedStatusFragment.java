@@ -82,7 +82,6 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         fragments.add(InvitedTabFragment.newInstance(StatusType.maybe.name(), group_id,owner_id));
         fragments.add(InvitedTabFragment.newInstance(StatusType.no.name(), group_id,owner_id));
 
-
         tabPagerAdapter = new MyFragmentPagerAdapter(getParentActivity().getSupportFragmentManager(), getParentActivity(), mViewPager, fragments);
         tabPagerAdapter.setOnMyPageChangeListenner(new MyFragmentPagerAdapter.OnPageChangeListenner() {
             @Override
@@ -122,7 +121,6 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
 
     @Override
     public void requestData() {
-
 
     }
 

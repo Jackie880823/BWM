@@ -577,6 +577,8 @@
     <string name="text_phone">电话</string>
     <string name="text_change_password">更改密码</string>
 
+    <string name="title_member_love">点赞会员</string>
+
     <string name="miss_you">你已成功发送 Miss!</string>
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>
     <string name="text_archive_data">没有存档</string>
@@ -590,5 +592,7 @@
     <string name="text_no_date_recommended">未有推荐通告</string>
     <string name="text_no_date_group">未有群组通告</string>
     <string name="text_hold_and_speak">按住说话</string>
+
+    <string name="loves_count">%d 喜欢</string>
 
 </resources>
