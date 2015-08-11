@@ -327,6 +327,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                         setImageSwitcher(currentItem);
                     }
                     handler.sendEmptyMessageDelayed(AUTO_PLAY, 2000);
+                    break;
             }
         }
     };
@@ -445,9 +446,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
             }
         });
-
-
-
     }
 
     /** download pictures for banner*/
