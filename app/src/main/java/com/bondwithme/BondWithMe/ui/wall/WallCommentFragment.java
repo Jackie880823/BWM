@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe.ui.wall;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -11,39 +10,30 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallCommentAdapter;
+import com.bondwithme.BondWithMe.adapter.WallHolder;
 import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
-import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
-import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.SendComment;
 import com.google.gson.Gson;
@@ -52,7 +42,6 @@ import com.google.gson.reflect.TypeToken;
 import com.material.widget.CircularProgress;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,56 +55,20 @@ import java.util.Map;
  * Use the {@link WallCommentFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements WallViewClickListener, View.OnClickListener {
+public class WallCommentFragment extends BaseFragment<WallCommentActivity> implements WallViewClickListener {
     private final static String TAG = WallCommentFragment.class.getSimpleName();
 
     private static final String GET_DETAIL = TAG + "_GET_DETAIL";
     private static final String GET_COMMENTS = TAG + "_GET_COMMENTS";
     private static final String POST_COMMENTS = TAG + "_POST_COMMENTS";
-    private static final String POST_LOVE = TAG + "_POST_LOVE";
     private static final String POST＿LOVE_COMMENTS = TAG + "_POST_LOVE_COMMENT";
     private static final String UPLOAD_PIC = TAG + "_POST_PIC";
     private static final String DELETE_COMMENT = TAG + "_DELETE_COMMENT";
     private static final String POST_DELETE = TAG + "_POST_DELETE";
 
-    private CircularNetworkImage nivHead;
-    private TextView tvContent;
-    /**
-     * 时间
-     */
-    private TextView tvDate;
-    /**
-     * 用户名
-     */
-    private TextView tvUserName;
-    View llWallsImage;
-    /**
-     * 分享的网络图片显示控件
-     */
-    private NetworkImageView imWallsImages;
-    /**
-     * 图片数量统计显示
-     */
-    private TextView tvPhotoCount;
-    /**
-     *
-     */
-    private TextView tvAgreeCount;
-    /**
-     * 评论总数显示
-     */
-    private TextView tvCommentCount;
-    private ImageButton ibAgree;
-    private ImageButton ibComment;
-    private ImageButton btn_del;
-    private ImageView iv_mood;
-    // location tag
-    private LinearLayout llLocation;
-    private ImageView ivLocation;
-    private TextView tvLocation;
-    private View vProgress;
+    private WallHolder holder;
 
-    boolean loving = false;
+    private View vProgress;
 
     private String content_group_id;
     private String group_id;
@@ -123,7 +76,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private int startIndex = 0;
     private final static int offset = 10;
     private boolean loading;
-    private View split;
     LinearLayoutManager llm;
     private RecyclerView rvList;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -212,14 +164,14 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             /**
              * 得到图片uri
              *
-             * @param uri
+             * @param uri 收到评论图片的URI
              */
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onReceiveBitmapUri(Uri uri) {
                 if(uri != null) { // 传输图片
                     CompressBitmapTask task = new CompressBitmapTask();
-
+                    vProgress.setVisibility(View.VISIBLE);
                     //for not work in down 11
                     if(SDKUtil.IS_HONEYCOMB) {
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
@@ -272,35 +224,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void initWallView(View wallView) {
-        if(wallView != null) {
-            split = wallView.findViewById(R.id.comment_split_line);
-            nivHead = (CircularNetworkImage) wallView.findViewById(R.id.owner_head);
-            tvUserName = (TextView) wallView.findViewById(R.id.owner_name);
-            tvContent = (TextView) wallView.findViewById(R.id.tv_wall_content);
-            tvDate = (TextView) wallView.findViewById(R.id.push_date);
-            llWallsImage = wallView.findViewById(R.id.ll_walls_image);
-            imWallsImages = (NetworkImageView) wallView.findViewById(R.id.iv_walls_images);
-            tvPhotoCount = (TextView) wallView.findViewById(R.id.tv_wall_photo_count);
-            tvAgreeCount = (TextView) wallView.findViewById(R.id.tv_wall_agree_count);
-            tvCommentCount = (TextView) wallView.findViewById(R.id.tv_wall_relay_count);
-            ibAgree = (ImageButton) wallView.findViewById(R.id.iv_love);
-            ibComment = (ImageButton) wallView.findViewById(R.id.iv_comment);
-            btn_del = (ImageButton) wallView.findViewById(R.id.btn_del);
-            iv_mood = (ImageView) wallView.findViewById(R.id.iv_mood);
-            llLocation = (LinearLayout) wallView.findViewById(R.id.ll_location);
-            ivLocation = (ImageView) wallView.findViewById(R.id.iv_location);
-            tvLocation = (TextView) wallView.findViewById(R.id.tv_location);
 
-            wallView.findViewById(R.id.ll_love).setOnClickListener(this);
-            llLocation.setOnClickListener(this);
-            ivLocation.setOnClickListener(this);
-            tvLocation.setOnClickListener(this);
-
-            ibAgree.setOnClickListener(this);
-            //            ibComment.setOnClickListener(this);
-            btn_del.setOnClickListener(this);
-            imWallsImages.setOnClickListener(this);
-        }
+        holder = new WallHolder(wallView, mHttpTools, true);
     }
 
     private void initListHeadView(View listHeadView) {
@@ -381,94 +306,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void setWallContext() {
-        VolleyUtil.initNetworkImageView(getParentActivity(), nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wall.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-
-        String atDescription = TextUtils.isEmpty(wall.getText_description()) ? "" : wall.getText_description();
-        tvContent.setText(atDescription);
-        // 设置文字可点击，实现特殊文字点击跳转必需添加些设置
-        tvContent.setMovementMethod(LinkMovementMethod.getInstance());
-
-        int tagMemberCount = wall.getTag_member().size();
-        int tagGroupCount = wall.getTag_group().size();
-        if(tagMemberCount > 0 || tagGroupCount > 0) {
-            WallUtil wallUtil = new WallUtil(getActivity(), this);
-            wallUtil.setSpanContent(tvContent, wall, atDescription, tagMemberCount, tagGroupCount);
-        }
-
-        tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(getParentActivity(), wall.getContent_creation_date()));
-        //            tvTime.setText(wall.getTime());
-        tvUserName.setText(wall.getUser_given_name());
-        if(TextUtils.isEmpty(wall.getFile_id())) {
-            llWallsImage.setVisibility(View.GONE);
-        } else {
-            llWallsImage.setVisibility(View.VISIBLE);
-
-            VolleyUtil.initNetworkImageView(getParentActivity(), imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, wall.getUser_id(), wall.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-
-            // 有图片显示图片总数
-            int count = Integer.valueOf(wall.getPhoto_count());
-            if(count > 1) {
-                String photoCountStr;
-                photoCountStr = count + " " + getString(R.string.text_photos);
-                tvPhotoCount.setText(photoCountStr);
-                tvPhotoCount.setVisibility(View.VISIBLE);
-            } else {
-                tvPhotoCount.setVisibility(View.GONE);
-            }
-        }
-
-         /*is owner wall*/
-        //        if (!TextUtils.isEmpty(wall.getUser_id())&&wall.getUser_id().equals("49")) {
-        //            ibDelete.setVisibility(View.VISIBLE);
-        //        } else {
-        //            ibDelete.setVisibility(View.GONE);
-        //        }
-
-        try {
-            if(wall.getDofeel_code() != null) {
-                StringBuilder b = new StringBuilder(wall.getDofeel_code());
-                int charIndex = wall.getDofeel_code().lastIndexOf("_");
-                b.replace(charIndex, charIndex + 1, "/");
-
-                InputStream is = getParentActivity().getAssets().open(b.toString());
-                iv_mood.setImageBitmap(BitmapFactory.decodeStream(is));
-            } else {
-                iv_mood.setVisibility(View.GONE);
-            }
-        } catch(Exception e) {
-            iv_mood.setVisibility(View.GONE);
-        }
-
-        /*location*/
-        //        if (TextUtils.isEmpty(wall.getLoc_name())) {
-        //            at.setVisibility(View.GONE);
-        //        } else {
-        //            at.setVisibility(View.VISIBLE);
-        //            tvLocation.setText(wall.getLoc_name());
-        //        }
-
-        tvAgreeCount.setText(wall.getLove_count());
-        tvCommentCount.setText(wall.getComment_count());
-
-
-        if(MainActivity.getUser().getUser_id().equals(wall.getUser_id())) {
-            btn_del.setVisibility(View.VISIBLE);
-        } else {
-            btn_del.setVisibility(View.GONE);
-        }
-
-        if(TextUtils.isEmpty(wall.getLove_id())) {
-            ibAgree.setImageResource(R.drawable.love_normal);
-        } else {
-            ibAgree.setImageResource(R.drawable.love_press);
-        }
-
-        if(TextUtils.isEmpty(wall.getLoc_name()) || TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
-            llLocation.setVisibility(View.GONE);
-        } else {
-            llLocation.setVisibility(View.VISIBLE);
-            tvLocation.setText(wall.getLoc_name());
-        }
+        holder.setViewClickListener(this);
+        holder.setWallEntity(wall);
+        holder.setContent(wall, getActivity());
     }
 
     private void getComments() {
@@ -521,13 +361,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     }
                 }
 
-                if(split != null) {
-                    if(adapter != null && adapter.getItemCount() > 0) {
-                        split.setVisibility(View.VISIBLE);
-                    } else {
-                        split.setVisibility(View.GONE);
-                    }
-                }
                 if(progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
@@ -635,9 +468,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 swipeRefreshLayout.setRefreshing(true);
 
                 // 更新评论总数
-                int commentCount = Integer.valueOf((String) tvCommentCount.getText()) + 1;
+                int commentCount = Integer.valueOf((String) holder.getTvCommentCount().getText()) + 1;
                 wall.setComment_count(String.valueOf(commentCount));
-                tvCommentCount.setText(String.valueOf(commentCount));
+                holder.getTvCommentCount().setText(String.valueOf(commentCount));
 
                 // 获取评论列表
                 getComments();
@@ -669,126 +502,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             }
         });
-    }
-
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.ll_love:
-            case R.id.iv_love:
-                int count = Integer.valueOf(tvAgreeCount.getText().toString());
-                if(TextUtils.isEmpty(wall.getLove_id())) {
-                    tvAgreeCount.setText(count + 1 + "");
-                    ibAgree.setImageResource(R.drawable.love_press);
-                    wall.setLove_id(MainActivity.getUser().getUser_id());
-                } else {
-                    ibAgree.setImageResource(R.drawable.love_normal);
-                    wall.setLove_id(null);
-                    tvAgreeCount.setText(count - 1 + "");
-                }
-                LogUtil.i(TAG, "love count = " + count);
-                //判断是否已经有进行中的判断
-                if(!loving) {
-                    LogUtil.i(TAG, "prepare love");
-                    loving = true;
-                    check();
-                } else {
-                    LogUtil.i(TAG, "not love");
-                }
-                break;
-            case R.id.iv_walls_images:
-                showOriginalPic(wall.getContent_id());
-                break;
-            case R.id.btn_del:
-                remove(wall.getContent_group_id());
-                break;
-            case R.id.iv_location:
-            case R.id.tv_location:
-            case R.id.ll_location:
-                gotoLocationSetting(wall);
-                break;
-        }
-    }
-
-    private void gotoLocationSetting(WallEntity wall) {
-        if(TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
-            return;
-        }
-        LocationUtil.goNavigation(getActivity(), Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()), wall.getLoc_type());
-    }
-
-    private void check() {
-
-        // 数据有修改设置result 为 Activity.RESULT_OK
-        getParentActivity().setResult(Activity.RESULT_OK);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    //缓冲时间为100
-                    Thread.sleep(100);
-                } catch(InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                loving = false;
-
-                if(TextUtils.isEmpty(wall.getLove_id())) {
-                    postLove(wall, false);
-                } else {
-                    postLove(wall, true);
-                }
-            }
-        }).start();
-    }
-
-    private void postLove(WallEntity wallEntity, boolean love) {
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put("content_id", wallEntity.getContent_id());
-        params.put("love", love ? "1" : "0");// 0-取消，1-赞
-        params.put("user_id", "" + MainActivity.getUser().getUser_id());
-
-        RequestInfo requestInfo = new RequestInfo(Constant.API_WALL_LOVE, params);
-
-        mHttpTools.post(requestInfo, POST_LOVE, new HttpCallback() {
-            @Override
-            public void onStart() {
-                LogUtil.i(TAG, "onStart");
-            }
-
-            @Override
-            public void onFinish() {
-                LogUtil.i(TAG, "onFinish");
-            }
-
-            @Override
-            public void onResult(String response) {
-                LogUtil.i(TAG, "onResult");
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
-
     }
 
     class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
@@ -823,7 +536,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             mHttpTools.upload(Constant.API_WALL_COMMENT_PIC_POST, params, UPLOAD_PIC, new HttpCallback() {
                 @Override
                 public void onStart() {
-                    vProgress.setVisibility(View.VISIBLE);
+
                 }
 
                 @Override
@@ -838,9 +551,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     swipeRefreshLayout.setRefreshing(true);
 
                     // 更新评论总数
-                    int commentCount = Integer.valueOf((String) tvCommentCount.getText()) + 1;
+                    int commentCount = Integer.valueOf((String) holder.getTvCommentCount().getText()) + 1;
                     wall.setComment_count(String.valueOf(commentCount));
-                    tvCommentCount.setText(String.valueOf(commentCount));
+                    holder.getTvCommentCount().setText(String.valueOf(commentCount));
 
                     getComments();
                     getParentActivity().setResult(Activity.RESULT_OK);
@@ -872,11 +585,13 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         mHttpTools.post(Constant.API_WALL_COMMENT_LOVE, params, POST＿LOVE_COMMENTS, new HttpCallback() {
             @Override
             public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
                 getParentActivity().setResult(Activity.RESULT_OK);
             }
 
             @Override
             public void onFinish() {
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -885,6 +600,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             @Override
             public void onError(Exception e) {
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -922,10 +638,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                         isRefresh = true;
                         swipeRefreshLayout.setRefreshing(true);
 
-                        int commentCount = Integer.valueOf((String) tvCommentCount.getText()) - 1;
+                        int commentCount = Integer.valueOf((String) holder.getTvCommentCount().getText()) - 1;
                         if(commentCount >= 0) {
                             wall.setComment_count(String.valueOf(commentCount));
-                            tvCommentCount.setText(String.valueOf(commentCount));
+                            holder.getTvCommentCount().setText(String.valueOf(commentCount));
                         }
 
                         getComments();
@@ -981,6 +697,11 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         super.onDestroy();
     }
 
+    /**
+     * 显示Wall图片
+     *
+     * @param content_id {@link WallEntity#content_id}
+     */
     @Override
     public void showOriginalPic(String content_id) {
         Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
@@ -994,8 +715,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     /**
-     * @param content_group_id
-     * @param group_id
+     * 显示Wall详情包括评论
+     *
+     * @param content_group_id {@link WallEntity#content_group_id}
+     * @param group_id         {@link WallEntity#group_id}
      */
     @Override
     public void showComments(String content_group_id, String group_id) {
@@ -1005,6 +728,11 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     MyDialog removeAlertDialog;
 
+    /**
+     * 删除Wall
+     *
+     * @param content_group_id {@link WallEntity#content_group_id}
+     */
     @Override
     public void remove(final String content_group_id) {
 
@@ -1064,8 +792,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     /**
      * 显示被@的用户列表
      *
-     * @param content_group_id
-     * @param group_id
+     * @param content_group_id {@link WallEntity#content_group_id}
+     * @param group_id         {@link WallEntity#group_id}
      */
     @Override
     public void showMembers(String content_group_id, String group_id) {
@@ -1079,8 +807,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     /**
      * 显示被@的群组列表
      *
-     * @param content_group_id
-     * @param group_id
+     * @param content_group_id {@link WallEntity#content_group_id}
+     * @param group_id         {@link WallEntity#group_id}
      */
     @Override
     public void showGroups(String content_group_id, String group_id) {
@@ -1088,6 +816,23 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_GROUP);
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);
+        startActivity(intent);
+    }
+
+    /**
+     * 显示点赞的用户列表
+     *
+     * @param viewer_id {@link WallEntity#user_id}
+     * @param refer_id  {@link WallEntity#content_id} or {@link WallCommentEntity#comment_id}
+     * @param type      {@link WallUtil#LOVE_MEMBER_COMMENT_TYPE} or {@link WallUtil#LOVE_MEMBER_WALL_TYPE}
+     */
+    @Override
+    public void showLovedMember(String viewer_id, String refer_id, String type) {
+        Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
+        intent.setAction(Constant.ACTION_SHOW_LOVED_USER);
+        intent.putExtra(WallUtil.GET_LOVE_LIST_VIEWER_ID, viewer_id);
+        intent.putExtra(WallUtil.GET_LOVE_LIST_REFER_ID, refer_id);
+        intent.putExtra(WallUtil.GET_LOVE_LIST_TYPE, type);
         startActivity(intent);
     }
 

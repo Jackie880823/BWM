@@ -139,30 +139,36 @@
                     android:id="@+id/rl_agree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true">
-
                     <TextView
-                        android:id="@+id/tv_like_desc"
-                        style="@style/text_dark_default"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:text="@string/text_like_desc"
-                        android:textStyle="bold"/>
+                        android:id="@+id/tv_agree"
+                        android:layout_width="@dimen/_100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_toLeftOf="@+id/iv_agree"
+                        android:layout_marginRight="@dimen/default_view_margin"
+                        android:layout_marginLeft="@dimen/default_view_margin"
+                        android:gravity="right|center_vertical"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:textColor="@color/default_text_color_blue"
+                        android:visibility="gone"
+                        android:textSize="@dimen/text_small_size"
+                        />
+
 
                     <TextView
                         android:id="@+id/tv_agree_count"
                         style="@style/text_dark_default"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginRight="@dimen/default_view_margin"
-                        android:layout_toLeftOf="@+id/tv_like_desc"
+                        android:layout_alignParentRight="true"
                         android:textStyle="bold"/>
 
                     <ImageButton
                         android:id="@+id/iv_agree"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/default_view_margin"
+                        android:paddingRight="@dimen/_15dp"
                         android:layout_toLeftOf="@+id/tv_agree_count"
                         android:background="@null"/>
                 </RelativeLayout>
