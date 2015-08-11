@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ import com.bondwithme.BondWithMe.adapter.MessageChatAdapter;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.interfaces.D3View;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
@@ -57,7 +59,7 @@ import java.util.TimerTask;
 /**
  * Created by quankun on 15/4/24.
  */
-public class MessageChatActivity extends BaseActivity implements View.OnTouchListener, StickerViewClickListener {
+public class MessageChatActivity extends BaseActivity implements View.OnTouchListener, StickerViewClickListener, View.OnLongClickListener {
     private Context mContext;
 //    private ProgressDialog progressDialog;
     /**
@@ -85,6 +87,25 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private TextView sendTextView;//发送按钮
     private LinearLayout expandFunctionLinear;//加号
     private LinearLayout stickerLinear;//表情库
+
+    @D3View(click = "onClick")
+    private LinearLayout chat_gn_ll;//隐藏键盘输入时布局
+    @D3View(click = "onClick")
+    private ImageView chat_mic_keyboard;//语音和文字输入切换按钮
+    @D3View
+    private LinearLayout chat_mic_ll;//语音按钮布局
+    @D3View
+    private TextView chat_mic_text;//语音输入提示
+    @D3View
+    private TextView chat_mic_time;//语音录制时间显示
+    @D3View(click = "onClick", longClick = "onLongClick")
+    private ImageView mic_iv;//语音录制按钮
+    @D3View(click = "onClick")
+    private ImageView mic_left;//语音录制左边按钮
+    @D3View(click = "onClick")
+    private ImageView mic_right;//语音录制右边按钮
+
+    private boolean isShowKBPic=false;
 
     public LinearLayout empty_message;
 
@@ -405,6 +426,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         sendTextView = getViewById(R.id.btn_send);
         empty_message = getViewById(R.id.no_message_data_linear);
 
+//        chat_gn_ll = getViewById(R.id.chat_gn_ll);
+//        chat_mic_keyboard = getViewById(R.id.chat_mic_keyboard);
+//        chat_mic_ll = getViewById(R.id.chat_mic_ll);
+//        chat_mic_text = getViewById(R.id.chat_mic_text);
+//        chat_mic_time = getViewById(R.id.chat_mic_time);
+//        mic_iv = getViewById(R.id.mic_iv);
+//        mic_left = getViewById(R.id.mic_left);
+//        mic_right= getViewById(R.id.mic_right);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -425,6 +455,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             }
         }, 50);
 
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        return false;
     }
 
     class ModifyStickerReceiver extends BroadcastReceiver {
@@ -508,6 +543,47 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             case R.id.btn_send://信息发送按钮
                 sendTextMessage();
                 break;
+            case R.id.chat_gn_ll://隐藏键盘输入时布局
+                break;
+            case R.id.chat_mic_keyboard://语音和文字输入切换按钮
+                if(isShowKBPic){
+//                    goneView(sendTextView);
+                    UIUtil.showKeyboard(mContext,etChat);
+                }else{
+
+                }
+
+                break;
+            case R.id.chat_mic_ll://语音按钮布局
+                break;
+            case R.id.chat_mic_text://语音输入提示
+                break;
+            case R.id.chat_mic_time://语音录制时间显示
+                break;
+            case R.id.mic_iv://语音录制按钮
+                break;
+            case R.id.mic_left://语音录制左边按钮
+                break;
+            case R.id.mic_right://语音录制右边按钮
+                break;
+        }
+    }
+
+    private void goneView(View view) {
+        if (view != null && view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        }
+    }
+
+    private void visibleView(View view) {
+        if (view != null && view.getVisibility() == View.GONE) {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void inVisibleView(View view) {
+        if (view != null && view.getVisibility() == View.GONE) {
+            view.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -730,7 +806,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if (s.length() > 0) {
+                    visibleView(sendTextView);
+                    goneView(chat_mic_keyboard);
+                } else {
+                    visibleView(chat_mic_keyboard);
+                    goneView(sendTextView);
+                }
             }
 
             @Override

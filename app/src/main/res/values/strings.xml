@@ -592,6 +592,7 @@
     <string name="text_no_date_members">No members alert</string>
     <string name="text_no_date_recommended">No recommended members</string>
     <string name="text_no_date_group">No group alert</string>
+    <string name="text_hold_and_speak">按住说话</string>
 
 
 </resources>
