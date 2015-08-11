@@ -322,6 +322,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         params.put("condition", jsonParamsString);
         params.put("start", startIndex + "");
         params.put(WallCommentEntity.LIMIT, offset + "");
+        LogUtil.i(TAG, "getComments& startIndex: " + startIndex);
 
         String url = UrlUtil.generateUrl(Constant.API_WALL_COMMENT_LIST, params);
 
@@ -348,7 +349,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 Gson gson = gsonb.create();
                 data = gson.fromJson(response, new TypeToken<ArrayList<WallCommentEntity>>() {}.getType());
 
+                LogUtil.i(TAG, "getComments& isRefresh: " + isRefresh);
                 if(isRefresh) {
+                    startIndex = data.size();
                     isRefresh = false;
                     swipeRefreshLayout.setRefreshing(false);
                     initAdapter();
@@ -361,6 +364,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     }
                 }
 
+                LogUtil.i(TAG, "getComments& size: " + adapter.getItemCount());
                 if(progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
