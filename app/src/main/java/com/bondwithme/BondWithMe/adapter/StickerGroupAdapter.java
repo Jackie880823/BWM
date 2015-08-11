@@ -49,6 +49,7 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
 
     @Override
     public void onBindViewHolder(final StickerGroupAdapter.VHItem holder, final int position) {
+        /**wing modified for 性能 begin*/
 //        boolean isNew = false;
         stickerGroupEntity = dataStickerGroup.get(position);
         url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_S", stickerGroupEntity.getPath(), stickerGroupEntity.getType());
@@ -59,7 +60,6 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
 //        if(isNew){
             holder.ivNewSticker.setVisibility(View.VISIBLE);
         }
-        /**wing modified for 性能 begin*/
         //设置sticker缩略图
         VolleyUtil.initNetworkImageView(mContext,
                 holder.ivSticker,
