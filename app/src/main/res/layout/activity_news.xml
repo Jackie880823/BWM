@@ -35,5 +35,7 @@
         <include layout="@layout/progress_layout"/>
     </RelativeLayout>
 
+    <include layout="@layout/no_date_layout"/>
+
 
 </RelativeLayout>

@@ -581,4 +581,13 @@
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>
     <string name="text_archive_data">没有存档</string>
 
+    <string name="text_no_date_diary">未有动态通告</string>
+    <string name="text_no_date_event">未有活动通告</string>
+    <string name="text_no_date_bigday">未有大日子通告</string>
+    <string name="text_no_date_miss">未有想念通告</string>
+    <string name="text_no_date_news">未有消息通告</string>
+    <string name="text_no_date_members">未有成员通告</string>
+    <string name="text_no_date_recommended">未有推荐通告</string>
+    <string name="text_no_date_group">未有群组通告</string>
+
 </resources>

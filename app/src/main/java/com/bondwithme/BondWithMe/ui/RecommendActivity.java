@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
@@ -45,6 +46,7 @@ public class RecommendActivity extends BaseActivity {
     private RecommendAdapter adapter;
     private RecyclerView rvList;
     private LinearLayoutManager llm;
+    private TextView tvNoDate;
     
 
     public int getLayout() {
@@ -83,6 +85,7 @@ public class RecommendActivity extends BaseActivity {
 
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
+        tvNoDate = getViewById(R.id.tv_no_data_display);
 
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
@@ -177,6 +180,10 @@ public class RecommendActivity extends BaseActivity {
 //                    finishReFresh();
 //                }
 //                loading =
+
+                if (data.isEmpty() && !RecommendActivity.this.isFinishing()){
+                    tvNoDate.setText(getResources().getString(R.string.text_no_date_recommended));
+                }
 
                 finishReFresh();
                 initAdapter();
