@@ -68,6 +68,7 @@ public class CreateGroupDialogActivity extends BaseActivity {
     private RelativeLayout defaultHead;
     private ImageView default_imag;
     private TextView add_photo_text;
+    private View vProgress;
     /**
      * 头像缓存文件名称
      */
@@ -300,10 +301,16 @@ public class CreateGroupDialogActivity extends BaseActivity {
         new HttpTools(this).upload(Constant.API_CREATE_GROUP, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
+                if(vProgress != null){
+                    vProgress.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onFinish() {
+                if(vProgress != null){
+                    vProgress.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -451,6 +458,8 @@ public class CreateGroupDialogActivity extends BaseActivity {
     public void initView() {
         mContext = this;
         TAG = mContext.getClass().getSimpleName();
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.GONE);
         selectUserList = new ArrayList<>();
         flagEntityList = new ArrayList<>();
         addedEntityList = new ArrayList<>();
