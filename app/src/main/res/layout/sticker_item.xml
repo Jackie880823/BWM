@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -69,15 +69,17 @@
 
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/iv_news_ticker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/new_sticker"
-            android:visibility="invisible" />
     </RelativeLayout>
+    <ImageView
+        android:id="@+id/iv_news_ticker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/new_sticker"
+        android:visibility="visible" />
 
 
 
-    <View style="@style/split_line_default" />
-</LinearLayout>
+    <View style="@style/split_line_default"
+        android:layout_below="@+id/item_content"/>
+</RelativeLayout>
