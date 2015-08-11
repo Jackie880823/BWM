@@ -577,7 +577,7 @@
     <string name="text_phone">电话</string>
     <string name="text_change_password">更改密码</string>
 
-    <string name="title_member_love">点赞成员</string>
+    <string name="title_member_love">点赞的成员</string>
 
     <string name="miss_you">你已成功发送 Miss!</string>
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>
