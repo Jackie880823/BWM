@@ -49,14 +49,14 @@ public class StickerGroupAdapter extends RecyclerView.Adapter<StickerGroupAdapte
 
     @Override
     public void onBindViewHolder(final StickerGroupAdapter.VHItem holder, final int position) {
-        boolean isNew = false;
+//        boolean isNew = false;
         stickerGroupEntity = dataStickerGroup.get(position);
         url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_S", stickerGroupEntity.getPath(), stickerGroupEntity.getType());
         //设置new sticker
         if (stickerGroupEntity.getSticker_new().equals("1")){
-            isNew = true;
-        }
-        if(isNew){
+//            isNew = true;
+//        }
+//        if(isNew){
             holder.ivNewSticker.setVisibility(View.VISIBLE);
         }
         /**wing modified for 性能 begin*/
