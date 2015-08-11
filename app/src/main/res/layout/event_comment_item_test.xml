@@ -36,9 +36,9 @@
 
                 <TextView
                     android:id="@+id/tv_comment_owner_name"
-                    style="@style/text_dark_default"
-                    android:layout_centerVertical="true"
-                    android:textStyle="bold" />
+                    style="@style/text_user_name"
+                    android:textColor="@color/default_text_color_dark"
+                    android:layout_centerVertical="true" />
 
                 <ImageButton
                     android:id="@+id/btn_comment_del"
