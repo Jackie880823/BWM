@@ -581,5 +581,6 @@
 
     <string name="miss_you">你已成功发送 Miss!</string>
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>
+    <string name="loves_count">%d 喜欢</string>
 
 </resources>

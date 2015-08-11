@@ -584,4 +584,5 @@
 
     <string name="miss_you">You successfully send a Miss!</string>
     <string name="miss_already_you">You have already sent a miss.!</string>
+    <string name="loves_count">%d Loves</string>
 </resources>

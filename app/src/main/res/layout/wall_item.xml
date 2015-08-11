@@ -172,21 +172,22 @@
                     android:id="@+id/tv_wall_agree_count"
                     style="@style/text_light_default"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/default_view_margin"/>
+                    android:layout_marginLeft="@dimen/_15dp"/>
 
+                <TextView
+                    android:id="@+id/tv_love_list"
+                    android:layout_width="@dimen/_100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_10dp"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:ellipsize="end"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="@color/default_text_color_blue"
+                    android:visibility="gone"
+                    android:textSize="@dimen/text_small_size"/>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_love_list"
-                android:layout_width="@dimen/_150dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10dp"
-                android:layout_marginRight="@dimen/_10dp"
-                android:layout_toRightOf="@+id/ll_love"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textColor="@color/default_text_color_blue"
-                android:textSize="@dimen/text_mirco_size"/>
 
             <LinearLayout
                 android:id="@+id/ll_comment"

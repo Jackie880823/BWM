@@ -76,7 +76,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private int startIndex = 0;
     private final static int offset = 10;
     private boolean loading;
-    private View split;
     LinearLayoutManager llm;
     private RecyclerView rvList;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -232,7 +231,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private void initListHeadView(View listHeadView) {
 
         if(listHeadView != null) {
-            split = listHeadView.findViewById(R.id.comment_split_line);
             progressBar = (CircularProgress) listHeadView.findViewById(R.id.wall_comment_progress_bar);
             if(loading) {
                 progressBar.setVisibility(View.VISIBLE);
@@ -363,13 +361,6 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     }
                 }
 
-                if(split != null) {
-                    if(adapter != null && adapter.getItemCount() > 0) {
-                        split.setVisibility(View.VISIBLE);
-                    } else {
-                        split.setVisibility(View.GONE);
-                    }
-                }
                 if(progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
@@ -594,11 +585,13 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         mHttpTools.post(Constant.API_WALL_COMMENT_LOVE, params, POST＿LOVE_COMMENTS, new HttpCallback() {
             @Override
             public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
                 getParentActivity().setResult(Activity.RESULT_OK);
             }
 
             @Override
             public void onFinish() {
+                vProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -607,6 +600,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             @Override
             public void onError(Exception e) {
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override

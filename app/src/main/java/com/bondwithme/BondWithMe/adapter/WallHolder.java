@@ -35,8 +35,9 @@ import java.util.List;
 
 /**
  * Created by Jackie on 8/7/15.
- *
+ * <p/>
  * 日志内容的{@link RecyclerView.ViewHolder}, 在Wall界面各Comment都使用这个Holder来显示日志内容
+ *
  * @author Jackie
  * @version 1.0
  */
@@ -91,7 +92,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     /**
      * 点赞用户名显示列表
      */
-    private TextView tvLoveList;
+//    private TextView tvLoveList;
 
 
     /**
@@ -141,8 +142,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     /**
      * @param itemView  日志视图的整个UI
-     * @param httpTools  网络上传工具
-     * @param needFull 是否显示全部日志信息：{@value true} 显示全部日志信息；{@value false} 显示部份日志
+     * @param httpTools 网络上传工具
+     * @param needFull  是否显示全部日志信息：{@value true} 显示全部日志信息；{@value false} 显示部份日志
      */
     public WallHolder(View itemView, HttpTools httpTools, boolean needFull) {
         // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
@@ -157,7 +158,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);
         tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
         tvAgreeCount = (TextView) itemView.findViewById(R.id.tv_wall_agree_count);
-        tvLoveList = (TextView) itemView.findViewById(R.id.tv_love_list);
+//        tvLoveList = (TextView) itemView.findViewById(R.id.tv_love_list);
         tvCommentCount = (TextView) itemView.findViewById(R.id.tv_wall_relay_count);
         ibAgree = (ImageButton) itemView.findViewById(R.id.iv_love);
         btn_del = (ImageButton) itemView.findViewById(R.id.btn_del);
@@ -195,8 +196,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         itemView.findViewById(R.id.top_event).setOnClickListener(this);
         itemView.findViewById(R.id.ll_comment).setOnClickListener(this);
-        itemView.findViewById(R.id.ll_love).setOnClickListener(this);
-        tvLoveList.setOnClickListener(this);
+        tvAgreeCount.setOnClickListener(this);
+//        tvLoveList.setOnClickListener(this);
         ibAgree.setOnClickListener(this);
         btn_del.setOnClickListener(this);
         imWallsImages.setOnClickListener(this);
@@ -206,16 +207,32 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     public void onClick(View v) {
         int position = getAdapterPosition();
         switch(v.getId()) {
+
+            case R.id.tv_wall_agree_count:
+            case R.id.tv_love_list:
+                if(Integer.valueOf(wallEntity.getLove_count()) > 0) {
+                    if(mViewClickListener != null) {
+                        mViewClickListener.showLovedMember(MainActivity.getUser().getUser_id(), wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+                    }
+                }
+                break;
+
             case R.id.ll_love:
             case R.id.iv_love:
                 newClick = true;
                 updateLovedView();
 
-                //判断是否已经有进行中的判断
-                if(!runningList.contains(position)) {
-                    runningList.add(position);
-                    check(position);
+                if(TextUtils.isEmpty(wallEntity.getLove_id())) {
+                    doLove(wallEntity, false);
+                } else {
+                    doLove(wallEntity, true);
                 }
+
+                //判断是否已经有进行中的判断
+                //                if(!runningList.contains(position)) {
+                //                    runningList.add(position);
+                //                    check(position);
+                //                }
                 break;
             case R.id.tv_wall_content:
             case R.id.ll_comment:
@@ -234,12 +251,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     mViewClickListener.remove(wallEntity.getContent_group_id());
                 }
                 break;
-
-            case R.id.tv_love_list:
-                if(mViewClickListener != null) {
-                    mViewClickListener.showLovedMember(MainActivity.getUser().getUser_id(), wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
-                }
-                break;
         }
     }
 
@@ -247,8 +258,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * 更新点赞相关视图
      */
     private void updateLovedView() {
-        int count = Integer.valueOf(tvAgreeCount.getText().toString());
-        String text = tvLoveList.getText().toString();
+        int count = Integer.valueOf(wallEntity.getLove_count());
+//        String text = tvLoveList.getText().toString();
         String name = MainActivity.getUser().getUser_given_name();
         int resId;
 
@@ -257,34 +268,34 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             resId = R.drawable.love_press;
             wallEntity.setLove_id(MainActivity.getUser().getUser_id());
 
-            if(count > 1) {
-                text += (name + " ");
-            } else {
-                text = name;
-            }
+//            if(count > 1) {
+//                text += (name + " ");
+//            } else {
+//                text = name;
+//            }
         } else {
             count -= 1;
             resId = R.drawable.love_normal;
             wallEntity.setLove_id(null);
 
-            if(count > 0) {
-                StringBuilder temp = new StringBuilder();
-                String split;
-                split = name + " ";
-
-                for(String str : text.split(split)) {
-                    temp.append(str);
-                }
-                text = temp.toString();
-            } else {
-                text = "";
-            }
+//            if(count > 0) {
+//                StringBuilder temp = new StringBuilder();
+//                String split;
+//                split = name + " ";
+//
+//                for(String str : text.split(split)) {
+//                    temp.append(str);
+//                }
+//                text = temp.toString();
+//            } else {
+//                text = "";
+//            }
         }
 
         wallEntity.setLove_count(String.valueOf(count));
         ibAgree.setImageResource(resId);
-        tvAgreeCount.setText(String.valueOf(count));
-        tvLoveList.setText(text);
+        tvAgreeCount.setText(String.format(tvAgreeCount.getContext().getString(R.string.loves_count), count));
+//        tvLoveList.setText(text);
     }
 
     boolean newClick;
@@ -438,13 +449,13 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //            at.setVisibility(View.VISIBLE);
         //            tvLocation.setText(wall.getLoc_name());
         //        }
-        int count = Integer.valueOf(this.wallEntity.getLove_count());
-        tvAgreeCount.setText(this.wallEntity.getLove_count());
-        if(count > 0) {
-            WallUtil.getLoveList(mHttpTools, tvLoveList, MainActivity.getUser().getUser_id(), wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
-        } else {
-            tvLoveList.setText("");
-        }
+//        int count = Integer.valueOf(this.wallEntity.getLove_count());
+        tvAgreeCount.setText(String.format(tvAgreeCount.getContext().getString(R.string.loves_count), Integer.valueOf(this.wallEntity.getLove_count())));
+//        if(count > 0) {
+//            WallUtil.getLoveList(mHttpTools, tvLoveList, MainActivity.getUser().getUser_id(), wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+//        } else {
+//            tvLoveList.setText("");
+//        }
 
         tvCommentCount.setText(this.wallEntity.getComment_count());
 
@@ -490,8 +501,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     /**
      * 跳至地图
-     * @param context  资源
-     * @param wall  {@link WallEntity}
+     *
+     * @param context 资源
+     * @param wall    {@link WallEntity}
      */
     private void gotoLocationSetting(Context context, WallEntity wall) {
         if(TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
