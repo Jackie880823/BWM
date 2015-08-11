@@ -49,12 +49,6 @@ public class EventCommentAdapterTest extends RecyclerView.Adapter<RecyclerView.V
     private static final int TYPE_SECOND = 2;
     private static final int TYPE_FOOTER = 3;
 
-    private static final int TEXT = 1;
-    private static final int GIF = 2;
-    private static final int PIC = 3;
-    private static final int PNG = 4;
-    private static final int GEF = 5;
-
     public EventCommentAdapterTest(Context context,EventEntity detailData, List<EventCommentEntity> data, RecyclerView recyclerView) {
         mContext = context;
         this.detailData = detailData;

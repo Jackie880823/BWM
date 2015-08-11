@@ -457,8 +457,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
             }
         });
-
-
     }
 
     /**

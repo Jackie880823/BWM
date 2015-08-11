@@ -10,31 +10,67 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by Jackie Zhu on 5/29/15.
+ *
+ * @author Jackie
+ * @version 1.0
  */
 public class WallUtil {
     private static final String TAG = WallUtil.class.getSimpleName();
 
     /**
-     * @群组的正则表达
+     * @ 群组的正则表达
      */
     public static final String AT_GROUPS = "@%1$sgroups";
     /**
-     * @用户的正则表达
+     * @ 用户的正则表达
      */
     public static final String AT_MEMBER = "@%1$smembers";
+
+    /**
+     * Wall中已赞会员类型
+     */
+    public static final String LOVE_MEMBER_WALL_TYPE = "wall";
+
+    /**
+     * 评论中已赞会员类型
+     */
+    public static final String LOVE_MEMBER_COMMENT_TYPE = "comment";
+
+    /**
+     * 当前用户ID {@link WallEntity#user_id}
+     */
+    public static final String GET_LOVE_LIST_VIEWER_ID = "viewer_id";
+
+    /**
+     * 日志拿content_id {@link WallEntity#content_id} / 评论拿comment_id {@link WallCommentEntity#comment_id}
+     */
+    public static final String GET_LOVE_LIST_REFER_ID = "refer_id";
+
+    /**
+     * 赞的模块属性 日志是 {@link WallUtil#LOVE_MEMBER_COMMENT_TYPE} / 评论是 {@link WallUtil#LOVE_MEMBER_WALL_TYPE}
+     */
+    public static final String GET_LOVE_LIST_TYPE = "type";
 
     private static Long lastClickTimeMills = 0L;
 
@@ -252,4 +288,55 @@ public class WallUtil {
             }
         }, 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
+
+
+    public static void getLoveList(HttpTools httpTools, TextView tvLoveList, String viewerId, String referId, String type) {
+        final TextView textView = tvLoveList;
+        HashMap<String, String> params = new HashMap<>();
+        params.put(WallUtil.GET_LOVE_LIST_VIEWER_ID, viewerId);
+        params.put(WallUtil.GET_LOVE_LIST_REFER_ID, referId);
+        params.put(WallUtil.GET_LOVE_LIST_TYPE, type);
+        LogUtil.i(TAG, "getLoveList& params: " + params.toString());
+        httpTools.cancelRequestByTag(tvLoveList);
+        httpTools.get(Constant.API_WALL_GET_LOVE_MEMBER_LIST, params, tvLoveList, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                LogUtil.i(TAG, "get loved list onResult& response: " + response);
+                Gson gson = new Gson();
+                ArrayList<UserEntity> users = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                int size = users.size();
+                StringBuilder text = new StringBuilder();
+                for(int i = 0; i < size && i < 4; i++) {
+                    text.append(users.get(i).getUser_given_name()).append(" ");
+                }
+                textView.setText(text.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
 }
