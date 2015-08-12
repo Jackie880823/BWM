@@ -29,7 +29,7 @@ public class VolleyUtil {
 
 	// 取运行内存阈值的1/8作为图片缓存
 	private static final int MEM_CACHE_SIZE = 1024 * 1024 * ((ActivityManager) App.getContextInstance()
-			.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass() / 8;
+			.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass() / 6;
 	private static ImageLreCache mImageLreCache = new ImageLreCache(MEM_CACHE_SIZE,"images",MEM_CACHE_SIZE*3);
 	public static ImageLoader  mImageLoder = new ImageLoader(RequesQueuetManager.mRequestQueue,mImageLreCache);
 

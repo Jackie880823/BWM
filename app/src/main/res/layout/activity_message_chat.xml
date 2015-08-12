@@ -89,6 +89,7 @@
 
             <EditText
                 android:id="@+id/et_chat"
+                style="@style/text_default"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_view_margin"

@@ -26,7 +26,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.adapter.EventCommentAdapterTest;
+import com.bondwithme.BondWithMe.adapter.EventCommentAdapter;
 import com.bondwithme.BondWithMe.entity.EventCommentEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
@@ -350,8 +350,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     //适配器
     private void initAdapter() {
-        adapter = new EventCommentAdapterTest(getParentActivity(),event, data, rvList);
-        adapter.setCommentActionListener(new EventCommentAdapterTest.CommentActionListener() {
+        adapter = new EventCommentAdapter(getParentActivity(),event, data, rvList);
+        adapter.setCommentActionListener(new EventCommentAdapter.CommentActionListener() {
             @Override
             public void doLove(EventCommentEntity commentEntity, boolean love) {
                 doLoveComment(commentEntity, love);
@@ -383,7 +383,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
 
         });
-        adapter.setUpdateListener(new EventCommentAdapterTest.ListViewItemViewUpdateListener() {
+        adapter.setUpdateListener(new EventCommentAdapter.ListViewItemViewUpdateListener() {
             @Override
             public void updateHeadView(View headView) {
                 initHeadView(headView);
@@ -487,7 +487,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     ImageView option_no_going;
     ImageView option_maybe;
     ImageView option_going;
-    public EventCommentAdapterTest adapter;
+    public EventCommentAdapter adapter;
 
     /**
      * 发送大表情

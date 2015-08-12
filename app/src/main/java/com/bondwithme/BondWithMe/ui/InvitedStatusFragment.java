@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,17 +11,16 @@ import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MyFragmentPagerAdapter;
-import com.bondwithme.BondWithMe.util.animation.ViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link android.support.v4.app.Fragment} subclass.
+ * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link com.bondwithme.BondWithMe.ui.InvitedStatusFragment.OnFragmentInteractionListener} interface
+ * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link com.bondwithme.BondWithMe.ui.InvitedStatusFragment#newInstance} factory method to
+ * Use the {@link InvitedStatusFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> implements View.OnClickListener {
@@ -30,6 +28,10 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
     private ViewPager mViewPager;
     private MyFragmentPagerAdapter tabPagerAdapter;
     private ImageView ivCursor;
+    private ImageView ivCursorGo;
+    private ImageView ivCursorMb;
+    private ImageView ivCursorNot;
+
     private LinearLayout all;
     private LinearLayout going;
     private LinearLayout maybe;
@@ -46,10 +48,13 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
     private ImageView tab_icon_not_going;
 
 
+
     TranslateAnimation translateAnimation1;
     TranslateAnimation translateAnimation2;
     int currentTabIndex;
     FragmentManager fragmentManager;
+
+    private int tabIndex = 4;//默认值
 
     public static InvitedStatusFragment newInstance(String... params) {
         return createInstance(new InvitedStatusFragment(), params);
@@ -72,16 +77,18 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         fragmentManager = getFragmentManager();
         mViewPager = getViewById(R.id.mPaper);
         List<Fragment> fragments = new ArrayList<Fragment>();
-        if(getParentActivity().eventEntity==null){
+        if (getParentActivity().eventEntity == null) {
             return;
         }
         String group_id = getParentActivity().eventEntity.getGroup_id();
         String owner_id = getParentActivity().eventEntity.getGroup_owner_id();
-        fragments.add(InvitedTabFragment.newInstance(StatusType.all.name(), group_id,owner_id));
-        fragments.add(InvitedTabFragment.newInstance(StatusType.yes.name(), group_id,owner_id));
-        fragments.add(InvitedTabFragment.newInstance(StatusType.maybe.name(), group_id,owner_id));
-        fragments.add(InvitedTabFragment.newInstance(StatusType.no.name(), group_id,owner_id));
+        tabIndex = getParentActivity().tabIndex;
+        fragments.add(InvitedTabFragment.newInstance(StatusType.all.name(), group_id, owner_id));
+        fragments.add(InvitedTabFragment.newInstance(StatusType.yes.name(), group_id, owner_id));
+        fragments.add(InvitedTabFragment.newInstance(StatusType.maybe.name(), group_id, owner_id));
+        fragments.add(InvitedTabFragment.newInstance(StatusType.no.name(), group_id, owner_id));
 
+//        startClick(tabIndex);
         tabPagerAdapter = new MyFragmentPagerAdapter(getParentActivity().getSupportFragmentManager(), getParentActivity(), mViewPager, fragments);
         tabPagerAdapter.setOnMyPageChangeListenner(new MyFragmentPagerAdapter.OnPageChangeListenner() {
             @Override
@@ -94,7 +101,10 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
 
         mViewPager.setAdapter(tabPagerAdapter);
 
-        ivCursor = getViewById(R.id.cursor);
+        ivCursor = getViewById(R.id.cursor_all);
+        ivCursorGo = getViewById(R.id.cursor_go);
+        ivCursorMb = getViewById(R.id.cursor_mb);
+        ivCursorNot  = getViewById(R.id.cursor_not);
         all = getViewById(R.id.all);
         going = getViewById(R.id.going);
         maybe = getViewById(R.id.maybe);
@@ -115,6 +125,8 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         going.setOnClickListener(this);
         maybe.setOnClickListener(this);
         not_going.setOnClickListener(this);
+
+        startClick(tabIndex);
 
     }
 
@@ -151,8 +163,11 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
 //        changOrdinal(tabIndex);
 
     }
-
-    private void changeTabTitle(int tabIndex){
+    private void startClick(int tabIndex){
+        changOrdinal(tabIndex);
+        mViewPager.setCurrentItem(tabIndex);
+    }
+    private void changeTabTitle(int tabIndex) {
         switch (tabIndex) {
             case 0:
                 tab_text_all.setTextColor(getResources().getColor(R.color.default_text_color_dark));
@@ -204,70 +219,49 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
     }
 
     private void changOrdinal(final int tabIndex) {
-        if (currentTabIndex == tabIndex) {
+        if (currentTabIndex == tabIndex  && tabIndex == 5) {
             return;
         }
-
-        if (tabIndex > currentTabIndex) {
-            int beginX = (tabIndex - 1) * ivCursor.getWidth();
-            int endX = beginX + ivCursor.getWidth();
-            translateAnimation1 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
-            translateAnimation1.setFillAfter(true);
-            translateAnimation1.setDuration(300);
-            translateAnimation1.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    changeTabTitle(tabIndex);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-            ivCursor.startAnimation(translateAnimation1);
-
-        } else {
-            int beginX = currentTabIndex * ivCursor.getWidth();
-            int endX = tabIndex * ivCursor.getWidth();
-            translateAnimation2 = new TranslateAnimation(beginX, endX, ViewHelper.getY(ivCursor), ViewHelper.getY(ivCursor));
-            translateAnimation2.setFillAfter(true);
-            translateAnimation2.setDuration(300);
-            ivCursor.startAnimation(translateAnimation2);
-            translateAnimation2.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    changeTabTitle(tabIndex);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
+        changeTabTitle(tabIndex);
+        switch (tabIndex) {
+            case 0:
+                ivCursor.setVisibility(View.VISIBLE);
+                ivCursorGo.setVisibility(View.INVISIBLE);
+                ivCursorMb.setVisibility(View.INVISIBLE);
+                ivCursorNot.setVisibility(View.INVISIBLE);
+                break;
+            case 1:
+                ivCursorGo.setVisibility(View.VISIBLE);
+                ivCursor.setVisibility(View.INVISIBLE);
+                ivCursorMb.setVisibility(View.INVISIBLE);
+                ivCursorNot.setVisibility(View.INVISIBLE);
+                break;
+            case 2:
+                ivCursorMb.setVisibility(View.VISIBLE);
+                ivCursor.setVisibility(View.INVISIBLE);
+                ivCursorGo.setVisibility(View.INVISIBLE);
+                ivCursorNot.setVisibility(View.INVISIBLE);
+                break;
+            case 3:
+                ivCursorNot.setVisibility(View.VISIBLE);
+                ivCursor.setVisibility(View.INVISIBLE);
+                ivCursorGo.setVisibility(View.INVISIBLE);
+                ivCursorMb.setVisibility(View.INVISIBLE);
+                break;
         }
+
         currentTabIndex = tabIndex;
     }
 
     @Override
     public void onDestroy() {
-        if(translateAnimation1!=null){
+        if (translateAnimation1 != null) {
             translateAnimation1.cancel();
-            translateAnimation1=null;
+            translateAnimation1 = null;
         }
-        if(translateAnimation2!=null){
+        if (translateAnimation2 != null) {
             translateAnimation2.cancel();
-            translateAnimation2=null;
+            translateAnimation2 = null;
         }
         super.onDestroy();
     }

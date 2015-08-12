@@ -273,7 +273,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             @Override
             public void onFinish() {
-                if(wall == null) {
+                if (wall == null) {
                     getParentActivity().finish();
                 } else {
                     vProgress.setVisibility(View.GONE);
@@ -485,13 +485,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 stickerGroupPath = "";
 
                 getParentActivity().setResult(Activity.RESULT_OK);
-                UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
+                if(getActivity()!=null&&!getActivity().isFinishing()) {
+                    UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
+                }
             }
 
             @Override
             public void onError(Exception e) {
                 progressBar.setVisibility(View.GONE);
-                UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
+                if(getActivity()!=null&&!getActivity().isFinishing()) {
+                    UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
+                }
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
 
             }
