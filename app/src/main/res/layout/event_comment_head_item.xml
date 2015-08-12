@@ -5,9 +5,46 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/_14dp"
     android:layout_marginRight="@dimen/_14dp"
-    android:background="#FAFAFA"
+    android:background="@drawable/event_detail_shape"
     android:elevation="3dip"
+    android:layout_marginTop="5dp"
     android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/comment_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="@dimen/default_content_padding">
+
+        <ImageView
+            android:id="@+id/icon_comments"
+            android:layout_width="@dimen/default_small_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_comments"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            style="@style/text_dark_default"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:layout_toRightOf="@+id/icon_comments"
+            android:layout_centerVertical="true"
+            android:text="@string/text_comments" />
+        <com.material.widget.CircularProgress
+            android:id="@+id/event_detail_progress_bar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/comment_split_line"
+        style="@style/split_line_default" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +52,6 @@
         android:layout_marginLeft="@dimen/default_content_padding"
         android:layout_marginRight="@dimen/default_content_padding"
         android:layout_marginTop="@dimen/default_content_padding"
-
         android:orientation="horizontal">
 
         <com.bondwithme.BondWithMe.widget.CircularNetworkImage
@@ -34,6 +70,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_comment_owner_name"-->
+                    <!--style="@style/text_dark_default"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:lines="1"-->
+                    <!--android:maxEms="6"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:textStyle="bold" />-->
                 <TextView
                     android:id="@+id/tv_comment_owner_name"
                     style="@style/text_user_name"
