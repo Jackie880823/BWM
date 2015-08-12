@@ -13,6 +13,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
@@ -104,24 +105,24 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         int listSize = list.size();
         myList.addAll(0, msgList);
         notifyDataSetChanged();
-        recyclerView.scrollToPosition(listSize);
+        llm.scrollToPosition(listSize);
     }
 
     public void addData(List<MsgEntity> list) {
         myList.addAll(0, list);
         notifyDataSetChanged();
-        recyclerView.scrollToPosition(getItemCount() - 1);
+        llm.scrollToPosition(getItemCount() - 1);
     }
 
     public void addTimerData(List<MsgEntity> list) {
-        int scrollPosition = 0;
+        int scrollPosition = llm.findLastVisibleItemPosition();
+        ;
         if (myList != null && myList.size() > 0) {
-            scrollPosition = llm.findLastVisibleItemPosition();
             myList.clear();
         }
         myList.addAll(list);
         notifyDataSetChanged();
-        recyclerView.scrollToPosition(scrollPosition);
+        llm.scrollToPosition(scrollPosition);
     }
 
     public void addSendData(List<MsgEntity> list) {
@@ -131,7 +132,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         myList.clear();
         myList.addAll(list);
         notifyDataSetChanged();
-        recyclerView.scrollToPosition(getItemCount() - 1);
+        llm.scrollToPosition(getItemCount() - 1);
     }
 
     public void addMsgEntity(MsgEntity msgEntity) {
@@ -140,7 +141,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         int listSize = myList.size();
         myList.add(msgEntity);
         notifyDataSetChanged();
-        recyclerView.scrollToPosition(getItemCount() - 1);
+        llm.scrollToPosition(getItemCount() - 1);
         //notifyItemInserted(myList.size());
     }
 
@@ -254,6 +255,14 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 }
             }, 0, atDescription.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             try {
+                if (!TextUtils.isEmpty(atDescription)) {
+                    String[] fbsArr = {"\\", "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}", "|"};
+                    for (String key : fbsArr) {
+                        if (atDescription.contains(key)) {
+                            atDescription = atDescription.replace(key, "\\" + key);
+                        }
+                    }
+                }
                 Pattern p = Pattern.compile(atDescription);
                 Matcher m = p.matcher(ssb.toString());
                 if (m.find()) {

@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_content_bg"
-    tools:context="com.bondwithme.BondWithMe.ui.MessageChatActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.bondwithme.BondWithMe.ui.MessageChatActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"></ScrollView>
 
-    <LinearLayout
+    <com.bondwithme.BondWithMe.widget.StickerLinearLayout
+        android:id="@+id/chat_main_ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -40,25 +41,25 @@
             android:id="@+id/no_message_data_linear"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_weight="1"
-            android:visibility="gone"
-            android:background="#e6e6e6">
+            android:background="#e6e6e6"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/empty_chat_message"
                 android:layout_marginTop="@dimen/_60dp"
+                android:background="@drawable/empty_chat_message"
                 android:scaleType="fitXY" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="There are no posting yet"
-                android:textSize="@dimen/_26dp"
                 android:layout_marginTop="@dimen/_30dp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:text="There are no posting yet"
+                android:textSize="@dimen/_26dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -66,26 +67,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
-            android:orientation="horizontal"
             android:gravity="center"
-            android:paddingTop="@dimen/_5dp"
-            android:paddingBottom="@dimen/_5dp">
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/_5dp"
+            android:paddingTop="@dimen/_5dp">
 
             <ImageButton
                 android:id="@+id/cb_1"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="@null"
                 android:paddingLeft="@dimen/default_view_margin"
-                android:src="@drawable/chat_plus_normal"
-                android:background="@null" />
+                android:src="@drawable/chat_plus_normal" />
 
             <ImageButton
                 android:id="@+id/cb_2"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="@null"
                 android:paddingLeft="@dimen/default_view_margin"
-                android:src="@drawable/chat_expression_normal"
-                android:background="@null" />
+                android:src="@drawable/chat_expression_normal" />
 
             <EditText
                 android:id="@+id/et_chat"
@@ -96,24 +97,24 @@
                 android:layout_marginRight="@dimen/default_view_margin"
                 android:layout_weight="1"
                 android:background="@drawable/et_chat_bg"
-                android:maxLines="5"
                 android:hint="@string/text_message_type_here"
-                android:textColorHint="#999"
+                android:maxLines="5"
                 android:padding="@dimen/default_content_padding"
-                android:textColor="@color/default_text_color_dark" />
+                android:textColor="@color/default_text_color_dark"
+                android:textColorHint="#999" />
 
             <TextView
                 android:id="@+id/btn_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/default_content_padding"
-                android:paddingTop="@dimen/default_content_padding"
-                android:paddingLeft="@dimen/default_view_margin"
-                android:paddingRight="@dimen/default_view_margin"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="@dimen/default_view_margin"
-                android:gravity="center"
                 android:background="@drawable/btn_chat_send_bg"
+                android:gravity="center"
+                android:paddingBottom="@dimen/default_content_padding"
+                android:paddingLeft="@dimen/default_view_margin"
+                android:paddingRight="@dimen/default_view_margin"
+                android:paddingTop="@dimen/default_content_padding"
                 android:text="@string/text_send"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/text_medium_size" />
@@ -124,25 +125,25 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_240dp"
             android:background="#ffffff"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/camera_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_camera"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/_10dp"
                     android:drawableTop="@drawable/message_camera"
                     android:gravity="center"
-                    android:drawablePadding="@dimen/_10dp"
+                    android:text="@string/text_camera"
                     android:textColor="@color/default_text_color_dark"
                     android:textSize="@dimen/text_medium_size" />
 
@@ -150,12 +151,12 @@
                     android:id="@+id/album_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_album"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/_10dp"
                     android:drawableTop="@drawable/message_album"
                     android:gravity="center"
-                    android:drawablePadding="@dimen/_10dp"
+                    android:text="@string/text_album"
                     android:textColor="@color/default_text_color_dark"
                     android:textSize="@dimen/text_medium_size" />
 
@@ -163,29 +164,29 @@
                     android:id="@+id/location_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_location"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/_10dp"
                     android:drawableTop="@drawable/message_location"
                     android:gravity="center"
-                    android:drawablePadding="@dimen/_10dp"
-                    android:visibility="invisible"
+                    android:text="@string/text_location"
                     android:textColor="@color/default_text_color_dark"
-                    android:textSize="@dimen/text_medium_size" />
+                    android:textSize="@dimen/text_medium_size"
+                    android:visibility="invisible" />
 
                 <TextView
                     android:id="@+id/video_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_video"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/_10dp"
                     android:drawableTop="@drawable/message_video"
                     android:gravity="center"
-                    android:visibility="invisible"
-                    android:drawablePadding="@dimen/_10dp"
+                    android:text="@string/text_video"
                     android:textColor="@color/default_text_color_dark"
-                    android:textSize="@dimen/text_medium_size" />
+                    android:textSize="@dimen/text_medium_size"
+                    android:visibility="invisible" />
 
 
             </LinearLayout>
@@ -199,15 +200,15 @@
                     android:id="@+id/contact_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_contact"
+                    android:layout_weight="1"
+                    android:drawablePadding="@dimen/_10dp"
                     android:drawableTop="@drawable/message_contact"
                     android:gravity="center"
-                    android:visibility="invisible"
-                    android:drawablePadding="@dimen/_10dp"
+                    android:text="@string/text_contact"
                     android:textColor="@color/default_text_color_dark"
-                    android:textSize="@dimen/text_medium_size" />
+                    android:textSize="@dimen/text_medium_size"
+                    android:visibility="invisible" />
 
                 <View
                     android:layout_width="0dp"
@@ -221,8 +222,8 @@
             android:id="@+id/ll_2"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_240dp"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <FrameLayout
                 android:id="@+id/sticker_message_fragment"
@@ -230,5 +231,5 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
 
-    </LinearLayout>
+    </com.bondwithme.BondWithMe.widget.StickerLinearLayout>
 </FrameLayout>
