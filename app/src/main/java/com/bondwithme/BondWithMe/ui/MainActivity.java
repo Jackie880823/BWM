@@ -584,14 +584,16 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
 
     private long startTime;
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                if(System.currentTimeMillis()-startTime<1000){
-                        App.getContextInstance().exit(MainActivity.this);
-                }else {
-                    MessageUtil.showMessage(this,R.string.click_again_exit,1000);
+                if (System.currentTimeMillis() - startTime < 1000) {
+                    PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
+                    App.getContextInstance().exit(MainActivity.this);
+                } else {
+                    MessageUtil.showMessage(this, R.string.click_again_exit, 1000);
                     startTime = System.currentTimeMillis();
                 }
 //                snackBar = new SnackBar(MainActivity.this,
