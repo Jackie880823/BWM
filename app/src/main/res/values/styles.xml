@@ -335,7 +335,7 @@
         <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
         <item name="android:textSize"> @dimen/_30dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:inputType">phone</item>
+        <item name="android:inputType">numberSigned</item>
         <item name="android:hint">@string/text_start_enter_code</item>
     </style>
 
@@ -343,7 +343,7 @@
         <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
         <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
         <item name="android:textSize"> @dimen/text_medium_size</item>
-        <item name="android:inputType">phone</item>
+        <item name="android:inputType">numberSigned</item>
         <item name="android:digits">0123456789</item>
         <item name="android:hint">@string/text_start_phone_number</item>
     </style>
