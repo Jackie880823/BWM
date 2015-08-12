@@ -35,6 +35,7 @@
             android:id="@+id/et_chat"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/text_small_size"
             android:layout_marginLeft="@dimen/default_view_margin"
             android:layout_marginRight="@dimen/default_view_margin"
             android:layout_weight="1"

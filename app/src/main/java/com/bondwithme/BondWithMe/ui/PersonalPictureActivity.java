@@ -238,7 +238,7 @@ public class PersonalPictureActivity extends BaseActivity {
             // intent.putExtra("scaleUpIfNeeded", true);//黑边
 
             intent.putExtra("return-data", false);
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
             intent.putExtra("noFaceDetection", true);
 
             //		if(fromPhoto){

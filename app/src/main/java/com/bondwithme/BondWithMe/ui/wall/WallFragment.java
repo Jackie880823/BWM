@@ -157,6 +157,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
             params.put("member_id", member_id + "");
         }
 
+        LogUtil.i(TAG, "requestData& startIndex: " + startIndex);
+
         String url = UrlUtil.generateUrl(Constant.API_WALL_MAIN, params);
         new HttpTools(getActivity()).get(url, params, GET_WALL, new HttpCallback() {
             @Override
@@ -180,6 +182,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 try {
                     boolean hasData = data != null && data.size() > 0;
                     data = gson.fromJson(response, new TypeToken<ArrayList<WallEntity>>() {}.getType());
+                    LogUtil.i(TAG, "requestData& isRefresh: " + isRefresh);
                     if(isRefresh) {
                         startIndex = data.size();
                         finishReFresh();
@@ -188,6 +191,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         startIndex += data.size();
                         adapter.add(data);
                     }
+                    LogUtil.i(TAG, "requestData& adapter size: " + adapter.getItemCount());
                     if(data.size() <= 0 && !hasData) {
                         if(TextUtils.isEmpty(member_id)) {
                             tvNoData.setVisibility(View.GONE);

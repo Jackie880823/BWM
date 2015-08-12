@@ -273,7 +273,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             @Override
             public void onFinish() {
-                if(wall == null) {
+                if (wall == null) {
                     getParentActivity().finish();
                 } else {
                     vProgress.setVisibility(View.GONE);
@@ -322,6 +322,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         params.put("condition", jsonParamsString);
         params.put("start", startIndex + "");
         params.put(WallCommentEntity.LIMIT, offset + "");
+        LogUtil.i(TAG, "getComments& startIndex: " + startIndex);
 
         String url = UrlUtil.generateUrl(Constant.API_WALL_COMMENT_LIST, params);
 
@@ -348,7 +349,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 Gson gson = gsonb.create();
                 data = gson.fromJson(response, new TypeToken<ArrayList<WallCommentEntity>>() {}.getType());
 
+                LogUtil.i(TAG, "getComments& isRefresh: " + isRefresh);
                 if(isRefresh) {
+                    startIndex = data.size();
                     isRefresh = false;
                     swipeRefreshLayout.setRefreshing(false);
                     initAdapter();
@@ -361,6 +364,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     }
                 }
 
+                LogUtil.i(TAG, "getComments& size: " + adapter.getItemCount());
                 if(progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
@@ -481,13 +485,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 stickerGroupPath = "";
 
                 getParentActivity().setResult(Activity.RESULT_OK);
-                UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
+                if(getActivity()!=null&&!getActivity().isFinishing()) {
+                    UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
+                }
             }
 
             @Override
             public void onError(Exception e) {
                 progressBar.setVisibility(View.GONE);
-                UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
+                if(getActivity()!=null&&!getActivity().isFinishing()) {
+                    UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
+                }
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
 
             }

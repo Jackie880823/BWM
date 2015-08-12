@@ -39,7 +39,7 @@ public class DiskLruBasedCache implements Cache {
     private static final boolean DEFAULT_INIT_DISK_CACHE_ON_CREATE = false;
     
     // Compression settings when writing images to disk cache
-    private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.JPEG;
+    private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.PNG;
     private static final int DEFAULT_COMPRESS_QUALITY = 70;
     private static final int DISK_CACHE_INDEX = 0;
 	private static final int APP_VERSION = 1;
