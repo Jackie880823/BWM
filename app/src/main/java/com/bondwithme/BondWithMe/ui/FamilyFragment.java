@@ -144,7 +144,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     }
                     //所有的成员包括亲人、好友、等待回复
                     memberEntityList = map.get("private");
-                    Log.i("member_size===", memberEntityList.size() + "");
+//                    Log.i("member_size===", memberEntityList.size() + "");
                     if (memberEntityList != null && memberEntityList.size() > 0) {
                         FamilyMemberEntity member = new FamilyMemberEntity();//family_tree
                         member.setUser_given_name(FAMILY_TREE);
@@ -155,7 +155,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                         for (FamilyMemberEntity memberEntity : memberEntityList) {
                             //成员的关系
                             String tree_type = memberEntity.getTree_type();
-                            Log.i("tree_type===", memberEntity.getTree_type());
+//                            Log.i("tree_type===", memberEntity.getTree_type());
                             if (FAMILY_PARENT.equals(tree_type) || FAMILY_CHILDREN.equals(tree_type)
                                     || FAMILY_SIBLING.equals(tree_type) || FAMILY_SPOUSE.equals(tree_type)) {
                                 memberList.add(memberEntity);
