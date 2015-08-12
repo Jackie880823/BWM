@@ -36,7 +36,6 @@ import com.bondwithme.BondWithMe.adapter.MessageChatAdapter;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.interfaces.D3View;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
@@ -88,24 +87,17 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private LinearLayout expandFunctionLinear;//加号
     private LinearLayout stickerLinear;//表情库
 
-    @D3View(click = "onClick")
     private LinearLayout chat_gn_ll;//隐藏键盘输入时布局
-    @D3View(click = "onClick")
     private ImageView chat_mic_keyboard;//语音和文字输入切换按钮
-    @D3View
     private LinearLayout chat_mic_ll;//语音按钮布局
-    @D3View
     private TextView chat_mic_text;//语音输入提示
-    @D3View
     private TextView chat_mic_time;//语音录制时间显示
-    @D3View(click = "onClick", longClick = "onLongClick")
     private ImageView mic_iv;//语音录制按钮
-    @D3View(click = "onClick")
     private ImageView mic_left;//语音录制左边按钮
-    @D3View(click = "onClick")
     private ImageView mic_right;//语音录制右边按钮
+    private ImageView chat_gn;
 
-    private boolean isShowKBPic=false;
+    private boolean isShowKBPic = false;
 
     public LinearLayout empty_message;
 
@@ -426,14 +418,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         sendTextView = getViewById(R.id.btn_send);
         empty_message = getViewById(R.id.no_message_data_linear);
 
-//        chat_gn_ll = getViewById(R.id.chat_gn_ll);
-//        chat_mic_keyboard = getViewById(R.id.chat_mic_keyboard);
-//        chat_mic_ll = getViewById(R.id.chat_mic_ll);
-//        chat_mic_text = getViewById(R.id.chat_mic_text);
-//        chat_mic_time = getViewById(R.id.chat_mic_time);
-//        mic_iv = getViewById(R.id.mic_iv);
-//        mic_left = getViewById(R.id.mic_left);
-//        mic_right= getViewById(R.id.mic_right);
+        chat_gn_ll = getViewById(R.id.chat_gn_ll);
+        chat_mic_keyboard = getViewById(R.id.chat_mic_keyboard);
+        chat_mic_ll = getViewById(R.id.chat_mic_ll);
+        chat_mic_text = getViewById(R.id.chat_mic_text);
+        chat_mic_time = getViewById(R.id.chat_mic_time);
+        mic_iv = getViewById(R.id.mic_iv);
+        mic_left = getViewById(R.id.mic_left);
+        mic_right = getViewById(R.id.mic_right);
+        chat_gn = getViewById(R.id.chat_gn);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -508,7 +501,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 if (stickerLinear.getVisibility() == View.VISIBLE) {
                     hideAllViewState();
                 } else {
-
                     if (imm.isActive()) {
                         imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
                         handler.postDelayed(new Runnable() {
@@ -544,13 +536,40 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 sendTextMessage();
                 break;
             case R.id.chat_gn_ll://隐藏键盘输入时布局
+                if (chat_mic_ll.getVisibility() == View.VISIBLE) {
+                    goneView(chat_mic_ll, chat_gn, R.drawable.chat_gn_upward);
+                } else {
+                    visibleView(chat_mic_ll, chat_gn, R.drawable.chat_gn_normal);
+                }
                 break;
             case R.id.chat_mic_keyboard://语音和文字输入切换按钮
-                if(isShowKBPic){
-//                    goneView(sendTextView);
-                    UIUtil.showKeyboard(mContext,etChat);
-                }else{
-
+                goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
+                goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
+                if (isShowKBPic) {
+                    isShowKBPic = false;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                            goneView(chat_gn_ll, chat_gn, R.drawable.chat_gn_normal);
+                            goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_microphone_normol);
+                            visibleView(etChat, null, 0);
+                            etChat.setFocusable(true);
+                            etChat.setFocusableInTouchMode(true);
+                            etChat.requestFocus();
+                        }
+                    }, 50);
+                } else {
+                    UIUtil.hideKeyboard(mContext, etChat);
+                    isShowKBPic = true;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            visibleView(chat_gn_ll, chat_gn, R.drawable.chat_gn_normal);
+                            visibleView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_keyboard_normol);
+                            goneView(etChat, null, 0);
+                        }
+                    }, 50);
                 }
 
                 break;
@@ -569,50 +588,61 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         }
     }
 
-    private void goneView(View view) {
+    private void goneView(View view, ImageView iv, int resourceId) {
         if (view != null && view.getVisibility() == View.VISIBLE) {
             view.setVisibility(View.GONE);
         }
-    }
-
-    private void visibleView(View view) {
-        if (view != null && view.getVisibility() == View.GONE) {
-            view.setVisibility(View.VISIBLE);
+        if (iv != null && resourceId != 0) {
+            iv.setImageResource(resourceId);
         }
     }
 
-    private void inVisibleView(View view) {
+    private void visibleView(View view, ImageView iv, int resourceId) {
+        if (view != null && view.getVisibility() == View.GONE) {
+            view.setVisibility(View.VISIBLE);
+        }
+        if (iv != null && resourceId != 0) {
+            iv.setImageResource(resourceId);
+        }
+    }
+
+    private void inVisibleView(View view, ImageView iv, int resourceId) {
         if (view != null && view.getVisibility() == View.GONE) {
             view.setVisibility(View.INVISIBLE);
+        }
+        if (iv != null && resourceId != 0) {
+            iv.setImageResource(resourceId);
         }
     }
 
     private void showExpandFunctionView() {
-        if (stickerLinear.getVisibility() == View.VISIBLE) {
-            stickerLinear.setVisibility(View.GONE);
-            stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
-        }
-        expandFunctionLinear.setVisibility(View.VISIBLE);
-        expandFunctionButton.setImageResource(R.drawable.chat_plus_press);
+        goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
+        isShowKBPic = false;
+        goneView(chat_gn_ll, chat_gn, R.drawable.chat_gn_normal);
+        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_microphone_normol);
+        visibleView(etChat, null, 0);
+        visibleView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_press);
         recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
     }
 
     private void showStickerView() {
-        if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
-            expandFunctionLinear.setVisibility(View.GONE);
-            expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
-        }
-        stickerLinear.setVisibility(View.VISIBLE);
-        stickerImageButton.setImageResource(R.drawable.chat_expression_press);
+        goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
+        isShowKBPic = false;
+        goneView(chat_gn_ll, chat_gn, R.drawable.chat_gn_normal);
+        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_microphone_normol);
+        visibleView(etChat, null, 0);
+        visibleView(stickerLinear, stickerImageButton, R.drawable.chat_expression_press);
         recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
     }
 
     private void hideAllViewState() {
         UIUtil.hideKeyboard(mContext, etChat);
-        expandFunctionLinear.setVisibility(View.GONE);
-        stickerLinear.setVisibility(View.GONE);
-        expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
-        stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
+        isShowKBPic = false;
+        goneView(chat_gn_ll, chat_gn, R.drawable.chat_gn_normal);
+        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_microphone_normol);
+        visibleView(etChat, null, 0);
+        goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
+        goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
     }
 
     @Override
@@ -651,12 +681,14 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                                 recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
                             }
                         }, 50);
-
                         if (!imm.isActive()) {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    imm.showSoftInput(etChat, InputMethodManager.SHOW_FORCED);
+                                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                                    etChat.setFocusable(true);
+                                    etChat.setFocusableInTouchMode(true);
+                                    etChat.requestFocus();
                                 }
                             }, 50);
                         }
@@ -791,6 +823,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         videoTextView.setOnClickListener(this);
         contactTextView.setOnClickListener(this);
         sendTextView.setOnClickListener(this);
+        chat_gn_ll.setOnClickListener(this);
+        chat_mic_keyboard.setOnClickListener(this);
+        mic_iv.setOnClickListener(this);
+        mic_left.setOnClickListener(this);
+        mic_right.setOnClickListener(this);
 
         recyclerView.setOnTouchListener(this);
         etChat.setOnTouchListener(this);
@@ -807,11 +844,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    visibleView(sendTextView);
-                    goneView(chat_mic_keyboard);
+                    visibleView(sendTextView, null, 0);
+                    goneView(chat_mic_keyboard, null, 0);
                 } else {
-                    visibleView(chat_mic_keyboard);
-                    goneView(sendTextView);
+                    visibleView(chat_mic_keyboard, null, 0);
+                    goneView(sendTextView, null, 0);
                 }
             }
 

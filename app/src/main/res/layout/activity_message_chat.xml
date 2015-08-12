@@ -112,6 +112,7 @@
                 android:visibility="gone">
 
                 <ImageView
+                    android:id="@+id/chat_gn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -261,6 +262,7 @@
             android:id="@+id/chat_mic_ll"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_240dp"
+            android:background="#ffffff"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
@@ -277,6 +279,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#ffffff"
                 android:gravity="center"
                 android:orientation="horizontal">
 
