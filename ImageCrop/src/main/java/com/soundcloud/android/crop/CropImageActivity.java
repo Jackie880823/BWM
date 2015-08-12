@@ -369,7 +369,7 @@ public class CropImageActivity extends MonitoredActivity {
             try {
                 outputStream = getContentResolver().openOutputStream(saveUri);
                 if (outputStream != null) {
-                    croppedImage.compress(Bitmap.CompressFormat.JPEG, 90, outputStream);
+                    croppedImage.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
                 }
             } catch (IOException e) {
                 setResultException(e);

@@ -83,7 +83,7 @@ public class ImageLreCache extends LruCache<String, Bitmap> implements ImageLoad
                 DiskLruCache.Editor editor = mDiskLruCache.edit(key);
                 if (editor != null) {
                     OutputStream outputStream = editor.newOutputStream(0);
-                    if (bitmap.compress(CompressFormat.JPEG, 100, outputStream)) {
+                    if (bitmap.compress(CompressFormat.PNG, 100, outputStream)) {
                         editor.commit();
                     } else {
                         editor.abort();

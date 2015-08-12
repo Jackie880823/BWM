@@ -122,7 +122,9 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //            startActivity(mainIntent);
             startActivity(intent);
         }else {
-            UIUtil.hideKeyboard(this, getCurrentFocus());
+            if(!isFinishing()) {
+                UIUtil.hideKeyboard(this, getCurrentFocus());
+            }
         }
         finish();
     }

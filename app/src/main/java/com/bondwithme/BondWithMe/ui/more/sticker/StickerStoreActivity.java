@@ -20,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
@@ -40,7 +39,6 @@ import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.bondwithme.BondWithMe.util.SystemUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.google.gson.Gson;
@@ -68,21 +66,22 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     public static final String FINISHED = "finished";
 
 
-    View mProgressDialog;
+//    View stickerProgressDialog;
+    View adProgressDialog;
     private RecyclerView recyclerViewList;
     private LinearLayoutManager llm;
     private List<StickerGroupEntity> dataStickerGroup = new ArrayList<>();
     private List<StickerBannerEntity> dataStickerBanner = new ArrayList<>();
-    private  List<StickerGroupEntity> data = new ArrayList<>();
+    private List<StickerGroupEntity> data = new ArrayList<>();
     private final int AUTO_PLAY = 1;
 
     int finished;
     int positionFromStickerDetail = -1;
     private ImageSwitcher isStickerBanner;
     private int currentItem;
-    private Map<String,Uri> uriMap = new HashMap<>();
-
-
+    private Map<String, Uri> uriMap = new HashMap<>();
+    private static final int SHOW_ADS = 10;
+    StickerGroupAdapter adapter;
 
 
     @Override
@@ -124,21 +123,20 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
     @Override
     public void initView() {
-        mProgressDialog = getViewById(R.id.rl_progress);
-        mProgressDialog.setVisibility(View.VISIBLE);
-
-        isStickerBanner = getViewById(R.id.is_sticker_banner);
-        initStickerBanner();
-
-
+        /**wing modified for 性能 begin*/
+//        stickerProgressDialog = getViewById(R.id.sticker_progress);
+//        stickerProgressDialog.setVisibility(View.VISIBLE);
+        adProgressDialog = getViewById(R.id.ad_progress);
+        adProgressDialog.setVisibility(View.VISIBLE);
 
         recyclerViewList = getViewById(R.id.recyclerview_sticker);
         llm = new FullyLinearLayoutManager(this);
         recyclerViewList.setLayoutManager(llm);
         recyclerViewList.setHasFixedSize(true);
-        initAdapter();      //加载表情包列表；
-        requestData();
-
+        recyclerViewList.setAdapter(adapter);
+//        initAdapter();      //加载表情包列表；
+//        requestData();
+        /**wing modified for 性能 end*/
 
 
         //注册广播接收器，更新progressbar、Download按钮状态
@@ -149,7 +147,9 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
     }
 
-    /**ImageSwitcher for sticker banner */
+    /**
+     * ImageSwitcher for sticker banner
+     */
     private void initStickerBanner() {
         isStickerBanner.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
@@ -165,7 +165,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
 
     }
-
 
 
     //获取广告图对应的表情包的position
@@ -184,7 +183,13 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
      * sticker group Adapter
      */
     private void initAdapter() {
-        StickerGroupAdapter adapter = new StickerGroupAdapter(this, dataStickerGroup);
+        /**wing modified for 性能 begin*/
+        //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
+        LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(this);
+        List<String> stickers = dao.queryAllSticker();
+
+        /**wing modified for 性能 end*/
+        adapter = new StickerGroupAdapter(this, dataStickerGroup, stickers);
         adapter.setItemClickListener(new StickerGroupAdapter.ItemClickListener() {
             @Override
             public void itemClick(StickerGroupEntity stickerGroupEntity, int position) {
@@ -192,7 +197,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                 intent.putExtra(StickerGroupAdapter.STICKER_GROUP, dataStickerGroup.get(position));
                 intent.putExtra(StickerGroupAdapter.POSITION, position);
                 intent.putExtra(FINISHED, finished);
-                intent.putExtra("positionFromStickerDetail",positionFromStickerDetail);
+                intent.putExtra("positionFromStickerDetail", positionFromStickerDetail);
                 startActivity(intent);
             }
         });
@@ -207,8 +212,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                 downloadZip(holder, position);
             }
         });
-
-
 
 
         recyclerViewList.setAdapter(adapter);
@@ -269,7 +272,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                 ivExist.setVisibility(View.VISIBLE);
 
 
-
             }
 
             @Override
@@ -300,8 +302,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     }
 
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -318,21 +318,34 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case AUTO_PLAY:
                     int totalItem = 0;
-                    if (dataStickerBanner != null && uriMap != null && uriMap.size()>0){
+                    if (dataStickerBanner != null && uriMap != null && uriMap.size() > 0) {
                         totalItem = dataStickerBanner.size();
                         currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
                         setImageSwitcher(currentItem);
                     }
                     handler.sendEmptyMessageDelayed(AUTO_PLAY, 2000);
                     break;
+                case SHOW_ADS:
+                    String response = (String) msg.obj;
+                    isStickerBanner = getViewById(R.id.is_sticker_banner);
+                    initStickerBanner();
+
+                    GsonBuilder gsonb = new GsonBuilder();
+                    Gson gson = gsonb.create();
+
+                    dataStickerBanner = gson.fromJson(response, new TypeToken<ArrayList<StickerBannerEntity>>() {
+                    }.getType());
+
+                    downloadPic();
+                    break;
             }
         }
     };
 
-    protected void setImageSwitcher(int currentItem){
+    protected void setImageSwitcher(int currentItem) {
         rightInAnim();
         isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
         setSwitcherClick();
@@ -366,7 +379,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         new HttpTools(this).get(Constant.API_STICKER_BANNER, null, TAG, new HttpCallback() {
             @Override
             public void onStart() {
-
+                adProgressDialog.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -376,13 +389,10 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
             @Override
             public void onResult(String response) {
-                GsonBuilder gsonb = new GsonBuilder();
-                Gson gson = gsonb.create();
-
-                dataStickerBanner = gson.fromJson(response, new TypeToken<ArrayList<StickerBannerEntity>>() {
-                }.getType());
-
-                downloadPic();
+                Message msg = handler.obtainMessage();
+                msg.what = SHOW_ADS;
+                msg.obj = response;
+                handler.sendMessage(msg);
 
             }
 
@@ -390,6 +400,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
             public void onError(Exception e) {
                 e.printStackTrace();
                 MessageUtil.showMessage(StickerStoreActivity.this, R.string.msg_action_failed);
+                adProgressDialog.setVisibility(View.GONE);
 
 
             }
@@ -448,39 +459,42 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         });
     }
 
-    /** download pictures for banner*/
-    private void downloadPic(){
+    /**
+     * download pictures for banner
+     */
+    private void downloadPic() {
         int count = 0;
-        if (data != null){
+        if (data != null) {
             count = dataStickerBanner.size();
         }
-        for (int i = 0; i < count;i++){
+        for (int i = 0; i < count; i++) {
             String url = String.format(Constant.API_STICKER_BANNER_PIC, dataStickerBanner.get(i).getBanner_photo());
-            final String target = FileUtil.getBannerFilePath(this) + "/" + String.format("%s", ""+ dataStickerBanner.get(i).getBanner_photo());
-            LogUtil.d(TAG,"====url===="+url);
-            LogUtil.d(TAG,"====target===="+target);
+            final String target = FileUtil.getBannerFilePath(this) + "/" + String.format("%s", "" + dataStickerBanner.get(i).getBanner_photo());
+            LogUtil.d(TAG, "====url====" + url);
+            LogUtil.d(TAG, "====target====" + target);
             final int finalI = i;
             new HttpTools(this).download(url, target, false, new HttpCallback() {
                 @Override
                 public void onStart() {
-                    LogUtil.d(TAG,"===onStart==="+"target==="+target);
+                    LogUtil.d(TAG, "===onStart===" + "target===" + target);
                 }
 
                 @Override
                 public void onFinish() {
-                    if (!StickerStoreActivity.this.isFinishing()){
+                    adProgressDialog.setVisibility(View.GONE);
+                    if (!StickerStoreActivity.this.isFinishing()) {
                         File f = new File(target);
                         LogUtil.d(TAG, "===onFinish===" + f.exists());
 
-                        if (f.exists()){
+                        if (f.exists()) {
                             Uri uri = Uri.parse(target);
-                            uriMap.put(dataStickerBanner.get(finalI).getSticker_group_path(),uri);
+                            uriMap.put(dataStickerBanner.get(finalI).getSticker_group_path(), uri);
                         }
                         //下载好一张banner就显示
-                        if (uriMap.size() == 1){
+                        if (uriMap.size() == 1) {
                             currentItem = finalI;
                             downloadFinish(currentItem);
-                            mProgressDialog.setVisibility(View.INVISIBLE);
+//                            stickerProgressDialog.setVisibility(View.INVISIBLE);
                         }
                     }
 
@@ -490,12 +504,11 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                 public void onResult(String response) {
 
 
-
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    LogUtil.e(TAG,"===onError===",e);
+                    LogUtil.e(TAG, "===onError===", e);
 
                 }
 
@@ -506,12 +519,11 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
                 @Override
                 public void onLoading(long count, long current) {
-                    LogUtil.d(TAG,"====onLoading==="+"=====count=========="+count+"======current========="+current);
+                    LogUtil.d(TAG, "====onLoading===" + "=====count==========" + count + "======current=========" + current);
                 }
             });
         }
     }
-
 
 
     @Override
@@ -528,8 +540,8 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
 
     public void downloadFinish(int currentItem) {
-        if (uriMap.size() > 0){
-            LogUtil.d(TAG,"===display_banner[0]==="+uriMap.size());
+        if (uriMap.size() > 0) {
+            LogUtil.d(TAG, "===display_banner[0]===" + uriMap.size());
             isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
             setSwitcherClick();
         }
@@ -539,32 +551,33 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
     float downX = 0;
     float upX = 0;
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
             //当手指按下的时候
             downX = event.getX();
-            LogUtil.d(TAG,"===downX==="+downX);
+            LogUtil.d(TAG, "===downX===" + downX);
         }
-        if(event.getAction() == MotionEvent.ACTION_UP) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
             //当手指离开的时候
             upX = event.getX();
             LogUtil.d(TAG, "===upX===" + upX);
-            if(downX - upX > 80) {      //左滑
+            if (downX - upX > 80) {      //左滑
                 int totalItem = 0;
-                if (dataStickerBanner.size() > 0 && uriMap.size()>0){
+                if (dataStickerBanner.size() > 0 && uriMap.size() > 0) {
                     totalItem = dataStickerBanner.size();
                     currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
                     rightInAnim();
-                    if (uriMap.size() > 0){
+                    if (uriMap.size() > 0) {
                         isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
                     }
-                    LogUtil.d(TAG,"=========currentItem========"+currentItem);
+                    LogUtil.d(TAG, "=========currentItem========" + currentItem);
                 }
                 return true;
-            } else if(upX - downX > 80) {       //右滑
+            } else if (upX - downX > 80) {       //右滑
                 int totalItem = 0;
-                if (dataStickerBanner.size() > 0 && uriMap.size()>0){
+                if (dataStickerBanner.size() > 0 && uriMap.size() > 0) {
                     totalItem = dataStickerBanner.size();
                     currentItem = currentItem - 1 < 0 ? totalItem - 1 : currentItem - 1;
                     Animation animIn = AnimationUtils.loadAnimation(this,
@@ -576,17 +589,17 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                             R.anim.slide_out_right);
                     animOut.setFillAfter(true);
                     isStickerBanner.setOutAnimation(animOut);
-                    if (uriMap.size() > 0){
+                    if (uriMap.size() > 0) {
                         isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
                     }
-                    LogUtil.d(TAG,"=========currentItem========"+currentItem);
+                    LogUtil.d(TAG, "=========currentItem========" + currentItem);
                 }
                 return true;
             }
         }
 
-        if (Math.abs(downX - upX) < 5){
-            LogUtil.d(TAG,"====return_false===");
+        if (Math.abs(downX - upX) < 5) {
+            LogUtil.d(TAG, "====return_false===");
             setSwitcherClick();
             return false;
         }
@@ -598,21 +611,21 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
     private void setSwitcherClick() {
         final String path = dataStickerBanner.get(currentItem).getSticker_group_path();
-        if (dataStickerBanner != null && dataStickerGroup != null && dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0){
-            LogUtil.d(TAG,"====setOnClickListener====="+path + "    "+!path.isEmpty());
-                final int position = getPosition(path,dataStickerGroup);
-                final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
-                isStickerBanner.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!path.isEmpty()){
-                            Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
-                            intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
-                            intent.putExtra(StickerGroupAdapter.POSITION, position);
-                            StickerStoreActivity.this.startActivity(intent);
-                        }
+        if (dataStickerBanner != null && dataStickerGroup != null && dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0) {
+            LogUtil.d(TAG, "====setOnClickListener=====" + path + "    " + !path.isEmpty());
+            final int position = getPosition(path, dataStickerGroup);
+            final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
+            isStickerBanner.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!path.isEmpty()) {
+                        Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
+                        intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
+                        intent.putExtra(StickerGroupAdapter.POSITION, position);
+                        StickerStoreActivity.this.startActivity(intent);
                     }
-                });
+                }
+            });
 
 
         }
@@ -644,24 +657,24 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
                 }
             } else if (MyStickerActivity.ACTION_UPDATE.equals(intent.getAction())) {
-                int position = getPosition(intent.getStringExtra("sticker_path"),dataStickerGroup);
+                int position = getPosition(intent.getStringExtra("sticker_path"), dataStickerGroup);
                 StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
                 ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
                 TextView tvDownload = (TextView) holder.itemView.findViewById(R.id.tv_download);
                 ivExist.setVisibility(View.INVISIBLE);
                 tvDownload.setVisibility(View.VISIBLE);
-            }else if (StickerStoreActivity.ACTION_UPDATE.equals(intent.getAction())){
-                int position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
-                finished = intent.getIntExtra(FINISHED,0);
+            } else if (StickerStoreActivity.ACTION_UPDATE.equals(intent.getAction())) {
+                int position = intent.getIntExtra(StickerGroupAdapter.POSITION, 0);
+                finished = intent.getIntExtra(FINISHED, 0);
                 StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
-                if ( holder!= null){
+                if (holder != null) {
                     ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
                     ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
-                    TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
+                    TextView tvDownload = (TextView) holder.itemView.findViewById(R.id.tv_download);
                     tvDownload.setVisibility(View.INVISIBLE);
                     pbDownload.setVisibility(View.VISIBLE);
                     pbDownload.setProgress(finished);
-                    if (finished == 100){
+                    if (finished == 100) {
                         pbDownload.setVisibility(View.INVISIBLE);
                         pbDownload.setProgress(0);
                         ivExist.setVisibility(View.VISIBLE);

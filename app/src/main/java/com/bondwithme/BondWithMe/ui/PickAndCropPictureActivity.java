@@ -212,7 +212,7 @@ public class PickAndCropPictureActivity extends Activity {
             // intent.putExtra("scale", true);//黑边
             // intent.putExtra("scaleUpIfNeeded", true);//黑边
             intent.putExtra("return-data", false);
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
             intent.putExtra("noFaceDetection", true);
             File f = PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME + System.currentTimeMillis() + ".png");
             mCropImagedUri = Uri.fromFile(f);
