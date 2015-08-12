@@ -549,9 +549,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 break;
             case R.id.chat_gn_ll://隐藏键盘输入时布局
                 if (chat_mic_ll.getVisibility() == View.VISIBLE) {
-                    goneView(chat_mic_ll, chat_gn, R.drawable.chat_gn_upward);
+                    goneView(chat_mic_ll, chat_gn, R.drawable.chat_choose_up);
                 } else {
-                    visibleView(chat_mic_ll, chat_gn, R.drawable.chat_gn_normal);
+                    visibleView(chat_mic_ll, chat_gn, R.drawable.chat_choose_down);
                 }
                 break;
             case R.id.chat_mic_keyboard://语音和文字输入切换按钮
@@ -563,8 +563,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         @Override
                         public void run() {
                             imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                            goneView(chat_gn_ll, chat_gn, R.drawable.chat_gn_normal);
-                            goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_microphone_normol);
+                            goneView(chat_gn_ll, chat_gn, R.drawable.chat_choose_down);
+                            goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_mic);
                             visibleView(etChat, null, 0);
                             etChat.setFocusable(true);
                             etChat.setFocusableInTouchMode(true);
@@ -577,8 +577,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            visibleView(chat_gn_ll, chat_gn, R.drawable.chat_gn_normal);
-                            visibleView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_keyboard_normol);
+                            visibleView(chat_gn_ll, chat_gn, R.drawable.chat_choose_down);
+                            visibleView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_kb);
                             goneView(etChat, null, 0);
                         }
                     }, 50);
@@ -630,8 +630,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private void showExpandFunctionView() {
         goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
         isShowKBPic = false;
-        goneView(chat_gn_ll, chat_gn, R.drawable.chat_gn_normal);
-        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_microphone_normol);
+        goneView(chat_gn_ll, chat_gn, R.drawable.chat_choose_down);
+        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_mic);
         visibleView(etChat, null, 0);
         visibleView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_press);
         recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
@@ -640,8 +640,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private void showStickerView() {
         goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
         isShowKBPic = false;
-        goneView(chat_gn_ll, chat_gn, R.drawable.chat_gn_normal);
-        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_microphone_normol);
+        goneView(chat_gn_ll, chat_gn, R.drawable.chat_choose_down);
+        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_mic);
         visibleView(etChat, null, 0);
         visibleView(stickerLinear, stickerImageButton, R.drawable.chat_expression_press);
         llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
@@ -650,8 +650,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private void hideAllViewState() {
         UIUtil.hideKeyboard(mContext, etChat);
         isShowKBPic = false;
-        goneView(chat_gn_ll, chat_gn, R.drawable.chat_gn_normal);
-        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_microphone_normol);
+        goneView(chat_gn_ll, chat_gn, R.drawable.chat_choose_down);
+        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_mic);
         visibleView(etChat, null, 0);
         goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
         goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
