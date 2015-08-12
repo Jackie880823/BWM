@@ -146,7 +146,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     @Override
     public void setLayoutId() {
-        this.layoutId = R.layout.fragment_event_detail_test;
+        this.layoutId = R.layout.fragment_event_detailt;
     }
 
     @Override
@@ -248,6 +248,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         if(file.exists()) {
 //                            progressBar.setVisibility(View.VISIBLE);
                             //                            vProgress.setVisibility(View.VISIBLE);
+                            if(progressBar != null){
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
                             Map<String, Object> param = new HashMap<>();
                             param.put("content_group_id", event.getContent_group_id());
                             param.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -669,9 +672,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         @Override
         protected void onPreExecute() {
 //            LogUtil.i("AsyncTask_开始", "");
-            if(progressBar != null){
-                progressBar.setVisibility(View.VISIBLE);
-            }
+//            if(progressBar != null){
+//                progressBar.setVisibility(View.VISIBLE);
+//            }
         }
 
         @Override
@@ -685,7 +688,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onFinish() {
-                    if(progressBar != null){
+                    if (progressBar != null) {
                         progressBar.setVisibility(View.GONE);
 
                     }
@@ -738,10 +741,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-        new HttpTools(getParentActivity()).get(url, params,Tag, new HttpCallback() {
+        new HttpTools(getParentActivity()).get(url, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
-                if(vProgress.getVisibility()==View.GONE){
+                if (vProgress.getVisibility() == View.GONE) {
                     vProgress.setVisibility(View.VISIBLE);
                 }
             }
@@ -759,7 +762,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             public void onResult(String response) {
                 event = new Gson().fromJson(response, EventEntity.class);
                 vProgress.setVisibility(View.GONE);
-                try{
+                try {
                     isRefresh = false;
                     currentPage = 1;//还原为第一页
                     initAdapter();
@@ -777,8 +780,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        }
 //                    }
                     ResponseStatus[] statuses = ResponseStatus.values();
-                    for(ResponseStatus status : statuses) {
-                        if(status.getServerCode().equals(event.getGroup_member_response())) {
+                    for (ResponseStatus status : statuses) {
+                        if (status.getServerCode().equals(event.getGroup_member_response())) {
                             currentStatus = status;
                             break;
                         }
@@ -787,10 +790,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     changeIntentUI(currentStatus);
                     swipeRefreshLayout.setRefreshing(false);
                     loading = false;
-                    if(data.size() < 1 ){
+                    if (data.size() < 1) {
                         requestComment();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     reInitDataStatus();
                 }
@@ -803,7 +806,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
                         getParentActivity().rightButton.setEnabled(false);
                     }
-                    if("2".equals(event.getGroup_event_status())){
+                    if ("2".equals(event.getGroup_event_status())) {
                         getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
                         getParentActivity().title_icon.setVisibility(View.GONE);
                         getParentActivity().rightButton.setEnabled(false);
@@ -873,17 +876,18 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onResult(String response) {
                     GsonBuilder gsonb = new GsonBuilder();
                     Gson gson = gsonb.create();
-                    data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {}.getType());
-                    if(isRefresh){
+                    data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {
+                    }.getType());
+                    if (isRefresh) {
                         isRefresh = false;
                         swipeRefreshLayout.setRefreshing(false);
                         currentPage = 1;//还原为第一页
                         initAdapter();
-                    }else {
+                    } else {
                         startIndex += data.size();
-                        if(adapter != null){
+                        if (adapter != null) {
                             adapter.addData(data);
-                        }else {
+                        } else {
                             initAdapter();
                         }
                     }
@@ -1015,7 +1019,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                    not_going_count.setText(result.getString("total_no"));
                     getParentActivity().setResult(Activity.RESULT_OK);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                } catch(JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
