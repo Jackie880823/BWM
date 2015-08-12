@@ -44,6 +44,7 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
+import com.bondwithme.BondWithMe.widget.StickerLinearLayout;
 
 import org.json.JSONObject;
 
@@ -149,6 +150,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private int isNewGroup;
     private ModifyStickerReceiver stickerReceiver;
     private boolean isGroupChat;
+    private StickerLinearLayout chat_main_ll;
 
     Handler handler = new Handler() {
         @Override
@@ -223,7 +225,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     try {
                         String postType = jsonObject.optString("postType");
                         if ("postPhoto".equals(postType) || "postSticker".equals(postType)) {
-                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -232,7 +234,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     JSONObject textJsonObject = (JSONObject) msg.obj;
                     try {
                         if ("postText".equals(textJsonObject.getString("postType"))) {
-                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -417,6 +419,16 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         contactTextView = getViewById(R.id.contact_tv);
         sendTextView = getViewById(R.id.btn_send);
         empty_message = getViewById(R.id.no_message_data_linear);
+        chat_main_ll = getViewById(R.id.chat_main_ll);
+
+        chat_main_ll.setOnResizeListener(new StickerLinearLayout.OnResizeListener() {
+            @Override
+            public void OnResize(int w, int h, int oldw, int oldh) {
+                if (h < oldh) {
+                    llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+                }
+            }
+        });
 
         chat_gn_ll = getViewById(R.id.chat_gn_ll);
         chat_mic_keyboard = getViewById(R.id.chat_mic_keyboard);
@@ -632,7 +644,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_microphone_normol);
         visibleView(etChat, null, 0);
         visibleView(stickerLinear, stickerImageButton, R.drawable.chat_expression_press);
-        recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+        llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
     }
 
     private void hideAllViewState() {
@@ -675,12 +687,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             case MotionEvent.ACTION_UP:
                 switch (v.getId()) {
                     case R.id.et_chat:
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
-                            }
-                        }, 50);
                         if (!imm.isActive()) {
                             handler.postDelayed(new Runnable() {
                                 @Override
@@ -697,7 +703,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         }
         return false;
     }
-
 
     private void sendTextMessage() {
         final String content = etChat.getText().toString();
@@ -816,7 +821,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private void setAllListener() {
         expandFunctionButton.setOnClickListener(this);
         stickerImageButton.setOnClickListener(this);
-        etChat.setOnClickListener(this);
         cameraTextView.setOnClickListener(this);
         albumTextView.setOnClickListener(this);
         locationTextView.setOnClickListener(this);

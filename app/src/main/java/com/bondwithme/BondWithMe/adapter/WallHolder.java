@@ -29,9 +29,7 @@ import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Jackie on 8/7/15.
@@ -205,7 +203,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        int position = getAdapterPosition();
         switch(v.getId()) {
 
             case R.id.tv_wall_agree_count:
@@ -219,7 +216,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
             case R.id.ll_love:
             case R.id.iv_love:
-                newClick = true;
                 updateLovedView();
 
                 if(TextUtils.isEmpty(wallEntity.getLove_id())) {
@@ -260,7 +256,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private void updateLovedView() {
         int count = Integer.valueOf(wallEntity.getLove_count());
 //        String text = tvLoveList.getText().toString();
-        String name = MainActivity.getUser().getUser_given_name();
+//        String name = MainActivity.getUser().getUser_given_name();
         int resId;
 
         if(TextUtils.isEmpty(wallEntity.getLove_id())) {
@@ -296,38 +292,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         ibAgree.setImageResource(resId);
         tvAgreeCount.setText(String.format(tvAgreeCount.getContext().getString(R.string.loves_count), count));
 //        tvLoveList.setText(text);
-    }
-
-    boolean newClick;
-    List<Integer> runningList = new ArrayList<>();
-
-    private void check(final int position) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                long startTime = System.currentTimeMillis();//点击时间
-                long nowTime = System.currentTimeMillis();
-                //缓冲时间为1000
-                while(nowTime - startTime < 1000) {
-                    if(newClick) {
-                        startTime = System.currentTimeMillis();
-                        newClick = false;
-                    }
-                    nowTime = System.currentTimeMillis();
-                }
-                try {
-                    runningList.remove(position);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-
-                if(TextUtils.isEmpty(wallEntity.getLove_id())) {
-                    doLove(wallEntity, false);
-                } else {
-                    doLove(wallEntity, true);
-                }
-            }
-        }).start();
     }
 
     private void doLove(final WallEntity wallEntity, final boolean love) {
@@ -388,7 +352,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         int tagMemberCount = this.wallEntity.getTag_member() == null ? 0 : this.wallEntity.getTag_member().size();
         int tagGroupCount = this.wallEntity.getTag_member() == null ? 0 : this.wallEntity.getTag_group().size();
-        if(tagMemberCount > 0 || tagGroupCount > 0) {
+        if(tagMemberCount >= 0 || tagGroupCount >= 0) {
             // 有TAG用户或分组需要显示字符特效
             WallUtil util = new WallUtil(context, mViewClickListener);
             util.setSpanContent(tvContent, this.wallEntity, atDescription, tagMemberCount, tagGroupCount);

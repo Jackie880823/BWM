@@ -4,6 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+    <!--<com.bondwithme.BondWithMe.widget.InvitedFrameLayout-->
+        <!--android:layout_width=""-->
+        <!--android:layout_height=""></com.bondwithme.BondWithMe.widget.InvitedFrameLayout>-->
+        <!--<com.bondwithme.BondWithMe.widget.SYBViewPager-->
+            <!--android:id="@+id/myiewpager"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent">-->
+        <!--</com.bondwithme.BondWithMe.widget.SYBViewPager>-->
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -23,7 +31,7 @@
             android:orientation="vertical"
             android:gravity="center_horizontal"
             >
-            
+
             <ImageView
                 android:id="@+id/tab_icon_all"
                 android:layout_width="@dimen/default_small_button_width_height"
@@ -124,18 +132,43 @@
         android:weightSum="4">
 
         <ImageView
-            android:id="@+id/cursor"
+            android:id="@+id/cursor_all"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="matrix"
+            android:visibility="invisible"
+            android:src="@color/default_text_color_green" />
+        <ImageView
+            android:id="@+id/cursor_go"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="matrix"
+            android:visibility="invisible"
+            android:src="@color/default_text_color_green" />
+        <ImageView
+            android:id="@+id/cursor_mb"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="matrix"
+            android:visibility="invisible"
+            android:src="@color/default_text_color_green" />
+        <ImageView
+            android:id="@+id/cursor_not"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="matrix"
+            android:visibility="invisible"
             android:src="@color/default_text_color_green" />
         <!--<FrameLayout-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_weight="1"-->
-            <!--android:scaleType="matrix"-->
-            <!--android:background="@color/default_text_color_green">-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:scaleType="matrix"-->
+        <!--android:background="@color/default_text_color_green">-->
         <!--</FrameLayout>-->
     </LinearLayout>
 
@@ -144,9 +177,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        tools:context=".ui.InvitedStatusActivity">
-
-    </android.support.v4.view.ViewPager>
+        tools:context=".ui.InvitedStatusActivity"/>
 
 
 </LinearLayout>
