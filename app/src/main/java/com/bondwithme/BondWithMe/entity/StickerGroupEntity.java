@@ -17,6 +17,16 @@ public class StickerGroupEntity implements Serializable {
     private String condition_type;         // 表情包下载条件分类 （以后用）
     private String downloadable;           // 表情包下载权限 （0-没权限，1-可以下载） ＊
 
+    public String getSticker_new() {
+        return sticker_new;
+    }
+
+    public void setSticker_new(String sticker_new) {
+        this.sticker_new = sticker_new;
+    }
+
+    private String sticker_new;            // 判断是否为新的sticker
+
     public String getDownloadable() {
         return downloadable;
     }

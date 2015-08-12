@@ -4,10 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +45,6 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MslToast;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
-import com.bondwithme.BondWithMe.widget.JustifyTextView;
-import com.bondwithme.BondWithMe.widget.MessageTextView;
 import com.material.widget.CircularProgress;
 
 import org.json.JSONException;
@@ -50,6 +56,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -97,24 +105,24 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         int listSize = list.size();
         myList.addAll(0, msgList);
         notifyDataSetChanged();
-        recyclerView.scrollToPosition(listSize);
+        llm.scrollToPosition(listSize);
     }
 
     public void addData(List<MsgEntity> list) {
         myList.addAll(0, list);
         notifyDataSetChanged();
-        recyclerView.scrollToPosition(getItemCount() - 1);
+        llm.scrollToPosition(getItemCount() - 1);
     }
 
     public void addTimerData(List<MsgEntity> list) {
-        int scrollPosition = 0;
+        int scrollPosition = llm.findLastVisibleItemPosition();
+        ;
         if (myList != null && myList.size() > 0) {
-            scrollPosition = llm.findLastVisibleItemPosition();
             myList.clear();
         }
         myList.addAll(list);
         notifyDataSetChanged();
-        recyclerView.scrollToPosition(scrollPosition);
+        llm.scrollToPosition(scrollPosition);
     }
 
     public void addSendData(List<MsgEntity> list) {
@@ -124,7 +132,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         myList.clear();
         myList.addAll(list);
         notifyDataSetChanged();
-        recyclerView.scrollToPosition(getItemCount() - 1);
+        llm.scrollToPosition(getItemCount() - 1);
     }
 
     public void addMsgEntity(MsgEntity msgEntity) {
@@ -133,7 +141,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         int listSize = myList.size();
         myList.add(msgEntity);
         notifyDataSetChanged();
-        recyclerView.scrollToPosition(getItemCount() - 1);
+        llm.scrollToPosition(getItemCount() - 1);
         //notifyItemInserted(myList.size());
     }
 
@@ -227,7 +235,48 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             }
         }
         if (null != msgEntity.getText_id()) {//文字
-            holder.messageText.setText(msgEntity.getText_description());
+//            holder.messageText.setText(msgEntity.getText_description());
+            String atDescription = msgEntity.getText_description();
+            holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
+            atDescription += " ";
+            SpannableStringBuilder ssb = new SpannableStringBuilder(atDescription);
+            SpannableString ssMind = new SpannableString(atDescription);
+            ssMind.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setUnderlineText(false);
+                    ds.setColor(Color.BLACK);
+                }
+            }, 0, atDescription.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            try {
+                if (!TextUtils.isEmpty(atDescription)) {
+                    String[] fbsArr = {"\\", "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}", "|"};
+                    for (String key : fbsArr) {
+                        if (atDescription.contains(key)) {
+                            atDescription = atDescription.replace(key, "\\" + key);
+                        }
+                    }
+                }
+                Pattern p = Pattern.compile(atDescription);
+                Matcher m = p.matcher(ssb.toString());
+                if (m.find()) {
+                    int start = m.start();
+                    int end = m.end();
+                    ssb.replace(start, end - 1, ssMind);
+                } else {
+                    ssb.append(ssMind);
+                }
+            } catch (Exception e) {
+                ssb.append(ssMind);
+                e.printStackTrace();
+            }
+            holder.messageText.setText(ssb);
         } else if (msgEntity.getLoc_id() != null) {//地图 item
             String locUrl = LocationUtil.getLocationPicUrl(context, msgEntity.getLoc_latitude(), msgEntity.getLoc_longitude(), msgEntity.getLoc_type());
             VolleyUtil.initNetworkImageView(context, holder.networkImageView, locUrl, R.drawable.network_image_default, R.drawable.network_image_default);
@@ -300,7 +349,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     class VHItem extends RecyclerView.ViewHolder implements View.OnClickListener {
         //接收
         CircularNetworkImage iconImage;
-        JustifyTextView messageText;
+        TextView messageText;
         NetworkImageView networkImageView;
         GifImageView gifImageView;
         TextView dateTime;
@@ -311,7 +360,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         public VHItem(View itemView) {
             super(itemView);
             iconImage = (CircularNetworkImage) itemView.findViewById(R.id.message_icon_image);
-            messageText = (JustifyTextView) itemView.findViewById(R.id.message_item_content_tv);
+            messageText = (TextView) itemView.findViewById(R.id.message_item_content_tv);
             networkImageView = (NetworkImageView) itemView.findViewById(R.id.message_pic_iv);
             gifImageView = (GifImageView) itemView.findViewById(R.id.message_pic_gif_iv);
             dateTime = (TextView) itemView.findViewById(R.id.date_time_tv);

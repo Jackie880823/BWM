@@ -354,7 +354,7 @@ public class WallEditView extends EditText implements TextWatcher {
         }
 
         int numbersGroups = getNumbers(oldGroupText);
-        if(numberMembers != 0) {
+        if(numbersGroups != 0) {
             String replaceGroup = String.format(WallUtil.AT_GROUPS, numbersGroups);
             text = replaceAt(text, oldGroupText, replaceGroup);
         }

@@ -106,18 +106,26 @@ public class UIUtil {
     }
 
     public static void hideKeyboard(Context context, EditText et) {
-        if (context != null && et != null) {
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+        try {
+            if (context != null && et != null) {
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(et.getWindowToken(), 0);
+            }
+        } catch (Exception e) {
+
         }
     }
 
     public static void hideKeyboard(Context context, View view) {
-        if (context != null && view != null) {
-            InputMethodManager imm = (InputMethodManager) context.getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        try {
+            if (context != null && view != null) {
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -129,7 +137,7 @@ public class UIUtil {
 
     public static int getPixelsFromDp(Context context, float dp) {
         final float scale = context.getResources().getDisplayMetrics().density;
-        return (int)(dp * scale + 0.5f);
+        return (int) (dp * scale + 0.5f);
     }
 
 }

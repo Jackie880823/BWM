@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container"
-    android:layout_width="match_parent" android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
     <include
         android:id="@+id/fragment_main_top"
         layout="@layout/title_view"
@@ -9,43 +11,70 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <ScrollView
-        android:id="@+id/sc_sticker_store"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/fragment_main_top"
-        android:fillViewport="true">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-
-
-            <ImageSwitcher
-                android:id="@+id/is_sticker_banner"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_200dp"
-                android:visibility="visible"/>
-
-
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview_sticker"
-                android:layout_below="@+id/is_sticker_banner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
-
-
-        </RelativeLayout>
-    </ScrollView>
 
     <RelativeLayout
-        android:layout_below="@+id/fragment_main_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <include layout="@layout/progress_layout"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_main_top">
+
+        <ScrollView
+
+            android:id="@+id/sc_sticker_store"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <RelativeLayout
+                    android:id="@+id/rl_ads"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_200dp">
+
+                    <ImageSwitcher
+                        android:id="@+id/is_sticker_banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="visible" />
+
+                    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/ad_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"
+                        android:clickable="true">
+
+                        <com.material.widget.CircularProgress
+                            android:id="@+id/top_full_progress_bar"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_centerInParent="true"
+                            android:visibility="visible"/>
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview_sticker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rl_ads" />
+
+
+            </RelativeLayout>
+
+
+        </ScrollView>
+
+        <include
+            android:id="@+id/sticker_progress"
+            layout="@layout/progress_layout" />
+
     </RelativeLayout>
+
 </RelativeLayout>

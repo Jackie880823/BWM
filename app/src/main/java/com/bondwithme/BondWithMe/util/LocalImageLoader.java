@@ -29,7 +29,6 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -63,10 +62,10 @@ public class LocalImageLoader {
         int scaleX = imageWidth / width;
         int scaleY = imageHeight / height;
         int scale = 1;
-        if(scaleX > scaleY & scaleY >= 1) {
+        if (scaleX > scaleY & scaleY >= 1) {
             scale = scaleX;
 
-        } else if(scaleY > scaleX & scaleX >= 1) {
+        } else if (scaleY > scaleX & scaleX >= 1) {
             scale = scaleY;
 
         }
@@ -89,7 +88,7 @@ public class LocalImageLoader {
         options.inJustDecodeBounds = true;
         try {
             BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options);
-        } catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             return null;
         }
         int width = UIUtil.getScreenWidth(context);
@@ -101,10 +100,10 @@ public class LocalImageLoader {
         int scaleX = imageWidth / width;
         int scaleY = imageHeight / height;
         int scale = 1;
-        if(scaleX > scaleY & scaleY >= 1) {
+        if (scaleX > scaleY & scaleY >= 1) {
             scale = scaleX;
 
-        } else if(scaleY > scaleX & scaleX >= 1) {
+        } else if (scaleY > scaleX & scaleX >= 1) {
             scale = scaleY;
         }
 
@@ -120,21 +119,21 @@ public class LocalImageLoader {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri), null, options);
             String path = null;
             Cursor c = context.getContentResolver().query(uri, null, null, null, null);
-            if(c != null) {
+            if (c != null) {
                 c.moveToFirst();
                 int idx = c.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
                 path = c.getString(idx);
                 c.close();
             }
 
-            if(TextUtils.isEmpty(path)) {
+            if (TextUtils.isEmpty(path)) {
                 path = uri.getPath();
             }
             int d = readPictureDegree(path);
-            if(d != 0) {
+            if (d != 0) {
                 bitmap = rotaingImageView(d, bitmap);
             }
-        } catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             return null;
         }
         return bitmap;
@@ -148,7 +147,7 @@ public class LocalImageLoader {
         Log.i(TAG, "loadBitmapFromFile& pathName: " + pathName);
         try {
             File file = new File(pathName);
-            if(!file.exists()) {
+            if (!file.exists()) {
                 return null;
             }
             // decode image size
@@ -161,8 +160,8 @@ public class LocalImageLoader {
             int width_tmp = bitmapTempOption.outWidth;
             int height_tmp = bitmapTempOption.outHeight;
             int scale = 1;
-            while(true) {
-                if(width_tmp / 2 < width || height_tmp / 2 < height)
+            while (true) {
+                if (width_tmp / 2 < width || height_tmp / 2 < height)
                     break;
                 width_tmp /= 2;
                 height_tmp /= 2;
@@ -177,16 +176,16 @@ public class LocalImageLoader {
                 Bitmap b = BitmapFactory.decodeStream(new FileInputStream(file), null, bitmapOption);
                 //调整角度
                 int degree = LocalImageLoader.readPictureDegree(pathName);
-                if(degree != 0)
+                if (degree != 0)
                     b = LocalImageLoader.rotaingImageView(degree, b);
                 return b;
                 //                return BitmapFactory.decodeStream(new FileInputStream(file), null, bitmapOption);
-            } catch(OutOfMemoryError e) {
+            } catch (OutOfMemoryError e) {
                 //                DebugHelper.printError(e);
-            } catch(Error e) {
+            } catch (Error e) {
                 //                DebugHelper.printError(e);
             }
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             //            DebugHelper.printException(exception);
         }
         return null;
@@ -297,24 +296,35 @@ public class LocalImageLoader {
         return loadDrawableFromFile(context, pathName, UIUtil.getScreenWidth(context), UIUtil.getScreenHeight(context));
     }
 
-    public static Drawable loadDrawableFromResourceId(Context context, int resourceId) {
+    public static Bitmap loadBitmapFromResourceId(Context context, int resourceId,int reqWidth, int reqHeight) {
         // 图片解析的配置
         Options options = new Options();
         // 不去真的解析图片，只是获取图片的头部信息宽，高
         options.inJustDecodeBounds = true;
 
         BitmapFactory.decodeResource(context.getResources(), resourceId, options);
-
-        int imageHeight = options.outHeight;
-        int imageWidth = options.outWidth;
+        int imageWidth =options.outWidth;
+        int imageHeight =options.outHeight;
+        int finalWidth ;
+        int finalHeight ;
+        if(reqWidth==0) {
+            finalWidth = UIUtil.getScreenWidth(context);
+        }else {
+            finalWidth = reqWidth;
+        }
+        if(reqHeight==0) {
+            finalHeight = UIUtil.getScreenHeight(context);
+        }else{
+            finalHeight = reqHeight;
+        }
         // 计算缩放比例
-        int scaleX = imageWidth / UIUtil.getScreenWidth(context);
-        int scaleY = imageHeight / UIUtil.getScreenHeight(context);
+        int scaleX = imageWidth / finalWidth;
+        int scaleY = imageHeight / finalHeight;
         int scale = 1;
-        if(scaleX > scaleY & scaleY >= 1) {
+        if (scaleX > scaleY & scaleY >= 1) {
             scale = scaleX;
 
-        } else if(scaleY > scaleX & scaleX >= 1) {
+        } else if (scaleY > scaleX & scaleX >= 1) {
             scale = scaleY;
 
         }
@@ -329,62 +339,11 @@ public class LocalImageLoader {
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
         // 设置宽高
         bitmap = Bitmap.createScaledBitmap(bitmap, UIUtil.getScreenWidth(context), UIUtil.getScreenHeight(context), false);
-        return new BitmapDrawable(context.getResources(), bitmap);
+        return bitmap;
     }
 
-    //	public static Bitmap decodeSampledBitmapFromResource(Resources res,
-    //			int resId, int reqWidth, int reqHeight) {
-    //
-    //		final BitmapFactory.Options options = new BitmapFactory.Options();
-    //		options.inJustDecodeBounds = true;
-    //		options.inPurgeable = true;
-    //		BitmapFactory.decodeResource(res, resId, options);
-    //		options.inSampleSize = calculateInSampleSize(options, reqWidth,
-    //				reqHeight);
-    //		options.inJustDecodeBounds = false;
-    //		try {
-    //			return BitmapFactory.decodeResource(res, resId, options);
-    //		} catch (OutOfMemoryError e) {
-    //			e.printStackTrace();
-    //			return null;
-    //		}
-    //	}
-
-    public static Bitmap decodeSampledBitmapFromDescriptor(FileDescriptor fileDescriptor, int reqWidth, int reqHeight) {
-
-        final Options options = new Options();
-        options.inJustDecodeBounds = true;
-        options.inPurgeable = true;
-        BitmapFactory.decodeFileDescriptor(fileDescriptor, null, options);
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-        options.inJustDecodeBounds = false;
-        try {
-            return BitmapFactory.decodeFileDescriptor(fileDescriptor, null, options);
-        } catch(OutOfMemoryError e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static Bitmap decodeSampledBitmapFromFile(String path, int reqWidth, int reqHeight) {
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(path);
-            return decodeSampledBitmapFromDescriptor(fis.getFD(), reqWidth, reqHeight);
-        } catch(Exception e) {
-            // TODO: handle exception
-        } finally {
-            if(fis != null) {
-                try {
-                    fis.close();
-                } catch(IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return null;
+    public static Drawable loadDrawableFromResourceId(Context context, int resourceId) {
+        return new BitmapDrawable(context.getResources(), loadBitmapFromResourceId(context, resourceId,0,0));
     }
 
     public static Bitmap decodeSampledBitmapFromByteArray(byte[] data, int offset, int length, int reqWidth, int reqHeight) {
@@ -403,8 +362,8 @@ public class LocalImageLoader {
         final int width = options.outWidth;
         int inSampleSize = 1;
 
-        if(height > reqHeight || width > reqWidth) {
-            if(width > height) {
+        if (height > reqHeight || width > reqWidth) {
+            if (width > height) {
                 inSampleSize = Math.round((float) height / (float) reqHeight);
             } else {
                 inSampleSize = Math.round((float) width / (float) reqWidth);
@@ -414,7 +373,7 @@ public class LocalImageLoader {
 
             final float totalReqPixelsCap = reqWidth * reqHeight * 2;
 
-            while(totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+            while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
                 inSampleSize++;
             }
         }
@@ -430,9 +389,9 @@ public class LocalImageLoader {
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
-        if(rqsW == 0 || rqsH == 0)
+        if (rqsW == 0 || rqsH == 0)
             return 1;
-        if(height > rqsH || width > rqsW) {
+        if (height > rqsH || width > rqsW) {
             final int heightRatio = Math.round((float) height / (float) rqsH);
             final int widthRatio = Math.round((float) width / (float) rqsW);
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
@@ -470,7 +429,7 @@ public class LocalImageLoader {
         Bitmap bitmap;
         ImageSize imageSize = new ImageSize(rqsW, rqsH);
         bitmap = ImageLoader.getInstance().loadImageSync(uri.toString(), imageSize);
-        if(bitmap == null) {
+        if (bitmap == null) {
             LogUtil.i(TAG, "compressBitmap& bitmap is null");
             return compressBitmap(context, FileUtil.getRealPathFromURI(context, uri), rqsW, rqsH, isDelSrc);
         } else {
@@ -510,21 +469,21 @@ public class LocalImageLoader {
         String desPath = PicturesCacheUtil.getCachePicPath(context);
         int degree = readPictureDegree(srcPath);
         try {
-            if(degree != 0)
+            if (degree != 0)
                 bitmap = rotaingImageView(degree, bitmap);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             // scale
             int options = 100;
             bitmap.compress(Bitmap.CompressFormat.PNG, options, os);
 
-            while(os.toByteArray().length / 1024 > maxSize && options > 30) {
+            while (os.toByteArray().length / 1024 > maxSize && options > 30) {
                 // Clean up os
                 os.reset();
                 // interval 10
                 options -= 5;
-                if(options == 0)
+                if (options == 0)
                     break;
-                bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
+                bitmap.compress(Bitmap.CompressFormat.PNG, options, os);
             }
 
             // Generate compressed image file
@@ -534,9 +493,9 @@ public class LocalImageLoader {
             fos.close();
 
             fos.close();
-            if(isDelSrc)
+            if (isDelSrc)
                 srcFile.deleteOnExit();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return desPath;
@@ -556,13 +515,13 @@ public class LocalImageLoader {
             byte data[] = new byte[is.available()];
             is.read(data);
             return decodeSampledBitmapFromByteArray(data, 0, data.length, width, height);
-        } catch(Exception e) {
+        } catch (Exception e) {
             // TODO: handle exception
         } finally {
-            if(is != null) {
+            if (is != null) {
                 try {
                     is.close();
-                } catch(IOException e) {
+                } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
@@ -576,7 +535,7 @@ public class LocalImageLoader {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte[] b = new byte[1024];
         int len = 0;
-        while((len = in.read(b)) != -1) {
+        while ((len = in.read(b)) != -1) {
             baos.write(b, 0, len);
         }
         in.close();
@@ -592,13 +551,13 @@ public class LocalImageLoader {
     public static Bitmap getSourceImageBitmapFromAssetsFile(Context mContext, String fileName) {
         Bitmap image = null;
         Resources resources = mContext.getResources();
-        if(resources != null) {
+        if (resources != null) {
             AssetManager am = resources.getAssets();
             try {
                 InputStream is = am.open(fileName);
                 image = BitmapFactory.decodeStream(is);
                 is.close();
-            } catch(IOException e) {
+            } catch (IOException e) {
             }
         }
         return image;
@@ -639,7 +598,7 @@ public class LocalImageLoader {
      * @return degree旋转的角度
      */
     public static int readPictureDegree(String path) {
-        if(TextUtils.isEmpty(path)) {
+        if (TextUtils.isEmpty(path)) {
             return 0;
         }
         int degree = 0;
@@ -647,7 +606,7 @@ public class LocalImageLoader {
             ExifInterface exifInterface = new ExifInterface(path);
             int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
             Log.i(TAG, "getRealPathFromURI& orientation ＝ " + orientation);
-            switch(orientation) {
+            switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     degree = 90;
                     break;
@@ -658,7 +617,7 @@ public class LocalImageLoader {
                     degree = 270;
                     break;
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         Log.i(TAG, "readPictureDegree& path: " + path + "; degree = " + degree);
@@ -666,7 +625,7 @@ public class LocalImageLoader {
     }
 
     public static byte[] bitmap2bytes(Bitmap bitmap) {
-        if(bitmap != null) {
+        if (bitmap != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             return baos.toByteArray();
@@ -685,7 +644,7 @@ public class LocalImageLoader {
      * @return Bitmap
      */
     public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
-        if(bitmap == null) {
+        if (bitmap == null) {
             return null;
         }
 
@@ -710,15 +669,15 @@ public class LocalImageLoader {
         Cursor c = context.getContentResolver().query(uri, null, null, null, null);
 
         String miniThumbnailUri = null;
-        if(c != null) {
+        if (c != null) {
             c.moveToFirst();
             Cursor cursor = MediaStore.Images.Thumbnails.queryMiniThumbnail(context.getContentResolver(), c.getLong(c.getColumnIndex(MediaStore.Images.Thumbnails._ID)), MediaStore.Images.Thumbnails.MINI_KIND, null);
-            if(cursor != null && cursor.getCount() > 0) {
+            if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();//**EDIT**
                 miniThumbnailUri = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
 
                 cursor.close();
-            } else if(cursor != null) {
+            } else if (cursor != null) {
                 cursor.close();
             }
 
@@ -732,14 +691,14 @@ public class LocalImageLoader {
 
         // 略缩图
         Bitmap thumbnail = null;
-        if(!TextUtils.isEmpty(miniThumbnailUri)) {
+        if (!TextUtils.isEmpty(miniThumbnailUri)) {
             //系统存有此图的略缩图
             Log.i(TAG, "getMiniThumbnailBitmap& miniThumbnailUri: " + miniThumbnailUri + " for uri: " + uri);
 
             thumbnail = LocalImageLoader.loadBitmapFromFile(context, Uri.parse(miniThumbnailUri).getPath());
         }
 
-        if(thumbnail == null) {
+        if (thumbnail == null) {
             // 没有获取的缩略，从原图加载缩略图
             thumbnail = LocalImageLoader.loadBitmapFromFile(context, path, columnWidthHeight, columnWidthHeight);
         }

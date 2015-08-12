@@ -207,17 +207,20 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             public void onClick(View v) {
                 //聊天界面
                 Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
-                intent2.putExtra("type", 0);
-                if((TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)) && userEntity != null){
+//                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                if(userEntity != null) {
+                    intent2.putExtra("type", 0);
                     //如果上个页面没有groupId或者groupName
                     intent2.putExtra("groupId", userEntity.getGroup_id());
                     intent2.putExtra("titleName", userEntity.getUser_given_name());
                     startActivity(intent2);
-                }else {
-                    intent2.putExtra("groupId", groupId);
-                    intent2.putExtra("titleName", groupName);
-                    startActivity(intent2);
                 }
+//                }else {
+//                    intent2.putExtra("type", 1);
+//                    intent2.putExtra("groupId", groupId);
+//                    intent2.putExtra("titleName", groupName);
+//                    startActivity(intent2);
+//                }
 
             }
         });

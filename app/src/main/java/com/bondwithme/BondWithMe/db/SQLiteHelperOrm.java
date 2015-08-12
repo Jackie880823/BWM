@@ -40,7 +40,7 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
 		//TODO
 		try {
-			TableUtils.createTable(connectionSource, OrmEntityDemo.class);
+//			TableUtils.createTable(connectionSource, OrmEntityDemo.class);
             TableUtils.createTable(connectionSource, LocalStickerInfo.class);
 		} catch (java.sql.SQLException e) {
 			e.printStackTrace();
@@ -53,6 +53,7 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
         switch (oldVersion){
             case 1:
                 try {
+                    TableUtils.dropTable(connectionSource, OrmEntityDemo.class, true);
                     TableUtils.dropTable(connectionSource, LocalStickerInfo.class, true);
                     TableUtils.createTable(connectionSource, LocalStickerInfo.class);
                 } catch (SQLException e) {

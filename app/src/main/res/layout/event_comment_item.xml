@@ -3,6 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/_14dp"
+    android:layout_marginRight="@dimen/_14dp"
+    android:background="#FAFAFA"
+    android:elevation="3dip"
     android:orientation="vertical">
 
     <LinearLayout
@@ -11,6 +15,7 @@
         android:layout_marginLeft="@dimen/default_content_padding"
         android:layout_marginRight="@dimen/default_content_padding"
         android:layout_marginTop="@dimen/default_content_padding"
+
         android:orientation="horizontal">
 
         <com.bondwithme.BondWithMe.widget.CircularNetworkImage
@@ -31,9 +36,9 @@
 
                 <TextView
                     android:id="@+id/tv_comment_owner_name"
-                    style="@style/text_dark_default"
-                    android:layout_centerVertical="true"
-                    android:textStyle="bold" />
+                    style="@style/text_user_name"
+                    android:textColor="@color/default_text_color_dark"
+                    android:layout_centerVertical="true" />
 
                 <ImageButton
                     android:id="@+id/btn_comment_del"
@@ -54,30 +59,33 @@
                 android:autoLink="web"
                 android:linksClickable="true"
                 android:visibility="gone"/>
-            <!--<pl.droidsonroids.gif.GifImageView-->
-                <!--android:id="@+id/message_pic_gif_iv"-->
-                <!--android:layout_width="@dimen/_150dp"-->
-                <!--android:layout_height="@dimen/_150dp"-->
-                <!--android:visibility="gone"-->
-                <!--android:scaleType="fitXY"/>-->
-            <!--<ImageView-->
-                <!--android:id="@+id/message_pic_png_iv"-->
-                <!--android:layout_width="@dimen/_150dp"-->
-                <!--android:layout_height="@dimen/_150dp"-->
-                <!--android:visibility="gone"-->
-                <!--android:scaleType="fitXY"/>-->
-            <!--<com.android.volley.toolbox.NetworkImageView-->
-                <!--android:id="@+id/message_pic_iv"-->
-                <!--android:layout_width="@dimen/_150dp"-->
-                <!--android:layout_height="@dimen/_150dp"-->
-                <!--android:visibility="gone"-->
-                <!--android:scaleType="fitXY"/>-->
-            <!--<com.material.widget.CircularProgress-->
-                <!--android:id="@+id/message_progress_bar"-->
-                <!--android:layout_width="@dimen/_32dp"-->
-                <!--android:layout_height="@dimen/_32dp"-->
-                <!--android:layout_centerInParent="true"-->
-                <!--android:background="#1E88E5" />-->
+
+            <RelativeLayout
+                android:id="@+id/ll_chats_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/default_view_margin"
+                android:visibility="gone">
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/message_pic_gif_iv"
+                    android:layout_width="@dimen/_80dp"
+                    android:layout_height="@dimen/_80dp"
+                    android:visibility="gone"
+                    android:scaleType="fitXY"/>
+                <ImageView
+                    android:id="@+id/message_pic_png_iv"
+                    android:layout_width="@dimen/_80dp"
+                    android:layout_height="@dimen/_80dp"
+                    android:visibility="gone"
+                    android:scaleType="fitXY"/>
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/message_pic_iv"
+                    android:layout_width="@dimen/_80dp"
+                    android:layout_height="@dimen/_80dp"
+                    android:visibility="gone"
+                    android:scaleType="fitXY"/>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -88,37 +96,37 @@
                     style="@style/text_light_default"
                     android:layout_alignParentBottom="true" />
 
-                <TextView
-                    android:id="@+id/tv_like_desc"
-                    style="@style/text_dark_default"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/text_like_desc"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_agree_count"
-                    style="@style/text_dark_default"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginRight="@dimen/default_view_margin"
-                    android:layout_toLeftOf="@+id/tv_like_desc"
-                    android:textStyle="bold" />
-
                 <RelativeLayout
-                    android:id="@+id/agree_touch"
-                    android:layout_width="@dimen/_50dp"
-                    android:layout_height="@dimen/_30dp"
+                    android:id="@+id/rl_agree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:paddingBottom="@dimen/_3dp"
-                    android:layout_toLeftOf="@+id/tv_like_desc">
+                    android:layout_alignParentRight="true">
+
+                    <TextView
+                        android:id="@+id/tv_like_desc"
+                        style="@style/text_dark_default"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:text="@string/text_like_desc"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tv_agree_count"
+                        style="@style/text_dark_default"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="@dimen/default_view_margin"
+                        android:layout_toLeftOf="@+id/tv_like_desc"
+                        android:textStyle="bold"/>
+
                     <ImageButton
                         android:id="@+id/iv_agree"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/_25dp"
-                        android:background="@null" />
+                        android:layout_marginRight="@dimen/default_view_margin"
+                        android:layout_toLeftOf="@+id/tv_agree_count"
+                        android:clickable="false"
+                        android:background="@null"/>
                 </RelativeLayout>
 
             </RelativeLayout>

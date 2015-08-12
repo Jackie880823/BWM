@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -40,6 +41,7 @@ public class AlertWallActivity extends BaseActivity {
     private AlertWallAdapter adapter;
     private RecyclerView rvList;
     private LinearLayoutManager llm;
+    private TextView tvNoDate;
 
 
     public int getLayout() {
@@ -77,6 +79,7 @@ public class AlertWallActivity extends BaseActivity {
     public void initView() {
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
+        tvNoDate = getViewById(R.id.tv_no_data_display);
 
 
         rvList = getViewById(R.id.rvList);
@@ -163,6 +166,10 @@ public class AlertWallActivity extends BaseActivity {
                     finishReFresh();
                 }
                 loading = false;
+
+                if (data.isEmpty() && !AlertWallActivity.this.isFinishing()){
+                    tvNoDate.setText(getResources().getString(R.string.text_no_date_diary));
+                }
             }
 
             @Override

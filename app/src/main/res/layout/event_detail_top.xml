@@ -48,7 +48,8 @@
 
                         <TextView
                             android:id="@+id/owner_name"
-                            style="@style/text_light_default" />
+                            android:textColor="@color/default_text_color_light"
+                            style="@style/text_user_name" />
 
 
                         <TextView

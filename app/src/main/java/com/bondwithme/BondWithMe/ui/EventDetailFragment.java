@@ -7,10 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -22,16 +19,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.adapter.EventCommentAdapterTest;
+import com.bondwithme.BondWithMe.adapter.EventCommentAdapter;
 import com.bondwithme.BondWithMe.entity.EventCommentEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
@@ -44,13 +39,13 @@ import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
-import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.bondwithme.BondWithMe.widget.SendComment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.material.widget.CircularProgress;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,25 +73,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private String group_id;
     private boolean isCommentRefresh = true;
     private MySwipeRefreshLayout swipeRefreshLayout;
-
-    private TextView push_date;
-    private TextView owner_name;
-    private CircularNetworkImage owner_head;
-    private TextView event_title;
-    private NetworkImageView event_picture_4_location;
-    private TextView event_desc;
-    private TextView event_date;
-    private TextView location_desc;
-    private RelativeLayout btn_intent_all;
-    private LinearLayout iv_intent_agree;
-    private LinearLayout iv_intent_maybe;
-    private LinearLayout iv_intent_no;
-    private CardView btn_location;
-    private TextView going_count;
-    private TextView maybe_count;
-    private TextView not_going_count;
-
-    private boolean isStickerItemClick = false;
+    private boolean isCommentTest;
 
     private boolean isRefresh;
     private boolean isComment;
@@ -110,7 +87,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     private RecyclerView rvList;
     private EventEntity event;
     int colorIntentSelected;
-//    private CircularProgress progressBar;
+    private CircularProgress progressBar;
+    private View defaultComment;
 
     private SendComment sendCommentView;
     private ScrollView Socontent;
@@ -145,14 +123,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
-    Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-//            bindData();
-//            requestComment();
-        }
-    };
 
     /**
      * Called when the fragment is visible to the user and actively running.
@@ -176,7 +146,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     @Override
     public void setLayoutId() {
-        this.layoutId = R.layout.fragment_event_detail_test;
+        this.layoutId = R.layout.fragment_event_detailt;
     }
 
     @Override
@@ -208,7 +178,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         });
         if(NetworkUtil.isNetworkConnected(getActivity())) {
 
-//            progressBar = getViewById(R.id.event_detail_progress_bar);
 
             etChat = getViewById(R.id.et_chat);
             expandFunctionButton = getViewById(R.id.ib_more);
@@ -261,7 +230,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             sendCommentView.setCommentListener(new SendComment.CommentListener() {
                 @Override
                 public void onStickerItemClick(String type, String folderName, String filName) {
-                    isStickerItemClick = true;
                     stickerEntity.setSticker_type(type);
                     stickerEntity.setSticker_group_path(folderName);
                     stickerEntity.setSticker_name(filName);
@@ -280,6 +248,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         if(file.exists()) {
 //                            progressBar.setVisibility(View.VISIBLE);
                             //                            vProgress.setVisibility(View.VISIBLE);
+                            if(progressBar != null){
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
                             Map<String, Object> param = new HashMap<>();
                             param.put("content_group_id", event.getContent_group_id());
                             param.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -303,12 +274,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     if(isComment) {
                         sendComment();
                     }
-                    isStickerItemClick = false;
                 }
 
                 @Override
                 public void onRemoveClick() {
-                    isStickerItemClick = false;
                     stickerEntity.setSticker_type("");
                     stickerEntity.setSticker_group_path("");
                     stickerEntity.setSticker_name("");
@@ -324,8 +293,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                     // dy>0 表示向下滑动
                     if((data.size() == (currentPage * offset)) && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+//                        LogUtil.i("eventdetail====", "onScrolled& getComments");
+//                        currentPage++;
                         loading = true;
-//                        vProgress.setVisibility(View.VISIBLE);
                         requestComment();
                     }
                 }
@@ -383,8 +353,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     //适配器
     private void initAdapter() {
-        adapter = new EventCommentAdapterTest(getParentActivity(),event, data, rvList);
-        adapter.setCommentActionListener(new EventCommentAdapterTest.CommentActionListener() {
+        adapter = new EventCommentAdapter(getParentActivity(),event, data, rvList);
+        adapter.setCommentActionListener(new EventCommentAdapter.CommentActionListener() {
             @Override
             public void doLove(EventCommentEntity commentEntity, boolean love) {
                 doLoveComment(commentEntity, love);
@@ -409,7 +379,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 intent.putExtra("datas", datas);
                 startActivity(intent);
             }
-
             @Override
             public void setIntentAll(EventEntity entity,int memeber) {
                 goInvitedStutus(memeber);
@@ -417,12 +386,59 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
 
         });
+        adapter.setUpdateListener(new EventCommentAdapter.ListViewItemViewUpdateListener() {
+            @Override
+            public void updateHeadView(View headView) {
+                initHeadView(headView);
+            }
+
+            @Override
+            public void updateListSecondView(View listSecondView) {
+                initListSecondView(listSecondView);
+            }
+        });
         rvList.setAdapter(adapter);
         RecyclerView.ItemAnimator animator = rvList.getItemAnimator();
         animator.setAddDuration(2000);
         animator.setRemoveDuration(1000);
     }
 
+    private void initListSecondView(View listSecondView){
+        progressBar = (CircularProgress) listSecondView.findViewById(R.id.event_detail_progress_bar);
+
+    }
+
+    private void initHeadView(View headView){
+        defaultComment = headView.findViewById(R.id.default_comment);
+//        defaultComment.setVisibility(View.GONE);
+    }
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        if(event != null) {
+////            bindData();
+//            requestComment();
+//        } else {
+//            Thread thread = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    while(true) {
+//                        try {
+//                            Thread.sleep(100);
+//                            if(getParentActivity() != null && getParentActivity().getDataDone) {
+//                                Message.obtain(handler).sendToTarget();
+//                                break;
+//                            }
+//                        } catch(Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                }
+//            });
+//            thread.start();
+//        }
+//    }
 
 
     private void doChangeResponse(ResponseStatus status) {
@@ -474,7 +490,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     ImageView option_no_going;
     ImageView option_maybe;
     ImageView option_going;
-    public EventCommentAdapterTest adapter;
+    public EventCommentAdapter adapter;
 
     /**
      * 发送大表情
@@ -495,20 +511,26 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
-
+                    if(progressBar != null){
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 @Override
                 public void onFinish() {
-//                    data.clear();
-//                    adapter.removeCommentData();
-//                    requestComment();
+//                        data.clear();
+//                        adapter.removeCommentData();
+//                        requestComment();
+                    if(progressBar != null){
+                        progressBar.setVisibility(View.GONE);
+                    }
                 }
 
                 @Override
                 public void onResult(String response) {
                     startIndex = 0;
 //                    isRefresh = true;
+                    currentPage = 1;
                     stickerEntity.setSticker_type("");
                     stickerEntity.setSticker_group_path("");
                     stickerEntity.setSticker_name("");
@@ -583,7 +605,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
-
+                        if(progressBar != null){
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override
@@ -591,13 +615,18 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        data.clear();
 //                        adapter.removeCommentData();
 //                        requestComment();
+                        if(progressBar != null){
+                            progressBar.setVisibility(View.GONE);
+                        }
+
                     }
 
                     @Override
                     public void onResult(String response) {
+                        isCommentTest = true;
                         startIndex = 0;
 //                        isRefresh = true;
-                        isComment = true;
+                        currentPage = 1;
                         stickerEntity.setSticker_type("");
                         stickerEntity.setSticker_group_path("");
                         stickerEntity.setSticker_name("");
@@ -638,18 +667,31 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     /**
      * 异步上传照片
      */
-    class uploadBimapTask extends AsyncTask<Map, Void, Boolean> {
+    class uploadBimapTask extends AsyncTask<Map, Void, Boolean>{
+
+        @Override
+        protected void onPreExecute() {
+//            LogUtil.i("AsyncTask_开始", "");
+//            if(progressBar != null){
+//                progressBar.setVisibility(View.VISIBLE);
+//            }
+        }
+
         @Override
         protected Boolean doInBackground(Map... params) {
 
             new HttpTools(App.getContextInstance()).upload(Constant.API_COMMENT_POST_TEXT, params[0], Tag, new HttpCallback() {
+
                 @Override
                 public void onStart() {
                 }
 
                 @Override
                 public void onFinish() {
-//                    requestComment();
+                    if (progressBar != null) {
+                        progressBar.setVisibility(View.GONE);
+
+                    }
                 }
 
                 @Override
@@ -657,6 +699,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     startIndex = 0;
 //                    isRefresh = true;
                     isCommentBim = true;
+                    currentPage = 1;
                     mUri = null;
                     data.clear();
                     adapter.removeCommentData();
@@ -698,10 +741,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-        new HttpTools(getParentActivity()).get(url, params,Tag, new HttpCallback() {
+        new HttpTools(getParentActivity()).get(url, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
-                if(vProgress.getVisibility()==View.GONE){
+                if (vProgress.getVisibility() == View.GONE) {
                     vProgress.setVisibility(View.VISIBLE);
                 }
             }
@@ -719,7 +762,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             public void onResult(String response) {
                 event = new Gson().fromJson(response, EventEntity.class);
                 vProgress.setVisibility(View.GONE);
-                try{
+                try {
                     isRefresh = false;
                     currentPage = 1;//还原为第一页
                     initAdapter();
@@ -737,8 +780,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        }
 //                    }
                     ResponseStatus[] statuses = ResponseStatus.values();
-                    for(ResponseStatus status : statuses) {
-                        if(status.getServerCode().equals(event.getGroup_member_response())) {
+                    for (ResponseStatus status : statuses) {
+                        if (status.getServerCode().equals(event.getGroup_member_response())) {
                             currentStatus = status;
                             break;
                         }
@@ -747,10 +790,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     changeIntentUI(currentStatus);
                     swipeRefreshLayout.setRefreshing(false);
                     loading = false;
-                    if(data.size() < 1 ){
+                    if (data.size() < 1) {
                         requestComment();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     reInitDataStatus();
                 }
@@ -763,7 +806,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
                         getParentActivity().rightButton.setEnabled(false);
                     }
-                    if("2".equals(event.getGroup_event_status())){
+                    if ("2".equals(event.getGroup_event_status())) {
                         getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
                         getParentActivity().title_icon.setVisibility(View.GONE);
                         getParentActivity().rightButton.setEnabled(false);
@@ -801,7 +844,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 return;
 
             HashMap<String, String> jsonParams = new HashMap<String, String>();
-
+//            defaultComment.setVisibility(View.GONE);
             jsonParams.put("user_id", MainActivity.getUser().getUser_id());
             jsonParams.put("group_id", event.getGroup_id());
             jsonParams.put("content_group_id", event.getContent_group_id());
@@ -817,37 +860,41 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             new HttpTools(getActivity()).get(url, null, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
-
+//                    if(adapter != null && adapter.getItemCount() == 1){
+//                        defaultComment.setVisibility(View.GONE);
+//                    }
                 }
 
                 @Override
                 public void onFinish() {
 //                    progressBar.setVisibility(View.GONE);
                     //                    vProgress.setVisibility(View.GONE);
+
                 }
 
                 @Override
                 public void onResult(String response) {
                     GsonBuilder gsonb = new GsonBuilder();
                     Gson gson = gsonb.create();
-                    data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {}.getType());
-                    currentPage = 1;
-                    startIndex += data.size();
-                    vProgress.setVisibility(View.GONE);
-                    if(isRefresh) {
+                    data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {
+                    }.getType());
+                    if (isRefresh) {
                         isRefresh = false;
-                        currentPage = 1;
-//                        initAdapter();
-//                        adapter.notifyDataSetChanged();
+                        swipeRefreshLayout.setRefreshing(false);
+                        currentPage = 1;//还原为第一页
+                        initAdapter();
                     } else {
                         startIndex += data.size();
-                        if(adapter == null){
-                            initAdapter();
-                            adapter.notifyDataSetChanged();
-                        }else {
+                        if (adapter != null) {
                             adapter.addData(data);
+                        } else {
+                            initAdapter();
                         }
                     }
+//                    if(adapter != null && adapter.getItemCount() > 1){
+//                        defaultComment.setVisibility(View.GONE);
+//                    }
+                    loading = false;
 //                    //如果有评论，则隐藏进度条
 //                    if(adapter != null && adapter.getItemCount() > 1) {
 //                        getViewById(R.id.comment_split_line).setVisibility(View.VISIBLE);
@@ -856,7 +903,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onError(Exception e) {
-
+                    loading = false;
                 }
 
                 @Override
@@ -972,7 +1019,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                    not_going_count.setText(result.getString("total_no"));
                     getParentActivity().setResult(Activity.RESULT_OK);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                } catch(JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -1078,53 +1125,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         }
     }
 
-    private void getEventResponseInfos() {
-        if(event == null)
-            return;
-
-
-        new HttpTools(getActivity()).get(String.format(Constant.API_EVENT_RESPONSE_INFOS, event.getGroup_id()), null, Tag, new HttpCallback() {
-
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-
-            @Override
-            public void onResult(String response) {
-                try {
-                    JSONObject result;
-                    result = new JSONObject(response);
-                    going_count.setText(result.getString("total_yes"));
-                    maybe_count.setText(result.getString("total_maybe"));
-                    not_going_count.setText(result.getString("total_no"));
-                } catch(JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
-
-    }
 
     /**
      * 删除评论
@@ -1306,7 +1306,5 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         });
 
     }
-
-
 
 }
