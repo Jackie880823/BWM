@@ -43,6 +43,7 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
+import com.bondwithme.BondWithMe.widget.StickerLinearLayout;
 
 import org.json.JSONObject;
 
@@ -136,6 +137,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private int isNewGroup;
     private ModifyStickerReceiver stickerReceiver;
     private boolean isGroupChat;
+    private StickerLinearLayout chat_main_ll;
 
     Handler handler = new Handler() {
         @Override
@@ -210,7 +212,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     try {
                         String postType = jsonObject.optString("postType");
                         if ("postPhoto".equals(postType) || "postSticker".equals(postType)) {
-                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -219,7 +221,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     JSONObject textJsonObject = (JSONObject) msg.obj;
                     try {
                         if ("postText".equals(textJsonObject.getString("postType"))) {
-                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -364,6 +366,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         imm = (InputMethodManager) getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         llm = new LinearLayoutManager(MessageChatActivity.this);
+        llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
 
         messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm, isGroupChat);
@@ -404,6 +407,16 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         contactTextView = getViewById(R.id.contact_tv);
         sendTextView = getViewById(R.id.btn_send);
         empty_message = getViewById(R.id.no_message_data_linear);
+        chat_main_ll = getViewById(R.id.chat_main_ll);
+
+        chat_main_ll.setOnResizeListener(new StickerLinearLayout.OnResizeListener() {
+            @Override
+            public void OnResize(int w, int h, int oldw, int oldh) {
+                if (h < oldh) {
+                    llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+                }
+            }
+        });
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -518,7 +531,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         }
         expandFunctionLinear.setVisibility(View.VISIBLE);
         expandFunctionButton.setImageResource(R.drawable.chat_plus_press);
-        recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+        llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
     }
 
     private void showStickerView() {
@@ -528,7 +541,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         }
         stickerLinear.setVisibility(View.VISIBLE);
         stickerImageButton.setImageResource(R.drawable.chat_expression_press);
-        recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+        llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
     }
 
     private void hideAllViewState() {
@@ -569,27 +582,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             case MotionEvent.ACTION_UP:
                 switch (v.getId()) {
                     case R.id.et_chat:
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
-                            }
-                        }, 50);
-
+//                        llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
                         if (!imm.isActive()) {
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    imm.showSoftInput(etChat, InputMethodManager.SHOW_FORCED);
-                                }
-                            }, 50);
+                            imm.showSoftInput(etChat, InputMethodManager.SHOW_FORCED);
                         }
                         break;
                 }
         }
         return false;
     }
-
 
     private void sendTextMessage() {
         final String content = etChat.getText().toString();
@@ -708,7 +709,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private void setAllListener() {
         expandFunctionButton.setOnClickListener(this);
         stickerImageButton.setOnClickListener(this);
-        etChat.setOnClickListener(this);
         cameraTextView.setOnClickListener(this);
         albumTextView.setOnClickListener(this);
         locationTextView.setOnClickListener(this);

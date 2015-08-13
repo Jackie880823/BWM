@@ -23,7 +23,6 @@ import android.widget.ScrollView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.EventCommentAdapter;
@@ -71,6 +70,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     private List<EventCommentEntity> data = new ArrayList<EventCommentEntity>();
     private String group_id;
+    private String Content_group_id;
     private boolean isCommentRefresh = true;
     private MySwipeRefreshLayout swipeRefreshLayout;
     private boolean isCommentTest;
@@ -106,6 +106,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
      * 表情按钮
      */
     private ImageButton stickerImageButton;
+
+    private HttpTools mHttpTools;
 
     Intent intent;
     private Context mContext;
@@ -146,14 +148,16 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     @Override
     public void setLayoutId() {
-        this.layoutId = R.layout.fragment_event_detail_test;
+        this.layoutId = R.layout.fragment_event_detailt;
     }
 
     @Override
     public void initView() {
+        mHttpTools = new HttpTools(getActivity());
         isComment = true;
         isCommentBim = true;
         group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
+        Content_group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
         mContext = getParentActivity();
@@ -241,27 +245,18 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onReceiveBitmapUri(Uri uri) {
                     isCommentBim = true;
                     hideAllViewState();
-                    mUri = uri;
-                    if(mUri != null) {
-                        String path = LocalImageLoader.compressBitmap(getActivity(), mUri, 480, 800, false);
-                        File file = new File(path);
-                        if(file.exists()) {
-//                            progressBar.setVisibility(View.VISIBLE);
-                            //                            vProgress.setVisibility(View.VISIBLE);
-                            Map<String, Object> param = new HashMap<>();
-                            param.put("content_group_id", event.getContent_group_id());
-                            param.put("comment_owner_id", MainActivity.getUser().getUser_id());
-                            param.put("content_type", "comment");
-                            param.put("file", file);
-                            param.put("photo_fullsize", "1");
-                            uploadBimapTask task = new uploadBimapTask();
+                    if(uri != null) {
+                            if(progressBar != null){
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
+                        UploadBimapTask task = new UploadBimapTask();
                             //for not work in down 11
                             if(SDKUtil.IS_HONEYCOMB) {
-                                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, param);
+                                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
                             } else {
-                                task.execute(param);
+                                task.execute(uri);
                             }
-                        }
+//                        }
                     }
 
                 }
@@ -505,10 +500,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("sticker_name", stickerEntity.getSticker_name());
             params.put("sticker_type", stickerEntity.getSticker_type());
 
-            new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
+            mHttpTools.post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
-                    if(progressBar != null){
+                    if (progressBar != null) {
                         progressBar.setVisibility(View.VISIBLE);
                     }
                 }
@@ -518,7 +513,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        data.clear();
 //                        adapter.removeCommentData();
 //                        requestComment();
-                    if(progressBar != null){
+                    if (progressBar != null) {
                         progressBar.setVisibility(View.GONE);
                     }
                 }
@@ -599,10 +594,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     params.put("sticker_type", "");
                 }
 
-                new HttpTools(getActivity()).post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
+                mHttpTools.post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
-                        if(progressBar != null){
+                        if (progressBar != null) {
                             progressBar.setVisibility(View.VISIBLE);
                         }
                     }
@@ -612,7 +607,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        data.clear();
 //                        adapter.removeCommentData();
 //                        requestComment();
-                        if(progressBar != null){
+                        if (progressBar != null) {
                             progressBar.setVisibility(View.GONE);
                         }
 
@@ -661,38 +656,50 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     }
 
-    /**
-     * 异步上传照片
-     */
-    class uploadBimapTask extends AsyncTask<Map, Void, Boolean>{
+    class UploadBimapTask extends AsyncTask<Uri, Void, String> {
 
         @Override
-        protected void onPreExecute() {
-//            LogUtil.i("AsyncTask_开始", "");
-            if(progressBar != null){
-                progressBar.setVisibility(View.VISIBLE);
+        protected String doInBackground(Uri... params) {
+            if(params == null) {
+                return null;
             }
+            return LocalImageLoader.compressBitmap(getActivity(), params[0], 480, 800, false);
         }
 
         @Override
-        protected Boolean doInBackground(Map... params) {
+        protected void onPostExecute(String path) {
+            submitPic(path);
+        }
 
-            new HttpTools(App.getContextInstance()).upload(Constant.API_COMMENT_POST_TEXT, params[0], Tag, new HttpCallback() {
+        private void submitPic(String path) {
+            File f = new File(path);
+            if(!f.exists()) {
+                return;
+            }
 
+            Map<String, Object> params = new HashMap<>();
+            params.put("content_group_id", Content_group_id);
+            params.put("comment_owner_id", MainActivity.getUser().getUser_id());
+            params.put("content_type", "comment");
+            params.put("file", f);
+            params.put("photo_fullsize", "1");
+
+
+            mHttpTools.upload(Constant.API_COMMENT_POST_TEXT, params, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
+
                 }
 
                 @Override
                 public void onFinish() {
                     if(progressBar != null){
                         progressBar.setVisibility(View.GONE);
-
                     }
                 }
 
                 @Override
-                public void onResult(String response) {
+                public void onResult(String string) {
                     startIndex = 0;
 //                    isRefresh = true;
                     isCommentBim = true;
@@ -704,17 +711,15 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
                     getParentActivity().setResult(Activity.RESULT_OK);
-
                 }
 
                 @Override
                 public void onError(Exception e) {
-
+                    e.printStackTrace();
                 }
 
                 @Override
                 public void onCancelled() {
-
                 }
 
                 @Override
@@ -722,10 +727,9 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 }
             });
-            return null;
         }
-
     }
+
 
     @Override
     public void requestData() {
@@ -738,10 +742,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-        new HttpTools(getParentActivity()).get(url, params,Tag, new HttpCallback() {
+        mHttpTools.get(url, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
-                if(vProgress.getVisibility()==View.GONE){
+                if (vProgress.getVisibility() == View.GONE) {
                     vProgress.setVisibility(View.VISIBLE);
                 }
             }
@@ -759,7 +763,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             public void onResult(String response) {
                 event = new Gson().fromJson(response, EventEntity.class);
                 vProgress.setVisibility(View.GONE);
-                try{
+                try {
                     isRefresh = false;
                     currentPage = 1;//还原为第一页
                     initAdapter();
@@ -777,8 +781,8 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                        }
 //                    }
                     ResponseStatus[] statuses = ResponseStatus.values();
-                    for(ResponseStatus status : statuses) {
-                        if(status.getServerCode().equals(event.getGroup_member_response())) {
+                    for (ResponseStatus status : statuses) {
+                        if (status.getServerCode().equals(event.getGroup_member_response())) {
                             currentStatus = status;
                             break;
                         }
@@ -787,10 +791,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     changeIntentUI(currentStatus);
                     swipeRefreshLayout.setRefreshing(false);
                     loading = false;
-                    if(data.size() < 1 ){
+                    if (data.size() < 1) {
                         requestComment();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     reInitDataStatus();
                 }
@@ -803,7 +807,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
                         getParentActivity().rightButton.setEnabled(false);
                     }
-                    if("2".equals(event.getGroup_event_status())){
+                    if ("2".equals(event.getGroup_event_status())) {
                         getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
                         getParentActivity().title_icon.setVisibility(View.GONE);
                         getParentActivity().rightButton.setEnabled(false);
@@ -854,7 +858,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             String url = UrlUtil.generateUrl(Constant.API_EVENT_COMMENT, params);
 
-            new HttpTools(getActivity()).get(url, null, Tag, new HttpCallback() {
+            mHttpTools.get(url, null, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
 //                    if(adapter != null && adapter.getItemCount() == 1){
@@ -873,17 +877,18 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 public void onResult(String response) {
                     GsonBuilder gsonb = new GsonBuilder();
                     Gson gson = gsonb.create();
-                    data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {}.getType());
-                    if(isRefresh){
+                    data = gson.fromJson(response, new TypeToken<ArrayList<EventCommentEntity>>() {
+                    }.getType());
+                    if (isRefresh) {
                         isRefresh = false;
                         swipeRefreshLayout.setRefreshing(false);
                         currentPage = 1;//还原为第一页
                         initAdapter();
-                    }else {
+                    } else {
                         startIndex += data.size();
-                        if(adapter != null){
+                        if (adapter != null) {
                             adapter.addData(data);
-                        }else {
+                        } else {
                             initAdapter();
                         }
                     }
@@ -941,7 +946,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_EVENT_CANCEL, event.getGroup_id()), null);
 
-        new HttpTools(getActivity()).put(requestInfo, Tag, new HttpCallback() {
+        mHttpTools.put(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -995,7 +1000,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = String.format(Constant.API_EVENT_INTENT, event.getGroup_id());
         requestInfo.jsonParam = jsonParamsString;
-        new HttpTools(getActivity()).put(requestInfo, Tag, new HttpCallback() {
+        mHttpTools.put(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1015,7 +1020,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                    not_going_count.setText(result.getString("total_no"));
                     getParentActivity().setResult(Activity.RESULT_OK);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                } catch(JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -1135,14 +1140,14 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_COMMENT_DELETE, commentId), null);
-                new HttpTools(getActivity()).delete(requestInfo, Tag, new HttpCallback() {
+                mHttpTools.delete(requestInfo, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }
 
                     @Override
                     public void onFinish() {
-                        if(vProgress != null)
+                        if (vProgress != null)
                             vProgress.setVisibility(View.GONE);
 
 //                        data.clear();
@@ -1206,7 +1211,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
         params.put("user_id", "" + MainActivity.getUser().getUser_id());
         RequestInfo requestInfo = new RequestInfo(Constant.API_EVENT_COMMENT_LOVE, params);
-        new HttpTools(getActivity()).post(requestInfo, Tag, new HttpCallback() {
+        mHttpTools.post(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1266,7 +1271,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("file", file);
         params.put("photo_fullsize", "1");
 
-        new HttpTools(getActivity()).upload(Constant.API_EVENT_COMMENT_PIC_POST, params, Tag, new HttpCallback() {
+        mHttpTools.upload(Constant.API_EVENT_COMMENT_PIC_POST, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -1283,7 +1288,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 mUri = null;
                 requestComment();
                 getParentActivity().setResult(Activity.RESULT_OK);
-                //                    Log.i("onResult====",string);
             }
 
             @Override
