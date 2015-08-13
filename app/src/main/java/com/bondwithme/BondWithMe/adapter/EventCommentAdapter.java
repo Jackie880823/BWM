@@ -749,13 +749,13 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public interface CommentActionListener {
-        public void doLove(final EventCommentEntity commentEntity, final boolean love);
+         void doLove(final EventCommentEntity commentEntity, final boolean love);
 
-        public void doDelete(String commentId);
+         void doDelete(String commentId);
 
-        public void showOriginalPic(String User_id, String File_id);
+         void showOriginalPic(String User_id, String File_id);
 
-        public void setIntentAll(EventEntity entity,int memeber);
+         void setIntentAll(EventEntity entity,int member);
     }
 
     private ListViewItemViewUpdateListener updateListener;
