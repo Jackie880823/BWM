@@ -72,8 +72,8 @@
         <!--</ScrollView>-->
 
         <include
-            android:id="@+id/sticker_progress"
-            layout="@layout/progress_layout" />
+        android:id="@+id/sticker_progress"
+        layout="@layout/progress_layout" />
 
     </RelativeLayout>
 
