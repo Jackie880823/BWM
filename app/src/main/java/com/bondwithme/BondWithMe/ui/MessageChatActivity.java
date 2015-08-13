@@ -379,6 +379,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         imm = (InputMethodManager) getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         llm = new LinearLayoutManager(MessageChatActivity.this);
+        llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
 
         messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm, isGroupChat);
