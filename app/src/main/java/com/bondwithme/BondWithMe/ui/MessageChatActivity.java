@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -22,6 +23,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -139,6 +141,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public final static int GET_HISTORY_MESSAGE = 0X105;
     public final static int GET_SEND_OVER_MESSAGE = 0X106;
     public final static int GET_TIMER_MESSAGE = 0X107;
+    private final static int GET_RECORD_TIME = 0X108;
     public int INITIAL_LIMIT = 10;
 
     public MessageAction messageAction;
@@ -146,11 +149,16 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public LinearLayoutManager llm;
     private InputMethodManager imm;
     private Timer mTimer;
+    private float touchDownX;
+    private int totalMove;
 
     private int isNewGroup;
     private ModifyStickerReceiver stickerReceiver;
     private boolean isGroupChat;
     private StickerLinearLayout chat_main_ll;
+
+    private long voiceBeginTime = 0;
+    private int mlCount = 0;
 
     Handler handler = new Handler() {
         @Override
@@ -250,9 +258,34 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         messageChatAdapter.addTimerData(msgTimerList);
                     }
                     break;
+                case GET_RECORD_TIME:
+                    mlCount = 1 + mlCount;
+                    if (mlCount < 115) {
+                        chat_mic_time.setText(formatRecordTime(mlCount));
+                    } else {
+                        int eciprocalrCount = 200 - mlCount;
+                        chat_mic_time.setText("还可以录制" + eciprocalrCount + "秒");
+                        if (mlCount == 200) {
+                            if (timer != null) {
+                                timer.cancel();
+                                //发送语音
+
+                            }
+                        }
+                    }
+                    break;
             }
         }
     };
+
+    private String formatRecordTime(int formatTime) {
+        int j = formatTime / 60;
+        int k = formatTime % 60;
+        Object[] arrayOfObject = new Object[2];
+        arrayOfObject[0] = Integer.valueOf(j);
+        arrayOfObject[1] = Integer.valueOf(k);
+        return String.format("%1$02d:%2$02d", arrayOfObject);
+    }
 
     @Override
     public int getLayout() {
@@ -440,7 +473,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         mic_left = getViewById(R.id.mic_left);
         mic_right = getViewById(R.id.mic_right);
         chat_gn = getViewById(R.id.chat_gn);
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -463,8 +495,28 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     }
 
+    Timer timer;
+
     @Override
     public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.mic_iv:
+                mic_iv.setImageResource(R.drawable.chat_voice_press);
+                chat_mic_text.setText("松开发送");
+                voiceBeginTime = System.currentTimeMillis();
+                TimerTask task = new TimerTask() {
+                    public void run() {
+                        Message message = new Message();
+                        message.what = GET_RECORD_TIME;
+                        handler.sendMessage(message);
+                    }
+                };
+                timer = new Timer(true);
+                timer.schedule(task, 1000, 1000); //延时1000ms后执行，1000ms执行一次
+                //timer.cancel(); //退出计时器
+                break;
+        }
+
         return false;
     }
 
@@ -558,6 +610,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             case R.id.chat_mic_keyboard://语音和文字输入切换按钮
                 goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
                 goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
+                llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
                 if (isShowKBPic) {
                     isShowKBPic = false;
                     handler.postDelayed(new Runnable() {
@@ -684,6 +737,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             }
                         }, 50);
                         break;
+                    case R.id.mic_iv:
+                        touchDownX = event.getRawX();
+                        break;
                 }
             case MotionEvent.ACTION_UP:
                 switch (v.getId()) {
@@ -700,7 +756,83 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             }, 50);
                         }
                         break;
+                    case R.id.mic_iv:
+                        mlCount = 0;
+                        mic_iv.setImageResource(R.drawable.chat_voice);
+                        chat_mic_time.setText(formatRecordTime(mlCount));
+                        if (timer != null) {
+                            timer.cancel();
+                        }
+
+                        break;
                 }
+
+            case MotionEvent.ACTION_MOVE:
+                switch (v.getId()) {
+                    case R.id.mic_iv:
+                        int[] arrayLeft = new int[2];
+                        mic_left.getLocationOnScreen(arrayLeft);
+                        int[] arrayRight = new int[2];
+                        mic_right.getLocationOnScreen(arrayRight);
+                        totalMove = (arrayRight[0] - arrayLeft[0]) / 2;
+                        float moveX = event.getRawX();
+                        float moveRange = moveX - touchDownX;
+                        float mplificationNum;
+                        if (moveRange < 0) {
+                            mplificationNum = (-moveRange) / totalMove;
+                        } else {
+                            mplificationNum = moveRange / totalMove;
+                        }
+                        boolean isInLeft = isInView(mic_left, mic_iv, event);
+                        boolean isInRight = isInView(mic_left, mic_iv, event);
+                        if (!isInLeft || !isInRight) {
+                            chat_mic_text.setText(formatRecordTime(mlCount));
+                        }
+                        if (moveRange < -50f) {
+                            if(mplificationNum<1) {
+                                mic_left.setScaleX(1 + mplificationNum);
+                                mic_left.setScaleY(1 + mplificationNum);
+                            }
+                            if (isInLeft) {
+                                chat_mic_text.setText("松手试听");
+                                if (timer != null) {
+                                    timer.cancel();
+                                }
+                            }
+                        }
+                        if (moveRange > 50f) {
+                            if(mplificationNum<1) {
+                                mic_right.setScaleX(1 + mplificationNum);
+                                mic_right.setScaleY(1 + mplificationNum);
+                            }
+                            if (isInRight) {
+                                chat_mic_text.setText("松手取消发送");
+                                if (timer != null) {
+                                    timer.cancel();
+                                }
+                            }
+                        }
+                        break;
+                }
+
+                break;
+        }
+        return false;
+    }
+
+    public boolean isInView(View view1, View view2, MotionEvent event) {
+        int clickX = ((int) event.getRawX());
+        int clickY = ((int) event.getRawY());
+        //如下的view表示Activity中的子View或者控件
+        int[] location = new int[2];
+        view1.getLocationOnScreen(location);
+        int x = location[0];
+        int y = location[1];
+        int width = view1.getWidth();
+        int height = view1.getHeight();
+        if (clickX > x && clickX < (x + width) &&
+                clickY > y && clickY < (y + height)) {
+            return true;  //这个条件成立，则判断这个view被点击了
         }
         return false;
     }
@@ -837,6 +969,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         recyclerView.setOnTouchListener(this);
         etChat.setOnTouchListener(this);
         empty_message.setOnTouchListener(this);
+        mic_iv.setOnTouchListener(this);
+
+        mic_iv.setOnLongClickListener(this);
 
         etChat.setFilters(new InputFilter[]{new CustomLengthFilter(INPUT_EDIT_MAX_LENGTH)});
 
