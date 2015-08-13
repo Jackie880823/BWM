@@ -30,7 +30,6 @@ import com.bondwithme.BondWithMe.entity.EventCommentEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -767,19 +766,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     isRefresh = false;
                     currentPage = 1;//还原为第一页
                     initAdapter();
-//                    if(isRefresh) {
-//                        isRefresh = false;
-//                        currentPage = 1;//还原为第一页
-//                        initAdapter();
-//                    } else {
-////                    startIndex += detailDate.size();
-//                        if(adapter == null) {
-//                            initAdapter();
-//                            adapter.notifyDataSetChanged();
-//                        } else {
-////                        abookends.addData(detailDate);
-//                        }
-//                    }
                     ResponseStatus[] statuses = ResponseStatus.values();
                     for (ResponseStatus status : statuses) {
                         if (status.getServerCode().equals(event.getGroup_member_response())) {
@@ -1252,59 +1238,5 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         sendCommentView.onActivityResult(requestCode, resultCode, data);
     }
 
-
-    /**
-     * 上传照片
-     *
-     * @param uri
-     */
-    private void uploadImage(Uri uri) {
-        String path = LocalImageLoader.compressBitmap(mContext, FileUtil.getRealPathFromURI(mContext, uri), 480, 800, false);
-        File file = new File(path);
-        if(!file.exists()) {
-            return;
-        }
-        Map<String, Object> params = new HashMap<>();
-        params.put("content_group_id", event.getContent_group_id());
-        params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-        params.put("content_type", "comment");
-        params.put("file", file);
-        params.put("photo_fullsize", "1");
-
-        mHttpTools.upload(Constant.API_EVENT_COMMENT_PIC_POST, params, Tag, new HttpCallback() {
-            @Override
-            public void onStart() {
-            }
-
-            @Override
-            public void onFinish() {
-            }
-
-            @Override
-            public void onResult(String string) {
-                startIndex = 0;
-//                isRefresh = true;
-                isCommentBim = true;
-                mUri = null;
-                requestComment();
-                getParentActivity().setResult(Activity.RESULT_OK);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onCancelled() {
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
-
-    }
 
 }
