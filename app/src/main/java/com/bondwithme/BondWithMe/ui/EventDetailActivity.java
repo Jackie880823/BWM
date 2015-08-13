@@ -24,6 +24,8 @@ import java.util.HashMap;
  */
 public class EventDetailActivity extends BaseActivity {
     private static final String Tag = EventDetailActivity.class.getSimpleName();
+    private String group_id;
+    private String Content_group_id;
 
     @Override
     protected void initBottomBar() {
@@ -105,13 +107,12 @@ public class EventDetailActivity extends BaseActivity {
 
     }
 
-    private String group_id;
-
     @Override
     protected Fragment getFragment() {
 //        event = (EventEntity) getIntent().getSerializableExtra("event");
         group_id = getIntent().getStringExtra("group_id");
-        return EventDetailFragment.newInstance(group_id);
+        Content_group_id = getIntent().getStringExtra("Content_group_id");
+        return EventDetailFragment.newInstance(group_id,Content_group_id);
     }
 
     @Override
