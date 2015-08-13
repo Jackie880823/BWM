@@ -476,7 +476,6 @@ public class LocalImageLoader {
             int options = 100;
             bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
             int interval = 10;
-//            while (os.toByteArray().length / 1024 > maxSize ) {
             while (os.toByteArray().length / 1024 > maxSize) {
                 // Clean up os
                 os.reset();

@@ -31,6 +31,7 @@ import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.SystemUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -257,7 +258,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public static void logout(Activity context) {
 
         if (context != null) {
-            LoginManager.getInstance().logOut();//清除Facebook授权缓存
+            if (FacebookSdk.isInitialized()) {
+                LoginManager.getInstance().logOut();//清除Facebook授权缓存
+            }
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
 
