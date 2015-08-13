@@ -63,6 +63,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private TextView tvDate;
 
     /**
+     * Wall公开性标识图标
+     */
+    private ImageView ivLock;
+
+    /**
      * 用户昵称视图
      */
     private TextView tvUserName;
@@ -152,6 +157,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
         tvContent = (FreedomSelectionTextView) itemView.findViewById(R.id.tv_wall_content);
         tvDate = (TextView) itemView.findViewById(R.id.push_date);
+        ivLock = (ImageView) itemView.findViewById(R.id.lock_post_iv);
         llWallsImage = itemView.findViewById(R.id.ll_walls_image);
         imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);
         tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
@@ -362,6 +368,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         // 显示发表的时间
         tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(context, this.wallEntity.getContent_creation_date()));
+        int publicType = Integer.valueOf(wallEntity.getContent_group_public());
+        if(publicType == 0) {
+            ivLock.setVisibility(View.VISIBLE);
+        } else {
+            ivLock.setVisibility(View.GONE);
+        }
         // 用户名
         tvUserName.setText(this.wallEntity.getUser_given_name());
 

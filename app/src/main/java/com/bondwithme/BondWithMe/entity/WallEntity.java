@@ -1,5 +1,7 @@
 package com.bondwithme.BondWithMe.entity;
 
+import com.bondwithme.BondWithMe.Constant;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,41 +10,148 @@ import java.util.List;
  */
 public class WallEntity implements Serializable {
 
+    /**
+     * <br>Post create date
+     * <br>such as: "2015-01-28 11:16:57"
+     */
     private String content_creation_date;
 
+    /**
+     * 0- Private, 1-Public
+     */
+    private String content_group_public;
+
+    /**
+     * Posting - Text content
+     */
     private String text_description;
+
+    /**
+     * Posting - Photo file ID
+     */
     private String file_id;
+
+    /**
+     * <br>Post map coordinates latitude
+     * <br>such as: "3.127272"
+     */
     private String loc_latitude;
+
+    /**
+     * <br>Post map coordinates longitude
+     * <br>such as: "101.6451158"
+     */
     private String loc_longitude;
-    /**坐标类型*/
+
+    /**
+     * 坐标类型
+     */
     private String loc_type;
+
+    /**
+     * <br>Post map location
+     * <br>such as:"Pusat Perdagangan Phileo Damansara"
+     */
     private String loc_name;
+
+    /**
+     * <br>Post map location caption
+     */
     private String loc_caption;
+
+    /**
+     * <br>Sticker ID
+     */
     private String sticker_id;
+
+    /**
+     * <br>Sticker Path
+     */
     private String sticker_group_path;
+
+    /**
+     * Sticker Name
+     */
     private String sticker_name;
+
+    /**
+     * <br>Sticker Type
+     * <br> such as:{@link Constant#Sticker_Png} or {@link Constant#Sticker_Gif}
+     */
     private String sticker_type;
+
+    /**
+     * <br>Posting creator name
+     * <br> such as:  "Jolin Tay"
+     */
     private String user_given_name;
+
+    /**
+     * <br> Number of comments
+     * <br> default: "0"
+     */
     private String comment_count;
+
+    /**
+     * <br>Number of love
+     */
     private String love_count;
+
+    /**
+     * Number of photo
+     */
     private String photo_count;
+
+    /**
+     * <br>Other format for posting date time
+     * <br>"{\"day\":\"1\",\"month\":\"0\",\"year\":\"0\",\"hour\":\"3\",\"min\":\"46\",\"sec\":\"4\"}"
+     */
     private String post_date_info;
 
+    /**
+     * Posting creator ID
+     */
     private String user_id;
+
+    /**
+     *
+     */
     private String user_photo;
+
+    /**
+     * Post content ID
+     */
     private String content_id;
+
+    /**
+     *
+     */
     private String group_id;
+
+    /**
+     * Post content group ID
+     */
     private String content_group_id;
+
     public String getFile_id() {
         return file_id;
     }
+
     private String love_id;
 
+    /**
+     * do and feel code 心情码
+     */
     private String dofeel_code;
+
+    /**
+     * group tag list, if null - no group tag
+     */
     private List<GroupEntity> tag_group;
 
-
-
+    /**
+     * member tag list, if null - no member tag
+     */
     private List<UserEntity> tag_member;
 
     public String getContent_creation_date() {
@@ -51,6 +160,14 @@ public class WallEntity implements Serializable {
 
     public void setContent_creation_date(String content_creation_date) {
         this.content_creation_date = content_creation_date;
+    }
+
+    public String getContent_group_public() {
+        return content_group_public;
+    }
+
+    public void setContent_group_public(String content_group_public) {
+        this.content_group_public = content_group_public;
     }
 
     public String getText_description() {
@@ -79,6 +196,14 @@ public class WallEntity implements Serializable {
 
     public void setLoc_longitude(String loc_longitude) {
         this.loc_longitude = loc_longitude;
+    }
+
+    public String getLoc_type() {
+        return loc_type;
+    }
+
+    public void setLoc_type(String loc_type) {
+        this.loc_type = loc_type;
     }
 
     public String getLoc_name() {
@@ -153,15 +278,21 @@ public class WallEntity implements Serializable {
         this.love_count = love_count;
     }
 
-    public void setPhoto_count(String photo_count){ this.photo_count = photo_count; }
+    public String getPhoto_count() {
+        return photo_count;
+    }
 
-    public String getPhoto_count(){ return photo_count; }
+    public void setPhoto_count(String photo_count) {
+        this.photo_count = photo_count;
+    }
 
     public String getPost_date_info() {
         return post_date_info;
     }
 
-    public void setPost_date_info(String post_date_info) { this.post_date_info = post_date_info; }
+    public void setPost_date_info(String post_date_info) {
+        this.post_date_info = post_date_info;
+    }
 
     public String getUser_id() {
         return user_id;
@@ -233,13 +364,5 @@ public class WallEntity implements Serializable {
 
     public void setTag_member(List<UserEntity> tag_member) {
         this.tag_member = tag_member;
-    }
-
-    public String getLoc_type() {
-        return loc_type;
-    }
-
-    public void setLoc_type(String loc_type) {
-        this.loc_type = loc_type;
     }
 }
