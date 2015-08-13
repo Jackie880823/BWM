@@ -1,1 +1,1 @@
-include ':app', ':Volley', ':PhotoView', ':mupdflibrary', ':MaterialWidget', ':facebook', ':ImageCrop', ':piwik_sdk', ':demo_app'
+include ':app', ':Volley', ':PhotoView', ':mupdflibrary', ':MaterialWidget', ':facebook', ':ImageCrop', ':piwik_sdk'

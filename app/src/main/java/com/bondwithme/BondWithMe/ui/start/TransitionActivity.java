@@ -23,6 +23,7 @@ public class TransitionActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this);
+        App.piwikGuest();
         if(isLogin()){
             startActivity(new Intent(this,MainActivity.class));
         }else{

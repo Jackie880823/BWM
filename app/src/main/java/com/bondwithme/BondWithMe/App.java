@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
@@ -37,7 +38,10 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.piwik.sdk.Piwik;
+import org.piwik.sdk.Tracker;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -263,6 +267,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public static void logout(Activity context) {
 
         if (context != null) {
+            Piwik.getInstance(getContextInstance()).setAppOptOut(true);//禁止Piwik
             LoginManager.getInstance().logOut();//清除Facebook授权缓存
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
@@ -396,4 +401,88 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     }
 
+
+
+    Tracker piwikTracker;
+
+    public Piwik getGlobalSettings(){
+        return Piwik.getInstance(this);
+    }
+
+    public Tracker getTracker() {
+        if (piwikTracker != null) {
+            return piwikTracker;
+        }
+
+        try {
+            piwikTracker = getGlobalSettings().newTracker(getTrackerUrl(), getSiteId(), getAuthToken());
+        } catch (MalformedURLException e) {
+            return null;
+        }
+
+        return piwikTracker;
+
+    }
+
+    public String getTrackerUrl() {
+        return Constant.TRACKER_URL;
+    }
+
+    /**
+     * AuthToken is deprecated in Piwik >= 2.8.0 due to security reasons.
+     * @return token or null
+     */
+    public String getAuthToken() {
+        return null;
+//        return "3bde48623ab1cea339c606abd09debd7";
+    }
+
+
+    public Integer getSiteId() {
+        return Constant.TRACKER_SITE_ID;
+    }
+
+    public static void piwikUser()
+    {
+//        Piwik.getInstance(appContext).setAppOptOut(false);//启动piwik
+
+        appContext.getGlobalSettings().setDryRun(false);//设置sent to Piwik
+
+        appContext.getTracker()
+                .setUserId(Settings.Secure.getString(appContext.getContentResolver(), Settings.Secure.ANDROID_ID));
+
+        appContext.getTracker()
+                .setDispatchInterval(0)
+                .trackAppDownload()//下载次数 总下载数量
+                .setSessionTimeout(30);//30秒
+
+        appContext.getTracker()
+                .setUserCustomVariable(1, "App Name", AppInfoUtil.getAppPackageName(appContext))
+                .setUserCustomVariable(2, "App Version", AppInfoUtil.getAppVersionName(appContext))
+                .setUserCustomVariable(3, "Model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
+                .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
+                .trackScreenView("/", "Main Screen");
+    }
+
+    public static void piwikGuest()
+    {
+//        Piwik.getInstance(appContext).setAppOptOut(false);//启动piwik
+
+        appContext.getGlobalSettings().setDryRun(false);//设置sent to Piwik
+
+        appContext.getTracker()
+                .setDispatchInterval(0)
+                .trackAppDownload()//下载次数 总下载数量
+                .setSessionTimeout(30);//30秒
+
+        appContext.getTracker()
+                .setUserId("guest");
+
+        appContext.getTracker()
+                .setUserCustomVariable(1, "App Name", AppInfoUtil.getAppPackageName(appContext))
+                .setUserCustomVariable(2, "App Version", AppInfoUtil.getAppVersionName(appContext))
+                .setUserCustomVariable(3, "Model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
+                .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
+                .trackScreenView("/", "guest");
+    }
 }

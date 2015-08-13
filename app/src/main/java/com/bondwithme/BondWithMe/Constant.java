@@ -39,6 +39,11 @@ public class Constant {
 //    public static final String API_SERVER = "http://pt.bondwith.me";
 //    public static final String API_SERVER = "http://sc.bondwith.me";
     public static final String API_SERVER = "http://dev.bondwith.me";
+
+//    public static final int TRACKER_SITE_ID = 2;//pt
+        public static final int TRACKER_SITE_ID = 4;//dev
+//    public static final int TRACKER_SITE_ID = 5;//m
+
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER + "/bondwithme/index.php/api/multiPhoto";
 
     public static final String API_WALL_MAIN = API_SERVER + "/bondwithme/index.php/api/wall";
@@ -271,4 +276,9 @@ public class Constant {
     public static final String API_MORE_ARCHIVE_GROUP_MEMEBER_LIST = API_SERVER + "/bondwithme/index.php/api/archivePostMain";
 
     public static final String API_MESSAGE_GROUP_IS_FRIEND = API_SERVER + "/bondwithme/index.php/api/memberAction/%s/member/%s/type/check ";
+
+    public static final String TRACKER_URL = "http://bwstat.bondwith.me/";
+    public static final String TRACKER_AUTH_TOKEN = "3bde48623ab1cea339c606abd09debd7";
+
+
 }

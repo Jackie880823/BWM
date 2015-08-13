@@ -325,6 +325,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     public void initView() {
+        App.piwikUser();
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN += App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
