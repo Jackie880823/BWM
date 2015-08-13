@@ -459,6 +459,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     }
 
     protected void changeTab(TabEnum tabEnum) {
+        App.piwikUser();
         switch (tabEnum) {
             case wall:
                 setDrawable();

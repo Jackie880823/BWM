@@ -449,19 +449,17 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         appContext.getGlobalSettings().setDryRun(false);//设置sent to Piwik
 
         appContext.getTracker()
-                .setUserId(Settings.Secure.getString(appContext.getContentResolver(), Settings.Secure.ANDROID_ID));
-
-        appContext.getTracker()
-                .setDispatchInterval(0)
-                .trackAppDownload()//下载次数 总下载数量
-                .setSessionTimeout(30);//30秒
+                .setUserId(Settings.Secure.getString(appContext.getContentResolver(), Settings.Secure.ANDROID_ID))
+                .setDispatchInterval(10)
+                .setSessionTimeout(5);
 
         appContext.getTracker()
                 .setUserCustomVariable(1, "App Name", AppInfoUtil.getAppPackageName(appContext))
                 .setUserCustomVariable(2, "App Version", AppInfoUtil.getAppVersionName(appContext))
                 .setUserCustomVariable(3, "Model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
                 .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
-                .trackScreenView("/", "Main Screen");
+                .trackScreenView("");
+//                .setScreenCustomVariable(1, "Android", Settings.Secure.getString(appContext.getContentResolver(), Settings.Secure.ANDROID_ID));
     }
 
     public static void piwikGuest()
@@ -471,18 +469,18 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         appContext.getGlobalSettings().setDryRun(false);//设置sent to Piwik
 
         appContext.getTracker()
-                .setDispatchInterval(0)
-                .trackAppDownload()//下载次数 总下载数量
-                .setSessionTimeout(30);//30秒
-
-        appContext.getTracker()
-                .setUserId("guest");
+                .setUserId("guest")
+                .setDispatchInterval(10)
+                .setSessionTimeout(5);
 
         appContext.getTracker()
                 .setUserCustomVariable(1, "App Name", AppInfoUtil.getAppPackageName(appContext))
                 .setUserCustomVariable(2, "App Version", AppInfoUtil.getAppVersionName(appContext))
                 .setUserCustomVariable(3, "Model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
                 .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
-                .trackScreenView("/", "guest");
+                .trackScreenView("")
+                .trackAppDownload();
+//                .setScreenCustomVariable(1, "Android", "guest");
+
     }
 }
