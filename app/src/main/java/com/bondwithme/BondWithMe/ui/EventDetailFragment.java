@@ -262,9 +262,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onSendCommentClick(EditText et) {
-                    if(isComment) {
-                        sendComment();
-                    }
+//                    if(isComment) {
+//                        sendComment();
+//                    }
+                    sendComment(et);
                 }
 
                 @Override
@@ -558,18 +559,23 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     /**
      * 发送评论
      */
-    private void sendComment() {
+    private void sendComment(EditText et) {
         //        String commentText = et.getText().toString();
         //        if(TextUtils.isEmpty(etChat.getText().toString().trim()) && isStickerItemClick==false) {
         //            // 如果没有输入字符且没有添加表情，不发送评论
         //            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
         //            return;
         //        }
-        isComment = false;
-        if(TextUtils.isEmpty(etChat.getText().toString().trim())) {
+//        isComment = false;
+        String commentText = "";
+        if(et != null){
+            commentText = et.getText().toString().trim();
+            et.setText("");
+        }
+        if(TextUtils.isEmpty(commentText)) {
             // 如果没有输入字不发送评论
             MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
-            isComment = true;
+//            isComment = true;
             return;
         } else {
             if(NetworkUtil.isNetworkConnected(getActivity())) {
@@ -578,7 +584,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 params.put("content_group_id", event.getContent_group_id());
                 params.put("comment_owner_id", MainActivity.getUser().getUser_id());
                 params.put("content_type", "comment");
-                params.put("comment_content", etChat.getText().toString().trim());
+                params.put("comment_content", commentText);
                 //            if(isStickerItemClick){
                 if(false) {
                     //                Log.i("isStickerItemClick=====","true");
@@ -621,7 +627,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         stickerEntity.setSticker_type("");
                         stickerEntity.setSticker_group_path("");
                         stickerEntity.setSticker_name("");
-                        etChat.setText("");
+
                         data.clear();
                         adapter.removeCommentData();
                         requestComment();
@@ -692,7 +698,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
                 @Override
                 public void onFinish() {
-                    if(progressBar != null){
+                    if (progressBar != null) {
                         progressBar.setVisibility(View.GONE);
                     }
                 }

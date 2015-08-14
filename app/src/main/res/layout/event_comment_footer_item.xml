@@ -3,10 +3,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/_15dp"
-    android:layout_marginRight="@dimen/_15dp"
-    android:layout_marginBottom="@dimen/default_content_padding"
-    android:background="#FAFAFA"
+    android:layout_marginLeft="@dimen/_14dp"
+    android:layout_marginRight="@dimen/_14dp"
+    android:layout_marginBottom="@dimen/_60dp"
+    android:background="@drawable/event_detail_footer_shape"
     android:elevation="3dip"
     android:orientation="vertical">
 
@@ -142,6 +142,7 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/line"
         style="@style/split_line_default"
         android:layout_marginTop="@dimen/default_view_margin" />
 </LinearLayout>

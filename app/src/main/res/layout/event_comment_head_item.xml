@@ -181,6 +181,7 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/line"
         style="@style/split_line_default"
         android:layout_marginTop="@dimen/default_view_margin" />
 </LinearLayout>
