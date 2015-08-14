@@ -368,7 +368,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         // 显示发表的时间
         tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(context, this.wallEntity.getContent_creation_date()));
-        int publicType = Integer.valueOf(wallEntity.getContent_group_public());
+        //wing modified begin 2015.08.13
+        int publicType = 0;
+        if(!    TextUtils.isEmpty(wallEntity.getContent_group_public())) {
+            publicType = Integer.valueOf(wallEntity.getContent_group_public());
+        }
+        //wing modified end 2015.08.13
         if(publicType == 0) {
             ivLock.setVisibility(View.VISIBLE);
         } else {
