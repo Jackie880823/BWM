@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.StickerGroupAdapter;
@@ -28,15 +27,12 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,10 +50,9 @@ public class StickerDetailActivity extends BaseActivity {
     private TextView tvDownload;
     private int position;
     public static final String ACTION_UPDATE = "ACTION_UPDATE_FROM_STICKER_DETAIL";
-    int finished;
-    private final int UPDATE_PROGRESSBAR =1;
-    int loadingPosition;
-
+    //    int finished;
+    private final int UPDATE_PROGRESSBAR = 1;
+//    int loadingPosition;
 
 
     @Override
@@ -74,7 +69,7 @@ public class StickerDetailActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         tvTitle.setText(stickerGroupEntity.getName());
-                rightButton.setVisibility(View.INVISIBLE);
+        rightButton.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -94,16 +89,17 @@ public class StickerDetailActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        dao = LocalStickerInfoDao.getInstance(this);
         intent = getIntent();
         stickerGroupEntity = (StickerGroupEntity) intent.getSerializableExtra(StickerGroupAdapter.STICKER_GROUP);
-        position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
-        finished = intent.getIntExtra("finished",0);
-        loadingPosition = intent.getIntExtra("positionFromStickerDetail",0);
+        position = intent.getIntExtra(StickerGroupAdapter.POSITION, 0);
+//        finished = intent.getIntExtra("progress",0);
+//        loadingPosition = intent.getIntExtra("positionFromStickerDetail", 0);
 
         NetworkImageView insideSticker = getViewById(R.id.iv_inside_sticker);
         TextView insideStickerName = getViewById(R.id.tv_inside_sticker_name);
         TextView desc = getViewById(R.id.tv_description);
-        desc.setText("sticker_type: "+stickerGroupEntity.getType());
+        desc.setText("sticker_type: " + stickerGroupEntity.getType());
         TextView price = getViewById(R.id.price);
         tvDownload = getViewById(R.id.tv_inside_download);
         gvSticker = getViewById(R.id.gv_sticker);
@@ -116,24 +112,29 @@ public class StickerDetailActivity extends BaseActivity {
                 String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()),
                 R.drawable.network_image_default, R.drawable.network_image_default);
         insideStickerName.setText(stickerGroupEntity.getName());
-        if("0".equals(stickerGroupEntity.getPrice())){
+        if ("0".equals(stickerGroupEntity.getPrice())) {
             price.setText(getResources().getString(R.string.free));
-        }else{
+        } else {
             price.setText(stickerGroupEntity.getPrice());
         }
 
         tvDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadZip(stickerGroupEntity, position);
-                tvDownload.setVisibility(View.INVISIBLE);
-                pbProgress.setVisibility(View.VISIBLE);
+
+                if (dao.hasDownloadSticker(stickerGroupEntity.getPath())) {
+                    setTvDownloaded();
+                }else{
+                    downloadZip(stickerGroupEntity, position);
+                    tvDownload.setVisibility(View.INVISIBLE);
+                    pbProgress.setVisibility(View.VISIBLE);
+                }
             }
         });
 
 
         initAdapter();
-        requestData();
+//        requestData();
 
         //注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -144,31 +145,35 @@ public class StickerDetailActivity extends BaseActivity {
 
     }
 
-
+    private LocalStickerInfoDao dao;
 
     private void initDownloadView() {
-        try {       //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
-            LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(this);
-            if(dao.hasDownloadSticker(stickerGroupEntity.getPath())){
+        tvDownload.setVisibility(View.VISIBLE);
+        pbProgress.setVisibility(View.INVISIBLE);
+        pbProgress.setProgress(0);
+        //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
+        if (dao != null) {
+            if (dao.hasDownloadSticker(stickerGroupEntity.getPath())) {
                 setTvDownloaded();
             }
-        } catch (Exception e) {
-            LogUtil.e(TAG,"",e);
         }
-        if(finished>0 && finished<100 && position == loadingPosition) {
-            tvDownload.setVisibility(View.INVISIBLE);
-            pbProgress.setVisibility(View.VISIBLE);
-            pbProgress.setProgress(finished);
-        } else{
-            tvDownload.setVisibility(View.VISIBLE);
-            pbProgress.setVisibility(View.INVISIBLE);
-            pbProgress.setProgress(0);
-
-        }
+//        if(finished>0 && finished<100 && position == loadingPosition) {
+//            tvDownload.setVisibility(View.INVISIBLE);
+//            pbProgress.setVisibility(View.VISIBLE);
+//            pbProgress.setProgress(finished);
+//        } else{
+//            tvDownload.setVisibility(View.VISIBLE);
+//            pbProgress.setVisibility(View.INVISIBLE);
+//            pbProgress.setProgress(0);
+//
+//        }
 
     }
 
     private void setTvDownloaded() {
+        pbProgress.setVisibility(View.INVISIBLE);
+        pbProgress.setProgress(0);
+        tvDownload.setVisibility(View.VISIBLE);
         tvDownload.setText(getResources().getString(R.string.Downloaded));
         tvDownload.setTextColor(getResources().getColor(R.color.default_text_color_dark));
         tvDownload.setBackgroundColor(getResources().getColor(R.color.default_unenable_item_bg));
@@ -187,6 +192,11 @@ public class StickerDetailActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
+                if(LocalStickerInfoDao.getInstance(StickerDetailActivity.this).hasDownloadSticker(stickerGroupEntity.getPath())) {
+                    Intent intent = new Intent(StickerStoreActivity.ACTION_FINISHED);
+                    intent.putExtra(StickerGroupAdapter.POSITION, position);
+                    sendBroadcast(intent);
+                }
             }
 
             @Override
@@ -196,36 +206,34 @@ public class StickerDetailActivity extends BaseActivity {
                     ZipUtils.unZipFile(zipFile, MainActivity.STICKERS_NAME);
                     zipFile.delete();
 
-                    if(finished>=100) {
-                        //
-                        pbProgress.setVisibility(View.INVISIBLE);
-                        pbProgress.setProgress(0);
-                        tvDownload.setVisibility(View.VISIBLE);
+//                    if(finished>=100) {
+                    //
+
+
+                    //插入sticker info
+//                    try {
+//                        Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+                        LocalStickerInfo stickerInfo = new LocalStickerInfo();
+                        stickerInfo.setName(stickerGroupEntity.getName());
+                        stickerInfo.setPath(stickerGroupEntity.getPath());
+                        stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
+                        stickerInfo.setVersion(stickerGroupEntity.getVersion());
+                        stickerInfo.setType(stickerGroupEntity.getType());
+                        stickerInfo.setOrder(System.currentTimeMillis());
+                        LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
+                        Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
+
+//                        pbProgress.setVisibility(View.INVISIBLE);
+//                        pbProgress.setProgress(0);
+//                        tvDownload.setVisibility(View.VISIBLE);
                         setTvDownloaded();
-
-                        //插入sticker info
-                        try {
-                            Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-                            LocalStickerInfo stickerInfo = new LocalStickerInfo();
-                            stickerInfo.setName(stickerGroupEntity.getName());
-                            stickerInfo.setPath(stickerGroupEntity.getPath());
-                            stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
-                            stickerInfo.setVersion(stickerGroupEntity.getVersion());
-                            stickerInfo.setType(stickerGroupEntity.getType());
-                            stickerInfo.setOrder(System.currentTimeMillis());
-                            LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
-                            Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
-
-                            Intent intent = new Intent(StickerStoreActivity.ACTION_FINISHED);
-                            sendBroadcast(intent);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                    } catch (SQLException e) {
+//                        e.printStackTrace();
+//                    }
+//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
 
 
             }
@@ -237,18 +245,18 @@ public class StickerDetailActivity extends BaseActivity {
 
             @Override
             public void onCancelled() {
-
+                setTvDownloaded();
             }
 
             @Override
             public void onLoading(long count, long current) {
                 //更新item中的进度条
-                finished = (int) (current * 100 / count);
-                pbProgress.setProgress(finished);
+//                finished = (int) (current * 100 / count);
+//                pbProgress.setProgress(finished);
 
                 //发广播更新StickerStoreActivity的progressbar
                 Intent intent = new Intent(StickerDetailActivity.ACTION_UPDATE);
-                intent.putExtra("finished",finished);
+                intent.putExtra("progress", (int) (current * 100 / count));
                 intent.putExtra(StickerGroupAdapter.POSITION, position);
                 sendBroadcast(intent);
             }
@@ -256,7 +264,7 @@ public class StickerDetailActivity extends BaseActivity {
     }
 
     private void initAdapter() {
-        adapter = new StickerItemAdapter(this,data,stickerGroupEntity);
+        adapter = new StickerItemAdapter(this, data, stickerGroupEntity);
         gvSticker.setAdapter(adapter);
 
     }
@@ -268,7 +276,7 @@ public class StickerDetailActivity extends BaseActivity {
         params.put("path", stickerGroupEntity.getPath());
 
 
-        new HttpTools(this).get(Constant.API_STICKER_ITEM,params,TAG,new HttpCallback() {
+        new HttpTools(this).get(Constant.API_STICKER_ITEM, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -307,37 +315,33 @@ public class StickerDetailActivity extends BaseActivity {
     }
 
 
-    /**更新UI的广播接收器*/
+    /**
+     * 更新UI的广播接收器
+     */
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(StickerStoreActivity.ACTION_UPDATE.equals(intent.getAction())){
-                int finished = intent.getIntExtra("finished",0);
-                int positionLoading = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
+            if (StickerStoreActivity.ACTION_UPDATE.equals(intent.getAction())) {
+                int finished = intent.getIntExtra("progress", 0);
+                int positionLoading = intent.getIntExtra(StickerGroupAdapter.POSITION, 0);
                 if (positionLoading == position) {
                     tvDownload.setVisibility(View.INVISIBLE);
                     pbProgress.setVisibility(View.VISIBLE);
                     pbProgress.setProgress(finished);
-                    if (finished == 100){
-                        pbProgress.setVisibility(View.INVISIBLE);
-                        pbProgress.setProgress(0);
-                        tvDownload.setVisibility(View.VISIBLE);
+                    if (finished == 100) {
                         setTvDownloaded();
                     }
 
                 }
 
-            }else if (StickerDetailActivity.ACTION_UPDATE.equals(intent.getAction())){
-                int finished = intent.getIntExtra("finished",0);
-                int positionLoading = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
+            } else if (StickerDetailActivity.ACTION_UPDATE.equals(intent.getAction())) {
+                int finished = intent.getIntExtra("progress", 0);
+                int positionLoading = intent.getIntExtra(StickerGroupAdapter.POSITION, 0);
                 if (positionLoading == position) {
                     tvDownload.setVisibility(View.INVISIBLE);
                     pbProgress.setVisibility(View.VISIBLE);
                     pbProgress.setProgress(finished);
-                    if (finished == 100){
-                        pbProgress.setVisibility(View.INVISIBLE);
-                        pbProgress.setProgress(0);
-                        tvDownload.setVisibility(View.VISIBLE);
+                    if (finished == 100) {
                         setTvDownloaded();
                     }
 
@@ -348,7 +352,7 @@ public class StickerDetailActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if(mReceiver!=null){
+        if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
         super.onDestroy();

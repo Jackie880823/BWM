@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.entity;
 
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -28,6 +27,8 @@ public class LocalStickerInfo implements Serializable {
     private long order;               //sticker group order
     @DatabaseField
     private String loginUserId;
+//    @DatabaseField(foreign = true, foreignAutoRefresh = true,columnName="user_id")
+//    private UserEntity userEntity;
 
     public String getLoginUserId() {
         return loginUserId;
@@ -95,6 +96,14 @@ public class LocalStickerInfo implements Serializable {
     public void setOrder(long order) {
         this.order = order;
     }
+
+//    public UserEntity getUserEntity() {
+//        return userEntity;
+//    }
+
+//    public void setUserEntity(UserEntity userEntity) {
+//        this.userEntity = userEntity;
+//    }
 
     @Override
     public String toString() {

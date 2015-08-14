@@ -55,17 +55,30 @@
 
                         <ImageView
                             android:id="@+id/iv_mood"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="@dimen/default_small_button_width_height"
+                            android:layout_height="@dimen/default_small_button_width_height"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/activity_horizontal_margin"
                             android:scaleType="fitCenter"/>
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/push_date"
-                        style="@style/text_light_default"
-                        android:layout_marginTop="@dimen/default_view_margin"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/push_date"
+                            style="@style/text_light_default"/>
+
+                        <ImageView
+                            android:id="@+id/lock_post_iv"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/lock_post"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <ImageButton
@@ -74,6 +87,7 @@
                     android:layout_height="@dimen/default_small_button_width_height"
                     android:layout_alignParentRight="true"
                     android:background="@null"
+                    android:contentDescription="@string/delete"
                     android:src="@drawable/icon_delete"/>
             </RelativeLayout>
 

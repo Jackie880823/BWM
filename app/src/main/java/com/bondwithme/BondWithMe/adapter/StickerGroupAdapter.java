@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +24,8 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.StickerGroupEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.more.sticker.StickerDetailActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,9 +36,10 @@ import java.util.Map;
 /**
  * Created by heweidong on 15/6/10.
  */
-public class StickerGroupAdapter extends HeaderListRecyclerAdapter {
+public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements View.OnClickListener {
 
     private static final String TAG = StickerGroupAdapter.class.getSimpleName();
+    public static final String PATH = "sticker_path";
     private Context mContext;
     private List<StickerGroupEntity> dataStickerGroup;
     private String url;
@@ -53,6 +57,18 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter {
         mStickers = stickers;
         setList(dataStickerGroup);
         this.mAdsPaths = mAdsPaths;
+    }
+
+    public void addSticker(String path) {
+        if (mStickers != null&&!mStickers.contains(path)) {
+            mStickers.add(path);
+        }
+    }
+
+    public void removeSticker(String path) {
+        if (mStickers != null) {
+            mStickers.remove(path);
+        }
     }
 
     @Override
@@ -76,13 +92,25 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter {
         //设置sticker name
         holder.tvStickerName.setText(stickerGroupEntity.getName());
 
-        if (mStickers != null && mStickers.contains(stickerGroupEntity.getPath())) {
+        LogUtil.d("", "position============" + position);
+        LogUtil.d("", "stickerGroupEntity.getPath()============" + mStickers.contains(stickerGroupEntity.getPath()));
+        LogUtil.d("", "stickerGroupEntity.isDownloading()============" + stickerGroupEntity.isDownloading());
+        if ((mStickers != null && mStickers.contains(stickerGroupEntity.getPath()))) {
             holder.tvDownload.setVisibility(View.INVISIBLE);
             holder.ivExist.setVisibility(View.VISIBLE);
+            holder.getPbDownload().setVisibility(View.INVISIBLE);
         } else {
-            holder.tvDownload.setVisibility(View.VISIBLE);
-            holder.ivExist.setVisibility(View.INVISIBLE);
+            if (!stickerGroupEntity.isDownloading()) {
+                holder.tvDownload.setVisibility(View.VISIBLE);
+                holder.ivExist.setVisibility(View.INVISIBLE);
+                holder.getPbDownload().setVisibility(View.INVISIBLE);
+            } else {
+                holder.tvDownload.setVisibility(View.INVISIBLE);
+                holder.ivExist.setVisibility(View.INVISIBLE);
+                holder.getPbDownload().setVisibility(View.VISIBLE);
+            }
         }
+
     }
 
     @Override
@@ -98,8 +126,8 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter {
                 view.setLayoutParams(new ImageSwitcher.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                         FrameLayout.LayoutParams.MATCH_PARENT));
                 view.setImageURI(entry.getValue());
-//                view.setImageBitmap(com.nostra13.universalimageloader.core.ImageLoader.getInstance().loadImageSync(entry.getValue().toString()));
-//                view.setImageBitmap(LocalImageLoader.loadBitmapFromFile(mContext, entry.getValue()));
+                view.setTag(entry.getKey());
+                view.setOnClickListener(this);
                 views.add(view);
             }
 
@@ -111,6 +139,35 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter {
 //        }
 
 //        holder.isStickerBanner.setOnTouchListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        final String path = (String) v.getTag();
+//        if (dataStickerBanner != null && dataStickerGroup != null && dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0) {
+//            LogUtil.d(TAG, "====setOnClickListener=====" + path + "    " + !path.isEmpty());
+        final int position = getPosition(path, dataStickerGroup);
+        if (position != -1) {
+            final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
+            if (!path.isEmpty()) {
+                Intent intent = new Intent(mContext, StickerDetailActivity.class);
+                intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
+                intent.putExtra(StickerGroupAdapter.POSITION, position);
+                mContext.startActivity(intent);
+            }
+        }
+    }
+
+    //获取广告图对应的表情包的position
+    private int getPosition(String stickerGroupPath, List<StickerGroupEntity> dataStickerGroup) {
+        String path = null;
+        for (int i = 0; i < dataStickerGroup.size(); i++) {
+            path = dataStickerGroup.get(i).getPath();
+            if (path.equals(stickerGroupPath)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private class ImageAdapter extends PagerAdapter {
@@ -159,17 +216,7 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter {
     }
 
 
-    private boolean adSizeConfirm;
     private Map<String, Uri> mAdsPaths = new HashMap<>();
-
-    public void setAds(Map<String, Uri> adsPaths) {
-        if (adsPaths != null) {
-            mAdsPaths = adsPaths;
-        }
-        adSizeConfirm = true;
-//        notifyItemChanged(0);
-
-    }
 
     @Override
     public RecyclerView.ViewHolder onCreateItemViewHolder(ViewGroup parent) {
@@ -227,17 +274,6 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter {
             //开始轮播效果
             mHandler.sendEmptyMessageDelayed(ImageHandler.MSG_UPDATE_IMAGE, ImageHandler.MSG_DELAY);
 
-
-//            isStickerBanner.setFactory(new ViewSwitcher.ViewFactory() {
-//                @Override
-//                public View makeView() {
-//                    ImageView i = new ImageView(mContext);
-//                    i.setScaleType(ImageView.ScaleType.FIT_XY);
-//                    i.setLayoutParams(new ImageSwitcher.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-//                            FrameLayout.LayoutParams.MATCH_PARENT));
-//                    return i;
-//                }
-//            });
         }
 
         private class ImageHandler extends Handler {
@@ -324,7 +360,7 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter {
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener != null && dataStickerGroup != null) {
-                        itemClickListener.itemClick(stickerGroupEntity, getAdapterPosition());
+                        itemClickListener.itemClick(stickerGroupEntity, getAdapterPosition() - 1);
 
                     }
                 }
@@ -333,14 +369,52 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter {
                 @Override
                 public void onClick(View v) {
                     if (downloadClickListener != null && dataStickerGroup != null) {
-                        downloadClickListener.downloadClick(stickerGroupEntity, getAdapterPosition());
+                        downloadClickListener.downloadClick(stickerGroupEntity, getAdapterPosition() - 1);
                     }
                 }
             });
 
         }
 
+        public NetworkImageView getIvSticker() {
+            return ivSticker;
+        }
 
+        public void setIvSticker(NetworkImageView ivSticker) {
+            this.ivSticker = ivSticker;
+        }
+
+        public TextView getTvStickerName() {
+            return tvStickerName;
+        }
+
+        public void setTvStickerName(TextView tvStickerName) {
+            this.tvStickerName = tvStickerName;
+        }
+
+        public TextView getTvDownload() {
+            return tvDownload;
+        }
+
+        public void setTvDownload(TextView tvDownload) {
+            this.tvDownload = tvDownload;
+        }
+
+        public ImageView getIvExist() {
+            return ivExist;
+        }
+
+        public void setIvExist(ImageView ivExist) {
+            this.ivExist = ivExist;
+        }
+
+        public ProgressBar getPbDownload() {
+            return pbDownload;
+        }
+
+        public void setPbDownload(ProgressBar pbDownload) {
+            this.pbDownload = pbDownload;
+        }
     }
 
     public ItemClickListener itemClickListener;
