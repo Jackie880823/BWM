@@ -40,8 +40,8 @@ public class Constant {
 //    public static final String API_SERVER = "http://sc.bondwith.me";
     public static final String API_SERVER = "http://dev.bondwith.me";
 
-//    public static final int TRACKER_SITE_ID = 2;//pt
-        public static final int TRACKER_SITE_ID = 4;//dev
+    public static final int TRACKER_SITE_ID = 3;//dev
+//    public static final int TRACKER_SITE_ID = 4;//pt
 //    public static final int TRACKER_SITE_ID = 5;//m
 
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER + "/bondwithme/index.php/api/multiPhoto";
