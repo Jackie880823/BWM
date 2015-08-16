@@ -391,64 +391,64 @@
     </string-array>
 
     <array name="relationship_item">
-        <item>@string/text_mother</item>
-        <item>@string/text_father</item>
-        <item>@string/text_wife</item>
-        <item>@string/text_husband</item>
-        <item>@string/text_sister</item>
-        <item>@string/text_brother</item>
-        <item>@string/text_daughter</item>
-        <item>@string/text_son</item>
-        <item>@string/text_grandma</item>
-        <item>@string/text_grandpa</item>
-        <item>@string/text_granddaughter</item>
-        <item>@string/text_grandson</item>
-        <item>@string/text_granduncle</item>
-        <item>@string/text_grandaunt</item>
-        <item>@string/text_grandniece</item>
-        <item>@string/text_grandnephew</item>
-        <item>@string/text_great_grandma</item>
-        <item>@string/text_great_grandpa</item>
-        <item>@string/text_great_grandniece</item>
-        <item>@string/text_great_grandnephew</item>
-        <item>@string/text_aunt</item>
-        <item>@string/text_uncle</item>
-        <item>@string/text_first_cousin</item>
-        <item>@string/text_second_cousin</item>
-        <item>@string/text_cousin</item>
-        <item>@string/text_niece</item>
-        <item>@string/text_nephew</item>
-        <item>@string/text_mother_in_law</item>
-        <item>@string/text_father_in_law</item>
-        <item>@string/text_aunty_in_law</item>
-        <item>@string/text_uncle_in_law</item>
-        <item>@string/text_sister_in_law</item>
-        <item>@string/text_brother_in_law</item>
-        <item>@string/text_daughter_in_law</item>
-        <item>@string/text_son_in_law</item>
-        <item>@string/text_cousin_in_law</item>
-        <item>@string/text_niece_in_law</item>
-        <item>@string/text_nephew_in_law</item>
-        <item>@string/text_fiancee</item>
-        <item>@string/text_fiance</item>
-        <item>@string/text_ex_wife</item>
-        <item>@string/text_ex_husband</item>
-        <item>@string/text_godmother</item>
-        <item>@string/text_godfather</item>
-        <item>@string/text_god_sister</item>
-        <item>@string/text_god_brother</item>
-        <item>@string/text_god_daughter</item>
-        <item>@string/text_godson</item>
-        <item>@string/text_stepmother</item>
-        <item>@string/text_stepfather</item>
-        <item>@string/text_stepsister</item>
-        <item>@string/text_stepbrother</item>
-        <item>@string/text_stepdaughter</item>
-        <item>@string/text_stepson</item>
-        <item>@string/text_other_relative</item>
-        <item>@string/text_partner</item>
-        <item>@string/text_friend</item>
-        <item>@string/text_colleague</item>
+        <item>Mother</item>
+        <item>Father</item>
+        <item>Wife</item>
+        <item>Husband</item>
+        <item>Sister</item>
+        <item>Brother</item>
+        <item>Daughter</item>
+        <item>Son</item>
+        <item>Grandma</item>
+        <item>Grandpa</item>
+        <item>Granddaughter</item>
+        <item>Grandson</item>
+        <item>Granduncle</item>
+        <item>Grandaunt</item>
+        <item>Grandniece</item>
+        <item>Grandnephew</item>
+        <item>Great Grandma</item>
+        <item>Great Grandpa</item>
+        <item>Great Grandniece</item>
+        <item>Great Grandnephew</item>
+        <item>Aunt</item>
+        <item>Uncle</item>
+        <item>First Cousin</item>
+        <item>Second Cousin</item>
+        <item>Cousin</item>
+        <item>Niece</item>
+        <item>Nephew</item>
+        <item>Mother-in-law</item>
+        <item>Father-in-law</item>
+        <item>Aunty-in-law</item>
+        <item>Uncle-in-law</item>
+        <item>Sister-in-law</item>
+        <item>Brother-in-law</item>
+        <item>Daughter-in-law</item>
+        <item>Son-in-law</item>
+        <item>Cousin-in-law</item>
+        <item>Niece-in-Law</item>
+        <item>Nephew-in-Law</item>
+        <item>Fiancee</item>
+        <item>Fiance</item>
+        <item>Ex-wife</item>
+        <item>Ex-husband</item>
+        <item>Godmother</item>
+        <item>Godfather</item>
+        <item>Godsister</item>
+        <item>Godbrother</item>
+        <item>Goddaughter</item>
+        <item>Godson</item>
+        <item>Stepmother</item>
+        <item>Stepfather</item>
+        <item>Stepsister</item>
+        <item>Stepbrother</item>
+        <item>Stepdaughter</item>
+        <item>Stepson</item>
+        <item>Other Relative</item>
+        <item>Partner</item>
+        <item>Friend</item>
+        <item>Colleague</item>
     </array>
 
     <string-array name="CountryCodes">

@@ -1,5 +1,8 @@
 package com.bondwithme.BondWithMe.entity;
 
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.ForeignCollectionField;
+
 import java.io.Serializable;
 
 /**
@@ -10,11 +13,10 @@ public class UserEntity implements Serializable {
     public static final String EXTRA_GROUP_ID = "groupId";
     public static final String EXTRA_GROUP_NAME = "groupName";
 
-    /**
-     * 这个是示例字段，示例关系依赖
-     */
-//    @DatabaseField(foreign = true, foreignAutoRefresh = true,columnName="device_id")
-//    private OrmEntityDemo ormEntity;
+    /**实体关系UserEntity为测试用，可以到UserEntity注释看反引用关系写法*/
+//	@ForeignCollectionField(eager = true,orderColumnName="date",orderAscending=false)
+	@ForeignCollectionField(eager = true,orderAscending=false)
+	private ForeignCollection<LocalStickerInfo> stickers;
 
     private String user_id;
     private String user_given_name;
@@ -470,4 +472,13 @@ public class UserEntity implements Serializable {
 //    public void setToken(AppTokenEntity token) {
 //        this.token = token;
 //    }
+
+
+    public ForeignCollection<LocalStickerInfo> getStickers() {
+        return stickers;
+    }
+
+    public void setStickers(ForeignCollection<LocalStickerInfo> stickers) {
+        this.stickers = stickers;
+    }
 }

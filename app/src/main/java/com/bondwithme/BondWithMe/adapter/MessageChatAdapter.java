@@ -235,48 +235,48 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             }
         }
         if (null != msgEntity.getText_id()) {//文字
-//            holder.messageText.setText(msgEntity.getText_description());
-            String atDescription = msgEntity.getText_description();
-            holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
-            atDescription += " ";
-            SpannableStringBuilder ssb = new SpannableStringBuilder(atDescription);
-            SpannableString ssMind = new SpannableString(atDescription);
-            ssMind.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(View widget) {
-
-                }
-
-                @Override
-                public void updateDrawState(TextPaint ds) {
-                    super.updateDrawState(ds);
-                    ds.setUnderlineText(false);
-                    ds.setColor(Color.BLACK);
-                }
-            }, 0, atDescription.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            try {
-                if (!TextUtils.isEmpty(atDescription)) {
-                    String[] fbsArr = {"\\", "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}", "|"};
-                    for (String key : fbsArr) {
-                        if (atDescription.contains(key)) {
-                            atDescription = atDescription.replace(key, "\\" + key);
-                        }
-                    }
-                }
-                Pattern p = Pattern.compile(atDescription);
-                Matcher m = p.matcher(ssb.toString());
-                if (m.find()) {
-                    int start = m.start();
-                    int end = m.end();
-                    ssb.replace(start, end - 1, ssMind);
-                } else {
-                    ssb.append(ssMind);
-                }
-            } catch (Exception e) {
-                ssb.append(ssMind);
-                e.printStackTrace();
-            }
-            holder.messageText.setText(ssb);
+            holder.messageText.setText(msgEntity.getText_description());
+//            String atDescription = msgEntity.getText_description();
+//            holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
+//            atDescription += " ";
+//            SpannableStringBuilder ssb = new SpannableStringBuilder(atDescription);
+//            SpannableString ssMind = new SpannableString(atDescription);
+//            ssMind.setSpan(new ClickableSpan() {
+//                @Override
+//                public void onClick(View widget) {
+//
+//                }
+//
+//                @Override
+//                public void updateDrawState(TextPaint ds) {
+//                    super.updateDrawState(ds);
+//                    ds.setUnderlineText(false);
+//                    ds.setColor(Color.BLACK);
+//                }
+//            }, 0, atDescription.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//            try {
+//                if (!TextUtils.isEmpty(atDescription)) {
+//                    String[] fbsArr = {"\\", "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}", "|"};
+//                    for (String key : fbsArr) {
+//                        if (atDescription.contains(key)) {
+//                            atDescription = atDescription.replace(key, "\\" + key);
+//                        }
+//                    }
+//                }
+//                Pattern p = Pattern.compile(atDescription);
+//                Matcher m = p.matcher(ssb.toString());
+//                if (m.find()) {
+//                    int start = m.start();
+//                    int end = m.end();
+//                    ssb.replace(start, end - 1, ssMind);
+//                } else {
+//                    ssb.append(ssMind);
+//                }
+//            } catch (Exception e) {
+//                ssb.append(ssMind);
+//                e.printStackTrace();
+//            }
+//            holder.messageText.setText(ssb);
         } else if (msgEntity.getLoc_id() != null) {//地图 item
             String locUrl = LocationUtil.getLocationPicUrl(context, msgEntity.getLoc_latitude(), msgEntity.getLoc_longitude(), msgEntity.getLoc_type());
             VolleyUtil.initNetworkImageView(context, holder.networkImageView, locUrl, R.drawable.network_image_default, R.drawable.network_image_default);

@@ -5,12 +5,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_80dp">
+        android:layout_height="@dimen/_64dp">
 
         <ImageView
             android:id="@+id/iv_my_sticker"
-            android:layout_width="@dimen/_64dp"
-            android:layout_height="@dimen/_64dp"
+            android:layout_width="@dimen/_48dp"
+            android:layout_height="@dimen/_48dp"
             android:layout_centerVertical="true"
             android:layout_margin="@dimen/default_content_padding"
             />
