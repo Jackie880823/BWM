@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.entity.ImageData;
+import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
@@ -220,7 +220,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     Intent intent = new Intent(mActivity, SelectPhotosActivity.class);
                     //                Intent intent = new Intent(Intent.ACTION_PICK, null);
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-                    intent.putExtra(ImageData.USE_UNIVERSAL, true);
+                    intent.putExtra(MediaData.USE_UNIVERSAL, true);
                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                     fragment.startActivityForResult(intent, SendComment.REQUEST_HEAD_PHOTO);
                 }

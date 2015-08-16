@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,9 +19,12 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.WallEntity;
+import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.PreviewVideoActivity;
+import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
@@ -30,6 +34,7 @@ import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Jackie on 8/7/15.
@@ -47,6 +52,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private WallViewClickListener mViewClickListener;
     private WallEntity wallEntity;
     private HttpTools mHttpTools;
+    private Context context;
 
     /**
      * 头像视图
@@ -95,7 +101,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     /**
      * 点赞用户名显示列表
      */
-//    private TextView tvLoveList;
+    //    private TextView tvLoveList;
 
 
     /**
@@ -147,11 +153,13 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * @param itemView  日志视图的整个UI
      * @param httpTools 网络上传工具
      * @param needFull  是否显示全部日志信息：{@value true} 显示全部日志信息；{@value false} 显示部份日志
+     * @param context   用于引导应用资源
      */
-    public WallHolder(View itemView, HttpTools httpTools, boolean needFull) {
+    public WallHolder(Context context, View itemView, HttpTools httpTools, boolean needFull) {
         // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
         super(itemView);
         mHttpTools = httpTools;
+        this.context = context;
 
         nivHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
         tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
@@ -162,7 +170,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);
         tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
         tvAgreeCount = (TextView) itemView.findViewById(R.id.tv_wall_agree_count);
-//        tvLoveList = (TextView) itemView.findViewById(R.id.tv_love_list);
+        //        tvLoveList = (TextView) itemView.findViewById(R.id.tv_love_list);
         tvCommentCount = (TextView) itemView.findViewById(R.id.tv_wall_relay_count);
         ibAgree = (ImageButton) itemView.findViewById(R.id.iv_love);
         btn_del = (ImageButton) itemView.findViewById(R.id.btn_del);
@@ -201,12 +209,15 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         itemView.findViewById(R.id.top_event).setOnClickListener(this);
         itemView.findViewById(R.id.ll_comment).setOnClickListener(this);
         tvAgreeCount.setOnClickListener(this);
-//        tvLoveList.setOnClickListener(this);
+        //        tvLoveList.setOnClickListener(this);
         ibAgree.setOnClickListener(this);
         btn_del.setOnClickListener(this);
         imWallsImages.setOnClickListener(this);
     }
 
+    /**
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
@@ -244,10 +255,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 }
                 break;
             case R.id.iv_walls_images:
-                if(mViewClickListener != null) {
-                    mViewClickListener.showOriginalPic(wallEntity.getContent_id());
+
+                if(TextUtils.isEmpty(wallEntity.getVideo_filename())) {
+                    showOrignPic();
+                } else {
+                    showPreviewVideo();
                 }
                 break;
+
             case R.id.btn_del:
                 if(mViewClickListener != null) {
                     mViewClickListener.remove(wallEntity.getContent_group_id());
@@ -256,13 +271,31 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
     }
 
+    private void showPreviewVideo() {
+        Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
+        intent.putExtra(PreviewVideoActivity.CONTENT_CREATION_ID, wallEntity.getContent_creation_date());
+        intent.putExtra(PreviewVideoActivity.VIDEO_FILENAME, wallEntity.getVideo_filename());
+        context.startActivity(intent);
+    }
+
+    private void showOrignPic() {
+        Intent intent = new Intent(context, ViewOriginalPicesActivity.class);
+        Map<String, String> condition = new HashMap<>();
+        condition.put("content_id", wallEntity.getContent_id());
+        Map<String, String> params = new HashMap<>();
+        params.put("condition", UrlUtil.mapToJsonstring(condition));
+        String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
+        intent.putExtra("request_url", url);
+        context.startActivity(intent);
+    }
+
     /**
      * 更新点赞相关视图
      */
     private void updateLovedView() {
         int count = Integer.valueOf(wallEntity.getLove_count());
-//        String text = tvLoveList.getText().toString();
-//        String name = MainActivity.getUser().getUser_given_name();
+        //        String text = tvLoveList.getText().toString();
+        //        String name = MainActivity.getUser().getUser_given_name();
         int resId;
 
         if(TextUtils.isEmpty(wallEntity.getLove_id())) {
@@ -270,34 +303,34 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             resId = R.drawable.love_press;
             wallEntity.setLove_id(MainActivity.getUser().getUser_id());
 
-//            if(count > 1) {
-//                text += (name + " ");
-//            } else {
-//                text = name;
-//            }
+            //            if(count > 1) {
+            //                text += (name + " ");
+            //            } else {
+            //                text = name;
+            //            }
         } else {
             count -= 1;
             resId = R.drawable.love_normal;
             wallEntity.setLove_id(null);
 
-//            if(count > 0) {
-//                StringBuilder temp = new StringBuilder();
-//                String split;
-//                split = name + " ";
-//
-//                for(String str : text.split(split)) {
-//                    temp.append(str);
-//                }
-//                text = temp.toString();
-//            } else {
-//                text = "";
-//            }
+            //            if(count > 0) {
+            //                StringBuilder temp = new StringBuilder();
+            //                String split;
+            //                split = name + " ";
+            //
+            //                for(String str : text.split(split)) {
+            //                    temp.append(str);
+            //                }
+            //                text = temp.toString();
+            //            } else {
+            //                text = "";
+            //            }
         }
 
         wallEntity.setLove_count(String.valueOf(count));
         ibAgree.setImageResource(resId);
         tvAgreeCount.setText(String.format(tvAgreeCount.getContext().getString(R.string.loves_count), count));
-//        tvLoveList.setText(text);
+        //        tvLoveList.setText(text);
     }
 
     private void doLove(final WallEntity wallEntity, final boolean love) {
@@ -344,10 +377,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     public void setContent(WallEntity wallEntity, final Context context) {
+
         this.wallEntity = wallEntity;
+
         VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
-        String atDescription = this.wallEntity.getText_description();
+        String atDescription = wallEntity.getText_description();
         if(TextUtils.isEmpty(atDescription)) {
             tvContent.setVisibility(View.GONE);
         } else {
@@ -356,8 +391,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
         LogUtil.i(TAG, "onBindViewHolder& description: " + atDescription);
 
-        int tagMemberCount = this.wallEntity.getTag_member() == null ? 0 : this.wallEntity.getTag_member().size();
-        int tagGroupCount = this.wallEntity.getTag_member() == null ? 0 : this.wallEntity.getTag_group().size();
+        int tagMemberCount = this.wallEntity.getTag_member() == null ? 0 : wallEntity.getTag_member().size();
+        int tagGroupCount = this.wallEntity.getTag_member() == null ? 0 : wallEntity.getTag_group().size();
         if(tagMemberCount >= 0 || tagGroupCount >= 0) {
             // 有TAG用户或分组需要显示字符特效
             WallUtil util = new WallUtil(context, mViewClickListener);
@@ -367,7 +402,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         // 显示发表的时间
-        tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(context, this.wallEntity.getContent_creation_date()));
+        tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(context, wallEntity.getContent_creation_date()));
         int publicType = Integer.valueOf(wallEntity.getContent_group_public());
         if(publicType == 0) {
             ivLock.setVisibility(View.VISIBLE);
@@ -378,23 +413,28 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tvUserName.setText(this.wallEntity.getUser_given_name());
 
         // file_id 为空表示没有发表图片，有则需要显示图片
-        if(TextUtils.isEmpty(this.wallEntity.getFile_id())) {
+        if(TextUtils.isEmpty(this.wallEntity.getFile_id()) && TextUtils.isEmpty(wallEntity.getVideo_thumbnail())) {
             llWallsImage.setVisibility(View.GONE);
         } else {
             llWallsImage.setVisibility(View.VISIBLE);
 
-            // 有图片显示图片总数
-            int count = Integer.valueOf(this.wallEntity.getPhoto_count());
-            if(count > 1) {
-                String photoCountStr;
-                photoCountStr = count + " " + context.getString(R.string.text_photos);
-                tvPhotoCount.setText(photoCountStr);
-                tvPhotoCount.setVisibility(View.VISIBLE);
+            if(!TextUtils.isEmpty(this.wallEntity.getVideo_thumbnail())) { // 有视频图片说这条Wall上传的是视频并有图片，显示视频图片
+                String url = String.format(Constant.API_GET_VIDEO_THUMBNAIL, wallEntity.getContent_creator_id(), wallEntity.getVideo_thumbnail());
+                VolleyUtil.initNetworkImageView(context, imWallsImages, url);
             } else {
-                tvPhotoCount.setVisibility(View.GONE);
-            }
+                // 有图片显示图片总数
+                int count = Integer.valueOf(wallEntity.getPhoto_count());
+                if(count > 1) {
+                    String photoCountStr;
+                    photoCountStr = count + " " + context.getString(R.string.text_photos);
+                    tvPhotoCount.setText(photoCountStr);
+                    tvPhotoCount.setVisibility(View.VISIBLE);
+                } else {
+                    tvPhotoCount.setVisibility(View.GONE);
+                }
 
-            VolleyUtil.initNetworkImageView(context, imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, this.wallEntity.getUser_id(), this.wallEntity.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                VolleyUtil.initNetworkImageView(context, imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, wallEntity.getUser_id(), wallEntity.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            }
         }
          /*is owner wall*/
         //        if (!TextUtils.isEmpty(wall.getUser_id())&&wall.getUser_id().equals("49")) {
@@ -425,13 +465,13 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //            at.setVisibility(View.VISIBLE);
         //            tvLocation.setText(wall.getLoc_name());
         //        }
-//        int count = Integer.valueOf(this.wallEntity.getLove_count());
+        //        int count = Integer.valueOf(this.wallEntity.getLove_count());
         tvAgreeCount.setText(String.format(tvAgreeCount.getContext().getString(R.string.loves_count), Integer.valueOf(this.wallEntity.getLove_count())));
-//        if(count > 0) {
-//            WallUtil.getLoveList(mHttpTools, tvLoveList, MainActivity.getUser().getUser_id(), wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
-//        } else {
-//            tvLoveList.setText("");
-//        }
+        //        if(count > 0) {
+        //            WallUtil.getLoveList(mHttpTools, tvLoveList, MainActivity.getUser().getUser_id(), wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+        //        } else {
+        //            tvLoveList.setText("");
+        //        }
 
         tvCommentCount.setText(this.wallEntity.getComment_count());
 

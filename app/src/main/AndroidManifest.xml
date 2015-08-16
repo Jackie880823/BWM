@@ -594,6 +594,12 @@
 
         <activity android:name=".ui.PickAndCropPictureActivity"></activity>
         <activity android:name=".ui.CrashActivity" android:noHistory="true" android:launchMode="singleTop" android:excludeFromRecents="true"></activity>
+        <activity android:name=".ui.PreviewVideoActivity">
+            <intent-filter>
+                <action android:name="com.bondwithme.BondWithMe.ui.PreviewVideoActivity"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
     </application>
 
