@@ -12,12 +12,6 @@ import com.bondwithme.BondWithMe.util.WallUtil;
  * @version 1.0
  */
 public interface WallViewClickListener {
-    /**
-     * 显示Wall图片
-     *
-     * @param content_id {@link WallEntity#content_id}
-     */
-    void showOriginalPic(final String content_id);
 
     /**
      * 显示Wall详情包括评论

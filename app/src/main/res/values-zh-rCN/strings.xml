@@ -583,6 +583,7 @@
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>
     <string name="text_archive_data">没有存档</string>
 
+
     <string name="text_no_date_diary">暂无动态通告</string>
     <string name="text_no_date_event">暂无活动通告</string>
     <string name="text_no_date_bigday">暂无大日子通告</string>
@@ -594,5 +595,11 @@
 
     <string name="loves_count">%d 喜欢</string>
     <string name="notification_title_expand">新的消息</string>
+    <string name="select_photos_or_video">选择照片或视频</string>
+    <string name="text_all_select">全选</string>
+    <string name="text_inverse_select">反选</string>
+    <string name="text_delete">删除</string>
+    <string name="text_cancel_all">取消全选</string>
+
 
 </resources>

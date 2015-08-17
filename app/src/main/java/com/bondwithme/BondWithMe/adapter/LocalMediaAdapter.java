@@ -12,7 +12,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.entity.ImageData;
+import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
@@ -23,42 +23,36 @@ import java.util.List;
 
 /**
  * Created by Jackie on 5/4/15.
+ *
  * @author Jackie
  * @version 1.0
  */
-public class LocalImagesAdapter extends BaseAdapter {
+public class LocalMediaAdapter extends BaseAdapter {
 
-    private static final String TAG = LocalImagesAdapter.class.getSimpleName();
+    private static final String TAG = LocalMediaAdapter.class.getSimpleName();
 
     private Context mContext;
+
     /**
      * 显示图片的Ur列表
      */
-    private List<ImageData> mDatas;
+    private List<MediaData> mDatas;
     /**
      * 已经选中的图片
      */
-    private ArrayList<ImageData> mSelectImages;
+    private ArrayList<MediaData> mSelectMedias;
 
     private SelectImageUirChangeListener mListener;
 
-    private int columnWidthHeight;
-
-    private int mColor = -1;
 
     /**
      * 控制是否显示选择按钮，当选择一张图片时不需要显示选择框
      */
     private boolean checkBoxVisible = true;
 
-    public LocalImagesAdapter(Context context, List<ImageData> datas, int color) {
+    public LocalMediaAdapter(Context context, List<MediaData> datas) {
         mContext = context;
         mDatas = datas;
-        mColor = color;
-    }
-
-    public void setColumnWidthHeight(int columnWidthHeight) {
-        this.columnWidthHeight = columnWidthHeight;
     }
 
     /**
@@ -97,10 +91,10 @@ public class LocalImagesAdapter extends BaseAdapter {
     /**
      * 设置选中图片列表用于判断显示选择框的选中状态
      *
-     * @param selectedImages
+     * @param selectedMedias
      */
-    public void setSelectedImages(ArrayList<ImageData> selectedImages) {
-        mSelectImages = selectedImages;
+    public void setSelectedImages(ArrayList<MediaData> selectedMedias) {
+        mSelectMedias = selectedMedias;
     }
 
     public void setListener(SelectImageUirChangeListener listener) {
@@ -148,12 +142,12 @@ public class LocalImagesAdapter extends BaseAdapter {
             holder = (HolderView) convertView.getTag();
         }
 
+
         loadLocalBitmap(holder.iv, position);
 
         if(!checkBoxVisible) {
             holder.check.setVisibility(View.GONE);
         } else {
-
             holder.iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -172,7 +166,7 @@ public class LocalImagesAdapter extends BaseAdapter {
                     boolean isChecked = checkBox.isChecked();
                     checkBox.setChecked(isChecked);
 
-                    ImageData uri = mDatas.get(position);
+                    MediaData uri = mDatas.get(position);
                     if(mListener != null) {
                         LogUtil.i(TAG, "onCheck& check2");
                         if(isChecked) {
@@ -197,7 +191,7 @@ public class LocalImagesAdapter extends BaseAdapter {
             });
 
             // 判断当前数据是否被选中，一在设置setOnCheckedChangeListener之后执行否则数据无效添加或删除上一次使用当前View的URI
-            if(mSelectImages != null && mSelectImages.contains(mDatas.get(position))) {
+            if(mSelectMedias != null && mSelectMedias.contains(mDatas.get(position))) {
                 LogUtil.i(TAG, "onCheck& check7");
                 // 当前图片已被选中
                 holder.check.setChecked(true);
@@ -206,7 +200,6 @@ public class LocalImagesAdapter extends BaseAdapter {
                 holder.check.setChecked(false);
             }
         }
-
         return convertView;
     }
 
@@ -214,7 +207,7 @@ public class LocalImagesAdapter extends BaseAdapter {
      * 通过Uir列中{@code position}项的uri异步获取缩略图，并加载传入的imageVie中
      *
      * @param imageView －  显示图片的ImageVie视图
-     * @param position
+     * @param position  Uir列中{@code position}项的uri
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void loadLocalBitmap(ImageView imageView, int position) {
