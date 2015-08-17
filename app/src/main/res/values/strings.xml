@@ -594,6 +594,10 @@
     <string name="text_no_date_members">No members alert</string>
     <string name="text_no_date_recommended">No recommended members</string>
     <string name="text_no_date_group">No group alert</string>
+    <string name="text_all_select">Select All</string>
+    <string name="text_inverse_select">Inverse Select</string>
+    <string name="text_delete">Delete</string>
+    <string name="text_cancel_all">Cancel All</string>
 
     <string name="loves_count">%d Loves</string>
     <string name="select_photos_or_video">Select Photos or Video</string>
