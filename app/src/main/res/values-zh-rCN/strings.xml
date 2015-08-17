@@ -589,5 +589,9 @@
     <string name="text_no_date_members">未有成员通告</string>
     <string name="text_no_date_recommended">未有推荐通告</string>
     <string name="text_no_date_group">未有群组通告</string>
+    <string name="text_all_select">全选</string>
+    <string name="text_inverse_select">反选</string>
+    <string name="text_delete">删除</string>
+    <string name="text_cancel_all">取消全选</string>
 
 </resources>

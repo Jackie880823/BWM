@@ -124,6 +124,7 @@ public class Constant {
     public static final String API_BONDALERT_GROUP = API_SERVER + "/bondwithme/index.php/api/bondAlertList/%s/module/group";
     public static final String API_BONDALERT_GROUP_CONFIRM = API_SERVER + "/bondwithme/index.php/api/confirmJoinGroup/%s";
     public static final String API_BONDALERT_GROUP_REJECT = API_SERVER + "/bondwithme/index.php/api/rejectJoinGroup/%s";
+    public static final String API_BONDALERT_REMOVE_RECOMMEND = API_SERVER + "/bondwithme/index.php/api/removeRecomUser/";
 
     /**
      * Api for sticker store
