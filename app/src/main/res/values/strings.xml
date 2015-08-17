@@ -596,4 +596,5 @@
     <string name="text_no_date_group">No group alert</string>
 
     <string name="loves_count">%d Loves</string>
+    <string name="select_photos_or_video">Select Photos or Video</string>
 </resources>

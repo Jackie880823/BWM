@@ -22,6 +22,11 @@ public class WallEntity implements Serializable {
     private String content_group_public;
 
     /**
+     * Post creator ID
+     */
+    private String content_creator_id;
+
+    /**
      * Posting - Text content
      */
     private String text_description;
@@ -81,6 +86,18 @@ public class WallEntity implements Serializable {
     private String sticker_type;
 
     /**
+     * <br>视频文件名，若没有视频是null
+     * <br> such as: "1439522914995561.MOV"
+     */
+    private String video_filename;
+
+    /**
+     * <br>视频小图文件名，没视频是null
+     * <br>"1439522914995561.png",
+     */
+    private String video_thumbnail;
+
+    /**
      * <br>Posting creator name
      * <br> such as:  "Jolin Tay"
      */
@@ -133,10 +150,6 @@ public class WallEntity implements Serializable {
      */
     private String content_group_id;
 
-    public String getFile_id() {
-        return file_id;
-    }
-
     private String love_id;
 
     /**
@@ -170,12 +183,24 @@ public class WallEntity implements Serializable {
         this.content_group_public = content_group_public;
     }
 
+    public String getContent_creator_id() {
+        return content_creator_id;
+    }
+
+    public void setContent_creator_id(String content_creator_id) {
+        this.content_creator_id = content_creator_id;
+    }
+
     public String getText_description() {
         return text_description;
     }
 
     public void setText_description(String text_description) {
         this.text_description = text_description;
+    }
+
+    public String getFile_id() {
+        return file_id;
     }
 
     public void setFile_id(String file_id) {
@@ -252,6 +277,22 @@ public class WallEntity implements Serializable {
 
     public void setSticker_type(String sticker_type) {
         this.sticker_type = sticker_type;
+    }
+
+    public String getVideo_thumbnail() {
+        return video_thumbnail;
+    }
+
+    public void setVideo_thumbnail(String video_thumbnail) {
+        this.video_thumbnail = video_thumbnail;
+    }
+
+    public String getVideo_filename() {
+        return video_filename;
+    }
+
+    public void setVideo_filename(String video_filename) {
+        this.video_filename = video_filename;
     }
 
     public String getUser_given_name() {
