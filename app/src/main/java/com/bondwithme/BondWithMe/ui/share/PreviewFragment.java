@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.adapter;
+package com.bondwithme.BondWithMe.ui.share;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -12,8 +12,6 @@ import android.widget.VideoView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosFragment;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -119,6 +117,7 @@ public class PreviewFragment extends BaseFragment<SelectPhotosActivity> {
 
     /**
      * 传入缩略图的封装数据{@link MediaData}在当前UI中显示数据中的内容
+     *
      * @param mediaData 缩略图的数据内容
      */
     public void displayImage(MediaData mediaData) {

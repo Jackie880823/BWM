@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 
 import java.io.File;
@@ -70,7 +70,7 @@ public class PickAndCropPictureActivity extends Activity {
 
     private void doAction() {
         Intent intent;
-        switch (picFrom) {
+        switch(picFrom) {
             case REQUEST_FROM_PHOTO:
                 intent = new Intent(this, SelectPhotosActivity.class);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
@@ -79,15 +79,13 @@ public class PickAndCropPictureActivity extends Activity {
                 break;
             case REQUEST_FROM_CAMERA:
                 Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                intent2.putExtra("android.intent.extras.CAMERA_FACING", 1);
+                //                intent2.putExtra("android.intent.extras.CAMERA_FACING", 1);
                 intent2.putExtra("camerasensortype", 2);
 
 
                 CACHE_PIC_NAME_TEMP = System.currentTimeMillis() + "_head_cache_temp.png";
                 // 下面这句指定调用相机拍照后的照片存储的路径
-                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
-                        .fromFile(PicturesCacheUtil.getCachePicFileByName(this,
-                                CACHE_PIC_NAME_TEMP)));
+                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 intent2.putExtra("return-data", false);
@@ -98,17 +96,17 @@ public class PickAndCropPictureActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (RESULT_OK == resultCode) {
-            switch (requestCode) {
+        if(RESULT_OK == resultCode) {
+            switch(requestCode) {
                 // 如果是直接从相册获取
                 case REQUEST_FROM_PHOTO:
-                    if (data != null) {
+                    if(data != null) {
                         Uri uri;
                         uri = data.getData();
-                        if (needCrop) {
+                        if(needCrop) {
                             try {
                                 startPhotoZoom(uri, true);
-                            } catch (IOException e) {
+                            } catch(IOException e) {
                                 e.printStackTrace();
                             }
                         } else {
@@ -122,10 +120,10 @@ public class PickAndCropPictureActivity extends Activity {
                 // 如果是调用相机拍照时
                 case REQUEST_FROM_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP));
-                    if (needCrop) {
+                    if(needCrop) {
                         try {
                             startPhotoZoom(uri, false);
-                        } catch (IOException e) {
+                        } catch(IOException e) {
                             e.printStackTrace();
                         }
                     } else {
@@ -164,39 +162,39 @@ public class PickAndCropPictureActivity extends Activity {
      */
     public void startPhotoZoom(Uri uri, boolean fromPhoto) throws IOException {
 
-        String path = FileUtil.getRealPathFromURI(this,uri);
-        if (uri == null || path == null) {
+        String path = FileUtil.getRealPathFromURI(this, uri);
+        if(uri == null || path == null) {
             return;
         }
 
-//        /**
-//         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
-//         */
-//        int degree = LocalImageLoader.readPictureDegree(path);
-//
-//        if (fromPhoto&&degree != 0) {
-//
-//            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(this, uri);
-////            /**
-////             * 把图片旋转为正的方向
-////             */
-//            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
-//            byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
-//            File file = new File(path);
-//            file.delete();
-//            FileOutputStream fos = new FileOutputStream(path);
-//            fos.write(newBytes);
-//            fos.flush();
-//
-//            fos.close();
-//            bitmap.recycle();
-//        }
+        //        /**
+        //         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
+        //         */
+        //        int degree = LocalImageLoader.readPictureDegree(path);
+        //
+        //        if (fromPhoto&&degree != 0) {
+        //
+        //            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(this, uri);
+        ////            /**
+        ////             * 把图片旋转为正的方向
+        ////             */
+        //            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
+        //            byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
+        //            File file = new File(path);
+        //            file.delete();
+        //            FileOutputStream fos = new FileOutputStream(path);
+        //            fos.write(newBytes);
+        //            fos.flush();
+        //
+        //            fos.close();
+        //            bitmap.recycle();
+        //        }
 
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
         List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, 0);
         int size = list.size();
-        if (size == 0) {
+        if(size == 0) {
             Toast.makeText(this, getResources().getString(R.string.text_no_found_reduce), Toast.LENGTH_SHORT).show();
             return;
         } else {

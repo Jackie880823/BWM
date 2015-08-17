@@ -3,8 +3,8 @@ package com.bondwithme.BondWithMe.entity;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosFragment;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosFragment;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 /**

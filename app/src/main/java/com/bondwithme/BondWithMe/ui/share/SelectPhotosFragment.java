@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.ui.wall;
+package com.bondwithme.BondWithMe.ui.share;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -28,6 +28,7 @@ import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
+import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,8 +65,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      * <p>false: 只允许选择一张图片</p>
      */
     private boolean multi;
-
-    private boolean useVideo;
 
     /**
      * 已经选择的图Ur列表
@@ -140,7 +139,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         mDrawerLayout = getViewById(R.id.drawer_layout);
 
         multi = getParentActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        useVideo = getParentActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
+        boolean useVideo = getParentActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
 
         // 获取数据库中的图片资源游标
         String[] imageColumns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
@@ -394,8 +393,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     /**
      * Adds the url or path to the bucket if it exists, and if not, creates it and adds the url/path.
      *
-     * @param bucket
-     * @param mediaData
+     * @param bucket  path
+     * @param mediaData data about of url
      */
     private void addToMediaMap(String bucket, MediaData mediaData) {
         ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_nearest));

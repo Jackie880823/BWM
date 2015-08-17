@@ -23,8 +23,8 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
+import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
@@ -405,7 +405,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(context, wallEntity.getContent_creation_date()));
         //wing modified begin 2015.08.13
         int publicType = 0;
-        if(!    TextUtils.isEmpty(wallEntity.getContent_group_public())) {
+        if(!TextUtils.isEmpty(wallEntity.getContent_group_public())) {
             publicType = Integer.valueOf(wallEntity.getContent_group_public());
         }
         //wing modified end 2015.08.13

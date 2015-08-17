@@ -29,7 +29,7 @@ import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.StickerMainFragment;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
@@ -77,14 +77,14 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
         }
     }
 
-    public void commitAllowingStateLoss(){
+    public void commitAllowingStateLoss() {
 
         // 开启一个Fragment事务
         FragmentTransaction transaction = mActivity.getSupportFragmentManager().beginTransaction();
         StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
         mainFragment.setPicClickListener(this);
         transaction.replace(R.id.sticker_message_fragment, mainFragment);
-//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        //        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.addToBackStack(null);
         transaction.commitAllowingStateLoss();
     }

@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.ui.wall;
+package com.bondwithme.BondWithMe.ui.share;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -11,18 +11,20 @@ import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.adapter.PreviewFragment;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.wall.TabPictureFragment;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
 
 import java.util.ArrayList;
 
 
 /**
  * 选择图片的Activity
+ *
  * @author Jackie
  * @see BaseActivity
  */
@@ -61,7 +63,7 @@ public class SelectPhotosActivity extends BaseActivity {
 
     private SelectImageUirChangeListener listener = new SelectImageUirChangeListener() {
 
-        PreviewFragment previewFragment;
+        com.bondwithme.BondWithMe.ui.share.PreviewFragment previewFragment;
 
         /**
          * 添加图片{@code mediaData}到选择列表
@@ -148,7 +150,7 @@ public class SelectPhotosActivity extends BaseActivity {
             LogUtil.i(TAG, "preview& mediaData: " + mediaData.toString());
             //            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(getApplicationContext(), mediaData);
             if(previewFragment == null) {
-                previewFragment = PreviewFragment.newInstance("");
+                previewFragment = com.bondwithme.BondWithMe.ui.share.PreviewFragment.newInstance("");
             }
             changeFragment(previewFragment, true);
             previewFragment.displayImage(currentData);
