@@ -323,8 +323,8 @@
 
     <string name="text_upcoming_birthdays">生日即将来临</string>
     <string name="text_today_birthday">今天生日</string>
-    <string name="text_today_birthday_on"> 的生日在今天!</string>
-    <string name="text_upcoming_birthdays_on"> 的生日在</string>
+    <string name="text_today_birthday_on">&#160;的生日是今天!</string>
+    <string name="text_upcoming_birthdays_on">&#160;的生日是</string>
     <string name="text_d">天 </string>
     <string name="text_left">后</string>
 
@@ -593,5 +593,6 @@
     <string name="text_no_date_group">暂无群组通告</string>
 
     <string name="loves_count">%d 喜欢</string>
+    <string name="notification_title_expand">新的消息</string>
 
 </resources>

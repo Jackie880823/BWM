@@ -596,4 +596,5 @@
     <string name="text_no_date_group">No group alert</string>
 
     <string name="loves_count">%d Loves</string>
+    <string name="notification_title_expand">New Messages</string>
 </resources>
