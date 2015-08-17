@@ -273,7 +273,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     private void showPreviewVideo() {
         Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
-        intent.putExtra(PreviewVideoActivity.CONTENT_CREATION_ID, wallEntity.getContent_creation_date());
+        intent.putExtra(PreviewVideoActivity.CONTENT_CREATOR_ID, wallEntity.getContent_creator_id());
         intent.putExtra(PreviewVideoActivity.VIDEO_FILENAME, wallEntity.getVideo_filename());
         context.startActivity(intent);
     }
