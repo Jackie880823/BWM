@@ -30,7 +30,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallHolder> {
     public WallHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.wall_item, parent, false);
         // ViewHolder参数一定要是Item的Root节点.
-        return new WallHolder(view, mHttpTools, false);
+        return new WallHolder(mContext, view, mHttpTools, false);
     }
 
     public void add(List<WallEntity> newData) {

@@ -593,5 +593,6 @@
     <string name="text_no_date_group">暂无群组通告</string>
 
     <string name="loves_count">%d 喜欢</string>
+    <string name="select_photos_or_video">选择照片或视频</string>
 
 </resources>
