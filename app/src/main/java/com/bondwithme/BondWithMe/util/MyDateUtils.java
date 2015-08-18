@@ -15,12 +15,12 @@ import java.util.logging.Logger;
 
 /**
  * 日期工具类 主要负责处理时间java.util.Date与String类型的转换
- * 
+ *
  * @author wangtao
  */
 public class MyDateUtils extends android.text.format.DateUtils {
-	private static Logger log = Logger.getLogger(DateUtils.class.toString());
-	private static SimpleDateFormat defaultDateFormat = null;
+    private static Logger log = Logger.getLogger(DateUtils.class.toString());
+    private static SimpleDateFormat defaultDateFormat = null;
 
     public static String formatTimeStampString(Context context, long when, boolean fullFormat) {
         Time then = new Time();
@@ -36,7 +36,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
             format_flags |= DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME;
         } else if (then.yearDay != now.yearDay) {
             // If it is from a different day than today, show only the date.
-            if(now.yearDay - then.yearDay == 1) {
+            if (now.yearDay - then.yearDay == 1) {
                 // 一天前的更新
                 format_flags |= DateUtils.FORMAT_SHOW_TIME;
                 String result = context.getString(R.string.yesterday_ago) + DateUtils.formatDateTime(context, when, format_flags);
@@ -45,9 +45,9 @@ public class MyDateUtils extends android.text.format.DateUtils {
             format_flags |= DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME;
         } else {
             // Otherwise, if the message is from today, show the time.
-            int hour = now.hour  - then.hour;
+            int hour = now.hour - then.hour;
             int minute = now.minute - then.minute;
-            if(hour < 1 && minute <= 1){
+            if (hour < 1 && minute <= 1) {
                 // 1分之内的更新
                 return context.getString(R.string.just_now);
             } else {
@@ -79,7 +79,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
             format_flags |= DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME;
         } else if (then.yearDay != now.yearDay) {
             // If it is from a different day than today, show only the date.
-            if(now.yearDay - then.yearDay == 1) {
+            if (now.yearDay - then.yearDay == 1) {
                 // 一天前的更新
                 format_flags |= DateUtils.FORMAT_SHOW_TIME;
                 String result = context.getString(R.string.yesterday_ago) + DateUtils.formatDateTime(context, when, format_flags);
@@ -88,9 +88,9 @@ public class MyDateUtils extends android.text.format.DateUtils {
             format_flags |= DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME;
         } else {
             // Otherwise, if the message is from today, show the time.
-            int hour = now.hour  - then.hour;
+            int hour = now.hour - then.hour;
             int minute = now.minute - then.minute;
-            if(hour < 1 && minute <= 1){
+            if (hour < 1 && minute <= 1) {
                 // 1分之内的更新
 //                return context.getString(R.string.just_now);
             } else {
@@ -107,90 +107,120 @@ public class MyDateUtils extends android.text.format.DateUtils {
         }
         return DateUtils.formatDateTime(context, when, format_flags);
     }
-    private static SimpleDateFormat getDefaultDateFormat(){
-        if(defaultDateFormat==null){
+
+    private static SimpleDateFormat getDefaultDateFormat() {
+        if (defaultDateFormat == null) {
             defaultDateFormat = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
         }
         return defaultDateFormat;
     }
 
-    private static String formatDate2Default(Date date){
+    public static String formatDate2Default(Date date) {
         getDefaultDateFormat().setTimeZone(TimeZone.getDefault());
         return defaultDateFormat.format(date);
     }
 
     /**
      * Default Date format like yyy-MM-dd HH:mm:ss
+     *
      * @param dateString
      * @return
      */
-    public static String getLocalDateString4DefaultFromUTC(String dateString){
+    public static String getLocalDateString4DefaultFromUTC(String dateString) {
         return formatDate2Default(new Date(dateString2Timestamp(dateString).getTime() + TimeZone.getDefault().getRawOffset()));
     }
+
     /**
      * show Date time format is auto by current time
+     *
      * @param context
      * @param dateString
      * @return
      */
-    public static String getLocalDateStringFromUTC(Context context, String dateString){
-        if(TextUtils.isEmpty(dateString))
+    public static String getLocalDateStringFromUTC(Context context, String dateString) {
+        if (TextUtils.isEmpty(dateString))
             return null;
         return formatTimeStampString(context, dateString2Timestamp(dateString).getTime() + TimeZone.getDefault().getRawOffset(), false);
     }
+
     //event 专用
-    public static String getEventLocalDateStringFromUTC(Context context,String dateString){
-        if(TextUtils.isEmpty(dateString))
+    public static String getEventLocalDateStringFromUTC(Context context, String dateString) {
+        if (TextUtils.isEmpty(dateString))
             return null;
         return EventformatTimeStampString(context, dateString2Timestamp(dateString).getTime() + TimeZone.getDefault().getRawOffset(), true);
 //        return formatTimeStampString(context, dateString2Timestamp(dateString).getTime() + TimeZone.getDefault().getRawOffset(), true);
 
     }
 
-    public static String getLocalDateStringFromLocal(Context context,  long timestamp){
-        return  formatTimeStampString(context, timestamp, true);
-    }
-    public static String getEventLocalDateStringFromLocal(Context context,  long timestamp){
-        return  EventformatTimeStampString(context, timestamp, true);
+    public static String getLocalDateStringFromLocal(Context context, long timestamp) {
+        return formatTimeStampString(context, timestamp, true);
     }
 
-    public static String getUTCDateString4DefaultFromLocal(long timestamp){
+    public static String getEventLocalDateStringFromLocal(Context context, long timestamp) {
+        return EventformatTimeStampString(context, timestamp, true);
+    }
+
+    public static String getUTCDateString4DefaultFromLocal(long timestamp) {
         return formatDate2Default(new Date(formatTimestamp2UTC(timestamp)));
     }
-    public static String getEventUTCDateString4DefaultFromLocal(long timestamp){
+
+    public static String getEventUTCDateString4DefaultFromLocal(long timestamp) {
         return formatDate2Default(new Date(formatTimestamp2UTC(timestamp)));
     }
 
     /**
      * Default Date format like yyy-MM-dd HH:mm:ss
+     *
      * @param timestamp
      * @return
      */
-    public static String getUTCDateString4DefaultFromUTC(long timestamp){
+    public static String getUTCDateString4DefaultFromUTC(long timestamp) {
         return formatDate2Default(new Date(timestamp));
     }
 
-    public static String getUTCDateStringFromUTC(Context context, long timestamp){
+    public static String getUTCDateStringFromUTC(Context context, long timestamp) {
         return formatTimeStampString(context, formatTimestamp2Local(timestamp), true);
     }
 
-    public static Timestamp dateString2Timestamp(String date){
+    public static Timestamp dateString2Timestamp(String date) {
         return Timestamp.valueOf(date);
     }
 
 
-    public static long formatTimestamp2UTC(long timestamp){
-        return timestamp-TimeZone.getDefault().getRawOffset();
+    public static long formatTimestamp2UTC(long timestamp) {
+        return timestamp - TimeZone.getDefault().getRawOffset();
     }
 
-    public static long formatTimestamp2Local(long timestamp){
-        return timestamp+TimeZone.getDefault().getRawOffset();
+    public static long formatTimestamp2Local(long timestamp) {
+        return timestamp + TimeZone.getDefault().getRawOffset();
     }
 
-    public static boolean isBeforeDate(long timestamp){
-        return timestamp<System.currentTimeMillis();
+    public static boolean isBeforeDate(long timestamp) {
+        return timestamp < System.currentTimeMillis();
     }
 
+    public static String formatRecordTime(int formatTime) {
+        int j = formatTime / 60;
+        int k = formatTime % 60;
+        Object[] arrayOfObject = new Object[2];
+        arrayOfObject[0] = Integer.valueOf(j);
+        arrayOfObject[1] = Integer.valueOf(k);
+        return String.format("%1$02d:%2$02d", arrayOfObject);
+    }
 
-
+    public static String formatRecordTimeForString(String formatTime) {
+        int time = 0;
+        try {
+            time = Integer.parseInt(formatTime);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return "00:00";
+        }
+        int j = time / 60;
+        int k = time % 60;
+        Object[] arrayOfObject = new Object[2];
+        arrayOfObject[0] = Integer.valueOf(j);
+        arrayOfObject[1] = Integer.valueOf(k);
+        return String.format("%1$02d:%2$02d", arrayOfObject);
+    }
 }

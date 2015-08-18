@@ -519,7 +519,7 @@
     <string name="text_phone">Phone</string>
     <string name="text_change_password">Change Password</string>
 
-    <string name="title_member_love">Members Who Love This</string>
+    <string name="title_member_love">Members by Love</string>
 
     <string name="miss_you">You successfully send a Miss!</string>
     <string name="miss_already_you">You have already sent a miss.!</string>
@@ -533,8 +533,11 @@
     <string name="text_no_date_members">No members alert</string>
     <string name="text_no_date_recommended">No recommended members</string>
     <string name="text_no_date_group">No group alert</string>
+    <string name="text_hold_and_speak">按住说话</string>
 
     <string name="loves_count">%d Loves</string>
+    <string name="text_message_chat_post_audio">[音频]</string>
+    <string name="text_message_chat_post_video">[视频]</string>
     <string name="notification_title_expand">New Messages</string>
     <string name="select_photos_or_video">Select Photos or Video</string>
     <string name="will_remove_photos">If select video will remove photos of selected, continuation?</string>
