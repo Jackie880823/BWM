@@ -272,4 +272,5 @@ public class Constant {
     public static final String API_MORE_ARCHIVE_GROUP_MEMEBER_LIST = API_SERVER + "/bondwithme/index.php/api/archivePostMain";
 
     public static final String API_MESSAGE_GROUP_IS_FRIEND = API_SERVER + "/bondwithme/index.php/api/memberAction/%s/member/%s/type/check ";
+    public static final String API_MESSAGE_DOWNLOAD_AUDIO = API_SERVER + "/bondwithme/index.php/api/audio_preview/%s/fid/%s";
 }

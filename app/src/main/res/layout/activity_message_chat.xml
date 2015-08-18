@@ -266,7 +266,7 @@
             android:background="#ffffff"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/chat_mic_text"

@@ -597,4 +597,6 @@
     <string name="text_hold_and_speak">按住说话</string>
 
     <string name="loves_count">%d Loves</string>
+    <string name="text_message_chat_post_audio">[音频]</string>
+    <string name="text_message_chat_post_video">[视频]</string>
 </resources>

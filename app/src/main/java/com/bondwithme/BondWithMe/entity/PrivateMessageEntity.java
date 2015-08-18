@@ -10,6 +10,8 @@ public class PrivateMessageEntity implements Serializable {
     public static final String POST_STICKER = "postSticker";
     public static final String POST_LOCATION = "postLocation";
     public static final String POST_PHOTO = "postPhoto";
+    public static final String POST_AUDIO = "postAudio";
+    public static final String POST_VIDEO = "postVideo";
 
     private String user_id;// member id
     private String user_given_name; // member name
