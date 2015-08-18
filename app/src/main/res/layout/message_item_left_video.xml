@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/default_view_margin"
+    android:paddingTop="@dimen/default_view_margin">
+
+    <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+        android:id="@+id/message_icon_image"
+        android:layout_width="@dimen/_50dp"
+        android:layout_height="@dimen/_50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/_6dp"
+        android:src="@drawable/default_head_icon"
+        app:border="false" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_5dp"
+        android:layout_marginLeft="@dimen/_12dp"
+        android:layout_marginRight="@dimen/_20dp"
+        android:layout_toRightOf="@+id/message_icon_image"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="即使但是时"
+        android:textColor="@color/btn_bg_color_gray_press"
+        android:textSize="@dimen/_13dp" />
+
+    <RelativeLayout
+        android:id="@+id/pic_linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_toRightOf="@+id/message_icon_image"
+        android:background="@drawable/message_left"
+        android:gravity="center">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/message_video_start"
+            android:layout_width="@dimen/_120dp"
+            android:layout_height="@dimen/_120dp"
+            android:scaleType="fitXY"/>
+        <com.material.widget.CircularProgress
+            android:id="@+id/message_progress_bar"
+            android:layout_width="@dimen/_32dp"
+            android:layout_height="@dimen/_32dp"
+            android:layout_centerInParent="true"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_video"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/date_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/pic_linear"
+        android:layout_below="@+id/pic_linear"
+        android:layout_marginLeft="@dimen/_16dp"
+        android:layout_marginTop="@dimen/_6dp"
+        android:text="2015年05月24日"
+        android:textColor="@color/default_text_color_light"
+        android:textSize="@dimen/_12dp" />
+
+</RelativeLayout>

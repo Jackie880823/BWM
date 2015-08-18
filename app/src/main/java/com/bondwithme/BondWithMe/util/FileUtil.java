@@ -193,7 +193,8 @@ public class FileUtil {
         LogUtil.d("FileUtil", "===fileRoot===" + fileRoot.getAbsolutePath() + "===" + fileRoot.exists() + "====" + deleted);
     }
 
-    private static final String RECORD = "record";
+    private static final String RECORD = "Audio";
+    private static final String VIDEO = "Video";
 
     public static File saveAudioFile(Context mContext) {
         return new File(getAudioRootPath(mContext) + File.separator + System.currentTimeMillis() + ".mp3");
@@ -203,6 +204,21 @@ public class FileUtil {
         File bootFile = getSavePath(mContext, true);
         String filePath = bootFile.getAbsolutePath();
         filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + RECORD;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return filePath;
+    }
+
+    public static File saveVideoFile(Context mContext) {
+        return new File(getVideoRootPath(mContext) + File.separator + System.currentTimeMillis() + ".mp4");
+    }
+
+    public static String getVideoRootPath(Context mContext) {
+        File bootFile = getSavePath(mContext, true);
+        String filePath = bootFile.getAbsolutePath();
+        filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + VIDEO;
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdirs();

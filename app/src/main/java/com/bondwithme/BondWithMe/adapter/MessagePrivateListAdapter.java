@@ -110,7 +110,6 @@ public class MessagePrivateListAdapter extends BaseAdapter {
             viewHolder.tvNum.setVisibility(View.GONE);
         }
         String type=userEntity.getType();
-        Log.i("aaaaaa",type);
         if(PrivateMessageEntity.POST_TEXT.equals(type)){
             viewHolder.lastMessage.setText(userEntity.getMessage());
         }else if(PrivateMessageEntity.POST_STICKER.equals(type)){

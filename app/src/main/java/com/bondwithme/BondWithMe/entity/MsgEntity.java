@@ -83,6 +83,15 @@ public class MsgEntity implements Serializable {
     private String audio_duration;
     private String audio_filename;
     private String video_duration;
+    private String video_thumbnail;
+
+    public String getVideo_thumbnail() {
+        return video_thumbnail;
+    }
+
+    public void setVideo_thumbnail(String video_thumbnail) {
+        this.video_thumbnail = video_thumbnail;
+    }
 
     public String getVideo_filename() {
         return video_filename;
