@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -22,10 +23,12 @@ import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.exception.StickerTypeException;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.wall.WallMembersOrGroupsActivity;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
+import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 
@@ -508,6 +511,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
          *
          */
         TextView tv_agree_count;
+        TextView tv_like_desc;
         ImageButton iv_agree;
         ImageButton btn_comment_del;
         TextView comment_date;
@@ -534,6 +538,9 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
 //            progressBar = (CircularProgress) itemView.findViewById(R.id.message_progress_bar);
             chatsImage = itemView.findViewById(R.id.ll_chats_image);
+            tv_like_desc = (TextView) itemView.findViewById(R.id.tv_like_desc);
+            tv_like_desc.setOnClickListener(this);
+            iv_agree.setOnClickListener(this);
             line = itemView.findViewById(R.id.line);
             agreeTouch.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
@@ -559,7 +566,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         mCommentActionListener.showOriginalPic(commentEntity.getUser_id(),commentEntity.getFile_id());
                     }
                     break;
-                case R.id.rl_agree:
+                case R.id.iv_agree:
                     newClick = true;
                     int count = Integer.valueOf(tv_agree_count.getText().toString());
                     if (TextUtils.isEmpty(commentEntity.getLove_id())) {
@@ -576,6 +583,17 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         runningList.add(position - detailItemCount);
                         check(position - detailItemCount);
                     }
+                    break;
+                case R.id.tv_like_desc:
+                    if(Integer.valueOf(tv_agree_count.getText().toString()) > 0){
+                        Intent intent = new Intent(mContext, WallMembersOrGroupsActivity.class);
+                        intent.setAction(Constant.ACTION_SHOW_LOVED_USER);
+                        intent.putExtra(WallUtil.GET_LOVE_LIST_VIEWER_ID, MainActivity.getUser().getUser_id());
+                        intent.putExtra(WallUtil.GET_LOVE_LIST_REFER_ID, commentEntity.getComment_id());
+                        intent.putExtra(WallUtil.GET_LOVE_LIST_TYPE, WallUtil.LOVE_MEMBER_COMMENT_TYPE);
+                        mContext.startActivity(intent);
+                    }
+
                     break;
             }
 
@@ -609,7 +627,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 final EventCommentEntity commentEntity = data.get(position);
                 if (mCommentActionListener != null) {
                     if (TextUtils.isEmpty(commentEntity.getLove_id())) {
-                        mCommentActionListener.doLove(commentEntity, false);
+                       mCommentActionListener.doLove(commentEntity, false);
                     } else {
                         mCommentActionListener.doLove(commentEntity, true);
                     }
