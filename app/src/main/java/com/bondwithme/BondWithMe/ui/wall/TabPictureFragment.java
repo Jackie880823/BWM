@@ -57,10 +57,6 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      * 临时文件用户裁剪
      */
     public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp_";
-    /**
-     * 限制最多可选图片张数
-     */
-    public final static int MAX_SELECT = 10;
 
     private final static int REQUEST_HEAD_PHOTO = 1;
     private final static int REQUEST_HEAD_IMAGE = 2;
@@ -202,9 +198,9 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onClick(View v) {
-        final int residue = MAX_SELECT - datas.size();
+        final int residue = SelectPhotosActivity.MAX_SELECT - datas.size();
         if(residue <= 0) {
-            MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), MAX_SELECT));
+            MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), SelectPhotosActivity.MAX_SELECT));
             return;
         }
         switch(v.getId()) {
@@ -431,9 +427,9 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                 case REQUEST_HEAD_IMAGE: {
                     clearVideo();
 
-                    int residue = MAX_SELECT - datas.size();
+                    int residue = SelectPhotosActivity.MAX_SELECT - datas.size();
                     if(residue <= 0) {
-                        MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), MAX_SELECT));
+                        MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), SelectPhotosActivity.MAX_SELECT));
                         return;
                     }
                     //                    if (data != null) {

@@ -537,8 +537,8 @@
     <string name="loves_count">%d Loves</string>
     <string name="notification_title_expand">New Messages</string>
     <string name="select_photos_or_video">Select Photos or Video</string>
-    <string name="will_remove_photos">If select video will remove photos of selected!</string>
-    <string name="will_remove_selected_video">select photos will remove the selected video!</string>
+    <string name="will_remove_photos">If select video will remove photos of selected, continuation?</string>
+    <string name="will_remove_selected_video">select photos will remove the selected video, continuation? </string>
     <string name="text_all_select">Select All</string>
     <string name="text_inverse_select">Select Inverse</string>
     <string name="text_delete">Delete</string>

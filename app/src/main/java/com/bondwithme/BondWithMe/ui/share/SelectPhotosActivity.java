@@ -15,7 +15,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.wall.TabPictureFragment;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
@@ -39,6 +38,10 @@ public class SelectPhotosActivity extends BaseActivity {
     public static final String SELECTED_PHOTOS = "selected_photos";
 
     public final static String RESIDUE = "residue";
+    /**
+     * 限制最多可选图片张数
+     */
+    public final static int MAX_SELECT = 10;
 
     private SelectPhotosFragment fragment;
     private ArrayList<MediaData> mSelectedImages = new ArrayList<>();
@@ -99,7 +102,7 @@ public class SelectPhotosActivity extends BaseActivity {
                         result = mSelectedImages.contains(mediaData) || mSelectedImages.add(mediaData);
                     } else {
                         // 提示用户添加的图片超过限制的数量
-                        MessageUtil.showMessage(SelectPhotosActivity.this, String.format(SelectPhotosActivity.this.getString(R.string.select_too_many), TabPictureFragment.MAX_SELECT));
+                        MessageUtil.showMessage(SelectPhotosActivity.this, String.format(SelectPhotosActivity.this.getString(R.string.select_too_many), MAX_SELECT));
                     }
                 } else {
                     // 不是同时添加多张图片，添加完成关闭当前Activity
@@ -312,7 +315,7 @@ public class SelectPhotosActivity extends BaseActivity {
      * @param mediaData {@link MediaData#TYPE_VIDEO}类型的媒体数据
      */
     public void alertAddVideo(final MediaData mediaData) {
-        if(!mSelectedImages.isEmpty()) {
+        if(!mSelectedImages.isEmpty() || residue < MAX_SELECT) {
             if(selectVideoDialog == null) {
                 selectVideoDialog = new MyDialog(this, "", getString(R.string.will_remove_photos));
                 // 确认要选择视频

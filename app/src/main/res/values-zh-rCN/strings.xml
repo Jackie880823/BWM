@@ -534,8 +534,8 @@
     <string name="loves_count">%d 喜欢</string>
     <string name="notification_title_expand">新的消息</string>
     <string name="select_photos_or_video">选择照片或视频</string>
-    <string name="will_remove_photos">选择视频将会删除已经选择的图片！</string>
-    <string name="will_remove_selected_video">选择图片为删除已经选择的视频！</string>
+    <string name="will_remove_photos">选择视频将会删除已经选择的图片！继续？</string>
+    <string name="will_remove_selected_video">选择图片为删除已经选择的视频！继续？</string>
     <string name="text_all_select">全选</string>
     <string name="text_inverse_select">反选</string>
     <string name="text_delete">删除</string>
