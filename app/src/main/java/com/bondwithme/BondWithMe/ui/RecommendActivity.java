@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -105,7 +106,7 @@ public class RecommendActivity extends BaseActivity {
             llSelect.setVisibility(View.VISIBLE);
             rightButton.setVisibility(View.GONE);
             yearButton.setVisibility(View.VISIBLE);
-            yearButton.setTextSize(16);
+            yearButton.setTextSize(14);
             yearButton.setText(R.string.text_cancel);
             btnRemove.setText(R.string.text_delete);
         }else {
