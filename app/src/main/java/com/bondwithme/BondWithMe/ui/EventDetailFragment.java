@@ -349,7 +349,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         adapter.setCommentActionListener(new EventCommentAdapter.CommentActionListener() {
             @Override
             public void doLove(EventCommentEntity commentEntity, boolean love) {
-                doLoveComment(commentEntity, love);
+                 doLoveComment(commentEntity, love);
             }
 
             @Override
@@ -1197,7 +1197,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
      */
     private void doLoveComment(final EventCommentEntity commentEntity, final boolean love) {
 
-
+//        final boolean[] isSucceed = new boolean[1];
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("comment_id", commentEntity.getComment_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
@@ -1211,7 +1211,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             @Override
             public void onFinish() {
-
             }
 
             @Override
@@ -1221,7 +1220,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             @Override
             public void onError(Exception e) {
-
             }
 
             @Override

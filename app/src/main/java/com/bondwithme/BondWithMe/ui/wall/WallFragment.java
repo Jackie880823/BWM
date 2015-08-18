@@ -24,7 +24,6 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
@@ -37,7 +36,6 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -248,23 +246,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     private void finishReFresh() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
-    }
-
-    /**
-     * 显示Wall图片
-     *
-     * @param content_id {@link WallEntity#content_id}
-     */
-    @Override
-    public void showOriginalPic(String content_id) {
-        Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
-        Map<String, String> condition = new HashMap<>();
-        condition.put("content_id", content_id);
-        Map<String, String> params = new HashMap<>();
-        params.put("condition", UrlUtil.mapToJsonstring(condition));
-        String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
-        intent.putExtra("request_url", url);
-        startActivity(intent);
     }
 
     /**
