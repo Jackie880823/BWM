@@ -11,7 +11,6 @@
         android:id="@+id/media_display_rl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:gravity="center"
         android:layout_weight="1">
 
         <com.bondwithme.BondWithMe.widget.CustomGridView
@@ -21,6 +20,19 @@
             android:horizontalSpacing="2dp"
             android:numColumns="3"
             android:verticalSpacing="2dp"/>
+
+        <ImageView
+            android:id="@+id/delete_video_view"
+            android:layout_width="@dimen/default_small_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="@dimen/default_view_margin"
+            android:layout_marginTop="@dimen/default_view_margin"
+            android:background="@color/translucence_color"
+            android:contentDescription="@string/delete"
+            android:src="@drawable/x_delete_icon"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 
