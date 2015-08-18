@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MediaData;
@@ -18,6 +19,7 @@ import com.bondwithme.BondWithMe.ui.wall.TabPictureFragment;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
+import com.bondwithme.BondWithMe.widget.MyDialog;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,9 @@ public class SelectPhotosActivity extends BaseActivity {
 
     public static final String IMAGES_STR = "images";
     public static final String RESULT_MEDIA_TYPE = "result_media_type";
+    public static final String SELECTED_PHOTOS = "selected_photos";
+
+    public final static String RESIDUE = "residue";
 
     private SelectPhotosFragment fragment;
     private ArrayList<MediaData> mSelectedImages = new ArrayList<>();
@@ -59,7 +64,15 @@ public class SelectPhotosActivity extends BaseActivity {
      * 当前是否为浏览状态标识位
      */
     private boolean isPreview = false;
+    /**
+     * 当前选择的媒体数据
+     */
     private MediaData currentData;
+
+    /**
+     * 选择视频询问框，提示选择视频后将删除已经选择好的图片
+     */
+    private MyDialog selectVideoDialog;
 
     private SelectImageUirChangeListener listener = new SelectImageUirChangeListener() {
 
@@ -78,13 +91,7 @@ public class SelectPhotosActivity extends BaseActivity {
             boolean result = false;
             if(MediaData.TYPE_VIDEO.equals(mediaData.getType())) {
                 LogUtil.i(TAG, "addUri& uri: " + mediaData.getPath());
-                Intent intent = new Intent();
-                intent.putExtra(RESULT_MEDIA_TYPE, MediaData.TYPE_VIDEO);
-                intent.setType(MediaData.TYPE_VIDEO);
-                intent.setData(Uri.parse(mediaData.getPath()));
-                setResult(RESULT_OK, intent);
-                finish();
-                result = true;
+                alertAddVideo(mediaData);
             } else {
                 if(multi) {
                     if(mSelectedImages.size() < residue) {
@@ -241,7 +248,7 @@ public class SelectPhotosActivity extends BaseActivity {
         useVideo = intent.getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
 
         // 总共需要添加的图片数量
-        residue = intent.getIntExtra(TabPictureFragment.RESIDUE, 10);
+        residue = intent.getIntExtra(RESIDUE, 10);
         fragment.setSelectImageUirListener(listener);
     }
 
@@ -297,5 +304,52 @@ public class SelectPhotosActivity extends BaseActivity {
     @Override
     public boolean dispatchKeyShortcutEvent(@NonNull KeyEvent event) {
         return super.dispatchKeyShortcutEvent(event);
+    }
+
+    /**
+     * 传入为{@link MediaData#TYPE_VIDEO}弹出提示，选择了{@link MediaData#TYPE_VIDEO}将会删除已经选择好的{@link MediaData#TYPE_IMAGE}
+     *
+     * @param mediaData {@link MediaData#TYPE_VIDEO}类型的媒体数据
+     */
+    public void alertAddVideo(final MediaData mediaData) {
+        if(!mSelectedImages.isEmpty()) {
+            if(selectVideoDialog == null) {
+                selectVideoDialog = new MyDialog(this, "", getString(R.string.will_remove_photos));
+                // 确认要选择视频
+                selectVideoDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectVideoDialog.dismiss();
+                        mSelectedImages.clear();
+                        resultVideo(mediaData);
+                    }
+                });
+
+                // 不选择视频
+                selectVideoDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectVideoDialog.dismiss();
+                    }
+                });
+            }
+
+            selectVideoDialog.show();
+        } else {
+            resultVideo(mediaData);
+        }
+    }
+
+    /**
+     * 确定返回{@link MediaData#TYPE_VIDEO}的媒体数据
+     * @param mediaData 类型为{@link MediaData#TYPE_VIDEO}的{@link MediaData}
+     */
+    private void resultVideo(MediaData mediaData) {
+        Intent intent = new Intent();
+        intent.putExtra(RESULT_MEDIA_TYPE, MediaData.TYPE_VIDEO);
+        intent.setType(MediaData.TYPE_VIDEO);
+        intent.setData(Uri.parse(mediaData.getPath()));
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

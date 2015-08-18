@@ -597,4 +597,6 @@
 
     <string name="loves_count">%d Loves</string>
     <string name="select_photos_or_video">Select Photos or Video</string>
+    <string name="will_remove_photos">If select video will remove photos of selected!</string>
+    <string name="will_remove_selected_video">select photos will remove the selected video!</string>
 </resources>
