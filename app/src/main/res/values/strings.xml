@@ -538,7 +538,7 @@
     <string name="notification_title_expand">New Messages</string>
     <string name="select_photos_or_video">Select Photos or Video</string>
     <string name="text_all_select">Select All</string>
-    <string name="text_inverse_select">Inverse Select</string>
+    <string name="text_inverse_select">Select Inverse</string>
     <string name="text_delete">Delete</string>
     <string name="text_cancel_all">Cancel All</string>
 </resources>
