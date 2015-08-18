@@ -121,25 +121,37 @@
                 style="@style/split_line_default" />
         </LinearLayout>
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/connent_Rl"
         android:layout_width="match_parent"
-        android:layout_below="@+id/event_options"
-        android:layout_marginBottom="@dimen/_58dp"
-        android:layout_height="match_parent">
-        <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
-            android:id="@+id/swipe_archive_layout"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/event_options">
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            android:background="@android:color/white">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_event_comment_list"
+            <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+                android:id="@+id/swipe_archive_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/top_event"
-                android:scrollbars="vertical">
-            </android.support.v7.widget.RecyclerView>
-        </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
+                android:layout_height="wrap_content">
+                android:background="@android:color/white">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_event_comment_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/top_event"
+                    android:scrollbars="vertical">
+                </android.support.v7.widget.RecyclerView>
+            </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
+        </RelativeLayout>
+
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/test"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/_48dp">-->
+
+        <!--</RelativeLayout>-->
     </RelativeLayout>
 
     <com.bondwithme.BondWithMe.widget.SendComment

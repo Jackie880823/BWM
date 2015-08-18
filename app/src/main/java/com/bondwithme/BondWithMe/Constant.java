@@ -88,6 +88,16 @@ public class Constant {
     public static final String API_GET_PHOTO = API_SERVER + "/bondwithme/index.php/api/%s/%s/fid/profile";
 
     /**
+     * 获取视频的链接，两个参数：1.content_creator_id; 2.视频文件名称
+     */
+    public static final String API_GET_VIDEO = API_SERVER + "/bondwithme/index.php/api/video_preview/%s/fid/%s";
+
+    /**
+     * 获取视频小图的链接，两个参数：1.content_creator_id; 2.视频文件名称
+     */
+    public static final String API_GET_VIDEO_THUMBNAIL = API_SERVER + "/bondwithme/index.php/api/video_thumbnail/%s/fid/%s";
+
+    /**
      * for pic
      */
     public static final String Module_Original = "photo_original";//original uploaded size
@@ -126,6 +136,7 @@ public class Constant {
     public static final String API_BONDALERT_GROUP = API_SERVER + "/bondwithme/index.php/api/bondAlertList/%s/module/group";
     public static final String API_BONDALERT_GROUP_CONFIRM = API_SERVER + "/bondwithme/index.php/api/confirmJoinGroup/%s";
     public static final String API_BONDALERT_GROUP_REJECT = API_SERVER + "/bondwithme/index.php/api/rejectJoinGroup/%s";
+    public static final String API_BONDALERT_REMOVE_RECOMMEND = API_SERVER + "/bondwithme/index.php/api/removeRecomUser/";
 
     /**
      * Api for sticker store

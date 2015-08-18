@@ -27,7 +27,6 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -225,7 +224,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void initWallView(View wallView) {
 
-        holder = new WallHolder(wallView, mHttpTools, true);
+        holder = new WallHolder(getParentActivity(), wallView, mHttpTools, true);
     }
 
     private void initListHeadView(View listHeadView) {
@@ -282,8 +281,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             }
 
             @Override
-            public void onResult(String string) {
-                wall = new Gson().fromJson(string, WallEntity.class);
+            public void onResult(String response) {
+                LogUtil.i(TAG, "request& onResult# response: " + response);
+                wall = new Gson().fromJson(response, WallEntity.class);
             }
 
             @Override
@@ -706,32 +706,13 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     /**
-     * 显示Wall图片
-     *
-     * @param content_id {@link WallEntity#content_id}
-     */
-    @Override
-    public void showOriginalPic(String content_id) {
-        Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
-        Map<String, String> condition = new HashMap<>();
-        condition.put("content_id", content_id);
-        Map<String, String> params = new HashMap<>();
-        params.put("condition", UrlUtil.mapToJsonstring(condition));
-        String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
-        intent.putExtra("request_url", url);
-        startActivity(intent);
-    }
-
-    /**
      * 显示Wall详情包括评论
      *
      * @param content_group_id {@link WallEntity#content_group_id}
      * @param group_id         {@link WallEntity#group_id}
      */
     @Override
-    public void showComments(String content_group_id, String group_id) {
-
-    }
+    public void showComments(String content_group_id, String group_id) {}
 
 
     MyDialog removeAlertDialog;

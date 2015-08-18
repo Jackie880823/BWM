@@ -3,13 +3,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/drag_item_layout"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/_64dp"
     android:background="@android:color/white" >
 
     <ImageView
         android:id="@+id/iv_my_sticker"
-        android:layout_width="@dimen/_40dp"
-        android:layout_height="@dimen/_40dp"
+        android:layout_width="@dimen/_48dp"
+        android:layout_height="@dimen/_48dp"
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/default_content_padding"
         />
@@ -35,5 +35,8 @@
         android:layout_toRightOf="@id/iv_my_sticker"
         android:gravity="center_vertical"
         android:textSize="12sp" />
+
+    <View style="@style/split_line_default"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

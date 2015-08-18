@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">伴我玩</string>
-    <string name="title_tab_diary">日志</string>
+    <string name="title_tab_diary">日记</string>
     <string name="title_tab_chat">信息</string>
     <string name="title_tab_event">活动</string>
     <string name="title_tab_more">更多</string>
@@ -323,8 +323,8 @@
 
     <string name="text_upcoming_birthdays">生日即将来临</string>
     <string name="text_today_birthday">今天生日</string>
-    <string name="text_today_birthday_on"> 的生日在今天!</string>
-    <string name="text_upcoming_birthdays_on"> 的生日在</string>
+    <string name="text_today_birthday_on">&#160;的生日是今天!</string>
+    <string name="text_upcoming_birthdays_on">&#160;的生日是</string>
     <string name="text_d">天 </string>
     <string name="text_left">后</string>
 
@@ -583,6 +583,7 @@
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>
     <string name="text_archive_data">没有存档</string>
 
+<<<<<<< HEAD
     <string name="text_no_date_diary">未有动态通告</string>
     <string name="text_no_date_event">未有活动通告</string>
     <string name="text_no_date_bigday">未有大日子通告</string>
@@ -596,5 +597,25 @@
     <string name="loves_count">%d 喜欢</string>
     <string name="text_message_chat_post_audio">[音频]</string>
     <string name="text_message_chat_post_video">[视频]</string>
+=======
+
+    <string name="text_no_date_diary">暂无动态通告</string>
+    <string name="text_no_date_event">暂无活动通告</string>
+    <string name="text_no_date_bigday">暂无大日子通告</string>
+    <string name="text_no_date_miss">暂无想念通告</string>
+    <string name="text_no_date_news">暂无消息通告</string>
+    <string name="text_no_date_members">暂无成员通告</string>
+    <string name="text_no_date_recommended">暂无推荐通告</string>
+    <string name="text_no_date_group">暂无群组通告</string>
+
+    <string name="loves_count">%d 喜欢</string>
+    <string name="notification_title_expand">新的消息</string>
+    <string name="select_photos_or_video">选择照片或视频</string>
+    <string name="text_all_select">全选</string>
+    <string name="text_inverse_select">反选</string>
+    <string name="text_delete">删除</string>
+    <string name="text_cancel_all">取消全选</string>
+
+>>>>>>> 376dc906f348f20658e5e09c78a02e5391a4edf6
 
 </resources>

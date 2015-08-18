@@ -597,6 +597,15 @@
     <string name="text_hold_and_speak">按住说话</string>
 
     <string name="loves_count">%d Loves</string>
+<<<<<<< HEAD
     <string name="text_message_chat_post_audio">[音频]</string>
     <string name="text_message_chat_post_video">[视频]</string>
+=======
+    <string name="notification_title_expand">New Messages</string>
+    <string name="select_photos_or_video">Select Photos or Video</string>
+    <string name="text_all_select">Select All</string>
+    <string name="text_inverse_select">Inverse Select</string>
+    <string name="text_delete">Delete</string>
+    <string name="text_cancel_all">Cancel All</string>
+>>>>>>> 376dc906f348f20658e5e09c78a02e5391a4edf6
 </resources>

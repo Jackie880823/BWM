@@ -474,16 +474,20 @@ public class LocalImageLoader {
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             // scale
             int options = 100;
-            bitmap.compress(Bitmap.CompressFormat.PNG, options, os);
-
-            while (os.toByteArray().length / 1024 > maxSize && options > 30) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
+            int interval = 10;
+            while (os.toByteArray().length / 1024 > maxSize) {
                 // Clean up os
                 os.reset();
                 // interval 10
-                options -= 5;
-                if (options == 0)
+                if(options<=30&&interval==10){
+                    interval = 5;
+                }
+                options -= interval;
+                bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
+                if(options == 10){
                     break;
-                bitmap.compress(Bitmap.CompressFormat.PNG, options, os);
+                }
             }
 
             // Generate compressed image file
@@ -627,7 +631,7 @@ public class LocalImageLoader {
     public static byte[] bitmap2bytes(Bitmap bitmap) {
         if (bitmap != null) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             return baos.toByteArray();
         }
         return null;

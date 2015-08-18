@@ -8,7 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.Constant;
@@ -34,6 +36,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
     //begin
     public static final int CHOOSE_RELATION_CODE = 1;
     private int positionId;
+    private boolean isEditingMode;
 
     public int getPositionId() {
         return positionId;
@@ -73,9 +76,6 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
         VolleyUtil.initNetworkImageView(mContext, holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, recommendEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         holder.user_name.setText(recommendEntity.getUser_given_name());
 
-
-
-
         getDataEn();
         if (Locale.getDefault().toString().equals("zh_CN")) {
             isZh = true;
@@ -95,6 +95,18 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
         } else {
             holder.tvRelationshipWithMember.setText(recommendEntity.getUser_recommend() + mContext.getResources().getString(R.string.title_birthday_title_prefix2) +" "+ relationship);
         }
+
+        if (isEditingMode){
+            holder.recommend_relationship.setVisibility(View.INVISIBLE);
+            holder.cbRecommend.setVisibility(View.VISIBLE);
+            holder.cbRecommend.setChecked(recommendEntity.isSelected());
+        }else {
+            holder.cbRecommend.setVisibility(View.INVISIBLE);
+            holder.recommend_relationship.setVisibility(View.VISIBLE);
+        }
+
+        holder.itemView.setTag(data.get(position));
+
     }
 
     private List<String> getDataZh() {
@@ -122,17 +134,25 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
         return data.size();
     }
 
+    public void setEditingMode(boolean isEditingMode){
+        this.isEditingMode = isEditingMode;
+    }
 
-    class VHItem extends RecyclerView.ViewHolder {
+
+
+
+    public class VHItem extends RecyclerView.ViewHolder {
 
         private CircularNetworkImage owner_head;
         private TextView user_name;
         private TextView tvRelationshipWithMember;
         //begin
         private TextView recommend_relationship;
+        private CheckBox cbRecommend;
+
 
         //end
-        public VHItem(View itemView) {
+        public VHItem(final View itemView) {
             // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
             super(itemView);
 
@@ -141,7 +161,8 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
             tvRelationshipWithMember = (TextView) itemView.findViewById(R.id.tv_relationship_with_member);
             //begin
             recommend_relationship = (TextView) itemView.findViewById(R.id.recommend_relationship);
-            recommend_relationship.setOnClickListener(new View.OnClickListener() {
+            cbRecommend = (CheckBox) itemView.findViewById(R.id.cb_recommend);
+            recommend_relationship.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     setPositionId(getAdapterPosition());
@@ -152,8 +173,30 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
                 }
             });
 
+
+            itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mItemClcikListener != null && data != null){
+                        mItemClcikListener.itemClick(data.get(getAdapterPosition()),getAdapterPosition());
+                    }
+                }
+            });
+
             //end
         }
+
+
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.mItemClcikListener = itemClickListener;
+    }
+
+    public ItemClickListener mItemClcikListener;
+
+    public interface ItemClickListener {
+        void itemClick(RecommendEntity recommendEntity, int position);
     }
 
 

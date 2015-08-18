@@ -7,6 +7,8 @@ import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.ParcelFileDescriptor;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -98,7 +100,7 @@ public class ViewPDFActivity extends BaseActivity {
     /**
      * 一个SB的方法因为服务把pdf分开两个接口
      */
-    private void getPdfUrl(){
+    private void getPdfUrl() {
         vProgress.setVisibility(View.VISIBLE);
 //        mProgressDialog.show();
 //        new Thread() {
@@ -118,26 +120,15 @@ public class ViewPDFActivity extends BaseActivity {
 
             @Override
             public void onResult(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if ("Success".equals(jsonObject.getString("response_status"))) {
-                        String urlString = jsonObject.getString("filePath");
-                        if (!TextUtils.isEmpty(urlString)) {
-                            getPdf(urlString);
-                        }
-                    } else {
-                        MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
-                    }
-                } catch (Exception e) {
-                    MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
-                    e.printStackTrace();
-                }
+                Message msg = mHandler.obtainMessage();
+                msg.what = RECEIVE_PDF_INFO;
+                msg.obj = response;
+                mHandler.sendMessage(msg);
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
-                vProgress.setVisibility(View.GONE);
+                mHandler.sendEmptyMessage(REQUEST_ERROR);
             }
 
             @Override
@@ -280,6 +271,48 @@ public class ViewPDFActivity extends BaseActivity {
 
     }
 
+    private static final int REQUEST_ERROR = 9;
+    private static final int SHOW_PDF = 10;
+    private static final int RECEIVE_PDF_INFO = 11;
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case SHOW_PDF:
+                    String target = (String) msg.obj;
+                    vProgress.setVisibility(View.GONE);
+                    File file = new File(target);
+                    if (file.exists()) {
+                        showPDF(target);
+                    }
+                    break;
+                case RECEIVE_PDF_INFO:
+                    String response = (String) msg.obj;
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if ("Success".equals(jsonObject.getString("response_status"))) {
+                            String urlString = jsonObject.getString("filePath");
+                            if (!TextUtils.isEmpty(urlString)) {
+                                getPdf(urlString);
+                            }
+                        } else {
+                            MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+                        }
+                    } catch (Exception e) {
+                        MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+                        e.printStackTrace();
+                    }
+                    break;
+                case REQUEST_ERROR:
+                    MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
+                    vProgress.setVisibility(View.GONE);
+                    break;
+
+            }
+            return false;
+        }
+    });
+
     public void getPdf(String urlString) {
 
         final String target = FileUtil.getCacheFilePath(this) + String.format("/cache_%s.pdf", "" + System.currentTimeMillis());
@@ -292,11 +325,11 @@ public class ViewPDFActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                vProgress.setVisibility(View.GONE);
-                File file = new File(target);
-                if (file.exists()) {
-                    showPDF(target);
-                }
+                Message msg = mHandler.obtainMessage();
+                msg.what = SHOW_PDF;
+                msg.obj = target;
+                mHandler.sendMessage(msg);
+
             }
 
             @Override
@@ -319,8 +352,8 @@ public class ViewPDFActivity extends BaseActivity {
             @Override
             public void onError(Exception e) {
 //                mProgressDialog.dismiss();
-                MessageUtil.showMessage(ViewPDFActivity.this, R.string.msg_action_failed);
-                vProgress.setVisibility(View.GONE);
+                mHandler.sendEmptyMessage(REQUEST_ERROR);
+
             }
 
             @Override
@@ -433,8 +466,12 @@ public class ViewPDFActivity extends BaseActivity {
             if (null != mCurrentPage) {
                 mCurrentPage.close();
             }
-            mPdfRenderer.close();
-            mFileDescriptor.close();
+            if(mPdfRenderer!=null) {
+                mPdfRenderer.close();
+            }
+            if(mFileDescriptor!=null) {
+                mFileDescriptor.close();
+            }
         }
     }
 
@@ -458,7 +495,7 @@ public class ViewPDFActivity extends BaseActivity {
 
 
             int width = mCurrentPage.getWidth();
-            int height =mCurrentPage.getHeight();
+            int height = mCurrentPage.getHeight();
 
             // Important: the destination bitmap must be ARGB (not RGB).
             Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -497,7 +534,6 @@ public class ViewPDFActivity extends BaseActivity {
     public int getPageCount() {
         return mPdfRenderer.getPageCount();
     }
-
 
 
 }
