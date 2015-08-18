@@ -31,7 +31,6 @@ import com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.jpush.android.api.JPushInterface;
@@ -171,7 +170,13 @@ public class NotificationUtil {
 
         Notification notification = getNotification(context, isGCM, msg);
         if (notification != null) {
-            getNotivficationManager(context).notify(msgType.ordinal(), notification);
+//            if(msgs.size()==1) {
+//                getNotivficationManager(context).notify(0, notification);
+//            }else{
+//                getNotivficationManager(context).cancel(0);
+            getNotivficationManager(context).notify(1, notification);
+//            }
+//            getNotivficationManager(context).notify(msgType.ordinal(), notification);
         }
 
     }
@@ -191,15 +196,11 @@ public class NotificationUtil {
     private static Intent intentGroup;
 
 
-    /**
-     * 测试
-     */
-    private static Intent intent;
-
-    private static Intent getFowwordIntent(Context context, Bundle msg, boolean isGCM) throws JSONException {
+    private static Intent getFowwordIntent(Context context, Bundle msg, boolean isGCM,List msgs) throws JSONException {
         if (msg == null) {
             return null;
         }
+        Intent intent = null;
         JSONObject jsonObjectExtras = null;
         String msgString = null;
 
@@ -228,7 +229,7 @@ public class NotificationUtil {
             return null;
         }
 
-        if (intent == null) {
+        if (msgs.size() == 0) {
 //        Intent intent = null;
             switch (msgType) {
                 case BONDALERT_WALL:
@@ -332,8 +333,9 @@ public class NotificationUtil {
     }
 
     private static Notification getNotification(Context context, boolean isGCM, Bundle msg) throws JSONException {
+        List<String> msgs = App.getContextInstance().getNotificaationList();
         PendingIntent contentIntent = null;
-        intent = getFowwordIntent(context, msg, isGCM);
+        Intent intent = getFowwordIntent(context, msg, isGCM, msgs);
         if (intent != null) {
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -358,12 +360,12 @@ public class NotificationUtil {
         }
 
         msgs.add(message);
-        if (msgs.size() == 1) {
-            notification = getSingleNotification(context, contentIntent, title);
-        } else {
-            notification = getInboxStyleNotification(context, contentIntent, title);
-        }
-        if(notification!=null) {
+//        if (msgs.size() == 1) {
+//            notification = getSingleNotification(context, contentIntent, title);
+//        } else {
+        notification = getInboxStyleNotification(context, contentIntent, title,msgs);
+//        }
+        if (notification != null) {
             notification.priority = Notification.PRIORITY_HIGH;
             notification.defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS;
         }
@@ -429,9 +431,8 @@ public class NotificationUtil {
      */
     private static final int MAX_SHOW = 3;
     private static final String FLAG_SINGLE_MSG = "single_msg";
-    private static List<String> msgs = new ArrayList<>();
 
-    private static Notification getSingleNotification(Context context, PendingIntent contentIntent, String title) {
+    private static Notification getSingleNotification(Context context, PendingIntent contentIntent, String title,List<String> msgs) {
         if (msgs.size() < 1) {
             return null;
         }
@@ -459,7 +460,7 @@ public class NotificationUtil {
         return mBuilder.build();
     }
 
-    private static Notification getInboxStyleNotification(Context context, PendingIntent resultPendingIntent, String title) {
+    private static Notification getInboxStyleNotification(Context context, PendingIntent resultPendingIntent, String title,List<String> msgs) {
 
         // Create the style object with InboxStyle subclass.
         NotificationCompat.InboxStyle notiStyle = new NotificationCompat.InboxStyle();
@@ -504,9 +505,10 @@ public class NotificationUtil {
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
                 .setContentIntent(resultPendingIntent)
                 .setContentTitle(title)
-                .setContentText(msgs.get(msgs.size()-1))
+                .setContentText(msgs.get(msgs.size() - 1))
+                .setGroupSummary(true)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setStyle(notiStyle).build();
-//                .setSmallIcon(R.drawable.ic_launcher)
 //                .addAction(R.drawable.ic_launcher, "One", resultPendingIntent)
 //                .addAction(R.drawable.ic_launcher, "Two", resultPendingIntent)
 //                .addAction(R.drawable.ic_launcher, "Three", resultPendingIntent)
