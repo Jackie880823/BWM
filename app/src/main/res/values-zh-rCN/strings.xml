@@ -429,8 +429,6 @@
     <string name="text_admin">管理员</string>
     <string name="text_check_in_a_location">签到</string>
 
-    <string name="text_post_and">幸福就是与您的亲人联络感情！</string>
-    <string name="text_event_now">别等了，现在就组织活动吧！</string>
     <string name="text_archive">存档</string>
     <string name="text_group_posting">群组发布</string>
     <string name="text_private_posting">私人发布</string>
@@ -490,7 +488,7 @@
     <string name="text_start_cancle">取消</string>
     <string name="text_start_no_changes_found">没有更改。</string>
     <string name="text_more_setting_current_version">当前版本</string>
-    <string name="text_msg_start_bonding">开始聊天吧!</string>
+    <string name="text_msg_start_bonding">免费聊天，轻轻松松，伴我玩。</string>
 
     <string name="text_confirm_relation">确定要将此成员添加为您的</string>
 
@@ -543,4 +541,12 @@
     <string name="text_delete">删除</string>
     <string name="text_cancel_all">取消全选</string>
 
+    <string name="text_evnt_empty_happ_with">幸福就是</string>
+    <string name="text_evnt_empty_love_one">与您的亲人联络感情！</string>
+    <string name="text_evnt_empty_dont_now">别等了，现在就组织活动吧！</string>
+    <string name="text_empty_add_member_notlone">你不是孤独的。</string>
+    <string name="text_empty_add_member_startbond">轻按"＋"符号添加成员吧！</string>
+    <string name="text_empty_add_group_newgroup">轻按"+"创建新群组 </string>
+    <string name="text_empty_add_group_loveone">与您的亲人促进感情吧！</string>
+    <string name="text_message_break_ice">将冰山劈开！</string>
 </resources>

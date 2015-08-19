@@ -36,6 +36,7 @@ public class SelectPhotosActivity extends BaseActivity {
     public static final String IMAGES_STR = "images";
     public static final String RESULT_MEDIA_TYPE = "result_media_type";
     public static final String SELECTED_PHOTOS = "selected_photos";
+    public static final String RESULT_VIDEO_DURATION = "duration";
 
     public final static String RESIDUE = "residue";
     /**
@@ -350,6 +351,7 @@ public class SelectPhotosActivity extends BaseActivity {
     private void resultVideo(MediaData mediaData) {
         Intent intent = new Intent();
         intent.putExtra(RESULT_MEDIA_TYPE, MediaData.TYPE_VIDEO);
+        intent.putExtra(RESULT_VIDEO_DURATION, mediaData.getDuration());
         intent.setType(MediaData.TYPE_VIDEO);
         intent.setData(Uri.parse(mediaData.getPath()));
         setResult(RESULT_OK, intent);

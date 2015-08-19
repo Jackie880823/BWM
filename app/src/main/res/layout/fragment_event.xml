@@ -4,71 +4,59 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-<FrameLayout
+<RelativeLayout
     android:id="@+id/eventStart"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="invisible">
-    <LinearLayout
-        android:id="@+id/test"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/Post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/_60dp"
-            android:paddingLeft="@dimen/_40dp"
-            android:text="@string/text_post_and"
-            android:textSize="30dp"/>
-        <TextView
-            android:id="@+id/now"
-            android:layout_alignBottom="@+id/Post"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/_40dp"
-            android:text="@string/text_event_now"
-            android:textSize="30dp"/>
-        <ImageView
-            android:layout_alignBottom="@+id/now"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/_20dp"
-            android:src="@drawable/event_startup"/>
-    </LinearLayout>
-    <LinearLayout
+    android:visibility="gone">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/noevet_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/event_noevent"/>
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/test"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="20">
-
-        </LinearLayout>
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_weight="25">
-            <ImageView
+            android:layout_below="@+id/noevet_img"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/happ_text"
+                style="@style/text_empty_pages"
+                android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:src="@drawable/arrow_pointer"/>
-        </RelativeLayout>
+                android:text="@string/text_evnt_empty_happ_with"/>
+            <TextView
+                style="@style/text_empty_pages"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_evnt_empty_love_one"/>
+            <TextView
+                style="@style/text_empty_pages"
+                android:layout_marginBottom="@dimen/_32dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_evnt_empty_dont_now"/>
+        </LinearLayout>
+    </RelativeLayout>
 
-
-    </LinearLayout>
-    </FrameLayout>
+    </RelativeLayout>
     <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/default_content_padding"
         android:paddingRight="@dimen/default_content_padding"
-        android:paddingTop="@dimen/default_view_margin">
+        android:paddingTop="@dimen/default_view_margin"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
