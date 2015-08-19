@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -27,6 +28,7 @@ public class BigDayActivity extends BaseActivity {
     private RecyclerView rvList;
     private BondAlertBigDayAdapter bondAlertBigDayAdapter;
     private List<BigDayEntity> data = new ArrayList<>();
+    private TextView tvNoDate;
 
 
     public int getLayout() {
@@ -64,6 +66,8 @@ public class BigDayActivity extends BaseActivity {
     public void initView() {
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
+        tvNoDate = getViewById(R.id.tv_no_data_display);
+
         rvList = getViewById(R.id.rvList);
         rvList.setLayoutManager(new LinearLayoutManager(this));
         initAdapter();
@@ -89,11 +93,13 @@ public class BigDayActivity extends BaseActivity {
                 Gson gson = gsonb.create();
                 data = gson.fromJson(response, new TypeToken<ArrayList<BigDayEntity>>() {}.getType());
 
-
-
                 if (data != null)
                 {
                     initAdapter();
+                }
+
+                if (data.isEmpty() && !BigDayActivity.this.isFinishing()){
+                    tvNoDate.setText(getResources().getString(R.string.text_no_date_bigday));
                 }
             }
 

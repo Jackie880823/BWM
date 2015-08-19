@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.task;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.material.widget.CircularProgress;
 
@@ -16,8 +18,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -215,6 +219,54 @@ public class DownloadStickerTask {
             fos.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void downloadAudioFile(Context mContext, String audioSendId, String fileName) {
+        final String path = FileUtil.getAudioRootPath(mContext) + File.separator + fileName;
+        File file = new File(path);
+        if (file.exists()) {
+            return;
+        }
+        final String url = String.format(Constant.API_MESSAGE_DOWNLOAD_AUDIO, audioSendId, fileName);
+        AsyncTask task = new AsyncTask<Object, Void, Void>() {
+            @Override
+            protected Void doInBackground(Object... params) {
+                OutputStream os = null;
+                InputStream is = null;
+                try {
+                    URLConnection con = null;
+                    con = new URL(url).openConnection();
+                    is = con.getInputStream();
+                    byte[] bs = new byte[1024];
+                    int len;
+                    os = new FileOutputStream(path);
+                    // 开始读取
+                    while ((len = is.read(bs)) != -1) {
+                        os.write(bs, 0, len);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (os != null) {
+                            os.flush();
+                            os.close();
+                        }
+                        if (is != null) {
+                            is.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        };
+        if (SDKUtil.IS_HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            task.execute();
         }
     }
 }

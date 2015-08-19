@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MessageChatActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 
@@ -22,7 +22,9 @@ import java.util.List;
 
 /**
  * @的分组详细的Adapter
- * Created by zhuweiping on 4/28/15.
+ * Created by Jackie on 4/28/15.
+ * @author Jackie
+ * @version 1.0
  */
 public class WallGroupAdapter extends RecyclerView.Adapter<WallGroupAdapter.MGItem>{
 
@@ -117,7 +119,7 @@ public class WallGroupAdapter extends RecyclerView.Adapter<WallGroupAdapter.MGIt
                     int position = getAdapterPosition();
                     GroupEntity groupEntity = mData.get(position);
                     String group_flag = groupEntity.getGroup_flag();
-                    Log.i(TAG, "onClick& position: " + position + "; group_flag = " + group_flag);
+                    LogUtil.i(TAG, "onClick& position: " + position + "; group_flag = " + group_flag);
                     if("0".equals(group_flag)) {
                         // 不在此分组中弹出提示
                         final MyDialog myDialog = new MyDialog(mContext, "", mContext.getString(R.string.alert_no_join_group));

@@ -193,8 +193,8 @@ public class MessageAction {
         });
     }
 
-    private class SortExpertsTeamDate implements Comparator<MsgEntity> {
-        private SortExpertsTeamDate() {
+    public static class SortExpertsTeamDate implements Comparator<MsgEntity> {
+        public SortExpertsTeamDate() {
         }
 
         @Override

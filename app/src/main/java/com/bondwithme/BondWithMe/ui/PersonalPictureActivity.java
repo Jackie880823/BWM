@@ -25,7 +25,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
@@ -106,18 +106,18 @@ public class PersonalPictureActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (PersonalPictureActivity.RESULT_OK == resultCode) {
+        if(PersonalPictureActivity.RESULT_OK == resultCode) {
 
-            switch (requestCode) {
+            switch(requestCode) {
                 // 如果是直接从相册获取
                 case REQUEST_HEAD_PHOTO:
-                    if (data != null) {
+                    if(data != null) {
 
                         Uri uri;
                         uri = data.getData();
                         try {
                             startPhotoZoom(uri, false);
-                        } catch (IOException e) {
+                        } catch(IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -126,10 +126,10 @@ public class PersonalPictureActivity extends BaseActivity {
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(PersonalPictureActivity.this, CACHE_PIC_NAME_TEMP));
-                    if (new File(uri.getPath()).exists()) {
+                    if(new File(uri.getPath()).exists()) {
                         try {
                             startPhotoZoom(uri, false);
-                        } catch (IOException e) {
+                        } catch(IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -138,20 +138,20 @@ public class PersonalPictureActivity extends BaseActivity {
 
                 // 取得裁剪后的图片
                 case REQUEST_HEAD_FINAL:
-                    if (data != null) {
+                    if(data != null) {
                         Bitmap photo;
                         try {
                             imagePath = mCropImagedUri.getPath();
-                            if (!TextUtils.isEmpty(imagePath)) {
-//								photo = MediaStore.Images.Media.getBitmap(getContentResolver(), mCropImagedUri);
+                            if(!TextUtils.isEmpty(imagePath)) {
+                                //								photo = MediaStore.Images.Media.getBitmap(getContentResolver(), mCropImagedUri);
                                 BitmapFactory.Options options = new BitmapFactory.Options();
                                 options.inPreferredConfig = Bitmap.Config.RGB_565;
                                 photo = BitmapFactory.decodeStream(PersonalPictureActivity.this.getContentResolver().openInputStream(mCropImagedUri), null, options);
-                                if (photo != null) {
+                                if(photo != null) {
                                     setPicToView(photo);
                                 }
                             }
-                        } catch (FileNotFoundException e) {
+                        } catch(FileNotFoundException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
@@ -175,7 +175,7 @@ public class PersonalPictureActivity extends BaseActivity {
      */
     public void startPhotoZoom(Uri uri, boolean fromPhoto) throws IOException {
 
-        if (uri == null || uri.getPath() == null) {
+        if(uri == null || uri.getPath() == null) {
             return;
         }
 
@@ -188,21 +188,19 @@ public class PersonalPictureActivity extends BaseActivity {
          */
         int degree = LocalImageLoader.readPictureDegree(uri.getPath());
 
-        if (degree != 0) {
+        if(degree != 0) {
             /**
              * 把图片旋转为正的方向
              */
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
-            Bitmap bitmap = BitmapFactory.decodeStream(
-                    new FileInputStream(uri.getPath()), null, options);
+            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(uri.getPath()), null, options);
             options.inSampleSize = 4;
             options.outWidth = width;
             options.outHeight = height;
             options.inJustDecodeBounds = false;
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            bitmap = BitmapFactory.decodeStream(
-                    new FileInputStream(uri.getPath()), null, options);
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(uri.getPath()), null, options);
             bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
             byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
             File file = new File(uri.getPath());
@@ -220,7 +218,7 @@ public class PersonalPictureActivity extends BaseActivity {
         intent.setDataAndType(uri, "image/*");
         List<ResolveInfo> list = PersonalPictureActivity.this.getPackageManager().queryIntentActivities(intent, 0);
         int size = list.size();
-        if (size == 0) {
+        if(size == 0) {
             Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_no_found_reduce), Toast.LENGTH_SHORT).show();
             return;
         } else {
@@ -238,7 +236,7 @@ public class PersonalPictureActivity extends BaseActivity {
             // intent.putExtra("scaleUpIfNeeded", true);//黑边
 
             intent.putExtra("return-data", false);
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+            intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
             intent.putExtra("noFaceDetection", true);
 
             //		if(fromPhoto){
@@ -258,7 +256,7 @@ public class PersonalPictureActivity extends BaseActivity {
      * @param photo
      */
     private void setPicToView(Bitmap photo) {
-        if (photo != null) {
+        if(photo != null) {
             ivPhone.setImageBitmap(photo);
         }
     }
@@ -324,9 +322,9 @@ public class PersonalPictureActivity extends BaseActivity {
                 //TODO
                 Intent intent = new Intent(PersonalPictureActivity.this, MainActivity.class);
                 /**wing modified for clear activity stacks*/
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                ComponentName cn = intent.getComponent();
-//                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                //                ComponentName cn = intent.getComponent();
+                //                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
                 App.changeLoginedUser(userEntity, appTokenEntity);
                 startActivity(intent);
                 /**wing modified for clear activity stacks*/
@@ -339,7 +337,7 @@ public class PersonalPictureActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if (!NetworkUtil.isNetworkConnected(PersonalPictureActivity.this)) {
+                if(!NetworkUtil.isNetworkConnected(PersonalPictureActivity.this)) {
                     Toast.makeText(PersonalPictureActivity.this, getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -348,7 +346,6 @@ public class PersonalPictureActivity extends BaseActivity {
             }
         });
     }
-
 
 
     @Override
@@ -364,15 +361,15 @@ public class PersonalPictureActivity extends BaseActivity {
 
     private void uploadImage() {
 
-        if (mCropImagedUri == null) {
+        if(mCropImagedUri == null) {
             return;
         }
 
         String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mCropImagedUri), 480, 800, false);
         File file = new File(path);
 
-//        File f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
-        if (!file.exists()) {
+        //        File f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
+        if(!file.exists()) {
             return;
         }
 
@@ -386,7 +383,7 @@ public class PersonalPictureActivity extends BaseActivity {
         params.put("file", file);
         params.put("user_id", userEntity.getUser_id());
 
-        new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, this,new HttpCallback() {
+        new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, this, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -403,16 +400,16 @@ public class PersonalPictureActivity extends BaseActivity {
                     String responseStatus;
                     JSONObject jsonObject = new JSONObject(response);
                     responseStatus = jsonObject.getString("response_status");
-                    if ("Fail".equals(responseStatus)) {
+                    if("Fail".equals(responseStatus)) {
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_updateProPicFail), Toast.LENGTH_SHORT).show();
-                    } else if ("Success".equals(responseStatus)) {
+                    } else if("Success".equals(responseStatus)) {
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(PersonalPictureActivity.this, MainActivity.class);
                         /**wing modified for clear activity stacks*/
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                        ComponentName cn = intent.getComponent();
-//                        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        //                        ComponentName cn = intent.getComponent();
+                        //                        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
                         App.changeLoginedUser(userEntity, appTokenEntity);//可能会传入没有数据的???
                         startActivity(intent);
                         /**wing modified for clear activity stacks*/
@@ -420,7 +417,7 @@ public class PersonalPictureActivity extends BaseActivity {
                         Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                     }
 
-                } catch (Exception e) {
+                } catch(Exception e) {
                     Toast.makeText(PersonalPictureActivity.this, getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
@@ -444,23 +441,23 @@ public class PersonalPictureActivity extends BaseActivity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
-            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+        if(KeyEvent.KEYCODE_BACK == event.getKeyCode()) {
+            if(event.getAction() == KeyEvent.ACTION_DOWN) {
                 /**wing modified for clear activity stacks*/
                 Intent intent = new Intent(PersonalPictureActivity.this, MainActivity.class);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                ComponentName cn = intent.getComponent();
-//                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+                //                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                //                ComponentName cn = intent.getComponent();
+                //                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
                 App.changeLoginedUser(userEntity, appTokenEntity);
                 startActivity(intent);
 
-//                Intent intentToBeNewRoot = new Intent(this, MainActivity.class);
-//                ComponentName cn = intentToBeNewRoot.getComponent();
-//                App.changeLoginedUser(userEntity, appTokenEntity);
-//                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-//
-//                startActivity(mainIntent);
-//                finish();
+                //                Intent intentToBeNewRoot = new Intent(this, MainActivity.class);
+                //                ComponentName cn = intentToBeNewRoot.getComponent();
+                //                App.changeLoginedUser(userEntity, appTokenEntity);
+                //                Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+                //
+                //                startActivity(mainIntent);
+                //                finish();
                 /**wing modified for clear activity stacks*/
             }
         }

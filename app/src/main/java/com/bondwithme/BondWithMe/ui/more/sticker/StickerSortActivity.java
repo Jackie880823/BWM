@@ -56,7 +56,6 @@ public class StickerSortActivity extends BaseActivity {
     @Override
     protected void titleRightEvent() {
         changeOrder();
-
     }
 
     private void changeOrder() {

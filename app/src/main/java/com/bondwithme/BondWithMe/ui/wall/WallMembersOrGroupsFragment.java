@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallGroupAdapter;
@@ -21,8 +19,13 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.WallUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,8 +45,12 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
     private final static String GET_DETAIL = TAG + "_GET_DETAIL";
 
     private String content_group_id;
-    private String user_id;
-    private String group_id;
+//    private String user_id;
+//    private String group_id;
+
+    private String viewer_id;
+    private String refer_id;
+    private String type;
 
     private RecyclerView rvList;
     private RecyclerView.Adapter adapter;
@@ -52,7 +59,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
 
 
     public static WallMembersOrGroupsFragment newInstance(String... params) {
-        Log.i(TAG, "createInstance");
+        LogUtil.i(TAG, "createInstance");
         return createInstance(new WallMembersOrGroupsFragment(), params);
     }
 
@@ -65,9 +72,15 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
     public void initView() {
 
         try {
-            getActivity().getIntent().getAction();
-            content_group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
-            group_id = getArguments().getString(ARG_PARAM_PREFIX + "2");
+            String action = getActivity().getIntent().getAction();
+            if(!Constant.ACTION_SHOW_LOVED_USER.equals(action)) {
+                content_group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
+//                group_id = getArguments().getString(ARG_PARAM_PREFIX + "2");
+            } else {
+                viewer_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
+                refer_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
+                type = getArguments().getString(ARG_PARAM_PREFIX + "2");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,11 +92,20 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
 
     @Override
     public void requestData() {
-        HashMap<String, String> pparams = new HashMap<String, String>();
-        pparams.put("content_group_id", content_group_id);
-        pparams.put("user_id", MainActivity.getUser().getUser_id());
+        HashMap<String, String> pparams = new HashMap<>();
+        String url;
+        if(!Constant.ACTION_SHOW_LOVED_USER.equals(getActivity().getIntent().getAction())) {
+            url = Constant.API_WALL_DETAIL;
+            pparams.put("content_group_id", content_group_id);
+            pparams.put("user_id", MainActivity.getUser().getUser_id());
+        } else {
+            url = Constant.API_WALL_GET_LOVE_MEMBER_LIST;
+            pparams.put(WallUtil.GET_LOVE_LIST_VIEWER_ID, viewer_id);
+            pparams.put(WallUtil.GET_LOVE_LIST_REFER_ID, refer_id);
+            pparams.put(WallUtil.GET_LOVE_LIST_TYPE, type);
+        }
 
-        new HttpTools(getActivity()).get(Constant.API_WALL_DETAIL, pparams, GET_DETAIL, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, pparams, GET_DETAIL, new HttpCallback() {
 
             @Override
             public void onStart() {
@@ -97,13 +119,18 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
 
             @Override
             public void onResult(String response) {
-                WallEntity wall = new Gson().fromJson(response, WallEntity.class);
-                if(Constant.ACTION_SHOW_NOTIFY_GROUP.equals(getActivity().getIntent().getAction())){
-                    groupEntities = wall.getTag_group();
-                    adapter = new WallGroupAdapter(getActivity(), groupEntities);
-                } else {
-                    userEntities = wall.getTag_member();
+                if(Constant.ACTION_SHOW_LOVED_USER.equals(getActivity().getIntent().getAction())){
+                    userEntities = new Gson().fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
                     adapter = new WallMemberAdapter(getActivity(), userEntities, WallMembersOrGroupsFragment.this);
+                } else {
+                    WallEntity wall = new Gson().fromJson(response, WallEntity.class);
+                    if(Constant.ACTION_SHOW_NOTIFY_GROUP.equals(getActivity().getIntent().getAction())) {
+                        groupEntities = wall.getTag_group();
+                        adapter = new WallGroupAdapter(getActivity(), groupEntities);
+                    } else {
+                        userEntities = wall.getTag_member();
+                        adapter = new WallMemberAdapter(getActivity(), userEntities, WallMembersOrGroupsFragment.this);
+                    }
                 }
                 rvList.setAdapter(adapter);
             }
@@ -140,7 +167,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i(TAG, "onActivityResult& requestCode = " + requestCode);
+        LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode);
         if (resultCode == Activity.RESULT_OK) {
             MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
             //                    startIndex = 0;
@@ -157,7 +184,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
      */
     @Override
     public void onDestroy() {
-        Log.i(TAG, "onDestroy");
+        LogUtil.i(TAG, "onDestroy");
         super.onDestroy();
 
         // 取消获取群组或者用户列表的网络请求

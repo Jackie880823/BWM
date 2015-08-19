@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -42,8 +43,9 @@ public class AlertGroupActivity extends BaseActivity{
 
     private RecyclerView rvList;
     private LinearLayoutManager llm;
-
     private List<AlertGroupEntity> data = new ArrayList<>();
+    private TextView tvNoDate;
+
 
     public int getLayout() {
         return R.layout.activity_news;
@@ -80,6 +82,7 @@ public class AlertGroupActivity extends BaseActivity{
     public void initView() {
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
+        tvNoDate = getViewById(R.id.tv_no_data_display);
 
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
@@ -260,6 +263,10 @@ public class AlertGroupActivity extends BaseActivity{
                 data = gson.fromJson(string, new TypeToken<ArrayList<AlertGroupEntity>>() {
                 }.getType());
 
+
+                if (data.isEmpty() && !AlertGroupActivity.this.isFinishing()){
+                    tvNoDate.setText(getResources().getString(R.string.text_no_date_group));
+                }
                 initAdapter();
 
             }

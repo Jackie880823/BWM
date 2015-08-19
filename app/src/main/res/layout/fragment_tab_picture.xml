@@ -1,21 +1,39 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/default_text_color_while"
-    android:orientation="vertical"
-    android:padding="@dimen/default_content_padding"
-    tools:context="com.bondwithme.BondWithMe.ui.wall.TabPictureFragment">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/default_text_color_while"
+              android:orientation="vertical"
+              android:padding="@dimen/default_content_padding"
+              tools:context="com.bondwithme.BondWithMe.ui.wall.TabPictureFragment">
 
-    <com.bondwithme.BondWithMe.widget.CustomGridView
-        android:id="@+id/gv_pictures"
+    <RelativeLayout
+        android:id="@+id/media_display_rl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:horizontalSpacing="2dp"
-        android:numColumns="3"
-        android:verticalSpacing="2dp" />
+        android:layout_weight="1">
 
+        <com.bondwithme.BondWithMe.widget.CustomGridView
+            android:id="@+id/gv_pictures"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:horizontalSpacing="2dp"
+            android:numColumns="3"
+            android:verticalSpacing="2dp"/>
+
+        <ImageView
+            android:id="@+id/delete_video_view"
+            android:layout_width="@dimen/default_small_button_width_height"
+            android:layout_height="@dimen/default_small_button_width_height"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/translucence_color"
+            android:contentDescription="@string/delete"
+            android:scaleType="centerInside"
+            android:src="@drawable/x_delete_icon"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,8 +43,8 @@
         <LinearLayout
             android:id="@+id/ll_to_photo"
             android:layout_width="@dimen/_0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@null"
             android:gravity="center"
             android:padding="@dimen/default_content_padding">
@@ -34,23 +52,23 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="@dimen/_5dp"
                 android:background="@null"
-                android:src="@drawable/message_album" />
+                android:paddingRight="@dimen/_5dp"
+                android:src="@drawable/message_album"/>
 
             <TextView
                 style="@style/text_dark_default"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/_5dp"
-                android:text="@string/text_album" />
+                android:text="@string/text_album"/>
         </LinearLayout>
 
 
         <View
             style="@style/split_line_default"
             android:layout_width="@dimen/default_line_height"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <LinearLayout
             android:id="@+id/ll_to_camera"
@@ -64,17 +82,17 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="@dimen/_5dp"
                 android:background="@null"
-                android:src="@drawable/message_camera" />
+                android:paddingRight="@dimen/_5dp"
+                android:src="@drawable/message_camera"/>
 
             <TextView
                 style="@style/text_dark_default"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_5dp"
                 android:background="@null"
-                android:text="@string/text_camera" />
+                android:paddingLeft="@dimen/_5dp"
+                android:text="@string/text_camera"/>
         </LinearLayout>
 
     </LinearLayout>

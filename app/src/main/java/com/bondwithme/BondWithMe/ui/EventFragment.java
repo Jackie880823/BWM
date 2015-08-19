@@ -6,7 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -21,14 +21,6 @@ import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.bondwithme.BondWithMe.Constant;
-import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.adapter.EventAdapter;
-import com.bondwithme.BondWithMe.entity.BirthdayEntity;
-import com.bondwithme.BondWithMe.entity.EventEntity;
-import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -78,7 +70,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
     private EventAdapter adapter;
     public List<EventEntity> data = new ArrayList<EventEntity>();
     public List<BirthdayEntity> birthdayEvents = new ArrayList<BirthdayEntity>();
-    private FrameLayout eventStart;
+    private RelativeLayout eventStart;
 
     private MySwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
@@ -232,6 +224,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                             Intent intent = new Intent(getActivity(), EventDetailActivity.class);
 //                            intent.putExtra("event", eventEntity);
                             intent.putExtra("group_id", eventEntity.getGroup_id());
+                            intent.putExtra("Content_group_id",eventEntity.getContent_group_id());
                             startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
 //                            requestData();
 //                            }

@@ -10,31 +10,67 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by Jackie Zhu on 5/29/15.
+ *
+ * @author Jackie
+ * @version 1.0
  */
 public class WallUtil {
     private static final String TAG = WallUtil.class.getSimpleName();
 
     /**
-     * @群组的正则表达
+     * @ 群组的正则表达
      */
     public static final String AT_GROUPS = "@%1$sgroups";
     /**
-     * @用户的正则表达
+     * @ 用户的正则表达
      */
     public static final String AT_MEMBER = "@%1$smembers";
+
+    /**
+     * Wall中已赞会员类型
+     */
+    public static final String LOVE_MEMBER_WALL_TYPE = "wall";
+
+    /**
+     * 评论中已赞会员类型
+     */
+    public static final String LOVE_MEMBER_COMMENT_TYPE = "comment";
+
+    /**
+     * 当前用户ID {@link WallEntity#user_id}
+     */
+    public static final String GET_LOVE_LIST_VIEWER_ID = "viewer_id";
+
+    /**
+     * 日志拿content_id {@link WallEntity#content_id} / 评论拿comment_id {@link WallCommentEntity#comment_id}
+     */
+    public static final String GET_LOVE_LIST_REFER_ID = "refer_id";
+
+    /**
+     * 赞的模块属性 日志是 {@link WallUtil#LOVE_MEMBER_COMMENT_TYPE} / 评论是 {@link WallUtil#LOVE_MEMBER_WALL_TYPE}
+     */
+    public static final String GET_LOVE_LIST_TYPE = "type";
 
     private static Long lastClickTimeMills = 0L;
 
@@ -72,7 +108,7 @@ public class WallUtil {
                 @Override
                 public void onClick(View widget) {
                     if(mViewClickListener != null) {
-                        Log.i(TAG, "onClick& mViewClickListener not null showMembers");
+                        LogUtil.i(TAG, "onClick& mViewClickListener not null showMembers");
                         long currentTime = System.currentTimeMillis();
                         if(currentTime - lastClickTimeMills > 500) {
                             // 部分手机会连续执行两次，500毫秒之内的连续执行被认为一次点击只执行一次点击事件
@@ -80,7 +116,7 @@ public class WallUtil {
                             mViewClickListener.showMembers(wall.getContent_group_id(), wall.getGroup_id());
                         }
                     } else {
-                        Log.i(TAG, "onClick& mViewClickListener do nothing");
+                        LogUtil.i(TAG, "onClick& mViewClickListener do nothing");
                     }
                 }
             }, 0, strMember.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
@@ -103,7 +139,7 @@ public class WallUtil {
                 @Override
                 public void onClick(View widget) {
                     if(mViewClickListener != null) {
-                        Log.i(TAG, "onClick& mViewClickListener not null showGroups");
+                        LogUtil.i(TAG, "onClick& mViewClickListener not null showGroups");
                         long currentTime = System.currentTimeMillis();
                         if(currentTime - lastClickTimeMills > 500) {
                             // 部分手机会连续执行两次，500毫秒之内的连续执行被认为一次点击只执行一次点击事件
@@ -111,7 +147,7 @@ public class WallUtil {
                             mViewClickListener.showGroups(wall.getContent_group_id(), wall.getGroup_id());
                         }
                     } else {
-                        Log.i(TAG, "onClick& mViewClickListener do nothing");
+                        LogUtil.i(TAG, "onClick& mViewClickListener do nothing");
                     }
                 }
             }, 0, strGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -164,44 +200,45 @@ public class WallUtil {
      */
     private void setClickNormal(SpannableStringBuilder ssb, String strMember, String strGroup, WallEntity wallEntity) {
         String description = ssb.toString();
-        Log.i(TAG, "setClickNormal& description: " + description + "; member: " + strMember + "; group: " + strGroup);
+        LogUtil.i(TAG, "setClickNormal& description: " + description + "; member: " + strMember + "; group: " + strGroup);
         int startMember = description.indexOf(strMember);
         int endMember = startMember + strMember.length();
         int startGroup = description.indexOf(strGroup);
         int endGroup = startGroup + strGroup.length();
         if(endGroup == endMember) {
-            // @群组和用户结束所在的位置相等说明没有任何@可以不做处理
-            Log.w(TAG, "setClickNormal& no action");
+            // @群组和用户结束所在的位置相等说明没有任何@,全字符可点击
+            LogUtil.w(TAG, "setClickNormal& no action");
+            setSpecialText(ssb, wallEntity, description, 0, description.length());
             return;
         } else {
 
             int length = description.length();
             if(startMember > startGroup | TextUtils.isEmpty(strMember)) {
-                Log.i(TAG, "setClickNormal& group first");
+                LogUtil.i(TAG, "setClickNormal& group first");
 
                 setSpecialText(ssb, wallEntity, description, 0, startGroup);
 
                 if(endGroup < startMember) {
-                    Log.i(TAG, "setClickNormal& split 4 part");
+                    LogUtil.i(TAG, "setClickNormal& split 4 part");
                     setSpecialText(ssb, wallEntity, description, endGroup, startMember);
 
                     setSpecialText(ssb, wallEntity, description, endMember, length);
                 } else {
-                    Log.i(TAG, "setClickNormal& split 1 part");
+                    LogUtil.i(TAG, "setClickNormal& split 1 part");
                     setSpecialText(ssb, wallEntity, description, endGroup, length);
                 }
             } else {
-                Log.i(TAG, "setClickNormal& member first");
+                LogUtil.i(TAG, "setClickNormal& member first");
 
                 setSpecialText(ssb, wallEntity, description, 0, startMember);
 
                 if(endMember < startGroup) {
-                    Log.i(TAG, "setClickNormal& split 4 part");
+                    LogUtil.i(TAG, "setClickNormal& split 4 part");
                     setSpecialText(ssb, wallEntity, description, endMember, startGroup);
 
                     setSpecialText(ssb, wallEntity, description, endGroup, length);
                 } else {
-                    Log.i(TAG, "setClickNormal& split 1 part");
+                    LogUtil.i(TAG, "setClickNormal& split 1 part");
                     setSpecialText(ssb, wallEntity, description, endMember, length);
                 }
             }
@@ -228,7 +265,7 @@ public class WallUtil {
         s.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Log.i(TAG, "setClickNormal& onClick");
+                LogUtil.i(TAG, "setClickNormal& onClick");
                 if(mViewClickListener != null) {
                     long currentTime = System.currentTimeMillis();
                     if(currentTime - lastClickTimeMills > 500) {
@@ -252,4 +289,55 @@ public class WallUtil {
             }
         }, 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
+
+
+    public static void getLoveList(HttpTools httpTools, TextView tvLoveList, String viewerId, String referId, String type) {
+        final TextView textView = tvLoveList;
+        HashMap<String, String> params = new HashMap<>();
+        params.put(WallUtil.GET_LOVE_LIST_VIEWER_ID, viewerId);
+        params.put(WallUtil.GET_LOVE_LIST_REFER_ID, referId);
+        params.put(WallUtil.GET_LOVE_LIST_TYPE, type);
+        LogUtil.i(TAG, "getLoveList& params: " + params.toString());
+        httpTools.cancelRequestByTag(tvLoveList);
+        httpTools.get(Constant.API_WALL_GET_LOVE_MEMBER_LIST, params, tvLoveList, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                LogUtil.i(TAG, "get loved list onResult& response: " + response);
+                Gson gson = new Gson();
+                ArrayList<UserEntity> users = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                int size = users.size();
+                StringBuilder text = new StringBuilder();
+                for(int i = 0; i < size && i < 4; i++) {
+                    text.append(users.get(i).getUser_given_name()).append(" ");
+                }
+                textView.setText(text.toString());
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
 }

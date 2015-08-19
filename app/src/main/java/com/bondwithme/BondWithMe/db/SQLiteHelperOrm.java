@@ -21,53 +21,60 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
     private static SQLiteHelperOrm helper = null;
     private static final AtomicInteger usageCounter = new AtomicInteger(0);
 
-	public SQLiteHelperOrm(Context context) {
-		super(context, DB_NAME, null,
-		DB_VERSION, R.raw.ormlite_config);
+    public SQLiteHelperOrm(Context context) {
+        super(context, DB_NAME, null,
+                DB_VERSION, R.raw.ormlite_config);
 //		super(context, DB_NAME, null,
 //				DB_VERSION);
 
-	}
+    }
 
-	public SQLiteHelperOrm() {
-		super(App.getContextInstance(), DB_NAME, null,
-		DB_VERSION, R.raw.ormlite_config);
+    public SQLiteHelperOrm() {
+        super(App.getContextInstance(), DB_NAME, null,
+                DB_VERSION, R.raw.ormlite_config);
 //		super(App.getContextInstance(), DB_NAME, null,
 //				DB_VERSION);
-	}
+    }
 
-	@Override
-	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
-		//TODO
-		try {
-			TableUtils.createTable(connectionSource, OrmEntityDemo.class);
+    @Override
+    public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
+        //TODO
+        try {
+//			TableUtils.createTable(connectionSource, OrmEntityDemo.class);
+//            TableUtils.createTable(connectionSource, UserEntity.class);
             TableUtils.createTable(connectionSource, LocalStickerInfo.class);
-		} catch (java.sql.SQLException e) {
-			e.printStackTrace();
-		}
-	}
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+    @Override
+    public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
 
-        switch (oldVersion){
-            case 1:
-                try {
+        try {
+            switch (oldVersion) {
+                case 1:
+                    TableUtils.dropTable(connectionSource, OrmEntityDemo.class, true);
                     TableUtils.dropTable(connectionSource, LocalStickerInfo.class, true);
                     TableUtils.createTable(connectionSource, LocalStickerInfo.class);
-                } catch (SQLException e) {
-                }
-                break;
+                    break;
+//                case 2:
+//                    TableUtils.createTable(connectionSource, UserEntity.class);
+//                    Dao<LocalStickerInfo, Integer> stickerInfoDao = SQLiteHelperOrm.getHelper(App.getContextInstance()).getDao(LocalStickerInfo.class);
+//                    stickerInfoDao.executeRaw("ALTER TABLE 'account' ADD COLUMN weight INTEGER;");
+//                    break;
+            }
+        } catch (SQLException e) {
         }
 
-		//TODO
-		// try {
-		// TableUtils.dropTable(connectionSource, POUser.class, true);
-		// onCreate(db, connectionSource);
-		// } catch (SQLException e) {
-		// Log.e("SQLiteHelperOrm", "onUpgrade", e);
-		// }
-	}
+        //TODO
+        // try {
+        // TableUtils.dropTable(connectionSource, POUser.class, true);
+        // onCreate(db, connectionSource);
+        // } catch (SQLException e) {
+        // Log.e("SQLiteHelperOrm", "onUpgrade", e);
+        // }
+    }
 
     public static synchronized SQLiteHelperOrm getHelper(Context paramContext) {
         try {

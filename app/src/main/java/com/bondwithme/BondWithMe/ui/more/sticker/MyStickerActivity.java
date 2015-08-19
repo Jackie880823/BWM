@@ -2,8 +2,6 @@ package com.bondwithme.BondWithMe.ui.more.sticker;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,43 +67,26 @@ public class MyStickerActivity extends BaseActivity {
     }
     @Override
     public void initView() {
-        mhandler.sendEmptyMessageDelayed(QUERY_STICKER, 0);
-    }
-    Handler mhandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case QUERY_STICKER:
-                    try {
-                        Dao<LocalStickerInfo, String> stickerInfoDao = SQLiteHelperOrm.getHelper(MyStickerActivity.this).getDao(LocalStickerInfo.class);
-                        QueryBuilder qb = stickerInfoDao.queryBuilder();
-                        qb.orderBy("order", false).where().eq("loginUserId", MainActivity.getUser().getUser_id());
-                        data = qb.query();
-                    } catch (Exception e) {
-                        LogUtil.e(TAG, "", e);
+        try {
+            Dao<LocalStickerInfo, String> stickerInfoDao = SQLiteHelperOrm.getHelper(MyStickerActivity.this).getDao(LocalStickerInfo.class);
+            QueryBuilder qb = stickerInfoDao.queryBuilder();
+            qb.orderBy("order", false).where().eq("loginUserId", MainActivity.getUser().getUser_id());
+            data = qb.query();
+        } catch (Exception e) {
+            LogUtil.e(TAG, "", e);
 
-                    }
-                    if (data != null && data.size() > 0) {
-                        rvList = (RecyclerView) getViewById(R.id.rv_my_sticker);
-                        llm = new FullyLinearLayoutManager(MyStickerActivity.this);
-                        rvList.setLayoutManager(llm);
-                        rvList.setHasFixedSize(true);
-                        rvList.setItemAnimator(new DefaultItemAnimator());
-
-                        MyStickerAdapter adapter = new MyStickerAdapter(MyStickerActivity.this, data);
-                        rvList.setAdapter(adapter);
-
-                    }
-
-                    break;
-            }
         }
-    };
+        if (data != null && data.size() > 0) {
+            rvList = (RecyclerView) getViewById(R.id.rv_my_sticker);
+            llm = new FullyLinearLayoutManager(MyStickerActivity.this);
+            rvList.setLayoutManager(llm);
+            rvList.setHasFixedSize(true);
+            rvList.setItemAnimator(new DefaultItemAnimator());
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mhandler.sendEmptyMessageDelayed(QUERY_STICKER, 0);
+            MyStickerAdapter adapter = new MyStickerAdapter(MyStickerActivity.this, data);
+            rvList.setAdapter(adapter);
+
+        }
     }
 
     @Override

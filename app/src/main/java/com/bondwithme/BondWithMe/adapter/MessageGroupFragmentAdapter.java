@@ -108,6 +108,10 @@ public class MessageGroupFragmentAdapter extends BaseAdapter {
             viewHolder.lastMessageContent.setText(mContext.getString(R.string.text_message_chat_post_photo));
         } else if (PrivateMessageEntity.POST_LOCATION.equals(type)) {
             viewHolder.lastMessageContent.setText(mContext.getString(R.string.text_message_chat_post_location));
+        }else if(PrivateMessageEntity.POST_AUDIO.equals(type)){
+            viewHolder.lastMessageContent.setText(R.string.text_message_chat_post_audio);
+        }else if(PrivateMessageEntity.POST_VIDEO.equals(type)){
+            viewHolder.lastMessageContent.setText(R.string.text_message_chat_post_video);
         }else{
             viewHolder.lastMessageContent.setText("");
         }

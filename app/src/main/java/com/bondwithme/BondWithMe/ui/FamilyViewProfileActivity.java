@@ -15,12 +15,18 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class FamilyViewProfileActivity extends BaseActivity {
 
@@ -104,15 +110,18 @@ public class FamilyViewProfileActivity extends BaseActivity {
         tvName1.setText(userEntity.getUser_given_name());
         tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
 
-        tvPhone.setText("+" + MainActivity.getUser().getUser_country_code() + " " + MainActivity.getUser().getUser_phone());
+        if (userEntity.getUser_phone().length() > 0){
+            tvPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone());
+        }
         tvFirstName.setText(userEntity.getUser_given_name());
         tvLastName.setText(userEntity.getUser_surname());
 //        tvAge.setText(userEntity.getUser_dob());
         String strDOB = userEntity.getUser_dob();
-        if (strDOB != null && strDOB.contains("-")){
-            strDOB = strDOB.substring(strDOB.indexOf("-") + 1);
-        }
-        tvBirthday.setText(strDOB);
+        LogUtil.d("TAG", "strDOB===" + strDOB);
+        setTvBirthday(strDOB);
+
+//        tvBirthday.setText(strDOB);
+
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,6 +171,25 @@ public class FamilyViewProfileActivity extends BaseActivity {
             }
         }
 
+    }
+
+    private void setTvBirthday(String strDOB) {
+        if (strDOB != null && !strDOB.equals("0000-00-00")){
+            Date date = null;
+            try {
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(strDOB);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            //不同语言设置不同日期显示
+            if (Locale.getDefault().toString().equals("zh_CN")){
+            tvBirthday.setText(date.getMonth() + "月" + date.getDay() + "日");
+//                DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
+//                tvBirthday.setText(dateFormat.format(date));
+            }else {
+                tvBirthday.setText(this.getResources().getStringArray(R.array.months)[date.getMonth()] + " " + date.getDate());
+            }
+        }
     }
 
     @Override

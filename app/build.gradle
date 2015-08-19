@@ -18,8 +18,8 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 52   //TODO
-        versionName "1.9.0" //TODO
+        versionCode 53   //TODO
+        versionName "1.10.0" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -51,7 +51,6 @@ android {
 //        debug {
 //            // 显示Log
 //            buildConfigField "boolean", "LOG_DEBUG", "true"
-//
 //            minifyEnabled false
 //            zipAlignEnabled false
 //            shrinkResources false
@@ -59,11 +58,11 @@ android {
 //        }
 //        release {
 //            // 不显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "true" //TODO 正式环境改false
 //            minifyEnabled true //TODO 正式环境改true
+//            buildConfigField "boolean", "LOG_DEBUG", "false" //TODO 正式环境改false
 //            zipAlignEnabled true //TODO 正式环境改true
 //            // 移除无用的resource文件
-//            shrinkResources false
+//            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            signingConfig signingConfigs.release
 //        }
@@ -142,23 +141,22 @@ dependencies {
     compile project(':facebook')
     compile project(':ImageCrop')
     //    compile 'com.android.support:gridlayout-v7:21.0.3'
-    compile project(':piwik_sdk')
-    compile('org.apache.httpcomponents:httpmime:4.3.5') {
+    compile 'com.android.support:multidex:1.0.+'
+    compile 'com.android.support:support-annotations:22.2.+'
+    compile 'com.android.support:appcompat-v7:22.2.+'
+    compile 'com.android.support:support-v4:22.2.+'
+    compile 'com.android.support:recyclerview-v7:22.2.+'
+    compile 'com.android.support:cardview-v7:22.2.+'
+    compile 'com.google.android.gms:play-services:7.5.0'
+
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
+    /** 第三方图片处理库 */
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+    compile ('org.apache.httpcomponents:httpmime:4.5'){
         // avoid "is ignored for the default configuration X" warnings
         // since httpclient is included in the android SDK.
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
-    compile 'com.android.support:multidex:1.0.0'
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.android.support:support-annotations:22.2.0'
-    compile 'com.google.android.gms:play-services:7.5.0'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
-    compile 'com.j256.ormlite:ormlite-android:4.48'
-    compile 'com.j256.ormlite:ormlite-core:4.48'
-    compile 'com.android.support:support-v4:22.2.0'
-    /** 第三方图片处理库 */
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
-    compile 'com.android.support:cardview-v7:22.2.1'
+    compile project(':piwik_sdk')
 }

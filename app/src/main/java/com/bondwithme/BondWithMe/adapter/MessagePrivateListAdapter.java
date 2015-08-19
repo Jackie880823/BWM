@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,6 +118,10 @@ public class MessagePrivateListAdapter extends BaseAdapter {
             viewHolder.lastMessage.setText(mContext.getString(R.string.text_message_chat_post_photo));
         }else if(PrivateMessageEntity.POST_LOCATION.equals(type)){
             viewHolder.lastMessage.setText(mContext.getString(R.string.text_message_chat_post_location));
+        }else if(PrivateMessageEntity.POST_AUDIO.equals(type)){
+            viewHolder.lastMessage.setText(R.string.text_message_chat_post_audio);
+        }else if(PrivateMessageEntity.POST_VIDEO.equals(type)){
+            viewHolder.lastMessage.setText(R.string.text_message_chat_post_video);
         }else{
             viewHolder.lastMessage.setText("");
         }

@@ -16,26 +16,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.DownloadRequest;
-import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.StickerGroupAdapter;
-import com.bondwithme.BondWithMe.adapter.StickerPagerAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.entity.StickerBannerEntity;
-import com.bondwithme.BondWithMe.entity.StickerBannerPic;
 import com.bondwithme.BondWithMe.entity.StickerGroupEntity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
@@ -43,11 +35,9 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
-import com.bondwithme.BondWithMe.widget.FullyLinearLayoutManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,36 +49,32 @@ import java.util.Map;
 /**
  * Created by heweidong on 2015/6/7.
  */
-public class StickerStoreActivity extends BaseActivity implements StickerBannerPic.DownloadBannerListener,View.OnTouchListener {
+public class StickerStoreActivity extends BaseActivity implements View.OnTouchListener {
 
     private static final String TAG = StickerStoreActivity.class.getSimpleName();
     private static final String GET_STICKER_GROUP = TAG + "GET_STICKER_GROUP";
     private static final String GET_STICKER_BANNER = TAG + "GET_STICKER_BANNER";
     public static final String ACTION_UPDATE = "ACTION_UPDATE_FROM_STICKER_STORE";
     public static final String ACTION_FINISHED = "ACTION_FINISHED_FROM_STICKER_STORE";
-    public static final String FINISHED = "finished";
+    public static final String PROGRESS = "progress";
 
 
-    View mProgressDialog;
-
-    private StickerPagerAdapter stickerPagerAdapter;
-    private List<View> views;
+    View stickerProgressDialog;
+    //    View adProgressDialog;
     private RecyclerView recyclerViewList;
     private LinearLayoutManager llm;
     private List<StickerGroupEntity> dataStickerGroup = new ArrayList<>();
     private List<StickerBannerEntity> dataStickerBanner = new ArrayList<>();
-    private  List<StickerGroupEntity> data = new ArrayList<>();
-    private final int AUTO_PLAY = 1;
-    private final int INIT_ADAPTER = 2;
-    private final int DISMISS_DIALOG = 3;
-    private ScrollView scrollView;
-    int finished;
-    int positionFromStickerDetail = -1;
-    private ImageSwitcher isStickerBanner;
-    private int currentItem;
-    private List<Uri> uriList;
-    StickerBannerPic stickerBannerPic;
+    private List<StickerGroupEntity> data = new ArrayList<>();
+//    private final int AUTO_PLAY = 1;
 
+//    int positionFromStickerDetail = -1;
+    //    private ImageSwitcher isStickerBanner;
+    private int currentItem;
+    private Map<String, Uri> uriMap = new HashMap<>();
+    private static final int SHOW_ADS = 10;
+    private static final int DOWNLOAD_DONE = 11;
+    StickerGroupAdapter adapter;
 
 
     @Override
@@ -130,49 +116,74 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
 
     @Override
     public void initView() {
-        mProgressDialog = getViewById(R.id.rl_progress);
-        mProgressDialog.setVisibility(View.VISIBLE);
-
-        scrollView = getViewById(R.id.sc_sticker_store);
-        isStickerBanner = getViewById(R.id.is_sticker_banner);
-        initStickerBanner();
-
-
+        /**wing modified for 性能 begin*/
+        stickerProgressDialog = getViewById(R.id.sticker_progress);
+        stickerProgressDialog.setVisibility(View.VISIBLE);
+//        adProgressDialog = getViewById(R.id.ad_progress);
+//        adProgressDialog.setVisibility(View.VISIBLE);
 
         recyclerViewList = getViewById(R.id.recyclerview_sticker);
-        llm = new FullyLinearLayoutManager(this);
+//        llm = new FullyLinearLayoutManager(this);
+        llm = new LinearLayoutManager(this);
         recyclerViewList.setLayoutManager(llm);
         recyclerViewList.setHasFixedSize(true);
-        initAdapter();      //加载表情包列表；
-        requestData();
-
+        recyclerViewList.setAdapter(adapter);
+//        initAdapter();      //加载表情包列表；
+//        requestData();
+        /**wing modified for 性能 end*/
 
 
         //注册广播接收器，更新progressbar、Download按钮状态
         IntentFilter filter = new IntentFilter();
         filter.addAction(StickerDetailActivity.ACTION_UPDATE);
         filter.addAction(MyStickerActivity.ACTION_UPDATE);
+        filter.addAction(StickerStoreActivity.ACTION_UPDATE);
+        filter.addAction(StickerStoreActivity.ACTION_FINISHED);
         registerReceiver(mReceiver, filter);
 
-    }
 
-    /**ImageSwitcher for sticker banner */
-    private void initStickerBanner() {
-        isStickerBanner.setFactory(new ViewSwitcher.ViewFactory() {
+        //恶心
+        new Thread(new Runnable() {
             @Override
-            public View makeView() {
-                ImageView i = new ImageView(StickerStoreActivity.this);
-                i.setScaleType(ImageView.ScaleType.FIT_XY);
-                i.setLayoutParams(new ImageSwitcher.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT));
-                return i;
-            }
-        });
-        isStickerBanner.setOnTouchListener(this);
+            public void run() {
+                while (finishedAdCount < allAdCount && !hasError) {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                handler.sendEmptyMessage(DOWNLOAD_DONE);
 
+//                if(adapter!=null) {
+//                    adapter.setAds(uriMap);
+//                }
+            }
+        }).start();
 
     }
 
+    private int allAdCount = 4;
+    private int finishedAdCount;
+
+    /**
+     * ImageSwitcher for sticker banner
+     */
+//    private void initStickerBanner() {
+//        isStickerBanner.setFactory(new ViewSwitcher.ViewFactory() {
+//            @Override
+//            public View makeView() {
+//                ImageView i = new ImageView(StickerStoreActivity.this);
+//                i.setScaleType(ImageView.ScaleType.FIT_XY);
+//                i.setLayoutParams(new ImageSwitcher.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+//                        FrameLayout.LayoutParams.MATCH_PARENT));
+//                return i;
+//            }
+//        });
+//        isStickerBanner.setOnTouchListener(this);
+//
+//
+//    }
 
 
     //获取广告图对应的表情包的position
@@ -186,36 +197,47 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
         }
         return 0;
     }
+    List<String> stickers;
 
     /**
      * sticker group Adapter
      */
     private void initAdapter() {
-        StickerGroupAdapter adapter = new StickerGroupAdapter(this, dataStickerGroup);
+        /**wing modified for 性能 begin*/
+        //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
+        LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(this);
+        stickers = dao.queryAllSticker();
+
+        /**wing modified for 性能 end*/
+        adapter = new StickerGroupAdapter(this, dataStickerGroup, stickers, uriMap);
         adapter.setItemClickListener(new StickerGroupAdapter.ItemClickListener() {
             @Override
             public void itemClick(StickerGroupEntity stickerGroupEntity, int position) {
                 Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
                 intent.putExtra(StickerGroupAdapter.STICKER_GROUP, dataStickerGroup.get(position));
                 intent.putExtra(StickerGroupAdapter.POSITION, position);
-                intent.putExtra(FINISHED, finished);
-                intent.putExtra("positionFromStickerDetail",positionFromStickerDetail);
+//                intent.putExtra(PROGRESS, progress);
+//                intent.putExtra("positionFromStickerDetail", positionFromStickerDetail);
                 startActivity(intent);
             }
         });
         adapter.setDownloadClickListener(new StickerGroupAdapter.DownloadClickListener() {
             @Override
             public void downloadClick(StickerGroupEntity stickerGroupEntity, int position) {
-                StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
+
+
+                //加1(header)
+                StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position + 1);
                 ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
                 TextView tvDownload = (TextView) holder.itemView.findViewById(R.id.tv_download);
                 tvDownload.setVisibility(View.INVISIBLE);
                 pbDownload.setVisibility(View.VISIBLE);
-                downloadZip(holder, position);
+                dataStickerGroup.get(position).setDownloading(true);
+//                adapter.notifyItemChanged(position+1);
+//                downloadZip(holder, position);
+                downloadZip(position);
             }
         });
-
-
 
 
         recyclerViewList.setAdapter(adapter);
@@ -225,9 +247,10 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
     /**
      * 下载sticker Group zip
      */
-    private void downloadZip(final StickerGroupAdapter.VHItem holder, final int position) {
-        final ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
-        final ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
+    private void downloadZip(final int position) {
+//    private void downloadZip(final StickerGroupAdapter.VHItem holder, final int position) {
+//        final ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
+//        final ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
         final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
         String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
         final String target = FileUtil.getCacheFilePath(this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
@@ -238,6 +261,11 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
 
             @Override
             public void onFinish() {
+                if(LocalStickerInfoDao.getInstance(StickerStoreActivity.this).hasDownloadSticker(stickerGroupEntity.getPath())){
+                    Intent intent = new Intent(StickerStoreActivity.ACTION_FINISHED);
+                    intent.putExtra(StickerGroupAdapter.POSITION, position);
+                    sendBroadcast(intent);
+                }
             }
 
             @Override
@@ -253,7 +281,7 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
 
                 //插入sticker info
                 try {
-                    Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+//                    Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
                     LocalStickerInfo stickerInfo = new LocalStickerInfo();
                     stickerInfo.setName(stickerGroupEntity.getName());
                     stickerInfo.setPath(stickerGroupEntity.getPath());
@@ -264,17 +292,13 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
                     LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
                     Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
 
-                    Intent intent = new Intent(StickerStoreActivity.ACTION_FINISHED);
-                    sendBroadcast(intent);
-
                 } catch (Exception e) {
                     LogUtil.e(TAG, "插入sticker info", e);
                 }
 
-                pbDownload.setVisibility(View.INVISIBLE);
-                pbDownload.setProgress(0);
-                ivExist.setVisibility(View.VISIBLE);
-
+//                pbDownload.setVisibility(View.INVISIBLE);
+//                pbDownload.setProgress(0);
+//                ivExist.setVisibility(View.VISIBLE);
 
 
             }
@@ -291,14 +315,9 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
 
             @Override
             public void onLoading(long count, long current) {
-                //更新item中的进度条
-                finished = (int) (current * 100 / count);
-                pbDownload.setProgress(finished);
-
-
                 //发广播更新StickerDetailActivity的progressbar
                 Intent intent = new Intent(StickerStoreActivity.ACTION_UPDATE);
-                intent.putExtra(FINISHED, finished);
+                intent.putExtra(PROGRESS, (int) (current * 100 / count));
                 intent.putExtra(StickerGroupAdapter.POSITION, position);
                 sendBroadcast(intent);
 
@@ -307,13 +326,11 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
     }
 
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
         data = dataStickerGroup;
-        handler.sendEmptyMessageDelayed(AUTO_PLAY, 10000);
+//        handler.sendEmptyMessageDelayed(AUTO_PLAY, 10000);
     }
 
     @Override
@@ -325,52 +342,112 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
-                case AUTO_PLAY:
-                    int totalItem = 0;
-                    if (dataStickerBanner != null && uriList != null && uriList.size()>0){
-                        totalItem = dataStickerBanner.size();
-                        currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
-                        setImageSwitcher(currentItem);
-                    }
-                    handler.sendEmptyMessageDelayed(AUTO_PLAY, 5000);
+            switch (msg.what) {
+//                case AUTO_PLAY:
+//                    int totalItem = 0;
+//                    if (dataStickerBanner != null && uriMap != null && uriMap.size() > 0) {
+//                        totalItem = dataStickerBanner.size();
+//                        currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
+//                        setImageSwitcher(currentItem);
+//                    }
+//                    handler.sendEmptyMessageDelayed(AUTO_PLAY, 2000);
+//                    break;
+                case SHOW_ADS:
+                    String response = (String) msg.obj;
+//                    isStickerBanner = getViewById(R.id.is_sticker_banner);
+//                    initStickerBanner();
+
+                    GsonBuilder gsonb = new GsonBuilder();
+                    Gson gson = gsonb.create();
+
+                    dataStickerBanner = gson.fromJson(response, new TypeToken<ArrayList<StickerBannerEntity>>() {
+                    }.getType());
+
+                    downloadPic();
+                    break;
+                case DOWNLOAD_DONE:
+                    initAdapter();
+                    stickerProgressDialog.setVisibility(View.GONE);
+                    break;
             }
         }
     };
 
-    protected void setImageSwitcher(int currentItem){
-        rightInAnim();
-        isStickerBanner.setImageURI(uriList.get(currentItem));
-        setSwitcherClick();
-
-    }
+//    protected void setImageSwitcher(int currentItem) {
+//        rightInAnim();
+//        isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
+//        setSwitcherClick();
+//
+//    }
 
     private void rightInAnim() {
         Animation animIn = AnimationUtils.loadAnimation(this,
                 R.anim.slide_in_right);
         animIn.setFillAfter(true);
-        isStickerBanner.setInAnimation(animIn);
+//        isStickerBanner.setInAnimation(animIn);
 
         Animation animOut = AnimationUtils.loadAnimation(this,
                 R.anim.slide_out_left);
         animOut.setFillAfter(true);
-        isStickerBanner.setOutAnimation(animOut);
+//        isStickerBanner.setOutAnimation(animOut);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        handler.removeMessages(AUTO_PLAY);
+//        handler.removeMessages(AUTO_PLAY);
     }
+
+    private boolean hasError;
 
     @Override
     public void requestData() {
         Map<String, String> params = new HashMap<>();
         params.put("user_id", MainActivity.getUser().getUser_id());
 
+//        //获取 sticker banner 广告图
+        new HttpTools(this).get(Constant.API_STICKER_BANNER, null, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+//                adProgressDialog.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                Message msg = handler.obtainMessage();
+                msg.what = SHOW_ADS;
+                msg.obj = response;
+                handler.sendMessage(msg);
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+                MessageUtil.showMessage(StickerStoreActivity.this, R.string.msg_action_failed);
+//                adProgressDialog.setVisibility(View.GONE);
+                hasError = true;
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
 
         //获取sticker group list
-        new HttpTools(this).get(Constant.API_STICKER_GROUP, params, GET_STICKER_GROUP, new HttpCallback() {
+        new HttpTools(this).get(Constant.API_STICKER_GROUP, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -378,7 +455,7 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
 
             @Override
             public void onFinish() {
-
+                finishedAdCount++;
             }
 
             @Override
@@ -389,7 +466,7 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
                 dataStickerGroup = gson.fromJson(response, new TypeToken<ArrayList<StickerGroupEntity>>() {
                 }.getType());
 
-                initAdapter();
+//                initAdapter();
 
             }
 
@@ -397,7 +474,7 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
             public void onError(Exception e) {
                 e.printStackTrace();
                 MessageUtil.showMessage(StickerStoreActivity.this, R.string.msg_action_failed);
-
+                hasError = true;
             }
 
             @Override
@@ -410,57 +487,182 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
 
             }
         });
-        //获取 sticker banner 广告图
-        new HttpTools(this).get(Constant.API_STICKER_BANNER, null, GET_STICKER_BANNER, new HttpCallback() {
-            @Override
-            public void onStart() {
+    }
 
-            }
+    /**
+     * download pictures for banner
+     */
+    private void downloadPic() {
+        int count = 0;
+        if (data != null) {
+            count = dataStickerBanner.size();
+        }
+        for (int i = 0; i < count; i++) {
+            String url = String.format(Constant.API_STICKER_BANNER_PIC, dataStickerBanner.get(i).getBanner_photo());
+            final String target = FileUtil.getBannerFilePath(this) + "/" + String.format("%s", "" + dataStickerBanner.get(i).getBanner_photo());
+            LogUtil.d(TAG, "====url====" + url);
+            LogUtil.d(TAG, "====target====" + target);
+            final int finalI = i;
+            new HttpTools(this).download(url, target, false, new HttpCallback() {
+                @Override
+                public void onStart() {
+                    LogUtil.d(TAG, "===onStart===" + "target===" + target);
+                }
 
-            @Override
-            public void onFinish() {
+                @Override
+                public void onFinish() {
+                    finishedAdCount++;
+//                    adProgressDialog.setVisibility(View.GONE);
+                    if (!StickerStoreActivity.this.isFinishing()) {
+                        File f = new File(target);
+                        LogUtil.d(TAG, "===onFinish===" + f.exists());
 
-            }
-
-            @Override
-            public void onResult(String response) {
-                GsonBuilder gsonb = new GsonBuilder();
-                Gson gson = gsonb.create();
-
-                dataStickerBanner = gson.fromJson(response, new TypeToken<ArrayList<StickerBannerEntity>>() {
-                }.getType());
-
-                stickerBannerPic = new StickerBannerPic(dataStickerBanner, StickerStoreActivity.this);
-                stickerBannerPic.setDownloadListener(StickerStoreActivity.this);
-                stickerBannerPic.getUri();
-                LogUtil.d(TAG, "=======stickerBannerPic====" + stickerBannerPic.toString());
+                        if (f.exists()) {
+                            Uri uri = Uri.parse(target);
+                            uriMap.put(dataStickerBanner.get(finalI).getSticker_group_path(), uri);
+                        }
 
 
-//                initPagerAdapter();
+//                        //下载好一张banner就显示
+//                        if (uriMap.size() == 1) {
+//                            currentItem = finalI;
+////                            downloadFinish(currentItem);
+////                            stickerProgressDialog.setVisibility(View.INVISIBLE);
+//                        }
+                    }
 
-            }
+                }
 
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-                MessageUtil.showMessage(StickerStoreActivity.this, R.string.msg_action_failed);
+                @Override
+                public void onResult(String response) {
 
 
-            }
+                }
 
-            @Override
-            public void onCancelled() {
+                @Override
+                public void onError(Exception e) {
+                    LogUtil.e(TAG, "===onError===", e);
 
-            }
+                }
 
-            @Override
-            public void onLoading(long count, long current) {
+                @Override
+                public void onCancelled() {
 
-            }
-        });
+                }
 
+                @Override
+                public void onLoading(long count, long current) {
+                    LogUtil.d(TAG, "====onLoading===" + "=====count==========" + count + "======current=========" + current);
+                }
+            });
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
+//        FileUtil.deleteBanner(this);
+        uriMap = null;
+        new HttpTools(this).cancelRequestByTag(TAG);
+        super.onDestroy();
 
     }
+
+
+    public void downloadFinish(int currentItem) {
+        if (uriMap.size() > 0) {
+            LogUtil.d(TAG, "===display_banner[0]===" + uriMap.size());
+//            isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
+//            setSwitcherClick();
+        }
+
+    }
+
+    //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
+    float downX = 0;
+    float upX = 0;
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            //当手指按下的时候
+            downX = event.getX();
+            LogUtil.d(TAG, "===downX===" + downX);
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            //当手指离开的时候
+            upX = event.getX();
+            LogUtil.d(TAG, "===upX===" + upX);
+            if (downX - upX > 80) {      //左滑
+                int totalItem = 0;
+                if (dataStickerBanner.size() > 0 && uriMap.size() > 0) {
+                    totalItem = dataStickerBanner.size();
+                    currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
+                    rightInAnim();
+                    if (uriMap.size() > 0) {
+//                        isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
+                    }
+                    LogUtil.d(TAG, "=========currentItem========" + currentItem);
+                }
+                return true;
+            } else if (upX - downX > 80) {       //右滑
+                int totalItem = 0;
+                if (dataStickerBanner.size() > 0 && uriMap.size() > 0) {
+                    totalItem = dataStickerBanner.size();
+                    currentItem = currentItem - 1 < 0 ? totalItem - 1 : currentItem - 1;
+                    Animation animIn = AnimationUtils.loadAnimation(this,
+                            R.anim.slide_in_left);
+                    animIn.setFillAfter(true);
+//                    isStickerBanner.setInAnimation(animIn);
+
+                    Animation animOut = AnimationUtils.loadAnimation(this,
+                            R.anim.slide_out_right);
+                    animOut.setFillAfter(true);
+//                    isStickerBanner.setOutAnimation(animOut);
+                    if (uriMap.size() > 0) {
+//                        isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
+                    }
+                    LogUtil.d(TAG, "=========currentItem========" + currentItem);
+                }
+                return true;
+            }
+        }
+
+        if (Math.abs(downX - upX) < 5) {
+            LogUtil.d(TAG, "====return_false===");
+//            setSwitcherClick();
+            return false;
+        }
+
+        LogUtil.d(TAG, "====return_false===");
+        return false;
+
+    }
+
+//    private void setSwitcherClick() {
+//        final String path = dataStickerBanner.get(currentItem).getSticker_group_path();
+//        if (dataStickerBanner != null && dataStickerGroup != null && dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0) {
+//            LogUtil.d(TAG, "====setOnClickListener=====" + path + "    " + !path.isEmpty());
+//            final int position = getPosition(path, dataStickerGroup);
+//            final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
+////            isStickerBanner.setOnClickListener(new View.OnClickListener() {
+////                @Override
+////                public void onClick(View v) {
+////                    if (!path.isEmpty()) {
+////                        Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
+////                        intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
+////                        intent.putExtra(StickerGroupAdapter.POSITION, position);
+////                        StickerStoreActivity.this.startActivity(intent);
+////                    }
+////                }
+////            });
+//
+//
+//        }
+//    }
 
     /**
      * 更新UI的广播接收器
@@ -468,161 +670,71 @@ public class StickerStoreActivity extends BaseActivity implements StickerBannerP
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (StickerDetailActivity.ACTION_UPDATE.equals(intent.getAction())) {
-                finished = intent.getIntExtra(FINISHED, 0);
-                positionFromStickerDetail = intent.getIntExtra(StickerGroupAdapter.POSITION, 0);
-                Log.i(TAG, "=======positionFromStickerDetail========" + positionFromStickerDetail);
-                StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(positionFromStickerDetail);
-                if (holder != null) {
-                    ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
-                    ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
-                    TextView tvDownload = (TextView) holder.itemView.findViewById(R.id.tv_download);
-                    tvDownload.setVisibility(View.INVISIBLE);
-                    pbDownload.setVisibility(View.VISIBLE);
-                    pbDownload.setProgress(finished);
-                    if (finished == 100) {
-                        pbDownload.setVisibility(View.INVISIBLE);
-                        pbDownload.setProgress(0);
-                        ivExist.setVisibility(View.VISIBLE);
-                    }
+
+            if (intent != null) {
+                int positionFromStickerDetail = -1;
+                int dataPosition;
+                switch (intent.getAction()) {
+                    case StickerDetailActivity.ACTION_UPDATE:
+                    case StickerStoreActivity.ACTION_UPDATE:
+                        dataPosition = intent.getIntExtra(StickerGroupAdapter.POSITION, 0);
+                        dataStickerGroup.get(dataPosition).setDownloading(true);
+                        //加1(header)
+                        positionFromStickerDetail = dataPosition + 1;//add header
+                        final RecyclerView.ViewHolder viewHolder = recyclerViewList.findViewHolderForAdapterPosition(positionFromStickerDetail);
+                        if (viewHolder != null) {
+                            StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) viewHolder;
+                            int progress = intent.getIntExtra(PROGRESS, 0);
+                            setViewProgress(holder, progress,dataStickerGroup.get(dataPosition),dataPosition);
+                        }
+                        break;
+                    case MyStickerActivity.ACTION_UPDATE:
+                        String path = intent.getStringExtra(StickerGroupAdapter.PATH);
+                        dataPosition = getPosition(path, dataStickerGroup);
+//                        positionFromStickerDetail = dataPosition+1;//add header
+//                        final StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(positionFromStickerDetail);
+//                        if(holder!=null) {
+//                            holder.getIvExist().setVisibility(View.INVISIBLE);
+//                            holder.getTvDownload().setVisibility(View.VISIBLE);
+//                        }
+//                        dataStickerGroup.get(dataPosition).setPath(path);
+//                        stickers.remove(path);
+                        adapter.removeSticker(path);
+                        adapter.notifyItemChanged(dataPosition+1);
+                        break;
+                    case StickerStoreActivity.ACTION_FINISHED:
+                        dataPosition = intent.getIntExtra(StickerGroupAdapter.POSITION,-1);
+                        if(dataPosition!=-1) {
+                            adapter.addSticker(dataStickerGroup.get(dataPosition).getPath());
+                            dataStickerGroup.get(dataPosition).setDownloading(false);
+                            adapter.notifyItemChanged(dataPosition+1);
+//                            adapter.notifyDataSetChanged();
+                        }
+                        break;
 
                 }
-            } else if (MyStickerActivity.ACTION_UPDATE.equals(intent.getAction())) {
-                int position = getPosition(intent.getStringExtra("sticker_path"),dataStickerGroup);
-                StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
-                ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
-                TextView tvDownload = (TextView) holder.itemView.findViewById(R.id.tv_download);
-                ivExist.setVisibility(View.INVISIBLE);
-                tvDownload.setVisibility(View.VISIBLE);
-            }else if (StickerStoreActivity.ACTION_UPDATE.equals(intent.getAction())){
-                int position = intent.getIntExtra(StickerGroupAdapter.POSITION,0);
-                finished = intent.getIntExtra(FINISHED,0);
-                StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) recyclerViewList.findViewHolderForAdapterPosition(position);
-                if ( holder!= null){
-                    ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
-                    ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
-                    TextView tvDownload = (TextView)holder.itemView.findViewById(R.id.tv_download);
-                    tvDownload.setVisibility(View.INVISIBLE);
-                    pbDownload.setVisibility(View.VISIBLE);
-                    pbDownload.setProgress(finished);
-                    if (finished == 100){
-                        pbDownload.setVisibility(View.INVISIBLE);
-                        pbDownload.setProgress(0);
-                        ivExist.setVisibility(View.VISIBLE);
-                    }
-                }
-
             }
-        }
+
+         }
     };
 
-    @Override
-    protected void onDestroy() {
-        if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
+    private void setViewProgress(StickerGroupAdapter.VHItem holder, int progress, StickerGroupEntity stickerGroupEntity,int position) {
+        holder.getTvDownload().setVisibility(View.INVISIBLE);
+        holder.getPbDownload().setVisibility(View.VISIBLE);
+        holder.getPbDownload().setProgress(progress);
+        if (progress >= 100) {
+            holder.getPbDownload().setVisibility(View.INVISIBLE);
+//            holder.getPbDownload().setProgress(0);
+            holder.getIvExist().setVisibility(View.VISIBLE);
+            dataStickerGroup.get(position).setDownloading(false);
+            adapter.addSticker(stickerGroupEntity.getPath());
+//            adapter.notifyItemChanged(position);
         }
-        super.onDestroy();
     }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-
-
-
-    @Override
-    public void downloadFinish() {
-        LogUtil.d(TAG, "=====downloadFinish=====");
-        uriList = stickerBannerPic.uriList;
-        LogUtil.d(TAG, "==========uriList.size()========="+uriList.size());
-        if (uriList.size() > 0){
-            isStickerBanner.setImageURI(uriList.get(currentItem));
-            setSwitcherClick();
-        }
-        mProgressDialog.setVisibility(View.INVISIBLE);
-    }
-
-    //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
-    float downX = 0;
-    float upX = 0;
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            //当手指按下的时候
-            downX = event.getX();
-            LogUtil.d(TAG,"===downX==="+downX);
-        }
-        if(event.getAction() == MotionEvent.ACTION_UP) {
-            //当手指离开的时候
-            upX = event.getX();
-            LogUtil.d(TAG, "===upX===" + upX);
-            if(downX - upX > 80) {      //左滑
-                int totalItem = 0;
-                if (dataStickerBanner.size() > 0 && uriList.size()>0){
-                    totalItem = dataStickerBanner.size();
-                    currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
-                    rightInAnim();
-                    if (uriList.size() > 0){
-                        isStickerBanner.setImageURI(uriList.get(currentItem));
-                    }
-                    LogUtil.d(TAG,"=========currentItem========"+currentItem);
-                }
-                return true;
-            } else if(upX - downX > 80) {       //右滑
-                int totalItem = 0;
-                if (dataStickerBanner.size() > 0 && uriList.size()>0){
-                    totalItem = dataStickerBanner.size();
-                    currentItem = currentItem - 1 < 0 ? totalItem - 1 : currentItem - 1;
-                    Animation animIn = AnimationUtils.loadAnimation(this,
-                            R.anim.slide_in_left);
-                    animIn.setFillAfter(true);
-                    isStickerBanner.setInAnimation(animIn);
-
-                    Animation animOut = AnimationUtils.loadAnimation(this,
-                            R.anim.slide_out_right);
-                    animOut.setFillAfter(true);
-                    isStickerBanner.setOutAnimation(animOut);
-                    if (uriList.size() > 0){
-                        isStickerBanner.setImageURI(uriList.get(currentItem));
-                    }
-                    LogUtil.d(TAG,"=========currentItem========"+currentItem);
-                }
-                return true;
-            }
-        }
-
-        if (Math.abs(downX - upX) < 5){
-            LogUtil.d(TAG,"====return_false===");
-            setSwitcherClick();
-            return false;
-        }
-
-        LogUtil.d(TAG,"====return_false===");
-        return false;
-
-    }
-
-    private void setSwitcherClick() {
-
-        if (dataStickerBanner != null && dataStickerGroup != null){
-            if(dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0){
-                final int position = getPosition(dataStickerBanner.get(currentItem).getSticker_group_path(),dataStickerGroup);
-                final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
-                isStickerBanner.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        LogUtil.d(TAG,"=========currentItem========"+currentItem);
-                        LogUtil.d(TAG, "========onClick======");
-                        Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
-                        intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
-                        intent.putExtra(StickerGroupAdapter.POSITION, position);
-                        StickerStoreActivity.this.startActivity(intent);
-                    }
-                });
-            }
-
-        }
     }
 }

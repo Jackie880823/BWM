@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +20,11 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
+import com.bondwithme.BondWithMe.ui.wall.WallMembersOrGroupsActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
+import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 
@@ -35,7 +37,6 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final String TAG = WallCommentAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_HEAD = 0;
-    private static final int VIEW_TYPE_ICON = 1;
 
     private Context mContext;
     private List<WallCommentEntity> data;
@@ -47,8 +48,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public void addData(List<WallCommentEntity> newData) {
         data.addAll(newData);
-        //        notifyItemInserted(0);
-        notifyDataSetChanged();
+        notifyItemInserted(data.size());
     }
 
     public void setData(List<WallCommentEntity> data) {
@@ -57,7 +57,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.i(TAG, "onCreateViewHolder& viewType is " + viewType);
+        LogUtil.i(TAG, "onCreateViewHolder& viewType is " + viewType);
         if(VIEW_TYPE_HEAD != viewType) {
             // 加载Item的布局.布局中用到的真正的CardView.
             View view = LayoutInflater.from(mContext).inflate(R.layout.wall_comment_item, parent, false);
@@ -84,11 +84,14 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 item.commentHead.setVisibility(View.GONE);
             }
 
+
             WallCommentEntity comment = data.get(i - 2);
+//            WallUtil.getLoveList(new HttpTools(mContext), item.tv_agree, MainActivity.getUser().getUser_id(), comment.getComment_id(), WallUtil.LOVE_MEMBER_COMMENT_TYPE);
             VolleyUtil.initNetworkImageView(mContext, item.civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, comment.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             item.tv_comment_owner_name.setText(comment.getUser_given_name());
             item.tv_comment_content.setText(comment.getComment_content());
-            item.tv_agree_count.setText((TextUtils.isEmpty(comment.getLove_count()) ? "0" : comment.getLove_count()));
+            int count = TextUtils.isEmpty(comment.getLove_count()) ? 0 : Integer.valueOf(comment.getLove_count());
+            item.tv_agree_count.setText(String.format(mContext.getString(R.string.loves_count), count));
             item.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, comment.getComment_creation_date()));
 
             if(MainActivity.getUser().getUser_id().equals(comment.getUser_id())) {
@@ -98,19 +101,18 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
 
             if(TextUtils.isEmpty(comment.getLove_id())) {
-                item.iv_agree.setImageResource(R.drawable.agree_normal);
+                item.iv_agree.setImageResource(R.drawable.love_normal);
             } else {
-                item.iv_agree.setImageResource(R.drawable.agree_press);
+                item.iv_agree.setImageResource(R.drawable.love_press);
             }
             setCommentPic(item.iv_comment_pic, item.niv_comment_pic, comment);
         } else {
             updateListener.updateWallView(viewHolder.itemView);
-            return;
         }
     }
 
     private void setCommentPic(GifImageView iv, NetworkImageView niv, WallCommentEntity comment) {
-        Log.i(TAG, "setCommentPic& file_id: " + comment.getFile_id() + "; StickerName is " + comment.getSticker_name());
+        LogUtil.i(TAG, "setCommentPic& file_id: " + comment.getFile_id() + "; StickerName is " + comment.getSticker_name());
         if(!TextUtils.isEmpty(comment.getFile_id())) {
             niv.setVisibility(View.VISIBLE);
             iv.setVisibility(View.GONE);
@@ -154,6 +156,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         NetworkImageView niv_comment_pic;
         View commentHead;
         View commentContent;
+//        TextView tv_agree;
 
         public VHItem(View itemView) {
             super(itemView);
@@ -162,14 +165,16 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tv_comment_owner_name = (TextView) itemView.findViewById(R.id.tv_comment_owner_name);
             comment_date = (TextView) itemView.findViewById(R.id.comment_date);
             tv_agree_count = (TextView) itemView.findViewById(R.id.tv_agree_count);
+//            tv_agree = (TextView) itemView.findViewById(R.id.tv_agree);
             iv_agree = (ImageButton) itemView.findViewById(R.id.iv_agree);
             btn_comment_del = (ImageButton) itemView.findViewById(R.id.btn_comment_del);
             iv_comment_pic = (GifImageView) itemView.findViewById(R.id.iv_comment_pic);
             niv_comment_pic = (NetworkImageView) itemView.findViewById(R.id.niv_comment_pic);
             commentHead = itemView.findViewById(R.id.comment_head_ll);
             commentContent = itemView.findViewById(R.id.comment_content);
-            itemView.findViewById(R.id.rl_agree).setOnClickListener(this);
+//            tv_agree.setOnClickListener(this);
             iv_agree.setOnClickListener(this);
+            tv_agree_count.setOnClickListener(this);
             btn_comment_del.setOnClickListener(this);
             niv_comment_pic.setOnClickListener(this);
 
@@ -180,24 +185,36 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             int position = getAdapterPosition();
             WallCommentEntity commentEntity = data.get(position - 2);
             switch(v.getId()) {
-                case R.id.rl_agree:
+                case R.id.tv_agree_count:
+                case R.id.tv_agree:
+                    if(Integer.valueOf(commentEntity.getLove_count()) > 0) {
+                        Intent intent = new Intent(mContext, WallMembersOrGroupsActivity.class);
+                        intent.setAction(Constant.ACTION_SHOW_LOVED_USER);
+                        intent.putExtra(WallUtil.GET_LOVE_LIST_VIEWER_ID, MainActivity.getUser().getUser_id());
+                        intent.putExtra(WallUtil.GET_LOVE_LIST_REFER_ID, commentEntity.getComment_id());
+                        intent.putExtra(WallUtil.GET_LOVE_LIST_TYPE, WallUtil.LOVE_MEMBER_COMMENT_TYPE);
+                        mContext.startActivity(intent);
+                    }
+                    break;
+
                 case R.id.iv_agree:
                     newClick = true;
-                    int count = Integer.valueOf(tv_agree_count.getText().toString());
-                    if(TextUtils.isEmpty(commentEntity.getLove_id())) {
-                        iv_agree.setImageResource(R.drawable.agree_press);
-                        commentEntity.setLove_id(MainActivity.getUser().getUser_id());
-                        tv_agree_count.setText(count + 1 + "");
-                    } else {
-                        iv_agree.setImageResource(R.drawable.agree_normal);
-                        commentEntity.setLove_id(null);
-                        tv_agree_count.setText(count - 1 + "");
+                    updateLovedView(commentEntity);
+
+                    if(mCommentActionListener != null) {
+                        if(TextUtils.isEmpty(commentEntity.getLove_id())) {
+                            mCommentActionListener.doLove(commentEntity, false);
+                        } else {
+                            mCommentActionListener.doLove(commentEntity, true);
+                        }
                     }
-                    //判断是否已经有进行中的判断
-                    if(!runningList.contains(position)) {
-                        runningList.add(position);
-                        check(position);
-                    }
+
+                    //                    //判断是否已经有进行中的判断
+                    //                    if(!runningList.contains(position)) {
+                    //                        runningList.add(position);
+                    //                        check(position);
+                    //                    }
+
                     break;
                 case R.id.btn_comment_del: {
                     //自己发的或event creator 可以删除
@@ -211,7 +228,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 case R.id.niv_comment_pic: {
                     Intent intent = new Intent(mContext, ViewOriginalPicesActivity.class);
 
-                    ArrayList<PhotoEntity> dataList = new ArrayList();
+                    ArrayList<PhotoEntity> dataList = new ArrayList<>();
 
                     PhotoEntity peData = new PhotoEntity();
                     peData.setUser_id(commentEntity.getUser_id());
@@ -227,35 +244,83 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             }
         }
+
+        /**
+         * 更新点击相关视图
+         *
+         * @param commentEntity {@link WallCommentEntity}实例
+         */
+        private void updateLovedView(WallCommentEntity commentEntity) {
+            int count = Integer.valueOf(commentEntity.getLove_count());
+//            String text = tv_agree.getText().toString();
+            String name = MainActivity.getUser().getUser_given_name();
+            int resId;
+            if(TextUtils.isEmpty(commentEntity.getLove_id())) {
+                count += 1;
+                resId = R.drawable.love_press;
+                commentEntity.setLove_id(MainActivity.getUser().getUser_id());
+
+//                if(count > 1) {
+//                    text += (name + " ");
+//                } else {
+//                    text = name;
+//                }
+
+            } else {
+                count -= 1;
+                resId = R.drawable.love_normal;
+                commentEntity.setLove_id(null);
+
+//                if(count > 0) {
+//                    StringBuilder temp = new StringBuilder();
+//                    String split = name + " ";
+//
+//                    for(String str : text.split(split)) {
+//                        temp.append(str);
+//                    }
+//                    text = temp.toString();
+//                } else {
+//                    text = "";
+//                }
+            }
+
+            commentEntity.setLove_count(String.valueOf(count));
+//            tv_agree.setText(text);
+            iv_agree.setImageResource(resId);
+            tv_agree_count.setText(String.format(mContext.getString(R.string.loves_count), count));
+        }
     }
 
     boolean newClick;
-    List<Integer> runningList = new ArrayList<Integer>();
+    List<Integer> runningList = new ArrayList<>();
 
     private void check(final int position) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                long startTime = System.currentTimeMillis();//点击时间
-                long nowTime = System.currentTimeMillis();
-                //缓冲时间为1000
-                while(nowTime - startTime < 1000) {
-                    if(newClick) {
-                        startTime = System.currentTimeMillis();
-                        newClick = false;
+                synchronized(WallCommentAdapter.this) {
+                    long startTime = System.currentTimeMillis();//点击时间
+                    long nowTime = System.currentTimeMillis();
+                    //缓冲时间为1000
+                    while(nowTime - startTime < 1000) {
+                        if(newClick) {
+                            startTime = System.currentTimeMillis();
+                            newClick = false;
+                        }
+                        nowTime = System.currentTimeMillis();
                     }
-                    nowTime = System.currentTimeMillis();
-                }
-                try {
-                    runningList.remove(position);
-                } catch(Exception e) {
-                }
-                final WallCommentEntity commentEntity = data.get(position - 2);
-                if(mCommentActionListener != null) {
-                    if(TextUtils.isEmpty(commentEntity.getLove_id())) {
-                        mCommentActionListener.doLove(commentEntity, false);
-                    } else {
-                        mCommentActionListener.doLove(commentEntity, true);
+                    try {
+                        runningList.remove(position);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                    final WallCommentEntity commentEntity = data.get(position - 2);
+                    if(mCommentActionListener != null) {
+                        if(TextUtils.isEmpty(commentEntity.getLove_id())) {
+                            mCommentActionListener.doLove(commentEntity, false);
+                        } else {
+                            mCommentActionListener.doLove(commentEntity, true);
+                        }
                     }
                 }
 

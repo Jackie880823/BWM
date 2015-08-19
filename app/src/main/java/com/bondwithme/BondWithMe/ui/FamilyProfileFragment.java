@@ -159,7 +159,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
         tvName1.setText(groupName);
         getParentActivity().tvTitle.setText(groupName);
-        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.network_image_default, R.drawable.network_image_default);
         if (!TextUtils.isEmpty(getDofeelCode)) {
             try {
                 String filePath = "";
@@ -207,17 +207,20 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             public void onClick(View v) {
                 //聊天界面
                 Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
-                intent2.putExtra("type", 0);
-                if((TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)) && userEntity != null){
+//                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                if(userEntity != null) {
+                    intent2.putExtra("type", 0);
                     //如果上个页面没有groupId或者groupName
                     intent2.putExtra("groupId", userEntity.getGroup_id());
                     intent2.putExtra("titleName", userEntity.getUser_given_name());
                     startActivity(intent2);
-                }else {
-                    intent2.putExtra("groupId", groupId);
-                    intent2.putExtra("titleName", groupName);
-                    startActivity(intent2);
                 }
+//                }else {
+//                    intent2.putExtra("type", 1);
+//                    intent2.putExtra("groupId", groupId);
+//                    intent2.putExtra("titleName", groupName);
+//                    startActivity(intent2);
+//                }
 
             }
         });
@@ -241,17 +244,10 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
                     Intent intent = new Intent(getActivity(), PathRelationshipActivity.class);
                     intent.putExtra("member_id", memberId);
-//                    if(!TextUtils.isEmpty(relationship)){
-//                        intent.putExtra("relationship", relationship);
-//                        intent.putExtra("fam_nickname", famNickname);
-//                        intent.putExtra("member_status", memberStatus);
-////                        intent.putExtra("selectMemeber", data_Us.indexOf(userEntity.getTree_type_name()));
-//                        intent.putExtra("selectMemeber", "");
-//                    }
                     intent.putExtra("relationship", userEntity.getTree_type_name());
                     intent.putExtra("fam_nickname", userEntity.getFam_nickname());
                     intent.putExtra("member_status", userEntity.getUser_status());
-                    //传index进下个界面
+                    //传index进下个界面,需要判断index可能为-1
                     intent.putExtra("selectMemeber", data_Us.indexOf(userEntity.getTree_type_name()));
 //                    startActivityForResult(intent, 0);
                     startActivityForResult(intent, 1);
@@ -344,7 +340,14 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //                    } else if (missMessage.startsWith("You successfully sent miss")) {
 //
 //                    }
-                    MslToast.getInstance(getActivity()).showShortToast(jsonObject.getString("message"));
+//                    /already
+                    if(-1 != jsonObject.getString("message").indexOf("already")){
+                        MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
+                    }else {
+                        MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
+
+                    }
+
                 } catch (JSONException e) {
                     MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
                     e.printStackTrace();

@@ -29,7 +29,7 @@
         android:textColor="@color/btn_bg_color_gray_press"
         android:textSize="@dimen/_13dp" />
 
-    <com.bondwithme.BondWithMe.widget.MessageTextView
+    <TextView
         android:id="@+id/message_item_content_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

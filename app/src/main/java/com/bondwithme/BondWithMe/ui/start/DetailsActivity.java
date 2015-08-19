@@ -31,7 +31,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.PersonalPictureActivity;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MyTextUtil;

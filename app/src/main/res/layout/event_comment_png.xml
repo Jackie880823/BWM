@@ -52,14 +52,21 @@
                 style="@style/text_dark_default"
                 android:visibility="gone"/>
 
-            <ImageView
-                android:id="@+id/message_png_iv"
-                android:layout_width="@dimen/_80dp"
-                android:layout_height="@dimen/_80dp"
-                android:paddingTop="@dimen/default_view_margin"
-                android:scaleType="fitXY"
-                android:visibility="gone"/>
+            <!--<ImageView-->
+                <!--android:id="@+id/message_png_iv"-->
+                <!--android:layout_width="@dimen/_80dp"-->
+                <!--android:layout_height="@dimen/_80dp"-->
+                <!--android:paddingTop="@dimen/default_view_margin"-->
+                <!--android:scaleType="fitXY"-->
+                <!--android:visibility="gone"/>-->
 
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/message_png_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/default_view_margin"
+                android:visibility="gone"
+                android:scaleType="fitXY"/>
             <com.material.widget.CircularProgress
                 android:id="@+id/message_progress_bar"
                 android:layout_width="@dimen/_32dp"

@@ -367,8 +367,10 @@ public class Map4BaiduActivity extends BaseActivity implements OnGetPoiSearchRes
 
             InfoWindow infoWindow = new InfoWindow(view, latLng, -y);
 
-            // 弹出地址信息选择视图
-            mBaiduMap.showInfoWindow(infoWindow);
+            if(infoWindow!=null) {
+                // 弹出地址信息选择视图
+                mBaiduMap.showInfoWindow(infoWindow);
+            }
 
             return infoWindow;
         } else {

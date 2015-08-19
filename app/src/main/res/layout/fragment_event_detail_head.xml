@@ -1,0 +1,105 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--
+    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com.bondwithme.BondWithMe/widget/SendCommentView.java
+    -->
+
+    <!-- com.bondwithme.BondWithMe/widget/OverScrollView.java-->
+        <LinearLayout
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:paddingRight="@dimen/default_content_padding">
+
+
+            <include
+                layout="@layout/event_detail_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_view_margin" />
+
+
+        </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/default_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding">
+        <android.support.v7.widget.CardView
+            android:id="@+id/comment_container"
+            style="@style/CardViewDefault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/default_content_padding">
+
+                    <ImageView
+                        android:id="@+id/icon_comments"
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/icon_comments"
+                        android:layout_centerVertical="true" />
+
+                    <TextView
+                        style="@style/text_dark_default"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/default_view_margin"
+                        android:layout_toRightOf="@+id/icon_comments"
+                        android:layout_centerVertical="true"
+                        android:text="@string/text_comments" />
+
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/comment_split_line"
+                    style="@style/split_line_default"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+
+
+
+
+
+    <!--<com.bondwithme.BondWithMe.widget.SendCommentView-->
+    <!--android:id="@+id/comment_send"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true">-->
+    <!--</com.bondwithme.BondWithMe.widget.SendCommentView>-->
+
+
+    <!--<include layout="@layout/comment_bar" />-->
+    <!--<com.bondwithme.BondWithMe.widget.SendCommentView-->
+    <!--android:id="@+id/comment_bar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
+
+    <!--</com.bondwithme.BondWithMe.widget.SendCommentView>-->
+
+</RelativeLayout>

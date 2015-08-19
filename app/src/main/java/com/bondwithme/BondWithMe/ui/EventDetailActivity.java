@@ -24,6 +24,8 @@ import java.util.HashMap;
  */
 public class EventDetailActivity extends BaseActivity {
     private static final String Tag = EventDetailActivity.class.getSimpleName();
+    private String group_id;
+    private String Content_group_id;
 
     @Override
     protected void initBottomBar() {
@@ -88,7 +90,7 @@ public class EventDetailActivity extends BaseActivity {
             titleLeftEvent();
             return true;
         }
-        return super.onKeyUp(keyCode,event);
+        return super.onKeyUp(keyCode, event);
     }
     @Override
     protected void titleLeftEvent() {
@@ -105,13 +107,12 @@ public class EventDetailActivity extends BaseActivity {
 
     }
 
-    private String group_id;
-
     @Override
     protected Fragment getFragment() {
 //        event = (EventEntity) getIntent().getSerializableExtra("event");
         group_id = getIntent().getStringExtra("group_id");
-        return EventDetailFragment.newInstance(group_id);
+        Content_group_id = getIntent().getStringExtra("Content_group_id");
+        return EventDetailFragment.newInstance(group_id,Content_group_id);
     }
 
     @Override
@@ -152,21 +153,26 @@ public class EventDetailActivity extends BaseActivity {
 
             @Override
             public void onResult(String response) {
-                event = new Gson().fromJson(response, EventEntity.class);
-                if (isCurrentUser()) {
-                    rightButton.setImageResource(R.drawable.btn_edit);
-                    rightButton.setVisibility(View.VISIBLE);
-                    if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date()).getTime()))) {
-                        rightButton.setImageResource(R.drawable.icon_edit_press);
-                        rightButton.setEnabled(false);
+                try {
+                    event = new Gson().fromJson(response, EventEntity.class);
+                    if (isCurrentUser()) {
+                        rightButton.setImageResource(R.drawable.btn_edit);
+                        rightButton.setVisibility(View.VISIBLE);
+                        if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date()).getTime()))) {
+                            rightButton.setImageResource(R.drawable.icon_edit_press);
+                            rightButton.setEnabled(false);
+                        }
+                        if("2".equals(event.getGroup_event_status())){
+                            rightButton.setImageResource(R.drawable.icon_edit_press);
+                            title_icon.setVisibility(View.GONE);
+                            rightButton.setEnabled(false);
+                        }
+                    } else {
+                        rightButton.setVisibility(View.INVISIBLE);
                     }
-                    if("2".equals(event.getGroup_event_status())){
-                        rightButton.setImageResource(R.drawable.icon_edit_press);
-                        title_icon.setVisibility(View.GONE);
-                        rightButton.setEnabled(false);
-                    }
-                } else {
-                    rightButton.setVisibility(View.INVISIBLE);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    finish();
                 }
 
             }

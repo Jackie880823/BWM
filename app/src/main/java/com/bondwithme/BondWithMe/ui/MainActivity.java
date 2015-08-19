@@ -85,7 +85,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     List<Fragment> fragments;
 
     EventFragment eventFragment;
-    EventStartupFragment eventStartupFragment;
     private boolean iseventdate;
 
 
@@ -100,13 +99,13 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private View red_point_4;
     private View red_point_5;
     public static String STICKERS_NAME = "stickers";
-    public static String IS_FIRST_LOGIN = "firstLogin";
+    public static String IS_FIRST_LOGIN = "isFirstLogin";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (App.getLoginedUser() == null) {
-            finish();
+            App.getContextInstance().logout(this);
             return;
         }
 
@@ -169,7 +168,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     protected void onStop() {
         PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
         LAST_LEAVE_INDEX = "lastLeaveIndex";
-        IS_FIRST_LOGIN = "firstLogin";
+        IS_FIRST_LOGIN = "isFirstLogin";
         super.onStop();
     }
 
@@ -329,7 +328,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN += App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
-//        if (isFirstLogin) {
+        if (isFirstLogin) {
             new Thread() {
                 @Override
                 public void run() {
@@ -348,7 +347,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 }
             }.start();
             PreferencesUtil.saveValue(this, IS_FIRST_LOGIN, false);
-//        }
+        }
 
         mViewPager = getViewById(R.id.pager);
         fragments = new ArrayList<>();
@@ -358,7 +357,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
 //        eventFragment = EventFragment.newInstance();
-//        eventStartupFragment = EventStartupFragment.newInstance();
 //        fragments.add(eventFragment);
 //        if(isEventFragmentDate()){
 //            Log.i("isEventFragmentDate==================","true");
@@ -586,14 +584,16 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
 
     private long startTime;
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                if(System.currentTimeMillis()-startTime<1000){
-                        App.getContextInstance().exit(MainActivity.this);
-                }else {
-                    MessageUtil.showMessage(this,R.string.click_again_exit,1000);
+                if (System.currentTimeMillis() - startTime < 1000) {
+                    PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
+                    App.getContextInstance().exit(MainActivity.this);
+                } else {
+                    MessageUtil.showMessage(this, R.string.click_again_exit, 1000);
                     startTime = System.currentTimeMillis();
                 }
 //                snackBar = new SnackBar(MainActivity.this,

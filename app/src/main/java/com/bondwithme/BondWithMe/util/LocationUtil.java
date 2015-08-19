@@ -46,7 +46,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
      * <br>    谷歌服务是否可用标识位，在应用启动后获取到位置信息则标识位置设置为true,没有获取到位置信息或服务不用都为
      * <br>false。默认状态也为false
      */
-    private static boolean googleAvailable = false;
+    public static boolean googleAvailable = false;
 
     /**
      * 通过经纬度获取地址
@@ -150,16 +150,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         //判断是用百度还是google
         if(!googleAvailable) {
             // 应用启动后用谷歌获取了一次地址信息，如果这次地址信息为空则证明谷歌地图不可用，启用百度地
-            //TODO for baidu not support 64 bit cpu
-            /**baidu map*/
-            if(System.getProperty("os.arch").contains("64")) {
-                //64bit cpu
-                MessageUtil.showMessage(context, context.getString(R.string.not_support_64bit));
-                return null;
-            } else {
-                //32 bit cpu
-                intent.setClass(context, Map4BaiduActivity.class);
-            }
+            intent.setClass(context, Map4BaiduActivity.class);
         } else {
             intent.setClass(context, Map4GoogleActivity.class);
         }
@@ -223,7 +214,7 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
 
 
         // 判断是否有谷歌服务
-        if(SystemUtil.checkPlayServices(context)) {
+        if(googleAvailable) {
             if(LOCATION_TYPE_BD09LL.equals(locationType)) {
                 //                if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
                 openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
@@ -268,26 +259,39 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         context.startActivity(intent);
     }
 
+    /**
+     * 获取地图位置截图，得到图片的网络路径
+     *
+     * @param context      上下文资源
+     * @param latitude     纬度坐标
+     * @param longitude    经度坐标
+     * @param locationType 坐标类型({@link #LOCATION_TYPE_BD09LL}, {@link #LOCATION_TYPE_GCJ02}, {@link #LOCATION_TYPE_WGS84})
+     * @return 返回的所需位置图片的URL路径
+     */
     public static String getLocationPicUrl(Context context, String latitude, String longitude, String locationType) {
-        Log.i("", "1locationType======" + locationType);
-        String ssssaa = latitude + "," + longitude;
-        if(SystemUtil.checkPlayServices(context)) {
-            Log.i("", "2locationType======" + locationType);
+        LogUtil.i(TAG, "getLocationPicUrl& locationType: " + locationType);
+        String location;
+        String result;
+        if(googleAvailable) {
+            // 谷歌地图片服务可用，并能获取到位置
             if(LOCATION_TYPE_BD09LL.equals(locationType)) {
-                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
+                // 坐标类型为百度的坐标从百度服务获取路径
+                location = longitude + "," + latitude;
+                result = String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, location, context.getString(R.string.google_map_pic_size), location);
             } else {
-                Log.i("", "3locationType======" + locationType);
-                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
+                // 从谷歌获取路径
+                location = latitude + "," + longitude;
+                result = String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, location, context.getString(R.string.google_map_pic_size), location);
                 //                return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
             }
         } else {
-            Log.i("", "4locationType======" + locationType);
-            return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, ssssaa, context.getString(R.string.google_map_pic_size), ssssaa);
+            // 谷歌服用获取不到位置，从百度服务中获取图片路径
+            location = longitude + "," + latitude;
+            result = String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, location, context.getString(R.string.google_map_pic_size), location);
 
         }
-        //        return String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_GOOGLE, latitude + "," + longitude, context.getString(R.string.google_map_pic_size), latitude + "," + longitude);
-
-        //        String sss = "http://api.map.baidu.com/staticimage?width=400&height=300&center=" + ssssaa + "&zoom=11&markers=" + ssssaa + "&markerStyles=m,T";
+        LogUtil.i(TAG, "getLocationPicUrl& result picture url: " + result);
+        return result;
     }
 
     /**

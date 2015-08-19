@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -74,7 +73,12 @@ public class MeFragment extends BaseFragment<MeActivity> {
         tvName1.setText(MainActivity.getUser().getUser_given_name());
 //        tvTitle.setText(MainActivity.getUser().getUser_given_name());
         tvId1.setText(getResources().getString(R.string.app_name) + " ID: " + MainActivity.getUser().getDis_bondwithme_id());
-        tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
+        if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
+        {
+            tvLoginId.setText(getResources().getString(R.string.login) + " ID: "+MainActivity.getUser().getUser_login_type());
+        }else {
+            tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
+        }
 
         String dofeel_code = MainActivity.getUser().getDofeel_code();
         if (!TextUtils.isEmpty((dofeel_code))) {
@@ -127,7 +131,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
                 PhotoEntity peData = new PhotoEntity();
                 peData.setUser_id(MainActivity.getUser().getUser_id());
                 peData.setFile_id("profile");
-                peData.setPhoto_caption(Constant.Module_profile);
+                peData.setPhoto_caption(Constant.Module_Original);
                 peData.setPhoto_multipe("false");
                 datas.add(peData);
                 intent.putExtra("is_data", true);

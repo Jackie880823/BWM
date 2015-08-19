@@ -48,34 +48,35 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
 
         String picPath = MainActivity.STICKERS_NAME+"/"+stickerInfo.getPath()+"/"+stickerInfo.getSticker_name()+stickerInfo.getType();
         Bitmap bmp = BitmapFactory.decodeFile(picPath);
+//        Bitmap bmp = LocalImageLoader.loadBitmapFromFile(mContext, picPath, holder.ivMySticker.getWidth(), holder.ivMySticker.getHeight());
         holder.ivMySticker.setImageBitmap(bmp);
 
         holder.tvName.setText(stickerInfo.getName());
         holder.tvRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean deleted = true;
-                File f = new File(MainActivity.STICKERS_NAME +"/"+stickerInfo.getPath());
+//                boolean deleted = true;
+//                File f = new File(MainActivity.STICKERS_NAME +"/"+stickerInfo.getPath());
 //                deleted = deleteDirectory(f);
-                if (deleted){
-                    try {
-                        Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-                        stickerDao.delete(stickerInfo);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    //发广播更新StickerStoreActivity的DOWNLOAD or √
-                    Intent intent = new Intent(MyStickerActivity.ACTION_UPDATE);
-                    intent.putExtra("sticker_path",stickerInfo.getPath());
-//                    intent.putExtra("position",stickerInfo.getPosition());
-                    mContext.sendBroadcast(intent);
-
-                    int position = data.indexOf(stickerInfo);
-                    if (position != -1){
-                        data.remove(position);
-                        notifyItemRemoved(position);
-                    }
+//                if (deleted){
+                try {
+                    Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+                    stickerDao.delete(stickerInfo);
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
+                //发广播更新StickerStoreActivity的DOWNLOAD or √
+                Intent intent = new Intent(MyStickerActivity.ACTION_UPDATE);
+                intent.putExtra(StickerGroupAdapter.PATH,stickerInfo.getPath());
+//                    intent.putExtra("position",stickerInfo.getPosition());
+                mContext.sendBroadcast(intent);
+
+                int position = data.indexOf(stickerInfo);
+                if (position != -1){
+                    data.remove(position);
+                    notifyItemRemoved(position);
+                }
+//                }
             }
         });
     }

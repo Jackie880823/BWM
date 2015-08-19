@@ -30,6 +30,7 @@ public class Constant {
 
     public static final String ACTION_SHOW_NOTIFY_USER = "ACTION_SHOW_NOTIFY_USER";
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
+    public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
 
 
     /**
@@ -37,7 +38,6 @@ public class Constant {
      */
 //    public static final String API_SERVER = "http://m.bondwith.me";
 //    public static final String API_SERVER = "http://pt.bondwith.me";
-//    public static final String API_SERVER = "http://sc.bondwith.me";
     public static final String API_SERVER = "http://dev.bondwith.me";
 
     public static final int TRACKER_SITE_ID = 3;//dev
@@ -57,6 +57,7 @@ public class Constant {
     public static final String API_WALL_COMMENT_LOVE = API_SERVER + "/bondwithme/index.php/api/love_comment";
     public static final String API_WALL_COMMENT_DELETE = API_SERVER + "/bondwithme/index.php/api/comment/%s";
     public static final String API_WALL_DELETE = API_SERVER + "/bondwithme/index.php/api/removeContent/%s";
+    public static final String API_WALL_GET_LOVE_MEMBER_LIST = API_SERVER + "/bondwithme/index.php/api/loveMemberList";
 
     public static final String API_REGIST_PUSH = API_SERVER + "/bondwithme/index.php/api/pushToken";
     public static final String UN_REGISTER_URL = API_SERVER + "/bondwithme/index.php/api/auth/%s";
@@ -90,6 +91,16 @@ public class Constant {
     public static final String API_GET_PIC = API_SERVER + "/bondwithme/index.php/api/%s/%s/fid/%s" + "/" + System.currentTimeMillis();
     public static final String API_GET_COMMENT_PIC = API_SERVER + "/bondwithme/index.php/api/%s/%s/fid/%s";
     public static final String API_GET_PHOTO = API_SERVER + "/bondwithme/index.php/api/%s/%s/fid/profile";
+
+    /**
+     * 获取视频的链接，两个参数：1.content_creator_id; 2.视频文件名称
+     */
+    public static final String API_GET_VIDEO = API_SERVER + "/bondwithme/index.php/api/video_preview/%s/fid/%s";
+
+    /**
+     * 获取视频小图的链接，两个参数：1.content_creator_id; 2.视频文件名称
+     */
+    public static final String API_GET_VIDEO_THUMBNAIL = API_SERVER + "/bondwithme/index.php/api/video_thumbnail/%s/fid/%s";
 
     /**
      * for pic
@@ -130,6 +141,7 @@ public class Constant {
     public static final String API_BONDALERT_GROUP = API_SERVER + "/bondwithme/index.php/api/bondAlertList/%s/module/group";
     public static final String API_BONDALERT_GROUP_CONFIRM = API_SERVER + "/bondwithme/index.php/api/confirmJoinGroup/%s";
     public static final String API_BONDALERT_GROUP_REJECT = API_SERVER + "/bondwithme/index.php/api/rejectJoinGroup/%s";
+    public static final String API_BONDALERT_REMOVE_RECOMMEND = API_SERVER + "/bondwithme/index.php/api/removeRecomUser/";
 
     /**
      * Api for sticker store
@@ -282,4 +294,7 @@ public class Constant {
     public static final String TRACKER_AUTH_TOKEN = "3bde48623ab1cea339c606abd09debd7";
 
 
+    public static final String API_MESSAGE_DOWNLOAD_AUDIO = API_SERVER + "/bondwithme/index.php/api/audio_preview/%s/fid/%s";
+    public static final String API_MESSAGE_DOWNLOAD_VIDEO = API_SERVER + "/bondwithme/index.php/api/video_preview/%s/fid/%s";
+    public static final String API_MESSAGE_DOWNLOAD_VIDEO_PIC = API_SERVER + "/bondwithme/index.php/api/video_thumbnail/%s/fid/%s";
 }

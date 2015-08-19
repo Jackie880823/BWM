@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.bondwithme.BondWithMe.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                                                       android:layout_width="match_parent"
+                                                       android:layout_height="match_parent">
+
     <ImageView
         android:id="@+id/iv_pic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
+
     <CheckBox
         android:id="@+id/select_image_right"
         style="@style/CustomCheckboxTheme"
-        android:layout_alignParentRight="true"
-        />
+        android:layout_alignParentRight="true"/>
 
 </com.bondwithme.BondWithMe.widget.SquareRelativeLayout>

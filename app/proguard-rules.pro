@@ -155,6 +155,9 @@
 -keep class com.baidu.** { *; }
 -keep class vi.com.gdi.bgl.android.** { *; }
 
+-dontwarn com.j256.ormlite.**
+#-keep com.j256.ormlite.** { *; }
+
 #xmpp asmack
 
 #Only if the above haven't fixed then, go with keeping your db class files and its members.

@@ -37,6 +37,14 @@
         <item name="android:textColor">@color/default_text_color_dark</item>
     </style>
 
+    <style name="text_user_name" parent="text_dark_default">
+        <item name="android:lines">1</item>
+        <item name="android:maxEms">6</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="text_light_default" parent="text_default">
         <item name="android:textColor">@color/default_text_color_light</item>
     </style>
@@ -327,7 +335,7 @@
         <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
         <item name="android:textSize"> @dimen/_30dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:inputType">phone</item>
+        <item name="android:inputType">numberSigned</item>
         <item name="android:hint">@string/text_start_enter_code</item>
     </style>
 
@@ -335,7 +343,7 @@
         <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
         <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
         <item name="android:textSize"> @dimen/text_medium_size</item>
-        <item name="android:inputType">phone</item>
+        <item name="android:inputType">numberSigned</item>
         <item name="android:digits">0123456789</item>
         <item name="android:hint">@string/text_start_phone_number</item>
     </style>
@@ -411,5 +419,24 @@
         <item name="com.bondwithme.BondWithMe:paper_text_color">@color/default_text_color_dark</item>
     </style>
 
+    <style name="text_empty_pages" parent="text_default">
+        <item name="android:textColor">@color/default_text_color_dark</item>
+        <item name="android:textSize">17dp</item>
+    </style>
+    <style name="NumberProgressBar_Default">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
 
+        <item name="progress_max">100</item>
+        <item name="progress_current">0</item>
+
+        <item name="progress_unreached_color">#CCCCCC</item>
+        <item name="progress_reached_color">#3498DB</item>
+
+        <item name="progress_text_size">10sp</item>
+        <item name="progress_text_color">#3498DB</item>
+
+        <item name="progress_reached_bar_height">1.5dp</item>
+        <item name="progress_unreached_bar_height">0.75dp</item>
+    </style>
 </resources>

@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -19,12 +20,15 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,22 +36,34 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.action.MessageAction;
 import com.bondwithme.BondWithMe.adapter.MessageChatAdapter;
+import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
-import com.bondwithme.BondWithMe.ui.wall.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.util.AudioPlayUtils;
 import com.bondwithme.BondWithMe.util.CustomLengthFilter;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
+import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.bondwithme.BondWithMe.widget.StickerLinearLayout;
+import com.czt.mp3recorder.MP3Recorder;
+import com.material.widget.Dialog;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +73,7 @@ import java.util.TimerTask;
 /**
  * Created by quankun on 15/4/24.
  */
-public class MessageChatActivity extends BaseActivity implements View.OnTouchListener, StickerViewClickListener {
+public class MessageChatActivity extends BaseActivity implements View.OnTouchListener, StickerViewClickListener, View.OnLongClickListener {
     private Context mContext;
 //    private ProgressDialog progressDialog;
     /**
@@ -86,6 +102,18 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private LinearLayout expandFunctionLinear;//加号
     private LinearLayout stickerLinear;//表情库
 
+    private LinearLayout chat_gn_ll;//隐藏键盘输入时布局
+    private ImageView chat_mic_keyboard;//语音和文字输入切换按钮
+    private LinearLayout chat_mic_ll;//语音按钮布局
+    private TextView chat_mic_text;//语音输入提示
+    private TextView chat_mic_time;//语音录制时间显示
+    private ImageView mic_iv;//语音录制按钮
+    private ImageView mic_left;//语音录制左边按钮
+    private ImageView mic_right;//语音录制右边按钮
+    private ImageView chat_gn;
+
+    private boolean isShowKBPic = false;
+
     public LinearLayout empty_message;
 
     private List<MsgEntity> msgList;
@@ -103,6 +131,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private final static int REQUEST_HEAD_CAMERA = 101;
     private final static int REQUEST_HEAD_FINAL = 102;
     private final static int INPUT_EDIT_MAX_LENGTH = 1000;
+    private final static int CAMERA_ACTIVITY = 103;
     private Intent intent;
 
     private int indexPage = 1;
@@ -125,6 +154,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public final static int GET_HISTORY_MESSAGE = 0X105;
     public final static int GET_SEND_OVER_MESSAGE = 0X106;
     public final static int GET_TIMER_MESSAGE = 0X107;
+    private final static int GET_RECORD_TIME = 0X108;
+    private final static int SEND_AUDIO_MESSAGE = 0X109;
     public int INITIAL_LIMIT = 10;
 
     public MessageAction messageAction;
@@ -132,10 +163,22 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public LinearLayoutManager llm;
     private InputMethodManager imm;
     private Timer mTimer;
+    private float touchDownX;
+    private int totalMove;
 
     private int isNewGroup;
     private ModifyStickerReceiver stickerReceiver;
     private boolean isGroupChat;
+    private StickerLinearLayout chat_main_ll;
+
+    private long voiceBeginTime = 0;
+    private int mlCount = 0;
+
+    private MP3Recorder mRecorder;
+    private Timer timer;
+    private File audioFile;
+
+    private MsgEntity audioMsgEntity;
 
     Handler handler = new Handler() {
         @Override
@@ -160,6 +203,23 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         if (empty_message.getVisibility() == View.VISIBLE) {
                             empty_message.setVisibility(View.GONE);
                             swipeRefreshLayout.setVisibility(View.VISIBLE);
+                        }
+                        boolean hasAudioMsg = false;
+                        for (MsgEntity msgEntity1 : msgSendList) {
+                            if (audioMsgEntity != null && audioMsgEntity.getAudio_filename().equalsIgnoreCase(
+                                    msgEntity1.getAudio_filename())) {
+                                hasAudioMsg = true;
+                                break;
+                            }
+                            if (audioMsgEntity != null && audioMsgEntity.getVideo_filename().equalsIgnoreCase(
+                                    msgEntity1.getVideo_filename())) {
+                                hasAudioMsg = true;
+                                break;
+                            }
+                        }
+                        if (!hasAudioMsg && audioMsgEntity != null) {
+                            msgSendList.add(audioMsgEntity);
+                            Collections.sort(msgSendList, new MessageAction.SortExpertsTeamDate());
                         }
                         messageChatAdapter.addSendData(msgSendList);
                     }
@@ -210,7 +270,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     try {
                         String postType = jsonObject.optString("postType");
                         if ("postPhoto".equals(postType) || "postSticker".equals(postType)) {
-                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -219,7 +279,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     JSONObject textJsonObject = (JSONObject) msg.obj;
                     try {
                         if ("postText".equals(textJsonObject.getString("postType"))) {
-                            getMsg(INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -232,7 +292,56 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             empty_message.setVisibility(View.GONE);
                             swipeRefreshLayout.setVisibility(View.VISIBLE);
                         }
+                        boolean hasAudioMsg = false;
+                        for (MsgEntity msgEntity1 : msgTimerList) {
+                            if (audioMsgEntity != null && audioMsgEntity.getAudio_filename().equalsIgnoreCase(
+                                    msgEntity1.getAudio_filename())) {
+                                hasAudioMsg = true;
+                                break;
+                            }
+                        }
+                        if (!hasAudioMsg && audioMsgEntity != null) {
+                            msgTimerList.add(audioMsgEntity);
+                            Collections.sort(msgTimerList, new MessageAction.SortExpertsTeamDate());
+                        }
                         messageChatAdapter.addTimerData(msgTimerList);
+                    }
+                    break;
+                case GET_RECORD_TIME:
+                    mlCount++;
+                    if (mlCount < 115) {
+                        chat_mic_time.setText(MyDateUtils.formatRecordTime(mlCount));
+                    } else {
+                        int eciprocalrCount = 200 - mlCount;
+                        chat_mic_time.setText("还可以录制" + eciprocalrCount + "秒");
+                        if (mlCount == 200) {
+                            if (timer != null) {
+                                timer.cancel();
+                                //发送语音
+
+                            }
+                        }
+                    }
+                    break;
+                case SEND_AUDIO_MESSAGE:
+                    JSONObject audioJsonObject = (JSONObject) msg.obj;
+                    if (audioJsonObject == null) {
+                        return;
+                    }
+                    try {
+                        String audio_filename = audioJsonObject.optString("audio_filename");
+                        String video_filename = audioJsonObject.optString("video_filename");
+                        String video_thumbnail = audioJsonObject.optString("video_thumbnail");
+                        String video_duration = audioJsonObject.optString("video_duration");
+                        String audio_duration = audioJsonObject.optString("audio_duration");
+                        audioMsgEntity = new MsgEntity();
+                        audioMsgEntity.setAudio_filename(audio_filename);
+                        audioMsgEntity.setVideo_filename(video_filename);
+                        audioMsgEntity.setVideo_thumbnail(video_thumbnail);
+                        audioMsgEntity.setVideo_duration(video_duration);
+                        audioMsgEntity.setAudio_duration(audio_duration);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     break;
             }
@@ -333,37 +442,16 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         }
         mContext = this;
         messageAction = new MessageAction(mContext, handler);
-//        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
-//        progressDialog.show();
         msgList = new ArrayList<>();
-//        if (userOrGroupType == 0) {
-//            titleName
-//            tvTitle.setText(userEntity.getUser_given_name());
-//        } else if (userOrGroupType == 1) {
-//            tvTitle.setText(groupEntity.getGroup_name());
-//        } else {
-//            tvTitle.setText("error");
-//        }
         groupId = getIntent().getStringExtra("groupId");
         titleName = getIntent().getStringExtra("titleName");
-//        if (userOrGroupType == 0) {
-//            userEntity = (PrivateMessageEntity) getIntent().getExtras().getSerializable("userEntity");
-//            if (userEntity != null) {
-//                groupId = userEntity.getGroup_id();
-//            }
-//        } else if (userOrGroupType == 1) {
-//            groupEntity = (GroupMessageEntity) getIntent().getExtras().getSerializable("groupEntity");
-//            if (groupEntity != null) {
-//                groupId = groupEntity.getGroup_id();
-//            }
-//        } else {
-//            finish();
-//        }
+        mRecorder = new MP3Recorder();
         setView();
         setAllListener();
         imm = (InputMethodManager) getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         llm = new LinearLayoutManager(MessageChatActivity.this);
+        llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
 
         messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm, isGroupChat);
@@ -380,6 +468,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         IntentFilter intentFilter = new IntentFilter(StickerStoreActivity.ACTION_FINISHED);
         stickerReceiver = new ModifyStickerReceiver();
         registerReceiver(stickerReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        AudioPlayUtils.stopAudio();
     }
 
     @Override
@@ -404,7 +498,26 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         contactTextView = getViewById(R.id.contact_tv);
         sendTextView = getViewById(R.id.btn_send);
         empty_message = getViewById(R.id.no_message_data_linear);
+        chat_main_ll = getViewById(R.id.chat_main_ll);
 
+        chat_main_ll.setOnResizeListener(new StickerLinearLayout.OnResizeListener() {
+            @Override
+            public void OnResize(int w, int h, int oldw, int oldh) {
+                if (h < oldh) {
+                    llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+                }
+            }
+        });
+
+        chat_gn_ll = getViewById(R.id.chat_gn_ll);
+        chat_mic_keyboard = getViewById(R.id.chat_mic_keyboard);
+        chat_mic_ll = getViewById(R.id.chat_mic_ll);
+        chat_mic_text = getViewById(R.id.chat_mic_text);
+        chat_mic_time = getViewById(R.id.chat_mic_time);
+        mic_iv = getViewById(R.id.mic_iv);
+        mic_left = getViewById(R.id.mic_left);
+        mic_right = getViewById(R.id.mic_right);
+        chat_gn = getViewById(R.id.chat_gn);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -425,6 +538,38 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             }
         }, 50);
 
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.mic_iv:
+                if (mlCount != 0) {
+                    mlCount = 0;
+                }
+                mic_iv.setImageResource(R.drawable.chat_voice_press);
+                try {
+                    audioFile = FileUtil.saveAudioFile(mContext);
+                    mRecorder.start(audioFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                chat_mic_text.setText("松开发送");
+                voiceBeginTime = System.currentTimeMillis();
+                TimerTask task = new TimerTask() {
+                    public void run() {
+                        Message message = new Message();
+                        message.what = GET_RECORD_TIME;
+                        handler.sendMessage(message);
+                    }
+                };
+                timer = new Timer(true);
+                timer.schedule(task, 1000, 1000); //延时1000ms后执行，1000ms执行一次
+                //timer.cancel(); //退出计时器
+                break;
+        }
+
+        return false;
     }
 
     class ModifyStickerReceiver extends BroadcastReceiver {
@@ -473,7 +618,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 if (stickerLinear.getVisibility() == View.VISIBLE) {
                     hideAllViewState();
                 } else {
-
                     if (imm.isActive()) {
                         imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
                         handler.postDelayed(new Runnable() {
@@ -494,7 +638,39 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 //                stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
                 break;
             case R.id.camera_tv://打开相机
-                openCamera();
+                LayoutInflater factory = LayoutInflater.from(mContext);
+                View selectIntention = factory.inflate(R.layout.dialog_message_title_right, null);
+                final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+                TextView tvAddNewMember = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
+                TextView tvCreateNewGroup = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
+                TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+                tvAddNewMember.setText("录制视频");
+                tvCreateNewGroup.setText("拍摄照片");
+                tvAddNewMember.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                        mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);//画质0.5
+                        mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 70000);//70s
+                        startActivityForResult(mIntent, CAMERA_ACTIVITY);//CAMERA_ACTIVITY = 1
+                        showSelectDialog.dismiss();
+                    }
+                });
+
+                tvCreateNewGroup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openCamera();
+                        showSelectDialog.dismiss();
+                    }
+                });
+                cancelTv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showSelectDialog.dismiss();
+                    }
+                });
+                showSelectDialog.show();
                 break;
             case R.id.album_tv://打开本地相册
                 openAlbum();
@@ -508,35 +684,115 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             case R.id.btn_send://信息发送按钮
                 sendTextMessage();
                 break;
+            case R.id.chat_gn_ll://隐藏键盘输入时布局
+                if (chat_mic_ll.getVisibility() == View.VISIBLE) {
+                    goneView(chat_mic_ll, chat_gn, R.drawable.chat_choose_up);
+                } else {
+                    visibleView(chat_mic_ll, chat_gn, R.drawable.chat_choose_down);
+                }
+                break;
+            case R.id.chat_mic_keyboard://语音和文字输入切换按钮
+                goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
+                goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
+                llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+                if (isShowKBPic) {
+                    isShowKBPic = false;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                            goneView(chat_gn_ll, chat_gn, R.drawable.chat_choose_down);
+                            goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_mic);
+                            visibleView(etChat, null, 0);
+                            etChat.setFocusable(true);
+                            etChat.setFocusableInTouchMode(true);
+                            etChat.requestFocus();
+                        }
+                    }, 50);
+                } else {
+                    UIUtil.hideKeyboard(mContext, etChat);
+                    isShowKBPic = true;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            visibleView(chat_gn_ll, chat_gn, R.drawable.chat_choose_down);
+                            visibleView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_kb);
+                            goneView(etChat, null, 0);
+                        }
+                    }, 50);
+                }
+
+                break;
+            case R.id.chat_mic_ll://语音按钮布局
+                break;
+            case R.id.chat_mic_text://语音输入提示
+                break;
+            case R.id.chat_mic_time://语音录制时间显示
+                break;
+            case R.id.mic_iv://语音录制按钮
+                break;
+            case R.id.mic_left://语音录制左边按钮
+                break;
+            case R.id.mic_right://语音录制右边按钮
+                break;
+        }
+    }
+
+    private void goneView(View view, ImageView iv, int resourceId) {
+        if (view != null && view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        }
+        if (iv != null && resourceId != 0) {
+            iv.setImageResource(resourceId);
+        }
+    }
+
+    private void visibleView(View view, ImageView iv, int resourceId) {
+        if (view != null && view.getVisibility() == View.GONE) {
+            view.setVisibility(View.VISIBLE);
+        }
+        if (iv != null && resourceId != 0) {
+            iv.setImageResource(resourceId);
+        }
+    }
+
+    private void inVisibleView(View view, ImageView iv, int resourceId) {
+        if (view != null && view.getVisibility() == View.GONE) {
+            view.setVisibility(View.INVISIBLE);
+        }
+        if (iv != null && resourceId != 0) {
+            iv.setImageResource(resourceId);
         }
     }
 
     private void showExpandFunctionView() {
-        if (stickerLinear.getVisibility() == View.VISIBLE) {
-            stickerLinear.setVisibility(View.GONE);
-            stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
-        }
-        expandFunctionLinear.setVisibility(View.VISIBLE);
-        expandFunctionButton.setImageResource(R.drawable.chat_plus_press);
+        goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
+        isShowKBPic = false;
+        goneView(chat_gn_ll, chat_gn, R.drawable.chat_choose_down);
+        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_mic);
+        visibleView(etChat, null, 0);
+        visibleView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_press);
         recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
     }
 
     private void showStickerView() {
-        if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
-            expandFunctionLinear.setVisibility(View.GONE);
-            expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
-        }
-        stickerLinear.setVisibility(View.VISIBLE);
-        stickerImageButton.setImageResource(R.drawable.chat_expression_press);
-        recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
+        goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
+        isShowKBPic = false;
+        goneView(chat_gn_ll, chat_gn, R.drawable.chat_choose_down);
+        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_mic);
+        visibleView(etChat, null, 0);
+        visibleView(stickerLinear, stickerImageButton, R.drawable.chat_expression_press);
+        llm.scrollToPosition(messageChatAdapter.getItemCount() - 1);
     }
 
     private void hideAllViewState() {
         UIUtil.hideKeyboard(mContext, etChat);
-        expandFunctionLinear.setVisibility(View.GONE);
-        stickerLinear.setVisibility(View.GONE);
-        expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
-        stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
+        isShowKBPic = false;
+        goneView(chat_gn_ll, chat_gn, R.drawable.chat_choose_down);
+        goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_mic);
+        visibleView(etChat, null, 0);
+        goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
+        goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
     }
 
     @Override
@@ -547,46 +803,124 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     case R.id.message_recyclerView:
                         hideAllViewState();
                         break;
+                    case R.id.no_message_data_linear:
+                        hideAllViewState();
+                        break;
                     case R.id.et_chat:
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (expandFunctionLinear.getVisibility() == View.VISIBLE) {
-                                    expandFunctionLinear.setVisibility(View.GONE);
-                                    expandFunctionButton.setImageResource(R.drawable.chat_plus_normal);
-                                }
-                                if (stickerLinear.getVisibility() == View.VISIBLE) {
-                                    stickerLinear.setVisibility(View.GONE);
-                                    stickerImageButton.setImageResource(R.drawable.chat_expression_normal);
-                                }
+                                goneView(chat_mic_ll, chat_mic_keyboard, R.drawable.chat_choose_mic);
+                                goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
+                                goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
                             }
                         }, 50);
+                        break;
+                    case R.id.mic_iv:
+                        touchDownX = event.getRawX();
                         break;
                 }
             case MotionEvent.ACTION_UP:
                 switch (v.getId()) {
                     case R.id.et_chat:
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                recyclerView.scrollToPosition(messageChatAdapter.getItemCount() - 1);
-                            }
-                        }, 50);
-
                         if (!imm.isActive()) {
                             handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    imm.showSoftInput(etChat, InputMethodManager.SHOW_FORCED);
+                                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                                    etChat.setFocusable(true);
+                                    etChat.setFocusableInTouchMode(true);
+                                    etChat.requestFocus();
                                 }
                             }, 50);
                         }
                         break;
+                    case R.id.mic_iv:
+                        mic_iv.setImageResource(R.drawable.chat_voice);
+                        chat_mic_time.setText(MyDateUtils.formatRecordTime(mlCount));
+                        if (timer != null) {
+                            timer.cancel();
+                        }
+                        mRecorder.stop();
+                        if (audioFile != null && audioFile.exists() && mlCount >= 2) {
+                            mlCount++;
+                            uploadAudioOrVideo(audioFile, true, "");
+                        } else if (audioFile != null && audioFile.exists()) {
+                            audioFile.delete();
+                        }
+                        mlCount = 0;
+                        break;
                 }
+
+            case MotionEvent.ACTION_MOVE:
+                switch (v.getId()) {
+                    case R.id.mic_iv:
+                        int[] arrayLeft = new int[2];
+                        mic_left.getLocationOnScreen(arrayLeft);
+                        int[] arrayRight = new int[2];
+                        mic_right.getLocationOnScreen(arrayRight);
+                        totalMove = (arrayRight[0] - arrayLeft[0]) / 2;
+                        float moveX = event.getRawX();
+                        float moveRange = moveX - touchDownX;
+                        float mplificationNum;
+                        if (moveRange < 0) {
+                            mplificationNum = (-moveRange) / totalMove;
+                        } else {
+                            mplificationNum = moveRange / totalMove;
+                        }
+                        boolean isInLeft = isInView(mic_left, mic_iv, event);
+                        boolean isInRight = isInView(mic_left, mic_iv, event);
+                        if (!isInLeft || !isInRight) {
+                            chat_mic_text.setText(MyDateUtils.formatRecordTime(mlCount));
+                        }
+                        if (moveRange < -50f) {
+                            if (mplificationNum < 1) {
+                                mic_left.setScaleX(1 + mplificationNum);
+                                mic_left.setScaleY(1 + mplificationNum);
+                            }
+                            if (isInLeft) {
+                                chat_mic_text.setText("松手试听");
+                                if (timer != null) {
+                                    timer.cancel();
+                                }
+                            }
+                        }
+                        if (moveRange > 50f) {
+                            if (mplificationNum < 1) {
+                                mic_right.setScaleX(1 + mplificationNum);
+                                mic_right.setScaleY(1 + mplificationNum);
+                            }
+                            if (isInRight) {
+                                chat_mic_text.setText("松手取消发送");
+                                if (timer != null) {
+                                    timer.cancel();
+                                }
+                            }
+                        }
+                        break;
+                }
+
+                break;
         }
         return false;
     }
 
+    public boolean isInView(View view1, View view2, MotionEvent event) {
+        int clickX = ((int) event.getRawX());
+        int clickY = ((int) event.getRawY());
+        //如下的view表示Activity中的子View或者控件
+        int[] location = new int[2];
+        view1.getLocationOnScreen(location);
+        int x = location[0];
+        int y = location[1];
+        int width = view1.getWidth();
+        int height = view1.getHeight();
+        if (clickX > x && clickX < (x + width) &&
+                clickY > y && clickY < (y + height)) {
+            return true;  //这个条件成立，则判断这个view被点击了
+        }
+        return false;
+    }
 
     private void sendTextMessage() {
         final String content = etChat.getText().toString();
@@ -617,17 +951,85 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         intent = new Intent(getApplicationContext(), SelectPhotosActivity.class);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        intent.putExtra(MediaData.USE_VIDEO_AVAILABLE, true);
         startActivityForResult(intent, REQUEST_HEAD_PHOTO);
     }
 
     List<Uri> pickUries = new ArrayList();
 
+    private void uploadVideo(final Uri voideUri) {
+        if (voideUri != null) {
+            File file = new File(voideUri.getPath());
+            float fileLength = file.length();
+            String fomatLength = null;
+            boolean isTooBig = false;
+            if (fileLength <= 1024) {
+                fileLength = (float) (Math.round(fileLength * 100)) / 100;
+                fomatLength = fileLength + "B";
+            } else {
+                fileLength = fileLength / 1024;
+                if (fileLength <= 1024) {
+                    fileLength = (float) (Math.round(fileLength * 100)) / 100;
+                    fomatLength = fileLength + "KB";
+                } else {
+                    fileLength = fileLength / 1024;
+                    if (fileLength < 50) {
+                        fileLength = (float) (Math.round(fileLength * 100)) / 100;
+                        fomatLength = fileLength + "MB";
+                    } else {
+                        isTooBig = true;
+                    }
+                }
+            }
+
+            LayoutInflater factory = LayoutInflater.from(mContext);
+            View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+            final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+            TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+            if (!isTooBig) {
+                fomatLength = String.format("所选视频大小约为%s,是否需要发送", fomatLength);
+            } else {
+                fomatLength = "所选视频太大";
+            }
+            tv_no_member.setText(fomatLength);
+
+            TextView tv_ok = (TextView) selectIntention.findViewById(R.id.tv_ok);
+            TextView tv_cancel = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+            View line_view = selectIntention.findViewById(R.id.line_view);
+            if (!isTooBig) {
+                tv_cancel.setVisibility(View.VISIBLE);
+                line_view.setVisibility(View.VISIBLE);
+                tv_ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        uploadAudioOrVideo(new File(voideUri.getPath()), false, voideUri.toString());
+                        showSelectDialog.dismiss();
+                    }
+                });
+                tv_cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showSelectDialog.dismiss();
+                    }
+                });
+            } else {
+                tv_cancel.setVisibility(View.GONE);
+                line_view.setVisibility(View.GONE);
+                tv_ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showSelectDialog.dismiss();
+                    }
+                });
+            }
+            showSelectDialog.show();
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Log.i("M_requestCode====",requestCode+"");
-//        Log.i("M_resultCode====",resultCode+"");
         String groupNmae;
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
@@ -635,18 +1037,23 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case REQUEST_HEAD_PHOTO:
                     pickUries.clear();
                     if (data != null) {
-                        ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
-                        pickUries.addAll(uris);
-                        for (Uri uri : pickUries) {
-                            MsgEntity msgEntity = new MsgEntity();
-                            msgEntity.setSticker_type(".png");
-                            msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-                            msgEntity.setUri(uri);
-                            messageChatAdapter.addMsgEntity(msgEntity);
+                        String type = data.getStringExtra(SelectPhotosActivity.RESULT_MEDIA_TYPE);
+                        if (MediaData.TYPE_VIDEO.equals(type)) {
+                            Uri voideUri = data.getData();
+                            uploadVideo(voideUri);
+                        } else {
+                            ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
+                            pickUries.addAll(uris);
+                            for (Uri uri : pickUries) {
+                                MsgEntity msgEntity = new MsgEntity();
+                                msgEntity.setSticker_type(".png");
+                                msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+                                msgEntity.setUri(uri);
+                                messageChatAdapter.addMsgEntity(msgEntity);
+                            }
+                            handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
                         }
-                        handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
                     }
-
                     break;
 
                 // 如果是调用相机拍照时
@@ -665,6 +1072,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     if (!TextUtils.isEmpty(groupNmae)) {
                         tvTitle.setText(groupNmae);
                     }
+                    break;
+                case CAMERA_ACTIVITY:
+                    Uri voideUri = data.getData();
+                    uploadVideo(voideUri);
                     break;
                 default:
                     break;
@@ -705,16 +1116,24 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private void setAllListener() {
         expandFunctionButton.setOnClickListener(this);
         stickerImageButton.setOnClickListener(this);
-        etChat.setOnClickListener(this);
         cameraTextView.setOnClickListener(this);
         albumTextView.setOnClickListener(this);
         locationTextView.setOnClickListener(this);
         videoTextView.setOnClickListener(this);
         contactTextView.setOnClickListener(this);
         sendTextView.setOnClickListener(this);
+        chat_gn_ll.setOnClickListener(this);
+        chat_mic_keyboard.setOnClickListener(this);
+        mic_iv.setOnClickListener(this);
+        mic_left.setOnClickListener(this);
+        mic_right.setOnClickListener(this);
 
         recyclerView.setOnTouchListener(this);
         etChat.setOnTouchListener(this);
+        empty_message.setOnTouchListener(this);
+        mic_iv.setOnTouchListener(this);
+
+        mic_iv.setOnLongClickListener(this);
 
         etChat.setFilters(new InputFilter[]{new CustomLengthFilter(INPUT_EDIT_MAX_LENGTH)});
 
@@ -726,7 +1145,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if (s.length() > 0) {
+                    visibleView(sendTextView, null, 0);
+                    goneView(chat_mic_keyboard, null, 0);
+                } else {
+                    visibleView(chat_mic_keyboard, null, 0);
+                    goneView(sendTextView, null, 0);
+                }
             }
 
             @Override
@@ -738,6 +1163,46 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 }
             }
         });
+    }
+
+    private void uploadAudioOrVideo(File file, boolean isAudio, String thumbnailPath) {
+        if (file == null || !file.exists()) {
+            return;
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("content_creator_id", MainActivity.getUser().getUser_id());
+        params.put("group_id", groupId);
+        params.put("content_type", "post");
+        params.put("file", file);
+        MsgEntity msgEntity = new MsgEntity();
+        msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+        msgEntity.setContent_creation_date(MyDateUtils.formatDate2Default(new Date()));
+        String audioFile = file.getAbsolutePath();
+        audioFile = audioFile.substring(audioFile.lastIndexOf(File.separator) + 1);
+        if (!isAudio) {
+            params.put("video", "1");
+            params.put("video_duration", "");
+            msgEntity.setVideo_filename(audioFile);
+            String videoThumbnail = getVideoThumbnail(thumbnailPath);
+            msgEntity.setVideo_format1(videoThumbnail);
+            params.put("video_thumbnail", String.format("data:image/png;base64,%s", videoThumbnail));
+        } else {
+            params.put("audio", "1");
+            params.put("audio_duration", mlCount + "");
+            msgEntity.setAudio_filename(audioFile);
+            msgEntity.setAudio_duration(mlCount + "");
+        }
+        audioMsgEntity = msgEntity;
+        messageChatAdapter.addMsgEntity(msgEntity);
+        messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_MESSAGE_POST_TEXT, SEND_AUDIO_MESSAGE);
+    }
+
+    private String getVideoThumbnail(String videoPath) {
+        Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoPath);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        return strThumbnail;
     }
 
     private void uploadImage(Uri uri) {

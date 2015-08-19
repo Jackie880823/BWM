@@ -28,12 +28,12 @@ import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
 
 import java.util.regex.Matcher;
@@ -169,11 +169,11 @@ public class WallEditView extends EditText implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        Log.i(TAG, "afterTextChanged& s: " + s + " oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
+        LogUtil.i(TAG, "afterTextChanged& s: " + s + " oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
 
         int change = TextChangeListener.CHANGE_MODE_NORMAL;
         //        if(!isVisible) {
-        //            Log.w(TAG, "afterTextChanged& this view not show");
+        //            LogUtil.w(TAG, "afterTextChanged& this view not show");
         //            change = TextChangeListener.CHANGE_MODE_BLACK_CHANGE;
         //        } else
         synchronized(this) {
@@ -198,7 +198,7 @@ public class WallEditView extends EditText implements TextWatcher {
                 }
             }
         }
-        Log.i(TAG, "afterTextChanged& change" + change);
+        LogUtil.i(TAG, "afterTextChanged& change" + change);
         if(textChangeListener != null) {
             textChangeListener.afterTextChanged(s, change);
         }
@@ -218,10 +218,10 @@ public class WallEditView extends EditText implements TextWatcher {
         sbLog.append(hasAtMember);
         sbLog.append("; hasAtGroup: ");
         sbLog.append(hasAtGroup);
-        Log.i(TAG, sbLog.toString());
+        LogUtil.i(TAG, sbLog.toString());
 
         if(!isVisible) {
-            Log.w(TAG, "addAtDesc& this view not show");
+            LogUtil.w(TAG, "addAtDesc& this view not show");
             if(textChangeListener != null) {
                 textChangeListener.afterTextChanged(getText(), TextChangeListener.CHANGE_MODE_BLACK_CHANGE);
             }
@@ -267,12 +267,12 @@ public class WallEditView extends EditText implements TextWatcher {
         }
 
         SpannableStringBuilder sb = new SpannableStringBuilder(editable.toString());
-        Log.i(TAG, "addAtDesc& 1 sb: " + sb.toString());
+        LogUtil.i(TAG, "addAtDesc& 1 sb: " + sb.toString());
         // at member transform about member text
         hasAtMember = setDescSpan(memberText, oldMemberText, sb);
         oldMemberText = memberText;
 
-        Log.i(TAG, "addAtDesc& 2 sb: " + sb.toString());
+        LogUtil.i(TAG, "addAtDesc& 2 sb: " + sb.toString());
 
         // at group transform about group text
         hasAtGroup = setDescSpan(groupText, oldGroupText, sb);
@@ -282,13 +282,13 @@ public class WallEditView extends EditText implements TextWatcher {
             setDescSpan(at, at, sb);
         }
 
-        Log.i(TAG, "addAtDesc& 3 sb: " + sb.toString());
+        LogUtil.i(TAG, "addAtDesc& 3 sb: " + sb.toString());
         this.setText(sb);
-        Log.i(TAG, "addAtDesc& oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
+        LogUtil.i(TAG, "addAtDesc& oldMemberText: " + oldMemberText + "; oldGroupText: " + oldGroupText);
     }
 
     private boolean setDescSpan(String desc, String oldDesc, SpannableStringBuilder ssbDesc) {
-        Log.i(TAG, "addAtDesc& oldDesc: " + oldDesc + "; desc: " + desc);
+        LogUtil.i(TAG, "addAtDesc& oldDesc: " + oldDesc + "; desc: " + desc);
 
         if(!TextUtils.isEmpty(desc)) {
             ImageSpan is = getImageSpanForText(desc);
@@ -354,11 +354,11 @@ public class WallEditView extends EditText implements TextWatcher {
         }
 
         int numbersGroups = getNumbers(oldGroupText);
-        if(numberMembers != 0) {
+        if(numbersGroups != 0) {
             String replaceGroup = String.format(WallUtil.AT_GROUPS, numbersGroups);
             text = replaceAt(text, oldGroupText, replaceGroup);
         }
-        Log.i(TAG, "getRelText& text: " + text);
+        LogUtil.i(TAG, "getRelText& text: " + text);
         return text;
     }
 
@@ -438,7 +438,7 @@ public class WallEditView extends EditText implements TextWatcher {
         TextView tv = new TextView(this.getContext());
         tv.setText(text);
         tv.setTextSize(16);
-        Log.i("", "size===" + getResources().getDimensionPixelSize(R.dimen.text_small_size));
+        LogUtil.i("", "size===" + getResources().getDimensionPixelSize(R.dimen.text_small_size));
         //        tv.setTextSize(getResources().getDimensionPixelSize(R.dimen.text_small_size));
         //        clickableSpan(tv, App.getContextInstance(),qqq);
         return tv;
