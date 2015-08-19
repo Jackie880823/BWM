@@ -464,6 +464,8 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 //                .setScreenCustomVariable(1, "Android", Settings.Secure.getString(appContext.getContentResolver(), Settings.Secure.ANDROID_ID));
     }
 
+    private static  final  String META_DATA_APP_STORE = "appstore";
+
     public static void piwikGuest()
     {
 //        Piwik.getInstance(appContext).setAppOptOut(false);//启动piwik
@@ -488,9 +490,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 appInfo = appContext.getPackageManager()
                         .getApplicationInfo(appContext.getPackageName(),
                                 PackageManager.GET_META_DATA);
-                String msg = appInfo.metaData.getString("appstore");
+                String msg = appInfo.metaData.getString(META_DATA_APP_STORE);
                 appContext.getTracker()
-                        .setScreenCustomVariable(5, "appstore", msg)
+                        .setScreenCustomVariable(5, META_DATA_APP_STORE, msg)
                         .trackScreenView("");
                 PreferencesUtil.saveValue(appContext, Constant.HAS_DOWNLOAD, Constant.HAS_DOWNLOAD);
             } catch (PackageManager.NameNotFoundException e) {
