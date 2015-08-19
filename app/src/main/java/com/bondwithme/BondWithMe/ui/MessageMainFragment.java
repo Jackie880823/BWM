@@ -500,7 +500,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             groupRefreshLayout.setVisibility(View.GONE);
         }
         emptyGroupMessageLinear.setVisibility(View.VISIBLE);
-        emptyGroupMessageIv.setImageResource(R.drawable.group_msg_empty);
+        emptyGroupMessageIv.setImageResource(R.drawable.message_member_empty);
         emptyGroupMessageTv.setText(mContext.getString(R.string.text_msg_start_bonding));
     }
 
