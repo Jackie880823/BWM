@@ -257,7 +257,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             case R.id.iv_walls_images:
 
                 if(TextUtils.isEmpty(wallEntity.getVideo_filename())) {
-                    showOrignPic();
+                    showOriginPic();
                 } else {
                     showPreviewVideo();
                 }
@@ -272,13 +272,16 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     private void showPreviewVideo() {
+        // 启动网络视频预览Activity的隐式意图，也可选择显示启动PreviewVideoActivity
         Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
+        // 传的值对应视频的content_creator_id
         intent.putExtra(PreviewVideoActivity.CONTENT_CREATOR_ID, wallEntity.getContent_creator_id());
+        // 传的值对应video_filename
         intent.putExtra(PreviewVideoActivity.VIDEO_FILENAME, wallEntity.getVideo_filename());
         context.startActivity(intent);
     }
 
-    private void showOrignPic() {
+    private void showOriginPic() {
         Intent intent = new Intent(context, ViewOriginalPicesActivity.class);
         Map<String, String> condition = new HashMap<>();
         condition.put("content_id", wallEntity.getContent_id());

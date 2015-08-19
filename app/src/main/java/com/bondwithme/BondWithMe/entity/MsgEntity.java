@@ -79,6 +79,51 @@ public class MsgEntity implements Serializable {
 
     private Uri uri;
     private String isNate;
+    private String video_filename;
+    private String audio_duration;
+    private String audio_filename;
+    private String video_duration;
+    private String video_thumbnail;
+
+    public String getVideo_thumbnail() {
+        return video_thumbnail;
+    }
+
+    public void setVideo_thumbnail(String video_thumbnail) {
+        this.video_thumbnail = video_thumbnail;
+    }
+
+    public String getVideo_filename() {
+        return video_filename;
+    }
+
+    public void setVideo_filename(String video_filename) {
+        this.video_filename = video_filename;
+    }
+
+    public String getAudio_duration() {
+        return audio_duration;
+    }
+
+    public void setAudio_duration(String audio_duration) {
+        this.audio_duration = audio_duration;
+    }
+
+    public String getAudio_filename() {
+        return audio_filename;
+    }
+
+    public void setAudio_filename(String audio_filename) {
+        this.audio_filename = audio_filename;
+    }
+
+    public String getVideo_duration() {
+        return video_duration;
+    }
+
+    public void setVideo_duration(String video_duration) {
+        this.video_duration = video_duration;
+    }
 
     public String getIsNate() {
         return isNate;

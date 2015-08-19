@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
 import android.widget.VideoView;
 
 import com.android.volley.ext.HttpCallback;
@@ -23,6 +22,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.widget.NumberProgressBar;
 
 import java.io.File;
 
@@ -67,7 +67,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
     /**
      * 视频下载进度提示
      */
-    private ProgressBar pbDownload;
+    private NumberProgressBar pbDownload;
 
     /**
      * 下载视频的请求
@@ -108,7 +108,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
         setContentView(R.layout.activity_preview_video);
 
         videoView = (VideoView) findViewById(R.id.preview_video_view);
-        pbDownload = (ProgressBar) findViewById(R.id.download_progress);
+        pbDownload = (NumberProgressBar) findViewById(R.id.download_progress);
 
         MediaController controller = new MediaController(this);
         controller.setAnchorView(videoView);
@@ -157,6 +157,11 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
             target = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(this) + String.format("/%s", fileName);
 
             downloadVideo(url, target);
+        } else {
+            Uri video = data.getData();
+            if(video != null && !Uri.EMPTY.equals(video)){
+                videoView.setVideoURI(video);
+            }
         }
     }
 
