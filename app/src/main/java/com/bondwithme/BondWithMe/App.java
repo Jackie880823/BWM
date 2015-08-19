@@ -39,7 +39,9 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,6 +58,19 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     private static final int CHECK_DELAY = 500;
     private Runnable check;
     private Handler handler;
+
+    public List<String> getNotificaationList() {
+        if(notificaationList==null) {
+            notificaationList = new ArrayList<>();
+        }
+        return notificaationList;
+    }
+
+    public void setNotificaationList(List<String> notificaationList) {
+        this.notificaationList = notificaationList;
+    }
+
+    private List<String> notificaationList = new ArrayList<>();
 
     @Override
     public void onCreate() {
