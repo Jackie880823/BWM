@@ -4,27 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -65,8 +57,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -392,6 +382,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             holder.progressBar.setVisibility(View.GONE);
             final String video_format = msgEntity.getVideo_format1();
             if (msgEntity.getVideo_thumbnail() == null && video_format != null) {
+                holder.btn_video.setImageResource(R.drawable.btn_video);
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -402,6 +393,12 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     }
                 }, 50);
             } else {
+                File file = new File(PreviewVideoActivity.VIDEO_PATH + msgEntity.getVideo_filename());
+                if (file != null && file.exists()) {
+                    holder.btn_video.setImageResource(R.drawable.btn_video);
+                } else {
+                    holder.btn_video.setImageResource(R.drawable.download_video);
+                }
                 String videoUrl = String.format(Constant.API_MESSAGE_DOWNLOAD_VIDEO_PIC, msgEntity.getUser_id(), msgEntity.getVideo_thumbnail());
                 VolleyUtil.initNetworkImageView(context, holder.message_video_start, videoUrl, R.drawable.network_image_default, R.drawable.network_image_default);
             }
@@ -465,6 +462,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         HorizontalProgressBarWithNumber id_progressbar;
         TextView audio_time;
         NetworkImageView message_video_start;
+        ImageView btn_video;
+        TextView video_time;
 
         public VHItem(View itemView) {
             super(itemView);
@@ -480,6 +479,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             id_progressbar = (HorizontalProgressBarWithNumber) itemView.findViewById(R.id.id_progressbar);
             audio_time = (TextView) itemView.findViewById(R.id.audio_time);
             message_video_start = (NetworkImageView) itemView.findViewById(R.id.message_video_start);
+            video_time = (TextView) itemView.findViewById(R.id.video_time);
+            btn_video = (ImageView) itemView.findViewById(R.id.btn_video);
 
             if (null != iconImage) {
                 iconImage.setOnClickListener(this);
@@ -611,9 +612,14 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     mHandler.sendMessageDelayed(mHandler.obtainMessage(PLAY_AUDIO_HANDLER, map), 500);
                     break;
                 case R.id.message_video_start:
+                    String video_format = msgEntity.getVideo_format1();
                     intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
-                    intent.putExtra(PreviewVideoActivity.CONTENT_CREATOR_ID, msgEntity.getUser_id());
-                    intent.putExtra(PreviewVideoActivity.VIDEO_FILENAME, msgEntity.getVideo_filename());
+                    if (msgEntity.getVideo_thumbnail() == null && video_format != null) {
+                        intent.putExtra(PreviewVideoActivity.EXTRA_VIDEO_URI, msgEntity.getVideo_format2());
+                    } else {
+                        intent.putExtra(PreviewVideoActivity.CONTENT_CREATOR_ID, msgEntity.getUser_id());
+                        intent.putExtra(PreviewVideoActivity.VIDEO_FILENAME, msgEntity.getVideo_filename());
+                    }
                     context.startActivity(intent);
                     break;
             }
