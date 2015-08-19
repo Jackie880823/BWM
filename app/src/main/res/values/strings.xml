@@ -492,7 +492,7 @@
     <string name="text_start_cancle">Cancel</string>
     <string name="text_start_no_changes_found">No changes found.</string>
     <string name="text_more_setting_current_version">Current Version</string>
-    <string name="text_msg_start_bonding">Let\'s start bonding!</string>
+    <string name="text_msg_start_bonding">Chat day and night for free! Bond With Me now.</string>
 
     <string name="text_confirm_relation">Are you sure you want to add this member as your </string>
 
@@ -553,4 +553,5 @@
     <string name="text_inverse_select">Select Inverse</string>
     <string name="text_delete">Delete</string>
     <string name="text_cancel_all">Cancel All</string>
+    <string name="text_message_break_ice">Break the ice!</string>
 </resources>
