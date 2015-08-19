@@ -377,7 +377,6 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             VolleyUtil.initNetworkImageView(context, holder.networkImageView, String.format(Constant.API_GET_PIC, "post_preview_m", msgEntity.getUser_id(), msgEntity.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         } else if (!TextUtils.isEmpty(msgEntity.getAudio_filename())) {
             String name = msgEntity.getAudio_filename();
-            Log.i("aaaaa",name);
             holder.id_progressbar.setProgress(0);
             holder.audio_time.setText(MyDateUtils.formatRecordTimeForString(msgEntity.getAudio_duration()));
             if (name != null && name.equals(audioName) && playPros != 0) {
@@ -391,14 +390,17 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             DownloadStickerTask.getInstance().downloadAudioFile(context, msgEntity.getUser_id(), name);
         } else if (!TextUtils.isEmpty(msgEntity.getVideo_filename())) {
             holder.progressBar.setVisibility(View.GONE);
-            String video_format = msgEntity.getVideo_format1();
-            holder.message_video_start.setImageDrawable(null);
-            holder.message_video_start.setBackground(null);
+            final String video_format = msgEntity.getVideo_format1();
             if (msgEntity.getVideo_thumbnail() == null && video_format != null) {
-                Bitmap bitmap = base64ToBitmap(video_format);
-                if (bitmap != null) {
-                    holder.message_video_start.setImageBitmap(bitmap);
-                }
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Bitmap bitmap = base64ToBitmap(video_format);
+                        if (bitmap != null) {
+                            holder.message_video_start.setImageBitmap(bitmap);
+                        }
+                    }
+                }, 50);
             } else {
                 String videoUrl = String.format(Constant.API_MESSAGE_DOWNLOAD_VIDEO_PIC, msgEntity.getUser_id(), msgEntity.getVideo_thumbnail());
                 VolleyUtil.initNetworkImageView(context, holder.message_video_start, videoUrl, R.drawable.network_image_default, R.drawable.network_image_default);

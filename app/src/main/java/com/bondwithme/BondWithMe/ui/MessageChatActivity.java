@@ -207,12 +207,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         }
                         boolean hasAudioMsg = false;
                         for (MsgEntity msgEntity1 : msgSendList) {
-                            if (audioMsgEntity != null && audioMsgEntity.getAudio_filename().equalsIgnoreCase(
+                            if (audioMsgEntity != null && !TextUtils.isEmpty(audioMsgEntity.getAudio_filename()) && audioMsgEntity.getAudio_filename().equalsIgnoreCase(
                                     msgEntity1.getAudio_filename())) {
                                 hasAudioMsg = true;
                                 break;
                             }
-                            if (audioMsgEntity != null && audioMsgEntity.getVideo_filename().equalsIgnoreCase(
+                            if (audioMsgEntity != null && !TextUtils.isEmpty(audioMsgEntity.getVideo_filename()) && audioMsgEntity.getVideo_filename().equalsIgnoreCase(
                                     msgEntity1.getVideo_filename())) {
                                 hasAudioMsg = true;
                                 break;
@@ -295,8 +295,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         }
                         boolean hasAudioMsg = false;
                         for (MsgEntity msgEntity1 : msgTimerList) {
-                            if (audioMsgEntity != null && audioMsgEntity.getAudio_filename().equalsIgnoreCase(
+                            if (audioMsgEntity != null && !TextUtils.isEmpty(audioMsgEntity.getAudio_filename()) && audioMsgEntity.getAudio_filename().equalsIgnoreCase(
                                     msgEntity1.getAudio_filename())) {
+                                hasAudioMsg = true;
+                                break;
+                            }
+                            if (audioMsgEntity != null && !TextUtils.isEmpty(audioMsgEntity.getVideo_filename()) && audioMsgEntity.getVideo_filename().equalsIgnoreCase(
+                                    msgEntity1.getVideo_filename())) {
                                 hasAudioMsg = true;
                                 break;
                             }
@@ -336,11 +341,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         String video_duration = audioJsonObject.optString("video_duration");
                         String audio_duration = audioJsonObject.optString("audio_duration");
                         audioMsgEntity = new MsgEntity();
+                        audioMsgEntity.setUser_id(MainActivity.getUser().getUser_id());
                         audioMsgEntity.setAudio_filename(audio_filename);
                         audioMsgEntity.setVideo_filename(video_filename);
                         audioMsgEntity.setVideo_thumbnail(video_thumbnail);
                         audioMsgEntity.setVideo_duration(video_duration);
                         audioMsgEntity.setAudio_duration(audio_duration);
+                        audioMsgEntity.setContent_creation_date(MyDateUtils.formatDate2Default(new Date()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -651,8 +658,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     @Override
                     public void onClick(View v) {
                         Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                        mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.5);//画质0.5
-                        mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 70000);//70s
+                        mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.7);//画质0.5
+                        //mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60000);//60s
+                        mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 45*1024*1024);
+
                         startActivityForResult(mIntent, CAMERA_ACTIVITY);//CAMERA_ACTIVITY = 1
                         showSelectDialog.dismiss();
                     }
@@ -959,8 +968,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     List<Uri> pickUries = new ArrayList();
 
     private void uploadVideo(final Uri voideUri) {
-        if (voideUri != null) {
-            File file = new File(voideUri.getPath());
+        final File file = new File(voideUri.getPath());
+        if (file != null && file.exists()) {
             float fileLength = file.length();
             String fomatLength = null;
             boolean isTooBig = false;
@@ -1003,7 +1012,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 tv_ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        uploadAudioOrVideo(new File(voideUri.getPath()), false, voideUri.toString());
+                        uploadAudioOrVideo(file, false, Uri.fromFile(file).toString());
                         showSelectDialog.dismiss();
                     }
                 });
@@ -1040,8 +1049,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     if (data != null) {
                         String type = data.getStringExtra(SelectPhotosActivity.RESULT_MEDIA_TYPE);
                         if (MediaData.TYPE_VIDEO.equals(type)) {
-                            Uri voideUri = data.getData();
-                            uploadVideo(voideUri);
+                            uploadVideo(data.getData());
                         } else {
                             ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
                             pickUries.addAll(uris);
@@ -1075,17 +1083,17 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     }
                     break;
                 case CAMERA_ACTIVITY:
-                    Uri voideUri = data.getData();
-
                     Uri uri = data.getData();
-                    Cursor cursor = this.getContentResolver().query(uri, null, null,
-                            null, null);
+                    String[] proj = {MediaStore.Video.VideoColumns.DATA};
+                    Cursor cursor = this.getContentResolver().query(uri, proj, null, null, null);
+                    String filePath = null;
                     if (cursor != null && cursor.moveToNext()) {
-                        String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
-                        uploadVideo(Uri.parse(filePath));
+                        filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
                         cursor.close();
                     }
-                   // uploadVideo(voideUri);
+                    if (!TextUtils.isEmpty(filePath)) {
+                        uploadVideo(Uri.parse(filePath));
+                    }
                     break;
                 default:
                     break;
