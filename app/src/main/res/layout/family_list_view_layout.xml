@@ -42,11 +42,10 @@
         android:orientation="vertical"
         android:visibility="visible"
         android:gravity="center">
-<!--family_group_msg_empty-->
         <RelativeLayout
             android:id="@+id/family_empty_rl"
             android:layout_width="wrap_content"
-            android:layout_height="300dp">
+            android:layout_height="@dimen/_300dp">
             <ImageView
                 android:id="@+id/family_group_image_empty"
                 android:layout_width="match_parent"
@@ -64,16 +63,8 @@
                 android:visibility="gone"
                 android:src="@drawable/family_member_msg_empty" />
 
-
         </RelativeLayout>
 
-        <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="300dip"-->
-            <!--android:visibility="visible"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:src="@drawable/family_group_msg_empty"/>-->
-<!--@string/text_empty_add_member-->
         <LinearLayout
             android:id="@+id/family_memeber_text_empty"
             android:layout_alignBottom="@+id/family_empty_rl"
