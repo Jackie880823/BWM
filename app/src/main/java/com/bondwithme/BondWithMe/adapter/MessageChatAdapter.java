@@ -380,6 +380,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             DownloadStickerTask.getInstance().downloadAudioFile(context, msgEntity.getUser_id(), name);
         } else if (!TextUtils.isEmpty(msgEntity.getVideo_filename())) {
             holder.progressBar.setVisibility(View.GONE);
+            holder.video_time.setText(MyDateUtils.formatRecordTimeForString(msgEntity.getVideo_duration()));
             final String video_format = msgEntity.getVideo_format1();
             if (msgEntity.getVideo_thumbnail() == null && video_format != null) {
                 holder.btn_video.setImageResource(R.drawable.btn_video);
