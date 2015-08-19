@@ -21,18 +21,6 @@
             android:numColumns="3"
             android:verticalSpacing="2dp"/>
 
-        <ImageView
-            android:id="@+id/delete_video_view"
-            android:layout_width="@dimen/default_small_button_width_height"
-            android:layout_height="@dimen/default_small_button_width_height"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@color/translucence_color"
-            android:contentDescription="@string/delete"
-            android:scaleType="centerInside"
-            android:src="@drawable/x_delete_icon"
-            android:visibility="gone"/>
-
     </RelativeLayout>
 
     <LinearLayout
