@@ -242,6 +242,7 @@ public class Constant {
     public static final String EXTRA_LONGITUDE = "longitude";
 
     public static final String HAS_LOGED_IN = "has_loged_in";
+    public static final String HAS_DOWNLOAD = "has_download";
 
     public static final String TYPE_PHONE = "phone";
     public static final String TYPE_USERNAME = "username";

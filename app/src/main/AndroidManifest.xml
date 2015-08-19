@@ -586,6 +586,10 @@
         <activity android:name=".ui.PickAndCropPictureActivity"></activity>
         <activity android:name=".ui.CrashActivity" android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"></activity>
 
+        <meta-data
+            android:name="appstore"
+            android:value="play.google.com"  />
+
     </application>
 
 </manifest>

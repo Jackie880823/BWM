@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -478,9 +480,25 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 .setUserCustomVariable(2, "App Version", AppInfoUtil.getAppVersionName(appContext))
                 .setUserCustomVariable(3, "Model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
                 .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
-                .trackScreenView("")
                 .trackAppDownload();
-//                .setScreenCustomVariable(1, "Android", "guest");
 
+        if (TextUtils.isEmpty(PreferencesUtil.getValue(appContext, Constant.HAS_DOWNLOAD, null))) {
+            ApplicationInfo appInfo = null;
+            try {
+                appInfo = appContext.getPackageManager()
+                        .getApplicationInfo(appContext.getPackageName(),
+                                PackageManager.GET_META_DATA);
+                String msg = appInfo.metaData.getString("appstore");
+                appContext.getTracker()
+                        .setScreenCustomVariable(5, "appstore", msg)
+                        .trackScreenView("");
+                PreferencesUtil.saveValue(appContext, Constant.HAS_DOWNLOAD, Constant.HAS_DOWNLOAD);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            appContext.getTracker().trackScreenView("");
+        }
     }
+
 }
