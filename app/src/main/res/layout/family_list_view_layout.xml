@@ -35,30 +35,93 @@
         android:visibility="gone"
         android:background="@null" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/family_empty_linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
+        android:visibility="visible"
         android:gravity="center">
-
-        <ImageView
-            android:id="@+id/family_image_empty"
+<!--family_group_msg_empty-->
+        <RelativeLayout
+            android:id="@+id/family_empty_rl"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/family_member_msg_empty" />
+            android:layout_height="300dp">
+            <ImageView
+                android:id="@+id/family_group_image_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitStart"
+                android:visibility="gone"
+                android:src="@drawable/family_group_msg_empty" />
+            <ImageView
+                android:id="@+id/family_memeber_image_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitCenter"
+                android:visibility="gone"
+                android:src="@drawable/family_member_msg_empty" />
 
-        <TextView
-            android:id="@+id/family_text_empty"
-            android:layout_width="wrap_content"
+
+        </RelativeLayout>
+
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="300dip"-->
+            <!--android:visibility="visible"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:src="@drawable/family_group_msg_empty"/>-->
+<!--@string/text_empty_add_member-->
+        <LinearLayout
+            android:id="@+id/family_memeber_text_empty"
+            android:layout_alignBottom="@+id/family_empty_rl"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxWidth="@dimen/_200dp"
-            android:layout_marginTop="@dimen/_15dp"
-            android:textSize="@dimen/_22dp"
-            android:gravity="center"
-            android:text="@string/text_empty_add_member" />
-    </LinearLayout>
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignBottom="@+id/family_image_empty"
+                android:gravity="center"
+                android:text="@string/text_empty_add_member_notlone" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_alignBottom="@+id/family_image_empty"
+                android:gravity="center"
+                android:text="@string/text_empty_add_member_startbond" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/family_group_text_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@+id/family_empty_rl"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_20dp"
+                android:gravity="center"
+                android:text="@string/text_empty_add_group_newgroup" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_20dp"
+                android:gravity="center"
+                android:text="@string/text_empty_add_group_loveone" />
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

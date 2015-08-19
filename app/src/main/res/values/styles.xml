@@ -419,5 +419,9 @@
         <item name="com.bondwithme.BondWithMe:paper_text_color">@color/default_text_color_dark</item>
     </style>
 
+    <style name="text_empty_pages" parent="text_default">
+        <item name="android:textColor">@color/default_text_color_dark</item>
+        <item name="android:textSize">17dp</item>
+    </style>
 
 </resources>

@@ -454,8 +454,8 @@
     <string name="text_love_event">%s loved your event.</string>
     <string name="text_upcoming_event">Upcoming event: %s </string>
     <string name="text_dialog_save_draft">Save as Draft?</string>
-    <string name="text_empty_add_member">Tap on the + to add family member.</string>
-    <string name="text_empty_add_group">Tap on the + to create group.</string>
+    <string name="text_empty_add_member">You\'re not alone. Tap on + to start bonding!</string>
+    <string name="text_empty_add_group">Tap on + to create new group to bond with your loved ones.</string>
     <string name="text_message_type_here">type message here</string>
 
     <string name="text_target_choose">Select</string>
@@ -491,8 +491,6 @@
     <string name="text_admin">Admin</string>
     <string name="text_check_in_a_location">Check in a location</string>
 
-    <string name="text_post_and">Post an</string>
-    <string name="text_event_now">Event now</string>
     <string name="text_archive">Archive</string>
     <string name="text_group_posting">Group Posting</string>
     <string name="text_private_posting">Private Posting</string>
@@ -597,4 +595,13 @@
 
     <string name="loves_count">%d Loves</string>
     <string name="select_photos_or_video">Select Photos or Video</string>
+
+    <string name="text_evnt_empty_happ_with">Happiness is bonding together with</string>
+    <string name="text_evnt_empty_love_one">your loved ones!</string>
+    <string name="text_evnt_empty_dont_now">Don\'t wait, organise an Event now.</string>
+    <string name="text_empty_add_member_notlone">You\'re not alone.</string>
+    <string name="text_empty_add_member_startbond">Tap on + to start bonding!</string>
+    <string name="text_empty_add_group_newgroup">Tap on + to create new group </string>
+    <string name="text_empty_add_group_loveone">to bond with your loved ones.</string>
+
 </resources>
