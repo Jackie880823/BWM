@@ -14,6 +14,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -861,7 +862,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         mRecorder.stop();
                         if (audioFile != null && audioFile.exists() && mlCount >= 2) {
                             mlCount++;
-                            uploadAudioOrVideo(audioFile, true, null);
+                            uploadAudioOrVideo(audioFile, true, null, 0);
                         } else if (audioFile != null && audioFile.exists()) {
                             audioFile.delete();
                         }
@@ -974,7 +975,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     List<Uri> pickUries = new ArrayList();
 
-    private void uploadVideo(final Uri voideUri) {
+    private void uploadVideo(final Uri voideUri, final long durationTime) {
         final File file = new File(voideUri.getPath());
         if (file != null && file.exists()) {
             float fileLength = file.length();
@@ -1020,7 +1021,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     @Override
                     public void onClick(View v) {
                         Uri uri = Uri.fromFile(file);
-                        uploadAudioOrVideo(file, false, uri);
+                        uploadAudioOrVideo(file, false, uri, durationTime);
                         showSelectDialog.dismiss();
                     }
                 });
@@ -1057,7 +1058,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     if (data != null) {
                         String type = data.getStringExtra(SelectPhotosActivity.RESULT_MEDIA_TYPE);
                         if (MediaData.TYPE_VIDEO.equals(type)) {
-                            uploadVideo(data.getData());
+                            long durationTime = data.getLongExtra(SelectPhotosActivity.RESULT_VIDEO_DURATION, 0);
+                            uploadVideo(data.getData(), durationTime);
                         } else {
                             ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
                             pickUries.addAll(uris);
@@ -1091,16 +1093,19 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     }
                     break;
                 case CAMERA_ACTIVITY:
+                    String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA,
+                            MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION};
                     Uri uri = data.getData();
-                    String[] proj = {MediaStore.Video.VideoColumns.DATA};
-                    Cursor cursor = this.getContentResolver().query(uri, proj, null, null, null);
+                    Cursor cursor = this.getContentResolver().query(uri, videoColumns, null, null, null);
                     String filePath = null;
+                    long duration = 0;
                     if (cursor != null && cursor.moveToNext()) {
                         filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
+                        duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION));
                         cursor.close();
                     }
                     if (!TextUtils.isEmpty(filePath)) {
-                        uploadVideo(Uri.parse(filePath));
+                        uploadVideo(Uri.parse(filePath), duration);
                     }
                     break;
                 default:
@@ -1191,7 +1196,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         });
     }
 
-    private void uploadAudioOrVideo(File file, boolean isAudio, Uri uri) {
+    private void uploadAudioOrVideo(File file, boolean isAudio, Uri uri, long durationTime) {
         if (file == null || !file.exists()) {
             return;
         }
@@ -1206,12 +1211,14 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         String audioFile = file.getAbsolutePath();
         audioFile = audioFile.substring(audioFile.lastIndexOf(File.separator) + 1);
         if (!isAudio) {
+            String duration = durationTime / 1000L + "";
             params.put("video", "1");
-            params.put("video_duration", "");
+            params.put("video_duration", duration);
             msgEntity.setVideo_filename(audioFile);
             String videoThumbnail = getVideoThumbnail(uri.toString());
             msgEntity.setVideo_format1(videoThumbnail);
             msgEntity.setVideo_format2(uri.toString());
+            msgEntity.setVideo_duration(duration);
             params.put("video_thumbnail", String.format("data:image/png;base64,%s", videoThumbnail));
         } else {
             params.put("audio", "1");
