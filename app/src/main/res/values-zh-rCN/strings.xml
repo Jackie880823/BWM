@@ -28,7 +28,7 @@
     <string name="msg_action_successed">操作完成</string>
     <string name="msg_action_canceled">操作取消</string>
     <string name="msg_action_failed">操作失败</string>
-    <string name="msg_no_content">内容不能为空</string>
+    <string name="msg_no_content">写些东西发帖子</string>
     <string name="msg_no_internet">网络不稳定</string>
     <string name="msg_load_config_successed">加载成功</string>
     <string name="msg_load_config_failed">加载失败</string>
