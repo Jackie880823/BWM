@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -1075,7 +1076,16 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     break;
                 case CAMERA_ACTIVITY:
                     Uri voideUri = data.getData();
-                    uploadVideo(voideUri);
+
+                    Uri uri = data.getData();
+                    Cursor cursor = this.getContentResolver().query(uri, null, null,
+                            null, null);
+                    if (cursor != null && cursor.moveToNext()) {
+                        String filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
+                        uploadVideo(Uri.parse(filePath));
+                        cursor.close();
+                    }
+                   // uploadVideo(voideUri);
                     break;
                 default:
                     break;
