@@ -24,7 +24,7 @@ import android.widget.Filter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -101,12 +101,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     public static String FAMILY_MORE_MEMBER = "Everyone";
     public static String FAMILY_HIDE_MEMBER = "MyFamily";
 
-    private LinearLayout emptyGroupLinear;
-    private LinearLayout emptyMemberLinear;
+    private RelativeLayout emptyGroupLinear;
+    private RelativeLayout emptyMemberLinear;
     private ImageView emptyGroupIv;
     private ImageView emptyMemberIv;
-    private TextView emptyGroupTv;
-    private TextView emptyMemberTv;
+    private View emptyGroupTv;
+    private View emptyMemberTv;
     private View vProgress;
     private GridView groupListView;
     private String MemeberSearch;
@@ -397,8 +397,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             memberRefreshLayout.setVisibility(View.GONE);
         }
         emptyMemberLinear.setVisibility(View.VISIBLE);
-        emptyMemberIv.setImageResource(R.drawable.family_member_msg_empty);
-        emptyMemberTv.setText(getString(R.string.text_empty_add_member));
+//        emptyMemberIv.setImageResource(R.drawable.family_member_msg_empty);
+        emptyMemberIv.setVisibility(View.VISIBLE);
+//        emptyMemberTv.setText(getString(R.string.text_empty_add_member));
+        emptyMemberTv.setVisibility(View.VISIBLE);
     }
 
     private void showGroupEmptyView() {
@@ -406,8 +408,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             groupRefreshLayout.setVisibility(View.GONE);
         }
         emptyGroupLinear.setVisibility(View.VISIBLE);
-        emptyGroupIv.setImageResource(R.drawable.family_group_msg_empty);
-        emptyGroupTv.setText(mContext.getString(R.string.text_empty_add_group));
+//        emptyGroupIv.setImageResource(R.drawable.family_group_msg_empty);
+        emptyGroupIv.setVisibility(View.VISIBLE);
+//        emptyGroupTv.setText(mContext.getString(R.string.text_empty_add_group));
+        emptyGroupTv.setVisibility(View.VISIBLE);
     }
 
     private void hideMemberEmptyView() {
@@ -433,9 +437,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         final GridView userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
         final ImageButton userIb = (ImageButton) userView.findViewById(R.id.ib_top);
         memberRefreshLayout = (MySwipeRefreshLayout) userView.findViewById(R.id.swipe_refresh_layout);
-        emptyMemberLinear = (LinearLayout) userView.findViewById(R.id.family_empty_linear);
-        emptyMemberIv = (ImageView) userView.findViewById(R.id.family_image_empty);
-        emptyMemberTv = (TextView) userView.findViewById(R.id.family_text_empty);
+        emptyMemberLinear = (RelativeLayout) userView.findViewById(R.id.family_empty_linear);
+        emptyMemberIv = (ImageView) userView.findViewById(R.id.family_memeber_image_empty);
+        emptyMemberTv =  userView.findViewById(R.id.family_memeber_text_empty);
         userGridView.setAdapter(memberAdapter);
         userIb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -549,9 +553,10 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
         final ImageButton groupIb = (ImageButton) groupView.findViewById(R.id.ib_top);
         groupRefreshLayout = (MySwipeRefreshLayout) groupView.findViewById(R.id.swipe_refresh_layout);
-        emptyGroupLinear = (LinearLayout) groupView.findViewById(R.id.family_empty_linear);
-        emptyGroupIv = (ImageView) groupView.findViewById(R.id.family_image_empty);
-        emptyGroupTv = (TextView) groupView.findViewById(R.id.family_text_empty);
+        emptyGroupLinear = (RelativeLayout) groupView.findViewById(R.id.family_empty_linear);
+        emptyGroupIv = (ImageView) groupView.findViewById(R.id.family_group_image_empty);
+        emptyGroupTv = groupView.findViewById(R.id.family_group_text_empty);
+        emptyGroupTv.setVisibility(View.VISIBLE);
         groupListView.setAdapter(groupAdapter);
         groupIb.setOnClickListener(new View.OnClickListener() {
             @Override

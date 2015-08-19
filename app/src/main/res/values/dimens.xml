@@ -138,4 +138,6 @@
     <dimen name="_240dp">240dp</dimen>
     <dimen name="_250dp">250dp</dimen>
     <dimen name="_280dp">280dp</dimen>
+    <dimen name="_300dp">300dp</dimen>
+    <dimen name="_400dp">400dp</dimen>
 </resources>
