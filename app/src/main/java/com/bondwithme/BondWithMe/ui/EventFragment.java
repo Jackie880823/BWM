@@ -6,7 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -70,7 +70,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
     private EventAdapter adapter;
     public List<EventEntity> data = new ArrayList<EventEntity>();
     public List<BirthdayEntity> birthdayEvents = new ArrayList<BirthdayEntity>();
-    private FrameLayout eventStart;
+    private RelativeLayout eventStart;
 
     private MySwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
