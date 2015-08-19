@@ -157,6 +157,11 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
             target = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(this) + String.format("/%s", fileName);
 
             downloadVideo(url, target);
+        } else {
+            Uri video = data.getData();
+            if(video != null && !Uri.EMPTY.equals(video)){
+                videoView.setVideoURI(video);
+            }
         }
     }
 
