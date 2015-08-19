@@ -27,10 +27,9 @@
             android:layout_height="@dimen/default_small_button_width_height"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="@dimen/default_view_margin"
-            android:layout_marginTop="@dimen/default_view_margin"
             android:background="@color/translucence_color"
             android:contentDescription="@string/delete"
+            android:scaleType="centerInside"
             android:src="@drawable/x_delete_icon"
             android:visibility="gone"/>
 
