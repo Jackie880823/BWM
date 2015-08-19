@@ -112,39 +112,39 @@ public class HorizontalProgressBarWithNumber extends ProgressBar {
     private void obtainStyledAttributes(AttributeSet attrs) {
         // init values from custom attributes
         final TypedArray attributes = getContext().obtainStyledAttributes(
-                attrs, R.styleable.NumberProgressBar);
+                attrs, R.styleable.HorizontalProgressBarWithNumber);
 
         mTextColor = attributes
                 .getColor(
-                        R.styleable.NumberProgressBar_progress_text_color,
+                        R.styleable.HorizontalProgressBarWithNumber_progress_text_color_horizontal,
                         DEFAULT_TEXT_COLOR);
         mTextSize = (int) attributes.getDimension(
-                R.styleable.NumberProgressBar_progress_text_size,
+                R.styleable.HorizontalProgressBarWithNumber_progress_text_size_horizontal,
                 mTextSize);
 
         mReachedBarColor = attributes
                 .getColor(
-                        R.styleable.NumberProgressBar_progress_reached_color,
+                        R.styleable.HorizontalProgressBarWithNumber_progress_reached_color_horizontal,
                         mTextColor);
         mUnReachedBarColor = attributes
                 .getColor(
-                        R.styleable.NumberProgressBar_progress_unreached_color,
+                        R.styleable.HorizontalProgressBarWithNumber_progress_unreached_color_horizontal,
                         DEFAULT_COLOR_UNREACHED_COLOR);
         mReachedProgressBarHeight = (int) attributes
                 .getDimension(
-                        R.styleable.NumberProgressBar_progress_reached_bar_height,
+                        R.styleable.HorizontalProgressBarWithNumber_progress_reached_bar_height_horizontal,
                         mReachedProgressBarHeight);
         mUnReachedProgressBarHeight = (int) attributes
                 .getDimension(
-                        R.styleable.NumberProgressBar_progress_unreached_bar_height,
+                        R.styleable.HorizontalProgressBarWithNumber_progress_unreached_bar_height_horizontal,
                         mUnReachedProgressBarHeight);
         mTextOffset = (int) attributes
                 .getDimension(
-                        R.styleable.NumberProgressBar_progress_text_offset,
+                        R.styleable.HorizontalProgressBarWithNumber_progress_text_offset_horizontal,
                         mTextOffset);
 
         int textVisible = attributes
-                .getInt(R.styleable.NumberProgressBar_progress_text_visibility,
+                .getInt(R.styleable.HorizontalProgressBarWithNumber_progress_text_visibility_horizontal,
                         VISIBLE);
         if (textVisible != VISIBLE) {
             mIfDrawText = false;
