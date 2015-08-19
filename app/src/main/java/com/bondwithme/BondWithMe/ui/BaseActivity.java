@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
@@ -124,6 +125,8 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //            Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
 //            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            startActivity(mainIntent);
+            /**重置通知数量*/
+            App.getContextInstance().setNotificaationList(null);
             startActivity(intent);
         }else {
             if(!isFinishing()) {
@@ -131,6 +134,14 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
             }
         }
         finish();
+    }
+
+    @Override
+    protected void onStop() {
+        if(getIntent().getBooleanExtra(IS_OUTSIDE_INTENT,false)) {
+            App.getContextInstance().setNotificaationList(null);
+        }
+        super.onStop();
     }
 
     /**

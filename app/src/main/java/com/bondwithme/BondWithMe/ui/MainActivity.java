@@ -85,7 +85,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     List<Fragment> fragments;
 
     EventFragment eventFragment;
-    EventStartupFragment eventStartupFragment;
     private boolean iseventdate;
 
 
@@ -357,7 +356,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
 //        eventFragment = EventFragment.newInstance();
-//        eventStartupFragment = EventStartupFragment.newInstance();
 //        fragments.add(eventFragment);
 //        if(isEventFragmentDate()){
 //            Log.i("isEventFragmentDate==================","true");

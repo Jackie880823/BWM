@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
+import com.bondwithme.BondWithMe.App;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -81,10 +83,10 @@ public class FileUtil {
             bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
         }
 
-}
+    }
 
     /**
      * 判断是否有sd卡
@@ -188,7 +190,39 @@ public class FileUtil {
             }
         }
         boolean deleted = fileRoot.delete();
-        LogUtil.d("FileUtil","===fileRoot==="+fileRoot.getAbsolutePath()+"==="+fileRoot.exists()+"===="+deleted);
+        LogUtil.d("FileUtil", "===fileRoot===" + fileRoot.getAbsolutePath() + "===" + fileRoot.exists() + "====" + deleted);
     }
 
+    private static final String RECORD = "Audio";
+    private static final String VIDEO = "Video";
+
+    public static File saveAudioFile(Context mContext) {
+        return new File(getAudioRootPath(mContext) + File.separator + System.currentTimeMillis() + ".mp3");
+    }
+
+    public static String getAudioRootPath(Context mContext) {
+        File bootFile = getSavePath(mContext, true);
+        String filePath = bootFile.getAbsolutePath();
+        filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + RECORD;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return filePath;
+    }
+
+    public static File saveVideoFile(Context mContext) {
+        return new File(getVideoRootPath(mContext) + File.separator + System.currentTimeMillis() + ".mp4");
+    }
+
+    public static String getVideoRootPath(Context mContext) {
+        File bootFile = getSavePath(mContext, true);
+        String filePath = bootFile.getAbsolutePath();
+        filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + VIDEO;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return filePath;
+    }
 }

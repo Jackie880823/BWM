@@ -150,7 +150,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             // 获取数据库中的视频资源游标
             String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.Media.DATA, MediaStore.Video.Media._ID, MediaStore.Video.Media.SIZE};
             String videoOrderBy = MediaStore.Video.Media.DATE_ADDED + " DESC";
-            videoCursor = new CursorLoader(getActivity(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, null, null, videoOrderBy).loadInBackground();
+            String select = MediaStore.Video.Media.SIZE + "<=" + MediaData.MAX_SIZE;
+            videoCursor = new CursorLoader(getActivity(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, select, null, videoOrderBy).loadInBackground();
         }
 
         initHandler();
@@ -314,7 +315,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 int cursorCount = videoCursor.getCount();
 
                 // 限制定显示的视频大小的最大数为50M
-                long maxSize = 50 * 1024 * 1024;
                 for(int i = 0; i < cursorCount; i++) {
                     String path;
                     Uri contentUri;
@@ -325,7 +325,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
                         videoCursor.moveToPosition(i);
                         long size = videoCursor.getColumnIndex(MediaStore.Video.Media.SIZE);
-                        if(size > maxSize) {
+                        if(size > MediaData.MAX_SIZE) {
                             // 视频大小超过限定不添加该视频到列表，执行下一循环
                             continue;
                         }

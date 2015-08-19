@@ -15,6 +15,15 @@ public class RecommendEntity implements Serializable {
     private String tree_type;
     private String user_recommend;
     private String user_recom_rel;
+    private boolean isSelected;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
 
     public String getUser_id() {
         return user_id;

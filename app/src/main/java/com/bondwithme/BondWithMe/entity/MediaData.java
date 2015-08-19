@@ -37,6 +37,8 @@ public class MediaData {
      */
     public final static String TYPE_VIDEO = "URI_TYPE_VIDEO";
 
+    public final static long MAX_SIZE = 50 * 1024 * 1024;
+
     /**
      * 手机本地储存的多媒体数据的{@link Uri}
      */

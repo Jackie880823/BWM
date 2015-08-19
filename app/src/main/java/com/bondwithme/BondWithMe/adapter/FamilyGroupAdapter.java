@@ -46,11 +46,15 @@ public class FamilyGroupAdapter extends BaseAdapter implements Filterable {
     }
 
     public void clearBitmap(List<FamilyGroupEntity> list){
-        Log.i("clearBitmap===","clearBitmap");
-        mBitmapTools.clearMemoryCache();
-        mBitmapTools.clearDiskCache(null);
-        groupList.clear();
-        groupList.addAll(list);
+        Log.i("clearBitmap===", "clearBitmap");
+        if(mBitmapTools!=null) {
+            mBitmapTools.clearMemoryCache();
+            mBitmapTools.clearDiskCache(null);
+        }
+        if(groupList!=null) {
+            groupList.clear();
+            groupList.addAll(list);
+        }
         notifyDataSetChanged();
     }
     public List<FamilyGroupEntity> getGroupList() {

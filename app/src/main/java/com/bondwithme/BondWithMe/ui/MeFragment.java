@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -132,7 +131,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
                 PhotoEntity peData = new PhotoEntity();
                 peData.setUser_id(MainActivity.getUser().getUser_id());
                 peData.setFile_id("profile");
-                peData.setPhoto_caption(Constant.Module_profile);
+                peData.setPhoto_caption(Constant.Module_Original);
                 peData.setPhoto_multipe("false");
                 datas.add(peData);
                 intent.putExtra("is_data", true);
