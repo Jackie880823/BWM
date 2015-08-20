@@ -35,3 +35,7 @@ Thumbs.db
 .gitignore.swp
 **/*.DS_Store
 demo/*
+
+demo_app
+build
+build/intermediates/dex-cache/cache.xml
