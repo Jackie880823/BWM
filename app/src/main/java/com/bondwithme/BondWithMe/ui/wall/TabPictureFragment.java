@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
@@ -88,6 +89,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      */
     private VideoView vvDisplay;
     private ImageView ivDeleteVideo;
+    private View previewVideoView;
 
     private PickPicAdapter adapter;
 
@@ -144,11 +146,12 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
         gvPictures = getViewById(R.id.gv_pictures);
 
-        ivDeleteVideo = getViewById(R.id.delete_video_view);
-        vvDisplay = new VideoView(getParentActivity());
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        previewVideoView = LayoutInflater.from(getActivity()).inflate(R.layout.tab_picture_voide_view, null);
+        ivDeleteVideo = (ImageView) previewVideoView.findViewById(R.id.delete_video_view);
+        vvDisplay = (VideoView) previewVideoView.findViewById(R.id.preview_video_view);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        vvDisplay.setLayoutParams(params);
+        previewVideoView.setLayoutParams(params);
 
         ivDeleteVideo.setOnClickListener(this);
         vvDisplay.setOnPreparedListener(this);
@@ -487,10 +490,10 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         }
 
         // 显示视频View
-        if(rlMediaDisplay.indexOfChild(vvDisplay) < 0) {
-            rlMediaDisplay.addView(vvDisplay, 0);
-            ivDeleteVideo.setVisibility(View.VISIBLE);
+        if(rlMediaDisplay.indexOfChild(previewVideoView) < 0) {
+            rlMediaDisplay.addView(previewVideoView, 0);
         }
+
         // 清册选择的图片
         uris.clear();
         datas.clear();
@@ -503,9 +506,8 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         videoUri = Uri.EMPTY;
 
         // 删除视频View
-        if(rlMediaDisplay.indexOfChild(vvDisplay) >= 0) {
-            rlMediaDisplay.removeView(vvDisplay);
-            ivDeleteVideo.setVisibility(View.GONE);
+        if(rlMediaDisplay.indexOfChild(previewVideoView) >= 0) {
+            rlMediaDisplay.removeView(previewVideoView);
         }
 
         // 添加图片显示View

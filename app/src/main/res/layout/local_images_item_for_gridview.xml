@@ -14,4 +14,19 @@
         style="@style/CustomCheckboxTheme"
         android:layout_alignParentRight="true"/>
 
+    <LinearLayout
+        android:id="@+id/duration_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@color/translucence_color">
+
+        <TextView
+            android:id="@+id/duration_tv"
+            style="@style/text_default"
+            android:layout_gravity="right"
+            android:gravity="right"/>
+    </LinearLayout>
+
 </com.bondwithme.BondWithMe.widget.SquareRelativeLayout>

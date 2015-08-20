@@ -54,15 +54,18 @@ public class MediaData {
      */
     private final String type;
 
+    private final long duration;
+
     /**
      * 封装{@link SelectPhotosActivity}显示的多媒体数据
-     *
-     * @param contentUri 储存在系统多媒体数据库的{@link Uri}
+     *  @param contentUri 储存在系统多媒体数据库的{@link Uri}
      * @param path       多媒体文件在手机本地的文件目录
      * @param type       多媒体数据类型标识:{@link #TYPE_VIDEO}、{@link #TYPE_VIDEO}
+     * @param duration   视频的持续时长
      */
-    public MediaData(Uri contentUri, String path, String type) {
+    public MediaData(Uri contentUri, String path, String type, long duration) {
         this.contentUri = contentUri;
+        this.duration = duration;
         this.path = ImageDownloader.Scheme.FILE.wrap(path);
         this.type = type;
     }
@@ -92,5 +95,9 @@ public class MediaData {
      */
     public String getType() {
         return type;
+    }
+
+    public long getDuration() {
+        return duration;
     }
 }

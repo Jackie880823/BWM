@@ -16,7 +16,9 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
 import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
+import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 
 /**
@@ -125,8 +127,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 //            Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
 //            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            startActivity(mainIntent);
-            /**重置通知数量*/
-            App.getContextInstance().setNotificaationList(null);
             startActivity(intent);
         }else {
             if(!isFinishing()) {
@@ -138,8 +138,10 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     @Override
     protected void onStop() {
+        /**重置通知数量*/
         if(getIntent().getBooleanExtra(IS_OUTSIDE_INTENT,false)) {
-            App.getContextInstance().setNotificaationList(null);
+            LogUtil.d("","getSerializableExtra======"+getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
+            App.getContextInstance().clearNotificationMsgsByType((NotificationUtil.MessageType) getIntent().getSerializableExtra(NotificationUtil.MSG_TYPE));
         }
         super.onStop();
     }
