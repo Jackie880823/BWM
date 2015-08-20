@@ -516,8 +516,8 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
         appContext.getTracker()
                 .setUserId(Settings.Secure.getString(appContext.getContentResolver(), Settings.Secure.ANDROID_ID))
-                .setDispatchInterval(10)
-                .setSessionTimeout(5);
+                .setDispatchInterval(120)
+                .setSessionTimeout(30);
 
         appContext.getTracker()
                 .setUserCustomVariable(1, "App Name", AppInfoUtil.getAppPackageName(appContext))
@@ -525,7 +525,6 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 .setUserCustomVariable(3, "Model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
                 .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
                 .trackScreenView("");
-//                .setScreenCustomVariable(1, "Android", Settings.Secure.getString(appContext.getContentResolver(), Settings.Secure.ANDROID_ID));
     }
 
     private static  final  String META_DATA_APP_STORE = "appstore";
@@ -538,8 +537,8 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
         appContext.getTracker()
                 .setUserId("guest")
-                .setDispatchInterval(10)
-                .setSessionTimeout(5);
+                .setDispatchInterval(120)
+                .setSessionTimeout(30);
 
         appContext.getTracker()
                 .setUserCustomVariable(1, "App Name", AppInfoUtil.getAppPackageName(appContext))
@@ -548,6 +547,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
                 .trackAppDownload();
 
+        //计算平台下载次数
         if (TextUtils.isEmpty(PreferencesUtil.getValue(appContext, Constant.HAS_DOWNLOAD, null))) {
             ApplicationInfo appInfo = null;
             try {
@@ -556,7 +556,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                                 PackageManager.GET_META_DATA);
                 String msg = appInfo.metaData.getString(META_DATA_APP_STORE);
                 appContext.getTracker()
-                        .setScreenCustomVariable(5, META_DATA_APP_STORE, msg)
+                        .setScreenCustomVariable(1, META_DATA_APP_STORE, msg)
                         .trackScreenView("");
                 PreferencesUtil.saveValue(appContext, Constant.HAS_DOWNLOAD, Constant.HAS_DOWNLOAD);
             } catch (PackageManager.NameNotFoundException e) {
