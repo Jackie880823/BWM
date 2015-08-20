@@ -72,7 +72,7 @@
             android:id="@+id/mail_content"
             style="@style/editview_default"
             android:layout_width="match_parent"
-            android:layout_height="dp"
+            android:layout_height="0dp"
             android:layout_below="@id/mail_from"
             android:layout_marginTop="@dimen/default_view_margin"
             android:layout_weight="1"
