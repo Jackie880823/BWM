@@ -36,8 +36,8 @@ public class Constant {
     /**
      * for api
      */
-//    public static final String API_SERVER = "http://m.bondwith.me";
-//    public static final String API_SERVER = "http://pt.bondwith.me";
+    //    public static final String API_SERVER = "http://m.bondwith.me";
+    //    public static final String API_SERVER = "http://pt.bondwith.me";
     public static final String API_SERVER = "http://dev.bondwith.me";
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER + "/bondwithme/index.php/api/multiPhoto";
 
@@ -208,6 +208,10 @@ public class Constant {
     public static final String API_MISS_MEMBER = API_SERVER + "/bondwithme/index.php/api/miss";//想念用户
 
     public static final String API_FAMILY_TREE = API_SERVER + "/bondwithme/index.php/api/familyTreeFile/%s";//获得family tree url
+    /**
+     * 获得家庭关系的URL,
+     */
+    public static final String API_FAMILY_RELATIONSHIP = API_SERVER + "/bondwithme/index.php/api/listDirectMemberWithSpouse/%s/member_id/%s";
 
     public static final String API_ALBUM_GALLERY = API_SERVER + "/bondwithme/index.php/api/userPhotos";//album gallery
 
