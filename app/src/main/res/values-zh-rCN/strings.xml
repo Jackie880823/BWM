@@ -547,6 +547,8 @@
     <string name="text_empty_add_group_newgroup">轻按"+"创建新群组 </string>
     <string name="text_empty_add_group_loveone">与您的亲人促进感情吧！</string>
     <string name="text_message_break_ice">将冰山劈开！</string>
+    <string name="text_video_too_big">所选视频太大</string>
+    <string name="text_chat_send_video">所选视频大小约为%s,是否需要发送</string>
     <string name="go_back_to_me">返回当前用户</string>
     <string name="write_a_diary">亲，开始一篇日志吧！共享即关怀。</string>
 
