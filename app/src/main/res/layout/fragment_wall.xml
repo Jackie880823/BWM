@@ -6,50 +6,25 @@
         android:id="@+id/wall_start_up"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/_40dp"
         android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/iv_wall_post_now"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_start_new"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_40dp"
-                android:paddingTop="@dimen/_60dp"
-                android:text="@string/start_a_new"
-                android:textSize="30sp"/>
-
-            <TextView
-                android:id="@+id/tv_post_now"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_40dp"
-                android:text="@string/post_now"
-                android:textSize="30sp"/>
-
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/_20dp"
+                android:contentDescription="@string/write_a_diary"
                 android:src="@drawable/wall_startup"/>
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/ll_arrow_pointer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="170dp"
-            android:paddingTop="@dimen/_10dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/arrow_pointer"/>
+            <TextView
+                style="@style/text_dark_default"
+                android:text="@string/write_a_diary"
+                android:textSize="@dimen/text_medium_size"/>
         </LinearLayout>
     </FrameLayout>
 
@@ -57,10 +32,10 @@
         android:id="@+id/tv_no_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_no_data"
-        android:visibility="gone"
         android:layout_centerInParent="true"
-        android:textSize="30sp"/>
+        android:text="@string/text_no_data"
+        android:textSize="30sp"
+        android:visibility="gone"/>
 
     <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"

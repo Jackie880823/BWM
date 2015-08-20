@@ -230,8 +230,6 @@
 
     <string name="select_too_many">You can only select 10 photos at a time.</string>
     <string name="text_nearest">recent</string>
-    <string name="start_a_new">Write a diary now.</string>
-    <string name="post_now">Sharing is caring.</string>
 
 
     <string name="text_to_other">Recommend me to other members.</string>
@@ -555,4 +553,5 @@
     <string name="text_cancel_all">Cancel All</string>
     <string name="text_message_break_ice">Break the ice!</string>
     <string name="go_back_to_me">Go back to Me</string>
+    <string name="write_a_diary">Write a diary now. Sharing is caring.</string>
 </resources>
