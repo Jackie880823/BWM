@@ -6,7 +6,7 @@ def releaseTime() {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "23"
 
     dexOptions {
         javaMaxHeapSize "2048M"
@@ -18,8 +18,8 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 53   //TODO
-        versionName "1.10.0" //TODO
+        versionCode 54   //TODO
+        versionName "1.10.1" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -58,9 +58,9 @@ android {
 //        }
 //        release {
 //            // 不显示Log
-//            minifyEnabled true //TODO 正式环境改true
-//            buildConfigField "boolean", "LOG_DEBUG", "false" //TODO 正式环境改false
-//            zipAlignEnabled true //TODO 正式环境改true
+//            minifyEnabled true
+//            buildConfigField "boolean", "LOG_DEBUG", "false"
+//            zipAlignEnabled true
 //            // 移除无用的resource文件
 //            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
