@@ -401,7 +401,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private void addToMediaMap(String bucket, MediaData mediaData) {
         ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_nearest));
-        if(nearest.size() < 30) {
+        if(nearest.size() < 30 && MediaData.TYPE_IMAGE.equals(mediaData.getType())) {
             nearest.add(mediaData);
         }
         if(mMediaUris.containsKey(bucket)) {

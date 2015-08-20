@@ -5,11 +5,15 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
@@ -38,7 +42,10 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.piwik.sdk.Piwik;
+import org.piwik.sdk.Tracker;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -324,6 +331,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public static void logout(Activity context) {
 
         if (context != null) {
+            Piwik.getInstance(getContextInstance()).setAppOptOut(true);//禁止Piwik
             if (FacebookSdk.isInitialized()) {
                 LoginManager.getInstance().logOut();//清除Facebook授权缓存
             }
@@ -458,6 +466,107 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     @Override
     public void onActivityDestroyed(Activity activity) {
 
+    }
+
+
+
+    Tracker piwikTracker;
+
+    public Piwik getGlobalSettings(){
+        return Piwik.getInstance(this);
+    }
+
+    public Tracker getTracker() {
+        if (piwikTracker != null) {
+            return piwikTracker;
+        }
+
+        try {
+            piwikTracker = getGlobalSettings().newTracker(getTrackerUrl(), getSiteId(), getAuthToken());
+        } catch (MalformedURLException e) {
+            return null;
+        }
+
+        return piwikTracker;
+
+    }
+
+    public String getTrackerUrl() {
+        return Constant.TRACKER_URL;
+    }
+
+    /**
+     * AuthToken is deprecated in Piwik >= 2.8.0 due to security reasons.
+     * @return token or null
+     */
+    public String getAuthToken() {
+        return null;
+//        return "3bde48623ab1cea339c606abd09debd7";
+    }
+
+
+    public Integer getSiteId() {
+        return Constant.TRACKER_SITE_ID;
+    }
+
+    public static void piwikUser()
+    {
+//        Piwik.getInstance(appContext).setAppOptOut(false);//启动piwik
+
+        appContext.getGlobalSettings().setDryRun(false);//设置sent to Piwik
+
+        appContext.getTracker()
+                .setUserId(Settings.Secure.getString(appContext.getContentResolver(), Settings.Secure.ANDROID_ID))
+                .setDispatchInterval(120)
+                .setSessionTimeout(30);
+
+        appContext.getTracker()
+                .setUserCustomVariable(1, "App Name", AppInfoUtil.getAppPackageName(appContext))
+                .setUserCustomVariable(2, "App Version", AppInfoUtil.getAppVersionName(appContext))
+                .setUserCustomVariable(3, "Model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
+                .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
+                .trackScreenView("");
+    }
+
+    private static  final  String META_DATA_APP_STORE = "UMENG_CHANNEL";
+
+    public static void piwikGuest()
+    {
+//        Piwik.getInstance(appContext).setAppOptOut(false);//启动piwik
+
+        appContext.getGlobalSettings().setDryRun(false);//设置sent to Piwik
+
+        appContext.getTracker()
+                .setUserId("guest")
+                .setDispatchInterval(120)
+                .setSessionTimeout(30);
+
+        appContext.getTracker()
+                .setUserCustomVariable(1, "App Name", AppInfoUtil.getAppPackageName(appContext))
+                .setUserCustomVariable(2, "App Version", AppInfoUtil.getAppVersionName(appContext))
+                .setUserCustomVariable(3, "Model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
+                .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
+                .trackAppDownload();
+
+        //计算平台下载次数
+        if (TextUtils.isEmpty(PreferencesUtil.getValue(appContext, Constant.HAS_DOWNLOAD, null))) {
+            ApplicationInfo appInfo = null;
+            try {
+                appInfo = appContext.getPackageManager()
+                        .getApplicationInfo(appContext.getPackageName(),
+                                PackageManager.GET_META_DATA);
+                String msg = appInfo.metaData.getString(META_DATA_APP_STORE);
+                appContext.getTracker()
+                        .setScreenCustomVariable(1, "appstore", msg)
+                        .trackScreenView("");
+                Log.d("", "msg------" + msg);
+                PreferencesUtil.saveValue(appContext, Constant.HAS_DOWNLOAD, Constant.HAS_DOWNLOAD);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            appContext.getTracker().trackScreenView("");
+        }
     }
 
 }

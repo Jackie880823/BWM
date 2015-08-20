@@ -39,6 +39,7 @@ import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
 import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.ui.family.FamilyTreeActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
@@ -455,7 +456,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 String userId = familyMemberEntity.getUser_id();
 
                 if (FamilyFragment.FAMILY_TREE.equals(userId)) {
-                    getUrl();
+                    /** modify by Jackie*/
+//                    getUrl();
+                    // 跳转至家谱界面
+                    Intent intent = new Intent(getActivity(), FamilyTreeActivity.class);
+                    startActivity(intent);
+                    /** modify end by Jackie*/
                 } else if (FamilyFragment.FAMILY_MORE_MEMBER.equals(userId)) {
                     isopen = true;
                     int size = memberAdapter.getList().size();

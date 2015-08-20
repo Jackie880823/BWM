@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <VideoView
+        android:id="@+id/preview_video_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+
+    <ImageView
+        android:id="@+id/delete_video_view"
+        android:layout_width="@dimen/default_small_button_width_height"
+        android:layout_height="@dimen/default_small_button_width_height"
+        android:layout_alignRight="@+id/preview_video_view"
+        android:layout_alignTop="@+id/preview_video_view"
+        android:background="@color/translucence_color"
+        android:contentDescription="@string/delete"
+        android:scaleType="centerInside"
+        android:src="@drawable/x_delete_icon"/>
+
+</RelativeLayout>

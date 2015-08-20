@@ -150,10 +150,6 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(detailData == null){
                 return;
             }
-            if(data != null && data.size()>0){
-                header.defaultComment.setVisibility(View.GONE);
-            }
-
             if(updateListener != null){
                 updateListener.updateHeadView(header.itemView);
             }
@@ -189,18 +185,24 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         if(position == 1){
 //            Second second = (Second) holder;
+            LinearLayout.LayoutParams layoutParam;
             mViewHolder second = (mViewHolder) holder;
 //            T second = (T) holder;
             EventCommentEntity entity =  data.get(0);
             if(data.size() == 1){
                 second.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_one_shape));
-                LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-                layoutParam.setMargins(dip2px(mContext,14),0,dip2px(mContext,14),dip2px(mContext,60));
+                layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+                layoutParam.setMargins(dip2px(mContext,14),10,dip2px(mContext,14),dip2px(mContext,60));
 //              layoutParam.setMarginEnd(500);
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.INVISIBLE);
             }else {
                 second.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_shape));
+                layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+                layoutParam.setMargins(dip2px(mContext,14),10,dip2px(mContext,14),dip2px(mContext,0));
+//              layoutParam.setMarginEnd(500);
+                second.itemView.setLayoutParams(layoutParam);
+                second.line.setVisibility(View.VISIBLE);
             }
             VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             second.tv_comment_owner_name.setText(entity.getUser_given_name());
