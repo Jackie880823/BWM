@@ -554,4 +554,5 @@
     <string name="text_delete">Delete</string>
     <string name="text_cancel_all">Cancel All</string>
     <string name="text_message_break_ice">Break the ice!</string>
+    <string name="go_back_to_me">Go back to Me</string>
 </resources>

@@ -2,25 +2,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical"
               android:orientation="vertical">
 
-    <com.bondwithme.BondWithMe.widget.CircularNetworkImage
-        android:id="@+id/relationship_item_image"
-        android:layout_width="@dimen/_75dp"
-        android:layout_height="@dimen/_75dp"
-        app:border="false"/>
+    <ImageView
+        android:id="@+id/up_tri_angel_iv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:scaleType="centerInside"
+        android:src="@drawable/up_tri_angel"
+        android:visibility="invisible"/>
 
-    <TextView
-        android:id="@+id/relationship_item_name_tv"
-        style="@style/text_user_name"
-        android:gravity="center"/>
+    <LinearLayout
+        android:id="@+id/relationship_item_content"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/relationship_item_relation_tv"
-        style="@style/text_user_name"
-        android:visibility="gone"
-        android:gravity="center"/>
+
+        <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+            android:id="@+id/relationship_item_image"
+            android:layout_width="@dimen/_75dp"
+            android:layout_height="@dimen/_75dp"
+            app:border="false"/>
+
+        <TextView
+            android:id="@+id/relationship_item_name_tv"
+            style="@style/text_user_name"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/relationship_item_relation_tv"
+            style="@style/text_user_name"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/down_tri_angel_iv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:scaleType="centerInside"
+        android:src="@drawable/down_tri_angel"
+        android:visibility="invisible"/>
 
 </LinearLayout>

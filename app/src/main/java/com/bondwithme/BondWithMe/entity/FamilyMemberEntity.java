@@ -1,18 +1,45 @@
 package com.bondwithme.BondWithMe.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by quankun on 15/5/12.
  */
 public class FamilyMemberEntity implements Serializable {
-    private String user_id;//": "492",
+
+    // add by Jackie 2015/08/19
+    /**
+     * 用户id
+     */
+    private String user_id;
+
+    /**
+     * 用户名
+     */
+    private String user_given_name;
+
+    /**
+     * 关系类型
+     */
+    private String relationship_type;
+
+    /**
+     * 关系名
+     */
+    private String tree_type_name;
+
+    /**
+     * 生日
+     */
+    private String DOB;
+    // add end by Jackie 2015/08/19
+
+    private ArrayList<FamilyMemberEntity> spouse;
     private String bondwithme_id;//": "80000492",
-    private String user_given_name;// member name
     private String user_status; // member status
     private String fam_nickname; // member nickname , show nickname as name if nickname not empty
     private String tree_type;//": "children",
-    private String tree_type_name;//": "Daughter", // member relationship
     private String miss; // miss if null mean no miss
     private String group_id;//personal chat group id
     private String fam_accept_flag;//1 – member, 0 – awaiting for approval from member
@@ -27,6 +54,32 @@ public class FamilyMemberEntity implements Serializable {
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
+
+    // add by Jackie 2015/08/19
+    public String getRelationship_type() {
+        return relationship_type;
+    }
+
+    public void setRelationship_type(String relationship_type) {
+        this.relationship_type = relationship_type;
+    }
+
+    public String getDOB() {
+        return DOB;
+    }
+
+    public void setDOB(String DOB) {
+        this.DOB = DOB;
+    }
+
+    public ArrayList<FamilyMemberEntity> getSpouse() {
+        return spouse;
+    }
+
+    public void setSpouse(ArrayList<FamilyMemberEntity> spouse) {
+        this.spouse = spouse;
+    }
+    // add end by Jackie 2015/08/19
 
     public String getBondwithme_id() {
         return bondwithme_id;
