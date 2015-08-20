@@ -552,6 +552,8 @@
     <string name="text_delete">Delete</string>
     <string name="text_cancel_all">Cancel All</string>
     <string name="text_message_break_ice">Break the ice!</string>
+    <string name="text_video_too_big">所选视频太大</string>
+    <string name="text_chat_send_video">所选视频大小约为%s,是否需要发送</string>
     <string name="go_back_to_me">Go back to Me</string>
     <string name="write_a_diary">Write a diary now. Sharing is caring.</string>
 </resources>

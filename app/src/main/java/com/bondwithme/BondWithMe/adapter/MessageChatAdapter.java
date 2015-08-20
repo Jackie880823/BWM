@@ -372,7 +372,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             if (name != null && name.equals(audioName) && playPros != 0) {
                 holder.id_progressbar.setProgress(playPros);
                 Map<String, Object> map = new HashMap<>();
-                map.put("duration", msgEntity.getAudio_duration());
+                String audioDuration = msgEntity.getAudio_duration();
+                audioDuration = formatTime(audioDuration);
+                map.put("duration", audioDuration);
                 map.put("position", position);
                 map.put("name", msgEntity.getAudio_filename());
                 mHandler.sendMessage(mHandler.obtainMessage(PLAY_AUDIO_HANDLER, map));
@@ -605,7 +607,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     String path = FileUtil.getAudioRootPath(context) + File.separator + msgEntity.getAudio_filename();
                     AudioPlayUtils.getInstance(path).playAudio();
                     Map<String, Object> map = new HashMap<>();
-                    map.put("duration", msgEntity.getAudio_duration());
+                    String audioDuration = msgEntity.getAudio_duration();
+                    audioDuration = formatTime(audioDuration);
+                    map.put("duration", audioDuration);
                     map.put("position", position);
                     map.put("name", msgEntity.getAudio_filename());
                     audioName = null;
@@ -627,6 +631,38 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         }
     }
 
+
+    private String formatTime(String audioDuration) {
+        if (audioDuration.contains(":")) {
+            int minute = 0;
+            int seconds = 0;
+            try {
+                minute = Integer.parseInt(audioDuration.substring(0, audioDuration.indexOf(":")));
+                seconds = Integer.parseInt(audioDuration.substring(audioDuration.indexOf(":") + 1));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                return "0";
+            } catch (Exception e) {
+                return "0";
+            }
+            return audioDuration = minute * 60 + seconds + "";
+        }
+        if (audioDuration.contains("：")) {
+            int minute = 0;
+            int seconds = 0;
+            try {
+                minute = Integer.parseInt(audioDuration.substring(0, audioDuration.indexOf("：")));
+                seconds = Integer.parseInt(audioDuration.substring(audioDuration.indexOf("：") + 1));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                return "0";
+            } catch (Exception e) {
+                return "0";
+            }
+            return audioDuration = minute * 60 + seconds + "";
+        }
+        return audioDuration;
+    }
 
     /**
      * base64转为bitmap
