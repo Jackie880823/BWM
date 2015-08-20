@@ -133,7 +133,7 @@ repositories {
 dependencies {
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     //for 突破65535的限制
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':Volley')
     compile project(':PhotoView')
     compile project(':mupdflibrary')
@@ -158,4 +158,5 @@ dependencies {
         // since httpclient is included in the android SDK.
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
+    compile project(':piwik_sdk')
 }

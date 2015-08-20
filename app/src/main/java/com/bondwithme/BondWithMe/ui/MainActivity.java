@@ -85,7 +85,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     List<Fragment> fragments;
 
     EventFragment eventFragment;
-    EventStartupFragment eventStartupFragment;
     private boolean iseventdate;
 
 
@@ -325,6 +324,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     public void initView() {
+        App.piwikUser();
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN += App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
@@ -357,7 +357,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         fragments.add(WallFragment.newInstance());
         fragments.add(EventFragment.newInstance());
 //        eventFragment = EventFragment.newInstance();
-//        eventStartupFragment = EventStartupFragment.newInstance();
 //        fragments.add(eventFragment);
 //        if(isEventFragmentDate()){
 //            Log.i("isEventFragmentDate==================","true");
@@ -458,6 +457,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     }
 
     protected void changeTab(TabEnum tabEnum) {
+        App.piwikUser();
         switch (tabEnum) {
             case wall:
                 setDrawable();
