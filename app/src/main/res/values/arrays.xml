@@ -449,6 +449,7 @@
         <item>Partner</item>
         <item>Friend</item>
         <item>Colleague</item>
+        <item>ME</item>
     </array>
 
     <string-array name="CountryCodes">
