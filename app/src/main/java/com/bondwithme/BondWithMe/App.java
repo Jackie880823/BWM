@@ -65,18 +65,65 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     private Runnable check;
     private Handler handler;
 
-    public List<String> getNotificaationList() {
-        if(notificaationList==null) {
-            notificaationList = new ArrayList<>();
+    /**通知记录,方便count*/
+    private List<String> notificaationWallList = new ArrayList<>();
+    private List<String> notificaationEventList = new ArrayList<>();
+    private List<String> notificaationMemberList = new ArrayList<>();
+    private List<String> notificaationMessageList = new ArrayList<>();
+    private List<String> notificaationMissList = new ArrayList<>();
+    private List<String> notificaationBigDayList = new ArrayList<>();
+    private List<String> notificaationNewsList = new ArrayList<>();
+    private List<String> notificaationRecommendList = new ArrayList<>();
+    private List<String> notificaationGroupList = new ArrayList<>();
+
+    public List<String> getNotificationMsgsByType(NotificationUtil.MessageType messageType){
+
+        switch (messageType){
+            case BONDALERT_WALL:
+                return notificaationWallList;
+            case BONDALERT_EVENT:
+                return notificaationEventList;
+            case BONDALERT_MEMBER:
+                return notificaationMemberList;
+            case BONDALERT_MESSAGE:
+                return notificaationMessageList;
+            case BONDALERT_MISS:
+                return notificaationMissList;
+            case BONDALERT_BIGDAY:
+                return notificaationBigDayList;
+            case BONDALERT_NEWS:
+                return notificaationNewsList;
+            case BONDALERT_RECOMMENDED:
+                return notificaationRecommendList;
+            case BONDALERT_GROUP:
+                return notificaationGroupList;
+            default:
+                return new ArrayList<>();
         }
-        return notificaationList;
     }
 
-    public void setNotificaationList(List<String> notificaationList) {
-        this.notificaationList = notificaationList;
+    public void clearNotificationMsgsByType(NotificationUtil.MessageType messageType){
+        switch (messageType) {
+            case BONDALERT_WALL:
+                notificaationWallList.clear();
+            case BONDALERT_EVENT:
+                notificaationEventList.clear();
+            case BONDALERT_MEMBER:
+                notificaationMemberList.clear();
+            case BONDALERT_MESSAGE:
+                notificaationMessageList.clear();
+            case BONDALERT_MISS:
+                notificaationMissList.clear();
+            case BONDALERT_BIGDAY:
+                notificaationBigDayList.clear();
+            case BONDALERT_NEWS:
+                notificaationNewsList.clear();
+            case BONDALERT_RECOMMENDED:
+                notificaationRecommendList.clear();
+            case BONDALERT_GROUP:
+                notificaationGroupList.clear();
+        }
     }
-
-    private List<String> notificaationList = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -251,6 +298,10 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             headers.put("X_BWM_TOKEN", tokenEntity.getUser_token());
             headers.put("X_BWM_USERLOGINID", user_login_id);
             headers.put("X_BWM_DEVID", AppInfoUtil.getDeviceUUID(appContext));
+            headers.put("X_BWM_APPID", AppInfoUtil.getAppPackageName(appContext));
+            headers.put("X_BWM_USERLOC", "");
+            headers.put("X_BWM_APPVER", AppInfoUtil.getAppVersionName(appContext));
+
             HttpTools.initHeaders(headers);
             //how to use
             //            Map<String, String> headers = HttpTools.getHeaders();
