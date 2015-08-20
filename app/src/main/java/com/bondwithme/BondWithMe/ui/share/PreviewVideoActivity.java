@@ -16,6 +16,7 @@ import android.widget.VideoView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.DownloadRequest;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
@@ -53,9 +54,19 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
     public static final String VIDEO_FILENAME = "video_filename";
 
     /**
+     *
+     */
+    public static final String EXTRA_VIDEO_URI = "video_uri";
+
+    /**
      * 网络请求视频信息很到的视频小图名称
      */
     public static final String VIDEO_THUMBNAIL = "video_thumbnail";
+
+    /**
+     * 视频存放路径
+     */
+    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance()) + "/Video/";
 
     /**
      * 播放视频控件，用于播放传入的{@link #CONTENT_CREATOR_ID}和{@link #VIDEO_FILENAME}的值对应在远程服务器中的视频
@@ -150,7 +161,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
             String createdContentId = data.getStringExtra(CONTENT_CREATOR_ID);
             String url = String.format(Constant.API_GET_VIDEO, createdContentId, fileName);
 
-            String targetParent = FileUtil.getCacheFilePath(this) + "/Video/";
+            String targetParent = VIDEO_PATH;
             String target;
             File file = new File(targetParent);
             boolean canWrite = file.exists() || file.mkdir();
@@ -158,7 +169,8 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
 
             downloadVideo(url, target);
         } else {
-            Uri video = data.getData();
+            pbDownload.setVisibility(View.GONE);
+            Uri video = Uri.parse(data.getStringExtra(EXTRA_VIDEO_URI));
             if(video != null && !Uri.EMPTY.equals(video)){
                 videoView.setVideoURI(video);
             }

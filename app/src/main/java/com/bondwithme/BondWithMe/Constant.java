@@ -36,9 +36,14 @@ public class Constant {
     /**
      * for api
      */
-//    public static final String API_SERVER = "http://m.bondwith.me";
-//    public static final String API_SERVER = "http://pt.bondwith.me";
+    //    public static final String API_SERVER = "http://m.bondwith.me";
+    //    public static final String API_SERVER = "http://pt.bondwith.me";
     public static final String API_SERVER = "http://dev.bondwith.me";
+
+    public static final int TRACKER_SITE_ID = 3;//dev
+//    public static final int TRACKER_SITE_ID = 4;//pt
+//    public static final int TRACKER_SITE_ID = 5;//m
+
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER + "/bondwithme/index.php/api/multiPhoto";
 
     public static final String API_WALL_MAIN = API_SERVER + "/bondwithme/index.php/api/wall";
@@ -208,6 +213,10 @@ public class Constant {
     public static final String API_MISS_MEMBER = API_SERVER + "/bondwithme/index.php/api/miss";//想念用户
 
     public static final String API_FAMILY_TREE = API_SERVER + "/bondwithme/index.php/api/familyTreeFile/%s";//获得family tree url
+    /**
+     * 获得家庭关系的URL,
+     */
+    public static final String API_FAMILY_RELATIONSHIP = API_SERVER + "/bondwithme/index.php/api/listDirectMemberWithSpouse/%s/member_id/%s";
 
     public static final String API_ALBUM_GALLERY = API_SERVER + "/bondwithme/index.php/api/userPhotos";//album gallery
 
@@ -249,6 +258,7 @@ public class Constant {
     public static final String EXTRA_LONGITUDE = "longitude";
 
     public static final String HAS_LOGED_IN = "has_loged_in";
+    public static final String HAS_DOWNLOAD = "has_download";
 
     public static final String TYPE_PHONE = "phone";
     public static final String TYPE_USERNAME = "username";
@@ -283,6 +293,11 @@ public class Constant {
     public static final String API_MORE_ARCHIVE_GROUP_MEMEBER_LIST = API_SERVER + "/bondwithme/index.php/api/archivePostMain";
 
     public static final String API_MESSAGE_GROUP_IS_FRIEND = API_SERVER + "/bondwithme/index.php/api/memberAction/%s/member/%s/type/check ";
+
+    public static final String TRACKER_URL = "http://bwstat.bondwith.me/";
+    public static final String TRACKER_AUTH_TOKEN = "3bde48623ab1cea339c606abd09debd7";
+
+
     public static final String API_MESSAGE_DOWNLOAD_AUDIO = API_SERVER + "/bondwithme/index.php/api/audio_preview/%s/fid/%s";
     public static final String API_MESSAGE_DOWNLOAD_VIDEO = API_SERVER + "/bondwithme/index.php/api/video_preview/%s/fid/%s";
     public static final String API_MESSAGE_DOWNLOAD_VIDEO_PIC = API_SERVER + "/bondwithme/index.php/api/video_thumbnail/%s/fid/%s";

@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MediaData;
@@ -131,12 +133,8 @@ public class LocalMediaAdapter extends BaseAdapter {
             holder = new HolderView();
             holder.iv = (ImageView) convertView.findViewById(R.id.iv_pic);
             holder.check = (CheckBox) convertView.findViewById(R.id.select_image_right);
-            /**wing modified begin 2015.07.15 (如果真要改变checkbox 的颜色使用checkbox_color和checkbox_checked_color属性)*/
-            //            if(mColor != -1) {
-            //                // 需要修改颜色
-            //                holder.check.setBackgroundColor(mColor);
-            //            }
-            /**wing modified end*/
+            holder.llDuration = (LinearLayout) convertView.findViewById(R.id.duration_ll);
+            holder.tvDuration = (TextView) convertView.findViewById(R.id.duration_tv);
             convertView.setTag(holder);
         } else {
             holder = (HolderView) convertView.getTag();
@@ -156,6 +154,15 @@ public class LocalMediaAdapter extends BaseAdapter {
                     }
                 }
             });
+
+            MediaData mediaData = mDatas.get(position);
+            if(MediaData.TYPE_VIDEO.equals(mediaData.getType())) {
+                holder.llDuration.setVisibility(View.VISIBLE);
+                long duration = mediaData.getDuration();
+                holder.tvDuration.setText(String.format("%02d", duration / (3600000)) + ":" + String.format("%02d", duration % 3600000 / 60000) + ":" + String.format("%02d", duration % 3600000 % 60000/1000));
+            } else {
+                holder.llDuration.setVisibility(View.GONE);
+            }
 
             // 需要显示选择框，并显设置点击监听事件
             holder.check.setVisibility(View.VISIBLE);
@@ -220,6 +227,8 @@ public class LocalMediaAdapter extends BaseAdapter {
     class HolderView {
         ImageView iv;
         CheckBox check;
+        LinearLayout llDuration;
+        TextView tvDuration;
     }
 
 }

@@ -148,9 +148,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
         if(useVideo) {
             // 获取数据库中的视频资源游标
-            String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.Media.DATA, MediaStore.Video.Media._ID, MediaStore.Video.Media.SIZE};
+            String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA, MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION};
             String videoOrderBy = MediaStore.Video.Media.DATE_ADDED + " DESC";
-            String select = MediaStore.Video.Media.SIZE + "<=" + MediaData.MAX_SIZE;
+            String select = MediaStore.Video.VideoColumns.SIZE + "<=" + MediaData.MAX_SIZE;
             videoCursor = new CursorLoader(getActivity(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, select, null, videoOrderBy).loadInBackground();
         }
 
@@ -292,7 +292,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                     }
 
                     if(!TextUtils.isEmpty(path)) {
-                        MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE);
+                        MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
                         addToMediaMap(bucket, mediaData);
                     }
                 }
@@ -318,26 +318,29 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 for(int i = 0; i < cursorCount; i++) {
                     String path;
                     Uri contentUri;
+                    long duration;
                     synchronized(SelectPhotosFragment.this) {
                         if(videoCursor.isClosed()) {
                             return;
                         }
 
                         videoCursor.moveToPosition(i);
-                        long size = videoCursor.getColumnIndex(MediaStore.Video.Media.SIZE);
+                        long size = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.SIZE);
                         if(size > MediaData.MAX_SIZE) {
                             // 视频大小超过限定不添加该视频到列表，执行下一循环
                             continue;
                         }
 
                         int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
-                        int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.Media.DATA);
+                        int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
+                        int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
+                        duration = videoCursor.getLong(durationColumnIndex);
                         path = videoCursor.getString(pathColumnIndex);
                         contentUri = Uri.parse("content://media/external/video/media/" + videoCursor.getInt(uriColumnIndex));
                     }
 
                     if(!TextUtils.isEmpty(path)) {
-                        MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO);
+                        MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
                         addToMediaMap(bucket, mediaData);
                     }
                 }
@@ -398,7 +401,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private void addToMediaMap(String bucket, MediaData mediaData) {
         ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_nearest));
-        if(nearest.size() < 30) {
+        if(nearest.size() < 30 && MediaData.TYPE_IMAGE.equals(mediaData.getType())) {
             nearest.add(mediaData);
         }
         if(mMediaUris.containsKey(bucket)) {

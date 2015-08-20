@@ -278,6 +278,7 @@
         <item>伴侣</item>
         <item>朋友</item>
         <item>同事</item>
+        <item>我</item>
     </array>
 
     <string-array name="CountryCodes">
