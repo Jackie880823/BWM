@@ -19,13 +19,14 @@ import com.bondwithme.BondWithMe.ui.AlertEventActivity;
 import com.bondwithme.BondWithMe.ui.AlertGroupActivity;
 import com.bondwithme.BondWithMe.ui.AlertWallActivity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.EventDetailActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.MemberActivity;
 import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 import com.bondwithme.BondWithMe.ui.MissListActivity;
 import com.bondwithme.BondWithMe.ui.NewsActivity;
 import com.bondwithme.BondWithMe.ui.RecommendActivity;
 import com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity;
+import com.bondwithme.BondWithMe.ui.wall.WallCommentActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -196,13 +197,12 @@ public class NotificationUtil {
     private static Intent intentGroup;
 
 
-    private static Intent getFowwordIntent(Context context, Bundle msg, boolean isGCM) throws JSONException {
+    private static Intent getFowwordIntent(Context context, Bundle bundle, boolean isGCM) throws JSONException {
 
         List<String> msgs = null;
         Intent intent = null;
         JSONObject jsonObjectExtras = null;
         String msgString = null;
-
         if (isGCM) {
 //            JSONObject json = new JSONObject();
 //            Set<String> keys = msg.keySet();
@@ -214,50 +214,72 @@ public class NotificationUtil {
 //                    //Handle exception here
 //                }
 //            }
-            msgString = msg.getString("extras");
+            msgString = bundle.getString("extras");
         } else {
-            msgString = msg.getString(JPushInterface.EXTRA_EXTRA);
+            msgString = bundle.getString(JPushInterface.EXTRA_EXTRA);
         }
+
+        String item_id = null;
+        String sub_item_id = null;
+        String action_owner_id = null;
+        String action = null;
+        String action_owner = null;
+        String item_owner_name = null;
+        String item_name = null;
+        String module = null;
+        String item_type = null;
+        String snippet = null;
+
         if (msgString != null) {
             jsonObjectExtras = new JSONObject(msgString);
-            String type = jsonObjectExtras.getString("module");
-//            msgCount = jsonObjectExtras.getInt("count");
-            msgType = MessageType.getMessageTypeByName(type);
+            module = jsonObjectExtras.getString("module");
+            item_id = jsonObjectExtras.getString("item_id");
+            sub_item_id = jsonObjectExtras.getString("sub_item_id");
+            action_owner_id = jsonObjectExtras.getString("action_owner_id");
+            action = jsonObjectExtras.getString("action");
+            action_owner = jsonObjectExtras.getString("action_owner");
+            item_owner_name = jsonObjectExtras.getString("item_owner_name");
+            item_name = jsonObjectExtras.getString("item_name");
+            item_type = jsonObjectExtras.getString("item_type");
+            snippet = jsonObjectExtras.getString("snippet");
+
+            msgType = MessageType.getMessageTypeByName(module);
         }
         if (msgType == null) {
             return null;
         }
 
-//        if (msgs.size() == 0) {
-//        Intent intent = null;
+        String newMsg = null;
+
         switch (msgType) {
             case BONDALERT_WALL:
                 smallIcon = R.drawable.bondalert_wall_icon;
                 msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_WALL);
                 if (msgs.size() == 0) {
-                    intent = new Intent(context, AlertWallActivity.class);
+//                    intent = new Intent(context, AlertWallActivity.class);
+                    intent = goWallDetailIntent(context, sub_item_id, item_id);
                 } else {
-                    //TODO
                     intent = new Intent(context, AlertWallActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_WALL);
                 doNotificationHandle(MainActivity.TabEnum.wall);
+                newMsg = NotificationMessageGenerateUtil.getWallMessage(context, action, action_owner, item_owner_name);
                 break;
             case BONDALERT_EVENT:
                 smallIcon = R.drawable.bondalert_event_icon;
                 msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_EVENT);
                 if (msgs.size() == 0) {
-                    intent = new Intent(context, AlertEventActivity.class);
+                    intent = goEventDetailIntent(context, item_id);
+//                    intent = new Intent(context, AlertEventActivity.class);
                 } else {
-                    //TODO
                     intent = new Intent(context, AlertEventActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_EVENT);
                 doNotificationHandle(MainActivity.TabEnum.event);
+                newMsg = NotificationMessageGenerateUtil.getEventMessage(context, action, action_owner, item_name, item_owner_name);
                 break;
             case BONDALERT_MEMBER:
                 smallIcon = R.drawable.bondalert_member_icon;
-                intent = new Intent(context, MemberActivity.class);
                 msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_MEMBER);
                 if (msgs.size() == 0) {
                     intent = new Intent(context, AlertEventActivity.class);
@@ -266,6 +288,7 @@ public class NotificationUtil {
                     intent = new Intent(context, AlertEventActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MEMBER);
+                newMsg = NotificationMessageGenerateUtil.getMemberMessage(context, action, action_owner, item_name);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
             case BONDALERT_MESSAGE:
@@ -276,18 +299,19 @@ public class NotificationUtil {
                     intent = new Intent(context, MessageChatActivity.class);
                     int type = 0;
                     try {
-                        type = Integer.valueOf(jsonObjectExtras.getString("group_type"));
+                        type = Integer.valueOf(jsonObjectExtras.getString("item_type"));
                     } catch (Exception e) {
 
                     }
                     intent.putExtra("type", type);
-                    intent.putExtra("groupId", jsonObjectExtras.getString("group_id"));
-                    intent.putExtra("titleName", jsonObjectExtras.getString("group_name"));
+                    intent.putExtra("groupId", jsonObjectExtras.getString("item_id"));
+                    intent.putExtra("titleName", jsonObjectExtras.getString("item_name"));
                 } else {
-                    //TODO
-                    intent = new Intent(context, AlertEventActivity.class);
+                    intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("jumpIndex", 1);//到信息列表
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MESSAGE);
+                newMsg = NotificationMessageGenerateUtil.getChatMessage(context, action, item_type, action_owner, item_name, snippet);
                 doNotificationHandle(MainActivity.TabEnum.chat);
                 break;
             case BONDALERT_MISS:
@@ -301,6 +325,7 @@ public class NotificationUtil {
                     intent = new Intent(context, MissListActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MISS);
+                newMsg = NotificationMessageGenerateUtil.getMissMessage(context, action, action_owner);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
             case BONDALERT_BIGDAY:
@@ -314,6 +339,7 @@ public class NotificationUtil {
                     intent = new Intent(context, BigDayActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_BIGDAY);
+                newMsg = NotificationMessageGenerateUtil.getBirthdayMessage(context, action, item_type, action_owner);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
             case BONDALERT_NEWS:
@@ -326,6 +352,7 @@ public class NotificationUtil {
                     intent = new Intent(context, NewsActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_NEWS);
+                newMsg = NotificationMessageGenerateUtil.getOtherMessage(context, action, jsonObjectExtras);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
             case BONDALERT_RECOMMENDED:
@@ -357,19 +384,30 @@ public class NotificationUtil {
 
         }
 
-//        } else {
-//            intent = new Intent(context, BondAlertActivity.class);
-//        }
 
-        if (isGCM) {
-            msgs.add(msg.getString("message"));
-        } else {
-            msgs.add(msg.getString(JPushInterface.EXTRA_MESSAGE));
-        }
+        msgs.add(newMsg);
+//        if (isGCM) {
+//            msgs.add(bundle.getString("message"));
+//        } else {
+//            msgs.add(bundle.getString(JPushInterface.EXTRA_MESSAGE));
+//        }
 //        currentMsgs = msgs;
         return intent;
     }
 //    private static List<String> currentMsgs = new ArrayList<>();
+
+    private static Intent goWallDetailIntent(Context mContext, String content_group_id, String group_id) {
+        Intent intent = new Intent(mContext, WallCommentActivity.class);
+        intent.putExtra("content_group_id", content_group_id);
+        intent.putExtra("group_id", group_id);
+        return intent;
+    }
+
+    private static Intent goEventDetailIntent(Context mContext, String group_id) {
+        Intent intent = new Intent(mContext, EventDetailActivity.class);
+        intent.putExtra("group_id", group_id);
+        return intent;
+    }
 
     private static Notification getNotification(Context context, boolean isGCM, Bundle msg) throws JSONException {
 

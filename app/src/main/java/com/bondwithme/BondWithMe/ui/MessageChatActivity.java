@@ -14,7 +14,6 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -441,10 +440,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         return null;
     }
 
+    public static final int CHAT_TYPE_PERSONAL = 0;
+    public static final int CHAT_TYPE_GROUP = -1;
     @Override
     public void initView() {
         userOrGroupType = getIntent().getIntExtra("type", -1);
-        if (userOrGroupType == 0) {
+        if (userOrGroupType == CHAT_TYPE_PERSONAL) {
             isGroupChat = false;
         } else {
             isGroupChat = true;
