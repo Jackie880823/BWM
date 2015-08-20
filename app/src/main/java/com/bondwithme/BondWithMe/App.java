@@ -527,7 +527,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 .trackScreenView("");
     }
 
-    private static  final  String META_DATA_APP_STORE = "appstore";
+    private static  final  String META_DATA_APP_STORE = "UMENG_CHANNEL";
 
     public static void piwikGuest()
     {
