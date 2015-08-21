@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.IntentCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
@@ -556,8 +557,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                                 PackageManager.GET_META_DATA);
                 String msg = appInfo.metaData.getString(META_DATA_APP_STORE);
                 appContext.getTracker()
-                        .setScreenCustomVariable(1, META_DATA_APP_STORE, msg)
+                        .setScreenCustomVariable(1, "appstore", msg)
                         .trackScreenView("");
+                Log.d("", "msg------" + msg);
                 PreferencesUtil.saveValue(appContext, Constant.HAS_DOWNLOAD, Constant.HAS_DOWNLOAD);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();

@@ -213,10 +213,15 @@ public class MyDateUtils extends android.text.format.DateUtils {
         if (TextUtils.isEmpty(formatTime)) {
             return "00:00";
         }
+        if (formatTime.contains(":") || formatTime.contains("：")) {
+            return formatTime;
+        }
         try {
             time = Integer.parseInt(formatTime);
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            return "00:00";
+        } catch (Exception e) {
             return "00:00";
         }
         return formatRecordTime(time);

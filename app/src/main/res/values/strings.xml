@@ -552,7 +552,56 @@
     <string name="text_delete">Delete</string>
     <string name="text_cancel_all">Cancel All</string>
     <string name="text_message_break_ice">Break the ice!</string>
+    <string name="text_video_too_big">所选视频太大</string>
+    <string name="text_chat_send_video">所选视频大小约为%s,是否需要发送</string>
     <string name="go_back_to_me">Go back to Me</string>
     <string name="write_a_diary">Write a diary now. Sharing is caring.</string>
     <string name="select_media">Select Media</string>
+
+    <string name="notification_action_event_invited">%1$s has invited you to event: %2$s</string>
+    <string name="notification_action_event_update">%1$s has updated event: %2$s</string>
+    <string name="notification_action_event_cancel">%1$s has cancelled the event: %2$s</string>
+    <string name="notification_action_event_resp">%1$s has responsed the event: %2$s</string>
+    <string name="notification_action_event_comment_owner_self">%1$s commented on own event: %2$s</string>
+    <string name="notification_action_event_comment_owner">%1$s comment your event: %2$s</string>
+    <string name="notification_action_event_comment_not_owner">%1$s commented on %2$s event:%3$s</string>
+    <string name="notification_action_event_loveComment">%1$s love your comment.</string>
+    <string name="notification_action_event_reminder">Upcoming event: %1$s</string>
+
+    <string name="notification_action_member_add">%1$s request to add you as %2$s</string>
+    <string name="notification_action_member_autoAcp">You have auto accept request from %1$s add you as %2$s</string>
+    <string name="notification_action_member_accept">%1$s accepted you as member</string>
+    <string name="notification_action_member_updateRel">%1$s set you as %2$s</string>
+
+    <string name="notification_action_message_postText_personal">%1$s sent message to you.</string>
+    <string name="notification_action_message_postText_group">%1$s sent message to group: %2$s</string>
+    <string name="notification_action_message_postSticker_personal">%1$s sent sticker to you.</string>
+    <string name="notification_action_message_postSticker_group">%1$s sent sticker to group: %2$s</string>
+    <string name="notification_action_message_postPhoto_personal">%1$s sent photo to you.</string>
+    <string name="notification_action_message_postPhoto_group">%1$s sent photo to group: %2$s</string>
+    <string name="notification_action_message_postAudio_personal">%1$s sent audio to you.</string>
+    <string name="notification_action_message_postAudio_group">%1$s sent audio to group: %2$s</string>
+    <string name="notification_action_message_postVideo_personal">%1$s sent video to you.</string>
+    <string name="notification_action_message_postVideo_group">%1$s sent video to group: %2$s</string>
+    <string name="notification_action_message_add">%1$s added you into group: %2$s</string>
+    <string name="notification_action_message_pending">%1$s requested you to join group: %2$s</string>
+    <string name="notification_action_message_reject">%1$s has declined your invite to join group: %2$s</string>
+
+    <string name="notification_action_bigday_birthday_self">Happy birthday %1$s</string>
+    <string name="notification_action_bigday_birthday_other">Today is %1$s birthday</string>
+    <string name="notification_action_bigday_birthday_prebirthday_1">Tomorrow is %1$s birthday</string>
+    <string name="notification_action_bigday_birthday_prebirthday_3">%1$s birthday is in 3 days</string>
+    <string name="notification_action_bigday_birthday_prebirthday_7">%1$s birthday is in 1 week</string>
+    <string name="notification_action_bigday_birthday_prebirthday_30">%1$s birthday is in 1 month</string>
+
+    <string name="notification_action_diary_comment_owner">%1$s comment your diary</string>
+    <string name="notification_action_diary_comment_not_owner">%1$s commented on %2$s diary.</string>
+    <string name="notification_action_diary_love_owner">%1$s love your diary</string>
+    <string name="notification_action_diary_love_not_owner">%1$s loved on %2$s diary</string>
+    <string name="notification_action_diary_loveComment">%1$s love your comment.</string>
+    <string name="notification_action_diary_tag">%1$s tag you in diary</string>
+
+    <string name="notification_action_miss_missyou">%1$s miss you</string>
+
+>>>>>>> e91f5fc86ccdc81499a43acefed6488e940e9b18
 </resources>
