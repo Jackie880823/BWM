@@ -10,8 +10,7 @@ import android.util.AttributeSet;
 
 import com.bondwithme.BondWithMe.R;
 
-public class RoundProgressBarWidthNumber extends
-        HorizontalProgressBarWithNumber {
+public class RoundProgressBarWidthNumber extends HorizontalProgressBarWithNumber {
     /**
      * mRadius of view
      */
@@ -63,7 +62,7 @@ public class RoundProgressBarWidthNumber extends
     @Override
     protected synchronized void onDraw(Canvas canvas) {
 
-        String text = getProgress() + "%";
+        String text = "";//getProgress() + "%";
         float textWidth = mPaint.measureText(text);
         float textHeight = (mPaint.descent() + mPaint.ascent()) / 2;
 

@@ -645,7 +645,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             } catch (Exception e) {
                 return "0";
             }
-            return audioDuration = minute * 60 + seconds + "";
+            audioDuration = minute * 60 + seconds + "";
         }
         if (audioDuration.contains("：")) {
             int minute = 0;
@@ -659,7 +659,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             } catch (Exception e) {
                 return "0";
             }
-            return audioDuration = minute * 60 + seconds + "";
+            audioDuration = minute * 60 + seconds + "";
         }
         return audioDuration;
     }
