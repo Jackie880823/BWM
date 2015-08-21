@@ -79,12 +79,12 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     private TextView tvGoBack;
 
 
-    private static String currentUseId = MainActivity.getUser().getUser_id();
-    public static String getCurrentUseId() {
-        return currentUseId;
+    private static String selectUseId;
+    public static String getSelectUseId() {
+        return selectUseId;
     }
 
-    private String useId = currentUseId;
+    private String useId;
 
     public static FamilyTreeFragment newInstance(String... params) {
         return createInstance(new FamilyTreeFragment(), params);
@@ -113,14 +113,14 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
         tvGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!currentUseId.equals(useId)) {
-                    currentUseId = useId;
+                if(!selectUseId.equals(useId) && rlProgress.getVisibility() != View.VISIBLE) {
+                    selectUseId = useId;
                     requestData();
                 }
             }
         });
 
-        currentUseId = useId;
+        selectUseId = useId = MainActivity.getUser().getUser_id();
     }
 
     /**
@@ -136,14 +136,14 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
 
     @Override
     public void requestData() {
-        if(currentUseId.equals(useId)) {
+        if(selectUseId.equals(useId)) {
             tvGoBack.setText(R.string.text_me);
         } else {
             tvGoBack.setText(R.string.go_back_to_me);
         }
 
         rlProgress.setVisibility(View.VISIBLE);
-        String url = String.format(Constant.API_FAMILY_RELATIONSHIP, useId, currentUseId);
+        String url = String.format(Constant.API_FAMILY_RELATIONSHIP, useId, selectUseId);
         LogUtil.i(TAG, "requestData& url: " + url);
         new HttpTools(getActivity()).get(url, null, TAG, new HttpCallback() {
             @Override
@@ -253,8 +253,8 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     @Override
     public void onClick(View view, FamilyMemberEntity entity) {
         String entityUseId = entity.getUser_id();
-        if(!currentUseId.equals(entityUseId)) {
-            currentUseId = entity.getUser_id();
+        if(!selectUseId.equals(entityUseId)) {
+            selectUseId = entity.getUser_id();
             requestData();
         }
     }
