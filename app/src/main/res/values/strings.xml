@@ -602,6 +602,9 @@
     <string name="notification_action_diary_tag">%1$s tag you in diary</string>
 
     <string name="notification_action_miss_missyou">%1$s miss you</string>
+    <string name="text_audio_release">松开发送</string>
+    <string name="text_audio_loosen_audition">松手试听</string>
+    <string name="text_audio_cancle_send">松手取消发送</string>
 
 >>>>>>> e91f5fc86ccdc81499a43acefed6488e940e9b18
 </resources>
