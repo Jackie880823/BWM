@@ -47,9 +47,9 @@
                     android:layout_alignLeft="@+id/tv_inside_sticker_name"
                     android:layout_marginTop="@dimen/_3dp"
                     android:paddingRight="@dimen/_5dp"
-                    android:text="description"
+                    android:text=""
                     android:textSize="@dimen/text_size_12sp"
-                    android:visibility="invisible"/>
+                    android:visibility="visible"/>
                 <TextView
                     android:id="@+id/tv_price"
                     android:layout_width="wrap_content"
