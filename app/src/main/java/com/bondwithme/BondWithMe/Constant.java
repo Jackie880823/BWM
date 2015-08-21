@@ -1,5 +1,7 @@
 package com.bondwithme.BondWithMe;
 
+import com.bondwithme.BondWithMe.util.FileUtil;
+
 /**
  * Created by wing on 15/1/29.
  */
@@ -300,4 +302,9 @@ public class Constant {
     public static final String API_MESSAGE_DOWNLOAD_AUDIO = API_SERVER + "/bondwithme/index.php/api/audio_preview/%s/fid/%s";
     public static final String API_MESSAGE_DOWNLOAD_VIDEO = API_SERVER + "/bondwithme/index.php/api/video_preview/%s/fid/%s";
     public static final String API_MESSAGE_DOWNLOAD_VIDEO_PIC = API_SERVER + "/bondwithme/index.php/api/video_thumbnail/%s/fid/%s";
+
+    /**
+     * 视频存放路径
+     */
+    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance()) + "/Video/";
 }
