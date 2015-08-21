@@ -6,7 +6,7 @@ def releaseTime() {
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "23"
 
     dexOptions {
         javaMaxHeapSize "2048M"
@@ -18,8 +18,9 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 53   //TODO
-        versionName "1.10.0" //TODO
+        versionCode 54   //TODO
+        versionName "2.0.0" //TODO
+//        versionName "1.10.1" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -28,56 +29,56 @@ android {
     }
 
     //代码检查
-//    lintOptions {
-//        checkReleaseBuilds false //TODO release change to true
-//        abortOnError false
-//    }
-//    signingConfigs {
-//
-//        debug {
-//            // No debug config
-//        }
-//        release {
-//            storeFile file(KEY_FILE_PATH)
-//            storePassword KEYSTORE_PASSWORD
-//            keyAlias KEYSTORE_ALIAS
-//            keyPassword KEY_PASSWORD
-//        }
-//
-//    }
-//
-//
-//    buildTypes {
-//        debug {
-//            // 显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "true"
-//            minifyEnabled false
-//            zipAlignEnabled false
-//            shrinkResources false
-//            signingConfig signingConfigs.debug
-//        }
-//        release {
-//            // 不显示Log
-//            minifyEnabled true //TODO 正式环境改true
-//            buildConfigField "boolean", "LOG_DEBUG", "false" //TODO 正式环境改false
-//            zipAlignEnabled true //TODO 正式环境改true
-//            // 移除无用的resource文件
-//            shrinkResources true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.release
-//        }
-//
-//        applicationVariants.all { variant ->
-//            variant.outputs.each { output ->
-//                def outputFile = output.outputFile
-//                if (outputFile != null && outputFile.name.endsWith('.apk')) {
-//                    // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
-//                    def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
-//                    output.outputFile = new File(outputFile.parent, fileName)
-//                }
-//            }
-//        }
-//    }
+    lintOptions {
+        checkReleaseBuilds false //TODO release change to true
+        abortOnError false
+    }
+    signingConfigs {
+
+        debug {
+            // No debug config
+        }
+        release {
+            storeFile file(KEY_FILE_PATH)
+            storePassword KEYSTORE_PASSWORD
+            keyAlias KEYSTORE_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+
+    }
+
+
+    buildTypes {
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            // 不显示Log
+            minifyEnabled true
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                def outputFile = output.outputFile
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
+                    def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                    output.outputFile = new File(outputFile.parent, fileName)
+                }
+            }
+        }
+    }
     // 多渠道打包
     productFlavors {
         wandoujia {}
@@ -133,7 +134,7 @@ repositories {
 dependencies {
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     //for 突破65535的限制
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':Volley')
     compile project(':PhotoView')
     compile project(':mupdflibrary')
@@ -158,4 +159,5 @@ dependencies {
         // since httpclient is included in the android SDK.
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
+    compile project(':piwik_sdk')
 }

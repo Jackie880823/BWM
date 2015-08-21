@@ -210,17 +210,20 @@ public class MyDateUtils extends android.text.format.DateUtils {
 
     public static String formatRecordTimeForString(String formatTime) {
         int time = 0;
+        if (TextUtils.isEmpty(formatTime)) {
+            return "00:00";
+        }
+        if (formatTime.contains(":") || formatTime.contains("：")) {
+            return formatTime;
+        }
         try {
             time = Integer.parseInt(formatTime);
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return "00:00";
+        } catch (Exception e) {
+            return "00:00";
         }
-        int j = time / 60;
-        int k = time % 60;
-        Object[] arrayOfObject = new Object[2];
-        arrayOfObject[0] = Integer.valueOf(j);
-        arrayOfObject[1] = Integer.valueOf(k);
-        return String.format("%1$02d:%2$02d", arrayOfObject);
+        return formatRecordTime(time);
     }
 }

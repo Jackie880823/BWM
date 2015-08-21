@@ -37,6 +37,13 @@ public class AudioPlayUtils {
         }
     }
 
+    public static boolean audioIsPlaying() {
+        if (mp != null && mp.isPlaying()) {
+            return true;
+        }
+        return false;
+    }
+
     public static void stopAudio() {
         if (mp != null && mp.isPlaying()) {
             mp.stop();

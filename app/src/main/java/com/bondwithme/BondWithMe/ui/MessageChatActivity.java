@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.Constant;
@@ -48,6 +49,7 @@ import com.bondwithme.BondWithMe.util.AudioPlayUtils;
 import com.bondwithme.BondWithMe.util.CustomLengthFilter;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
+import com.bondwithme.BondWithMe.util.MslToast;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
@@ -105,13 +107,14 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     private LinearLayout chat_gn_ll;//隐藏键盘输入时布局
     private ImageView chat_mic_keyboard;//语音和文字输入切换按钮
-    private LinearLayout chat_mic_ll;//语音按钮布局
+    private RelativeLayout chat_mic_ll;//语音按钮布局
     private TextView chat_mic_text;//语音输入提示
     private TextView chat_mic_time;//语音录制时间显示
     private ImageView mic_iv;//语音录制按钮
     private ImageView mic_left;//语音录制左边按钮
     private ImageView mic_right;//语音录制右边按钮
     private ImageView chat_gn;
+    private ImageView bend_line;
 
     private boolean isShowKBPic = false;
 
@@ -164,8 +167,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public LinearLayoutManager llm;
     private InputMethodManager imm;
     private Timer mTimer;
-    private float touchDownX;
-    private int totalMove;
 
     private int isNewGroup;
     private ModifyStickerReceiver stickerReceiver;
@@ -173,13 +174,14 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private StickerLinearLayout chat_main_ll;
 
     private long voiceBeginTime = 0;
-    private int mlCount = 0;
+    private int mlCount = 1;
 
     private MP3Recorder mRecorder;
     private Timer timer;
     private File audioFile;
 
     private MsgEntity audioMsgEntity;
+
 
     Handler handler = new Handler() {
         @Override
@@ -342,7 +344,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         String audio_duration = audioJsonObject.optString("audio_duration");
                         String postType = audioJsonObject.optString("postType");
                         String uri = null;
-                        if ("postType".equalsIgnoreCase(postType) && audioMsgEntity != null) {
+                        if ("postVideo".equalsIgnoreCase(postType) && audioMsgEntity != null) {
                             uri = audioMsgEntity.getVideo_format2();
                         }
                         audioMsgEntity = new MsgEntity();
@@ -440,10 +442,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         return null;
     }
 
+    public static final int CHAT_TYPE_PERSONAL = 0;
+    public static final int CHAT_TYPE_GROUP = -1;
     @Override
     public void initView() {
         userOrGroupType = getIntent().getIntExtra("type", -1);
-        if (userOrGroupType == 0) {
+        if (userOrGroupType == CHAT_TYPE_PERSONAL) {
             isGroupChat = false;
         } else {
             isGroupChat = true;
@@ -515,6 +519,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         sendTextView = getViewById(R.id.btn_send);
         empty_message = getViewById(R.id.no_message_data_linear);
         chat_main_ll = getViewById(R.id.chat_main_ll);
+        bend_line = getViewById(R.id.bend_line);
 
         chat_main_ll.setOnResizeListener(new StickerLinearLayout.OnResizeListener() {
             @Override
@@ -534,6 +539,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         mic_left = getViewById(R.id.mic_left);
         mic_right = getViewById(R.id.mic_right);
         chat_gn = getViewById(R.id.chat_gn);
+        chat_mic_text.setTextColor(getResources().getColor(getActionBarColor()));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -560,28 +566,30 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     public boolean onLongClick(View v) {
         switch (v.getId()) {
             case R.id.mic_iv:
-                if (mlCount != 0) {
-                    mlCount = 0;
-                }
-                mic_iv.setImageResource(R.drawable.chat_voice_press);
-                try {
-                    audioFile = FileUtil.saveAudioFile(mContext);
-                    mRecorder.start(audioFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                chat_mic_text.setText("松开发送");
-                voiceBeginTime = System.currentTimeMillis();
-                TimerTask task = new TimerTask() {
-                    public void run() {
-                        Message message = new Message();
-                        message.what = GET_RECORD_TIME;
-                        handler.sendMessage(message);
+                if (!isAudition) {
+                    if (mlCount != 1) {
+                        mlCount = 1;
                     }
-                };
-                timer = new Timer(true);
-                timer.schedule(task, 1000, 1000); //延时1000ms后执行，1000ms执行一次
-                //timer.cancel(); //退出计时器
+                    mic_iv.setImageResource(R.drawable.chat_voice_press);
+                    try {
+                        audioFile = FileUtil.saveAudioFile(mContext);
+                        mRecorder.start(audioFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    chat_mic_text.setText("松开发送");
+                    voiceBeginTime = System.currentTimeMillis();
+                    TimerTask task = new TimerTask() {
+                        public void run() {
+                            Message message = new Message();
+                            message.what = GET_RECORD_TIME;
+                            handler.sendMessage(message);
+                        }
+                    };
+                    timer = new Timer(true);
+                    timer.schedule(task, 1000, 1000); //延时1000ms后执行，1000ms执行一次
+                    //timer.cancel(); //退出计时器
+                }
                 break;
         }
 
@@ -666,7 +674,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     @Override
                     public void onClick(View v) {
                         Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                        mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.7);//画质0.5
+                        mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);//画质0.5
                         //mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60000);//60s
                         mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 45 * 1024 * 1024);
                         startActivityForResult(mIntent, CAMERA_ACTIVITY);//CAMERA_ACTIVITY = 1
@@ -747,10 +755,45 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             case R.id.chat_mic_time://语音录制时间显示
                 break;
             case R.id.mic_iv://语音录制按钮
+                if (isAudition) {
+                    if (AudioPlayUtils.audioIsPlaying()) {
+                        AudioPlayUtils.stopAudio();
+                    } else {
+                        if (audioFile != null && audioFile.exists()) {
+                            String path = audioFile.getAbsolutePath();
+                            AudioPlayUtils.getInstance(path).playAudio();
+                        }
+                    }
+                    break;
+                }
                 break;
             case R.id.mic_left://语音录制左边按钮
+                if (isAudition) {
+                    isAudition = false;
+                    AudioPlayUtils.stopAudio();
+                    if (audioFile != null && audioFile.exists()) {
+                        audioFile.delete();
+                        bend_line.setVisibility(View.VISIBLE);
+                        mic_left.setImageResource(R.drawable.chat_play);
+                        mic_right.setImageResource(R.drawable.delete_voice);
+                        mic_iv.setImageResource(R.drawable.chat_voice);
+                    }
+                    break;
+                }
                 break;
             case R.id.mic_right://语音录制右边按钮
+                if (isAudition) {
+                    AudioPlayUtils.stopAudio();
+                    isAudition = false;
+                    bend_line.setVisibility(View.VISIBLE);
+                    mic_left.setImageResource(R.drawable.chat_play);
+                    mic_right.setImageResource(R.drawable.delete_voice);
+                    mic_iv.setImageResource(R.drawable.chat_voice);
+                    if (audioFile != null && audioFile.exists()) {
+                        uploadAudioOrVideo(audioFile, true, null, 0);
+                    }
+                    mlCount = 1;
+                }
                 break;
         }
     }
@@ -812,6 +855,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
     }
 
+    boolean isAudition = false;
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
@@ -833,10 +878,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             }
                         }, 50);
                         break;
-                    case R.id.mic_iv:
-                        touchDownX = event.getRawX();
-                        break;
                 }
+
             case MotionEvent.ACTION_UP:
                 switch (v.getId()) {
                     case R.id.et_chat:
@@ -852,77 +895,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             }, 50);
                         }
                         break;
-                    case R.id.mic_iv:
-                        mic_iv.setImageResource(R.drawable.chat_voice);
-                        chat_mic_time.setText(MyDateUtils.formatRecordTime(mlCount));
-                        if (timer != null) {
-                            timer.cancel();
-                        }
-                        mRecorder.stop();
-                        if (audioFile != null && audioFile.exists() && mlCount >= 2) {
-                            mlCount++;
-                            uploadAudioOrVideo(audioFile, true, null);
-                        } else if (audioFile != null && audioFile.exists()) {
-                            audioFile.delete();
-                        }
-                        mlCount = 0;
-                        break;
                 }
 
             case MotionEvent.ACTION_MOVE:
-                switch (v.getId()) {
-                    case R.id.mic_iv:
-                        int[] arrayLeft = new int[2];
-                        mic_left.getLocationOnScreen(arrayLeft);
-                        int[] arrayRight = new int[2];
-                        mic_right.getLocationOnScreen(arrayRight);
-                        totalMove = (arrayRight[0] - arrayLeft[0]) / 2;
-                        float moveX = event.getRawX();
-                        float moveRange = moveX - touchDownX;
-                        float mplificationNum;
-                        if (moveRange < 0) {
-                            mplificationNum = (-moveRange) / totalMove;
-                        } else {
-                            mplificationNum = moveRange / totalMove;
-                        }
-                        boolean isInLeft = isInView(mic_left, mic_iv, event);
-                        boolean isInRight = isInView(mic_left, mic_iv, event);
-                        if (!isInLeft || !isInRight) {
-                            chat_mic_text.setText(MyDateUtils.formatRecordTime(mlCount));
-                        }
-                        if (moveRange < -50f) {
-                            if (mplificationNum < 1) {
-                                mic_left.setScaleX(1 + mplificationNum);
-                                mic_left.setScaleY(1 + mplificationNum);
-                            }
-                            if (isInLeft) {
-                                chat_mic_text.setText("松手试听");
-                                if (timer != null) {
-                                    timer.cancel();
-                                }
-                            }
-                        }
-                        if (moveRange > 50f) {
-                            if (mplificationNum < 1) {
-                                mic_right.setScaleX(1 + mplificationNum);
-                                mic_right.setScaleY(1 + mplificationNum);
-                            }
-                            if (isInRight) {
-                                chat_mic_text.setText("松手取消发送");
-                                if (timer != null) {
-                                    timer.cancel();
-                                }
-                            }
-                        }
-                        break;
-                }
-
                 break;
         }
         return false;
     }
 
-    public boolean isInView(View view1, View view2, MotionEvent event) {
+    public boolean isInView(View view1, MotionEvent event) {
         int clickX = ((int) event.getRawX());
         int clickY = ((int) event.getRawY());
         //如下的view表示Activity中的子View或者控件
@@ -930,10 +911,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         view1.getLocationOnScreen(location);
         int x = location[0];
         int y = location[1];
-        int width = view1.getWidth();
-        int height = view1.getHeight();
-        if (clickX > x && clickX < (x + width) &&
-                clickY > y && clickY < (y + height)) {
+        int width = view1.getWidth() / 2;
+        int height = view1.getHeight() / 2;
+        if (clickX >= (x + width) && clickX <= (x + width * 3) &&
+                clickY >= (y + height) && clickY <= (y + height * 3)) {
             return true;  //这个条件成立，则判断这个view被点击了
         }
         return false;
@@ -974,7 +955,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     List<Uri> pickUries = new ArrayList();
 
-    private void uploadVideo(final Uri voideUri) {
+    private void uploadVideo(final Uri voideUri, final long durationTime) {
         final File file = new File(voideUri.getPath());
         if (file != null && file.exists()) {
             float fileLength = file.length();
@@ -1004,9 +985,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
             TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
             if (!isTooBig) {
-                fomatLength = String.format("所选视频大小约为%s,是否需要发送", fomatLength);
+                fomatLength = String.format(getString(R.string.text_chat_send_video), fomatLength);
             } else {
-                fomatLength = "所选视频太大";
+                fomatLength = getString(R.string.text_video_too_big);
             }
             tv_no_member.setText(fomatLength);
 
@@ -1020,7 +1001,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     @Override
                     public void onClick(View v) {
                         Uri uri = Uri.fromFile(file);
-                        uploadAudioOrVideo(file, false, uri);
+                        uploadAudioOrVideo(file, false, uri, durationTime);
                         showSelectDialog.dismiss();
                     }
                 });
@@ -1057,7 +1038,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     if (data != null) {
                         String type = data.getStringExtra(SelectPhotosActivity.RESULT_MEDIA_TYPE);
                         if (MediaData.TYPE_VIDEO.equals(type)) {
-                            uploadVideo(data.getData());
+                            long durationTime = data.getLongExtra(SelectPhotosActivity.RESULT_VIDEO_DURATION, 0);
+                            uploadVideo(data.getData(), durationTime);
                         } else {
                             ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
                             pickUries.addAll(uris);
@@ -1091,16 +1073,19 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     }
                     break;
                 case CAMERA_ACTIVITY:
+                    String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA,
+                            MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION};
                     Uri uri = data.getData();
-                    String[] proj = {MediaStore.Video.VideoColumns.DATA};
-                    Cursor cursor = this.getContentResolver().query(uri, proj, null, null, null);
+                    Cursor cursor = this.getContentResolver().query(uri, videoColumns, null, null, null);
                     String filePath = null;
+                    long duration = 0;
                     if (cursor != null && cursor.moveToNext()) {
                         filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
+                        duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION));
                         cursor.close();
                     }
                     if (!TextUtils.isEmpty(filePath)) {
-                        uploadVideo(Uri.parse(filePath));
+                        uploadVideo(Uri.parse(filePath), duration);
                     }
                     break;
                 default:
@@ -1157,7 +1142,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         recyclerView.setOnTouchListener(this);
         etChat.setOnTouchListener(this);
         empty_message.setOnTouchListener(this);
-        mic_iv.setOnTouchListener(this);
+
 
         mic_iv.setOnLongClickListener(this);
 
@@ -1189,9 +1174,124 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 }
             }
         });
+
+        mic_iv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        if (!isAudition) {
+                            int[] arrayLeft = new int[2];
+                            mic_left.getLocationOnScreen(arrayLeft);
+                            int[] arrayRight = new int[2];
+                            mic_right.getLocationOnScreen(arrayRight);
+                            int totalMove = (arrayRight[0] - arrayLeft[0]) / 4;
+                            int[] arrayMic = new int[2];
+                            mic_iv.getLocationOnScreen(arrayMic);
+                            float touchDownX = arrayMic[0] + mic_iv.getWidth() / 2;
+                            int micWidth = mic_iv.getWidth() / 2;
+                            float moveX = event.getRawX();
+                            if (moveX < (touchDownX - micWidth)) {
+                                //左边按钮变大
+                                float moveRange = (touchDownX - micWidth - moveX) / totalMove;
+                                if (moveRange < 1) {
+                                    mic_left.setScaleX(1 + moveRange);
+                                    mic_left.setScaleY(1 + moveRange);
+                                }
+                                boolean isInLeft = isInView(mic_left, event);
+                                if (isInLeft) {
+                                    chat_mic_text.setText("松手试听");
+                                    mic_left.setImageResource(R.drawable.chat_play_press);
+                                } else {
+                                    chat_mic_text.setText("松开发送");
+                                    mic_left.setImageResource(R.drawable.chat_play);
+                                }
+                            }
+
+                            if (moveX > (touchDownX + micWidth)) {
+                                //右边边按钮变大
+                                float moveRange = (moveX - touchDownX - micWidth) / totalMove;
+                                if (moveRange < 1) {
+                                    mic_right.setScaleX(1 + moveRange);
+                                    mic_right.setScaleY(1 + moveRange);
+                                }
+                                boolean isInRight = isInView(mic_right, event);
+                                if (isInRight) {
+                                    chat_mic_text.setText("松手取消发送");
+                                    mic_right.setImageResource(R.drawable.delete_voice_press);
+                                } else {
+                                    chat_mic_text.setText("松开发送");
+                                    mic_right.setImageResource(R.drawable.delete_voice);
+                                }
+                            }
+                        }
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        if (!isAudition) {
+                            boolean isInLeft = isInView(mic_left, event);
+                            boolean isInRight = isInView(mic_right, event);
+                            mic_iv.setImageResource(R.drawable.chat_voice);
+                            chat_mic_time.setText(MyDateUtils.formatRecordTime(mlCount));
+                            if (timer != null) {
+                                timer.cancel();
+                            }
+                            handler.removeMessages(GET_RECORD_TIME);
+                            mRecorder.stop();
+                            if (audioFile != null && audioFile.exists() && mlCount < 2) {
+                                audioFile.delete();
+                                MslToast.getInstance(mContext).showShortToast("录制时间要大于两秒");
+                                mlCount = 1;
+                                chat_mic_time.setText("00:00");
+                            } else if (isInLeft) {
+                                isAudition = true;
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mic_left.setScaleX(1);
+                                        mic_left.setScaleY(1);
+                                        bend_line.setVisibility(View.INVISIBLE);
+                                        mic_left.setImageResource(R.drawable.chat_cancel_audio);
+                                        mic_right.setImageResource(R.drawable.chat_send_audio);
+                                        mic_iv.setImageResource(R.drawable.chat_play_voice);
+
+                                    }
+                                }, 50);
+
+                            } else if (isInRight) {
+                                mic_right.setScaleX(1);
+                                mic_right.setScaleY(1);
+                                if (audioFile != null && audioFile.exists()) {
+                                    audioFile.delete();
+                                }
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mic_right.setImageResource(R.drawable.delete_voice);
+                                    }
+                                }, 50);
+                                mlCount = 1;
+                                chat_mic_time.setText("00:00");
+                            } else {
+                                mic_left.setScaleX(1);
+                                mic_left.setScaleY(1);
+                                mic_right.setScaleX(1);
+                                mic_right.setScaleY(1);
+                                if (audioFile != null && audioFile.exists()) {
+                                    uploadAudioOrVideo(audioFile, true, null, 0);
+                                }
+                                mlCount = 1;
+                                chat_mic_time.setText("00:00");
+                            }
+                            return true;
+                        }
+                }
+                return false;
+            }
+        });
     }
 
-    private void uploadAudioOrVideo(File file, boolean isAudio, Uri uri) {
+    private void uploadAudioOrVideo(File file, boolean isAudio, Uri uri, long durationTime) {
         if (file == null || !file.exists()) {
             return;
         }
@@ -1206,12 +1306,14 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         String audioFile = file.getAbsolutePath();
         audioFile = audioFile.substring(audioFile.lastIndexOf(File.separator) + 1);
         if (!isAudio) {
+            String duration = durationTime / 1000L + "";
             params.put("video", "1");
-            params.put("video_duration", "");
+            params.put("video_duration", duration);
             msgEntity.setVideo_filename(audioFile);
             String videoThumbnail = getVideoThumbnail(uri.toString());
             msgEntity.setVideo_format1(videoThumbnail);
             msgEntity.setVideo_format2(uri.toString());
+            msgEntity.setVideo_duration(duration);
             params.put("video_thumbnail", String.format("data:image/png;base64,%s", videoThumbnail));
         } else {
             params.put("audio", "1");

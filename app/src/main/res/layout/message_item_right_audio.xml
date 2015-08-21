@@ -11,13 +11,15 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/_6dp"
         android:src="@drawable/default_head_icon"
+        android:layout_marginTop="@dimen/_20dp"
         app:border="false" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_80dp"
+        android:layout_marginLeft="@dimen/_68dp"
         android:layout_marginRight="@dimen/_12dp"
+        android:layout_marginTop="@dimen/_20dp"
         android:layout_toLeftOf="@id/message_icon_image"
         android:orientation="horizontal">
 
@@ -26,12 +28,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/little_play" />
+            android:src="@drawable/chat_play" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_20dp">
+            android:layout_marginLeft="@dimen/_20dp"
+            android:layout_marginRight="@dimen/_12dp">
 
             <com.bondwithme.BondWithMe.widget.HorizontalProgressBarWithNumber
                 android:id="@+id/id_progressbar"

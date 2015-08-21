@@ -19,14 +19,14 @@ import com.bondwithme.BondWithMe.ui.AlertEventActivity;
 import com.bondwithme.BondWithMe.ui.AlertGroupActivity;
 import com.bondwithme.BondWithMe.ui.AlertWallActivity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.BondAlertActivity;
+import com.bondwithme.BondWithMe.ui.EventDetailActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.MemberActivity;
 import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 import com.bondwithme.BondWithMe.ui.MissListActivity;
 import com.bondwithme.BondWithMe.ui.NewsActivity;
 import com.bondwithme.BondWithMe.ui.RecommendActivity;
 import com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity;
+import com.bondwithme.BondWithMe.ui.wall.WallCommentActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,11 +41,12 @@ import cn.jpush.android.api.JPushInterface;
 public class NotificationUtil {
 
     private static final String TAG = "NotificationUtil";
+    public static final String MSG_TYPE = "msg_type";
 
     /**
      * 通知类型
      */
-    private enum MessageType {
+    public enum MessageType {
         BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_NEWS("news"), BONDALERT_MEMBER("member"), BONDALERT_RECOMMENDED("recommended"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group");
         private String typeName;
 
@@ -170,13 +171,13 @@ public class NotificationUtil {
 
         Notification notification = getNotification(context, isGCM, msg);
         if (notification != null) {
-//            if(msgs.size()==1) {
-//                getNotivficationManager(context).notify(0, notification);
-//            }else{
-//                getNotivficationManager(context).cancel(0);
-            getNotivficationManager(context).notify(1, notification);
-//            }
-//            getNotivficationManager(context).notify(msgType.ordinal(), notification);
+
+//            Intent dismissedIntent = new Intent(
+//                    "com.xxxx.android.notify.dismissed");
+//            notification.deleteIntent = PendingIntent.getBroadcast(context, 0,
+//                    dismissedIntent, 0);
+
+            getNotivficationManager(context).notify(msgType.ordinal(), notification);
         }
 
     }
@@ -196,14 +197,12 @@ public class NotificationUtil {
     private static Intent intentGroup;
 
 
-    private static Intent getFowwordIntent(Context context, Bundle msg, boolean isGCM,List msgs) throws JSONException {
-        if (msg == null) {
-            return null;
-        }
+    private static Intent getFowwordIntent(Context context, Bundle bundle, boolean isGCM) throws JSONException {
+
+        List<String> msgs = null;
         Intent intent = null;
         JSONObject jsonObjectExtras = null;
         String msgString = null;
-
         if (isGCM) {
 //            JSONObject json = new JSONObject();
 //            Set<String> keys = msg.keySet();
@@ -215,127 +214,205 @@ public class NotificationUtil {
 //                    //Handle exception here
 //                }
 //            }
-            msgString = msg.getString("extras");
+            msgString = bundle.getString("extras");
         } else {
-            msgString = msg.getString(JPushInterface.EXTRA_EXTRA);
+            msgString = bundle.getString(JPushInterface.EXTRA_EXTRA);
         }
+
+        String item_id = null;
+        String sub_item_id = null;
+        String action_owner_id = null;
+        String action = null;
+        String action_owner = null;
+        String item_owner_name = null;
+        String item_name = null;
+        String module = null;
+        String item_type = null;
+        String snippet = null;
+
         if (msgString != null) {
             jsonObjectExtras = new JSONObject(msgString);
-            String type = jsonObjectExtras.getString("module");
-//            msgCount = jsonObjectExtras.getInt("count");
-            msgType = MessageType.getMessageTypeByName(type);
+            module = jsonObjectExtras.getString("module");
+            item_id = jsonObjectExtras.getString("item_id");
+            sub_item_id = jsonObjectExtras.getString("sub_item_id");
+            action_owner_id = jsonObjectExtras.getString("action_owner_id");
+            action = jsonObjectExtras.getString("action");
+            action_owner = jsonObjectExtras.getString("action_owner");
+            item_owner_name = jsonObjectExtras.getString("item_owner_name");
+            item_name = jsonObjectExtras.getString("item_name");
+            item_type = jsonObjectExtras.getString("item_type");
+            snippet = jsonObjectExtras.getString("snippet");
+
+            msgType = MessageType.getMessageTypeByName(module);
         }
         if (msgType == null) {
             return null;
         }
 
-        if (msgs.size() == 0) {
-//        Intent intent = null;
-            switch (msgType) {
-                case BONDALERT_WALL:
-                    smallIcon = R.drawable.bondalert_wall_icon;
-//                    if (intentWall == null) {
+        String newMsg = null;
+
+        switch (msgType) {
+            case BONDALERT_WALL:
+                smallIcon = R.drawable.bondalert_wall_icon;
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_WALL);
+                if (msgs.size() == 0) {
+//                    intent = new Intent(context, AlertWallActivity.class);
+                    intent = goWallDetailIntent(context, sub_item_id, item_id);
+                } else {
                     intent = new Intent(context, AlertWallActivity.class);
-//                        intent.putExtra(FLAG_SINGLE_MSG, true);
-//                    } else {
-//                        //跳转到详情
-//                        intent = new Intent(context, AlertWallActivity.class);
-//                        intent.putExtra(FLAG_SINGLE_MSG, false);
-//                    }
-                    doNotificationHandle(MainActivity.TabEnum.wall);
-                    break;
-                case BONDALERT_EVENT:
-                    smallIcon = R.drawable.bondalert_event_icon;
+                }
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_WALL);
+                doNotificationHandle(MainActivity.TabEnum.wall);
+                newMsg = NotificationMessageGenerateUtil.getWallMessage(context, action, action_owner, item_owner_name);
+                break;
+            case BONDALERT_EVENT:
+                smallIcon = R.drawable.bondalert_event_icon;
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_EVENT);
+                if (msgs.size() == 0) {
+                    intent = goEventDetailIntent(context, item_id);
+//                    intent = new Intent(context, AlertEventActivity.class);
+                } else {
                     intent = new Intent(context, AlertEventActivity.class);
-                    doNotificationHandle(MainActivity.TabEnum.event);
-                    break;
-                case BONDALERT_MEMBER:
-                    smallIcon = R.drawable.bondalert_member_icon;
-                    intent = new Intent(context, MemberActivity.class);
-                    doNotificationHandle(MainActivity.TabEnum.more);
-                    break;
-                case BONDALERT_MESSAGE:
-                    smallIcon = R.drawable.bondalert_message_icon;
+                }
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_EVENT);
+                doNotificationHandle(MainActivity.TabEnum.event);
+                newMsg = NotificationMessageGenerateUtil.getEventMessage(context, action, action_owner, item_name, item_owner_name);
+                break;
+            case BONDALERT_MEMBER:
+                smallIcon = R.drawable.bondalert_member_icon;
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_MEMBER);
+                if (msgs.size() == 0) {
+                    intent = new Intent(context, AlertEventActivity.class);
+                } else {
+                    //TODO
+                    intent = new Intent(context, AlertEventActivity.class);
+                }
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MEMBER);
+                newMsg = NotificationMessageGenerateUtil.getMemberMessage(context, action, action_owner, item_name);
+                doNotificationHandle(MainActivity.TabEnum.more);
+                break;
+            case BONDALERT_MESSAGE:
+                smallIcon = R.drawable.bondalert_message_icon;
+
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_MESSAGE);
+                if (msgs.size() == 0) {
                     intent = new Intent(context, MessageChatActivity.class);
                     int type = 0;
                     try {
-                        type = Integer.valueOf(jsonObjectExtras.getString("group_type"));
+                        type = Integer.valueOf(jsonObjectExtras.getString("item_type"));
                     } catch (Exception e) {
 
                     }
                     intent.putExtra("type", type);
-                    intent.putExtra("groupId", jsonObjectExtras.getString("group_id"));
-                    intent.putExtra("titleName", jsonObjectExtras.getString("group_name"));
-                    doNotificationHandle(MainActivity.TabEnum.chat);
-                    break;
-                case BONDALERT_MISS:
-                    smallIcon = R.drawable.bondalert_miss_icon;
+                    intent.putExtra("groupId", jsonObjectExtras.getString("item_id"));
+                    intent.putExtra("titleName", jsonObjectExtras.getString("item_name"));
+                } else {
+                    intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("jumpIndex", 1);//到信息列表
+                }
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MESSAGE);
+                newMsg = NotificationMessageGenerateUtil.getChatMessage(context, action, item_type, action_owner, item_name, snippet);
+                doNotificationHandle(MainActivity.TabEnum.chat);
+                break;
+            case BONDALERT_MISS:
+                smallIcon = R.drawable.bondalert_miss_icon;
+
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_MISS);
+                if (msgs.size() == 0) {
                     intent = new Intent(context, MissListActivity.class);
-                    doNotificationHandle(MainActivity.TabEnum.more);
-                    break;
-                case BONDALERT_BIGDAY:
-                    smallIcon = R.drawable.bondalert_bigday_icon;
+                } else {
+                    //TODO
+                    intent = new Intent(context, MissListActivity.class);
+                }
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MISS);
+                newMsg = NotificationMessageGenerateUtil.getMissMessage(context, action, action_owner);
+                doNotificationHandle(MainActivity.TabEnum.more);
+                break;
+            case BONDALERT_BIGDAY:
+                smallIcon = R.drawable.bondalert_bigday_icon;
+
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_BIGDAY);
+                if (msgs.size() == 0) {
                     intent = new Intent(context, BigDayActivity.class);
-                    doNotificationHandle(MainActivity.TabEnum.more);
-                    break;
-                case BONDALERT_NEWS:
-                    smallIcon = R.drawable.bondalert_news_icon;
+                } else {
+                    //TODO
+                    intent = new Intent(context, BigDayActivity.class);
+                }
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_BIGDAY);
+                newMsg = NotificationMessageGenerateUtil.getBirthdayMessage(context, action, item_type, action_owner);
+                doNotificationHandle(MainActivity.TabEnum.more);
+                break;
+            case BONDALERT_NEWS:
+                smallIcon = R.drawable.bondalert_news_icon;
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_NEWS);
+                if (msgs.size() == 0) {
                     intent = new Intent(context, NewsActivity.class);
-                    doNotificationHandle(MainActivity.TabEnum.more);
-                    break;
-                case BONDALERT_RECOMMENDED:
-                    smallIcon = R.drawable.bondalert_recommended_icon;
+                } else {
+                    //TODO
+                    intent = new Intent(context, NewsActivity.class);
+                }
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_NEWS);
+                newMsg = NotificationMessageGenerateUtil.getOtherMessage(context, action, jsonObjectExtras);
+                doNotificationHandle(MainActivity.TabEnum.more);
+                break;
+            case BONDALERT_RECOMMENDED:
+                smallIcon = R.drawable.bondalert_recommended_icon;
+
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_NEWS);
+                if (msgs.size() == 0) {
                     intent = new Intent(context, RecommendActivity.class);
-                    doNotificationHandle(MainActivity.TabEnum.more);
-                    break;
-                case BONDALERT_GROUP:
-                    smallIcon = R.drawable.bondalert_group_icon;
+                } else {
+                    //TODO
+                    intent = new Intent(context, RecommendActivity.class);
+                }
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_RECOMMENDED);
+                doNotificationHandle(MainActivity.TabEnum.more);
+                break;
+            case BONDALERT_GROUP:
+                smallIcon = R.drawable.bondalert_group_icon;
+
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_GROUP);
+                if (msgs.size() == 0) {
                     intent = new Intent(context, AlertGroupActivity.class);
-                    doNotificationHandle(MainActivity.TabEnum.more);
-                    break;
+                } else {
+                    //TODO
+                    intent = new Intent(context, AlertGroupActivity.class);
+                }
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_GROUP);
+                doNotificationHandle(MainActivity.TabEnum.more);
+                break;
 
-            }
-
-//        if (MessageType.BONDALERT_WALL.getTypeName().equals(type)) {
-//            contentIntent = PendingIntent.getActivity(context, 0,
-//                    new Intent(context, AlertWallActivity.class), 0);
-//        } else if (MessageType.BONDALERT_EVENT.getTypeName().equals(type)) {
-//            contentIntent = PendingIntent.getActivity(context, 0,
-//                    new Intent(context, AlertEventActivity.class), 0);
-//        } else if (MessageType.BONDALERT_MEMBER.getTypeName().equals(type)) {
-//            contentIntent = PendingIntent.getActivity(context, 0,
-//                    new Intent(context, MemberActivity.class), 0);
-//        } else if (MessageType.BONDALERT_MESSAGE.getTypeName().equals(type)) {
-//            Intent intent = new Intent(context, MessageChatActivity.class);
-//           jsonObjecttent.putExtra("type", jsonObjectExtras.getString("group_type"));
-//            injsonObjectt.putExtra("groupId", jsonObjectExtras.getString("group_id"));
-//            intejsonObjectputExtra("titleName", jsonObjectExtras.getString("group_name"));
-//            contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
-//        } else if (MessageType.BONDALERT_MISS.getTypeName().equals(type)) {
-//            contentIntent = PendingIntent.getActivity(context, 0,
-//                    new Intent(context, MissListActivity.class), 0);
-//        } else if (MessageType.BONDALERT_BIGDAY.getTypeName().equals(type)) {
-//            contentIntent = PendingIntent.getActivity(context, 0,
-//                    new Intent(context, BigDayActivity.class), 0);
-//        } else if (MessageType.BONDALERT_NEWS.getTypeName().equals(type)) {
-//            contentIntent = PendingIntent.getActivity(context, 0,
-//                    new Intent(context, NewsActivity.class), 0);
-//        } else if (MessageType.BONDALERT_RECOMMENDED.getTypeName().equals(type)) {
-//            contentIntent = PendingIntent.getActivity(context, 0,
-//                    new Intent(context, RecommendActivity.class), 0);
-//        }
-        } else {
-            intent = new Intent(context, BondAlertActivity.class);
         }
 
 
+        msgs.add(newMsg);
+//        if (isGCM) {
+//            msgs.add(bundle.getString("message"));
+//        } else {
+//            msgs.add(bundle.getString(JPushInterface.EXTRA_MESSAGE));
+//        }
+//        currentMsgs = msgs;
+        return intent;
+    }
+//    private static List<String> currentMsgs = new ArrayList<>();
+
+    private static Intent goWallDetailIntent(Context mContext, String content_group_id, String group_id) {
+        Intent intent = new Intent(mContext, WallCommentActivity.class);
+        intent.putExtra("content_group_id", content_group_id);
+        intent.putExtra("group_id", group_id);
+        return intent;
+    }
+
+    private static Intent goEventDetailIntent(Context mContext, String group_id) {
+        Intent intent = new Intent(mContext, EventDetailActivity.class);
+        intent.putExtra("group_id", group_id);
         return intent;
     }
 
     private static Notification getNotification(Context context, boolean isGCM, Bundle msg) throws JSONException {
-        List<String> msgs = App.getContextInstance().getNotificaationList();
+
         PendingIntent contentIntent = null;
-        Intent intent = getFowwordIntent(context, msg, isGCM, msgs);
+        Intent intent = getFowwordIntent(context, msg, isGCM);
         if (intent != null) {
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -343,7 +420,7 @@ public class NotificationUtil {
             intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            contentIntent = PendingIntent.getActivity(context, msgType.ordinal(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         } else {
             return null;
         }
@@ -353,17 +430,14 @@ public class NotificationUtil {
         String message = null;
         if (isGCM) {
             title = msg.getString("title");
-            message = msg.getString("message");
         } else {
             title = msg.getString(JPushInterface.EXTRA_TITLE);
-            message = msg.getString(JPushInterface.EXTRA_MESSAGE);
         }
 
-        msgs.add(message);
 //        if (msgs.size() == 1) {
 //            notification = getSingleNotification(context, contentIntent, title);
 //        } else {
-        notification = getInboxStyleNotification(context, contentIntent, title,msgs);
+        notification = getInboxStyleNotification(context, contentIntent, title);
 //        }
         if (notification != null) {
             notification.priority = Notification.PRIORITY_HIGH;
@@ -430,9 +504,8 @@ public class NotificationUtil {
      * 最大显示消息数
      */
     private static final int MAX_SHOW = 3;
-    private static final String FLAG_SINGLE_MSG = "single_msg";
 
-    private static Notification getSingleNotification(Context context, PendingIntent contentIntent, String title,List<String> msgs) {
+    private static Notification getSingleNotification(Context context, PendingIntent contentIntent, String title, List<String> msgs) {
         if (msgs.size() < 1) {
             return null;
         }
@@ -460,7 +533,11 @@ public class NotificationUtil {
         return mBuilder.build();
     }
 
-    private static Notification getInboxStyleNotification(Context context, PendingIntent resultPendingIntent, String title,List<String> msgs) {
+    private static Notification getInboxStyleNotification(Context context, PendingIntent resultPendingIntent, String title) {
+        List<String> currentMsgs = App.getContextInstance().getNotificationMsgsByType(msgType);
+        if (currentMsgs == null || currentMsgs.size() == 0) {
+            return null;
+        }
 
         // Create the style object with InboxStyle subclass.
         NotificationCompat.InboxStyle notiStyle = new NotificationCompat.InboxStyle();
@@ -469,12 +546,12 @@ public class NotificationUtil {
 
         // Add the multiple lines to the style.
         // This is strictly for providing an example of multiple lines.
-        int msgCount = msgs.size();
+        int msgCount = currentMsgs.size();
         for (int i = 0; i < msgCount; i++) {
             if (i == MAX_SHOW) {
                 break;
             }
-            notiStyle.addLine(msgs.get(i));
+            notiStyle.addLine(currentMsgs.get(i));
         }
         if (msgCount > MAX_SHOW) {
             notiStyle.setSummaryText("+" + (msgCount - MAX_SHOW) + " more line Messages");
@@ -500,17 +577,33 @@ public class NotificationUtil {
 //            notification.bigContentView = expandedView;
 //        }
 
-        return new NotificationCompat.Builder(context)
-                .setAutoCancel(true)
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+        if (smallIcon != -1) {
+            mBuilder.setSmallIcon(smallIcon);
+        }
+//        mBuilder.setDeleteIntent(PendingIntent.getBroadcast(context, 0, new Intent(NOTIFICATION_DELETED_ACTION), 0));
+
+        return mBuilder.setAutoCancel(true)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
                 .setContentIntent(resultPendingIntent)
                 .setContentTitle(title)
-                .setContentText(msgs.get(msgs.size() - 1))
                 .setGroupSummary(true)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentText(currentMsgs.get(currentMsgs.size() - 1))
                 .setStyle(notiStyle).build();
+
+//        return new NotificationCompat.Builder(context)
+//                .setAutoCancel(true)
+//                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
+//                .setContentIntent(resultPendingIntent)
+//                .setContentTitle(title)
+//                .setContentText(currentMsgs.get(currentMsgs.size() - 1))
+//                .setGroupSummary(true)
+//                .setSmallIcon(R.drawable.ic_launcher)
+//                .setStyle(notiStyle).build();
 //                .addAction(R.drawable.ic_launcher, "One", resultPendingIntent)
 //                .addAction(R.drawable.ic_launcher, "Two", resultPendingIntent)
 //                .addAction(R.drawable.ic_launcher, "Three", resultPendingIntent)
     }
+
+    public static final String NOTIFICATION_DELETED_ACTION = "notification_deleted_action";
 }
