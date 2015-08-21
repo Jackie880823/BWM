@@ -556,6 +556,7 @@
     <string name="text_chat_send_video">所选视频大小约为%s,是否需要发送</string>
     <string name="go_back_to_me">Go back to Me</string>
     <string name="write_a_diary">Write a diary now. Sharing is caring.</string>
+    <string name="select_media">Select Media</string>
 
     <string name="notification_action_event_invited">%1$s has invited you to event: %2$s</string>
     <string name="notification_action_event_update">%1$s has updated event: %2$s</string>
@@ -602,4 +603,5 @@
 
     <string name="notification_action_miss_missyou">%1$s miss you</string>
 
+>>>>>>> e91f5fc86ccdc81499a43acefed6488e940e9b18
 </resources>

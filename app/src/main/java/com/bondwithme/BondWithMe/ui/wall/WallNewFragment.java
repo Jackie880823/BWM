@@ -426,13 +426,15 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             pic_content = new ArrayList<>();
         } else {
             String videoUriStr = draftPreferences.getString(PREFERENCE_KEY_VIDEO_PATH, "");
+            Log.i(TAG, "recoverDraft& videoUri: " + videoUriStr);
             if(!TextUtils.isEmpty(videoUriStr)) {
                 videoUri = Uri.parse(videoUriStr);
                 fragment2.setVideoUri(videoUri);
             }
         }
 
-        draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).apply();
+        // 恢复了草稿，清除保存
+        draftPreferences.edit().clear().apply();
     }
 
     private boolean allRange = false;
@@ -861,7 +863,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
         // 没有退出编辑不用保存蓝草稿
         if(draftPreferences != null) {
-            draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).commit();
+            draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).apply();
         }
 
         if(resultCode == Activity.RESULT_OK) {
