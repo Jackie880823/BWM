@@ -549,4 +549,5 @@
     <string name="text_message_break_ice">将冰山劈开！</string>
     <string name="go_back_to_me">返回当前用户</string>
     <string name="write_a_diary">亲，开始一篇日志吧！共享即关怀。</string>
+    <string name="select_media">选择音/视频</string>
 </resources>

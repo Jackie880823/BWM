@@ -88,7 +88,6 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      * 得到的视频显示在这个控件上
      */
     private VideoView vvDisplay;
-    private ImageView ivDeleteVideo;
     private View previewVideoView;
 
     private PickPicAdapter adapter;
@@ -147,17 +146,16 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         gvPictures = getViewById(R.id.gv_pictures);
 
         previewVideoView = LayoutInflater.from(getActivity()).inflate(R.layout.tab_picture_voide_view, null);
-        ivDeleteVideo = (ImageView) previewVideoView.findViewById(R.id.delete_video_view);
         vvDisplay = (VideoView) previewVideoView.findViewById(R.id.preview_video_view);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         previewVideoView.setLayoutParams(params);
 
-        ivDeleteVideo.setOnClickListener(this);
+        // 删除视频
+        previewVideoView.findViewById(R.id.delete_video_view).setOnClickListener(this);
         vvDisplay.setOnPreparedListener(this);
 
         adapter = new PickPicAdapter(getActivity(), datas, R.layout.picture_item_for_gridview, new String[]{"pic_resId",}, new int[]{R.id.iv_pic});
-
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Object data, String textRepresentation) {
@@ -178,12 +176,14 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                     try {
                         uris.remove(index);
                     } catch(Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
         });
 
         gvPictures.setAdapter(adapter);
+
         if(!uris.isEmpty()) {
             clearVideo();
             addDataAndNotify(uris);
@@ -235,7 +235,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
             // 点击打开相机
             case R.id.ll_to_camera:
-                myDialog = new MyDialog(getParentActivity(), "", "Select Media");
+                myDialog = new MyDialog(getParentActivity(), "", getActivity().getString(R.string.select_media));
                 myDialog.setButtonAccept(getParentActivity().getString(R.string.text_video), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

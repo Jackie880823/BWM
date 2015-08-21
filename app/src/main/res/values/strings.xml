@@ -554,4 +554,5 @@
     <string name="text_message_break_ice">Break the ice!</string>
     <string name="go_back_to_me">Go back to Me</string>
     <string name="write_a_diary">Write a diary now. Sharing is caring.</string>
+    <string name="select_media">Select Media</string>
 </resources>
