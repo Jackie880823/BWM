@@ -27,6 +27,7 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -99,7 +100,7 @@ public class StickerDetailActivity extends BaseActivity {
         NetworkImageView insideSticker = getViewById(R.id.iv_inside_sticker);
         TextView insideStickerName = getViewById(R.id.tv_inside_sticker_name);
         TextView desc = getViewById(R.id.tv_description);
-        desc.setText("sticker_type: " + stickerGroupEntity.getType());
+        desc.setText(stickerGroupEntity.getDescription());
         TextView price = getViewById(R.id.price);
         tvDownload = getViewById(R.id.tv_inside_download);
         gvSticker = getViewById(R.id.gv_sticker);

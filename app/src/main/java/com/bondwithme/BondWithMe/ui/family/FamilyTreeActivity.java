@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.ui.family;
 
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,11 +9,9 @@ import android.view.View;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.DownloadRequest;
-import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.NumberProgressBar;
@@ -30,7 +29,7 @@ import java.io.File;
  */
 public class FamilyTreeActivity extends BaseActivity {
     private static final String TAG = FamilyTreeActivity.class.getSimpleName();
-    private static final String FAMILY_TREE_FILE_PATH_PARENT = FileUtil.getCacheFilePath(App.getContextInstance()) + "/Family_Tree/";
+    private static final String FAMILY_TREE_FILE_PATH_PARENT = Environment.getExternalStorageDirectory() + "/Download";
 
     private static int count = 0;
 
@@ -100,7 +99,7 @@ public class FamilyTreeActivity extends BaseActivity {
      */
     private void getTreeUrl() {
 
-        String url = String.format(Constant.API_FAMILY_TREE, FamilyTreeFragment.getCurrentUseId());
+        String url = String.format(Constant.API_FAMILY_TREE, FamilyTreeFragment.getSelectUseId());
         new HttpTools(this).get(url, null, true, new HttpCallback() {
             @Override
             public void onStart() {
@@ -149,11 +148,12 @@ public class FamilyTreeActivity extends BaseActivity {
 
     private void downloadTree(String url) {
         File treeDir = new File(FAMILY_TREE_FILE_PATH_PARENT);
-        if(!treeDir.exists()) {
-            boolean mkDir = treeDir.mkdir();
-            LogUtil.i(TAG, "getTreeUrl& file path exists: " + mkDir);
-        }
-        final String target = FAMILY_TREE_FILE_PATH_PARENT + String.format("Family_Tree_%d.pdf", ++count);
+        boolean exists = treeDir.exists() || treeDir.mkdir();
+        LogUtil.i(TAG, "getTreeUrl& file path exists: " + exists);
+
+        final String target;
+        target = exists ? (FAMILY_TREE_FILE_PATH_PARENT + url.substring(url.lastIndexOf("/"))) : (Environment.getDataDirectory() + url.substring(url.lastIndexOf("/")));
+
         LogUtil.i(TAG, "getTreeUrl& target: " + target);
         LogUtil.i(TAG, "getTreeUrl& url: " + url);
 

@@ -1,5 +1,7 @@
 package com.bondwithme.BondWithMe;
 
+import com.bondwithme.BondWithMe.util.FileUtil;
+
 /**
  * Created by wing on 15/1/29.
  */
@@ -35,13 +37,19 @@ public class Constant {
     /**
      * for api
      */
-    //    public static final String API_SERVER = "http://m.bondwith.me";
-    //    public static final String API_SERVER = "http://pt.bondwith.me";
     public static final String API_SERVER = "http://dev.bondwith.me";
-
     public static final int TRACKER_SITE_ID = 3;//dev
+
+
+//    public static final String API_SERVER = "http://pt.bondwith.me";
 //    public static final int TRACKER_SITE_ID = 4;//pt
+
+
 //    public static final int TRACKER_SITE_ID = 5;//m
+//    public static final String API_SERVER = "http://m.bondwith.me";
+
+
+
 
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER + "/bondwithme/index.php/api/multiPhoto";
 
@@ -300,4 +308,9 @@ public class Constant {
     public static final String API_MESSAGE_DOWNLOAD_AUDIO = API_SERVER + "/bondwithme/index.php/api/audio_preview/%s/fid/%s";
     public static final String API_MESSAGE_DOWNLOAD_VIDEO = API_SERVER + "/bondwithme/index.php/api/video_preview/%s/fid/%s";
     public static final String API_MESSAGE_DOWNLOAD_VIDEO_PIC = API_SERVER + "/bondwithme/index.php/api/video_thumbnail/%s/fid/%s";
+
+    /**
+     * 视频存放路径
+     */
+    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance()) + "/Video/";
 }
