@@ -282,16 +282,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/bend_line" />
+                android:src="@drawable/bend_line"
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/mic_left"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/bend_line"
                 android:layout_alignLeft="@+id/bend_line"
+                android:layout_alignStart="@+id/bend_line"
                 android:layout_alignTop="@+id/mic_iv"
-                android:src="@drawable/chat_play" />
+                android:src="@drawable/chat_play"
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/mic_iv"
@@ -300,6 +302,16 @@
                 android:layout_centerInParent="true"
                 android:src="@drawable/chat_voice" />
 
+            <com.bondwithme.BondWithMe.widget.RoundProgressBarWidthNumber
+                android:id="@+id/id_progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                app:progress_text_color_horizontal="#ff2903FC"
+                app:progress_unreached_color_horizontal="#ffBCB4E8"
+                app:radius="@dimen/_46dp" />
+
             <ImageView
                 android:id="@+id/mic_right"
                 android:layout_width="wrap_content"
@@ -307,19 +319,20 @@
                 android:layout_alignEnd="@+id/bend_line"
                 android:layout_alignRight="@+id/bend_line"
                 android:layout_alignTop="@+id/mic_iv"
-                android:src="@drawable/delete_voice" />
+                android:src="@drawable/delete_voice"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/chat_mic_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/text_hold_and_speak"
-                android:textColor="#c5270c"
+                android:layout_below="@+id/mic_iv"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_25dp"
-                android:layout_below="@+id/mic_iv"
-                android:textSize="@dimen/_16dp" />
+                android:gravity="center"
+                android:textColor="#c5270c"
+                android:textSize="@dimen/_16dp"
+                android:visibility="invisible" />
         </RelativeLayout>
 
     </com.bondwithme.BondWithMe.widget.StickerLinearLayout>
