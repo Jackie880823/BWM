@@ -9,6 +9,7 @@
 /**/*.iml
 /**/*-report.txt
 app/out.map
+/app/gradle.properties
 
 /*.idea
 # files for the dex VM

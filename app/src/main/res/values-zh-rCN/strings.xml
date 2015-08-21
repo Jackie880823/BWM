@@ -552,34 +552,34 @@
     <string name="go_back_to_me">返回当前用户</string>
     <string name="write_a_diary">亲，开始一篇日志吧！共享即关怀。</string>
 
-    <string name="notification_action_event_invited">%1$s 邀请你参加活动: %2$s</string>
-    <string name="notification_action_event_update">%1$s 更新活动: %2$s</string>
-    <string name="notification_action_event_cancel">%1$s 取消活动: %2$s</string>
-    <string name="notification_action_event_resp">%1$s 回应活动: %2$s</string>
-    <string name="notification_action_event_comment_owner_self">%1$s 评论了自己的活动: %2$s</string>
-    <string name="notification_action_event_comment_owner">%1$s 评论你的活动: %2$s</string>
-    <string name="notification_action_event_comment_not_owner">%1$s 评论了 %2$s 的活动:%3$s</string>
-    <string name="notification_action_event_loveComment">%1$s 喜欢你的评论.</string>
+    <string name="notification_action_event_invited">%1$s邀请你参加活动:%2$s</string>
+    <string name="notification_action_event_update">%1$s更新活动:%2$s</string>
+    <string name="notification_action_event_cancel">%1$s取消活动:%2$s</string>
+    <string name="notification_action_event_resp">%1$s回应活动:%2$s</string>
+    <string name="notification_action_event_comment_owner_self">%1$s评论了自己的活动:%2$s</string>
+    <string name="notification_action_event_comment_owner">%1$s评论你的活动:%2$s</string>
+    <string name="notification_action_event_comment_not_owner">%1$s评论了%2$s 的活动:%3$s</string>
+    <string name="notification_action_event_loveComment">%1$s喜欢你的评论.</string>
     <string name="notification_action_event_reminder">即将进行的活动: %1$s</string>
 
-    <string name="notification_action_member_add">%1$s 请求加你为 %2$s</string>
-    <string name="notification_action_member_autoAcp">你自动同意添加 %1$s 为 %2$s</string>
-    <string name="notification_action_member_accept">%1$s 已添加你为成员</string>
-    <string name="notification_action_member_updateRel">%1$s 将和你的关系设置为 %2$s</string>
+    <string name="notification_action_member_add">%1$s请求加你为:%2$s</string>
+    <string name="notification_action_member_autoAcp">你自动同意添加%1$s为:%2$s</string>
+    <string name="notification_action_member_accept">%1$s已添加你为成员</string>
+    <string name="notification_action_member_updateRel">%1$s将和你的关系设置为:%2$s</string>
 
-    <string name="notification_action_message_postText_personal">%1$s 发信息给你.</string>
-    <string name="notification_action_message_postText_group">%1$s 发信息在群组: %2$s</string>
-    <string name="notification_action_message_postSticker_personal">%1$s 发表情给你.</string>
-    <string name="notification_action_message_postSticker_group">%1$s 发表情在群组: %2$s</string>
-    <string name="notification_action_message_postPhoto_personal">%1$s 发图片给你发图片给你.</string>
-    <string name="notification_action_message_postPhoto_group">%1$s 发图片在群组: %2$s</string>
-    <string name="notification_action_message_postAudio_personal">%1$s 发语音给你.</string>
-    <string name="notification_action_message_postAudio_group">%1$s 发语音在群组: %2$s</string>
-    <string name="notification_action_message_postVideo_personal">%1$s 发视频给你.</string>
-    <string name="notification_action_message_postVideo_group">%1$s 发视频在群组: %2$s</string>
-    <string name="notification_action_message_add">你已被加入了 %1$s 的群组: %2$s</string>
-    <string name="notification_action_message_pending">%1$s 邀请你加入群: %2$s</string>
-    <string name="notification_action_message_reject">%1$s 拒绝加入你的群组: %2$s</string>
+    <string name="notification_action_message_postText_personal">%1$s发信息给你.</string>
+    <string name="notification_action_message_postText_group">%1$s发信息在群组:%2$s</string>
+    <string name="notification_action_message_postSticker_personal">%1$s发表情给你.</string>
+    <string name="notification_action_message_postSticker_group">%1$s发表情在群组:%2$s</string>
+    <string name="notification_action_message_postPhoto_personal">%1$s发图片给你.</string>
+    <string name="notification_action_message_postPhoto_group">%1$s发图片在群组:%2$s</string>
+    <string name="notification_action_message_postAudio_personal">%1$s发语音给你.</string>
+    <string name="notification_action_message_postAudio_group">%1$s发语音在群组:%2$s</string>
+    <string name="notification_action_message_postVideo_personal">%1$s发视频给你.</string>
+    <string name="notification_action_message_postVideo_group">%1$s发视频在群组: %2$s</string>
+    <string name="notification_action_message_add">你已被加入了%1$s的群组:%2$s</string>
+    <string name="notification_action_message_pending">%1$s邀请你加入群:%2$s</string>
+    <string name="notification_action_message_reject">%1$s拒绝加入你的群组:%2$s</string>
 
     <string name="notification_action_bigday_birthday_self">%1$s,生日快乐!</string>
     <string name="notification_action_bigday_birthday_other">今天是%1$s的生日,送上祝福吧</string>
@@ -590,7 +590,7 @@
 
     <string name="notification_action_diary_comment_owner">%1$s评论了的你日记</string>
     <string name="notification_action_diary_comment_not_owner">%1$s评论了%2$s的日记.</string>
-    <string name="notification_action_diary_love_owner">%1$s评论了自己的日记</string>
+    <string name="notification_action_diary_love_owner">%1$s喜欢你的日记</string>
     <string name="notification_action_diary_love_not_owner">%1$s喜欢你的%2$s日记</string>
     <string name="notification_action_diary_loveComment">%1$s喜欢你的评论.</string>
     <string name="notification_action_diary_tag">%1$s在日记里艾特了你</string>

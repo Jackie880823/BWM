@@ -174,8 +174,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     public static UserEntity getUser() {
         if (App.getLoginedUser() == null) {
-//            App.exit(null);
-//            getApplication().onTerminate();
+            App.logout(null);
         }
         return App.getLoginedUser();
     }

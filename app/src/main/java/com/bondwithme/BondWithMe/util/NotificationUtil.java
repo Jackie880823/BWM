@@ -379,6 +379,7 @@ public class NotificationUtil {
                     intent = new Intent(context, AlertGroupActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_GROUP);
+                newMsg = NotificationMessageGenerateUtil.getGroupAlertMessage(context, action, action_owner,item_name);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
 
@@ -391,6 +392,7 @@ public class NotificationUtil {
 //        } else {
 //            msgs.add(bundle.getString(JPushInterface.EXTRA_MESSAGE));
 //        }
+
 //        currentMsgs = msgs;
         return intent;
     }
