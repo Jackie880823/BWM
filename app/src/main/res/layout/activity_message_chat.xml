@@ -266,7 +266,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_240dp"
             android:background="#ffffff"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/chat_mic_text"
