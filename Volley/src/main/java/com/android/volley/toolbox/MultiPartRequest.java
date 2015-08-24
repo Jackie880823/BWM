@@ -1,6 +1,8 @@
 
 package com.android.volley.toolbox;
 
+import java.io.File;
+
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -16,8 +18,6 @@ import com.android.volley.Response.LoadingListener;
 import com.android.volley.toolbox.UploadMultipartEntity.ProgressListener;
 import com.android.volley.toolbox.multipart.FilePart;
 import com.android.volley.toolbox.multipart.StringPart;
-
-import java.io.File;
 
 /**
  * A request for making a Multi Part request

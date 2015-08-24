@@ -1,5 +1,6 @@
 package com.android.volley.ext;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -10,8 +11,8 @@ public class RequestInfo {
 	
 	public String url ;
 	public Map<String,String> params = new HashMap<String, String>() ;
-	public String jsonParam  ;
 	public Map<String, String> headers = new HashMap<String, String>();
+	public Map<String, File> fileParams = new HashMap<String, File>();
 	
     public RequestInfo() {
     }
@@ -33,16 +34,18 @@ public class RequestInfo {
                 }
             }
             Iterator<String> iterotor = params.keySet().iterator();
-            while (iterotor.hasNext()) {
-                String key = (String) iterotor.next();
-                if (key != null&&params.get(key)!=null) {
-                    try {
-                        /**wing modifed for encode get or delete url params*/
-                        sb.append(key).append("=").append(URLEncoder.encode(params.get(key), "utf-8")).append("&");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
+            try {
+                while (iterotor.hasNext()) {
+                    String key = (String) iterotor.next();
+                    if (key != null) {
+                        if (params.get(key) != null) {
+                            sb.append(URLEncoder.encode(key, "utf-8")).append("=")
+                                    .append(URLEncoder.encode(params.get(key), "utf-8")).append("&");
+                        }
                     }
                 }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
             if (sb.lastIndexOf("&") == sb.length() - 1) {
                 sb.deleteCharAt(sb.length() - 1);
@@ -51,5 +54,46 @@ public class RequestInfo {
         }
         return url;
     }
+    
+    public String getUrl() {
+        return url;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+    
+    public Map<String, File> getFileParams() {
+        return fileParams;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
 	
+    
+    public void put(String key, String value) {
+    	params.put(key, value);
+    }
+    
+    public void put(String key, File file) {
+    	fileParams.put(key, file);
+    }
+    
+    public void putFile(String key, String path) {
+    	fileParams.put(key, new File(path));
+    }
+    
+    public void putAllParams(Map<String, Object> objectParams) {
+    	if (params != null) {
+    		for (String key : objectParams.keySet()) {
+    			Object value = objectParams.get(key);
+    			if (value instanceof String) {
+    				params.put(key, (String)value);
+    			} else if (value instanceof File) {
+    				fileParams.put(key, (File)value);
+    			}
+    		}
+    	}
+    }
 }

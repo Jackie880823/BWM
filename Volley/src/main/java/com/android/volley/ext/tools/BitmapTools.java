@@ -1,5 +1,9 @@
 package com.android.volley.ext.tools;
 
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.List;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -25,13 +29,10 @@ import com.android.volley.toolbox.ImageLoader.ImageContainer;
 import com.android.volley.toolbox.ImageLoader.ImageListener;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
-
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.List;
 /**
  * 图片加载工具类
  * BitmapTools
+ * chenbo
  * 2014年8月8日 下午4:12:39
  * @version 3.4
  */
@@ -39,27 +40,33 @@ public class BitmapTools {
     // TODO i think nobody will you this id ^_^
     private static final int TAG_ID = 0xffffffff;
     private ImageLoader mImageLoader;
-    private static RequestQueue mRequestQueue;
+    private static RequestQueue sRequestQueue;
     private BitmapDisplayConfig mDisplayConfig;
     private Context mContext;
     private BitmapCache mBitmapCache;
     private IDisplayer mDisplayer;
-    private static BitmapTools mInstance;
 
     private HashMap<String, BitmapDisplayConfig> configMap = new HashMap<String, BitmapDisplayConfig>();
     
     public static void init(Context context) {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        if (sRequestQueue == null) {
+            sRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        }
+    }
+    
+    public static void stop() {
+        if (sRequestQueue != null) {
+        	sRequestQueue.stop();
+        	sRequestQueue = null;
         }
     }
 
-    private BitmapTools(Context context) {
+    public BitmapTools(Context context) {
         mContext = context.getApplicationContext();
         mDisplayer = new SimpleDisplayer();
         mBitmapCache = BitmapCache.getSigleton(context.getApplicationContext());
         init(context);
-        mImageLoader = new ImageLoader(mRequestQueue, mBitmapCache);
+        mImageLoader = new ImageLoader(sRequestQueue, mBitmapCache);
         mDisplayConfig = new BitmapDisplayConfig();
 
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -67,13 +74,6 @@ public class BitmapTools {
         int defaultHeight = displayMetrics.heightPixels;
         mDisplayConfig.bitmapWidth = (int) (defaultWidth * 1.2f);
         mDisplayConfig.bitmapHeight = (int) (defaultHeight * 1.2f);
-    }
-
-    public static synchronized BitmapTools getInstance(Context context) {
-        if (mInstance == null) {
-            mInstance = new BitmapTools(context);
-        }
-        return mInstance;
     }
     
     public ImageLoader getImageLoader() {
@@ -181,9 +181,15 @@ public class BitmapTools {
         mDisplayConfig.errorImageResId = errorImageResId;
     }
     
+    
     public void setDefaultAndImageResId(int resId) {
         mDisplayConfig.defaultImageResId = resId;
         mDisplayConfig.errorImageResId = resId;
+    }
+    
+    public void setDefaultBitmapWH(int w, int h) {
+        mDisplayConfig.bitmapWidth = w;
+        mDisplayConfig.bitmapHeight = h;
     }
 
     public void setAnimation(Animation animation) {
@@ -380,8 +386,8 @@ public class BitmapTools {
      * @since 3.6
      */
     public void resume() {
-        if (mRequestQueue != null) {
-            mRequestQueue.resume();
+        if (sRequestQueue != null) {
+            sRequestQueue.resume();
         }
     }
     
@@ -391,8 +397,8 @@ public class BitmapTools {
      * @since 3.6
      */
     public void pause() {
-        if (mRequestQueue != null) {
-            mRequestQueue.pause();
+        if (sRequestQueue != null) {
+            sRequestQueue.pause();
         }
     }
     
@@ -402,9 +408,26 @@ public class BitmapTools {
      * @since 3.6
      */
     public void cancelAllRequest() {
-        if (mRequestQueue != null) {
-            mRequestQueue.cancelAll(mContext);
+        if (sRequestQueue != null) {
+            sRequestQueue.cancelAll(mContext);
         }
+    }
+    
+    /**
+     * 清除view上面的任务和标记
+     * clearViewTask
+     * @param view
+     */
+    public void clearViewTask(View view) {
+        @SuppressWarnings("unchecked")
+        WeakReference<ImageContainer> ref = (WeakReference<ImageContainer>) view.getTag(TAG_ID);
+        if (ref != null) {
+            ImageContainer tagContainer = ref.get();
+            if (tagContainer != null) {
+                tagContainer.cancelRequest();
+            }
+        }
+        view.setTag(TAG_ID);
     }
     
     /**
@@ -449,9 +472,9 @@ public class BitmapTools {
      * @since 3.6
      */
     public void clearDiskCache(Runnable callback) {
-        if (mRequestQueue != null) {
-            ClearCacheRequest request = new ClearCacheRequest(mRequestQueue.getCache(), callback);
-            mRequestQueue.add(request);
+        if (sRequestQueue != null) {
+            ClearCacheRequest request = new ClearCacheRequest(sRequestQueue.getCache(), callback);
+            sRequestQueue.add(request);
         }
     }
     
