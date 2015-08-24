@@ -529,7 +529,7 @@
     <string name="text_no_date_recommended">暂无推荐通告</string>
     <string name="text_no_date_group">暂无群组通告</string>
 
-    <string name="loves_count">%d 喜欢</string>
+    <string name="loves_count">%d 赞</string>
     <string name="notification_title_expand">新的消息</string>
     <string name="select_photos_or_video">选择照片或视频</string>
     <string name="will_remove_photos">选择视频将会删除已经选择的图片！继续？</string>
@@ -560,7 +560,7 @@
     <string name="notification_action_event_comment_owner_self">%1$s评论了自己的活动:%2$s</string>
     <string name="notification_action_event_comment_owner">%1$s评论你的活动:%2$s</string>
     <string name="notification_action_event_comment_not_owner">%1$s评论了%2$s 的活动:%3$s</string>
-    <string name="notification_action_event_loveComment">%1$s喜欢你的评论.</string>
+    <string name="notification_action_event_loveComment">%1$s赞你的评论.</string>
     <string name="notification_action_event_reminder">即将进行的活动: %1$s</string>
 
     <string name="notification_action_member_add">%1$s请求加你为:%2$s</string>
@@ -591,9 +591,9 @@
 
     <string name="notification_action_diary_comment_owner">%1$s评论了的你日记</string>
     <string name="notification_action_diary_comment_not_owner">%1$s评论了%2$s的日记.</string>
-    <string name="notification_action_diary_love_owner">%1$s喜欢你的日记</string>
-    <string name="notification_action_diary_love_not_owner">%1$s喜欢你的%2$s日记</string>
-    <string name="notification_action_diary_loveComment">%1$s喜欢你的评论.</string>
+    <string name="notification_action_diary_love_owner">%1$s赞你的日记</string>
+    <string name="notification_action_diary_love_not_owner">%1$s赞你的%2$s日记</string>
+    <string name="notification_action_diary_loveComment">%1$s赞你的评论.</string>
     <string name="notification_action_diary_tag">%1$s在日记里艾特了你</string>
 
     <string name="notification_action_miss_missyou">%1$s想你了</string>
