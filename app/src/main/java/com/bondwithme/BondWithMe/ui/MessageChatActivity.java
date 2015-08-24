@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -21,7 +20,6 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -58,11 +56,9 @@ import com.bondwithme.BondWithMe.widget.RoundProgressBarWidthNumber;
 import com.bondwithme.BondWithMe.widget.StickerLinearLayout;
 import com.czt.mp3recorder.MP3Recorder;
 import com.material.widget.Dialog;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1352,11 +1348,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             params.put("video", "1");
             params.put("video_duration", duration);
             msgEntity.setVideo_filename(audioFile);
-            String videoThumbnail = getVideoThumbnail(uri.toString());
+            String videoThumbnail = getVideoThumbnail(uri);
             msgEntity.setVideo_format1(videoThumbnail);
             msgEntity.setVideo_format2(uri.toString());
             msgEntity.setVideo_duration(duration);
-            params.put("video_thumbnail", String.format("data:image/png;base64,%s", videoThumbnail));
+            params.put("video_thumbnail", String.format("data:image/jpeg;base64,%s", videoThumbnail));
         } else {
             params.put("audio", "1");
             params.put("audio_duration", mlCount + "");
@@ -1368,12 +1364,47 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_MESSAGE_POST_TEXT, SEND_AUDIO_MESSAGE);
     }
 
-    private String getVideoThumbnail(String videoPath) {
-        Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoPath);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-        return strThumbnail;
+    private String getVideoThumbnail(Uri uri) {
+        /**wing modified for pic too large begin*/
+
+        if (uri == null)
+            return null;
+
+        return LocalImageLoader.getVideoThumbnail(this,uri);
+//        String[] VIDEOTHUMBNAIL_TABLE = new String[]{
+//                MediaStore.Video.Media.DATA
+//
+//        };
+//
+//        Cursor c = MediaStore.Images.Thumbnails.queryMiniThumbnails(getContentResolver(), uri, MediaStore.Images.Thumbnails.MINI_KIND, VIDEOTHUMBNAIL_TABLE);
+//        String strThumbnail = null;
+//        try {
+//            String thumbnailPath = null;
+//            if ((c != null) && c.moveToFirst()) {
+//                thumbnailPath = c.getString(0);
+//            }
+//
+//            if (TextUtils.isEmpty(thumbnailPath)) {
+//                Bitmap bitmap = ImageLoader.getInstance().loadImageSync(uri.toString());
+//                Bitmap thumb = ThumbnailUtils.extractThumbnail(bitmap, 640, 480);
+//
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                thumb.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//                strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (c != null)
+//                c.close();
+//        }
+        /**wing modified for pic too large end*/
+
+//        Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoPath);
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//        String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+//        return strThumbnail;
     }
 
     private void uploadImage(Uri uri) {

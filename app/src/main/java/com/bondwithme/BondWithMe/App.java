@@ -49,6 +49,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -302,6 +303,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             headers.put("X_BWM_APPID", AppInfoUtil.getAppPackageName(appContext));
             headers.put("X_BWM_USERLOC", "");
             headers.put("X_BWM_APPVER", AppInfoUtil.getAppVersionName(appContext));
+            headers.put("X_BWM_APPLANG", Locale.getDefault().getLanguage());
 
             HttpTools.initHeaders(headers);
             //how to use
