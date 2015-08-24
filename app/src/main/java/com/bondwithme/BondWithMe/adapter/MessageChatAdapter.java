@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -461,7 +462,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         TextView leftName;
         ImageView pngImageView;
         CircularProgress progressBar;
-        ImageView audio_play;
+        RelativeLayout audio_play;
         HorizontalProgressBarWithNumber id_progressbar;
         TextView audio_time;
         NetworkImageView message_video_start;
@@ -478,7 +479,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             leftName = (TextView) itemView.findViewById(R.id.tv_name);
             pngImageView = (ImageView) itemView.findViewById(R.id.message_pic_png_iv);
             progressBar = (CircularProgress) itemView.findViewById(R.id.message_progress_bar);
-            audio_play = (ImageView) itemView.findViewById(R.id.audio_play);
+            audio_play = (RelativeLayout) itemView.findViewById(R.id.audio_play);
             id_progressbar = (HorizontalProgressBarWithNumber) itemView.findViewById(R.id.id_progressbar);
             audio_time = (TextView) itemView.findViewById(R.id.audio_time);
             message_video_start = (NetworkImageView) itemView.findViewById(R.id.message_video_start);

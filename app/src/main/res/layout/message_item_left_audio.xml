@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/_10dp"
+    android:paddingTop="@dimen/_10dp">
 
     <com.bondwithme.BondWithMe.widget.CircularNetworkImage
         android:id="@+id/message_icon_image"
@@ -11,7 +13,6 @@
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="@dimen/_6dp"
         android:src="@drawable/default_head_icon"
-        android:layout_marginTop="@dimen/_20dp"
         app:border="false" />
 
     <TextView
@@ -21,8 +22,7 @@
         android:layout_marginBottom="@dimen/_5dp"
         android:layout_marginLeft="@dimen/_12dp"
         android:layout_marginRight="@dimen/_20dp"
-        android:layout_marginTop="@dimen/_20dp"
-        android:layout_toRightOf="@+id/message_icon_image"
+        android:layout_toRightOf="@id/message_icon_image"
         android:gravity="center"
         android:singleLine="true"
         android:text="即使但是时"
@@ -31,21 +31,27 @@
         android:textSize="@dimen/_13dp" />
 
     <LinearLayout
+        android:id="@+id/pic_linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_name"
         android:layout_marginLeft="@dimen/_12dp"
-        android:layout_marginTop="@dimen/_5dp"
         android:layout_toRightOf="@id/message_icon_image"
-        android:layout_centerVertical="true"
         android:orientation="horizontal">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/audio_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/chat_play" />
+            android:layout_width="@dimen/_40dp"
+            android:layout_height="@dimen/_40dp"
+            android:background="@color/tab_color_press3">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/play_message" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -60,15 +66,6 @@
                 android:layout_marginBottom="@dimen/_15dp" />
 
             <TextView
-                android:id="@+id/date_time_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/id_progressbar"
-                android:text="2015年05月24日"
-                android:textColor="@color/default_text_color_light"
-                android:textSize="@dimen/_12dp" />
-
-            <TextView
                 android:id="@+id/audio_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,4 +74,15 @@
                 android:text="00:19" />
         </RelativeLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/date_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/pic_linear"
+        android:layout_below="@+id/pic_linear"
+        android:layout_marginTop="@dimen/_6dp"
+        android:text="2015年05月24日"
+        android:textColor="@color/default_text_color_light"
+        android:textSize="@dimen/_12dp" />
 </RelativeLayout>
