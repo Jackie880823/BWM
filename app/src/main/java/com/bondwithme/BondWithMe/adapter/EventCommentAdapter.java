@@ -192,14 +192,14 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(data.size() == 1){
                 second.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_one_shape));
                 layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-                layoutParam.setMargins(dip2px(mContext,14),10,dip2px(mContext,14),dip2px(mContext,60));
+                layoutParam.setMargins(dip2px(mContext,14),14,dip2px(mContext,14),dip2px(mContext,60));
 //              layoutParam.setMarginEnd(500);
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.INVISIBLE);
             }else {
                 second.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_shape));
                 layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-                layoutParam.setMargins(dip2px(mContext,14),10,dip2px(mContext,14),dip2px(mContext,0));
+                layoutParam.setMargins(dip2px(mContext,14),14,dip2px(mContext,14),dip2px(mContext,0));
 //              layoutParam.setMarginEnd(500);
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.VISIBLE);
