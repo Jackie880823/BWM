@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -74,6 +75,8 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     public static int cache_count = 0;
 
     private Uri videoUri = Uri.EMPTY;
+
+    private String videoDuration;
 
     /**
      * 存放图片Uri列表
@@ -461,9 +464,16 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
                 // 调用用相机录制返回的视频数据
                 case REQUEST_HEAD_VIDEO:
-                    Uri uri = getOutVideoUri();
-                    uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
-                    data.setData(uri);
+
+                    String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA,
+                            MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION};
+                    Uri uri = data.getData();
+                    Cursor cursor = getActivity().getContentResolver().query(uri, videoColumns, null, null, null);
+                    if (cursor != null && cursor.moveToNext()) {
+                        videoDuration = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION));
+                        cursor.close();
+                    }
+
                     addVideoFromActivityResult(data);
                     break;
 
@@ -484,6 +494,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         clearPhotos();
 
         videoUri = data.getData();
+        videoDuration = data.getStringExtra(SelectPhotosActivity.RESULT_VIDEO_DURATION);
         LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
         MediaController mediaController = new MediaController(getActivity());
         mediaController.setAnchorView(vvDisplay);
@@ -537,6 +548,14 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     public void setVideoUri(Uri videoUri) {
         uris.clear();
         this.videoUri = videoUri;
+    }
+
+    public String getVideoDuration() {
+        return videoDuration;
+    }
+
+    public void setVideoDuration(String videoDuration) {
+        this.videoDuration = videoDuration;
     }
 
     public List<Uri> getEditPic4Content() {

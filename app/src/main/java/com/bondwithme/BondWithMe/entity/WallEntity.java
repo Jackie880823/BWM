@@ -98,6 +98,11 @@ public class WallEntity implements Serializable {
     private String video_thumbnail;
 
     /**
+     * 视频长
+     */
+    private String video_duration;
+
+    /**
      * <br>Posting creator name
      * <br> such as:  "Jolin Tay"
      */
@@ -293,6 +298,14 @@ public class WallEntity implements Serializable {
 
     public void setVideo_filename(String video_filename) {
         this.video_filename = video_filename;
+    }
+
+    public String getVideo_duration() {
+        return video_duration;
+    }
+
+    public void setVideo_duration(String video_duration) {
+        this.video_duration = video_duration;
     }
 
     public String getUser_given_name() {

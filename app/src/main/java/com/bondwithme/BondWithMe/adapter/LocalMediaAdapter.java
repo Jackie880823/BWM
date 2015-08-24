@@ -17,6 +17,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -159,7 +160,7 @@ public class LocalMediaAdapter extends BaseAdapter {
             if(MediaData.TYPE_VIDEO.equals(mediaData.getType())) {
                 holder.llDuration.setVisibility(View.VISIBLE);
                 long duration = mediaData.getDuration();
-                holder.tvDuration.setText(String.format("%02d", duration / (3600000)) + ":" + String.format("%02d", duration % 3600000 / 60000) + ":" + String.format("%02d", duration % 3600000 % 60000/1000));
+                holder.tvDuration.setText(MyDateUtils.formatRecordTimeForString(String.valueOf(duration)));
             } else {
                 holder.llDuration.setVisibility(View.GONE);
             }
