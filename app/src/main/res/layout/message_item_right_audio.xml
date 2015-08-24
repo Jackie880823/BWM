@@ -11,10 +11,10 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/_6dp"
         android:src="@drawable/default_head_icon"
-        android:layout_marginTop="@dimen/_20dp"
         app:border="false" />
 
     <LinearLayout
+        android:id="@+id/pic_linear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/_68dp"
@@ -23,12 +23,19 @@
         android:layout_toLeftOf="@id/message_icon_image"
         android:orientation="horizontal">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/audio_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/chat_play" />
+            android:layout_width="@dimen/_45dp"
+            android:layout_height="@dimen/_45dp"
+            android:background="@color/tab_color_press3">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/play_message" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -40,17 +47,8 @@
                 android:id="@+id/id_progressbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_15dp"/>
+                android:layout_marginBottom="@dimen/_15dp" />
 
-
-            <TextView
-                android:id="@+id/date_time_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/id_progressbar"
-                android:text="2015年05月24日"
-                android:textColor="@color/default_text_color_light"
-                android:textSize="@dimen/_12dp" />
 
             <TextView
                 android:id="@+id/audio_time"
@@ -61,4 +59,16 @@
                 android:text="00:19" />
         </RelativeLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/date_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/pic_linear"
+        android:layout_below="@+id/pic_linear"
+        android:layout_marginRight="@dimen/_16dp"
+        android:layout_marginTop="@dimen/_6dp"
+        android:text="2015年05月24日"
+        android:textColor="@color/default_text_color_light"
+        android:textSize="@dimen/_12dp" />
 </RelativeLayout>
