@@ -99,7 +99,7 @@ public class FamilyTreeActivity extends BaseActivity {
      */
     private void getTreeUrl() {
 
-        String url = String.format(Constant.API_FAMILY_TREE, FamilyTreeFragment.getSelectUseId());
+        String url = String.format(Constant.API_FAMILY_TREE, ((FamilyTreeFragment)getFragment()).getSelectUseId());
         new HttpTools(this).get(url, null, true, new HttpCallback() {
             @Override
             public void onStart() {
