@@ -1023,7 +1023,6 @@ public class GroupSettingActivity extends BaseActivity {
 
     public void getMemberType(final int position) {
         RequestInfo requestInfo = new RequestInfo();
-        requestInfo.params = null;
         requestInfo.url = String.format(Constant.API_GET_MEMBER_TYPE, MainActivity.getUser().getUser_id(), userList.get(position).getUser_id());
         new HttpTools(this).get(requestInfo,Tag, new HttpCallback() {
             @Override

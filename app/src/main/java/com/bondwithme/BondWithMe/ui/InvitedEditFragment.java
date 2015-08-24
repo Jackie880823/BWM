@@ -398,7 +398,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
             return;
         }
 
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("group_id", group_id);
         params.put("group_owner_id", MainActivity.getUser().getUser_id());
         params.put("query_on", "addEventMember");
@@ -406,7 +406,7 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
 
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = Constant.API_EVENT_ADD_MEMBERS;
-        requestInfo.params = params;
+        requestInfo.putAllParams(params);
         new HttpTools(getActivity()).post(requestInfo, TAG, new HttpCallback() {
             @Override
             public void onStart() {

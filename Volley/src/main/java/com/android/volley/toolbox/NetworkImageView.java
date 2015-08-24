@@ -78,7 +78,6 @@ public class NetworkImageView extends ImageView {
         mImageLoader = imageLoader;
         // The URL has potentially changed. See if we need to load it.
         loadImageIfNecessary(false);
-
     }
 
     /**

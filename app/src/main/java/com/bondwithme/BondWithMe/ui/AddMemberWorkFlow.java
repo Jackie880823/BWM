@@ -46,7 +46,7 @@ public class AddMemberWorkFlow extends Activity {
 
     void getAddFlag() {
         RequestInfo requestInfo = new RequestInfo();
-        requestInfo.params = null;
+//        requestInfo.params = null;
         requestInfo.url = String.format(Constant.API_GET_MEMBER_TYPE, from, to);
 
         new HttpTools(this).get(requestInfo, this, new HttpCallback() {

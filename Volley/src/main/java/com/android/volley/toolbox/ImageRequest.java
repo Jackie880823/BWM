@@ -16,6 +16,8 @@
 
 package com.android.volley.toolbox;
 
+import java.io.InputStream;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -27,8 +29,6 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyLog;
-
-import java.io.InputStream;
 
 /**
  * A canned request for getting an image at a given URL and calling

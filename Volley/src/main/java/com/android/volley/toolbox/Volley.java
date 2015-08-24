@@ -16,6 +16,8 @@
 
 package com.android.volley.toolbox;
 
+import java.io.File;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -25,8 +27,7 @@ import android.os.Build;
 
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;
-
-import java.io.File;
+import com.android.volley.VolleyLog;
 
 @TargetApi(Build.VERSION_CODES.FROYO)
 public class Volley {
@@ -71,10 +72,10 @@ public class Volley {
     }
     
     /**
-     * chenbo add 对于Http请求，暂时没必要缓存，可以使用这个
-     * 无缓存的请求
+     * 不带缓存的requestQueue
      * newNoCacheRequestQueue
      * @param context
+     * @param stack
      * @return
      * @since 3.5
      */
@@ -117,5 +118,13 @@ public class Volley {
     
     public static File getDefaultCacheFile(Context context) {
         return new File(context.getCacheDir(), DEFAULT_CACHE_DIR);
+    }
+    
+    /**
+     * 判断是否打开volley的log输出
+     * @param isOpened
+     */
+    public void openLog(boolean isOpened) {
+    	VolleyLog.DEBUG = isOpened;
     }
 }
