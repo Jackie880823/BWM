@@ -8,6 +8,7 @@ import android.hardware.Camera;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.VideoView;
 
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.PickPicAdapter;
 import com.bondwithme.BondWithMe.entity.MediaData;
@@ -48,7 +50,7 @@ import java.util.Map;
  * Use the {@link TabPictureFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabPictureFragment extends BaseFragment<WallNewActivity> implements View.OnClickListener, MediaPlayer.OnPreparedListener{
+public class TabPictureFragment extends BaseFragment<WallNewActivity> implements View.OnClickListener, MediaPlayer.OnPreparedListener {
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
      */
@@ -58,6 +60,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      * 临时文件用户裁剪
      */
     public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp_";
+    public final static String VIDEO_NAME_TEMP = "video_temp_";
 
     private final static int REQUEST_HEAD_PHOTO = 1;
     private final static int REQUEST_HEAD_IMAGE = 2;
@@ -264,7 +267,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         switch(request) {
             case REQUEST_HEAD_VIDEO:
                 if(uris.isEmpty()) {
-                    Uri out = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(getActivity(), CACHE_PIC_NAME_TEMP + cache_count + ".mp4"));
+                    Uri out = getOutVideoUri();
                     openCamera(MediaStore.ACTION_VIDEO_CAPTURE, out, REQUEST_HEAD_VIDEO);
                 } else {
                     myDialog = new MyDialog(getParentActivity(), "", getString(R.string.will_remove_photos));
@@ -272,7 +275,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                         @Override
                         public void onClick(View v) {
                             myDialog.dismiss();
-                            Uri out = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(getActivity(), CACHE_PIC_NAME_TEMP + cache_count + MP4));
+                            Uri out = getOutVideoUri();
                             openCamera(MediaStore.ACTION_VIDEO_CAPTURE, out, REQUEST_HEAD_VIDEO);
                         }
                     });
@@ -312,6 +315,17 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                 LogUtil.e(TAG, "the request error");
         }
 
+    }
+
+    /**
+     * @return 获取保存视频的{@link Uri}
+     */
+    private Uri getOutVideoUri() {
+        File file = new File(Constant.VIDEO_PATH);
+        boolean exists = file.exists() || file.mkdir();
+        File video;
+        video = exists ? new File(Constant.VIDEO_PATH + VIDEO_NAME_TEMP + MP4) : new File(Environment.getDataDirectory() + VIDEO_NAME_TEMP + MP4);
+        return Uri.fromFile(video);
     }
 
     /**
@@ -447,7 +461,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
                 // 调用用相机录制返回的视频数据
                 case REQUEST_HEAD_VIDEO:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(getActivity(), CACHE_PIC_NAME_TEMP + cache_count + ".mp4"));
+                    Uri uri = getOutVideoUri();
                     uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
                     data.setData(uri);
                     addVideoFromActivityResult(data);
@@ -470,7 +484,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         clearPhotos();
 
         videoUri = data.getData();
-
+        LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
         MediaController mediaController = new MediaController(getActivity());
         mediaController.setAnchorView(vvDisplay);
         vvDisplay.setMediaController(mediaController);

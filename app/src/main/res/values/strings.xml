@@ -563,7 +563,7 @@
     <string name="notification_action_event_cancel">%1$s has cancelled the event: %2$s</string>
     <string name="notification_action_event_resp">%1$s has responsed the event: %2$s</string>
     <string name="notification_action_event_comment_owner_self">%1$s commented on own event: %2$s</string>
-    <string name="notification_action_event_comment_owner">%1$s comment your event: %2$s</string>
+    <string name="notification_action_event_comment_owner">%1$s commented on your event: %2$s</string>
     <string name="notification_action_event_comment_not_owner">%1$s commented on %2$s event:%3$s</string>
     <string name="notification_action_event_loveComment">%1$s love your comment.</string>
     <string name="notification_action_event_reminder">Upcoming event: %1$s</string>
@@ -594,7 +594,7 @@
     <string name="notification_action_bigday_birthday_prebirthday_7">%1$s birthday is in 1 week</string>
     <string name="notification_action_bigday_birthday_prebirthday_30">%1$s birthday is in 1 month</string>
 
-    <string name="notification_action_diary_comment_owner">%1$s comment your diary</string>
+    <string name="notification_action_diary_comment_owner">%1$s commented your diary</string>
     <string name="notification_action_diary_comment_not_owner">%1$s commented on %2$s diary.</string>
     <string name="notification_action_diary_love_owner">%1$s love your diary</string>
     <string name="notification_action_diary_love_not_owner">%1$s loved on %2$s diary</string>
@@ -602,6 +602,13 @@
     <string name="notification_action_diary_tag">%1$s tag you in diary</string>
 
     <string name="notification_action_miss_missyou">%1$s miss you</string>
+    <string name="text_audio_release">松开发送</string>
+    <string name="text_audio_loosen_audition">松手试听</string>
+    <string name="text_audio_cancle_send">松手取消发送</string>
+    <string name="text_recording_video">录制视频</string>
+    <string name="text_take_photos">拍摄照片</string>
+    <string name="text_record_audio_too_short">录制时间要大于两秒</string>
+    <string name="text_can_record_time">还可以录制%s秒</string>
 
->>>>>>> e91f5fc86ccdc81499a43acefed6488e940e9b18
+    >>>>>>> e91f5fc86ccdc81499a43acefed6488e940e9b18
 </resources>

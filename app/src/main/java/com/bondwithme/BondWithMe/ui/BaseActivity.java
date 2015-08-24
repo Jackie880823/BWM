@@ -196,6 +196,9 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
      * @return - 颜色值
      */
     public int getActionBarColor() {
+        if(currentColor==-1){
+            currentColor = R.color.tab_color_press1;
+        }
         return currentColor;
     }
 

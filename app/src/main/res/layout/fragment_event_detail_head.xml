@@ -3,30 +3,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--
-    /Users/liangzemian/Desktop/work/Bwm/app/src/main/java/com.bondwithme.BondWithMe/widget/SendCommentView.java
-    -->
+    <LinearLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding">
 
-    <!-- com.bondwithme.BondWithMe/widget/OverScrollView.java-->
-        <LinearLayout
-            android:id="@+id/top"
+        <include
+            layout="@layout/event_detail_top"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:paddingLeft="@dimen/default_content_padding"
-            android:paddingRight="@dimen/default_content_padding">
-
-
-            <include
-                layout="@layout/event_detail_top"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_view_margin" />
-
-
-        </LinearLayout>
+            android:layout_marginTop="@dimen/default_view_margin" />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/default_comment"
@@ -85,28 +77,12 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+        <RelativeLayout
+            android:layout_below="@+id/comment_container"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_58dp">
 
+        </RelativeLayout>
     </RelativeLayout>
-
-
-
-
-
-    <!--<com.bondwithme.BondWithMe.widget.SendCommentView-->
-    <!--android:id="@+id/comment_send"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentBottom="true">-->
-    <!--</com.bondwithme.BondWithMe.widget.SendCommentView>-->
-
-
-    <!--<include layout="@layout/comment_bar" />-->
-    <!--<com.bondwithme.BondWithMe.widget.SendCommentView-->
-    <!--android:id="@+id/comment_bar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="vertical">-->
-
-    <!--</com.bondwithme.BondWithMe.widget.SendCommentView>-->
 
 </RelativeLayout>

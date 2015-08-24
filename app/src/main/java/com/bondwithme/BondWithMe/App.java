@@ -49,6 +49,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -302,6 +303,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             headers.put("X_BWM_APPID", AppInfoUtil.getAppPackageName(appContext));
             headers.put("X_BWM_USERLOC", "");
             headers.put("X_BWM_APPVER", AppInfoUtil.getAppVersionName(appContext));
+            headers.put("X_BWM_APPLANG", Locale.getDefault().getLanguage());
 
             HttpTools.initHeaders(headers);
             //how to use
@@ -331,17 +333,13 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public static void logout(Activity context) {
 
         if (context != null) {
-            Piwik.getInstance(getContextInstance()).setAppOptOut(true);//禁止Piwik
-            if (FacebookSdk.isInitialized()) {
-                LoginManager.getInstance().logOut();//清除Facebook授权缓存
-            }
             FileUtil.clearCache(context);
             PreferencesUtil.saveValue(context, "user", null);
 
             //反注册推送
             clearPush(context);
             //默认tab
-            PreferencesUtil.saveValue(context, "lastLeaveIndex", -1);
+            PreferencesUtil.saveValue(context, MainActivity.LAST_LEAVE_INDEX, 0);
 
             //to Login activity
             Intent intent = new Intent(context, StartActivity.class);
@@ -350,6 +348,11 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             context.startActivity(mainIntent);
 
             user = null;
+
+            Piwik.getInstance(getContextInstance()).setAppOptOut(true);//禁止Piwik
+            if (FacebookSdk.isInitialized()) {
+                LoginManager.getInstance().logOut();//清除Facebook授权缓存
+            }
             context.finish();
         }
     }
@@ -445,9 +448,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             public void run() {
                 if (foreground && paused) {
                     foreground = false;
-                    LogUtil.d("", "App went background");
                 } else {
-                    LogUtil.d("", "App still foreground");
                 }
             }
         }, CHECK_DELAY);

@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.webkit.WebView;
 
+import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.R;
 
 public class TermsActivity extends BaseActivity {
@@ -46,7 +47,8 @@ public class TermsActivity extends BaseActivity {
     @Override
     public void initView() {
         webView = getViewById(R.id.webView);
-        webView.loadUrl("http://bondwithme.com/bonding-terms.htm");
+        webView.loadUrl("http://bondwithme.com/term.php?lang="+ HttpTools.getHeaders().get("X_BWM_APPLANG"));
+//        webView.loadUrl("http://bondwithme.com/bonding-terms.htm");
         webView.getSettings().setJavaScriptEnabled(true);//修复url不能跳转bug,add by wing
 
     }
