@@ -79,8 +79,9 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     private TextView tvGoBack;
 
 
-    private static String selectUseId;
-    public static String getSelectUseId() {
+    private String selectUseId;
+
+    public String getSelectUseId() {
         return selectUseId;
     }
 
@@ -205,7 +206,12 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
                     break;
 
                 case sibling:
-                    siblingMembers.add(familyMemberEntity);
+                    if(selectUseId.equals(familyMemberEntity.getUser_id())) {
+                        LogUtil.i(TAG, "parseResponse& add first");
+                        siblingMembers.add(0, familyMemberEntity);
+                    } else {
+                        siblingMembers.add(familyMemberEntity);
+                    }
                     break;
                 case children:
                     childrenMembers.add(familyMemberEntity);

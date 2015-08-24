@@ -188,11 +188,11 @@ public class GroupMessageFragment extends BaseFragment<MainActivity> {
         }
 
         final RequestInfo requestInfo = new RequestInfo();
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("limit", "20");
         int start = beginIndex * 20;
         params.put("start", start + "");
-        requestInfo.params = params;
+        requestInfo.putAllParams(params);
         requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "group");
         new Thread() {
             @Override

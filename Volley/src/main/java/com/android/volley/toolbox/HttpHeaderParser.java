@@ -16,17 +16,14 @@
 
 package com.android.volley.toolbox;
 
-import android.util.Log;
-
-import com.android.volley.Cache;
-import com.android.volley.NetworkResponse;
+import java.util.Map;
 
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
 import org.apache.http.protocol.HTTP;
 
-import java.util.Iterator;
-import java.util.Map;
+import com.android.volley.Cache;
+import com.android.volley.NetworkResponse;
 
 /**
  * Utility methods for parsing HTTP headers.
@@ -43,14 +40,7 @@ public class HttpHeaderParser {
         long now = System.currentTimeMillis();
 
         Map<String, String> headers = response.headers;
-        /**wing for test begin*/
-        Iterator<String> keySet = headers.keySet().iterator();
-        while (keySet.hasNext()){
-            String key = keySet.next();
-            Log.i("", "parseCacheHeaders=========" + key + "==" + headers.get(key));
-            break;//test
-        }
-        /**wing for test end*/
+
         long serverDate = 0;
         long serverExpires = 0;
         long softExpire = 0;

@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -148,7 +147,7 @@ public class TellAFriendsActivity extends BaseActivity {
             ContactMessageEntity messageEntity = generateMessage("");
 //            params.put("messageEntity", new Gson().toJson(messageEntity));
 
-            Map<String, String> params = new HashMap<>();
+            Map<String, Object> params = new HashMap<>();
             params.put("user_id", MainActivity.getUser().getUser_id());
             params.put("user_given_name", messageEntity.getUser_given_name());
             params.put("user_country_code", messageEntity.getUser_country_code());
@@ -157,7 +156,7 @@ public class TellAFriendsActivity extends BaseActivity {
 
             LogUtil.d("", "sendContact=========" + new Gson().toJson(messageEntity.getContact_list()));
             RequestInfo requestInfo = new RequestInfo();
-            requestInfo.params = params;
+            requestInfo.putAllParams(params);
             requestInfo.url = Constant.API_SHARE2FRIEND;
 
             new HttpTools(this).post(requestInfo, this, new HttpCallback() {

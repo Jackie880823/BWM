@@ -547,9 +547,9 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             params.put("video", "1");
             /**wing modifi for pic too big begin*/
             /**wing modifi for pic too big begin*/
-//            File f = new File(videoUri.getPath());
-//            params.put("file", f);
-//            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoUri.toString());
+            File f = new File(videoUri.getPath());
+            params.put("file", f);
+//            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoUri.toString(), new ImageSize(640, 480));
 //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
 //            String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
@@ -642,6 +642,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
             @Override
             public void onError(Exception e) {
+                e.printStackTrace();
                 mHandler.sendEmptyMessage(ACTION_FAILED);
             }
 
