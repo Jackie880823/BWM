@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,7 +16,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,11 +53,9 @@ import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.WallEditView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -549,12 +545,15 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
         if(!Uri.EMPTY.equals(videoUri)) {
             params.put("video", "1");
-            File f = new File(videoUri.getPath());
-            params.put("file", f);
-            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoUri.toString());
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+            /**wing modifi for pic too big begin*/
+            /**wing modifi for pic too big begin*/
+//            File f = new File(videoUri.getPath());
+//            params.put("file", f);
+//            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoUri.toString());
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//            String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+            String strThumbnail = LocalImageLoader.getVideoThumbnail(getActivity(),videoUri);
             strThumbnail = String.format("data:image/png;base64,%s", strThumbnail);
             params.put("video_thumbnail", strThumbnail);
             LogUtil.i(TAG, "submitPic$ strThumbnail: " + strThumbnail);

@@ -96,17 +96,17 @@ public class NotificationMessageGenerateUtil {
         return msg;
     }
 
-    public static String getChatMessage(Context context, String action, String item_type, String action_owner, String item_name,String snippet) {
+    public static String getChatMessage(Context context, String action, String item_type, String action_owner, String item_name, String snippet) {
 
         boolean isPersonnal = !("group".equals(item_type));
 //        boolean isPersonnal = ("" + MessageChatActivity.CHAT_TYPE_PERSONAL).equals(item_type);
         String msg = null;
         if ("postText".equals(action)) {
             if (isPersonnal) {
-                msg = action_owner+":"+snippet;
+                msg = action_owner + ":" + snippet;
 //                msg = context.getString(R.string.notification_action_message_postText_personal, action_owner);
             } else {
-                msg = item_name+"-"+action_owner+":"+snippet;
+                msg = item_name + "-" + action_owner + ":" + snippet;
 //                msg = context.getString(R.string.notification_action_message_postText_group, action_owner, item_name);
             }
         } else if ("postSticker".equals(action)) {
@@ -133,12 +133,6 @@ public class NotificationMessageGenerateUtil {
             } else {
                 msg = context.getString(R.string.notification_action_message_postVideo_group, action_owner, item_name);
             }
-        } else if ("add".equals(action)) {
-            msg = context.getString(R.string.notification_action_message_add, action_owner, item_name);
-        } else if ("pending".equals(action)) {
-            msg = context.getString(R.string.notification_action_message_pending, action_owner, item_name);
-        } else if ("reject".equals(action)) {
-            msg = context.getString(R.string.notification_action_message_reject, action_owner, item_name);
         }
         return msg;
     }
@@ -181,6 +175,17 @@ public class NotificationMessageGenerateUtil {
         String msg = null;
         if ("news".equals(action)) {
             msg = jsonObjectExtras.getString("item_name");
+        }
+        return msg;
+    }
+    public static String getGroupAlertMessage(Context context, String action, String action_owner, String item_name) throws JSONException {
+        String msg = null;
+        if ("add".equals(action)) {
+            msg = context.getString(R.string.notification_action_message_add, action_owner, item_name);
+        } else if ("pending".equals(action)) {
+            msg = context.getString(R.string.notification_action_message_pending, action_owner, item_name);
+        } else if ("reject".equals(action)) {
+            msg = context.getString(R.string.notification_action_message_reject, action_owner, item_name);
         }
         return msg;
     }

@@ -21,6 +21,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
@@ -42,7 +43,7 @@ public class LocalImageLoader {
     /**
      * max upload file size
      */
-    private static final int maxSize = 200;
+    private static final int maxSize = 150;
 
     private LocalImageLoader() {
     }
@@ -296,25 +297,25 @@ public class LocalImageLoader {
         return loadDrawableFromFile(context, pathName, UIUtil.getScreenWidth(context), UIUtil.getScreenHeight(context));
     }
 
-    public static Bitmap loadBitmapFromResourceId(Context context, int resourceId,int reqWidth, int reqHeight) {
+    public static Bitmap loadBitmapFromResourceId(Context context, int resourceId, int reqWidth, int reqHeight) {
         // 图片解析的配置
         Options options = new Options();
         // 不去真的解析图片，只是获取图片的头部信息宽，高
         options.inJustDecodeBounds = true;
 
         BitmapFactory.decodeResource(context.getResources(), resourceId, options);
-        int imageWidth =options.outWidth;
-        int imageHeight =options.outHeight;
-        int finalWidth ;
-        int finalHeight ;
-        if(reqWidth==0) {
+        int imageWidth = options.outWidth;
+        int imageHeight = options.outHeight;
+        int finalWidth;
+        int finalHeight;
+        if (reqWidth == 0) {
             finalWidth = UIUtil.getScreenWidth(context);
-        }else {
+        } else {
             finalWidth = reqWidth;
         }
-        if(reqHeight==0) {
+        if (reqHeight == 0) {
             finalHeight = UIUtil.getScreenHeight(context);
-        }else{
+        } else {
             finalHeight = reqHeight;
         }
         // 计算缩放比例
@@ -343,7 +344,7 @@ public class LocalImageLoader {
     }
 
     public static Drawable loadDrawableFromResourceId(Context context, int resourceId) {
-        return new BitmapDrawable(context.getResources(), loadBitmapFromResourceId(context, resourceId,0,0));
+        return new BitmapDrawable(context.getResources(), loadBitmapFromResourceId(context, resourceId, 0, 0));
     }
 
     public static Bitmap decodeSampledBitmapFromByteArray(byte[] data, int offset, int length, int reqWidth, int reqHeight) {
@@ -480,12 +481,12 @@ public class LocalImageLoader {
                 // Clean up os
                 os.reset();
                 // interval 10
-                if(options<=30&&interval==10){
+                if (options <= 30 && interval == 10) {
                     interval = 5;
                 }
                 options -= interval;
                 bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
-                if(options == 10){
+                if (options == 10) {
                     break;
                 }
             }
@@ -719,5 +720,82 @@ public class LocalImageLoader {
         //        }
 
 
+    }
+
+    /**
+     * 获取视频缩略图
+     *
+     * @param context
+     * @param uri
+     * @return base64 图片字节码
+     */
+    public static String getVideoThumbnail(Context context, Uri uri) {
+        /**wing modified for pic too large begin*/
+
+        if (uri == null)
+            return null;
+
+        String[] VIDEOTHUMBNAIL_TABLE = new String[]{
+                MediaStore.Video.Media.DATA
+
+        };
+
+        Cursor c = MediaStore.Images.Thumbnails.queryMiniThumbnails(context.getContentResolver(), uri, MediaStore.Images.Thumbnails.MINI_KIND, VIDEOTHUMBNAIL_TABLE);
+        String strThumbnail = null;
+        try {
+            String thumbnailPath = null;
+            if ((c != null) && c.moveToFirst()) {
+                thumbnailPath = c.getString(0);
+            }
+
+            if (TextUtils.isEmpty(thumbnailPath)) {
+                Bitmap bitmap;
+                ImageSize imageSize = new ImageSize(640, 480);
+                bitmap = ImageLoader.getInstance().loadImageSync(uri.toString(), imageSize);
+                if (bitmap == null) {
+                    bitmap = compressBitmap(FileUtil.getRealPathFromURI(context, uri), 640, 480);
+                }
+                int degree = readPictureDegree(uri.toString());
+                try {
+                    if (degree != 0)
+                        bitmap = rotaingImageView(degree, bitmap);
+                    ByteArrayOutputStream os = new ByteArrayOutputStream();
+                    // scale
+                    int options = 100;
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
+                    int interval = 10;
+                    while (os.toByteArray().length / 1024 > maxSize) {
+                        // Clean up os
+                        os.reset();
+                        // interval 10
+                        if (options <= 30 && interval == 10) {
+                            interval = 5;
+                        }
+                        options -= interval;
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, options, os);
+                        if (options == 10) {
+                            break;
+                        }
+                    }
+
+                    strThumbnail = Base64.encodeToString(os.toByteArray(), Base64.DEFAULT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null)
+                c.close();
+        }
+//        return thumbnailPath;
+        /**wing modified for pic too large end*/
+
+//        Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoPath);
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//        String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+        return strThumbnail;
     }
 }
