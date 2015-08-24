@@ -565,7 +565,7 @@
 
     <string name="notification_action_member_add">%1$s请求加你为:%2$s</string>
     <string name="notification_action_member_autoAcp">你自动同意添加%1$s为:%2$s</string>
-    <string name="notification_action_member_accept">%1$s已添加你为成员</string>
+    <string name="notification_action_member_accept">%1$s接受您为成员</string>
     <string name="notification_action_member_updateRel">%1$s将和你的关系设置为:%2$s</string>
 
     <string name="notification_action_message_postText_personal">%1$s发信息给你.</string>
@@ -600,8 +600,4 @@
     <string name="text_audio_release">松开发送</string>
     <string name="text_audio_loosen_audition">松手试听</string>
     <string name="text_audio_cancle_send">松手取消发送</string>
-    <string name="text_recording_video">录制视频</string>
-    <string name="text_take_photos">拍摄照片</string>
-    <string name="text_record_audio_too_short">录制时间要大于两秒</string>
-    <string name="text_can_record_time">还可以录制%s秒</string>
 </resources>
