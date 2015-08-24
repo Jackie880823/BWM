@@ -436,8 +436,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 LogUtil.i(TAG, "setContent& video_thumbnail: " + url);
                 videoImage.setVisibility(View.VISIBLE);
                 VolleyUtil.initNetworkImageView(context, imWallsImages, url, R.drawable.network_image_default, R.drawable.network_image_default);
-                tvPhotoCount.setVisibility(View.VISIBLE);
-                tvPhotoCount.setText(MyDateUtils.formatRecordTimeForString(wallEntity.getVideo_duration()));
+
+                String duration = MyDateUtils.formatDuration(wallEntity.getVideo_duration());
+                if(TextUtils.isEmpty(duration)) {
+                    tvPhotoCount.setVisibility(View.GONE);
+                } else {
+                    tvPhotoCount.setVisibility(View.VISIBLE);
+                    tvPhotoCount.setText(duration);
+                }
             } else {
                 // 有图片显示图片总数
                 int count = Integer.valueOf(wallEntity.getPhoto_count());

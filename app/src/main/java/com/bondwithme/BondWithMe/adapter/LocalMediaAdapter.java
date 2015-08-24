@@ -160,7 +160,7 @@ public class LocalMediaAdapter extends BaseAdapter {
             if(MediaData.TYPE_VIDEO.equals(mediaData.getType())) {
                 holder.llDuration.setVisibility(View.VISIBLE);
                 long duration = mediaData.getDuration();
-                holder.tvDuration.setText(MyDateUtils.formatRecordTimeForString(String.valueOf(duration)));
+                holder.tvDuration.setText(MyDateUtils.formatDuration(duration));
             } else {
                 holder.llDuration.setVisibility(View.GONE);
             }
