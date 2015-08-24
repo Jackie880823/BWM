@@ -605,6 +605,10 @@
     <string name="text_audio_release">松开发送</string>
     <string name="text_audio_loosen_audition">松手试听</string>
     <string name="text_audio_cancle_send">松手取消发送</string>
+    <string name="text_recording_video">录制视频</string>
+    <string name="text_take_photos">拍摄照片</string>
+    <string name="text_record_audio_too_short">录制时间要大于两秒</string>
+    <string name="text_can_record_time">还可以录制%s秒</string>
 
->>>>>>> e91f5fc86ccdc81499a43acefed6488e940e9b18
+    >>>>>>> e91f5fc86ccdc81499a43acefed6488e940e9b18
 </resources>

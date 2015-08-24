@@ -320,7 +320,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         chat_mic_time.setText(MyDateUtils.formatRecordTime(mlCount));
                     } else {
                         int eciprocalrCount = 200 - mlCount;
-                        chat_mic_time.setText(String.format("还可以录制%s秒", eciprocalrCount));
+                        chat_mic_time.setText(String.format(getString(R.string.text_can_record_time), eciprocalrCount));
                         if (mlCount == 200) {
                             if (timer != null) {
                                 timer.cancel();
@@ -687,8 +687,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 TextView tvAddNewMember = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
                 TextView tvCreateNewGroup = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
                 TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
-                tvAddNewMember.setText("录制视频");
-                tvCreateNewGroup.setText("拍摄照片");
+                tvAddNewMember.setText(R.string.text_recording_video);
+                tvCreateNewGroup.setText(R.string.text_take_photos);
                 tvAddNewMember.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1267,7 +1267,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             handler.removeMessages(GET_RECORD_TIME);
                             if (audioFile != null && audioFile.exists() && mlCount < 2) {
                                 audioFile.delete();
-                                MslToast.getInstance(mContext).showShortToast("录制时间要大于两秒");
+                                MslToast.getInstance(mContext).showShortToast(getString(R.string.text_record_audio_too_short));
                                 mlCount = 1;
                                 hideAudioView();
                             } else if (isInLeft) {
@@ -1373,45 +1373,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     private String getVideoThumbnail(Uri uri) {
         /**wing modified for pic too large begin*/
-
         if (uri == null)
             return null;
-
-        return LocalImageLoader.getVideoThumbnail(this,uri);
-//        String[] VIDEOTHUMBNAIL_TABLE = new String[]{
-//                MediaStore.Video.Media.DATA
-//
-//        };
-//
-//        Cursor c = MediaStore.Images.Thumbnails.queryMiniThumbnails(getContentResolver(), uri, MediaStore.Images.Thumbnails.MINI_KIND, VIDEOTHUMBNAIL_TABLE);
-//        String strThumbnail = null;
-//        try {
-//            String thumbnailPath = null;
-//            if ((c != null) && c.moveToFirst()) {
-//                thumbnailPath = c.getString(0);
-//            }
-//
-//            if (TextUtils.isEmpty(thumbnailPath)) {
-//                Bitmap bitmap = ImageLoader.getInstance().loadImageSync(uri.toString());
-//                Bitmap thumb = ThumbnailUtils.extractThumbnail(bitmap, 640, 480);
-//
-//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//                thumb.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//                strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (c != null)
-//                c.close();
-//        }
-        /**wing modified for pic too large end*/
-
-//        Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoPath);
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-//        String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-//        return strThumbnail;
+        return LocalImageLoader.getVideoThumbnail(this, uri);
     }
 
     private void uploadImage(Uri uri) {
