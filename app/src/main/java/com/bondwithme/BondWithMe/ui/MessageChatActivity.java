@@ -320,7 +320,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         chat_mic_time.setText(MyDateUtils.formatRecordTime(mlCount));
                     } else {
                         int eciprocalrCount = 200 - mlCount;
-                        chat_mic_time.setText("还可以录制" + eciprocalrCount + "秒");
+                        chat_mic_time.setText(String.format("还可以录制%s秒", eciprocalrCount));
                         if (mlCount == 200) {
                             if (timer != null) {
                                 timer.cancel();
@@ -817,7 +817,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     mic_right.setImageResource(R.drawable.delete_voice);
                     mic_iv.setImageResource(R.drawable.chat_voice);
                     if (audioFile != null && audioFile.exists()) {
-                        uploadAudioOrVideo(audioFile, true, null, 0);
+                        uploadAudioOrVideo(audioFile, true, null, mlCount);
                     }
                     mlCount = 1;
                 }
@@ -1256,6 +1256,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
                     case MotionEvent.ACTION_UP:
                         if (!isAudition) {
+                            mRecorder.stop();
                             boolean isInLeft = isInView(mic_left, event);
                             boolean isInRight = isInView(mic_right, event);
                             mic_iv.setImageResource(R.drawable.chat_voice);
@@ -1264,7 +1265,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                                 timer.cancel();
                             }
                             handler.removeMessages(GET_RECORD_TIME);
-                            mRecorder.stop();
                             if (audioFile != null && audioFile.exists() && mlCount < 2) {
                                 audioFile.delete();
                                 MslToast.getInstance(mContext).showShortToast("录制时间要大于两秒");
@@ -1286,7 +1286,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                                         chat_mic_text.setText(MyDateUtils.formatRecordTime(mlCount));
                                     }
                                 }, 50);
-
+                                return true;
                             } else if (isInRight) {
                                 mic_right.setScaleX(1);
                                 mic_right.setScaleY(1);
@@ -1307,12 +1307,19 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                                 mic_right.setScaleX(1);
                                 mic_right.setScaleY(1);
                                 if (audioFile != null && audioFile.exists()) {
-                                    uploadAudioOrVideo(audioFile, true, null, 0);
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            uploadAudioOrVideo(audioFile, true, null, mlCount);
+                                            mlCount = 1;
+                                        }
+                                    }, 200);
+                                } else {
+                                    mlCount = 1;
                                 }
-                                mlCount = 1;
                                 hideAudioView();
                             }
-                            return true;
+                            return false;
                         }
                 }
                 return false;
@@ -1355,9 +1362,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             params.put("video_thumbnail", String.format("data:image/jpeg;base64,%s", videoThumbnail));
         } else {
             params.put("audio", "1");
-            params.put("audio_duration", mlCount + "");
+            params.put("audio_duration", durationTime + "");
             msgEntity.setAudio_filename(audioFile);
-            msgEntity.setAudio_duration(mlCount + "");
+            msgEntity.setAudio_duration(durationTime + "");
         }
         audioMsgEntity = msgEntity;
         messageChatAdapter.addMsgEntity(msgEntity);
