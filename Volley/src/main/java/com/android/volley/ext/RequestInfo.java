@@ -7,12 +7,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * wing
+ */
 public class RequestInfo {
 	
 	public String url ;
-	public Map<String,String> params = new HashMap<String, String>() ;
+	private Map<String,String> params = new HashMap<String, String>() ;
+    public String jsonParam  ;
 	public Map<String, String> headers = new HashMap<String, String>();
-	public Map<String, File> fileParams = new HashMap<String, File>();
+    private Map<String, File> fileParams = new HashMap<String, File>();
 	
     public RequestInfo() {
     }
@@ -47,7 +51,7 @@ public class RequestInfo {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            if (sb.lastIndexOf("&") == sb.length() - 1) {
+            if (sb.lastIndexOf("&")!=-1&&sb.lastIndexOf("&") == sb.length() - 1) {
                 sb.deleteCharAt(sb.length() - 1);
             }
             return url + sb.toString();

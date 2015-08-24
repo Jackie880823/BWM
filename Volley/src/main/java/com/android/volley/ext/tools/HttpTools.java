@@ -1,14 +1,5 @@
 package com.android.volley.ext.tools;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -30,42 +21,55 @@ import com.android.volley.toolbox.MultiPartRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+/**
+ * wing
+ */
 public class HttpTools {
     private Context mContext;
     private static RequestQueue sRequestQueue;
-    private static RequestQueue sDownloadQueue;     
+    private static RequestQueue sDownloadQueue;
+    private static Map<String, String> headers = new HashMap<String, String>();
 
     public HttpTools(Context context) {
-        mContext = context.getApplicationContext();
+//        mContext = context.getApplicationContext();
+        mContext = context;
     }
-    
+
     public static void init(Context context) {
         if (sRequestQueue == null) {
             sRequestQueue = Volley.newNoCacheRequestQueue(context.getApplicationContext());
         }
     }
-    
-    public static void stop() {
-        if (sRequestQueue != null) {
-            sRequestQueue.stop();
-            sRequestQueue = null;
-        }
+
+    public static void initHeaders(Map<String, String> headers) {
+        HttpTools.headers = headers;
     }
-    
+
+    public static Map<String, String> getHeaders() {
+        return HttpTools.headers;
+    }
+
     public static RequestQueue getHttpRequestQueue() {
         return sRequestQueue;
     }
-    
+
     /**
      * get 请求
      * @param url
      * @param paramsMap
      * @param httpResult
      */
-    public void get(String url, Map<String, String> paramsMap, final HttpCallback httpResult) {
-        get(new RequestInfo(url, paramsMap), httpResult);
+    public void get(String url, Map<String, String> paramsMap, Object tag,final HttpCallback httpResult) {
+        get(new RequestInfo(url, paramsMap), tag,httpResult);
     }
-    
+
     /**
      * get 请求
      * get
@@ -73,8 +77,8 @@ public class HttpTools {
      * @param httpResult
      * @since 3.5
      */
-    public void get(RequestInfo requestInfo, final HttpCallback httpResult) {
-        sendRequest(Request.Method.GET, requestInfo, httpResult);
+    public void get(RequestInfo requestInfo, Object tag, final HttpCallback httpResult) {
+        sendRequest(Request.Method.GET, requestInfo, tag, httpResult);
     }
 
     /**
@@ -83,10 +87,10 @@ public class HttpTools {
      * @param paramsMap
      * @param httpResult
      */
-    public void post(final String url, final Map<String, String> paramsMap, final HttpCallback httpResult) {
-        post(new RequestInfo(url, paramsMap), httpResult);
+    public void post(final String url, final Map<String, String> paramsMap, Object tag,final HttpCallback httpResult) {
+        post(new RequestInfo(url, paramsMap), tag, httpResult);
     }
-    
+
     /**
      * post请求
      * post
@@ -94,53 +98,55 @@ public class HttpTools {
      * @param httpResult
      * @since 3.5
      */
-    public void post(RequestInfo requestInfo, final HttpCallback httpResult) {
-        sendRequest(Request.Method.POST, requestInfo, httpResult);
+    public void post(RequestInfo requestInfo, Object tag,final HttpCallback httpResult) {
+        sendRequest(Request.Method.POST, requestInfo, tag, httpResult);
     }
-    
+
     /**
      * delete 请求
      * @param requestInfo
      * @param httpResult
      * @since 3.5
      */
-    public void delete(RequestInfo requestInfo, final HttpCallback httpResult) {
-        sendRequest(Request.Method.DELETE, requestInfo, httpResult);
+    public void delete(RequestInfo requestInfo, Object tag,final HttpCallback httpResult) {
+        sendRequest(Request.Method.DELETE, requestInfo, tag,httpResult);
     }
-    
+
     /**
      * put 请求
      * @param requestInfo
      * @param httpResult
      * @since 3.5
      */
-    public void put(RequestInfo requestInfo, final HttpCallback httpResult) {
-        sendRequest(Request.Method.PUT, requestInfo, httpResult);
+    public void put(RequestInfo requestInfo, Object tag,final HttpCallback httpResult) {
+        sendRequest(Request.Method.PUT, requestInfo, tag ,httpResult);
     }
-    
+
 
     /**
      * upload 请求
-     * 
+     *
      * @param url
-     * @param paramsMap
-     * @param fileParams
+     * @param params
+     * @param tag
      * @param httpResult
      * @since 3.4
      */
-    public void upload(final String url, final Map<String, Object> params, final HttpCallback httpResult) {
+    public void upload(final String url, final Map<String, Object> params,Object tag, final HttpCallback httpResult) {
     	RequestInfo requestInfo = new RequestInfo();
     	requestInfo.url = url;
-    	upload(requestInfo, httpResult);
+        requestInfo.putAllParams(params);
+    	upload(requestInfo, tag, httpResult);
     }
-    
+
     /**
      * upload 请求
      * @param requestInfo
+     * @param tag
      * @param httpResult
      */
-    public void upload(final RequestInfo requestInfo, final HttpCallback httpResult) {
-    	
+    public void upload(final RequestInfo requestInfo,Object tag, final HttpCallback httpResult) {
+
     	final String url = requestInfo.getUrl();
         if (TextUtils.isEmpty(url)) {
             if (httpResult != null) {
@@ -204,12 +210,12 @@ public class HttpTools {
                     httpResult.onCancelled();
                 }
             }
-            
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<String, String>();
-                headers.put("Charset", "UTF-8");
-                headers.putAll(requestInfo.getHeaders());
+//                Map<String, String> headers = new HashMap<String, String>();
+//                headers.put("Charset", "UTF-8");
+//                headers.putAll(HttpTools.getHeaders());
                 return headers;
             }
 
@@ -232,16 +238,16 @@ public class HttpTools {
                 request.addPart(key, entry.getValue());
             }
         }
-        request.setTag(this);
+        request.setTag(tag);
         sRequestQueue.add(request);
     }
-    
+
     public DownloadRequest download(String url, String target, final boolean isResume, final HttpCallback httpResult) {
     	RequestInfo requestInfo = new RequestInfo();
     	requestInfo.url = url;
     	return download(requestInfo, target, isResume, httpResult);
     }
-    
+
     public DownloadRequest download(final RequestInfo requestInfo, String target, final boolean isResume, final HttpCallback httpResult) {
     	final String url = requestInfo.getFullUrl();
     	VolleyLog.d("download->%s", url);
@@ -263,7 +269,7 @@ public class HttpTools {
                     httpResult.onFinish();
                 }
             }
-            
+
         }, new Response.LoadingListener() {
 
             @Override
@@ -280,7 +286,7 @@ public class HttpTools {
                     httpResult.onCancelled();
                 }
             }
-            
+
             @Override
             public void cancel() {
                 super.cancel();
@@ -288,16 +294,16 @@ public class HttpTools {
                     httpResult.onCancelled();
                 }
             }
-            
-            
+
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-            	Map<String, String> headers = super.getHeaders();
-            	if (headers != null) {
-            		headers.putAll(requestInfo.getHeaders());
-            	} else {
-            		headers = requestInfo.getHeaders();
-            	}
+//            	Map<String, String> headers = super.getHeaders();
+//            	if (headers != null) {
+//            		headers.putAll(HttpTools.getHeaders());
+//            	} else {
+//            		headers = HttpTools.getHeaders();
+//            	}
                 return headers;
             }
         };
@@ -313,27 +319,30 @@ public class HttpTools {
             }
             return request;
         }
+        /**启用缓存，wing 20150625*/
         if (sDownloadQueue == null) {
-            sDownloadQueue = Volley.newNoCacheRequestQueue(mContext);
+            sDownloadQueue = Volley.newRequestQueue(mContext);
+//            sDownloadQueue = Volley.newNoCacheRequestQueue(mContext);
         }
+        request.setShouldCache(true);
         sDownloadQueue.add(request);
         return request;
-    
+
     }
-    
+
     /**
      * 发送http请求
      * @param request
      */
-    public <T> void sendRequest(Request<T> request) {
+    public <T> void sendRequest(Request<T> request,Object tag) {
     	if (sRequestQueue == null) {
             sRequestQueue = Volley.newNoCacheRequestQueue(mContext);
         }
-    	request.setTag(this);
+    	request.setTag(tag);
         sRequestQueue.add(request);
     }
-    
-    private void sendRequest(final int method, final RequestInfo requestInfo, final HttpCallback httpResult) {
+
+    private void sendRequest(final int method, final RequestInfo requestInfo,Object tag, final HttpCallback httpResult) {
         if (sRequestQueue == null) {
             sRequestQueue = Volley.newNoCacheRequestQueue(mContext);
         }
@@ -372,7 +381,7 @@ public class HttpTools {
         }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) { 
+            public void onErrorResponse(VolleyError error) {
                 if (httpResult != null) {
                     httpResult.onError(error);
                     httpResult.onFinish();
@@ -395,38 +404,57 @@ public class HttpTools {
                     httpResult.onCancelled();
                 }
             }
-            
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 if (method == Request.Method.POST || method == Request.Method.PUT) {
-                    VolleyLog.d((method == Request.Method.POST ? "post->%s" : "put->%s"), requestInfo.getUrl() + ",params->" + requestInfo.getParams().toString());
                     return requestInfo.getParams();
-                } 
+                }
+
                 return super.getParams();
             }
-            
+
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                if(requestInfo.jsonParam!=null){
+                    return requestInfo.jsonParam.getBytes();
+                }
+                return super.getBody();
+            }
+
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return requestInfo.getHeaders();
+                return HttpTools.getHeaders();
             }
         };
-        request.setTag(this);
+        request.setTag(tag);
         sRequestQueue.add(request);
     }
-    
-    public void cancelAllRequest() {
+
+    public void cancelRequestByTag(Object tag){
         if (sRequestQueue != null) {
-            sRequestQueue.cancelAll(this);
+            sRequestQueue.cancelAll(tag);
         }
     }
-    
+
+    public void cancelAllRequest() {
+        if (sRequestQueue != null) {
+            sRequestQueue.cancelAll(new RequestQueue.RequestFilter() {
+                @Override
+                public boolean apply(Request<?> request) {
+                    return true;
+                }
+            });
+        }
+    }
+
     public void quitDownloadQueue() {
         if (sDownloadQueue != null) {
             sDownloadQueue.stop();
             sDownloadQueue = null;
         }
     }
-    
+
     public Map<String, String> urlEncodeMap(Map<String, String> paramsMap) {
         if (paramsMap != null && !paramsMap.isEmpty()) {
             Iterator<String> iterator = paramsMap.keySet().iterator();
