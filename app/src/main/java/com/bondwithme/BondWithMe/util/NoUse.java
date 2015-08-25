@@ -9,8 +9,9 @@ import java.util.List;
 
 /**
  * Created by christepherzhang on 15/8/25.
+ * @deprecated
  */
-public class RelationshipUtils {
+public class NoUse {
 
     public static String getLocaleRelationship(Context context, String str)
     {
