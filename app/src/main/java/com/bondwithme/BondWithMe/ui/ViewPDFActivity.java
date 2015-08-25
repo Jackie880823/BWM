@@ -7,6 +7,7 @@ import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelFileDescriptor;
@@ -27,7 +28,7 @@ import com.artifex.mupdfdemo.MuPDFPageAdapter;
 import com.artifex.mupdfdemo.MuPDFReaderView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 
@@ -42,6 +43,8 @@ import java.io.InputStreamReader;
 import uk.co.senab.photoview.PhotoView;
 
 public class ViewPDFActivity extends BaseActivity {
+    private static final String TAG = ViewPDFActivity.class.getSimpleName();
+    private static final String FAMILY_TREE_FILE_PATH_PARENT = Environment.getExternalStorageDirectory() + "/Download";
 
     WebView webView;
     public static final String PARAM_PDF_URL = "pdf_url";
@@ -315,7 +318,14 @@ public class ViewPDFActivity extends BaseActivity {
 
     public void getPdf(String urlString) {
 
-        final String target = FileUtil.getCacheFilePath(this) + String.format("/cache_%s.pdf", "" + System.currentTimeMillis());
+//        final String target = FileUtil.getCacheFilePath(this) + String.format("/cache_%s.pdf", "" + System.currentTimeMillis());
+
+        File treeDir = new File(FAMILY_TREE_FILE_PATH_PARENT);
+        boolean exists = treeDir.exists() || treeDir.mkdir();
+        LogUtil.i(TAG, "getTreeUrl& file path exists: " + exists);
+        final String target;
+        target = exists ? (FAMILY_TREE_FILE_PATH_PARENT + urlString.substring(urlString.lastIndexOf("/"))) : (Environment.getDataDirectory() + urlString.substring(urlString.lastIndexOf("/")));
+
 
         new HttpTools(this).download(urlString, target, true, new HttpCallback() {
             @Override
