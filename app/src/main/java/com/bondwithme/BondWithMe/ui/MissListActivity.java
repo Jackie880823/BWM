@@ -174,7 +174,9 @@ public class MissListActivity extends BaseActivity {
                 }
                 loading = false;
 
-                if (data.isEmpty() && !MissListActivity.this.isFinishing()){
+                if (!data.isEmpty()){
+                    tvNoDate.setVisibility(View.GONE);
+                }else if (data.isEmpty() && !MissListActivity.this.isFinishing()){
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_miss));
                 }
             }

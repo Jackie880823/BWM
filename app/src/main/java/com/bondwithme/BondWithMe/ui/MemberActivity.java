@@ -158,7 +158,9 @@ public class MemberActivity extends BaseActivity {
                 }.getType());
 
                 //no data!
-                if (data.isEmpty() && !MemberActivity.this.isFinishing()){
+                if (!data.isEmpty()){
+                    tvNoDate.setVisibility(View.GONE);
+                }else if (data.isEmpty() && !MemberActivity.this.isFinishing()){
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_members));
                 }
 
