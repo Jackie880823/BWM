@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui.family;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,8 @@ import com.android.volley.toolbox.DownloadRequest;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.ViewPDFActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.NumberProgressBar;
@@ -62,7 +65,9 @@ public class FamilyTreeActivity extends BaseActivity {
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTreeUrl();
+//                getTreeUrl();
+                String url = String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id());
+                showPDF(url);
             }
         });
     }
@@ -144,6 +149,16 @@ public class FamilyTreeActivity extends BaseActivity {
 
             }
         });
+    }
+
+
+
+    private void showPDF(String url) {
+        if (TextUtils.isEmpty(url))
+            return;
+        Intent intent = new Intent(this, ViewPDFActivity.class);
+        intent.putExtra(ViewPDFActivity.PARAM_PDF_URL, url);
+        startActivity(intent);
     }
 
     private void downloadTree(String url) {
