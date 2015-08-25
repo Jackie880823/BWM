@@ -375,7 +375,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         // 下面这句指定调用相机后存储的路径
         intent2.putExtra(MediaStore.EXTRA_OUTPUT, out);
         // 图片质量为高
-        intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.9);
         intent2.putExtra("return-data", true);
         startActivityForResult(intent2, request);
     }
