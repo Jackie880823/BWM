@@ -600,4 +600,5 @@
     <string name="text_audio_release">松开发送</string>
     <string name="text_audio_loosen_audition">松手试听</string>
     <string name="text_audio_cancle_send">松手取消发送</string>
+    <string name="text_previous">上一个</string>
 </resources>

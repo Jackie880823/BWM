@@ -70,13 +70,20 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     private ArrayList<FamilyMemberEntity> childrenMembers = new ArrayList<>();
 
     /**
+     * 点用户记录
+     */
+    private ArrayList<String> clickUseIds = new ArrayList<>();
+
+    /**
      * 加载视图
      */
     private RelativeLayout rlProgress;
     /**
-     * 返回提示
+     * 返回提示用户自己的树
      */
-    private TextView tvGoBack;
+    private TextView tvGoToMe;
+
+    private TextView tvPrevous;
 
 
     private String selectUseId;
@@ -109,15 +116,46 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
         initRecyclerView(siblingRelation);
         initRecyclerView(childrenRelation);
 
-        tvGoBack = getViewById(R.id.back_me_tv);
+        tvGoToMe = getViewById(R.id.back_me_tv);
+        tvPrevous = getViewById(R.id.previous_tv);
 
-        tvGoBack.setOnClickListener(new View.OnClickListener() {
+        tvGoToMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!selectUseId.equals(useId) && rlProgress.getVisibility() != View.VISIBLE) {
                     selectUseId = useId;
+                    //  返回用户清除记录
                     requestData();
                 }
+            }
+        });
+
+        tvPrevous.setEnabled(false);
+        tvPrevous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    selectUseId = getPrevious();
+                } catch(Exception e) {
+                    selectUseId = useId;
+                    tvPrevous.setEnabled(false);
+                } finally {
+                    requestData();
+                }
+            }
+
+            private String getPrevious() throws Exception {
+                String result = null;
+                if(!clickUseIds.isEmpty()) {
+                    result = clickUseIds.remove(clickUseIds.size() - 1);
+                    if(selectUseId.equals(result)) {
+                        result = getPrevious();
+                    }
+                    return result;
+                } else {
+                    throw new Exception("list size is empty");
+                }
+
             }
         });
 
@@ -138,9 +176,9 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     @Override
     public void requestData() {
         if(selectUseId.equals(useId)) {
-            tvGoBack.setText(R.string.text_me);
+            tvGoToMe.setText(R.string.text_me);
         } else {
-            tvGoBack.setText(R.string.go_back_to_me);
+            tvGoToMe.setText(R.string.go_back_to_me);
         }
 
         rlProgress.setVisibility(View.VISIBLE);
@@ -261,7 +299,10 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
         String entityUseId = entity.getUser_id();
         if(!selectUseId.equals(entityUseId)) {
             selectUseId = entity.getUser_id();
+            clickUseIds.add(entity.getUser_id());
             requestData();
+
+            tvPrevous.setEnabled(true);
         }
     }
 }
