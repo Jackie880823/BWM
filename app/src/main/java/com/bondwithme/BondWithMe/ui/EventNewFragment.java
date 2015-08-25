@@ -417,7 +417,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             progressBar.setVisibility(View.VISIBLE);
             RequestInfo requestInfo = new RequestInfo();
             requestInfo.url = Constant.API_EVENT_CREATE;
-            HashMap<String, String> params = new HashMap<String, String>();
+            HashMap<String, Object> params = new HashMap<String, Object>();
             params.put("content_type", "post");
             params.put("first_post", "1");
             params.put("group_event_date", mEevent.getGroup_event_date());
@@ -438,7 +438,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("text_description", event_desc.getText().toString());
             params.put("user_id", MainActivity.getUser().getUser_id());
             params.put("event_member", gson.toJson(setGetMembersIds(userList)));
-            requestInfo.params = params;
+            requestInfo.putAllParams(params);
 
             new HttpTools(getActivity()).post(requestInfo,Tag, new HttpCallback() {
                 @Override

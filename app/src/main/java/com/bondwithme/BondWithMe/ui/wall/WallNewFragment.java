@@ -100,6 +100,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private static final String PREFERENCE_KEY_OLD_GROUP_TEXT = "OLD_GROUP_TEXT";
     private static final String PREFERENCE_KEY_TEXT_CONTENT = "TEXT_CONTENT";
     private static final String PREFERENCE_KEY_VIDEO_PATH = "VIDEO_PATH";
+    private static final String PREFERENCE_KEY_VIDEO_DURATION = "VIDEO_DURATION";
 
     /**
      * 输入文字的TAB
@@ -136,6 +137,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     private String locationName;
     private List<Uri> pic_content;
     private Uri videoUri = Uri.EMPTY;
+    private String duration;
     private List<CompressBitmapTask> tasks;
 
     private double latitude;
@@ -246,6 +248,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                 pic_content = fragment2.getEditPic4Content();
 
                 videoUri = fragment2.getVideoUri();
+                duration = fragment2.getVideoDuration();
             }
             SharedPreferences.Editor editor = draftPreferences.edit();
             if(TextUtils.isEmpty(text_content) && pic_content.isEmpty() && Uri.EMPTY.equals(videoUri)) {
@@ -338,6 +341,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             editor.putInt(PREFERENCE_KEY_PIC_COUNT, i);
         } else if(!Uri.EMPTY.equals(videoUri)) {
             editor.putString(PREFERENCE_KEY_VIDEO_PATH, videoUri.toString());
+            editor.putString(PREFERENCE_KEY_VIDEO_DURATION, duration);
         }
 
         editor.putString(PREFERENCE_KEY_LOC_NAME, location_desc.getText().toString());
@@ -422,10 +426,13 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             pic_content = new ArrayList<>();
         } else {
             String videoUriStr = draftPreferences.getString(PREFERENCE_KEY_VIDEO_PATH, "");
+
             Log.i(TAG, "recoverDraft& videoUri: " + videoUriStr);
             if(!TextUtils.isEmpty(videoUriStr)) {
                 videoUri = Uri.parse(videoUriStr);
+                duration = draftPreferences.getString(PREFERENCE_KEY_VIDEO_DURATION, "");
                 fragment2.setVideoUri(videoUri);
+                fragment2.setVideoDuration(duration);
             }
         }
 
@@ -506,6 +513,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             pic_content = fragment2.getEditPic4Content();
 
             videoUri = fragment2.getVideoUri();
+            duration = fragment2.getVideoDuration();
         }
 
         if(TextUtils.isEmpty(text_content) && pic_content.isEmpty() && Uri.EMPTY.equals(videoUri)) {
@@ -547,15 +555,16 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
             params.put("video", "1");
             /**wing modifi for pic too big begin*/
             /**wing modifi for pic too big begin*/
-//            File f = new File(videoUri.getPath());
-//            params.put("file", f);
-//            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoUri.toString());
+            File f = new File(videoUri.getPath());
+            params.put("file", f);
+//            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoUri.toString(), new ImageSize(640, 480));
 //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
 //            String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
             String strThumbnail = LocalImageLoader.getVideoThumbnail(getActivity(),videoUri);
             strThumbnail = String.format("data:image/png;base64,%s", strThumbnail);
             params.put("video_thumbnail", strThumbnail);
+            params.put("video_duration", duration);
             LogUtil.i(TAG, "submitPic$ strThumbnail: " + strThumbnail);
         }
 
@@ -642,6 +651,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
             @Override
             public void onError(Exception e) {
+                e.printStackTrace();
                 mHandler.sendEmptyMessage(ACTION_FAILED);
             }
 

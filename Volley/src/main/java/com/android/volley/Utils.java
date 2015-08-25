@@ -1,5 +1,16 @@
 package com.android.volley;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.os.Build;
+import android.os.Environment;
+import android.os.StatFs;
+import android.os.StrictMode;
+import android.util.Log;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -7,16 +18,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
-
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.os.Build;
-import android.os.Environment;
-import android.os.StatFs;
-import android.os.StrictMode;
-import android.util.Log;
 
 public class Utils {
     
@@ -95,10 +96,13 @@ public class Utils {
         return (long) stats.getBlockSize() * (long) stats.getAvailableBlocks();
     }
     
-    // �ݹ�
+    // 计算文件夹下所有文件的大小
     public static long getFileSize(File f) {
         long size = 0;
         File flist[] = f.listFiles();
+        if (flist == null) {
+            return 0;
+        }
         for (int i = 0; i < flist.length; i++) {
             if (flist[i].isDirectory()) {
                 size = size + getFileSize(flist[i]);
@@ -210,11 +214,16 @@ public class Utils {
     public static void closeQuietly(/* Auto */Closeable closeable) {
         if (closeable != null) {
             try {
-                closeable.close();
+            	// fix a crash when use huawei old device
+                if (closeable instanceof Cursor) {
+                    ((Cursor)closeable).close();
+                } else {
+                    closeable.close();
+                }
             } catch (RuntimeException rethrown) {
                 throw rethrown;
             } catch (Exception ignored) {
-            }
+            } 
         }
     }
     

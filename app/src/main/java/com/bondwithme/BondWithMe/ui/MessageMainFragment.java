@@ -373,11 +373,11 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             return;
         }
         final RequestInfo requestInfo = new RequestInfo();
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("limit", DEF_DATA_NUM + "");
         int start = beginIndex * DEF_DATA_NUM;
         params.put("start", start + "");
-        requestInfo.params = params;
+        requestInfo.putAllParams(params);
         Log.i(TAG, beginIndex + "");
         requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "member");
         new Thread() {
@@ -519,11 +519,11 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         }
 
         final RequestInfo requestInfo = new RequestInfo();
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("limit", DEF_DATA_NUM + "");
         int start = beginIndex * DEF_DATA_NUM;
         params.put("start", start + "");
-        requestInfo.params = params;
+        requestInfo.putAllParams(params);
         requestInfo.url = String.format(Constant.API_GET_CHAT_MESSAGE_LIST, MainActivity.getUser().getUser_id(), "group");
         new Thread() {
             @Override
