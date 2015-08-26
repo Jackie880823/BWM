@@ -133,6 +133,7 @@ public class LocalMediaAdapter extends BaseAdapter {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.local_images_item_for_gridview, null);
             holder = new HolderView();
             holder.iv = (ImageView) convertView.findViewById(R.id.iv_pic);
+            holder.videoIcon = (ImageView) convertView.findViewById(R.id.video_icon_iv);
             holder.check = (CheckBox) convertView.findViewById(R.id.select_image_right);
             holder.llDuration = (LinearLayout) convertView.findViewById(R.id.duration_ll);
             holder.tvDuration = (TextView) convertView.findViewById(R.id.duration_tv);
@@ -159,10 +160,12 @@ public class LocalMediaAdapter extends BaseAdapter {
             MediaData mediaData = mDatas.get(position);
             if(MediaData.TYPE_VIDEO.equals(mediaData.getType())) {
                 holder.llDuration.setVisibility(View.VISIBLE);
+                holder.videoIcon.setVisibility(View.VISIBLE);
                 long duration = mediaData.getDuration();
                 holder.tvDuration.setText(MyDateUtils.formatDuration(duration));
             } else {
                 holder.llDuration.setVisibility(View.GONE);
+                holder.videoIcon.setVisibility(View.GONE);
             }
 
             // 需要显示选择框，并显设置点击监听事件
@@ -227,6 +230,7 @@ public class LocalMediaAdapter extends BaseAdapter {
 
     class HolderView {
         ImageView iv;
+        ImageView videoIcon;
         CheckBox check;
         LinearLayout llDuration;
         TextView tvDuration;

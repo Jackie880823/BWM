@@ -5,19 +5,21 @@
 
     <VideoView
         android:id="@+id/preview_video_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/default_content_padding"/>
 
 
     <ImageView
         android:id="@+id/delete_video_view"
-        android:layout_width="@dimen/default_small_button_width_height"
-        android:layout_height="@dimen/default_small_button_width_height"
+        android:layout_width="@dimen/default_icon_width_height"
+        android:layout_height="@dimen/default_icon_width_height"
         android:layout_alignRight="@+id/preview_video_view"
         android:layout_alignTop="@+id/preview_video_view"
         android:background="@color/translucence_color"
         android:contentDescription="@string/delete"
+        android:layout_margin="@dimen/default_content_padding"
         android:scaleType="centerInside"
         android:src="@drawable/x_delete_icon"/>
 
