@@ -167,7 +167,9 @@ public class AlertWallActivity extends BaseActivity {
                 }
                 loading = false;
 
-                if (data.isEmpty() && !AlertWallActivity.this.isFinishing()){
+                if (!data.isEmpty()){
+                    tvNoDate.setVisibility(View.GONE);
+                }else if (data.isEmpty() && !AlertWallActivity.this.isFinishing()){
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_diary));
                 }
             }

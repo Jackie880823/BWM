@@ -239,7 +239,9 @@ public class RecommendActivity extends BaseActivity {
 //                }
 //                loading =
 
-                if (data.isEmpty() && !RecommendActivity.this.isFinishing()){
+                if (!data.isEmpty()){
+                    tvNoDate.setVisibility(View.GONE);
+                }else if (data.isEmpty() && !RecommendActivity.this.isFinishing()){
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_recommended));
                 }
 
