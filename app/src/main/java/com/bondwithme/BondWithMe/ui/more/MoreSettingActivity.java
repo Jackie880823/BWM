@@ -7,9 +7,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
+import com.bondwithme.BondWithMe.widget.MyDialog;
 
 public class MoreSettingActivity extends BaseActivity implements View.OnClickListener{
 
@@ -18,6 +20,7 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
     private RelativeLayout rl3;
 
     private TextView tvVersion;
+    private MyDialog myDialog;
 
     @Override
     public int getLayout() {
@@ -60,6 +63,8 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
 
         tvVersion.setText(AppInfoUtil.getAppVersionName(MoreSettingActivity.this));
 
+        getViewById(R.id.btn_sign_out).setOnClickListener(this);
+
         rl1.setOnClickListener(this);
         rl2.setOnClickListener(this);
         rl3.setOnClickListener(this);
@@ -78,11 +83,44 @@ public class MoreSettingActivity extends BaseActivity implements View.OnClickLis
             case R.id.rl_3:
                 startActivity(new Intent(MoreSettingActivity.this, GroupPrivacyActivity.class));
                 break;
+            case R.id.btn_sign_out:
+                if (myDialog == null) {
+                    myDialog = new MyDialog(this, R.string.text_tips_title, R.string.msg_ask_exit_app);
+                    myDialog.setCanceledOnTouchOutside(false);
+                    myDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (myDialog != null) {
+                                myDialog.dismiss();
+                            }
+                        }
+                    });
+                    myDialog.setButtonAccept(R.string.accept, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myDialog.dismiss();
+                            App.logout(MoreSettingActivity.this);
+                        }
+                    });
+                }
+                if (!myDialog.isShowing())
+                    myDialog.show();
+
+                break;
+
             default:
                 super.onClick(v);
                 break;
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (myDialog != null) {
+            myDialog.dismiss();
+        }
     }
 
     @Override
