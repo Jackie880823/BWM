@@ -29,6 +29,7 @@ public class AudioPlayUtils {
             return;
         }
         try {
+            mp.reset();
             mp.setDataSource(path);
             mp.prepare();
             mp.start();
