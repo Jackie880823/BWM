@@ -37,11 +37,21 @@ public class AudioMediaRecorder {
     }
 
     public void stopRecord() {
-        if (mediaRecorder != null) {
-            mediaRecorder.stop();
-            mediaRecorder.release();
-            mediaRecorder = null;
-            mIsRecording = false;
+        try {
+            if (mediaRecorder != null) {
+                mediaRecorder.setOnErrorListener(null);
+                mediaRecorder.setPreviewDisplay(null);
+                mediaRecorder.stop();
+                mediaRecorder.release();
+                mediaRecorder = null;
+                mIsRecording = false;
+            }
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 }
