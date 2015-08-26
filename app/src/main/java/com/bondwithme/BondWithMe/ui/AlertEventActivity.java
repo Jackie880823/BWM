@@ -172,7 +172,9 @@ public class AlertEventActivity extends BaseActivity {
                 }
                 loading = false;
 
-                if (data.isEmpty() && !AlertEventActivity.this.isFinishing()){
+                if (!data.isEmpty()){
+                    tvNoDate.setVisibility(View.GONE);
+                }else if (data.isEmpty() && !AlertEventActivity.this.isFinishing()){
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_event));
                 }
             }
