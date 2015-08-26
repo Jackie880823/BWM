@@ -15,6 +15,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
 import com.bondwithme.BondWithMe.entity.RelationshipEnum;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.OnFamilyItemClickListener;
 import com.bondwithme.BondWithMe.util.RelationshipUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -106,7 +107,12 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         }
         int count = holder.getChildCount();
         // 一个View至少要有两个用户显示的View
-        int minSize = userEntities.size() > 2 ? userEntities.size() : 2;
+        int minSize;
+        if(member.getUser_id().equals(MainActivity.getUser().getUser_id())) {
+            minSize = userEntities.size() > 2 ? userEntities.size() : 2;
+        } else {
+            minSize = userEntities.size();
+        }
 
         if(count > minSize) {
             holder.removeViews(minSize, count - minSize);

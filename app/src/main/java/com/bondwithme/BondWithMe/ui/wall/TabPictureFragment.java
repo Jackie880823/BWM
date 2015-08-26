@@ -484,7 +484,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         clearPhotos();
 
         MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
-        metadataRetriever.setDataSource(getContext(), data.getData());
+        metadataRetriever.setDataSource(getActivity(), data.getData());
         videoDuration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         metadataRetriever.release();
         videoUri = data.getData();
