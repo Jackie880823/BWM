@@ -86,13 +86,13 @@ public class NotificationMessageGenerateUtil {
 
         String msg = null;
         if ("add".equals(action)) {
-            msg = context.getString(R.string.notification_action_member_add, action_owner, RelationshipUtil.getRelationshipName(context, "item_name"));
+            msg = context.getString(R.string.notification_action_member_add, action_owner, RelationshipUtil.getRelationshipName(context, item_name));
         } else if ("autoAcp".equals(action)) {
-            msg = context.getString(R.string.notification_action_member_autoAcp, action_owner, RelationshipUtil.getRelationshipName(context, "item_name"));
+            msg = context.getString(R.string.notification_action_member_autoAcp, action_owner, RelationshipUtil.getRelationshipName(context, item_name));
         } else if ("accept".equals(action)) {
             msg = context.getString(R.string.notification_action_member_accept, action_owner);
         } else if ("updateRel".equals(action)) {
-            msg = context.getString(R.string.notification_action_member_updateRel, action_owner, RelationshipUtil.getRelationshipName(context, "item_name"));
+            msg = context.getString(R.string.notification_action_member_updateRel, action_owner, RelationshipUtil.getRelationshipName(context, item_name));
         }
         return msg;
     }
