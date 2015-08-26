@@ -43,6 +43,7 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.util.AudioMediaRecorder;
 import com.bondwithme.BondWithMe.util.AudioPlayUtils;
 import com.bondwithme.BondWithMe.util.CustomLengthFilter;
 import com.bondwithme.BondWithMe.util.FileUtil;
@@ -54,13 +55,11 @@ import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.RoundProgressBarWidthNumber;
 import com.bondwithme.BondWithMe.widget.StickerLinearLayout;
-import com.czt.mp3recorder.MP3Recorder;
 import com.material.widget.Dialog;
 
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -175,7 +174,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private long voiceBeginTime = 0;
     private int mlCount = 1;
 
-    private MP3Recorder mRecorder;
+    private AudioMediaRecorder mRecorder;
     private Timer timer;
     private File audioFile;
 
@@ -478,7 +477,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         msgList = new ArrayList<>();
         groupId = getIntent().getStringExtra("groupId");
         titleName = getIntent().getStringExtra("titleName");
-        mRecorder = new MP3Recorder();
+        mRecorder = new AudioMediaRecorder();
         setView();
         setAllListener();
         imm = (InputMethodManager) getSystemService(
@@ -590,12 +589,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     bend_line.setVisibility(View.VISIBLE);
                     chat_mic_time.setVisibility(View.VISIBLE);
                     mic_iv.setImageResource(R.drawable.chat_voice_press);
-                    try {
-                        audioFile = FileUtil.saveAudioFile(mContext);
-                        mRecorder.start(audioFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+                    audioFile = FileUtil.saveAudioFile(mContext);
+                    mRecorder.startRecord(audioFile);
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
                     chat_mic_text.setText(R.string.text_audio_release);
                     voiceBeginTime = System.currentTimeMillis();
                     TimerTask task = new TimerTask() {
@@ -693,7 +692,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     @Override
                     public void onClick(View v) {
                         Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                        mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);//画质0.5
+                        mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.9);//画质0.5
                         //mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60000);//60s
                         mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 45 * 1024 * 1024);
                         startActivityForResult(mIntent, CAMERA_ACTIVITY);//CAMERA_ACTIVITY = 1
@@ -1256,7 +1255,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
                     case MotionEvent.ACTION_UP:
                         if (!isAudition) {
-                            mRecorder.stop();
+                            mRecorder.stopRecord();
                             boolean isInLeft = isInView(mic_left, event);
                             boolean isInRight = isInView(mic_right, event);
                             mic_iv.setImageResource(R.drawable.chat_voice);

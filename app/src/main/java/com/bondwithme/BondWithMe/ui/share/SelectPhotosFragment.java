@@ -150,7 +150,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             // 获取数据库中的视频资源游标
             String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA, MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION};
             String videoOrderBy = MediaStore.Video.Media.DATE_ADDED + " DESC";
-            String select = MediaStore.Video.VideoColumns.SIZE + "<=" + MediaData.MAX_SIZE;
+            String select = String.format("%s <= %d and %s >= %d", MediaStore.Video.VideoColumns.SIZE, MediaData.MAX_SIZE, MediaStore.Video.VideoColumns.DURATION, 1000);
             videoCursor = new CursorLoader(getActivity(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, select, null, videoOrderBy).loadInBackground();
         }
 

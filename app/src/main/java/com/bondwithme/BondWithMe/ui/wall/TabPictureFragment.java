@@ -4,8 +4,8 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.hardware.Camera;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -375,7 +375,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         // 下面这句指定调用相机后存储的路径
         intent2.putExtra(MediaStore.EXTRA_OUTPUT, out);
         // 图片质量为高
-        intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.9);
         intent2.putExtra("return-data", true);
         startActivityForResult(intent2, request);
     }
@@ -464,16 +464,6 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
                 // 调用用相机录制返回的视频数据
                 case REQUEST_HEAD_VIDEO:
-
-                    String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA,
-                            MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION};
-                    Uri uri = data.getData();
-                    Cursor cursor = getActivity().getContentResolver().query(uri, videoColumns, null, null, null);
-                    if (cursor != null && cursor.moveToNext()) {
-                        videoDuration = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION));
-                        cursor.close();
-                    }
-
                     addVideoFromActivityResult(data);
                     break;
 
@@ -493,9 +483,13 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     private void addVideoFromActivityResult(Intent data) {
         clearPhotos();
 
+        MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
+        metadataRetriever.setDataSource(getActivity(), data.getData());
+        videoDuration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        metadataRetriever.release();
         videoUri = data.getData();
-        videoDuration = data.getStringExtra(SelectPhotosActivity.RESULT_VIDEO_DURATION);
         LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
+        LogUtil.i(TAG, "addVideoFromActivityResult& videoDuration: " + videoDuration);
         MediaController mediaController = new MediaController(getActivity());
         mediaController.setAnchorView(vvDisplay);
         vvDisplay.setMediaController(mediaController);
