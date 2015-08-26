@@ -132,7 +132,6 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
             public void onClick(View v) {
                 if(!selectUseId.equals(useId) && rlProgress.getVisibility() != View.VISIBLE) {
                     selectUseId = useId;
-                    //  返回用户清除记录
                     requestData();
                 }
             }
@@ -185,6 +184,9 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     public void requestData() {
         if(selectUseId.equals(useId)) {
             btnGoToMe.setText(getString(R.string.text_me));
+
+            //  返回用户清除记录
+            clickUseIds.clear();
 
             // 上一步提示设置成白底黑字
             btnPrevious.setTextColor(Color.BLACK);
