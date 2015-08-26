@@ -167,7 +167,9 @@ public class NewsActivity extends BaseActivity {
                 }
                 loading = false;
 
-                if (data.isEmpty() && !NewsActivity.this.isFinishing()){
+                if (!data.isEmpty()){
+                    tvNoDate.setVisibility(View.GONE);
+                }else if (data.isEmpty() && !NewsActivity.this.isFinishing()){
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_news));
                 }
             }
