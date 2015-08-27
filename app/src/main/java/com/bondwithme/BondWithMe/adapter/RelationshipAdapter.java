@@ -15,7 +15,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
 import com.bondwithme.BondWithMe.entity.RelationshipEnum;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.OnFamilyItemClickListener;
 import com.bondwithme.BondWithMe.util.RelationshipUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -105,19 +104,13 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         if(spouse != null) {
             userEntities.addAll(spouse);
         }
-        int count = holder.getChildCount();
-        // 一个View至少要有两个用户显示的View
-        int minSize;
-        if(member.getUser_id().equals(MainActivity.getUser().getUser_id())) {
-            minSize = userEntities.size() > 2 ? userEntities.size() : 2;
-        } else {
-            minSize = userEntities.size();
-        }
 
+        int count = holder.getChildCount();
+        int minSize = userEntities.size();
         if(count > minSize) {
             holder.removeViews(minSize, count - minSize);
         } else if(count < minSize) {
-            addViews(holder, minSize - count);
+            addViews(holder, minSize - count, position);
         }
 
         if(this.type == RelationshipEnum.sibling) {
@@ -143,10 +136,11 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
     /**
      * 向{@code holder}中添加{@code count}个{@link FamilyMemberEntity}显示视图
      *
-     * @param holder 子项的视图封装实例
-     * @param count  需要添加的{@link FamilyMemberEntity}显示视图
+     * @param holder   子项的视图封装实例
+     * @param count    需要添加的{@link FamilyMemberEntity}显示视图
+     * @param position 数据列表位置
      */
-    private void addViews(RelationHolder holder, int count) {
+    private void addViews(RelationHolder holder, int count, int position) {
         for(int i = 0; i < count; i++) {
             View child = LayoutInflater.from(context).inflate(R.layout.relationship_item_layout, null);
             if(type == RelationshipEnum.sibling) {
@@ -158,7 +152,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
 
                 }
             });
-            holder.addView(child, i == count - 1);
+            holder.addView(child, i == count - 1 && position != 0);
         }
     }
 
