@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -16,10 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
-import android.widget.VideoView;
+import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -27,10 +25,12 @@ import com.bondwithme.BondWithMe.adapter.PickPicAdapter;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
+import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
 import com.bondwithme.BondWithMe.widget.MyDialog;
@@ -52,7 +52,7 @@ import java.util.Map;
  * Use the {@link TabPictureFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabPictureFragment extends BaseFragment<WallNewActivity> implements View.OnClickListener, MediaPlayer.OnPreparedListener {
+public class TabPictureFragment extends BaseFragment<WallNewActivity> implements View.OnClickListener{
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
      */
@@ -93,8 +93,9 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     /**
      * 得到的视频显示在这个控件上
      */
-    private VideoView vvDisplay;
+    private ImageView ivDisplay;
     private View previewVideoView;
+    private TextView tvDuration;
 
     private PickPicAdapter adapter;
 
@@ -152,14 +153,15 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         gvPictures = getViewById(R.id.gv_pictures);
 
         previewVideoView = LayoutInflater.from(getActivity()).inflate(R.layout.tab_picture_voide_view, null);
-        vvDisplay = (VideoView) previewVideoView.findViewById(R.id.preview_video_view);
+        tvDuration = (TextView) previewVideoView.findViewById(R.id.duration_tv);
+        ivDisplay = (ImageView) previewVideoView.findViewById(R.id.video_view_iv);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         previewVideoView.setLayoutParams(params);
 
         // 删除视频
         previewVideoView.findViewById(R.id.delete_video_view).setOnClickListener(this);
-        vvDisplay.setOnPreparedListener(this);
+        previewVideoView.findViewById(R.id.go_to_preview_video_iv).setOnClickListener(this);
 
         adapter = new PickPicAdapter(getActivity(), datas, R.layout.picture_item_for_gridview, new String[]{"pic_resId",}, new int[]{R.id.iv_pic});
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
@@ -193,9 +195,12 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         if(!uris.isEmpty()) {
             clearVideo();
             addDataAndNotify(uris);
-        } else if(!Uri.EMPTY.equals(videoUri)) {
-            clearPhotos();
-            vvDisplay.setVideoURI(videoUri);
+        } else {
+            if(!Uri.EMPTY.equals(videoUri)) {
+                clearPhotos();
+                ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
+                tvDuration.setText(MyDateUtils.formatDuration(videoDuration));
+            }
         }
     }
 
@@ -270,6 +275,12 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
             case R.id.delete_video_view:
                 clearVideo();
+                break;
+
+            case R.id.go_to_preview_video_iv:
+                Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
+                intent.putExtra(PreviewVideoActivity.EXTRA_VIDEO_URI, videoUri.toString());
+                startActivity(intent);
                 break;
         }
     }
@@ -492,20 +503,15 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     private void addVideoFromActivityResult(Intent data) {
         clearPhotos();
 
+        videoUri = data.getData();
         MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
-        metadataRetriever.setDataSource(getActivity(), data.getData());
+        metadataRetriever.setDataSource(getActivity(), videoUri);
         videoDuration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         metadataRetriever.release();
-        videoUri = data.getData();
         LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
         LogUtil.i(TAG, "addVideoFromActivityResult& videoDuration: " + videoDuration);
-        MediaController mediaController = new MediaController(getActivity());
-        mediaController.setAnchorView(vvDisplay);
-        vvDisplay.setMediaController(mediaController);
-        vvDisplay.setVideoURI(videoUri);
-        if(vvDisplay.isPlaying()) {
-            vvDisplay.stopPlayback();
-        }
+        ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
+        tvDuration.setText(MyDateUtils.formatDuration(videoDuration));
     }
 
     /**
@@ -578,9 +584,6 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     @Override
     public void onPause() {
         super.onPause();
-        if(vvDisplay.isPlaying()) {
-            vvDisplay.pause();
-        }
     }
 
     /**
@@ -600,19 +603,6 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(vvDisplay.isPlaying()) {
-            vvDisplay.stopPlayback();
-        }
         FileUtil.clearCache(getActivity());
-    }
-
-    /**
-     * Called when the media file is ready for playback.
-     *
-     * @param mp the MediaPlayer that is ready for playback
-     */
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        mp.start();
     }
 }
