@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -209,11 +210,15 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         final int residue = SelectPhotosActivity.MAX_SELECT - datas.size();
         if(residue <= 0) {
             MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), SelectPhotosActivity.MAX_SELECT));
-            return;
         }
+
         switch(v.getId()) {
             // 点击打开相册
             case R.id.ll_to_photo:
+                if(residue <= 0) {
+                    return;
+                }
+
                 if(!Uri.EMPTY.equals(videoUri)) {
                     // 已经选择了视频需要弹出提示
                     myDialog = new MyDialog(getParentActivity(), "", getParentActivity().getString(R.string.will_remove_selected_video));
@@ -240,6 +245,11 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
             // 点击打开相机
             case R.id.ll_to_camera:
+                if(residue <= 0) {
+                    openCameraAfterCheck(REQUEST_HEAD_VIDEO);
+                    return;
+                }
+
                 myDialog = new MyDialog(getParentActivity(), "", getActivity().getString(R.string.select_media));
                 myDialog.setButtonAccept(getParentActivity().getString(R.string.text_video), new View.OnClickListener() {
                     @Override
@@ -345,8 +355,8 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
          */
         intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
         intent.putExtra(MediaData.USE_VIDEO_AVAILABLE, true);
-        intent.putExtra(SelectPhotosActivity.EXTRA_SELECTED_PHOTOS, !datas.isEmpty());
-        intent.putExtra(SelectPhotosActivity.RESIDUE, residue);
+        intent.putParcelableArrayListExtra(SelectPhotosActivity.EXTRA_SELECTED_PHOTOS, (ArrayList<? extends Parcelable>) uris);
+        intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(intent, REQUEST_HEAD_PHOTO);
     }
@@ -434,6 +444,8 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
                             ArrayList<Uri> pickUris;
                             pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
+                            datas.clear();
+                            uris.clear();
                             addDataAndNotify(pickUris);
                             uris.addAll(pickUris);
                         }
