@@ -38,23 +38,24 @@
                     android:paddingRight="@dimen/_5dp"
                     android:text="Henry's Cat"
                     android:textSize="@dimen/text_large_size"/>
-                <ScrollView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_inside_sticker_name"
-                    android:layout_alignLeft="@+id/tv_inside_sticker_name"
-                    android:layout_above="@+id/tv_price"
-                    android:scrollbarAlwaysDrawVerticalTrack="true">
+                <!--<ScrollView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!-- -->
+                    <!--android:scrollbarAlwaysDrawVerticalTrack="true">-->
 
                     <TextView
                         android:id="@+id/tv_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingRight="@dimen/_5dp"
+                        android:layout_below="@+id/tv_inside_sticker_name"
+                        android:layout_alignLeft="@+id/tv_inside_sticker_name"
+                        android:layout_above="@+id/tv_price"
                         android:text=""
                         android:textSize="@dimen/text_small_size"
                         android:visibility="visible"/>
-                </ScrollView>
+                <!--</ScrollView>-->
                 
 
                 <TextView
