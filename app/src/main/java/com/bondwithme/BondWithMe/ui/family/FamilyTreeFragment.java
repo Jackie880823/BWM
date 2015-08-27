@@ -190,7 +190,7 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
 
             // 上一步提示设置成白底黑字
             btnPrevious.setTextColor(Color.BLACK);
-            btnPrevious.setBackgroundResource(R.color.transparent_color);
+            btnPrevious.setBackgroundColor(Color.WHITE);
         } else {
             btnGoToMe.setText(getString(R.string.go_back_to_me));
 
