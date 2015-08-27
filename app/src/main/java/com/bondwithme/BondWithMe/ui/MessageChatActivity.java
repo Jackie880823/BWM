@@ -1063,12 +1063,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case REQUEST_HEAD_PHOTO:
                     pickUries.clear();
                     if (data != null) {
-                        String type = data.getStringExtra(SelectPhotosActivity.RESULT_MEDIA_TYPE);
+                        String type = data.getStringExtra(MediaData.EXTRA_MEDIA_TYPE);
                         if (MediaData.TYPE_VIDEO.equals(type)) {
-                            long durationTime = data.getLongExtra(SelectPhotosActivity.RESULT_VIDEO_DURATION, 0);
+                            long durationTime = data.getLongExtra(MediaData.EXTRA_VIDEO_DURATION, 0);
                             uploadVideo(data.getData(), durationTime);
                         } else {
-                            ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
+                            ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
                             pickUries.addAll(uris);
                             for (Uri uri : pickUries) {
                                 MsgEntity msgEntity = new MsgEntity();
@@ -1139,7 +1139,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
      * 打开相机
      */
     private void openCamera() {
-        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent = new Intent(MediaData.ACTION_RECORDER_VIDEO);
         intent.putExtra("camerasensortype", 2);
         // 下面这句指定调用相机拍照后的照片存储的路径
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri

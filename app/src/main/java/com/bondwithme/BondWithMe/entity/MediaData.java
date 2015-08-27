@@ -16,11 +16,23 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
  * @version 2.0
  */
 public class MediaData {
+
+    /**
+     * 隐式启动录制视频的Activity
+     */
+    public static final String ACTION_RECORDER_VIDEO = "com.bondwithme.BondWithMe.RECORDER_VIDEO";
+
+
+    public static final String EXTRA_MEDIA_TYPE = "result_media_type";
+    public static final String EXTRA_VIDEO_DURATION = "duration";
+
     /**
      * <br>跳转至{@link SelectPhotosActivity}用{@link Intent#putExtra(String, boolean)}传递用于判断返回数据是否适
      * 用于第三方Universal Image Loader库来加载图片的第一个参数
      */
-    public final static String USE_UNIVERSAL = "USE_TO_UNIVERSAL";
+    public final static String EXTRA_USE_UNIVERSAL = "USE_TO_UNIVERSAL";
+
+    public final static String EXTRA_RETURN_DATA = "return-data";
 
     /**
      * <br>跳转至{@link SelectPhotosActivity}用{@link Intent#putExtra(String, boolean)}传递用于判断是否可以返回视频数据的第一个参数

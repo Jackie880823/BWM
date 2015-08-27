@@ -603,6 +603,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.family.FamilyTreeActivity"/>
+        <activity android:name=".ui.share.RecorderVideoActivity">
+            <intent-filter>
+                <action android:name="com.bondwithme.BondWithMe.RECORDER_VIDEO"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
     </application>
 
