@@ -33,10 +33,8 @@ public class SelectPhotosActivity extends BaseActivity {
 
     private static final String TAG = SelectPhotosActivity.class.getSimpleName();
 
-    public static final String IMAGES_STR = "images";
-    public static final String RESULT_MEDIA_TYPE = "result_media_type";
-    public static final String SELECTED_PHOTOS = "selected_photos";
-    public static final String RESULT_VIDEO_DURATION = "duration";
+    public static final String EXTRA_IMAGES_STR = "images";
+    public static final String EXTRA_SELECTED_PHOTOS = "selected_photos";
 
     public final static String RESIDUE = "residue";
     /**
@@ -229,7 +227,7 @@ public class SelectPhotosActivity extends BaseActivity {
                         uriList.add(mediaData.getContentUri());
                     }
                 }
-                intent.putParcelableArrayListExtra(IMAGES_STR, uriList);
+                intent.putParcelableArrayListExtra(EXTRA_IMAGES_STR, uriList);
                 setResult(RESULT_OK, intent);
             }
             finish();
@@ -248,7 +246,7 @@ public class SelectPhotosActivity extends BaseActivity {
         Intent intent = getIntent();
         // 是否为同时添加多张图片
         multi = intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        useUniversal = intent.getBooleanExtra(MediaData.USE_UNIVERSAL, false);
+        useUniversal = intent.getBooleanExtra(MediaData.EXTRA_USE_UNIVERSAL, false);
         useVideo = intent.getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
 
         // 总共需要添加的图片数量
@@ -350,9 +348,8 @@ public class SelectPhotosActivity extends BaseActivity {
      */
     private void resultVideo(MediaData mediaData) {
         Intent intent = new Intent();
-        intent.putExtra(RESULT_MEDIA_TYPE, MediaData.TYPE_VIDEO);
-        intent.putExtra(RESULT_VIDEO_DURATION, mediaData.getDuration());
-        intent.setType(MediaData.TYPE_VIDEO);
+        intent.putExtra(MediaData.EXTRA_MEDIA_TYPE, MediaData.TYPE_VIDEO);
+        intent.putExtra(MediaData.EXTRA_VIDEO_DURATION, mediaData.getDuration());
         intent.setData(Uri.parse(mediaData.getPath()));
         setResult(RESULT_OK, intent);
         finish();
