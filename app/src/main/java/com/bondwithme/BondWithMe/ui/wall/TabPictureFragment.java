@@ -356,7 +356,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      *
      * @param action  打开相机方式动作
      *                <br>{@link MediaStore#ACTION_IMAGE_CAPTURE} - 拍摄照片
-     *                <br>{@link MediaStore#ACTION_VIDEO_CAPTURE} - 拍摄视频
+     *                <br>{@link MediaData#ACTION_RECORDER_VIDEO} - 拍摄视频
      * @param request 请求代码
      *                <br>{@link #REQUEST_HEAD_IMAGE} - 拍照
      *                <br> {@link #REQUEST_HEAD_VIDEO} - 视频

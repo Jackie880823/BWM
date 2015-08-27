@@ -50,6 +50,7 @@ import android.widget.VideoView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MediaData;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
@@ -63,6 +64,7 @@ import java.util.List;
 
 /**
  * 录制视频
+ *
  * @author Jackie
  * @version 1.0
  */
@@ -102,7 +104,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
     private int previewHeight = 480;
     private Chronometer chronometer;
     /**
-     *  {@value CameraInfo#CAMERA_FACING_BACK}是后置摄像头，{@value CameraInfo#CAMERA_FACING_FRONT}是前置摄像头
+     * {@value CameraInfo#CAMERA_FACING_BACK}是后置摄像头，{@value CameraInfo#CAMERA_FACING_FRONT}是前置摄像头
      */
     private int frontCamera = 0;
     private Button btn_switch;
@@ -141,6 +143,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
 
     /**
      * 在本Activity的布局文件中返回箭头点击调用此函数，android:onClick="back"
+     *
      * @param view 返回箭头视图
      */
     public void back(View view) {
@@ -161,10 +164,10 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
         //		if (!initCamera()) {
         //			showFailDialog();
         //		}
+        Thread.getDefaultUncaughtExceptionHandler();
     }
 
     /**
-     *
      * @return
      */
     @SuppressLint("NewApi")
@@ -354,6 +357,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
 
     /**
      * 初始化{@link MediaRecorder}参数
+     *
      * @return {@value false}:设置失败；{@value true}:设置成功
      */
     private boolean initRecorder() {
@@ -402,7 +406,11 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
 
         // 获取视频文件输出的路径
         Uri uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-        localPath = uri.getPath();
+        if(uri == null || Uri.EMPTY.equals(uri)) {
+            localPath = FileUtil.getVideoRootPath(this) + "/" + System.currentTimeMillis() + ".mp4";
+        } else {
+            localPath = uri.getPath();
+        }
         // 设置输入目录
         mMediaRecorder.setOutputFile(localPath);
 
@@ -544,15 +552,22 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
 
                         MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
                         metadataRetriever.setDataSource(getBaseContext(), uri);
-                        String videoDuration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                        String durationStr = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
                         metadataRetriever.release();
-                        LogUtil.i(TAG, "scanner completed&: duration = " + videoDuration);
+                        long duration = Long.valueOf(durationStr);
+                        LogUtil.i(TAG, "scanner completed&: duration = " + duration);
+                        if(duration > 0) {
+                            Intent intent = new Intent();
+                            intent.putExtra(MediaData.EXTRA_MEDIA_TYPE, MediaData.TYPE_VIDEO);
+                            intent.putExtra(MediaData.EXTRA_VIDEO_DURATION, Long.valueOf(durationStr));
+                            intent.setData(Uri.parse(ImageDownloader.Scheme.FILE.wrap(path)));
+                            setResult(RESULT_OK, intent);
+                        } else {
+                            setResult(RESULT_CANCELED);
+                            File file = new File(path);
+                            file.deleteOnExit();
+                        }
 
-                        Intent intent = new Intent();
-                        intent.putExtra(MediaData.EXTRA_MEDIA_TYPE, MediaData.TYPE_VIDEO);
-                        intent.putExtra(MediaData.EXTRA_VIDEO_DURATION, videoDuration);
-                        intent.setData(Uri.parse(ImageDownloader.Scheme.FILE.wrap(path)));
-                        setResult(RESULT_OK, intent);
                     } else {
                         setResult(RESULT_OK);
                     }
