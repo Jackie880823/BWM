@@ -183,7 +183,6 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     @Override
     public void requestData() {
         if(selectUseId.equals(useId)) {
-            tvGoToMe.setText(getString(R.string.text_me));
 
             //  返回用户清除记录
             clickUseIds.clear();
@@ -193,8 +192,6 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
             tvPrevious.setEnabled(false);
 //            tvPrevious.setBackgroundColor(Color.WHITE);
         } else {
-            tvGoToMe.setText(getString(R.string.go_back_to_me));
-
             // 上一步提示设置成黑底白字
             tvPrevious.setTextColor(Color.WHITE);
             tvPrevious.setEnabled(false);
