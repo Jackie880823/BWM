@@ -145,7 +145,6 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
                     selectUseId = getPrevious();
                 } catch(Exception e) {
                     selectUseId = useId;
-                    tvPrevious.setEnabled(false);
                 } finally {
                     requestData();
                 }
@@ -194,7 +193,7 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
         } else {
             // 上一步提示设置成黑底白字
             tvPrevious.setTextColor(Color.WHITE);
-            tvPrevious.setEnabled(false);
+            tvPrevious.setEnabled(true);
 //            tvPrevious.setBackgroundColor(Color.BLACK);
         }
 
@@ -318,8 +317,6 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
             selectUseId = entity.getUser_id();
             clickUseIds.add(entity.getUser_id());
             requestData();
-
-            tvPrevious.setEnabled(true);
         }
     }
 }
