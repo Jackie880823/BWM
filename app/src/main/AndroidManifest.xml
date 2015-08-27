@@ -602,14 +602,17 @@
 
         <activity android:name=".ui.PickAndCropPictureActivity"></activity>
         <activity android:name=".ui.CrashActivity" android:noHistory="true" android:launchMode="singleTop" android:excludeFromRecents="true"></activity>
-        <activity android:name=".ui.share.PreviewVideoActivity">
+        <activity android:name=".ui.share.PreviewVideoActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.bondwithme.BondWithMe.ui.PreviewVideoActivity"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.family.FamilyTreeActivity"/>
-        <activity android:name=".ui.share.RecorderVideoActivity">
+        <activity android:name=".ui.family.FamilyTreeActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.share.RecorderVideoActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.bondwithme.BondWithMe.RECORDER_VIDEO"/>
                 <category android:name="android.intent.category.DEFAULT"/>
