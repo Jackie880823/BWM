@@ -10,14 +10,14 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.more.AboutActivity;
 import com.bondwithme.BondWithMe.ui.more.ArchiveActivity;
 import com.bondwithme.BondWithMe.ui.more.MoreSettingActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
-import com.bondwithme.BondWithMe.widget.MyDialog;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,9 +32,13 @@ import org.json.JSONObject;
  */
 public class MoreFragment extends BaseFragment<MainActivity> implements View.OnClickListener {
 
-    private MyDialog myDialog;
+
     private TextView tv_num;
     private TextView tvVersion;
+
+    private TextView news_alert_num;
+    private TextView member_alert_num;
+    private TextView recommend_alert_num;
 
     public static MoreFragment newInstance(String... params) {
         return createInstance(new MoreFragment(), params);
@@ -67,17 +71,87 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         getViewById(R.id.btn_setting).setOnClickListener(this);
         getViewById(R.id.btn_sticker_store).setOnClickListener(this);
         getViewById(R.id.btn_about_us).setOnClickListener(this);
-        getViewById(R.id.btn_contact_us).setOnClickListener(this);
-        getViewById(R.id.btn_terms).setOnClickListener(this);
-        getViewById(R.id.btn_sign_out).setOnClickListener(this);
+//        getViewById(R.id.btn_contact_us).setOnClickListener(this);
+//        getViewById(R.id.btn_terms).setOnClickListener(this);
         getViewById(R.id.btn_archive).setOnClickListener(this);
+        getViewById(R.id.btn_alert_member).setOnClickListener(this);
+        getViewById(R.id.btn_alert_news).setOnClickListener(this);
+        getViewById(R.id.btn_alert_recommend).setOnClickListener(this);
+
+        news_alert_num = getViewById(R.id.news_alert_num);
+        member_alert_num = getViewById(R.id.member_alert_num);
+        recommend_alert_num = getViewById(R.id.recommend_alert_num);
 
         tvVersion = getViewById(R.id.tv_version);
         tvVersion.setText("V " + AppInfoUtil.getAppVersionName(getActivity()));
-
-
         tv_num = getViewById(R.id.tv_num);
 
+    }
+
+
+
+
+    private void bondDatas(JSONObject jsonObject) throws JSONException {
+        checkDataAndBond2View(news_alert_num,jsonObject.getString("news"));
+        checkDataAndBond2View(member_alert_num,jsonObject.getString("member"));
+        checkDataAndBond2View(recommend_alert_num,jsonObject.getString("recommended"));
+    }
+
+    private void checkDataAndBond2View(TextView view, String countString){
+        int count = Integer.valueOf(countString);
+
+        if (count > 99) {
+            count = 99;
+        }
+
+        if (count == 0) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setVisibility(View.VISIBLE);
+            view.setText("" + count);
+        }
+    }
+
+    public void getNum()
+    {
+
+
+        new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_MODULES_COUNT, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
+            @Override
+            public void onStart() {
+//                mProgressDialog.show();
+            }
+
+            @Override
+            public void onFinish() {
+//                mProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    bondDatas(jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
 
@@ -158,60 +232,48 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
             case R.id.btn_archive:
                 goArchive();
                 break;
+            case R.id.btn_alert_member:
+                v.findViewById(R.id.member_alert_num).setVisibility(View.GONE);
+                goMember();
+                break;
+            case R.id.btn_alert_news:
+                v.findViewById(R.id.news_alert_num).setVisibility(View.GONE);
+                goNews();
+                break;
+            case R.id.btn_alert_recommend:
+                v.findViewById(R.id.recommend_alert_num).setVisibility(View.GONE);
+                goRecommendAlert();
+                break;
             case R.id.btn_about_us:
                 goAbout();
-                break;
-            case R.id.btn_contact_us:
-                contactUs();
-                break;
-            case R.id.btn_terms:
-                showTerms();
-                break;
-            case R.id.btn_sign_out:
-                if (myDialog == null) {
-                    myDialog = new MyDialog(getActivity(), R.string.text_tips_title, R.string.msg_ask_exit_app);
-                    myDialog.setCanceledOnTouchOutside(false);
-                    myDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (myDialog != null) {
-                                myDialog.dismiss();
-                            }
-                        }
-                    });
-                    myDialog.setButtonAccept(R.string.accept, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            myDialog.dismiss();
-                            App.logout(getActivity());
-                        }
-                    });
-                }
-                if (!myDialog.isShowing())
-                    myDialog.show();
-
                 break;
         }
     }
 
-    private void showTerms() {
-        Intent intent = new Intent(getActivity(), TermsActivity.class);
+    private void goMember() {
+        Intent intent = new Intent(getActivity(), MemberActivity.class);
         startActivity(intent);
     }
+
+
+
+    private void goNews() {
+        Intent intent = new Intent(getActivity(), NewsActivity.class);
+        startActivity(intent);
+    }
+
+    private void goRecommendAlert() {
+        Intent intent = new Intent(getActivity(), RecommendActivity.class);
+        startActivity(intent);
+    }
+
+
 
     private void shareApp() {
         share2Friend();
     }
 
-    private void contactUs() {
-        Intent intent = new Intent(getActivity(), ContactUsActivity.class);
-        startActivity(intent);
-    }
 
-    private void goAbout() {
-        Intent intent = new Intent(getActivity(), AboutUsActivity.class);
-        startActivity(intent);
-    }
 
     private void goBondAlert() {
 
@@ -253,11 +315,13 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         startActivity(intent);
     }
 
+    private void goAbout() {
+        Intent intent = new Intent(getActivity(),AboutActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onDestroy() {
-        if (myDialog != null) {
-            myDialog.dismiss();
-        }
         super.onDestroy();
     }
 
@@ -278,5 +342,6 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     public void onResume() {
         super.onResume();
         requestData();
+        getNum();
     }
 }
