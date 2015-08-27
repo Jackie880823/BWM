@@ -229,7 +229,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
 
     public static String formatDuration(String durationStr) {
         String result;
-        if(TextUtils.isEmpty(durationStr) || durationStr.contains(":")) {
+        if (TextUtils.isEmpty(durationStr) || durationStr.contains(":")) {
             result = durationStr;
         } else {
             long duration = Long.valueOf(durationStr);
@@ -240,7 +240,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
 
     public static String formatDuration(long duration) {
         String result;
-        if(duration >0 ) {
+        if (duration > 0) {
             int h = (int) (duration / 3600000);
             int m = (int) (duration % 3600000 / 60000);
             int s = (int) (duration % 3600000 % 60000 / 1000);
@@ -249,5 +249,10 @@ public class MyDateUtils extends android.text.format.DateUtils {
             result = "";
         }
         return result;
+    }
+
+    public static String getUTCDateFromNowTime(Context context) {
+        long timestamp = System.currentTimeMillis();
+        return getLocalDateStringFromUTC(context, getUTCDateString4DefaultFromLocal(timestamp));
     }
 }

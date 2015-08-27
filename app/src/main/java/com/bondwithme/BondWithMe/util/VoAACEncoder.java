@@ -1,4 +1,4 @@
-package com.sinaapp.bashell;
+package com.bondwithme.BondWithMe.util;
 
 public class VoAACEncoder {
 	static {

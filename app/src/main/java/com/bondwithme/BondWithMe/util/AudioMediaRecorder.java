@@ -4,8 +4,6 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 
-import com.sinaapp.bashell.VoAACEncoder;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
