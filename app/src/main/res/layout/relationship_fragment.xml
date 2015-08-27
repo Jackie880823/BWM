@@ -26,24 +26,25 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:padding="@dimen/default_content_padding"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/back_me_tv"
-                style="@style/text_user_name"
+            <Button
+                android:id="@+id/back_me_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:paddingLeft="@dimen/default_content_padding"
-                android:paddingTop="@dimen/default_content_padding"
+                android:singleLine="true"
                 android:text="@string/text_me"
                 android:textColor="@color/family_tree_hint_color_text"
                 android:textSize="@dimen/text_medium_size"/>
 
-            <TextView
-                android:id="@+id/previous_tv"
-                style="@style/text_user_name"
+            <Button
+                android:id="@+id/previous_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:paddingRight="@dimen/default_content_padding"
-                android:paddingTop="@dimen/default_content_padding"
+                android:singleLine="true"
                 android:text="@string/text_previous"
                 android:textColor="@color/family_tree_hint_color_text"
                 android:textSize="@dimen/text_medium_size"/>
