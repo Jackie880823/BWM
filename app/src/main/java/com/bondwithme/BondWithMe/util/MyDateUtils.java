@@ -239,16 +239,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
     }
 
     public static String formatDuration(long duration) {
-        String result;
-        if (duration > 0) {
-            int h = (int) (duration / 3600000);
-            int m = (int) (duration % 3600000 / 60000);
-            int s = (int) (duration % 3600000 % 60000 / 1000);
-            result = String.format("%1$02d:%2$02d:%3$02d", h, m, s);
-        } else {
-            result = "";
-        }
-        return result;
+        return DateUtils.formatElapsedTime(duration/1000);
     }
 
     public static String getUTCDateFromNowTime(Context context) {
