@@ -355,7 +355,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         if (uri != null) {
                             audioMsgEntity.setVideo_format2(uri);
                         }
-                        audioMsgEntity.setContent_creation_date(MyDateUtils.formatDate2Default(new Date()));
+                        audioMsgEntity.setContent_creation_date(MyDateUtils.getUTCDateString4DefaultFromLocal(System.currentTimeMillis()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1346,7 +1346,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         params.put("file", file);
         MsgEntity msgEntity = new MsgEntity();
         msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-        msgEntity.setContent_creation_date(MyDateUtils.formatDate2Default(new Date()));
+        msgEntity.setContent_creation_date(MyDateUtils.getUTCDateString4DefaultFromLocal(System.currentTimeMillis()));
         String audioFile = file.getAbsolutePath();
         audioFile = audioFile.substring(audioFile.lastIndexOf(File.separator) + 1);
         if (!isAudio) {
