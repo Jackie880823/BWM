@@ -39,7 +39,6 @@ public class PicturesCacheUtil extends FileUtil {
 
 
     /**
-     * //TODO 去掉这个方法
      *
      * @param context
      */

@@ -165,6 +165,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
             String target;
             File file = new File(targetParent);
             boolean canWrite = file.exists() || file.mkdir();
+            //.....
             target = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(this) + String.format("/%s", fileName);
 
             downloadVideo(url, target);

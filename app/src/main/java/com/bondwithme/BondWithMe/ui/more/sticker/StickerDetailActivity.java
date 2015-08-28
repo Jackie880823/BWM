@@ -28,7 +28,6 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

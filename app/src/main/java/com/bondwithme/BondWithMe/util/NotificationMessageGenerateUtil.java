@@ -107,7 +107,7 @@ public class NotificationMessageGenerateUtil {
                 msg = action_owner + ":" + snippet;
 //                msg = context.getString(R.string.notification_action_message_postText_personal, action_owner);
             } else {
-                msg = item_name + "-" + action_owner + ":" + snippet;
+                msg = action_owner+"@"+item_name + ":" + snippet;
 //                msg = context.getString(R.string.notification_action_message_postText_group, action_owner, item_name);
             }
         } else if ("postSticker".equals(action)) {

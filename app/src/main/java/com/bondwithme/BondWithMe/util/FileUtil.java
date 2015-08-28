@@ -93,8 +93,7 @@ public class FileUtil {
      * @return
      */
     public static String getCacheFilePath(Context context) {
-        //缓存改放泥沙盒，保证不被意外删除
-        File f = getSaveRootPath(context, false);
+        File f = getSaveRootPath(context, true);
 
         f = new File(f.getAbsolutePath() + CACHE_DIR_NAME);
         if (!f.exists()) {
@@ -203,12 +202,6 @@ public class FileUtil {
         return filePaths;
     }
 
-    
-    /**
-     * 定制的路径，应该写在自己的类里
-     * @param context
-     * @return
-     */
     public static String getBannerFilePath(Context context) {
         File f = getSaveRootPath(context, false);
 
@@ -219,11 +212,7 @@ public class FileUtil {
 
         return f.getAbsolutePath();
     }
-    /**
-     * 定制的路径，应该写在自己的类里
-     * @param context
-     * @return
-     */
+
     public static void deleteBanner(Context context) {
         File fileRoot = new File(getBannerFilePath(context));
         LogUtil.d("FileUtil", "===fileRoot===" + fileRoot.getAbsolutePath());
@@ -239,39 +228,15 @@ public class FileUtil {
 
     private static final String RECORD = "Audio";
     private static final String VIDEO = "Video";
-    /**
-     * 定制的路径，应该写在自己的类里
-     * @param mContext
-     * @return
-     */
-    public static File saveAudioCacheFile(Context mContext) {
-        return new File(getAudioCachePath(mContext) + File.separator + System.currentTimeMillis() + ".aac");
+
+    public static File saveAudioFile(Context mContext) {
+        return new File(getAudioRootPath(mContext) + File.separator + System.currentTimeMillis() + ".aac");
     }
 
-    /**
-     * 定制的路径，应该写在自己的类里
-     * @param mContext
-     * @return
-     */
-    public static String getAudioCachePath(Context mContext) {
-//        File bootFile = getSaveRootPath(mContext, false);
-//        String filePath = bootFile.getAbsolutePath();
-        String filePath = getCacheFilePath(mContext) + File.separator + App.getLoginedUser().getUser_id() + File.separator + RECORD;
-        File file = new File(filePath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        return filePath;
-    }
-    /**
-     * 定制的路径，应该写在自己的类里
-     * @param mContext
-     * @return
-     */
-    public static String getVideoCachePath(Context mContext) {
-//        File bootFile = getSaveRootPath(mContext, false);
-//        String filePath = bootFile.getAbsolutePath();
-        String filePath = getCacheFilePath(mContext) + File.separator + App.getLoginedUser().getUser_id() + File.separator + VIDEO;
+    public static String getAudioRootPath(Context mContext) {
+        File bootFile = getSaveRootPath(mContext, true);
+        String filePath = bootFile.getAbsolutePath();
+        filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + RECORD;
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdirs();
@@ -279,4 +244,18 @@ public class FileUtil {
         return filePath;
     }
 
+    public static File saveVideoFile(Context mContext) {
+        return new File(getVideoRootPath(mContext) + File.separator + System.currentTimeMillis() + ".mp4");
+    }
+
+    public static String getVideoRootPath(Context mContext) {
+        File bootFile = getSaveRootPath(mContext, true);
+        String filePath = bootFile.getAbsolutePath();
+        filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + VIDEO;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return filePath;
+    }
 }

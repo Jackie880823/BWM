@@ -38,8 +38,8 @@ public class HttpTools {
     private static Map<String, String> headers = new HashMap<String, String>();
 
     public HttpTools(Context context) {
-//        mContext = context.getApplicationContext();
-        mContext = context;
+        mContext = context.getApplicationContext();
+//        mContext = context;
     }
 
     public static void init(Context context) {
