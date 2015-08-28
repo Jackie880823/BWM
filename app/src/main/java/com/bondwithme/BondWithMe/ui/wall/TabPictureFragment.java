@@ -367,7 +367,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
         intent.putExtra(MediaData.USE_VIDEO_AVAILABLE, true);
         intent.putParcelableArrayListExtra(SelectPhotosActivity.EXTRA_SELECTED_PHOTOS, (ArrayList<? extends Parcelable>) uris);
-        intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
+//        intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(intent, REQUEST_HEAD_PHOTO);
     }
