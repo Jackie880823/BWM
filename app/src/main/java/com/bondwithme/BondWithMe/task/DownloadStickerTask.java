@@ -223,7 +223,7 @@ public class DownloadStickerTask {
     }
 
     public void downloadAudioFile(Context mContext, String audioSendId, String fileName) {
-        final String path = FileUtil.getAudioRootPath(mContext) + File.separator + fileName;
+        final String path = FileUtil.getAudioCachePath(mContext) + File.separator + fileName;
         File file = new File(path);
         if (file.exists()) {
             return;

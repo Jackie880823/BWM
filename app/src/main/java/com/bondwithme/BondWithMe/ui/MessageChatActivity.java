@@ -589,7 +589,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     chat_mic_time.setVisibility(View.VISIBLE);
                     mic_iv.setImageResource(R.drawable.chat_voice_press);
 //                    try {
-                    audioFile = FileUtil.saveAudioFile(mContext);
+                    audioFile = FileUtil.saveAudioCacheFile(mContext);
                     mRecorder.startRecord(audioFile);
 //                    } catch (IOException e) {
 //                        e.printStackTrace();

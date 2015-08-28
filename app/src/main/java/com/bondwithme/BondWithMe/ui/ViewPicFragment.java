@@ -191,7 +191,8 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
             public void onClick(View v) {
                 if (bitmapCache != null && !bitmapCache.isRecycled()) {
                     try {
-                        PicturesCacheUtil.saveImageToGallery(getActivity(), bitmapCache, "wall");
+                        String path = PicturesCacheUtil.saveImageToGallery(getActivity(), bitmapCache, "wall");
+                        MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.saved_to_path) + path);
                     } catch (Exception e) {
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
                     }

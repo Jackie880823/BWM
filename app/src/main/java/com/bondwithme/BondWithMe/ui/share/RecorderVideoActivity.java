@@ -407,7 +407,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
         // 获取视频文件输出的路径
         Uri uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
         if(uri == null || Uri.EMPTY.equals(uri)) {
-            localPath = FileUtil.getVideoRootPath(this) + "/" + System.currentTimeMillis() + ".mp4";
+            localPath = FileUtil.getVideoCachePath(this) + "/" + System.currentTimeMillis() + ".mp4";
         } else {
             localPath = uri.getPath();
         }

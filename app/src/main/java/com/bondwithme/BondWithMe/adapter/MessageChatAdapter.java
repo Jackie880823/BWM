@@ -605,7 +605,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                         }
                     }
                     clickPosition = position;
-                    String path = FileUtil.getAudioRootPath(context) + File.separator + msgEntity.getAudio_filename();
+                    String path = FileUtil.getAudioCachePath(context) + File.separator + msgEntity.getAudio_filename();
                     AudioPlayUtils.getInstance(path).playAudio();
                     Map<String, Object> map = new HashMap<>();
                     String audioDuration = msgEntity.getAudio_duration();

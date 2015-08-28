@@ -38,8 +38,8 @@ public class HttpTools {
     private static Map<String, String> headers = new HashMap<String, String>();
 
     public HttpTools(Context context) {
-//        mContext = context.getApplicationContext();
-        mContext = context;
+        mContext = context.getApplicationContext();
+//        mContext = context;
     }
 
     public static void init(Context context) {
@@ -242,12 +242,28 @@ public class HttpTools {
         sRequestQueue.add(request);
     }
 
+    /**
+     *
+     * @param url
+     * @param target 位置
+     * @param isResume 是否要断线续传
+     * @param httpResult 回调接口
+     * @return
+     */
     public DownloadRequest download(String url, String target, final boolean isResume, final HttpCallback httpResult) {
     	RequestInfo requestInfo = new RequestInfo();
     	requestInfo.url = url;
     	return download(requestInfo, target, isResume, httpResult);
     }
 
+    /**
+     *
+     * @param requestInfo
+     * @param target 位置
+     * @param isResume 是否要断线续传
+     * @param httpResult 回调接口
+     * @return
+     */
     public DownloadRequest download(final RequestInfo requestInfo, String target, final boolean isResume, final HttpCallback httpResult) {
     	final String url = requestInfo.getFullUrl();
     	VolleyLog.d("download->%s", url);
@@ -324,7 +340,7 @@ public class HttpTools {
             sDownloadQueue = Volley.newRequestQueue(mContext);
 //            sDownloadQueue = Volley.newNoCacheRequestQueue(mContext);
         }
-        request.setShouldCache(true);
+//        request.setShouldCache(true);
         sDownloadQueue.add(request);
         return request;
 

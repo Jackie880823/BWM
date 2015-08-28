@@ -3,6 +3,8 @@ package com.bondwithme.BondWithMe.ui;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.Build;
@@ -49,7 +51,6 @@ public class ViewPDFActivity extends BaseActivity {
     WebView webView;
     public static final String PARAM_PDF_URL = "pdf_url";
     private String mFilePath;
-    private int currentPage;
     private View vProgress;
 
     @Override
@@ -277,7 +278,10 @@ public class ViewPDFActivity extends BaseActivity {
     private static final int REQUEST_ERROR = 9;
     private static final int SHOW_PDF = 10;
     private static final int RECEIVE_PDF_INFO = 11;
+    private int currentPage;
+    PdfRenderer renderer = null;
     private Handler mHandler = new Handler(new Handler.Callback() {
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
@@ -286,7 +290,44 @@ public class ViewPDFActivity extends BaseActivity {
                     vProgress.setVisibility(View.GONE);
                     File file = new File(target);
                     if (file.exists()) {
-                        showPDF(target);
+                        if(SDKUtil.IS_L) {
+                            mImageView = getViewById(R.id.image);
+                            int REQ_WIDTH = mImageView.getWidth()*2;
+                            int REQ_HEIGHT = mImageView.getHeight()*2;
+                            Bitmap mBitmap = Bitmap.createBitmap(REQ_WIDTH, REQ_HEIGHT, Bitmap.Config.ARGB_4444);
+                            try {
+                                renderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY));
+                                if(currentPage<0){
+                                    currentPage = 0;
+                                }else if(currentPage>renderer.getPageCount()){
+                                    currentPage = renderer.getPageCount()-1;
+                                }
+                                Matrix m = mImageView.getImageMatrix();
+                                Rect rect = new Rect(0,0,REQ_WIDTH,REQ_HEIGHT);
+                                renderer.openPage(currentPage).render(mBitmap, rect, m, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+                                mImageView.setImageMatrix(m);
+                                mImageView.setImageBitmap(mBitmap);
+                                mImageView.invalidate();
+
+//                                // let us just render all pages
+//                                final int pageCount = renderer.getPageCount();
+//                                for (int i = 0; i < pageCount; i++) {
+//                                    PdfRenderer.Page page = renderer.openPage(i);
+//                                    // say we render for showing on the screen
+//                                    page.render(mBitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+//                                    // do stuff with the bitmap
+//
+//                                    // close the page
+//                                    page.close();
+//                                }
+//                                // close the renderer
+//                                renderer.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }else {
+                            showPDF(target);
+                        }
                     }
                     break;
                 case RECEIVE_PDF_INFO:
