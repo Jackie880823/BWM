@@ -217,7 +217,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
 
     private void downloadVideo(String url, final String target) {
         Log.i(TAG, "downloadVideo& url: " + url + "; target: " + target);
-        request = new HttpTools(this).download(url, target, true, new HttpCallback() {
+        request = new HttpTools(this).download(App.getContextInstance(),url, target, true, new HttpCallback() {
             @Override
             public void onStart() {
                 pbDownload.setVisibility(View.VISIBLE);

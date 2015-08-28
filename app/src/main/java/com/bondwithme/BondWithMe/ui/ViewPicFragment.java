@@ -12,6 +12,7 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.DownloadRequest;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
@@ -250,7 +251,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 //                }
 //            });
 
-            downloadRequest = new HttpTools(getActivity()).download(pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
+            downloadRequest = new HttpTools(getContext()).download(App.getContextInstance(),pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
                 @Override
                 public void onStart() {
                     if (iv_pic != null) {

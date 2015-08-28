@@ -28,6 +28,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.artifex.mupdfdemo.MuPDFCore;
 import com.artifex.mupdfdemo.MuPDFPageAdapter;
 import com.artifex.mupdfdemo.MuPDFReaderView;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -368,7 +369,7 @@ public class ViewPDFActivity extends BaseActivity {
         target = exists ? (FAMILY_TREE_FILE_PATH_PARENT + urlString.substring(urlString.lastIndexOf("/"))) : (Environment.getDataDirectory() + urlString.substring(urlString.lastIndexOf("/")));
 
 
-        new HttpTools(this).download(urlString, target, true, new HttpCallback() {
+        new HttpTools(this).download(App.getContextInstance(),urlString, target, true, new HttpCallback() {
             @Override
             public void onStart() {
 

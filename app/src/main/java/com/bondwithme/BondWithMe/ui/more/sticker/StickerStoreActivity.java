@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.DownloadRequest;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.StickerGroupAdapter;
@@ -254,7 +255,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
         String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
         final String target = FileUtil.getCacheFilePath(this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
-        DownloadRequest download = new HttpTools(this).download(urlString, target, true, new HttpCallback() {
+        DownloadRequest download = new HttpTools(this).download(App.getContextInstance(),urlString, target, true, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -503,7 +504,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
             LogUtil.d(TAG, "====url====" + url);
             LogUtil.d(TAG, "====target====" + target);
             final int finalI = i;
-            new HttpTools(this).download(url, target, false, new HttpCallback() {
+            new HttpTools(this).download(App.getContextInstance(),url, target, false, new HttpCallback() {
                 @Override
                 public void onStart() {
                     LogUtil.d(TAG, "===onStart===" + "target===" + target);
