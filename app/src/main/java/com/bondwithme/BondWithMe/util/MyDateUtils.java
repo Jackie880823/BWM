@@ -242,8 +242,8 @@ public class MyDateUtils extends android.text.format.DateUtils {
         return DateUtils.formatElapsedTime(duration/1000);
     }
 
-    public static String getUTCDateFromNowTime(Context context) {
-        long timestamp = System.currentTimeMillis();
-        return getLocalDateStringFromUTC(context, getUTCDateString4DefaultFromLocal(timestamp));
-    }
+//    public static String getUTCDateFromNowTime(Context context) {
+//        long timestamp = System.currentTimeMillis();
+//        return getUTCDateString4DefaultFromLocal(timestamp);
+//    }
 }

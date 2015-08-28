@@ -15,57 +15,89 @@
         android:src="@drawable/default_head_icon"
         app:border="false" />
 
-    <LinearLayout
-        android:id="@+id/pic_linear"
+    <RelativeLayout
+        android:id="@+id/msg_content_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/_70dp"
-        android:layout_toLeftOf="@id/message_icon_image"
-        android:background="@drawable/message_right"
-        android:orientation="horizontal">
+        android:layout_toLeftOf="@+id/message_icon_image">
 
-        <RelativeLayout
-            android:id="@+id/audio_play"
-            android:layout_width="@dimen/_40dp"
-            android:layout_height="@dimen/_40dp"
-            android:background="@color/tab_color_press3">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/play_message" />
-        </RelativeLayout>
-
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/pic_linear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_10dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical">
+            android:layout_toRightOf="@+id/send_fail_rl"
+            android:background="@drawable/message_right"
+            android:orientation="horizontal">
 
-            <com.bondwithme.BondWithMe.widget.HorizontalProgressBarWithNumber
-                android:id="@+id/id_progressbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+            <RelativeLayout
+                android:id="@+id/audio_play"
+                android:layout_width="@dimen/_40dp"
+                android:layout_height="@dimen/_40dp"
+                android:background="@color/tab_color_press3">
 
-            <TextView
-                android:id="@+id/audio_time"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/play_message" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/id_progressbar"
-                android:text="00:19" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/_10dp"
+                android:gravity="center_vertical">
+
+                <com.bondwithme.BondWithMe.widget.HorizontalProgressBarWithNumber
+                    android:id="@+id/id_progressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/audio_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/id_progressbar"
+                    android:text="00:19" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/send_fail_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/_35dp"
+            android:layout_marginRight="@dimen/_15dp">
+
+            <com.material.widget.CircularProgress
+                android:id="@+id/send_progress_bar"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                app:circular_progress_border_width="1dp"
+                app:circular_progress_color="#EDEDED"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/msg_send_fail_iv"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/chat_send_fail"
+                android:visibility="gone"/>
         </RelativeLayout>
-    </LinearLayout>
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/date_time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/pic_linear"
-        android:layout_below="@+id/pic_linear"
+        android:layout_alignRight="@+id/msg_content_ll"
+        android:layout_below="@+id/msg_content_ll"
         android:layout_marginRight="@dimen/_16dp"
         android:layout_marginTop="@dimen/_6dp"
         android:text="2015年05月24日"
