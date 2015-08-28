@@ -517,7 +517,7 @@
 
     <string name="title_member_love">Members by Love</string>
 
-    <string name="miss_you">You successfully send a Miss!</string>
+    <string name="miss_you">You successfully sent a Miss!</string>
     <string name="miss_already_you">You have already sent a miss.!</string>
     <string name="text_archive_data">No archive found</string>
 
@@ -545,8 +545,8 @@
     <string name="text_empty_add_group_newgroup">Tap on + to create new group </string>
     <string name="text_empty_add_group_loveone">to bond with your loved ones.</string>
 
-    <string name="will_remove_photos">If select video will remove photos of selected, continuation?</string>
-    <string name="will_remove_selected_video">select photos will remove the selected video, continuation? </string>
+    <string name="will_remove_photos">If you select a video, previous photos will be removed. Continue?</string>
+    <string name="will_remove_selected_video">If you select a photo, previous video will be removed. Continue? </string>
     <string name="text_all_select">Select All</string>
     <string name="text_inverse_select">Select Inverse</string>
     <string name="text_delete">Delete</string>

@@ -4,8 +4,8 @@ import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -82,11 +82,11 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     /**
      * 返回提示用户自己的树
      */
-    private Button btnGoToMe;
+    private TextView tvGoToMe;
     /**
      * 返回上一次点击的提示
      */
-    private Button btnPrevious;
+    private TextView tvPrevious;
 
 
     private String selectUseId;
@@ -119,15 +119,15 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
         initRecyclerView(siblingRelation);
         initRecyclerView(childrenRelation);
 
-        btnGoToMe = getViewById(R.id.back_me_btn);
+        tvGoToMe = getViewById(R.id.back_me_btn);
 
         // 回去到用户提示设置成黑底白字
-        btnGoToMe.setTextColor(Color.WHITE);
-        btnGoToMe.setBackgroundColor(Color.BLACK);
+        tvGoToMe.setTextColor(Color.WHITE);
+        tvGoToMe.setBackgroundResource(R.drawable.family_tree_btn_gb);
 
-        btnPrevious = getViewById(R.id.previous_btn);
+        tvPrevious = getViewById(R.id.previous_btn);
 
-        btnGoToMe.setOnClickListener(new View.OnClickListener() {
+        tvGoToMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!selectUseId.equals(useId) && rlProgress.getVisibility() != View.VISIBLE) {
@@ -137,15 +137,14 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
             }
         });
 
-        btnPrevious.setEnabled(false);
-        btnPrevious.setOnClickListener(new View.OnClickListener() {
+        tvPrevious.setEnabled(false);
+        tvPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     selectUseId = getPrevious();
                 } catch(Exception e) {
                     selectUseId = useId;
-                    btnPrevious.setEnabled(false);
                 } finally {
                     requestData();
                 }
@@ -183,20 +182,19 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     @Override
     public void requestData() {
         if(selectUseId.equals(useId)) {
-            btnGoToMe.setText(getString(R.string.text_me));
 
             //  返回用户清除记录
             clickUseIds.clear();
 
             // 上一步提示设置成白底黑字
-            btnPrevious.setTextColor(Color.BLACK);
-            btnPrevious.setBackgroundColor(Color.WHITE);
+            tvPrevious.setTextColor(Color.BLACK);
+            tvPrevious.setEnabled(false);
+//            tvPrevious.setBackgroundColor(Color.WHITE);
         } else {
-            btnGoToMe.setText(getString(R.string.go_back_to_me));
-
             // 上一步提示设置成黑底白字
-            btnPrevious.setTextColor(Color.WHITE);
-            btnPrevious.setBackgroundColor(Color.BLACK);
+            tvPrevious.setTextColor(Color.WHITE);
+            tvPrevious.setEnabled(true);
+//            tvPrevious.setBackgroundColor(Color.BLACK);
         }
 
         rlProgress.setVisibility(View.VISIBLE);
@@ -319,8 +317,6 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
             selectUseId = entity.getUser_id();
             clickUseIds.add(entity.getUser_id());
             requestData();
-
-            btnPrevious.setEnabled(true);
         }
     }
 }
