@@ -124,7 +124,6 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
     public void addTimerData(List<MsgEntity> list) {
         int scrollPosition = llm.findLastVisibleItemPosition();
-        ;
         if (myList != null && myList.size() > 0) {
             myList.clear();
         }
@@ -261,6 +260,20 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             } else {
                 holder.leftName.setVisibility(View.GONE);
             }
+        } else {
+            if (holder.msgFail != null) {
+                holder.msgFail.setVisibility(View.GONE);
+            }
+            if (holder.sendProgress != null) {
+                holder.sendProgress.setVisibility(View.GONE);
+            }
+            String sendStatus = msgEntity.getSendStatus();
+            Log.i("aaaaa",sendStatus+"");
+            if (MsgEntity.SEND_FAIL.equals(sendStatus) && holder.msgFail != null) {
+                holder.msgFail.setVisibility(View.VISIBLE);
+            } else if (MsgEntity.SEND_IN.equals(sendStatus) && holder.sendProgress != null) {
+                holder.sendProgress.setVisibility(View.VISIBLE);
+            }
         }
         if (!TextUtils.isEmpty(msgEntity.getText_id())) {//文字
             holder.messageText.setText(msgEntity.getText_description());
@@ -379,6 +392,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 map.put("position", position);
                 map.put("name", msgEntity.getAudio_filename());
                 mHandler.sendMessage(mHandler.obtainMessage(PLAY_AUDIO_HANDLER, map));
+            } else {
+                holder.id_progressbar.setProgress(0);
             }
             DownloadStickerTask.getInstance().downloadAudioFile(context, msgEntity.getUser_id(), name);
         } else if (!TextUtils.isEmpty(msgEntity.getVideo_filename())) {
@@ -387,15 +402,12 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             final String video_format = msgEntity.getVideo_format1();
             if (msgEntity.getVideo_thumbnail() == null && video_format != null) {
                 holder.btn_video.setImageResource(R.drawable.btn_video);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Bitmap bitmap = base64ToBitmap(video_format);
-                        if (bitmap != null) {
-                            holder.message_video_start.setImageBitmap(bitmap);
-                        }
-                    }
-                }, 50);
+                Bitmap bitmap = base64ToBitmap(video_format);
+                if (bitmap != null) {
+                    holder.message_video_start.setImageBitmap(bitmap);
+                } else {
+                    holder.message_video_start.setImageResource(R.drawable.network_image_default);
+                }
             } else {
                 File file = new File(PreviewVideoActivity.VIDEO_PATH + msgEntity.getVideo_filename());
                 if (file != null && file.exists()) {
@@ -468,6 +480,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         NetworkImageView message_video_start;
         ImageView btn_video;
         TextView video_time;
+        CircularProgress sendProgress;
+        ImageView msgFail;
 
         public VHItem(View itemView) {
             super(itemView);
@@ -485,6 +499,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             message_video_start = (NetworkImageView) itemView.findViewById(R.id.message_video_start);
             video_time = (TextView) itemView.findViewById(R.id.video_time);
             btn_video = (ImageView) itemView.findViewById(R.id.btn_video);
+            sendProgress = (CircularProgress) itemView.findViewById(R.id.send_progress_bar);
+            msgFail = (ImageView) itemView.findViewById(R.id.msg_send_fail_iv);
 
             if (null != iconImage) {
                 iconImage.setOnClickListener(this);
@@ -497,6 +513,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             }
             if (message_video_start != null) {
                 message_video_start.setOnClickListener(this);
+            }
+            if (msgFail != null) {
+                msgFail.setOnClickListener(this);
             }
         }
 
@@ -628,10 +647,32 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     }
                     context.startActivity(intent);
                     break;
+                case R.id.msg_send_fail_iv:
+                    VHItem holder1 = (VHItem) recyclerView.findViewHolderForAdapterPosition(position);
+                    if (holder1 == null) {
+                        return;
+                    }
+                    if (sendFailMsgClick != null && !TextUtils.isEmpty(msgEntity.getPhoto_postsize())) {
+                        CircularProgress mProgressBar = (CircularProgress) holder1.itemView.findViewById(R.id.send_progress_bar);
+                        v.setVisibility(View.GONE);
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        msgEntity.setSendStatus(MsgEntity.SEND_IN);
+                        sendFailMsgClick.sendFailMsg(msgEntity);
+                    }
+                    break;
             }
         }
     }
 
+    public SendFailMsgClick sendFailMsgClick;
+
+    public void onClickFailMsg(SendFailMsgClick sendFailMsgClick) {
+        this.sendFailMsgClick = sendFailMsgClick;
+    }
+
+    public interface SendFailMsgClick {
+        void sendFailMsg(MsgEntity msgEntity);
+    }
 
     private String formatTime(String audioDuration) {
         if (audioDuration.contains(":")) {

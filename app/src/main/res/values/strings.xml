@@ -529,11 +529,11 @@
     <string name="text_no_date_members">No members alert</string>
     <string name="text_no_date_recommended">No recommended members</string>
     <string name="text_no_date_group">No group alert</string>
-    <string name="text_hold_and_speak">按住说话</string>
+    <string name="text_hold_and_speak">Hold to Talk</string>
 
     <string name="loves_count">%d Loves</string>
-    <string name="text_message_chat_post_audio">[音频]</string>
-    <string name="text_message_chat_post_video">[视频]</string>
+    <string name="text_message_chat_post_audio">[Audio]</string>
+    <string name="text_message_chat_post_video">[Video]</string>
     <string name="notification_title_expand">New Messages</string>
     <string name="select_photos_or_video">Select Photos or Video</string>
 
@@ -552,8 +552,8 @@
     <string name="text_delete">Delete</string>
     <string name="text_cancel_all">Cancel All</string>
     <string name="text_message_break_ice">Break the ice!</string>
-    <string name="text_video_too_big">所选视频太大</string>
-    <string name="text_chat_send_video">所选视频大小约为%s,是否需要发送</string>
+    <string name="text_video_too_big">The selected video is too large</string>
+    <string name="text_chat_send_video">Video size is%1$s,Confirm send it?</string>
     <string name="go_back_to_me">Go back to Me</string>
     <string name="write_a_diary">Write a diary now. Sharing is caring.</string>
     <string name="select_media">Select Media</string>
@@ -602,13 +602,13 @@
     <string name="notification_action_diary_tag">%1$s tag you in diary</string>
 
     <string name="notification_action_miss_missyou">%1$s miss you</string>
-    <string name="text_audio_release">松开发送</string>
-    <string name="text_audio_loosen_audition">松手试听</string>
-    <string name="text_audio_cancle_send">松手取消发送</string>
-    <string name="text_recording_video">录制视频</string>
-    <string name="text_take_photos">拍摄照片</string>
-    <string name="text_record_audio_too_short">录制时间要大于两秒</string>
-    <string name="text_can_record_time">还可以录制%s秒</string>
+    <string name="text_audio_release">Release to Send</string>
+    <string name="text_audio_loosen_audition">Release to Replay</string>
+    <string name="text_audio_cancle_send">Release to Cancel</string>
+    <string name="text_recording_video">Recording video</string>
+    <string name="text_take_photos">Take photos</string>
+    <string name="text_record_audio_too_short">Record time to more than two seconds</string>
+    <string name="text_can_record_time">Can also record%1$ssecond</string>
     <string name="text_previous">Previous</string>
 
 </resources>
