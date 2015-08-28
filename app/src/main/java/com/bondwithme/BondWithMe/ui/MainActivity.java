@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
+import com.bondwithme.BondWithMe.Piwik.MyPiwik;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MyFragmentPagerAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
@@ -323,8 +324,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     public void initView() {
-
-        App.piwikUser();
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN += App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
@@ -461,7 +460,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     }
 
     protected void changeTab(TabEnum tabEnum) {
-        App.piwikUser();
+        MyPiwik.piwikUser();
         switch (tabEnum) {
             case wall:
                 setDrawable();

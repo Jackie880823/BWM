@@ -83,4 +83,7 @@
     <color name="family_tree_relationship_sibling_background_color">#E9FFE6</color>
     <color name="family_tree_relationship_me_background_color">#B7F291</color>
     <color name="family_tree_hint_color_text">#33CC33</color>
+
+    <!-- Recorder Video-->
+    <color name="btn_gray_normal">#c0c0c0</color>
 </resources>

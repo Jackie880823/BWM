@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -48,6 +47,7 @@ import com.bondwithme.BondWithMe.util.AudioPlayUtils;
 import com.bondwithme.BondWithMe.util.CustomLengthFilter;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MslToast;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
@@ -62,7 +62,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -691,10 +690,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 tvAddNewMember.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                        // Modify start by Jackie, Use custom recorder
+                        Intent mIntent = new Intent(MediaData.ACTION_RECORDER_VIDEO);
+//                        Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                        // Modify end by Jackie
                         mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.9);//画质0.5
                         //mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60000);//60s
-                        mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 45 * 1024 * 1024);
+                        mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 45 * 1024 * 1024l);
                         startActivityForResult(mIntent, CAMERA_ACTIVITY);//CAMERA_ACTIVITY = 1
                         showSelectDialog.dismiss();
                     }
@@ -981,25 +983,26 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     List<Uri> pickUries = new ArrayList();
 
-    private void uploadVideo(final Uri voideUri, final long durationTime) {
-        final File file = new File(voideUri.getPath());
+    private void uploadVideo(final Uri videoUri, final long durationTime) {
+        LogUtil.i("Jackie", "uploadVideo: duration = " + durationTime);
+        final File file = new File(videoUri.getPath());
         if (file != null && file.exists()) {
             float fileLength = file.length();
-            String fomatLength = null;
+            String formatLength = null;
             boolean isTooBig = false;
             if (fileLength <= 1024) {
                 fileLength = (float) (Math.round(fileLength * 100)) / 100;
-                fomatLength = fileLength + "B";
+                formatLength = fileLength + "B";
             } else {
                 fileLength = fileLength / 1024;
                 if (fileLength <= 1024) {
                     fileLength = (float) (Math.round(fileLength * 100)) / 100;
-                    fomatLength = fileLength + "KB";
+                    formatLength = fileLength + "KB";
                 } else {
                     fileLength = fileLength / 1024;
                     if (fileLength < 50) {
                         fileLength = (float) (Math.round(fileLength * 100)) / 100;
-                        fomatLength = fileLength + "MB";
+                        formatLength = fileLength + "MB";
                     } else {
                         isTooBig = true;
                     }
@@ -1011,11 +1014,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
             TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
             if (!isTooBig) {
-                fomatLength = String.format(getString(R.string.text_chat_send_video), fomatLength);
+                formatLength = String.format(getString(R.string.text_chat_send_video), formatLength);
             } else {
-                fomatLength = getString(R.string.text_video_too_big);
+                formatLength = getString(R.string.text_video_too_big);
             }
-            tv_no_member.setText(fomatLength);
+            tv_no_member.setText(formatLength);
 
             TextView tv_ok = (TextView) selectIntention.findViewById(R.id.tv_ok);
             TextView tv_cancel = (TextView) selectIntention.findViewById(R.id.tv_cancel);
@@ -1062,12 +1065,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case REQUEST_HEAD_PHOTO:
                     pickUries.clear();
                     if (data != null) {
-                        String type = data.getStringExtra(SelectPhotosActivity.RESULT_MEDIA_TYPE);
+                        String type = data.getStringExtra(MediaData.EXTRA_MEDIA_TYPE);
                         if (MediaData.TYPE_VIDEO.equals(type)) {
-                            long durationTime = data.getLongExtra(SelectPhotosActivity.RESULT_VIDEO_DURATION, 0);
+                            long durationTime = data.getLongExtra(MediaData.EXTRA_VIDEO_DURATION, 0);
                             uploadVideo(data.getData(), durationTime);
                         } else {
-                            ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
+                            ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
                             pickUries.addAll(uris);
                             for (Uri uri : pickUries) {
                                 MsgEntity msgEntity = new MsgEntity();
@@ -1099,20 +1102,26 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     }
                     break;
                 case CAMERA_ACTIVITY:
-                    String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA,
-                            MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION};
-                    Uri uri = data.getData();
-                    Cursor cursor = this.getContentResolver().query(uri, videoColumns, null, null, null);
-                    String filePath = null;
-                    long duration = 0;
-                    if (cursor != null && cursor.moveToNext()) {
-                        filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
-                        duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION));
-                        cursor.close();
-                    }
-                    if (!TextUtils.isEmpty(filePath)) {
-                        uploadVideo(Uri.parse(filePath), duration);
-                    }
+                    // Modify start by Jackie
+//                    String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA,
+//                            MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION};
+//                    Uri uri = data.getData();
+//                    Cursor cursor = this.getContentResolver().query(uri, videoColumns, null, null, null);
+//                    String filePath = null;
+//                    long duration = 0;
+//                    if (cursor != null && cursor.moveToNext()) {
+//                        filePath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
+//                        duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION));
+//                        cursor.close();
+//                    }
+//                    if (!TextUtils.isEmpty(filePath)) {
+//                        uploadVideo(Uri.parse(filePath), duration);
+//                    }
+
+                    // Modify end and add start by Jackie, video data from custom recorder
+                    long durationTime = data.getLongExtra(MediaData.EXTRA_VIDEO_DURATION, 0);
+                    uploadVideo(data.getData(), durationTime);
+                    // add end by Jackie
                     break;
                 default:
                     break;

@@ -25,6 +25,7 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
+import com.bondwithme.BondWithMe.Piwik.MyPiwik;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
@@ -103,6 +104,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
             {
                 case HANDLER_COMPLETE_PROFILE_SUCCESS:
                     App.userLoginSuccessed(DetailsActivity.this,userEntity, tokenEntity);
+                    MyPiwik.piwikNewUser();//统计成功注册人数
                     break;
 
                 case ERROR:
