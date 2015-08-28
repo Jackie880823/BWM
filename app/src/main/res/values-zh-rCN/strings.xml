@@ -513,7 +513,7 @@
 
     <string name="title_member_love">点赞会员</string>
 
-    <string name="miss_you">你已成功发送 Miss!</string>
+    <string name="miss_you">您已发送“想你了”！</string>
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>
     <string name="text_archive_data">没有存档</string>
 

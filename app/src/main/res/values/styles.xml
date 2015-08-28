@@ -95,6 +95,7 @@
     <style name="user_header_base">
         <item name="com.bondwithme.BondWithMe:border_color">@color/default_text_color_light</item>
         <item name="com.bondwithme.BondWithMe:border_width">1dp</item>
+        <item name="com.bondwithme.BondWithMe:border">true</item>
     </style>
 
     <style name="user_header_normal" parent="user_header_base">
