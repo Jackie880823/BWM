@@ -151,7 +151,7 @@ public class PushApi {
     private static void sendRegistrationIdToBackend(String regid, String service) {
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = Constant.API_REGIST_PUSH;
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("pushToken", regid);
         params.put("deviceUuid", AppInfoUtil.getDeviceUUID(mContext));
         params.put("devicePlatform", "android");
@@ -159,7 +159,7 @@ public class PushApi {
         params.put("appType", "native");
         params.put("pushService", service);
         params.put("appID", AppInfoUtil.getAppPackageName(mContext));
-        requestInfo.params = params;
+        requestInfo.putAllParams(params);
         new HttpTools(mContext).post(requestInfo, mContext, new HttpCallback() {
             @Override
             public void onStart() {

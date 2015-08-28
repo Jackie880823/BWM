@@ -263,8 +263,10 @@ public class AlertGroupActivity extends BaseActivity{
                 data = gson.fromJson(string, new TypeToken<ArrayList<AlertGroupEntity>>() {
                 }.getType());
 
-
-                if (data.isEmpty() && !AlertGroupActivity.this.isFinishing()){
+                //no data!
+                if (!data.isEmpty()){
+                    tvNoDate.setVisibility(View.GONE);
+                }else if (data.isEmpty() && !AlertGroupActivity.this.isFinishing()){
                     tvNoDate.setText(getResources().getString(R.string.text_no_date_group));
                 }
                 initAdapter();

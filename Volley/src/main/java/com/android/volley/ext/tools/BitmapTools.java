@@ -32,14 +32,13 @@ import java.util.List;
 /**
  * 图片加载工具类
  * BitmapTools
- * 2014年8月8日 下午4:12:39
- * @version 3.4
+ * wing
  */
 public class BitmapTools {
     // TODO i think nobody will you this id ^_^
     private static final int TAG_ID = 0xffffffff;
     private ImageLoader mImageLoader;
-    private static RequestQueue mRequestQueue;
+    private static RequestQueue sRequestQueue;
     private BitmapDisplayConfig mDisplayConfig;
     private Context mContext;
     private BitmapCache mBitmapCache;
@@ -49,17 +48,24 @@ public class BitmapTools {
     private HashMap<String, BitmapDisplayConfig> configMap = new HashMap<String, BitmapDisplayConfig>();
     
     public static void init(Context context) {
-        if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        if (sRequestQueue == null) {
+            sRequestQueue = Volley.newRequestQueue(context.getApplicationContext());
+        }
+    }
+    
+    public static void stop() {
+        if (sRequestQueue != null) {
+        	sRequestQueue.stop();
+        	sRequestQueue = null;
         }
     }
 
-    private BitmapTools(Context context) {
+    public BitmapTools(Context context) {
         mContext = context.getApplicationContext();
         mDisplayer = new SimpleDisplayer();
         mBitmapCache = BitmapCache.getSigleton(context.getApplicationContext());
         init(context);
-        mImageLoader = new ImageLoader(mRequestQueue, mBitmapCache);
+        mImageLoader = new ImageLoader(sRequestQueue, mBitmapCache);
         mDisplayConfig = new BitmapDisplayConfig();
 
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
@@ -75,7 +81,7 @@ public class BitmapTools {
         }
         return mInstance;
     }
-    
+
     public ImageLoader getImageLoader() {
         return mImageLoader;
     }
@@ -181,9 +187,15 @@ public class BitmapTools {
         mDisplayConfig.errorImageResId = errorImageResId;
     }
     
+    
     public void setDefaultAndImageResId(int resId) {
         mDisplayConfig.defaultImageResId = resId;
         mDisplayConfig.errorImageResId = resId;
+    }
+    
+    public void setDefaultBitmapWH(int w, int h) {
+        mDisplayConfig.bitmapWidth = w;
+        mDisplayConfig.bitmapHeight = h;
     }
 
     public void setAnimation(Animation animation) {
@@ -380,8 +392,8 @@ public class BitmapTools {
      * @since 3.6
      */
     public void resume() {
-        if (mRequestQueue != null) {
-            mRequestQueue.resume();
+        if (sRequestQueue != null) {
+            sRequestQueue.resume();
         }
     }
     
@@ -391,8 +403,8 @@ public class BitmapTools {
      * @since 3.6
      */
     public void pause() {
-        if (mRequestQueue != null) {
-            mRequestQueue.pause();
+        if (sRequestQueue != null) {
+            sRequestQueue.pause();
         }
     }
     
@@ -402,9 +414,26 @@ public class BitmapTools {
      * @since 3.6
      */
     public void cancelAllRequest() {
-        if (mRequestQueue != null) {
-            mRequestQueue.cancelAll(mContext);
+        if (sRequestQueue != null) {
+            sRequestQueue.cancelAll(mContext);
         }
+    }
+    
+    /**
+     * 清除view上面的任务和标记
+     * clearViewTask
+     * @param view
+     */
+    public void clearViewTask(View view) {
+        @SuppressWarnings("unchecked")
+        WeakReference<ImageContainer> ref = (WeakReference<ImageContainer>) view.getTag(TAG_ID);
+        if (ref != null) {
+            ImageContainer tagContainer = ref.get();
+            if (tagContainer != null) {
+                tagContainer.cancelRequest();
+            }
+        }
+        view.setTag(TAG_ID);
     }
     
     /**
@@ -449,9 +478,9 @@ public class BitmapTools {
      * @since 3.6
      */
     public void clearDiskCache(Runnable callback) {
-        if (mRequestQueue != null) {
-            ClearCacheRequest request = new ClearCacheRequest(mRequestQueue.getCache(), callback);
-            mRequestQueue.add(request);
+        if (sRequestQueue != null) {
+            ClearCacheRequest request = new ClearCacheRequest(sRequestQueue.getCache(), callback);
+            sRequestQueue.add(request);
         }
     }
     

@@ -9,6 +9,9 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <!--
  The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but are recommended.
@@ -245,6 +248,9 @@
             android:name=".ui.ContactUsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".ui.more.AboutActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AboutUsActivity"
             android:screenOrientation="portrait" />
@@ -596,13 +602,22 @@
 
         <activity android:name=".ui.PickAndCropPictureActivity"></activity>
         <activity android:name=".ui.CrashActivity" android:noHistory="true" android:launchMode="singleTop" android:excludeFromRecents="true"></activity>
-        <activity android:name=".ui.share.PreviewVideoActivity">
+        <activity android:name=".ui.share.PreviewVideoActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.bondwithme.BondWithMe.ui.PreviewVideoActivity"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.family.FamilyTreeActivity"/>
+        <activity android:name=".ui.family.FamilyTreeActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.share.RecorderVideoActivity"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="com.bondwithme.BondWithMe.RECORDER_VIDEO"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
     </application>
 

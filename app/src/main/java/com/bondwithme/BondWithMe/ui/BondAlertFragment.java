@@ -31,9 +31,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     private TextView event_alert_num;
     private TextView bigday_alert_num;
     private TextView miss_alert_num;
-    private TextView news_alert_num;
-    private TextView member_alert_num;
-    private TextView recommend_alert_num;
+
     private TextView group_alert_num;
 
     public static BondAlertFragment newInstance(String... params) {
@@ -66,30 +64,23 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         getViewById(R.id.btn_alert_bigday).setOnClickListener(this);
         getViewById(R.id.btn_alert_wall).setOnClickListener(this);
         getViewById(R.id.btn_alert_event).setOnClickListener(this);
-        getViewById(R.id.btn_alert_member).setOnClickListener(this);
-        getViewById(R.id.btn_alert_news).setOnClickListener(this);
-        getViewById(R.id.btn_alert_recommend).setOnClickListener(this);
+
         getViewById(R.id.btn_alert_group).setOnClickListener(this);
 
         wall_alert_num = getViewById(R.id.wall_alert_num);
         event_alert_num = getViewById(R.id.event_alert_num);
         bigday_alert_num = getViewById(R.id.bigday_alert_num);
         miss_alert_num = getViewById(R.id.miss_alert_num);
-        news_alert_num = getViewById(R.id.news_alert_num);
-        member_alert_num = getViewById(R.id.member_alert_num);
-        recommend_alert_num = getViewById(R.id.recommend_alert_num);
+
         group_alert_num = getViewById(R.id.group_alert_num);
 
     }
 
     private void bondDatas(JSONObject jsonObject) throws JSONException {
-        checkDataAndBond2View(wall_alert_num,jsonObject.getString("wall"));
-        checkDataAndBond2View(event_alert_num,jsonObject.getString("event"));
-        checkDataAndBond2View(bigday_alert_num,jsonObject.getString("bigDay"));
+        checkDataAndBond2View(wall_alert_num, jsonObject.getString("wall"));
+        checkDataAndBond2View(event_alert_num, jsonObject.getString("event"));
+        checkDataAndBond2View(bigday_alert_num, jsonObject.getString("bigDay"));
         checkDataAndBond2View(miss_alert_num,jsonObject.getString("miss"));
-        checkDataAndBond2View(news_alert_num,jsonObject.getString("news"));
-        checkDataAndBond2View(member_alert_num,jsonObject.getString("member"));
-        checkDataAndBond2View(recommend_alert_num,jsonObject.getString("recommended"));
         checkDataAndBond2View(group_alert_num,jsonObject.getString("group"));
 
     }
@@ -125,7 +116,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     {
 
 
-        new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_MODULES_COUNT,MainActivity.getUser().getUser_id()), null,this, new HttpCallback() {
+        new HttpTools(getActivity()).get(String.format(Constant.API_BONDALERT_MODULES_COUNT, MainActivity.getUser().getUser_id()), null, this, new HttpCallback() {
             @Override
             public void onStart() {
 //                mProgressDialog.show();
@@ -182,18 +173,6 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
                 v.findViewById(R.id.event_alert_num).setVisibility(View.GONE);
                 goEventAlert();
                 break;
-            case R.id.btn_alert_member:
-                v.findViewById(R.id.member_alert_num).setVisibility(View.GONE);
-                goMember();
-                break;
-            case R.id.btn_alert_news:
-                v.findViewById(R.id.news_alert_num).setVisibility(View.GONE);
-                goNews();
-                break;
-            case R.id.btn_alert_recommend:
-                v.findViewById(R.id.recommend_alert_num).setVisibility(View.GONE);
-                goRecommendAlert();
-                break;
             case R.id.btn_alert_group:
                 v.findViewById(R.id.group_alert_num).setVisibility(View.GONE);
                 goGroupAlert();
@@ -206,20 +185,11 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         startActivity(intent);
     }
 
-    private void goMember() {
-        Intent intent = new Intent(getActivity(), MemberActivity.class);
-        startActivity(intent);
-    }
-
     private void goWallAlert() {
         Intent intent = new Intent(getActivity(), AlertWallActivity.class);
         startActivity(intent);
     }
 
-    private void goRecommendAlert() {
-        Intent intent = new Intent(getActivity(), RecommendActivity.class);
-        startActivity(intent);
-    }
 
     private void goEventAlert() {
         Intent intent = new Intent(getActivity(), AlertEventActivity.class);
@@ -232,10 +202,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         startActivity(intent);
     }
 
-    private void goNews() {
-        Intent intent = new Intent(getActivity(), NewsActivity.class);
-        startActivity(intent);
-    }
+
 
     private void goGroupAlert(){
         Intent intent = new Intent(getActivity(), AlertGroupActivity.class);

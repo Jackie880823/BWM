@@ -252,7 +252,9 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
             downloadRequest = new HttpTools(getActivity()).download(pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
                 @Override
                 public void onStart() {
-                    iv_pic.setImageResource(R.drawable.network_image_default);
+                    if (iv_pic != null) {
+                        iv_pic.setImageResource(R.drawable.network_image_default);
+                    }
                     mHandler.sendEmptyMessage(SHOW_WAITTING);
                 }
 
@@ -280,7 +282,9 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 
                 @Override
                 public void onCancelled() {
-                    iv_pic.setImageResource(R.drawable.network_image_default);
+                    if (iv_pic != null) {
+                        iv_pic.setImageResource(R.drawable.network_image_default);
+                    }
                 }
 
                 @Override

@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui.family;
 
+import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -70,17 +71,27 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     private ArrayList<FamilyMemberEntity> childrenMembers = new ArrayList<>();
 
     /**
+     * 点用户记录
+     */
+    private ArrayList<String> clickUseIds = new ArrayList<>();
+
+    /**
      * 加载视图
      */
     private RelativeLayout rlProgress;
     /**
-     * 返回提示
+     * 返回提示用户自己的树
      */
-    private TextView tvGoBack;
+    private TextView tvGoToMe;
+    /**
+     * 返回上一次点击的提示
+     */
+    private TextView tvPrevious;
 
 
-    private static String selectUseId;
-    public static String getSelectUseId() {
+    private String selectUseId;
+
+    public String getSelectUseId() {
         return selectUseId;
     }
 
@@ -108,15 +119,49 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
         initRecyclerView(siblingRelation);
         initRecyclerView(childrenRelation);
 
-        tvGoBack = getViewById(R.id.back_me_tv);
+        tvGoToMe = getViewById(R.id.back_me_btn);
 
-        tvGoBack.setOnClickListener(new View.OnClickListener() {
+        // 回去到用户提示设置成黑底白字
+        tvGoToMe.setTextColor(Color.WHITE);
+        tvGoToMe.setBackgroundResource(R.drawable.family_tree_btn_gb);
+
+        tvPrevious = getViewById(R.id.previous_btn);
+
+        tvGoToMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!selectUseId.equals(useId) && rlProgress.getVisibility() != View.VISIBLE) {
                     selectUseId = useId;
                     requestData();
                 }
+            }
+        });
+
+        tvPrevious.setEnabled(false);
+        tvPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    selectUseId = getPrevious();
+                } catch(Exception e) {
+                    selectUseId = useId;
+                } finally {
+                    requestData();
+                }
+            }
+
+            private String getPrevious() throws Exception {
+                String result = null;
+                if(!clickUseIds.isEmpty()) {
+                    result = clickUseIds.remove(clickUseIds.size() - 1);
+                    if(selectUseId.equals(result)) {
+                        result = getPrevious();
+                    }
+                    return result;
+                } else {
+                    throw new Exception("list size is empty");
+                }
+
             }
         });
 
@@ -137,9 +182,19 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
     @Override
     public void requestData() {
         if(selectUseId.equals(useId)) {
-            tvGoBack.setText(R.string.text_me);
+
+            //  返回用户清除记录
+            clickUseIds.clear();
+
+            // 上一步提示设置成白底黑字
+            tvPrevious.setTextColor(Color.BLACK);
+            tvPrevious.setEnabled(false);
+//            tvPrevious.setBackgroundColor(Color.WHITE);
         } else {
-            tvGoBack.setText(R.string.go_back_to_me);
+            // 上一步提示设置成黑底白字
+            tvPrevious.setTextColor(Color.WHITE);
+            tvPrevious.setEnabled(true);
+//            tvPrevious.setBackgroundColor(Color.BLACK);
         }
 
         rlProgress.setVisibility(View.VISIBLE);
@@ -205,7 +260,12 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
                     break;
 
                 case sibling:
-                    siblingMembers.add(familyMemberEntity);
+                    if(selectUseId.equals(familyMemberEntity.getUser_id())) {
+                        LogUtil.i(TAG, "parseResponse& add first");
+                        siblingMembers.add(0, familyMemberEntity);
+                    } else {
+                        siblingMembers.add(familyMemberEntity);
+                    }
                     break;
                 case children:
                     childrenMembers.add(familyMemberEntity);
@@ -255,6 +315,7 @@ public class FamilyTreeFragment extends BaseFragment<FamilyTreeActivity> impleme
         String entityUseId = entity.getUser_id();
         if(!selectUseId.equals(entityUseId)) {
             selectUseId = entity.getUser_id();
+            clickUseIds.add(entity.getUser_id());
             requestData();
         }
     }

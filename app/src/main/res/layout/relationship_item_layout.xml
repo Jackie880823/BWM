@@ -17,32 +17,51 @@
 
     <LinearLayout
         android:id="@+id/relationship_item_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.0"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
+        <ImageView
+            android:id="@+id/null_image_view"
+            android:layout_width="@dimen/_20dp"
+            android:layout_height="match_parent"
+            android:src="@null"
+            android:visibility="gone"/>
 
-        <com.bondwithme.BondWithMe.widget.CircularNetworkImage
-            android:id="@+id/relationship_item_image"
-            android:layout_width="@dimen/_75dp"
-            android:layout_height="@dimen/_75dp"
-            app:border="false"/>
-
-        <TextView
-            android:id="@+id/relationship_item_name_tv"
-            style="@style/text_user_name"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"/>
-
-        <TextView
-            android:id="@+id/relationship_item_relation_tv"
-            style="@style/text_user_name"
-            android:layout_gravity="center_horizontal"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:visibility="visible"/>
+            android:orientation="vertical">
 
+
+            <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+                android:id="@+id/relationship_item_image"
+                android:layout_width="@dimen/_75dp"
+                android:layout_height="@dimen/_75dp"
+                app:border="false"/>
+
+            <TextView
+                android:id="@+id/relationship_item_name_tv"
+                style="@style/text_user_name"
+                android:layout_width="@dimen/_75dp"
+
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textSize="@dimen/text_mirco_size"/>
+
+            <TextView
+                android:id="@+id/relationship_item_relation_tv"
+                style="@style/text_user_name"
+                android:layout_width="@dimen/_75dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textSize="@dimen/text_mirco_size"
+                android:visibility="visible"/>
+
+        </LinearLayout>
     </LinearLayout>
 
     <ImageView

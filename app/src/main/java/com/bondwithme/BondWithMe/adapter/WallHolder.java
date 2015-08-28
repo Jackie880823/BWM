@@ -87,6 +87,10 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * 显示网络图片的视图控件
      */
     private NetworkImageView imWallsImages;
+    /**
+     * 视频图标
+     */
+    private ImageView videoImage;
 
     /**
      * 用于显示图片总数的提示控件
@@ -168,6 +172,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         ivLock = (ImageView) itemView.findViewById(R.id.lock_post_iv);
         llWallsImage = itemView.findViewById(R.id.ll_walls_image);
         imWallsImages = (NetworkImageView) itemView.findViewById(R.id.iv_walls_images);
+        videoImage = (ImageView) itemView.findViewById(R.id.iv_video_top);
         tvPhotoCount = (TextView) itemView.findViewById(R.id.tv_wall_photo_count);
         tvAgreeCount = (TextView) itemView.findViewById(R.id.tv_wall_agree_count);
         //        tvLoveList = (TextView) itemView.findViewById(R.id.tv_love_list);
@@ -428,7 +433,17 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
             if(!TextUtils.isEmpty(this.wallEntity.getVideo_thumbnail())) { // 有视频图片说这条Wall上传的是视频并有图片，显示视频图片
                 String url = String.format(Constant.API_GET_VIDEO_THUMBNAIL, wallEntity.getContent_creator_id(), wallEntity.getVideo_thumbnail());
-                VolleyUtil.initNetworkImageView(context, imWallsImages, url);
+                LogUtil.i(TAG, "setContent& video_thumbnail: " + url);
+                videoImage.setVisibility(View.VISIBLE);
+                VolleyUtil.initNetworkImageView(context, imWallsImages, url, R.drawable.network_image_default, R.drawable.network_image_default);
+
+                String duration = MyDateUtils.formatDuration(wallEntity.getVideo_duration());
+                if(TextUtils.isEmpty(duration)) {
+                    tvPhotoCount.setVisibility(View.GONE);
+                } else {
+                    tvPhotoCount.setVisibility(View.VISIBLE);
+                    tvPhotoCount.setText(duration);
+                }
             } else {
                 // 有图片显示图片总数
                 int count = Integer.valueOf(wallEntity.getPhoto_count());
@@ -440,7 +455,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 } else {
                     tvPhotoCount.setVisibility(View.GONE);
                 }
-
+                videoImage.setVisibility(View.GONE);
                 VolleyUtil.initNetworkImageView(context, imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, wallEntity.getUser_id(), wallEntity.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             }
         }

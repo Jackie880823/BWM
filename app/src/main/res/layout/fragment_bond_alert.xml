@@ -166,120 +166,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:id="@+id/btn_alert_news"
-                    android:layout_width="@dimen/default_user_head_width_height"
-                    android:layout_height="@dimen/default_user_head_width_height"
-                    android:background="@drawable/circular_bg_blue"
-                    android:clickable="true">
-
-                    <ImageView
-                        android:layout_width="@dimen/default_small_button_width_height"
-                        android:layout_height="@dimen/default_small_button_width_height"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/bondalert_news_icon" />
-
-                    <TextView
-                        android:id="@+id/news_alert_num"
-                        style="@style/RedPoint"
-                        android:layout_alignParentRight="true" />
-                </RelativeLayout>
-
-                <TextView
-                    style="@style/text_dark_default"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_news" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:id="@+id/btn_alert_member"
-                    android:layout_width="@dimen/default_user_head_width_height"
-                    android:layout_height="@dimen/default_user_head_width_height"
-                    android:background="@drawable/circular_bg_blue"
-                    android:clickable="true">
-
-                    <ImageView
-                        android:layout_width="@dimen/default_small_button_width_height"
-                        android:layout_height="@dimen/default_small_button_width_height"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/bondalert_member_icon" />
-
-                    <TextView
-                        android:id="@+id/member_alert_num"
-                        style="@style/RedPoint"
-                        android:layout_alignParentRight="true" />
-                </RelativeLayout>
-
-                <TextView
-                    style="@style/text_dark_default"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_member" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:orientation="horizontal"
-            android:weightSum="3">
-
-
-            <LinearLayout
-
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:id="@+id/btn_alert_recommend"
-                    android:layout_width="@dimen/default_user_head_width_height"
-                    android:layout_height="@dimen/default_user_head_width_height"
-                    android:background="@drawable/circular_bg_blue"
-                    android:clickable="true">
-
-                    <ImageView
-                        android:layout_width="@dimen/default_small_button_width_height"
-                        android:layout_height="@dimen/default_small_button_width_height"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/bondalert_recommended_icon" />
-
-                    <TextView
-                        android:id="@+id/recommend_alert_num"
-                        style="@style/RedPoint"
-                        android:layout_alignParentRight="true" />
-                </RelativeLayout>
-
-                <TextView
-                    style="@style/text_dark_default"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_recommend" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
 
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -313,6 +199,45 @@
                     android:text="@string/text_alert_group" />
 
             </LinearLayout>
+
+            <LinearLayout
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <!--<RelativeLayout-->
+                    <!--android:id="@+id/btn_alert_group"-->
+                    <!--android:layout_width="@dimen/default_user_head_width_height"-->
+                    <!--android:layout_height="@dimen/default_user_head_width_height"-->
+                    <!--android:background="@drawable/circular_bg_blue"-->
+                    <!--android:clickable="true">-->
+
+                    <!--<ImageView-->
+                        <!--android:layout_width="@dimen/default_small_button_width_height"-->
+                        <!--android:layout_height="@dimen/default_small_button_width_height"-->
+                        <!--android:layout_centerInParent="true"-->
+                        <!--android:src="@drawable/bondalert_group_icon" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/group_alert_num"-->
+                        <!--style="@style/RedPoint"-->
+                        <!--android:layout_alignParentRight="true" />-->
+                <!--</RelativeLayout>-->
+
+                <!--<TextView-->
+                    <!--style="@style/text_dark_default"-->
+                    <!--android:layout_gravity="center_horizontal"-->
+                    <!--android:layout_marginTop="@dimen/default_view_margin"-->
+                    <!--android:text="@string/text_alert_group" />-->
+
+            </LinearLayout>
+
+
+
+
 
         </LinearLayout>
 

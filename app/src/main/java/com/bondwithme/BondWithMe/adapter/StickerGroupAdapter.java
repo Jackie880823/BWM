@@ -198,20 +198,24 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             //对ViewPager页号求模取出View列表中要显示的项
-            position %= viewlist.size();
-            if (position < 0) {
-                position = viewlist.size() + position;
+            if (!viewlist.isEmpty()){
+                position %= viewlist.size();
+                if (position < 0) {
+                    position = viewlist.size() + position;
+                }
+                ImageView view = viewlist.get(position);
+                //如果View已经在之前添加到了一个父组件，则必须先remove，否则会抛出IllegalStateException。
+                ViewParent vp = view.getParent();
+                if (vp != null) {
+                    ViewGroup parent = (ViewGroup) vp;
+                    parent.removeView(view);
+                }
+                container.addView(view);
+                //add  listeners  here  if  necessary
+                return view;
             }
-            ImageView view = viewlist.get(position);
-            //如果View已经在之前添加到了一个父组件，则必须先remove，否则会抛出IllegalStateException。
-            ViewParent vp = view.getParent();
-            if (vp != null) {
-                ViewGroup parent = (ViewGroup) vp;
-                parent.removeView(view);
-            }
-            container.addView(view);
-            //add  listeners  here  if  necessary
-            return view;
+
+            return null;
         }
     }
 

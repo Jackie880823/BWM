@@ -197,7 +197,7 @@ public class FileUtil {
     private static final String VIDEO = "Video";
 
     public static File saveAudioFile(Context mContext) {
-        return new File(getAudioRootPath(mContext) + File.separator + System.currentTimeMillis() + ".mp3");
+        return new File(getAudioRootPath(mContext) + File.separator + System.currentTimeMillis() + ".aac");
     }
 
     public static String getAudioRootPath(Context mContext) {

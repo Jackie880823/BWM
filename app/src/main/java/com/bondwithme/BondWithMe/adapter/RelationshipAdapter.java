@@ -74,7 +74,6 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         int padding = context.getResources().getDimensionPixelOffset(R.dimen.default_content_padding);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
         layout.setLayoutParams(params);
-        layout.setPadding(padding, 0, padding, 0);
         layout.setOrientation(LinearLayout.HORIZONTAL);
         return new RelationHolder<>(layout);
     }
@@ -105,14 +104,13 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         if(spouse != null) {
             userEntities.addAll(spouse);
         }
-        int count = holder.getChildCount();
-        // 一个View至少要有两个用户显示的View
-        int minSize = userEntities.size() > 2 ? userEntities.size() : 2;
 
+        int count = holder.getChildCount();
+        int minSize = userEntities.size();
         if(count > minSize) {
             holder.removeViews(minSize, count - minSize);
         } else if(count < minSize) {
-            addViews(holder, minSize - count);
+            addViews(holder, minSize - count, position);
         }
 
         if(this.type == RelationshipEnum.sibling) {
@@ -138,10 +136,11 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
     /**
      * 向{@code holder}中添加{@code count}个{@link FamilyMemberEntity}显示视图
      *
-     * @param holder 子项的视图封装实例
-     * @param count  需要添加的{@link FamilyMemberEntity}显示视图
+     * @param holder   子项的视图封装实例
+     * @param count    需要添加的{@link FamilyMemberEntity}显示视图
+     * @param position 数据列表位置
      */
-    private void addViews(RelationHolder holder, int count) {
+    private void addViews(RelationHolder holder, int count, int position) {
         for(int i = 0; i < count; i++) {
             View child = LayoutInflater.from(context).inflate(R.layout.relationship_item_layout, null);
             if(type == RelationshipEnum.sibling) {
@@ -153,7 +152,7 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
 
                 }
             });
-            holder.addView(child);
+            holder.addView(child, i == count - 1 && position != 0);
         }
     }
 
@@ -187,8 +186,8 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         tvName.setText(familyMemberEntity.getUser_given_name());
 
         String treeTypeName = familyMemberEntity.getTree_type_name();
-        if(!TextUtils.isEmpty(treeTypeName)){
-            treeTypeName = RelationshipUtil.getRelationshipName(context,treeTypeName);
+        if(!TextUtils.isEmpty(treeTypeName)) {
+            treeTypeName = RelationshipUtil.getRelationshipName(context, treeTypeName);
         }
         tvRelation.setText(treeTypeName);
     }
@@ -233,18 +232,24 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
          * @param child the child view to add
          * @see LinearLayout#generateDefaultLayoutParams()
          */
-        public void addView(View child) {
+        public void addView(View child, boolean show) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
             child.setLayoutParams(params);
             child.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        Object tag = v.getTag();
-                    if(listener != null && tag != null){
+                    Object tag = v.getTag();
+                    if(listener != null && tag != null) {
                         listener.onClick(v, (FamilyMemberEntity) tag);
                     }
                 }
             });
+            View nullView = child.findViewById(R.id.null_image_view);
+            if(show) {
+                nullView.setVisibility(View.VISIBLE);
+            } else {
+                nullView.setVisibility(View.GONE);
+            }
             itemView.addView(child);
         }
 

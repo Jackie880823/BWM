@@ -52,6 +52,7 @@ public class CrashActivity extends Activity {
                     } catch (android.content.ActivityNotFoundException ex) {
                         Toast.makeText(CrashActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
                     }
+                    finish();
                     android.os.Process.killProcess(android.os.Process.myPid());
                     System.exit(0);
 //

@@ -118,6 +118,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
+                <ImageView
+                    android:id="@+id/iv_video_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignBaseline="@+id/iv_walls_images"
+                    android:layout_alignEnd="@+id/iv_walls_images"
+                    android:layout_alignLeft="@+id/iv_walls_images"
+                    android:layout_alignRight="@+id/iv_walls_images"
+                    android:layout_alignStart="@+id/iv_walls_images"
+                    android:layout_alignTop="@+id/iv_walls_images"
+                    android:layout_alignBottom="@+id/iv_walls_images"
+                    android:src="@drawable/btn_video"
+                    android:scaleType="centerInside"
+                    android:visibility="gone"/>
+
                 <TextView
                     android:id="@+id/tv_wall_photo_count"
                     android:layout_width="wrap_content"
