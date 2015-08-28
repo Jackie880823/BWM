@@ -6,19 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
-import android.widget.VideoView;
+import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -26,10 +25,12 @@ import com.bondwithme.BondWithMe.adapter.PickPicAdapter;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
+import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
 import com.bondwithme.BondWithMe.widget.MyDialog;
@@ -51,7 +52,7 @@ import java.util.Map;
  * Use the {@link TabPictureFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabPictureFragment extends BaseFragment<WallNewActivity> implements View.OnClickListener, MediaPlayer.OnPreparedListener {
+public class TabPictureFragment extends BaseFragment<WallNewActivity> implements View.OnClickListener{
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
      */
@@ -61,7 +62,6 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      * 临时文件用户裁剪
      */
     public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp_";
-    public final static String VIDEO_NAME_TEMP = "video_temp_";
 
     private final static int REQUEST_HEAD_PHOTO = 1;
     private final static int REQUEST_HEAD_IMAGE = 2;
@@ -93,8 +93,9 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     /**
      * 得到的视频显示在这个控件上
      */
-    private VideoView vvDisplay;
+    private ImageView ivDisplay;
     private View previewVideoView;
+    private TextView tvDuration;
 
     private PickPicAdapter adapter;
 
@@ -152,14 +153,15 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         gvPictures = getViewById(R.id.gv_pictures);
 
         previewVideoView = LayoutInflater.from(getActivity()).inflate(R.layout.tab_picture_voide_view, null);
-        vvDisplay = (VideoView) previewVideoView.findViewById(R.id.preview_video_view);
+        tvDuration = (TextView) previewVideoView.findViewById(R.id.duration_tv);
+        ivDisplay = (ImageView) previewVideoView.findViewById(R.id.video_view_iv);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         previewVideoView.setLayoutParams(params);
 
         // 删除视频
         previewVideoView.findViewById(R.id.delete_video_view).setOnClickListener(this);
-        vvDisplay.setOnPreparedListener(this);
+        previewVideoView.findViewById(R.id.go_to_preview_video_iv).setOnClickListener(this);
 
         adapter = new PickPicAdapter(getActivity(), datas, R.layout.picture_item_for_gridview, new String[]{"pic_resId",}, new int[]{R.id.iv_pic});
         adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
@@ -193,9 +195,12 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         if(!uris.isEmpty()) {
             clearVideo();
             addDataAndNotify(uris);
-        } else if(!Uri.EMPTY.equals(videoUri)) {
-            clearPhotos();
-            vvDisplay.setVideoURI(videoUri);
+        } else {
+            if(!Uri.EMPTY.equals(videoUri)) {
+                clearPhotos();
+                ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
+                tvDuration.setText(MyDateUtils.formatDuration(videoDuration));
+            }
         }
     }
 
@@ -210,11 +215,15 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         final int residue = SelectPhotosActivity.MAX_SELECT - datas.size();
         if(residue <= 0) {
             MessageUtil.showMessage(getActivity(), String.format(getActivity().getString(R.string.select_too_many), SelectPhotosActivity.MAX_SELECT));
-            return;
         }
+
         switch(v.getId()) {
             // 点击打开相册
             case R.id.ll_to_photo:
+                if(residue <= 0) {
+                    return;
+                }
+
                 if(!Uri.EMPTY.equals(videoUri)) {
                     // 已经选择了视频需要弹出提示
                     myDialog = new MyDialog(getParentActivity(), "", getParentActivity().getString(R.string.will_remove_selected_video));
@@ -241,6 +250,11 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
 
             // 点击打开相机
             case R.id.ll_to_camera:
+                if(residue <= 0) {
+                    openCameraAfterCheck(REQUEST_HEAD_VIDEO);
+                    return;
+                }
+
                 myDialog = new MyDialog(getParentActivity(), "", getActivity().getString(R.string.select_media));
                 myDialog.setButtonAccept(getParentActivity().getString(R.string.text_video), new View.OnClickListener() {
                     @Override
@@ -262,6 +276,12 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
             case R.id.delete_video_view:
                 clearVideo();
                 break;
+
+            case R.id.go_to_preview_video_iv:
+                Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
+                intent.putExtra(PreviewVideoActivity.EXTRA_VIDEO_URI, videoUri.toString());
+                startActivity(intent);
+                break;
         }
     }
 
@@ -271,7 +291,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
             case REQUEST_HEAD_VIDEO:
                 if(uris.isEmpty()) {
                     Uri out = getOutVideoUri();
-                    openCamera(MediaStore.ACTION_VIDEO_CAPTURE, out, REQUEST_HEAD_VIDEO);
+                    openCamera(MediaData.ACTION_RECORDER_VIDEO, out, REQUEST_HEAD_VIDEO);
                 } else {
                     myDialog = new MyDialog(getParentActivity(), "", getString(R.string.will_remove_photos));
                     myDialog.setButtonAccept(R.string.text_yes, new View.OnClickListener() {
@@ -279,7 +299,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                         public void onClick(View v) {
                             myDialog.dismiss();
                             Uri out = getOutVideoUri();
-                            openCamera(MediaStore.ACTION_VIDEO_CAPTURE, out, REQUEST_HEAD_VIDEO);
+                            openCamera(MediaData.ACTION_RECORDER_VIDEO, out, REQUEST_HEAD_VIDEO);
                         }
                     });
                     myDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
@@ -327,7 +347,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         File file = new File(Constant.VIDEO_PATH);
         boolean exists = file.exists() || file.mkdir();
         File video;
-        video = exists ? new File(Constant.VIDEO_PATH + VIDEO_NAME_TEMP + MP4) : new File(Environment.getDataDirectory() + VIDEO_NAME_TEMP + MP4);
+        video = exists ? new File(Constant.VIDEO_PATH + System.currentTimeMillis() + MP4) : new File(Environment.getDataDirectory().getAbsolutePath() + "/" + System.currentTimeMillis() + MP4);
         return Uri.fromFile(video);
     }
 
@@ -344,10 +364,10 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         /**
          * 使用了Universal Image Loader库来处理图片需要返回的Uri与传统有差异，传此值用于区分
          */
-        intent.putExtra(MediaData.USE_UNIVERSAL, true);
+        intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
         intent.putExtra(MediaData.USE_VIDEO_AVAILABLE, true);
-        intent.putExtra(SelectPhotosActivity.SELECTED_PHOTOS, !datas.isEmpty());
-        intent.putExtra(SelectPhotosActivity.RESIDUE, residue);
+        intent.putParcelableArrayListExtra(SelectPhotosActivity.EXTRA_SELECTED_PHOTOS, (ArrayList<? extends Parcelable>) uris);
+//        intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         startActivityForResult(intent, REQUEST_HEAD_PHOTO);
     }
@@ -357,27 +377,25 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      *
      * @param action  打开相机方式动作
      *                <br>{@link MediaStore#ACTION_IMAGE_CAPTURE} - 拍摄照片
-     *                <br>{@link MediaStore#ACTION_VIDEO_CAPTURE} - 拍摄视频
+     *                <br>{@link MediaData#ACTION_RECORDER_VIDEO} - 拍摄视频
      * @param request 请求代码
      *                <br>{@link #REQUEST_HEAD_IMAGE} - 拍照
      *                <br> {@link #REQUEST_HEAD_VIDEO} - 视频
      */
     private void openCamera(String action, Uri out, int request) {
-        Intent intent2 = new Intent(action);
-        intent2.putExtra("android.intent.extras.CAMERA_FACING", getCameraId(false));
-        //                intent2.putExtra("android.intent.extras.CAMERA_FACING", 1);
-        //                intent2.putExtra("camerasensortype", 2);//using the front camera
-        intent2.putExtra("autofocus", true);
+        Intent intent = new Intent(action);
+        intent.putExtra("android.intent.extras.CAMERA_FACING", getCameraId(false));
+        intent.putExtra("autofocus", true);
 
         // 设置限制文件大小
-        intent2.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MediaData.MAX_SIZE);
+        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MediaData.MAX_SIZE);
 
         // 下面这句指定调用相机后存储的路径
-        intent2.putExtra(MediaStore.EXTRA_OUTPUT, out);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, out);
         // 图片质量为高
-        intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.9);
-        intent2.putExtra("return-data", true);
-        startActivityForResult(intent2, request);
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, request);
     }
 
     private void addDataAndNotify(Uri uri) {
@@ -429,14 +447,16 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
                 case REQUEST_HEAD_PHOTO:
                     if(data != null) {
                         LogUtil.i(TAG, "onClick& play video uri: " + data.getData());
-                        String type = data.getStringExtra(SelectPhotosActivity.RESULT_MEDIA_TYPE);
+                        String type = data.getStringExtra(MediaData.EXTRA_MEDIA_TYPE);
                         if(MediaData.TYPE_VIDEO.equals(type)) {
                             addVideoFromActivityResult(data);
                         } else {
                             clearVideo();
 
                             ArrayList<Uri> pickUris;
-                            pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.IMAGES_STR);
+                            pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
+                            datas.clear();
+                            uris.clear();
                             addDataAndNotify(pickUris);
                             uris.addAll(pickUris);
                         }
@@ -483,20 +503,15 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     private void addVideoFromActivityResult(Intent data) {
         clearPhotos();
 
+        videoUri = data.getData();
         MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
-        metadataRetriever.setDataSource(getActivity(), data.getData());
+        metadataRetriever.setDataSource(getActivity(), videoUri);
         videoDuration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         metadataRetriever.release();
-        videoUri = data.getData();
         LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
         LogUtil.i(TAG, "addVideoFromActivityResult& videoDuration: " + videoDuration);
-        MediaController mediaController = new MediaController(getActivity());
-        mediaController.setAnchorView(vvDisplay);
-        vvDisplay.setMediaController(mediaController);
-        vvDisplay.setVideoURI(videoUri);
-        if(vvDisplay.isPlaying()) {
-            vvDisplay.stopPlayback();
-        }
+        ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
+        tvDuration.setText(MyDateUtils.formatDuration(videoDuration));
     }
 
     /**
@@ -569,9 +584,6 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     @Override
     public void onPause() {
         super.onPause();
-        if(vvDisplay.isPlaying()) {
-            vvDisplay.pause();
-        }
     }
 
     /**
@@ -591,19 +603,6 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(vvDisplay.isPlaying()) {
-            vvDisplay.stopPlayback();
-        }
         FileUtil.clearCache(getActivity());
-    }
-
-    /**
-     * Called when the media file is ready for playback.
-     *
-     * @param mp the MediaPlayer that is ready for playback
-     */
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        mp.start();
     }
 }

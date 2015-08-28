@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
+import com.bondwithme.BondWithMe.Piwik.MyPiwik;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
@@ -27,8 +28,9 @@ public class TransitionActivity extends Activity {
         if(isLogin()){
             startActivity(new Intent(this,MainActivity.class));
         }else{
-            App.piwikGuest();
-            startActivity(new Intent(this,StartActivity.class));
+//            App.piwikGuest();
+            MyPiwik.piwikGuest();
+            startActivity(new Intent(this, StartActivity.class));
         }
         finish();
 
