@@ -1393,6 +1393,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             msgEntity.setVideo_filename(audioFile);
             String videoThumbnail = getVideoThumbnail(uri);
             msgEntity.setVideo_format1(videoThumbnail);
+            msgEntity.setVideo_format2(uri.getPath());
             msgEntity.setFailUri(uri);
             msgEntity.setVideo_duration(duration);
             params.put("video_thumbnail", String.format("data:image/jpeg;base64,%s", videoThumbnail));

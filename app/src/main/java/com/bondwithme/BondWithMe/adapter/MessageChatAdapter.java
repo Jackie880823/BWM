@@ -268,7 +268,6 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 holder.sendProgress.setVisibility(View.GONE);
             }
             String sendStatus = msgEntity.getSendStatus();
-            Log.i("aaaaa",sendStatus+"");
             if (MsgEntity.SEND_FAIL.equals(sendStatus) && holder.msgFail != null) {
                 holder.msgFail.setVisibility(View.VISIBLE);
             } else if (MsgEntity.SEND_IN.equals(sendStatus) && holder.sendProgress != null) {
@@ -400,15 +399,19 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             holder.progressBar.setVisibility(View.GONE);
             holder.video_time.setText(MyDateUtils.formatRecordTimeForString(msgEntity.getVideo_duration()));
             final String video_format = msgEntity.getVideo_format1();
-            if (msgEntity.getVideo_thumbnail() == null && video_format != null) {
+            if (video_format != null) {
+                holder.message_video_start.setVisibility(View.GONE);
+                holder.message_video_default.setVisibility(View.VISIBLE);
                 holder.btn_video.setImageResource(R.drawable.btn_video);
                 Bitmap bitmap = base64ToBitmap(video_format);
                 if (bitmap != null) {
-                    holder.message_video_start.setImageBitmap(bitmap);
+                    holder.message_video_default.setImageBitmap(bitmap);
                 } else {
-                    holder.message_video_start.setImageResource(R.drawable.network_image_default);
+                    holder.message_video_default.setImageResource(R.drawable.network_image_default);
                 }
             } else {
+                holder.message_video_default.setVisibility(View.GONE);
+                holder.message_video_start.setVisibility(View.VISIBLE);
                 File file = new File(PreviewVideoActivity.VIDEO_PATH + msgEntity.getVideo_filename());
                 if (file != null && file.exists()) {
                     holder.btn_video.setImageResource(R.drawable.btn_video);
@@ -482,6 +485,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         TextView video_time;
         CircularProgress sendProgress;
         ImageView msgFail;
+        ImageView message_video_default;
+        RelativeLayout pic_linear;
 
         public VHItem(View itemView) {
             super(itemView);
@@ -501,6 +506,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             btn_video = (ImageView) itemView.findViewById(R.id.btn_video);
             sendProgress = (CircularProgress) itemView.findViewById(R.id.send_progress_bar);
             msgFail = (ImageView) itemView.findViewById(R.id.msg_send_fail_iv);
+            message_video_default = (ImageView) itemView.findViewById(R.id.message_video_default);
+            pic_linear = (RelativeLayout) itemView.findViewById(R.id.pic_linear);
 
             if (null != iconImage) {
                 iconImage.setOnClickListener(this);
@@ -511,8 +518,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             if (null != audio_play) {
                 audio_play.setOnClickListener(this);
             }
-            if (message_video_start != null) {
-                message_video_start.setOnClickListener(this);
+            if (pic_linear != null) {
+                pic_linear.setOnClickListener(this);
             }
             if (msgFail != null) {
                 msgFail.setOnClickListener(this);
@@ -636,10 +643,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     playPros = 0;
                     mHandler.sendMessageDelayed(mHandler.obtainMessage(PLAY_AUDIO_HANDLER, map), 500);
                     break;
-                case R.id.message_video_start:
+                case R.id.pic_linear:
                     String video_format = msgEntity.getVideo_format1();
                     intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
-                    if (msgEntity.getVideo_thumbnail() == null && video_format != null) {
+                    if (video_format != null) {
                         intent.putExtra(PreviewVideoActivity.EXTRA_VIDEO_URI, msgEntity.getVideo_format2());
                     } else {
                         intent.putExtra(PreviewVideoActivity.CONTENT_CREATOR_ID, msgEntity.getUser_id());
