@@ -401,16 +401,22 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             final String video_format = msgEntity.getVideo_format1();
             if (video_format != null) {
                 holder.message_video_start.setVisibility(View.GONE);
-                holder.message_video_default.setVisibility(View.VISIBLE);
                 holder.btn_video.setImageResource(R.drawable.btn_video);
-                Bitmap bitmap = base64ToBitmap(video_format);
-                if (bitmap != null) {
-                    holder.message_video_default.setImageBitmap(bitmap);
+                if (null != holder.message_video_default) {
+                    holder.message_video_default.setVisibility(View.VISIBLE);
+                    Bitmap bitmap = base64ToBitmap(video_format);
+                    if (bitmap != null) {
+                        holder.message_video_default.setImageBitmap(bitmap);
+                    } else {
+                        holder.message_video_default.setImageResource(R.drawable.network_image_default);
+                    }
                 } else {
-                    holder.message_video_default.setImageResource(R.drawable.network_image_default);
+                    holder.message_video_start.setVisibility(View.VISIBLE);
                 }
             } else {
-                holder.message_video_default.setVisibility(View.GONE);
+                if (null != holder.message_video_default) {
+                    holder.message_video_default.setVisibility(View.GONE);
+                }
                 holder.message_video_start.setVisibility(View.VISIBLE);
                 File file = new File(PreviewVideoActivity.VIDEO_PATH + msgEntity.getVideo_filename());
                 if (file != null && file.exists()) {
@@ -444,14 +450,12 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 return;
             }
             HorizontalProgressBarWithNumber mProgressBar = (HorizontalProgressBarWithNumber) holder.itemView.findViewById(R.id.id_progressbar);
-            int progress = mProgressBar.getProgress();
             if (playTime != 0) {
                 mProgressBar.setMax(playTime);
-                mProgressBar.setProgress(++progress);
+                mProgressBar.setProgress(++playPros);
                 audioName = name;
-                playPros = progress;
             }
-            if (progress > playTime) {
+            if (playPros > playTime) {
                 mProgressBar.setProgress(0);
                 mHandler.removeMessages(PLAY_AUDIO_HANDLER);
                 audioName = null;
@@ -507,7 +511,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             sendProgress = (CircularProgress) itemView.findViewById(R.id.send_progress_bar);
             msgFail = (ImageView) itemView.findViewById(R.id.msg_send_fail_iv);
             message_video_default = (ImageView) itemView.findViewById(R.id.message_video_default);
-            pic_linear = (RelativeLayout) itemView.findViewById(R.id.pic_linear);
+            pic_linear = (RelativeLayout) itemView.findViewById(R.id.pic_linear_re);
 
             if (null != iconImage) {
                 iconImage.setOnClickListener(this);
@@ -643,7 +647,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     playPros = 0;
                     mHandler.sendMessageDelayed(mHandler.obtainMessage(PLAY_AUDIO_HANDLER, map), 500);
                     break;
-                case R.id.pic_linear:
+                case R.id.pic_linear_re:
                     String video_format = msgEntity.getVideo_format1();
                     intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
                     if (video_format != null) {
