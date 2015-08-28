@@ -8,7 +8,9 @@ import java.io.Serializable;
  * Created by christepherzhang on 15/1/27.
  */
 public class MsgEntity implements Serializable {
-
+    public static final String SEND_IN = "1";
+    public static final String SEND_FAIL = "2";
+    public static final String SEND_SUCCESS = "3";
 
     private String group_id;            //: "250",
     private String group_owner_id;      //: "47",
@@ -84,6 +86,24 @@ public class MsgEntity implements Serializable {
     private String audio_filename;
     private String video_duration;
     private String video_thumbnail;
+    private String sendStatus;
+    private Uri failUri;
+
+    public Uri getFailUri() {
+        return failUri;
+    }
+
+    public void setFailUri(Uri failUri) {
+        this.failUri = failUri;
+    }
+
+    public String getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(String sendStatus) {
+        this.sendStatus = sendStatus;
+    }
 
     public String getVideo_thumbnail() {
         return video_thumbnail;
