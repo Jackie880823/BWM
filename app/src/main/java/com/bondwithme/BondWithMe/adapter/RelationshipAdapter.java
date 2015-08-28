@@ -15,6 +15,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
 import com.bondwithme.BondWithMe.entity.RelationshipEnum;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.OnFamilyItemClickListener;
 import com.bondwithme.BondWithMe.util.RelationshipUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -183,9 +184,16 @@ public class RelationshipAdapter extends RecyclerView.Adapter<RelationshipAdapte
         TextView tvRelation = (TextView) childView.findViewById(R.id.relationship_item_relation_tv);
         VolleyUtil.initNetworkImageView(context, headImage, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, familyMemberEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
-        tvName.setText(familyMemberEntity.getUser_given_name());
+        String name;
+        if(MainActivity.getUser().getUser_id().equals(familyMemberEntity.getUser_id())) {
+            name = context.getString(R.string.text_me);
+        } else {
+            name = familyMemberEntity.getUser_given_name();
+        }
+        tvName.setText(name);
 
-        String treeTypeName = familyMemberEntity.getTree_type_name();
+        String treeTypeName;
+        treeTypeName = familyMemberEntity.getTree_type_name();
         if(!TextUtils.isEmpty(treeTypeName)) {
             treeTypeName = RelationshipUtil.getRelationshipName(context, treeTypeName);
         }
