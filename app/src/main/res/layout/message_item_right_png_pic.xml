@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/default_view_margin"
-    android:paddingBottom="@dimen/default_view_margin">
+    android:paddingBottom="@dimen/default_view_margin"
+    android:paddingTop="@dimen/default_view_margin">
+
     <com.bondwithme.BondWithMe.widget.CircularNetworkImage
         android:id="@+id/message_icon_image"
         android:layout_width="@dimen/_50dp"
@@ -13,32 +14,66 @@
         android:layout_marginRight="@dimen/_6dp"
         android:src="@drawable/default_head_icon"
         app:border="false" />
+
     <RelativeLayout
-        android:id="@+id/pic_linear"
+        android:id="@+id/msg_content_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/message_right"
-        android:gravity="center"
         android:layout_toLeftOf="@+id/message_icon_image">
 
-        <ImageView
-            android:id="@+id/message_pic_png_iv"
-            android:layout_width="@dimen/_120dp"
-            android:layout_height="@dimen/_120dp"
-            android:scaleType="fitXY"/>
-        <com.material.widget.CircularProgress
-            android:id="@+id/message_progress_bar"
-            android:layout_width="@dimen/_32dp"
-            android:layout_height="@dimen/_32dp"
-            android:layout_centerInParent="true"/>
+        <RelativeLayout
+            android:id="@+id/pic_linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/send_fail_rl"
+            android:background="@drawable/message_right"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/message_pic_png_iv"
+                android:layout_width="@dimen/_120dp"
+                android:layout_height="@dimen/_120dp"
+                android:scaleType="fitXY" />
+
+            <com.material.widget.CircularProgress
+                android:id="@+id/message_progress_bar"
+                android:layout_width="@dimen/_32dp"
+                android:layout_height="@dimen/_32dp"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/send_fail_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/_15dp"
+            android:layout_marginRight="@dimen/_15dp">
+
+            <com.material.widget.CircularProgress
+                android:id="@+id/send_progress_bar"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                app:circular_progress_border_width="1dp"
+                app:circular_progress_color="#EDEDED"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/msg_send_fail_iv"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/chat_send_fail"
+                android:visibility="gone"/>
+        </RelativeLayout>
     </RelativeLayout>
 
     <TextView
         android:id="@+id/date_time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/pic_linear"
-        android:layout_below="@+id/pic_linear"
+        android:layout_alignRight="@+id/msg_content_ll"
+        android:layout_below="@+id/msg_content_ll"
         android:layout_marginRight="@dimen/_16dp"
         android:layout_marginTop="@dimen/_6dp"
         android:text="2015年05月24日"

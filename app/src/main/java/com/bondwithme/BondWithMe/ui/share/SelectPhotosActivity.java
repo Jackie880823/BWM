@@ -63,7 +63,7 @@ public class SelectPhotosActivity extends BaseActivity {
     /**
      * 请求多张图片数量
      */
-    private int residue;
+//    private int residue;
     /**
      * 当前是否为浏览状态标识位
      */
@@ -99,7 +99,8 @@ public class SelectPhotosActivity extends BaseActivity {
             } else {
                 LogUtil.i(TAG, "addUri& uri path: " + mediaData.getPath());
                 if(multi) {
-                    if(mSelectedImages.size() < residue) {
+//                    if(mSelectedImages.size() < residue) {
+                    if(mSelectedImages.size() < MAX_SELECT) {
                         // 没有超过限制的图片数量可以继续添加并返回添加结果的返回值
                         result = mSelectedImages.contains(mediaData) || mSelectedImages.add(mediaData);
                     } else {
@@ -252,13 +253,15 @@ public class SelectPhotosActivity extends BaseActivity {
         useUniversal = intent.getBooleanExtra(MediaData.EXTRA_USE_UNIVERSAL, false);
         useVideo = intent.getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
         // 总共需要添加的图片数量
-        residue = intent.getIntExtra(EXTRA_RESIDUE, 10);
+//        residue = intent.getIntExtra(EXTRA_RESIDUE, 10);
         fragment.setSelectImageUirListener(listener);
         ArrayList<Uri> uris = intent.getParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS);
         mSelectedImages.clear();
-        for(Uri uri : uris) {
-            MediaData mediaData = new MediaData(uri, uri.toString(), MediaData.TYPE_IMAGE, 0);
-            mSelectedImages.add(mediaData);
+        if(uris != null  ) {
+            for(Uri uri : uris) {
+                MediaData mediaData = new MediaData(uri, uri.toString(), MediaData.TYPE_IMAGE, 0);
+                mSelectedImages.add(mediaData);
+            }
         }
     }
 
@@ -322,7 +325,9 @@ public class SelectPhotosActivity extends BaseActivity {
      * @param mediaData {@link MediaData#TYPE_VIDEO}类型的媒体数据
      */
     public void alertAddVideo(final MediaData mediaData) {
-        if(!mSelectedImages.isEmpty() || residue < MAX_SELECT) {
+//        if(!mSelectedImages.isEmpty() || residue < MAX_SELECT) {
+        if(!mSelectedImages.isEmpty()) {
+
             if(selectVideoDialog == null) {
                 selectVideoDialog = new MyDialog(this, "", getString(R.string.will_remove_photos));
                 // 确认要选择视频

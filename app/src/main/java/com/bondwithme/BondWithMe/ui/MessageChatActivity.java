@@ -157,6 +157,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private final static int GET_RECORD_TIME = 0X108;
     private final static int SEND_AUDIO_MESSAGE = 0X109;
     private final static int PLAY_AUDIO_HANDLER = 0X110;
+    public final static int NOTIFY_DATA = 0X111;
     public int INITIAL_LIMIT = 10;
 
     public MessageAction messageAction;
@@ -177,8 +178,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private Timer timer;
     private File audioFile;
 
-    private MsgEntity audioMsgEntity;
-
+    Map<String, MsgEntity> sendMap = new HashMap<>();
 
     Handler handler = new Handler() {
         @Override
@@ -204,21 +204,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             empty_message.setVisibility(View.GONE);
                             swipeRefreshLayout.setVisibility(View.VISIBLE);
                         }
-                        boolean hasAudioMsg = false;
-                        for (MsgEntity msgEntity1 : msgSendList) {
-                            if (audioMsgEntity != null && !TextUtils.isEmpty(audioMsgEntity.getAudio_filename()) && audioMsgEntity.getAudio_filename().equalsIgnoreCase(
-                                    msgEntity1.getAudio_filename())) {
-                                hasAudioMsg = true;
-                                break;
+                        if (sendMap != null && sendMap.size() > 0) {
+                            for (String mapKey : sendMap.keySet()) {
+                                msgSendList.add(sendMap.get(mapKey));
                             }
-                            if (audioMsgEntity != null && !TextUtils.isEmpty(audioMsgEntity.getVideo_filename()) && audioMsgEntity.getVideo_filename().equalsIgnoreCase(
-                                    msgEntity1.getVideo_filename())) {
-                                hasAudioMsg = true;
-                                break;
-                            }
-                        }
-                        if (!hasAudioMsg && audioMsgEntity != null) {
-                            msgSendList.add(audioMsgEntity);
                             Collections.sort(msgSendList, new MessageAction.SortExpertsTeamDate());
                         }
                         messageChatAdapter.addSendData(msgSendList);
@@ -232,35 +221,36 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     }
                     indexPage++;
                     if (null != msgHistoryList) {
+                        if (sendMap != null && sendMap.size() > 0) {
+                            for (String mapKey : sendMap.keySet()) {
+                                msgHistoryList.add(sendMap.get(mapKey));
+                            }
+                            Collections.sort(msgHistoryList, new MessageAction.SortExpertsTeamDate());
+                        }
                         messageChatAdapter.addHistoryData(msgHistoryList);
                     }
                     break;
                 case SEN_MESSAGE_FORM_ALBUM:
                     //上传相册图片
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (pickUries != null) {
-                                for (Uri uri : pickUries) {
-                                    uploadImage(uri);
-                                }
-                            }
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+                    if (pickUries != null) {
+                        for (Uri uri : pickUries) {
+                            uploadImage(uri);
                         }
-                    }).start();
+                    }
+//                        }
+//                    }).start();
                     break;
                 case SEN_MESSAGE_FORM_CAMERA:
                     //上传相机拍照图片
-                    MsgEntity msgEntity = new MsgEntity();
-                    msgEntity.setSticker_type(".png");
-                    msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-                    msgEntity.setUri(uri);
-                    messageChatAdapter.addMsgEntity(msgEntity);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            uploadImage(uri);
-                        }
-                    }).start();
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+                    uploadImage(uri);
+//                        }
+//                    }).start();
                     break;
                 case SEND_PIC_MESSAGE:
                     JSONObject jsonObject = (JSONObject) msg.obj;
@@ -292,21 +282,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             empty_message.setVisibility(View.GONE);
                             swipeRefreshLayout.setVisibility(View.VISIBLE);
                         }
-                        boolean hasAudioMsg = false;
-                        for (MsgEntity msgEntity1 : msgTimerList) {
-                            if (audioMsgEntity != null && !TextUtils.isEmpty(audioMsgEntity.getAudio_filename()) && audioMsgEntity.getAudio_filename().equalsIgnoreCase(
-                                    msgEntity1.getAudio_filename())) {
-                                hasAudioMsg = true;
-                                break;
+                        if (sendMap != null && sendMap.size() > 0) {
+                            for (String mapKey : sendMap.keySet()) {
+                                msgTimerList.add(sendMap.get(mapKey));
                             }
-                            if (audioMsgEntity != null && !TextUtils.isEmpty(audioMsgEntity.getVideo_filename()) && audioMsgEntity.getVideo_filename().equalsIgnoreCase(
-                                    msgEntity1.getVideo_filename())) {
-                                hasAudioMsg = true;
-                                break;
-                            }
-                        }
-                        if (!hasAudioMsg && audioMsgEntity != null) {
-                            msgTimerList.add(audioMsgEntity);
                             Collections.sort(msgTimerList, new MessageAction.SortExpertsTeamDate());
                         }
                         messageChatAdapter.addTimerData(msgTimerList);
@@ -334,27 +313,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         return;
                     }
                     try {
-                        String audio_filename = audioJsonObject.optString("audio_filename");
-                        String video_filename = audioJsonObject.optString("video_filename");
-                        String video_thumbnail = audioJsonObject.optString("video_thumbnail");
-                        String video_duration = audioJsonObject.optString("video_duration");
-                        String audio_duration = audioJsonObject.optString("audio_duration");
                         String postType = audioJsonObject.optString("postType");
-                        String uri = null;
-                        if ("postVideo".equalsIgnoreCase(postType) && audioMsgEntity != null) {
-                            uri = audioMsgEntity.getVideo_format2();
+                        if ("postVideo".equalsIgnoreCase(postType) || "postAudio".equalsIgnoreCase(postType)) {
+                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
-                        audioMsgEntity = new MsgEntity();
-                        audioMsgEntity.setUser_id(MainActivity.getUser().getUser_id());
-                        audioMsgEntity.setAudio_filename(audio_filename);
-                        audioMsgEntity.setVideo_filename(video_filename);
-                        audioMsgEntity.setVideo_thumbnail(video_thumbnail);
-                        audioMsgEntity.setVideo_duration(video_duration);
-                        audioMsgEntity.setAudio_duration(audio_duration);
-                        if (uri != null) {
-                            audioMsgEntity.setVideo_format2(uri);
-                        }
-                        audioMsgEntity.setContent_creation_date(MyDateUtils.getUTCDateString4DefaultFromLocal(System.currentTimeMillis()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -371,6 +333,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     } else {
                         handler.sendEmptyMessageDelayed(PLAY_AUDIO_HANDLER, 1000);
                     }
+                    break;
+                case NOTIFY_DATA:
+                    int scrollPosition = llm.findLastVisibleItemPosition();
+                    messageChatAdapter.notifyDataSetChanged();
+                    llm.scrollToPosition(scrollPosition);
                     break;
             }
         }
@@ -495,6 +462,88 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 getMsg(indexPage * INITIAL_LIMIT, 0, GET_TIMER_MESSAGE);//接收对话消息
             }
         }, 10000, 10000);
+
+        messageChatAdapter.onClickFailMsg(new MessageChatAdapter.SendFailMsgClick() {
+            @Override
+            public void sendFailMsg(MsgEntity msgEntity) {
+                if (sendMap != null && sendMap.size() > 0) {
+                    String key = msgEntity.getPhoto_postsize();
+                    String type = msgEntity.getPhoto_thumbsize();
+                    Map<String, Object> params = new HashMap<>();
+                    String content = msgEntity.getText_description();
+                    String audioName = msgEntity.getAudio_filename();
+                    String videoName = msgEntity.getVideo_filename();
+                    String sticker_name = msgEntity.getSticker_name();
+                    params.put("content_creator_id", MainActivity.getUser().getUser_id());
+                    Uri uriPic = msgEntity.getUri();
+                    params.put("group_id", groupId);
+                    params.put("content_type", "post");
+                    if (!TextUtils.isEmpty(content)) {
+                        params.put("text_description", content);
+                        params.put("group_ind_type", "");
+                        params.put("content_group_public", "0");
+                    } else if (!TextUtils.isEmpty(videoName)) {
+                        File file = new File(msgEntity.getFailUri().getPath());
+                        if (file == null || !file.exists()) {
+                            for (String mapKey : sendMap.keySet()) {
+                                if (key != null && key.equals(mapKey)) {
+                                    sendMap.remove(mapKey);
+                                    break;
+                                }
+                            }
+                            handler.sendEmptyMessage(NOTIFY_DATA);
+                            return;
+                        }
+                        params.put("file", file);
+                        params.put("video", "1");
+                        params.put("video_duration", msgEntity.getVideo_duration());
+                    } else if (!TextUtils.isEmpty(audioName)) {
+                        File file = new File(msgEntity.getFailUri().getPath());
+                        if (file == null || !file.exists()) {
+                            for (String mapKey : sendMap.keySet()) {
+                                if (key != null && key.equals(mapKey)) {
+                                    sendMap.remove(mapKey);
+                                    break;
+                                }
+                            }
+                            handler.sendEmptyMessage(NOTIFY_DATA);
+                            return;
+                        }
+                        params.put("file", file);
+                        params.put("audio", "1");
+                        params.put("audio_duration", msgEntity.getAudio_duration());
+                    } else if (uriPic != null) {
+                        String path = LocalImageLoader.compressBitmap(mContext, FileUtil.getRealPathFromURI(mContext, uriPic), 480, 800, false);
+                        File filePic = new File(path);
+                        if (filePic == null || !filePic.exists()) {
+                            for (String mapKey : sendMap.keySet()) {
+                                if (key != null && key.equals(mapKey)) {
+                                    sendMap.remove(mapKey);
+                                    break;
+                                }
+                            }
+                            handler.sendEmptyMessage(NOTIFY_DATA);
+                            return;
+                        }
+                        params.put("content_group_public", "0");
+                        params.put("photo_caption", "");
+                        params.put("multiple", "0");
+                        params.put("file", filePic);
+                        params.put("photo_fullsize", "1");
+                    } else if (!TextUtils.isEmpty(sticker_name)) {
+                        params.put("sticker_group_path", msgEntity.getSticker_group_path());
+                        params.put("sticker_name", sticker_name);
+                        params.put("sticker_type", msgEntity.getSticker_type());
+                    }
+                    handler.sendEmptyMessage(NOTIFY_DATA);
+                    String requestType = MessageAction.REQUEST_UPLOAD;
+                    if (MessageAction.POST_STICKER.equals(type) || MessageAction.POST_TEXT.equals(type)) {
+                        requestType = MessageAction.REQUEST_POST;
+                    }
+                    messageAction.doRequest(requestType, params, Constant.API_MESSAGE_POST_TEXT, SEND_TEXT_MESSAGE, sendMap, key, type);
+                }
+            }
+        });
 
         IntentFilter intentFilter = new IntentFilter(StickerStoreActivity.ACTION_FINISHED);
         stickerReceiver = new ModifyStickerReceiver();
@@ -956,9 +1005,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             msgEntity.setUser_id(MainActivity.getUser().getUser_id());
             msgEntity.setText_id("1");
             msgEntity.setText_description(content);
-            messageChatAdapter.addMsgEntity(msgEntity);
+            msgEntity.setSendStatus(MsgEntity.SEND_IN);
             etChat.setText("");
-
             Map<String, String> params = new HashMap<String, String>();
             params.put("content_creator_id", MainActivity.getUser().getUser_id());
             params.put("group_id", groupId);
@@ -966,7 +1014,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             params.put("text_description", content);
             params.put("group_ind_type", "");
             params.put("content_group_public", "0");
-            messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, SEND_TEXT_MESSAGE);
+            msgEntity.setContent_creation_date(MyDateUtils.getUTCDateString4DefaultFromLocal(System.currentTimeMillis()));
+            String key = MessageAction.POST_TEXT + System.currentTimeMillis();
+            msgEntity.setPhoto_postsize(key);
+            msgEntity.setPhoto_thumbsize(MessageAction.POST_TEXT);
+            messageChatAdapter.addMsgEntity(msgEntity);
+            sendMap.put(key, msgEntity);
+            messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, SEND_TEXT_MESSAGE, sendMap, key, MessageAction.POST_TEXT);
         }
     }
 
@@ -1072,13 +1126,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         } else {
                             ArrayList uris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
                             pickUries.addAll(uris);
-                            for (Uri uri : pickUries) {
-                                MsgEntity msgEntity = new MsgEntity();
-                                msgEntity.setSticker_type(".png");
-                                msgEntity.setUser_id(MainActivity.getUser().getUser_id());
-                                msgEntity.setUri(uri);
-                                messageChatAdapter.addMsgEntity(msgEntity);
-                            }
                             handler.sendEmptyMessage(SEN_MESSAGE_FORM_ALBUM);
                         }
                     }
@@ -1355,9 +1402,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         params.put("file", file);
         MsgEntity msgEntity = new MsgEntity();
         msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+        msgEntity.setSendStatus(MsgEntity.SEND_IN);
         msgEntity.setContent_creation_date(MyDateUtils.getUTCDateString4DefaultFromLocal(System.currentTimeMillis()));
         String audioFile = file.getAbsolutePath();
         audioFile = audioFile.substring(audioFile.lastIndexOf(File.separator) + 1);
+        String postType = MessageAction.POST_AUDIO;
         if (!isAudio) {
             String duration = durationTime / 1000L + "";
             params.put("video", "1");
@@ -1365,18 +1414,24 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             msgEntity.setVideo_filename(audioFile);
             String videoThumbnail = getVideoThumbnail(uri);
             msgEntity.setVideo_format1(videoThumbnail);
-            msgEntity.setVideo_format2(uri.toString());
+            msgEntity.setVideo_format2(uri.getPath());
+            msgEntity.setFailUri(uri);
             msgEntity.setVideo_duration(duration);
             params.put("video_thumbnail", String.format("data:image/jpeg;base64,%s", videoThumbnail));
+            postType = MessageAction.POST_VIDEO;
         } else {
             params.put("audio", "1");
             params.put("audio_duration", durationTime + "");
             msgEntity.setAudio_filename(audioFile);
             msgEntity.setAudio_duration(durationTime + "");
+            msgEntity.setFailUri(Uri.fromFile(file));
         }
-        audioMsgEntity = msgEntity;
+        String key = postType + System.currentTimeMillis();
+        msgEntity.setPhoto_postsize(key);
+        msgEntity.setPhoto_thumbsize(postType);
         messageChatAdapter.addMsgEntity(msgEntity);
-        messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_MESSAGE_POST_TEXT, SEND_AUDIO_MESSAGE);
+        sendMap.put(key, msgEntity);
+        messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_MESSAGE_POST_TEXT, SEND_AUDIO_MESSAGE, sendMap, key, postType);
     }
 
     private String getVideoThumbnail(Uri uri) {
@@ -1386,22 +1441,39 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         return LocalImageLoader.getVideoThumbnail(this, uri);
     }
 
-    private void uploadImage(Uri uri) {
-        String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, uri), 480, 800, false);
-        File file = new File(path);
-        if (!file.exists()) {
-            return;
-        }
-        Map<String, Object> params = new HashMap<>();
-        params.put("content_creator_id", MainActivity.getUser().getUser_id());
-        params.put("group_id", groupId);
-        params.put("content_type", "post");
-        params.put("content_group_public", "0");
-        params.put("photo_caption", "");
-        params.put("multiple", "0");
-        params.put("file", file);
-        params.put("photo_fullsize", "1");
-        messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_MESSAGE_POST_TEXT, SEND_PIC_MESSAGE);
+    private void uploadImage(final Uri uri) {
+        MsgEntity msgEntity = new MsgEntity();
+        msgEntity.setSticker_type(".png");
+        msgEntity.setUser_id(MainActivity.getUser().getUser_id());
+        msgEntity.setUri(uri);
+        msgEntity.setSendStatus(MsgEntity.SEND_IN);
+        msgEntity.setContent_creation_date(MyDateUtils.getUTCDateString4DefaultFromLocal(System.currentTimeMillis()));
+        final String key = MessageAction.POST_PHOTO + System.currentTimeMillis();
+        msgEntity.setPhoto_postsize(key);
+        msgEntity.setPhoto_thumbsize(MessageAction.POST_PHOTO);
+        messageChatAdapter.addMsgEntity(msgEntity);
+        sendMap.put(key, msgEntity);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String path = LocalImageLoader.compressBitmap(mContext, FileUtil.getRealPathFromURI(mContext, uri), 480, 800, false);
+                File file = new File(path);
+                if (!file.exists()) {
+                    sendMap.remove(key);
+                    return;
+                }
+                Map<String, Object> params = new HashMap<>();
+                params.put("content_creator_id", MainActivity.getUser().getUser_id());
+                params.put("group_id", groupId);
+                params.put("content_type", "post");
+                params.put("content_group_public", "0");
+                params.put("photo_caption", "");
+                params.put("multiple", "0");
+                params.put("file", file);
+                params.put("photo_fullsize", "1");
+                messageAction.doRequest(MessageAction.REQUEST_UPLOAD, params, Constant.API_MESSAGE_POST_TEXT, SEND_PIC_MESSAGE, sendMap, key, MessageAction.POST_PHOTO);
+            }
+        }).start();
     }
 
     /**
@@ -1416,7 +1488,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         params.put("start", startIndex + "");
         params.put("view_user", MainActivity.getUser().getUser_id());
         String url = UrlUtil.generateUrl(Constant.API_MESSAGE_POST_TEXT, params);
-        messageAction.doRequest(MessageAction.REQUEST_GET, null, url, msgIndex);
+        messageAction.doRequest(MessageAction.REQUEST_GET, null, url, msgIndex, null, null, null);
     }
 
     @Override
@@ -1437,7 +1509,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         msgEntity.setSticker_group_path(fileName);
         msgEntity.setSticker_name(Sticker_name);
         msgEntity.setIsNate("true");
-        messageChatAdapter.addMsgEntity(msgEntity);
+        msgEntity.setContent_creation_date(MyDateUtils.getUTCDateString4DefaultFromLocal(System.currentTimeMillis()));
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("content_creator_id", MainActivity.getUser().getUser_id());
         params.put("group_id", groupId);
@@ -1445,7 +1517,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         params.put("sticker_group_path", fileName);
         params.put("sticker_name", Sticker_name);
         params.put("sticker_type", type);
-        messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE);
+        String key = MessageAction.POST_STICKER + System.currentTimeMillis();
+        msgEntity.setSendStatus(MsgEntity.SEND_IN);
+        msgEntity.setPhoto_postsize(key);
+        msgEntity.setPhoto_thumbsize(MessageAction.POST_STICKER);
+        messageChatAdapter.addMsgEntity(msgEntity);
+        sendMap.put(key, msgEntity);
+        messageAction.doRequest(MessageAction.REQUEST_POST, params, Constant.API_MESSAGE_POST_TEXT, MessageChatActivity.SEND_PIC_MESSAGE, sendMap, key, MessageAction.POST_STICKER);
     }
 
     /**
