@@ -22,7 +22,7 @@
         android:layout_toLeftOf="@+id/message_icon_image">
 
         <RelativeLayout
-            android:id="@+id/pic_linear"
+            android:id="@+id/pic_linear_re"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/send_fail_rl"

@@ -485,6 +485,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     } else if (!TextUtils.isEmpty(videoName)) {
                         File file = new File(msgEntity.getFailUri().getPath());
                         if (file == null || !file.exists()) {
+                            for (String mapKey : sendMap.keySet()) {
+                                if (key != null && key.equals(mapKey)) {
+                                    sendMap.remove(mapKey);
+                                    break;
+                                }
+                            }
+                            handler.sendEmptyMessage(NOTIFY_DATA);
                             return;
                         }
                         params.put("file", file);
@@ -493,6 +500,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     } else if (!TextUtils.isEmpty(audioName)) {
                         File file = new File(msgEntity.getFailUri().getPath());
                         if (file == null || !file.exists()) {
+                            for (String mapKey : sendMap.keySet()) {
+                                if (key != null && key.equals(mapKey)) {
+                                    sendMap.remove(mapKey);
+                                    break;
+                                }
+                            }
+                            handler.sendEmptyMessage(NOTIFY_DATA);
                             return;
                         }
                         params.put("file", file);
@@ -502,6 +516,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         String path = LocalImageLoader.compressBitmap(mContext, FileUtil.getRealPathFromURI(mContext, uriPic), 480, 800, false);
                         File filePic = new File(path);
                         if (filePic == null || !filePic.exists()) {
+                            for (String mapKey : sendMap.keySet()) {
+                                if (key != null && key.equals(mapKey)) {
+                                    sendMap.remove(mapKey);
+                                    break;
+                                }
+                            }
+                            handler.sendEmptyMessage(NOTIFY_DATA);
                             return;
                         }
                         params.put("content_group_public", "0");
