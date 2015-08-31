@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.StickerGroupAdapter;
@@ -27,7 +28,6 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -185,7 +185,7 @@ public class StickerDetailActivity extends BaseActivity {
     private void downloadZip(final StickerGroupEntity stickerGroupEntity, final int position) {
         String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
         final String target = FileUtil.getCacheFilePath(this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
-        new HttpTools(this).download(urlString, target, true, new HttpCallback() {
+        new HttpTools(this).download(App.getContextInstance(),urlString, target, true, new HttpCallback() {
             @Override
             public void onStart() {
 

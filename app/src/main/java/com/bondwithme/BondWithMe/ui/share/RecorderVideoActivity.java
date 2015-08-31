@@ -351,7 +351,9 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
         }
         mMediaRecorder.setOnInfoListener(this);
         mMediaRecorder.setOnErrorListener(this);
-        mMediaRecorder.start();
+        try {
+            mMediaRecorder.start();
+        }catch (Exception e){}
         return true;
     }
 
@@ -407,7 +409,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
         // 获取视频文件输出的路径
         Uri uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
         if(uri == null || Uri.EMPTY.equals(uri)) {
-            localPath = FileUtil.getVideoRootPath(this) + "/" + System.currentTimeMillis() + ".mp4";
+            localPath = FileUtil.getCacheFilePath(this) + "/" + System.currentTimeMillis() + ".mp4";
         } else {
             localPath = uri.getPath();
         }
@@ -450,7 +452,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
             mMediaRecorder.setOnInfoListener(null);
             try {
                 mMediaRecorder.stop();
-            } catch(IllegalStateException e) {
+            } catch(Exception e) {
                 e.printStackTrace();
             }
         }

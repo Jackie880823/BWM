@@ -23,7 +23,20 @@ public class AudioMediaRecorder {
 
     }
 
+    private void closeFos() {
+        try {
+            isStart = false;
+            if (fos != null) {
+                fos.flush();
+                fos.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void startRecord(File file) {
+        closeFos();
         try {
             fos = new FileOutputStream(file);
         } catch (FileNotFoundException e) {
@@ -50,6 +63,7 @@ public class AudioMediaRecorder {
                             fos.write(ret);
                         } catch (IOException e) {
                             e.printStackTrace();
+                            closeFos();
                         }
                     }
                 }
@@ -57,25 +71,13 @@ public class AudioMediaRecorder {
                 recordInstance.release();
                 recordInstance = null;
                 vo.Uninit();
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                closeFos();
             }
         }).start();
     }
 
     public void stopRecord() {
         isStart = false;
-        if (fos != null) {
-            try {
-                fos.flush();
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
+        closeFos();
     }
 }

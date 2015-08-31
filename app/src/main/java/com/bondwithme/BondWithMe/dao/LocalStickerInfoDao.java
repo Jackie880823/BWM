@@ -32,7 +32,7 @@ public class LocalStickerInfoDao {
     }
 
     public String getSavePath() {
-        File bootFile = FileUtil.getSavePath(mContext, false);
+        File bootFile = FileUtil.getSaveRootPath(mContext, false);
         String filePath = bootFile.getAbsolutePath();
         filePath = filePath + File.separator + STICKER_FILE_PATH_NAME;
         File file = new File(filePath);
@@ -131,7 +131,7 @@ public class LocalStickerInfoDao {
 //            if (null != localList && localList.size() > 0) {
 //                for (LocalStickerInfo stickerInfo : localList) {
 //                    String name = stickerInfo.getSticker_name();
-//                    String path = getSavePath() + File.separator + name;
+//                    String path = getSaveRootPath() + File.separator + name;
 //                    File file = new File(path);
 //                    File[] files = file.listFiles();
 //                    if (null != files && files.length > 0) {

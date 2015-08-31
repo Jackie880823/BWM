@@ -133,7 +133,7 @@
     <string name="text_diary_posting">日记</string>
     <string name="text_reset_password">重设密码</string>
     <string name="text_male">男性</string>
-    <string name="text_female">女</string>
+    <string name="text_female">女性</string>
     <string name="text_wrong_password">密码无效，请重试。</string>
     <string name="text_back">返回</string>
     <string name="text_old_password">当前密码</string>
@@ -548,10 +548,10 @@
     <string name="text_empty_add_group_loveone">与您的亲人促进感情吧！</string>
     <string name="text_message_break_ice">将冰山劈开！</string>
     <string name="text_video_too_big">所选视频太大</string>
-    <string name="text_chat_send_video">所选视频大小约为%s,是否需要发送</string>
+    <string name="text_chat_send_video">视频文件大小为%s，确定要发送吗？</string>
     <string name="go_back_to_me">返回当前用户</string>
     <string name="write_a_diary">亲，开始一篇日志吧！共享即关怀。</string>
-    <string name="select_media">选择音/视频</string>
+    <string name="select_media">选择图片/视频</string>
 
     <string name="notification_action_event_invited">%1$s邀请你参加活动:%2$s</string>
     <string name="notification_action_event_update">%1$s更新活动:%2$s</string>
@@ -597,11 +597,13 @@
     <string name="notification_action_diary_tag">%1$s在日记里艾特了你</string>
 
     <string name="notification_action_miss_missyou">%1$s想你了</string>
-    <string name="text_audio_release">松开发送</string>
-    <string name="text_audio_loosen_audition">松手试听</string>
+    <string name="text_audio_release">松手发送</string>
+    <string name="text_audio_loosen_audition">松手重播</string>
     <string name="text_audio_cancle_send">松手取消发送</string>
     <string name="text_previous">上一个</string>
+    <string name="text_can_record_time">还能够录制%1$s秒</string>
 
+    <string name="say_thanks_for_report">谢谢!</string>
     <!-- add about recorder video by Jackie -->
     <string name="recording_video">录制视频</string>
     <string name="video_start">录像开始</string>
@@ -611,4 +613,9 @@
     <string name="prompt">提示</string>
     <string name="open_the_equipment_failure">打开设备失败！</string>
     <string name="no_sd_card">没有SD卡！</string>
+
+    <string name="text_recording_video">录制视频</string>
+    <string name="text_take_photos">拍摄照片</string>
+    <string name="text_record_audio_too_short">录音时间要超过两秒</string>
+    <string name="text_hold_and_speak">按住说话</string>
 </resources>

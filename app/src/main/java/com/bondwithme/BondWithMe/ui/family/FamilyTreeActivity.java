@@ -10,6 +10,7 @@ import android.view.View;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.DownloadRequest;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
@@ -172,7 +173,7 @@ public class FamilyTreeActivity extends BaseActivity {
         LogUtil.i(TAG, "getTreeUrl& target: " + target);
         LogUtil.i(TAG, "getTreeUrl& url: " + url);
 
-        request = new HttpTools(this).download(url, target, true, new HttpCallback() {
+        request = new HttpTools(this).download(App.getContextInstance(),url, target, true, new HttpCallback() {
             @Override
             public void onStart() {
 

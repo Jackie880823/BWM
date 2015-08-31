@@ -38,8 +38,8 @@ public class HttpTools {
     private static Map<String, String> headers = new HashMap<String, String>();
 
     public HttpTools(Context context) {
-//        mContext = context.getApplicationContext();
-        mContext = context;
+        mContext = context.getApplicationContext();
+//        mContext = context;
     }
 
     public static void init(Context context) {
@@ -242,13 +242,29 @@ public class HttpTools {
         sRequestQueue.add(request);
     }
 
-    public DownloadRequest download(String url, String target, final boolean isResume, final HttpCallback httpResult) {
+    /**
+     * @param context 下载需要传app content不能用activity content,（用于断点续传）
+     * @param url
+     * @param target 位置
+     * @param isResume 是否要断线续传
+     * @param httpResult 回调接口
+     * @return
+     */
+    public DownloadRequest download(Context context,String url, String target, final boolean isResume, final HttpCallback httpResult) {
     	RequestInfo requestInfo = new RequestInfo();
     	requestInfo.url = url;
-    	return download(requestInfo, target, isResume, httpResult);
+    	return download(context,requestInfo, target, isResume, httpResult);
     }
 
-    public DownloadRequest download(final RequestInfo requestInfo, String target, final boolean isResume, final HttpCallback httpResult) {
+    /**
+     *
+     * @param requestInfo
+     * @param target 位置
+     * @param isResume 是否要断线续传
+     * @param httpResult 回调接口
+     * @return
+     */
+    public DownloadRequest download(Context context,final RequestInfo requestInfo, String target, final boolean isResume, final HttpCallback httpResult) {
     	final String url = requestInfo.getFullUrl();
     	VolleyLog.d("download->%s", url);
         DownloadRequest request = new DownloadRequest(url, new Response.Listener<String>() {
@@ -321,10 +337,10 @@ public class HttpTools {
         }
         /**启用缓存，wing 20150625*/
         if (sDownloadQueue == null) {
-            sDownloadQueue = Volley.newRequestQueue(mContext);
+            sDownloadQueue = Volley.newRequestQueue(context);
 //            sDownloadQueue = Volley.newNoCacheRequestQueue(mContext);
         }
-        request.setShouldCache(true);
+//        request.setShouldCache(true);
         sDownloadQueue.add(request);
         return request;
 

@@ -324,8 +324,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     public void initView() {
-//        App.piwikUser();
-//        MyPiwik.piwikUser();
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN += App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
@@ -403,6 +401,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
 //        filter.addAction("refresh");
         registerReceiver(mReceiver, filter);
+
+        //TODO test mush delete
+//        Intent intent = new Intent(this, CrashActivity.class);
+//        startActivity(intent);
     }
 
     private boolean isEventFragmentDate() {

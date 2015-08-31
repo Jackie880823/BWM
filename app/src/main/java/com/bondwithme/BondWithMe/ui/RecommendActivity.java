@@ -225,19 +225,6 @@ public class RecommendActivity extends BaseActivity {
                 Gson gson = gsonb.create();
                 data = gson.fromJson(string, new TypeToken<ArrayList<RecommendEntity>>() {
                 }.getType());
-//                if (data != null) {
-//                    if (isRefresh) {
-//                        startIndex = data.size();
-//                        finishReFresh();
-//                        initAdapter();
-//                    } else {
-//                        startIndex += data.size();
-//                        adapter.add(data);
-//                    }
-//                } else {
-//                    finishReFresh();
-//                }
-//                loading =
 
                 if (!data.isEmpty()){
                     tvNoDate.setVisibility(View.GONE);

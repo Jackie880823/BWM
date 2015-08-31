@@ -7,6 +7,19 @@ import com.bondwithme.BondWithMe.util.FileUtil;
  */
 public class Constant {
 
+
+
+    /** mail */
+    public final static String REPORT_EMAIL_FROM_ADDRESS = "wingzhong@madxstudio.cn";
+    public final static String REPORT_EMAIL_USERNAME = "wingzhong@madxstudio.cn";
+    public final static String REPORT_EMAIL_PASSWORD = "3271559Aa";
+    // public final static String MAIL_USER_NAME = "suggestions@vigilant.cn";
+
+    public static final String REPORT_EMAIL_SERVER_HOST = "smtp.madxstudio.cn";
+    public static final boolean REPORT_EMAIL_VALIDATE = false;
+    public static final String REPORT_EMAIL_SERVER_PORT = "25";
+    public static final String REPORT_EMAIL_TO_ADDRESS = "wingzhong@madxstudio.cn";//
+
     /**
      * for app
      */
