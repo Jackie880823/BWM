@@ -30,7 +30,7 @@
         android:textSize="@dimen/_13dp" />
 
     <RelativeLayout
-        android:id="@+id/pic_linear"
+        android:id="@+id/pic_linear_re"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_name"
@@ -70,8 +70,8 @@
         android:id="@+id/date_time_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/pic_linear"
-        android:layout_below="@+id/pic_linear"
+        android:layout_alignLeft="@+id/pic_linear_re"
+        android:layout_below="@+id/pic_linear_re"
         android:layout_marginLeft="@dimen/_16dp"
         android:layout_marginTop="@dimen/_6dp"
         android:text="2015年05月24日"

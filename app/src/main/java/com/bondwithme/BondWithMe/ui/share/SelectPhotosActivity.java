@@ -257,9 +257,11 @@ public class SelectPhotosActivity extends BaseActivity {
         fragment.setSelectImageUirListener(listener);
         ArrayList<Uri> uris = intent.getParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS);
         mSelectedImages.clear();
-        for(Uri uri : uris) {
-            MediaData mediaData = new MediaData(uri, uri.toString(), MediaData.TYPE_IMAGE, 0);
-            mSelectedImages.add(mediaData);
+        if(uris != null  ) {
+            for(Uri uri : uris) {
+                MediaData mediaData = new MediaData(uri, uri.toString(), MediaData.TYPE_IMAGE, 0);
+                mSelectedImages.add(mediaData);
+            }
         }
     }
 
