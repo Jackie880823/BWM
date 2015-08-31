@@ -201,7 +201,7 @@ public class FileUtil {
     }
 
     public static String getAudioRootPath(Context mContext) {
-        File bootFile = getSavePath(mContext, true);
+        File bootFile = getSavePath(mContext, false);
         String filePath = bootFile.getAbsolutePath();
         filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + RECORD;
         File file = new File(filePath);
@@ -216,7 +216,7 @@ public class FileUtil {
     }
 
     public static String getVideoRootPath(Context mContext) {
-        File bootFile = getSavePath(mContext, true);
+        File bootFile = getSavePath(mContext, false);
         String filePath = bootFile.getAbsolutePath();
         filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + VIDEO;
         File file = new File(filePath);

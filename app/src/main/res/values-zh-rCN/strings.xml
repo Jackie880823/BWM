@@ -548,7 +548,7 @@
     <string name="text_empty_add_group_loveone">与您的亲人促进感情吧！</string>
     <string name="text_message_break_ice">将冰山劈开！</string>
     <string name="text_video_too_big">所选视频太大</string>
-    <string name="text_chat_send_video">视频文件大小为%s，确定要发送吗？</string>
+    <string name="text_chat_send_video">视频文件大小为%1$s，确定要发送吗？</string>
     <string name="go_back_to_me">返回当前用户</string>
     <string name="write_a_diary">亲，开始一篇日志吧！共享即关怀。</string>
     <string name="select_media">选择图片/视频</string>
