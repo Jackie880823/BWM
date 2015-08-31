@@ -17,6 +17,7 @@ import com.bondwithme.BondWithMe.ui.more.ArchiveActivity;
 import com.bondwithme.BondWithMe.ui.more.MoreSettingActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 
 
 import org.json.JSONException;
@@ -39,6 +40,8 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     private TextView news_alert_num;
     private TextView member_alert_num;
     private TextView recommend_alert_num;
+
+    private static final String TAG = "MoreFragment";
 
     public static MoreFragment newInstance(String... params) {
         return createInstance(new MoreFragment(), params);
@@ -120,6 +123,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
             @Override
             public void onStart() {
 //                mProgressDialog.show();
+                LogUtil.d(TAG, "======url_API_BONDALERT_MODULES_COUNT=======" + (String.format(Constant.API_BONDALERT_MODULES_COUNT, MainActivity.getUser().getUser_id())));
             }
 
             @Override
@@ -173,8 +177,11 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     String countString = jsonObject.getString("total");
-                    int count = Integer.valueOf(countString);
-
+                    int countOfTotal = Integer.valueOf(countString);
+                    int countOfNews = Integer.valueOf(jsonObject.getString("news"));
+                    int countOfMember = Integer.valueOf(jsonObject.getString("member"));
+                    int countOfRecommended = Integer.valueOf(jsonObject.getString("recommended"));
+                    int count = countOfTotal - countOfNews - countOfMember - countOfRecommended;
                     if (count > 0) {
                         Log.d("","mmmmmmmmm" + "mmmmmmm>0");
                         tv_num.setVisibility(View.VISIBLE);
@@ -182,6 +189,8 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                         Log.d("","mmmmmmmmm" + "mmmmmmm<0");
                         tv_num.setVisibility(View.GONE);
                     }
+
+                    Log.d("","mmmmmmmmm" + count + "=====" + jsonObject.toString());
 
                 } catch (JSONException e) {
                     tv_num.setVisibility(View.GONE);

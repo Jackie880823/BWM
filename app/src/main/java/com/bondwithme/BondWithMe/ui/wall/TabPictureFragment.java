@@ -8,7 +8,6 @@ import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -345,10 +344,13 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      */
     private Uri getOutVideoUri() {
         File file = new File(Constant.VIDEO_PATH);
-        boolean exists = file.exists() || file.mkdir();
-        File video;
-        video = exists ? new File(Constant.VIDEO_PATH + System.currentTimeMillis() + MP4) : new File(Environment.getDataDirectory().getAbsolutePath() + "/" + System.currentTimeMillis() + MP4);
-        return Uri.fromFile(video);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+//        boolean exists = file.exists() || file.mkdir();
+//        File video;
+//        video = exists ? new File(Constant.VIDEO_PATH + System.currentTimeMillis() + MP4) : new File(Environment.getDataDirectory().getAbsolutePath() + "/" + System.currentTimeMillis() + MP4);
+        return Uri.fromFile(new File(file+"/" + System.currentTimeMillis() + MP4));
     }
 
     /**

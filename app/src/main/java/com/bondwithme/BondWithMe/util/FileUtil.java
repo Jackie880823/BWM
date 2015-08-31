@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.format.DateUtils;
 
 import com.bondwithme.BondWithMe.App;
 
@@ -21,23 +22,23 @@ import java.util.List;
 public class FileUtil {
 
     private static File path;
-    private final static String CACHE_DIR_NAME = "/cache";
-    public final static String BANNER_DIR_NAME = "/banner";
+    private final static String CACHE_DIR_NAME = File.separator + "cache";
+    public final static String BANNER_DIR_NAME = File.separator + "banner";
     private static File appPath;
 
     /**
-     * 获取保存路径
+     * 获取保存文件位置根路径
      *
      * @param context
      * @param isOutPath 是否保存在app外(沙盒)
-     * @return
+     * @return File()
      */
-    public static File getSavePath(Context context, boolean isOutPath) {
+    public static File getSaveRootPath(Context context, boolean isOutPath) {
 
         if (isOutPath) {
             if (path == null) {
                 if (hasSDCard()) { // SD card
-                    path = new File(getSDCardPath() + "/" + "BondWithMe");
+                    path = new File(getSDCardPath() + File.separator + "BondWithMe");
                     path.mkdir();
                 } else {
                     path = Environment.getDataDirectory();
@@ -53,6 +54,38 @@ public class FileUtil {
 
     }
 
+    public static String getSaveCrashPath(Context context) {
+        String date = MyDateUtils.formatDateTime(context, System.currentTimeMillis(), DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
+        return getCrashRootPath(context) + File.separator + date + ".log";
+    }
+
+    /**
+     * 获取Crash文件保存位置根路径
+     *
+     * @param context
+     * @return
+     */
+    private static File getCrashRootPath(Context context) {
+        File file = new File(getSaveRootPath(context, true) + File.separator + "crash");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
+    }
+
+    public static File[] getCrashFiles(Context context) {
+        return getCrashRootPath(context).listFiles();
+    }
+
+    public static void clearCrashFiles(Context context) {
+        File[] cacheFiles = getCrashFiles(context);
+        if(cacheFiles!=null) {
+            for (File file : cacheFiles) {
+                file.delete();
+            }
+        }
+    }
+
     /**
      * 获取全局缓存目录路径
      *
@@ -60,7 +93,7 @@ public class FileUtil {
      * @return
      */
     public static String getCacheFilePath(Context context) {
-        File f = getSavePath(context, true);
+        File f = getSaveRootPath(context, true);
 
         f = new File(f.getAbsolutePath() + CACHE_DIR_NAME);
         if (!f.exists()) {
@@ -103,7 +136,7 @@ public class FileUtil {
      *
      * @return
      */
-    public static String getSDCardPath() {
+    private static String getSDCardPath() {
         File path = Environment.getExternalStorageDirectory();
         return path.getAbsolutePath();
     }
@@ -170,7 +203,7 @@ public class FileUtil {
     }
 
     public static String getBannerFilePath(Context context) {
-        File f = getSavePath(context, false);
+        File f = getSaveRootPath(context, false);
 
         f = new File(f.getAbsolutePath() + CACHE_DIR_NAME + BANNER_DIR_NAME);
         if (!f.exists()) {
@@ -201,7 +234,7 @@ public class FileUtil {
     }
 
     public static String getAudioRootPath(Context mContext) {
-        File bootFile = getSavePath(mContext, false);
+        File bootFile = getSaveRootPath(mContext, false);
         String filePath = bootFile.getAbsolutePath();
         filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + RECORD;
         File file = new File(filePath);
@@ -216,7 +249,7 @@ public class FileUtil {
     }
 
     public static String getVideoRootPath(Context mContext) {
-        File bootFile = getSavePath(mContext, false);
+        File bootFile = getSaveRootPath(mContext, false);
         String filePath = bootFile.getAbsolutePath();
         filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + VIDEO;
         File file = new File(filePath);

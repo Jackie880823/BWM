@@ -20,7 +20,7 @@ public class RelationshipUtil {
     private static final String TAG = RelationshipUtil.class.getSimpleName();
 
     /**
-     * 获取关系对照表，此列表与服务器的关系列表一致
+     * get 服务器表
      *
      * @param context 资源引导
      * @return 返回对照表
@@ -31,7 +31,7 @@ public class RelationshipUtil {
     }
 
     /**
-     * 用服务得到的关系名称获取当前语言下对应的关系名称的下标位置
+     * 服务器关系名称 >>>>>>> 下标
      *
      * @param context       资源引导
      * @param relationsType 关系名称一定要使用服务器上得到的关系
@@ -49,7 +49,7 @@ public class RelationshipUtil {
     }
 
     /**
-     * 用服务得到的关系名称获取当前语言下对应的关系名称
+     * 服务器关系名称 >>>>>>>> 翻译关系名称
      *
      * @param context       资源引导
      * @param relationsType 关系名称一定要使用服务器上得到的关系，否则返回传入的时的名称
@@ -79,7 +79,7 @@ public class RelationshipUtil {
     }
 
     /**
-     * 用关系列表下标位置获取当前语言下对应的关系名称
+     * 下标 >>>>>>>>>>> 翻译关系名称
      *
      * @param context  资源引导
      * @param position 关系下标位置
@@ -93,5 +93,46 @@ public class RelationshipUtil {
             throw new RelationshipException(String.format("position out of list: size is %d; position = %d", relationships.length, position));
         }
     }
+
+    /**
+     * 翻译关系名称 >>>>>>>> 服务器关系名称
+     * @param context
+     * @param relationshipName
+     * @return
+     * @throws RelationshipException
+     */
+    public static String getRelationshipValue(@NonNull Context context, @NonNull String relationshipName) throws RelationshipException {
+
+        // 对应语言关系列表
+        String[] temp = context.getResources().getStringArray(R.array.relationship_item);
+        List<String> relationships = Arrays.asList(temp);
+        int position = relationships.indexOf(relationshipName);
+        try {
+            return getRelationshipName(context, position);
+        } catch (RelationshipException e) {
+            throw new RelationshipException("relationship name error, this relationship: " + relationshipName);
+        }
+    }
+
+    /**
+     * 下标 >>>>>>>>> 服务器关系名称
+     * @param context
+     * @param position
+     * @return
+     * @throws RelationshipException
+     */
+    public static String getRelationshipValue(@NonNull Context context, int position) throws RelationshipException
+    {
+        List<String> temp = getDataValue(context);
+        if (position >= 0 && position < temp.size())
+        {
+            return temp.get(position);
+        }
+        else
+        {
+            throw new RelationshipException(String.format("position out of list: size is %d; position = %d", temp.size(), position));
+        }
+    }
+
 
 }

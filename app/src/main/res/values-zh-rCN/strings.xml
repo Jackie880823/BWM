@@ -603,6 +603,7 @@
     <string name="text_previous">上一个</string>
     <string name="text_can_record_time">还能够录制%1$s秒</string>
 
+    <string name="say_thanks_for_report">谢谢!</string>
     <!-- add about recorder video by Jackie -->
     <string name="recording_video">录制视频</string>
     <string name="video_start">录像开始</string>

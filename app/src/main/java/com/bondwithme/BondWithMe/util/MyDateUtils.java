@@ -160,6 +160,11 @@ public class MyDateUtils extends android.text.format.DateUtils {
         return EventformatTimeStampString(context, timestamp, true);
     }
 
+    /**
+     * 本地时间戳转带时区的字符default(yyy-MM-dd HH:mm:ss)形式
+     * @param timestamp
+     * @return
+     */
     public static String getUTCDateString4DefaultFromLocal(long timestamp) {
         return formatDate2Default(new Date(formatTimestamp2UTC(timestamp)));
     }
