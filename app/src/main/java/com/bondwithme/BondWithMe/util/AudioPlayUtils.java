@@ -1,6 +1,9 @@
 package com.bondwithme.BondWithMe.util;
 
 import android.media.MediaPlayer;
+import android.support.v7.widget.LinearLayoutManager;
+
+import com.bondwithme.BondWithMe.adapter.MessageChatAdapter;
 
 /**
  * Created by quankun on 15/8/17.
@@ -8,20 +11,19 @@ import android.media.MediaPlayer;
 public class AudioPlayUtils {
     private static MediaPlayer mp;
     private String path;
+    private static LinearLayoutManager llm;
+    private static MessageChatAdapter messageChatAdapter;
 
-    public static AudioPlayUtils getInstance(String filePath) {
-        return new AudioPlayUtils(filePath);
+    public static AudioPlayUtils getInstance(String filePath, LinearLayoutManager llm, MessageChatAdapter messageChatAdapter) {
+        return new AudioPlayUtils(filePath, llm, messageChatAdapter);
     }
 
-    private AudioPlayUtils(String filePath) {
-        if (mp != null) {
-            if (mp.isPlaying()) {
-                mp.stop();
-            }
-            mp.release();
-        }
+    private AudioPlayUtils(String filePath, LinearLayoutManager llm, MessageChatAdapter messageChatAdapter) {
+        stopAudio();
         mp = new MediaPlayer();
         this.path = filePath;
+        this.messageChatAdapter = messageChatAdapter;
+        this.llm = llm;
     }
 
     public void playAudio() {
@@ -46,8 +48,21 @@ public class AudioPlayUtils {
     }
 
     public static void stopAudio() {
-        if (mp != null && mp.isPlaying()) {
-            mp.stop();
+        if (mp != null) {
+            if (mp.isPlaying()) {
+                mp.stop();
+            }
+            mp.release();
+        }
+
+        if (llm != null && messageChatAdapter != null) {
+            messageChatAdapter.setPlayPros(0);
+            messageChatAdapter.setAudioName(null);
+            int scrollPosition = llm.findLastVisibleItemPosition();
+            messageChatAdapter.notifyDataSetChanged();
+            llm.scrollToPosition(scrollPosition);
+            llm = null;
+            messageChatAdapter = null;
         }
     }
 }
