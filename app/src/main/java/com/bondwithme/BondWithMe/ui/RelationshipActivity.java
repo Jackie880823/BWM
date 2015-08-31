@@ -12,6 +12,8 @@ import android.widget.ListView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.RecommendAdapter;
+import com.bondwithme.BondWithMe.exception.RelationshipException;
+import com.bondwithme.BondWithMe.util.RelationshipUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 
 import java.util.ArrayList;
@@ -105,13 +107,14 @@ public class RelationshipActivity extends BaseActivity {
                     return;
                 }
 
-                intent.putExtra("relationship", data_Us.get(position));
-                intent.putExtra("selectMemeber",position);
-//                Log.d("", "data---->" + data.get(position));
-                result = RESULT_OK;
-//                setResult(result, intent);
-//                setResult(RESULT_OK);
+                try {
+                    intent.putExtra("relationship", RelationshipUtil.getRelationshipValue(RelationshipActivity.this, position));//标准英文
+                } catch (RelationshipException e) {
+                    e.printStackTrace();
+                }
+                intent.putExtra("selectMemeber",position);  //下标
 
+                result = RESULT_OK;
                 finish();
             }
         });
