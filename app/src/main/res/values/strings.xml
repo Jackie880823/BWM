@@ -611,6 +611,7 @@
     <string name="text_can_record_time">Can also record%1$ssecond</string>
     <string name="text_previous">Previous</string>
 
+    <string name="say_thanks_for_report">Thank you!</string>
     <!-- add about recorder video by Jackie -->
     <string name="recording_video">Record video</string>
     <string name="video_start">The video to start</string>

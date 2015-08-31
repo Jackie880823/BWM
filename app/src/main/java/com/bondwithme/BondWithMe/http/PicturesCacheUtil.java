@@ -9,11 +9,11 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.util.FileUtil;
-import com.bondwithme.BondWithMe.util.MessageUtil;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class PicturesCacheUtil extends FileUtil {
@@ -39,7 +39,6 @@ public class PicturesCacheUtil extends FileUtil {
 
 
     /**
-     * //TODO 去掉这个方法
      *
      * @param context
      */
@@ -79,7 +78,7 @@ public class PicturesCacheUtil extends FileUtil {
      */
     private static String getSavePicPath(Context context) {
         if (save_pic_path == null) {
-            save_pic_path = getSavePath(context,true) + PIC_DIR_NAME;
+            save_pic_path = getSaveRootPath(context, true) + PIC_DIR_NAME;
         }
 
         File dir = new File(save_pic_path);
@@ -91,6 +90,7 @@ public class PicturesCacheUtil extends FileUtil {
 
     /**
      * 获取缓存图片
+     *
      * @param context
      * @param name
      * @return
@@ -106,31 +106,25 @@ public class PicturesCacheUtil extends FileUtil {
 
     }
 
-    public static void saveImageToGallery(Context context, Bitmap bmp, String prefix)  {
+    public static String saveImageToGallery(Context context, Bitmap bmp, String prefix) throws IOException {
+        String fileName = getPicPath(context, prefix);
+        File file = new File(fileName);
+        FileOutputStream fos = new FileOutputStream(file);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+        fos.flush();
+        fos.close();
 
-//        String fileName = getPicPath(context, prefix);
-//        saveToFile(fileName, bmp);
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, prefix);
+        values.put(MediaStore.Images.Media.DESCRIPTION, prefix);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        values.put(MediaStore.MediaColumns.DATA, fileName);
 
-//        Log.i("", "fileName==========" + fileName);
-
-
-//        ContentValues values = new ContentValues();
-//        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis()); // DATE HERE
-//        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-////        values.put(MediaStore.MediaColumns.DATA, file.getAbsolutePath());
-//
-//        ContentResolver mContentResolver = context.getContentResolver();
-//        mContentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//
-////
-//        String path =    MediaStore.Images.Media.insertImage(mContentResolver,fileName,"BondWithMe_Wall",null);
-//                    file.getAbsolutePath(), file.getName(), "BondWithMe_Wall");
-//            MediaStore.Images.Media.insertImage(context.getContentResolver(),bmp,"LLL","");
-        String path = insertImage(context.getContentResolver(),bmp,prefix,"BondWithMe_Wall");
-//            //照片下载完提示下载位置
-            MessageUtil.showMessage(context, context.getString(R.string.saved_to_path) + path);
+        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 //        // 最后通知图库更新
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(path)));
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(fileName)));
+        return fileName;
 
     }
 

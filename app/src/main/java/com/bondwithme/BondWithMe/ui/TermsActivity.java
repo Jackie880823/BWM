@@ -4,9 +4,11 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
-import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.R;
+
+import java.util.Locale;
 
 public class TermsActivity extends BaseActivity {
 
@@ -47,9 +49,11 @@ public class TermsActivity extends BaseActivity {
     @Override
     public void initView() {
         webView = getViewById(R.id.webView);
-        webView.loadUrl("http://bondwithme.com/term.php?lang="+ HttpTools.getHeaders().get("X_BWM_APPLANG"));
+        webView.loadUrl("http://bondwithme.com/term.php?lang="+ Locale.getDefault().getLanguage());
+//        webView.loadUrl("http://bondwithme.com/term.php?lang="+ HttpTools.getHeaders().get("X_BWM_APPLANG"));
 //        webView.loadUrl("http://bondwithme.com/bonding-terms.htm");
         webView.getSettings().setJavaScriptEnabled(true);//修复url不能跳转bug,add by wing
+        webView.setWebViewClient(new WebViewClient());
 
     }
 

@@ -3,21 +3,17 @@ package com.bondwithme.BondWithMe;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 
 import com.bondwithme.BondWithMe.ui.CrashActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.SystemUtil;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,9 +34,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
     private Context mContext;
     //用来存储设备信息和异常信息
     private Map<String, String> infos = new HashMap<String, String>();
-
-    //用于格式化日期,作为日志文件名的一部分
-    private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
 
     /**
      * 保证只有一个CrashHandler实例
@@ -115,15 +108,13 @@ public class CrashHandler implements UncaughtExceptionHandler {
     }
 
 
-
-
     /**
      * 保存错误信息到文件中
      *
      * @param ex
-     * @return 返回文件名称, 便于将文件传送到服务器
+     * @return
      */
-    private String saveCrashInfo2File(Throwable ex) {
+    private void saveCrashInfo2File(Throwable ex) {
         //收集设备参数信息
         infos = SystemUtil.collectDeviceInfo(mContext);
 
@@ -146,23 +137,12 @@ public class CrashHandler implements UncaughtExceptionHandler {
         String result = writer.toString();
         sb.append(result);
         try {
-            long timestamp = System.currentTimeMillis();
-            String time = formatter.format(new Date());
-            String fileName = "crash-" + time + "-" + timestamp + ".log";
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                String path = "/sdcard/crash/";
-                File dir = new File(path);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                FileOutputStream fos = new FileOutputStream(path + fileName);
-                fos.write(sb.toString().getBytes());
-                fos.close();
-            }
-            return fileName;
+            String filePath = FileUtil.getSaveCrashPath(mContext);
+            FileOutputStream fos = new FileOutputStream(filePath);
+            fos.write(sb.toString().getBytes());
+            fos.close();
         } catch (Exception e) {
             LogUtil.e(TAG, "an error occured while writing file...");
         }
-        return null;
     }
 }
