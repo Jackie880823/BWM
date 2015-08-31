@@ -839,7 +839,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         if (audioFile != null && audioFile.exists()) {
                             handler.removeMessages(PLAY_AUDIO_HANDLER);
                             String path = audioFile.getAbsolutePath();
-                            AudioPlayUtils.getInstance(path).playAudio();
+                            AudioPlayUtils.getInstance(path, llm, messageChatAdapter).playAudio();
                             id_progressbar.setVisibility(View.VISIBLE);
                             id_progressbar.setMax(mlCount);
                             handler.sendEmptyMessage(PLAY_AUDIO_HANDLER);

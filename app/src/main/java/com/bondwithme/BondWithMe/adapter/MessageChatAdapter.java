@@ -152,6 +152,14 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         //notifyItemInserted(myList.size());
     }
 
+    public void setAudioName(String audioName) {
+        this.audioName = audioName;
+    }
+
+    public void setPlayPros(int playPros) {
+        this.playPros = playPros;
+    }
+
     @Override
     public int getItemViewType(int position) {
         MsgEntity msgEntity = myList.get(position);
@@ -450,6 +458,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 return;
             }
             HorizontalProgressBarWithNumber mProgressBar = (HorizontalProgressBarWithNumber) holder.itemView.findViewById(R.id.id_progressbar);
+            if (mProgressBar == null) {
+                return;
+            }
             if (playTime != 0) {
                 mProgressBar.setMax(playTime);
                 mProgressBar.setProgress(++playPros);
@@ -636,7 +647,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     }
                     clickPosition = position;
                     String path = FileUtil.getAudioRootPath(context) + File.separator + msgEntity.getAudio_filename();
-                    AudioPlayUtils.getInstance(path).playAudio();
+                    AudioPlayUtils.getInstance(path, llm, MessageChatAdapter.this).playAudio();
                     Map<String, Object> map = new HashMap<>();
                     String audioDuration = msgEntity.getAudio_duration();
                     audioDuration = formatTime(audioDuration);
