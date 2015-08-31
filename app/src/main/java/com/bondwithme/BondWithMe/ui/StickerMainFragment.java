@@ -32,6 +32,7 @@ import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.util.AnimatedGifDrawable;
+import com.bondwithme.BondWithMe.util.AudioPlayUtils;
 import com.bondwithme.BondWithMe.widget.NoScrollGridView;
 
 import java.io.File;
@@ -139,6 +140,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AudioPlayUtils.stopAudio();
                 startActivity(new Intent(getActivity(), StickerStoreActivity.class));
             }
         });
@@ -311,6 +313,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                                 sticker_name = fileName.substring(fileName.lastIndexOf(File.separator) + 1, fileName.lastIndexOf("_"));
                             }
                             if (mViewClickListener != null) {
+                                AudioPlayUtils.stopAudio();
                                 mViewClickListener.showComments(type, selectStickerName, sticker_name);
                             }
                         }
