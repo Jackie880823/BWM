@@ -308,8 +308,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:visibility="gone"
-                app:progress_text_color_horizontal="#ff2903FC"
-                app:progress_unreached_color_horizontal="#ffBCB4E8"
+                app:progress_text_color_horizontal="#00CD00"
+                app:progress_unreached_bar_height_horizontal="@dimen/_1dp"
+                app:progress_unreached_color_horizontal="#00FA9A"
                 app:radius="@dimen/_46dp" />
 
             <ImageView

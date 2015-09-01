@@ -25,6 +25,7 @@ import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallMembersOrGroupsActivity;
 import com.bondwithme.BondWithMe.util.LocationUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
@@ -188,7 +189,6 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         if(position == 1){
 //            Second second = (Second) holder;
-//            LinearLayout.LayoutParams layoutParam;
             mViewHolder second = (mViewHolder) holder;
 //            T second = (T) holder;
             EventCommentEntity entity =  data.get(0);
@@ -234,7 +234,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 //            T vhItem = holder;
             EventCommentEntity entity =  data.get(position - detailItemCount);
             layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-            layoutParam.setMargins(itemDistance, 0, itemDistance, dip2px(mContext, 0));
+            layoutParam.setMargins(itemDistance,0,itemDistance,dip2px(mContext,0));
             vhItem.itemView.setLayoutParams(layoutParam);
             VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             vhItem.tv_comment_owner_name.setText(entity.getUser_given_name());
@@ -257,7 +257,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mViewHolder footer = (mViewHolder) holder;
             EventCommentEntity entity =  data.get(position - detailItemCount);
             layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-            layoutParam.setMargins(itemDistance, 0, itemDistance, dip2px(mContext, 60));
+            layoutParam.setMargins(itemDistance,0,itemDistance,dip2px(mContext,60));
             footer.itemView.setLayoutParams(layoutParam);
             footer.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_footer_shape));
             VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
