@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_name"
-        android:layout_marginRight="@dimen/_35dp"
+        android:layout_marginRight="@dimen/_70dp"
         android:layout_toRightOf="@id/message_icon_image"
         android:autoLink="web"
         android:background="@drawable/message_left"

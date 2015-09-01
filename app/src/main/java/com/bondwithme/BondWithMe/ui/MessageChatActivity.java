@@ -314,6 +314,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     }
                     try {
                         String postType = audioJsonObject.optString("postType");
+                        if ("postAudio".equalsIgnoreCase(postType)) {
+                            if (audioFile != null && audioFile.exists()) {
+                                audioFile.delete();
+                            }
+                        }
                         if ("postVideo".equalsIgnoreCase(postType) || "postAudio".equalsIgnoreCase(postType)) {
                             getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
@@ -632,6 +637,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     if (mlCount != 1) {
                         mlCount = 1;
                     }
+                    AudioPlayUtils.stopAudio();
                     mic_left.setVisibility(View.VISIBLE);
                     mic_right.setVisibility(View.VISIBLE);
                     bend_line.setVisibility(View.VISIBLE);
@@ -739,6 +745,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 tvAddNewMember.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        AudioPlayUtils.stopAudio();
                         // Modify start by Jackie, Use custom recorder
                         Intent mIntent = new Intent(MediaData.ACTION_RECORDER_VIDEO);
 //                        Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -832,7 +839,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         if (audioFile != null && audioFile.exists()) {
                             handler.removeMessages(PLAY_AUDIO_HANDLER);
                             String path = audioFile.getAbsolutePath();
-                            AudioPlayUtils.getInstance(path).playAudio();
+                            AudioPlayUtils.getInstance(path, null, null).playAudio();
                             id_progressbar.setVisibility(View.VISIBLE);
                             id_progressbar.setMax(mlCount);
                             handler.sendEmptyMessage(PLAY_AUDIO_HANDLER);
@@ -1028,6 +1035,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
      * 打开相册
      */
     private void openAlbum() {
+        AudioPlayUtils.stopAudio();
         intent = new Intent(getApplicationContext(), SelectPhotosActivity.class);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -1194,6 +1202,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
      * 打开相机
      */
     private void openCamera() {
+        AudioPlayUtils.stopAudio();
         intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra("camerasensortype", 2);
         // 下面这句指定调用相机拍照后的照片存储的路径
@@ -1239,6 +1248,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
+                    AudioPlayUtils.stopAudio();
                     visibleView(sendTextView, null, 0);
                     goneView(chat_mic_keyboard, null, 0);
                 } else {

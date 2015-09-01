@@ -25,7 +25,7 @@
             android:id="@+id/pic_linear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/send_fail_rl"
+            android:layout_marginLeft="@dimen/_70dp"
             android:background="@drawable/message_right"
             android:orientation="horizontal">
 
@@ -77,9 +77,9 @@
                 android:id="@+id/send_progress_bar"
                 android:layout_width="@dimen/_20dp"
                 android:layout_height="@dimen/_20dp"
+                android:visibility="gone"
                 app:circular_progress_border_width="1dp"
-                app:circular_progress_color="#EDEDED"
-                android:visibility="gone"/>
+                app:circular_progress_color="#EDEDED" />
 
             <ImageView
                 android:id="@+id/msg_send_fail_iv"
@@ -87,7 +87,7 @@
                 android:layout_height="@dimen/_20dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/chat_send_fail"
-                android:visibility="gone"/>
+                android:visibility="visible" />
         </RelativeLayout>
 
     </RelativeLayout>

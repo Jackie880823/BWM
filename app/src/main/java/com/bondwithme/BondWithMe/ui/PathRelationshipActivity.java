@@ -1,14 +1,13 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +17,10 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MemberPathEntity;
+import com.bondwithme.BondWithMe.exception.RelationshipException;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.util.RelationshipUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,23 +30,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
+/**
+ * 坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑
+ * 坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑
+ * 坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑
+ * 坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑坑
+ *
+ * 服务器为字符串返回 。 翻译需要自己处理 维护很痛苦。
+ */
 public class PathRelationshipActivity extends BaseActivity {
     private static final String Tag = PathRelationshipActivity.class.getSimpleName();
-    private boolean isZh;
     String memberId;
     String relationship;
     String fam_nickname;
     String member_status;
     List<MemberPathEntity> pathList = new ArrayList<MemberPathEntity>();
-    List<String> data_Zh = new ArrayList<String>();
-    List<String> data_Us = new ArrayList<String>();
-    private int selectMemeber;
-    private int RESULT = 0;
 
     LinearLayout llRelationship;
 
@@ -58,6 +60,7 @@ public class PathRelationshipActivity extends BaseActivity {
     TextView tvNames[] = new TextView[4];
     TextView tvRelationships[] = new TextView[4];
 
+    RelativeLayout rlProgress;
 
     @Override
     public int getLayout() {
@@ -87,33 +90,7 @@ public class PathRelationshipActivity extends BaseActivity {
 
     @Override
     protected void titleLeftEvent() {
-//        setResult(RESULT_OK);
         super.titleLeftEvent();
-    }
-
-    @Override
-    public void finish() {
-        Intent intent = new Intent();
-        if (isZh) {
-            if (-1 == data_Zh.indexOf(tvRelationship.getText().toString()))
-            {
-                setResult(RESULT_CANCELED);
-                super.finish();
-                return;
-            }
-            intent.putExtra("relationship", data_Us.get(data_Zh.indexOf(tvRelationship.getText().toString())));
-        } else {
-            if (-1 == data_Us.indexOf(tvRelationship.getText().toString()))
-            {
-                setResult(RESULT_CANCELED);
-                super.finish();
-                return;
-            }
-            intent.putExtra("relationship", tvRelationship.getText().toString());
-        }
-
-        setResult(Activity.RESULT_OK, intent);
-        super.finish();
     }
 
     @Override
@@ -122,44 +99,38 @@ public class PathRelationshipActivity extends BaseActivity {
     }
 
     @Override
-    public void initView() {
-        getDataEn();
-        //系统环境是中文
-        if (Locale.getDefault().toString().equals("zh_CN")) {
-            isZh = true;
-            getDataZh();
+    public void finish() {
+        try {
+            setResult(RESULT_OK, new Intent().putExtra("relationship", RelationshipUtil.getRelationshipValue(this, tvRelationship.getText().toString())));
+        } catch (RelationshipException e) {
+            e.printStackTrace();
+            setResult(RESULT_OK, new Intent().putExtra("relationship", ""));
         }
+        super.finish();
+    }
+
+    @Override
+    public void initView() {
+
         memberId = getIntent().getStringExtra("member_id");
-        relationship = getIntent().getStringExtra("relationship");
+        relationship = getIntent().getStringExtra("relationship");//英文版
         fam_nickname = getIntent().getStringExtra("fam_nickname");
         member_status = getIntent().getStringExtra("member_status");
 
-
-        if (TextUtils.isEmpty(memberId) && TextUtils.isEmpty(relationship)) {
+        if (TextUtils.isEmpty(memberId)) {
             finish();
         }
 
         llRelationship = getViewById(R.id.ll_relationship);
-
         tvRelationship = getViewById(R.id.tv_relationship);//头部右边显示的关系
         cniMain = getViewById(R.id.cni_main);
         tvName = getViewById(R.id.tv_name);//放名字还是放Me????
 
-        //FamilyProfileFragment界面传进来的index需要判断下如果为0
-        if (-1 == getIntent().getIntExtra("selectMemeber",-1))
-        {
-            tvRelationship.setText(relationship);//直接展示服务器数据，此时index为-1
-        }
-        else
-        {
-            if (isZh) {
-                tvRelationship.setText(data_Zh.get(getIntent().getIntExtra("selectMemeber",-1)));//中文
-            } else {
-                tvRelationship.setText(data_Us.get(getIntent().getIntExtra("selectMemeber",-1)));//英文
-            }
-        }
+        tvRelationship.setText(RelationshipUtil.getRelationshipName(this, relationship));//传入服务器标准关系，获取当前语言关系名。
 
         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+
+        rlProgress = getViewById(R.id.rl_progress);
 
         ll[0] = getViewById(R.id.ll_1);
         ll[1] = getViewById(R.id.ll_2);
@@ -206,12 +177,12 @@ public class PathRelationshipActivity extends BaseActivity {
         new HttpTools(PathRelationshipActivity.this).get(url, null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
-
+                rlProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
-
+                rlProgress.setVisibility(View.GONE);
             }
 
             @Override
@@ -228,19 +199,7 @@ public class PathRelationshipActivity extends BaseActivity {
                         ll[i].setVisibility(View.VISIBLE);
                         VolleyUtil.initNetworkImageView(PathRelationshipActivity.this, circularNetworkImages[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile, pathList.get(i).getMember_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
-                        String relationship4En = pathList.get(i).getRelationship();
-
-                        int position = data_Us.indexOf(relationship4En);//有可能出现position为-1
-
-                        if (isZh) {//中文
-                            if (position != -1) {
-                                tvRelationships[i].setText(data_Zh.get(position));
-                            } else {
-                                tvRelationships[i].setText(relationship4En);//index==-1，直接显示服务器数据
-                            }
-                        } else {//英文
-                            tvRelationships[i].setText(relationship4En);
-                        }
+                        tvRelationships[i].setText(RelationshipUtil.getRelationshipName(PathRelationshipActivity.this, pathList.get(i).getRelationship()));
 
                         tvNames[i].setText(pathList.get(i).getMember_fullname());
                     }
@@ -279,15 +238,10 @@ public class PathRelationshipActivity extends BaseActivity {
         switch (requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
-                    //获取选择关系界面传来的关系 根据index。
-                    selectMemeber = data.getExtras().getInt("selectMemeber");
-                    RESULT = RESULT_OK;
-                    if (isZh) {
-                        tvRelationship.setText(data_Zh.get(selectMemeber));
-                    } else {
-                        tvRelationship.setText(data_Us.get(selectMemeber));
-                    }
-                    updateRelationship();
+
+                    tvRelationship.setText(RelationshipUtil.getRelationshipName(this, data.getStringExtra("relationship")));//显示当前语言环境关系名称
+
+                    updateRelationship(data.getStringExtra("relationship"));//传入标准英文，传给服务器
                 }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -306,33 +260,12 @@ public class PathRelationshipActivity extends BaseActivity {
 
     }
 
-
-    private List<String> getDataZh() {
-        Configuration configuration = new Configuration();
-        //设置应用为简体中文
-        configuration.locale = Locale.SIMPLIFIED_CHINESE;
-        getResources().updateConfiguration(configuration, null);
-        String[] ralationArrayZh = getResources().getStringArray(R.array.relationship_item);
-        data_Zh = Arrays.asList(ralationArrayZh);
-        return data_Zh;
-    }
-
-    private List<String> getDataEn() {
-        Configuration configuration = new Configuration();
-        //设置应用为英文
-        configuration.locale = Locale.US;
-        getResources().updateConfiguration(configuration, null);
-        String[] ralationArrayUs = getResources().getStringArray(R.array.relationship_item);
-        data_Us = Arrays.asList(ralationArrayUs);
-        return data_Us;
-    }
-
-    public void updateRelationship() {
+    public void updateRelationship(String relationship) {
         RequestInfo requestInfo = new RequestInfo();
 
         HashMap<String, String> jsonParams = new HashMap<String, String>();
         jsonParams.put("member_id", memberId);
-        jsonParams.put("user_relationship_name", data_Us.get(selectMemeber));//上传的是英文字符串
+        jsonParams.put("user_relationship_name", relationship);//上传的是英文字符串
         jsonParams.put("fam_nickname", fam_nickname);
         jsonParams.put("member_status", member_status);
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
@@ -343,12 +276,13 @@ public class PathRelationshipActivity extends BaseActivity {
         new HttpTools(PathRelationshipActivity.this).put(requestInfo, Tag, new HttpCallback() {
             @Override
             public void onStart() {
-
+                rlProgress.setVisibility(View.VISIBLE);
+                leftButton.setClickable(false);
             }
 
             @Override
             public void onFinish() {
-
+                leftButton.setClickable(true);
             }
 
             @Override
