@@ -565,7 +565,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
                     if(getIntent().getBooleanExtra(MediaData.EXTRA_RETURN_DATA, true)) {
 
                         MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
-                        metadataRetriever.setDataSource(getBaseContext(), uri);
+                        metadataRetriever.setDataSource(path);
                         String durationStr = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
                         metadataRetriever.release();
                         long duration = Long.valueOf(durationStr);
@@ -615,7 +615,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
             btnStart.setVisibility(View.VISIBLE);
             btnStop.setVisibility(View.INVISIBLE);
             chronometer.stop();
-            if(localPath == null) {
+            if(TextUtils.isEmpty(localPath)) {
                 return;
             }
             String st3 = getString(R.string.ask_send);
