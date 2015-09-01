@@ -393,7 +393,7 @@
     <string name="text_dialog_save_draft">Save as Draft?</string>
     <string name="text_empty_add_member">You\'re not alone. Tap on + to start bonding!</string>
     <string name="text_empty_add_group">Tap on + to create new group to bond with your loved ones.</string>
-    <string name="text_message_type_here">type message here</string>
+    <string name="text_message_type_here">Type message here</string>
 
     <string name="text_target_choose">Select</string>
     <string name="waiting_upload">Please wait for the upload to complete.</string>
