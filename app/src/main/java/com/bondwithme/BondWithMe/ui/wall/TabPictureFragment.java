@@ -412,7 +412,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      */
     //	byte[] personHeadImage;
     private void addDataAndNotify(List<Uri> uris) {
-        if(uris != null && uris.size() > 0) {
+        if(uris != null) {
             for(Uri uri : uris) {
                 Map<String, Uri> map = new HashMap<>();
                 map.put("pic_resId", uri);
