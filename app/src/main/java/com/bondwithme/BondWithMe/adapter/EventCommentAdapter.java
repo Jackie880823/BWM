@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -53,6 +54,8 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_SECOND = 2;
     private static final int TYPE_FOOTER = 3;
+
+    private int itemDistance;
 
     public EventCommentAdapter(Context context, EventEntity detailData, List<EventCommentEntity> data, RecyclerView recyclerView) {
         mContext = context;
@@ -143,6 +146,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 //        Log.i("onBindViewHolder=====",position+"");
+        LinearLayout.LayoutParams layoutParam;
         if(position == 0 ){
             VHHeader header = (VHHeader) holder;
             EventEntity detail = detailData;
@@ -185,21 +189,26 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         if(position == 1){
 //            Second second = (Second) holder;
-            LinearLayout.LayoutParams layoutParam;
             mViewHolder second = (mViewHolder) holder;
 //            T second = (T) holder;
             EventCommentEntity entity =  data.get(0);
+            if( Build.VERSION.SDK_INT < 21){
+                itemDistance = dip2px(mContext,12);
+            }else {
+                itemDistance = dip2px(mContext,14);
+            }
+
             if(data.size() == 1){
                 second.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_one_shape));
                 layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-                layoutParam.setMargins(dip2px(mContext,14),14,dip2px(mContext,14),dip2px(mContext,60));
+                layoutParam.setMargins(itemDistance,14,itemDistance,dip2px(mContext,60));
 //              layoutParam.setMarginEnd(500);
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.INVISIBLE);
             }else {
                 second.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_shape));
                 layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-                layoutParam.setMargins(dip2px(mContext,14),14,dip2px(mContext,14),dip2px(mContext,0));
+                layoutParam.setMargins(itemDistance,14,itemDistance,dip2px(mContext,0));
 //              layoutParam.setMarginEnd(500);
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.VISIBLE);
@@ -207,7 +216,6 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             second.tv_comment_owner_name.setText(entity.getUser_given_name());
             second.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, entity.getComment_creation_date()));
-            second.tv_agree_count.setText((TextUtils.isEmpty(entity.getLove_count()) ? "0" : entity.getLove_count()));
             if(!TextUtils.isEmpty(entity.getComment_content().trim())){//如果文字不为空
                 second.tv_comment_content.setVisibility(View.VISIBLE);
                 second.tv_comment_content.setText(entity.getComment_content());
@@ -219,17 +227,18 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(updateListener != null){
                 updateListener.updateListSecondView(second.itemView);
             }
-            setComment(second.btn_comment_del,second.iv_agree,entity);
+            setComment(second.btn_comment_del,second.iv_agree,second.tv_agree_count,position,entity);
         }else if(position >1 && position < data.size()){
 //            VHItem vhItem = (VHItem) holder;
             mViewHolder vhItem = (mViewHolder) holder;
 //            T vhItem = holder;
             EventCommentEntity entity =  data.get(position - detailItemCount);
+            layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+            layoutParam.setMargins(itemDistance,0,itemDistance,dip2px(mContext,0));
+            vhItem.itemView.setLayoutParams(layoutParam);
             VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             vhItem.tv_comment_owner_name.setText(entity.getUser_given_name());
             vhItem.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, entity.getComment_creation_date()));
-            vhItem.tv_agree_count.setText((TextUtils.isEmpty(entity.getLove_count()) ? "0" : entity.getLove_count()));
-            LogUtil.i("tv_agree_count",position+""+entity.getLove_count());
             if(!TextUtils.isEmpty(entity.getComment_content().trim())){//如果文字不为空
 //                Log.i("文字=====", position + "");
                 vhItem.tv_comment_content.setVisibility(View.VISIBLE);
@@ -241,18 +250,20 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 setCommentPic(vhItem.gifImageView,vhItem.networkImageView,vhItem.chatsImage, entity);
             }
 
-            setComment(vhItem.btn_comment_del,vhItem.iv_agree,entity);
+            setComment(vhItem.btn_comment_del,vhItem.iv_agree,vhItem.tv_agree_count,position,entity);
         }else if(
                 position >1 && position == data.size() ){
 //            Footer footer = (Footer) holder;
             mViewHolder footer = (mViewHolder) holder;
             EventCommentEntity entity =  data.get(position - detailItemCount);
+            layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+            layoutParam.setMargins(itemDistance,0,itemDistance,dip2px(mContext,60));
+            footer.itemView.setLayoutParams(layoutParam);
             footer.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_footer_shape));
             VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             footer.line.setVisibility(View.INVISIBLE);
             footer.tv_comment_owner_name.setText(entity.getUser_given_name());
             footer.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, entity.getComment_creation_date()));
-            footer.tv_agree_count.setText((TextUtils.isEmpty(entity.getLove_count()) ? "0" : entity.getLove_count()));
             if(!TextUtils.isEmpty(entity.getComment_content().trim())){//如果文字不为空
 //                Log.i("文字=====", position + "");
                 footer.tv_comment_content.setVisibility(View.VISIBLE);
@@ -263,7 +274,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 footer.tv_comment_content.setVisibility(View.GONE);
                 setCommentPic(footer.gifImageView,footer.networkImageView,footer.chatsImage, entity);
             }
-            setComment(footer.btn_comment_del, footer.iv_agree, entity);
+            setComment(footer.btn_comment_del, footer.iv_agree,footer.tv_agree_count, position,entity);
         }
 
 
@@ -277,7 +288,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void setDetail(RecyclerView.ViewHolder holder,EventEntity entity){
 
     }
-    private void setComment(ImageButton btn_comment_del,ImageButton iv_agree,EventCommentEntity entity){
+    private void setComment(ImageButton btn_comment_del,ImageButton iv_agree,TextView tv_agree_count,int position,EventCommentEntity entity){
 
         if (MainActivity.getUser().getUser_id().equals(entity.getUser_id())) {//如果是自己发送到评论，则显示删除按钮，否则隐藏
             btn_comment_del.setVisibility(View.VISIBLE);
@@ -285,10 +296,16 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             btn_comment_del.setVisibility(View.GONE);
         }
         if (TextUtils.isEmpty(entity.getLove_id())) {//如果有人点赞
-            iv_agree.setImageResource(R.drawable.love_normal);
-        } else {
-            iv_agree.setImageResource(R.drawable.love_press);
+                iv_agree.setImageResource(R.drawable.love_normal);
+            } else {
+                iv_agree.setImageResource(R.drawable.love_press);
+            }
+        if(lovedate != null && lovedate.containsKey(position)){
+            tv_agree_count.setText(lovedate.get(position));
+        }else {
+            tv_agree_count.setText((TextUtils.isEmpty(entity.getLove_count()) ? "0" : entity.getLove_count()));
         }
+
 
 //        setCommentPic(holder,entity);
     }
@@ -580,9 +597,11 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         commentEntity.setLove_id(null);
                         tv_agree_count.setText(count - 1 + "");
                     }
+                    lovedate.put(position, tv_agree_count.getText().toString());
                     //判断是否已经有进行中的判断
                     if (!runningList.contains(position - detailItemCount)) {
                         runningList.add(position - detailItemCount);
+                        clickList.add(position - detailItemCount);
                         check(position - detailItemCount);
                     }
                     break;
@@ -607,6 +626,8 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     boolean newClick;
     List<Integer> runningList = new ArrayList<Integer>();
+    List<Integer> clickList = new ArrayList<Integer>();
+    HashMap<Integer,String> lovedate = new  HashMap<Integer,String>();
 
     private void check(final int position) {
         new Thread(new Runnable() {
