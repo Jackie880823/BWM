@@ -605,7 +605,7 @@
     <string name="text_audio_release">Release to Send</string>
     <string name="text_audio_loosen_audition">Release to Replay</string>
     <string name="text_audio_cancle_send">Release to Cancel</string>
-    <string name="text_recording_video">Recording video</string>
+    <string name="text_recording_video">Record video</string>
     <string name="text_take_photos">Take photos</string>
     <string name="text_record_audio_too_short">Record time to more than two seconds</string>
     <string name="text_can_record_time">Can also record%1$ssecond</string>
