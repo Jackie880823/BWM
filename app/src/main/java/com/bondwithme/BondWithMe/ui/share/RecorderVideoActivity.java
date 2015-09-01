@@ -187,6 +187,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
 
         } catch(RuntimeException ex) {
             ex.printStackTrace();
+            releaseCamera();
             return false;
         }
         return true;
@@ -378,61 +379,70 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
         mMediaRecorder = new MediaRecorder();
         mCamera.unlock();
         mMediaRecorder.setCamera(mCamera);
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-        // 设置录制视频源为Camera（相机）
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-        if(frontCamera == CameraInfo.CAMERA_FACING_FRONT) {
-            // 前置摄像头
-            mMediaRecorder.setOrientationHint(270);
-        } else {
-            // 后置摄像头
-            mMediaRecorder.setOrientationHint(90);
-        }
-        // 设置录制完成后视频的封装格式THREE_GPP为3gp.MPEG_4为mp4
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        // 设置录制的视频编码h263 h264
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        // 设置视频录制的分辨率。必须放在设置编码和格式的后面，否则报错
-        mMediaRecorder.setVideoSize(previewWidth, previewHeight);
-        // 设置视频的比特率
-        mMediaRecorder.setVideoEncodingBitRate(384 * 1024);
-        // // 设置录制的视频帧率。必须放在设置编码和格式的后面，否则报错
-        if(defaultVideoFrameRate != -1) {
-            mMediaRecorder.setVideoFrameRate(defaultVideoFrameRate);
-        }
 
-        Intent intent = getIntent();
-
-        // 获取视频文件输出的路径
-        Uri uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-        if(uri == null || Uri.EMPTY.equals(uri)) {
-            localPath = FileUtil.getVideoRootPath(this) + "/" + System.currentTimeMillis() + ".mp4";
-        } else {
-            localPath = uri.getPath();
-        }
-        // 设置输入目录
-        mMediaRecorder.setOutputFile(localPath);
-
-        // 判断可录制时长限制
-        int maxDuration = intent.getIntExtra(MediaStore.EXTRA_DURATION_LIMIT, 0);
-        if(maxDuration > 0) {
-            mMediaRecorder.setMaxDuration(maxDuration);
-        }
-
-        // 判断可录制文件大小限制
-        long maxSize = intent.getLongExtra(MediaStore.EXTRA_SIZE_LIMIT, 0);
-        if(maxSize > 0) {
-            mMediaRecorder.setMaxFileSize(maxSize);
-        }
-
-        mMediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
         try {
-            mMediaRecorder.prepare();
-        } catch(IllegalStateException e) {
-            e.printStackTrace();
-            return false;
-        } catch(IOException e) {
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+            // 设置录制视频源为Camera（相机）
+            mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+            if(frontCamera == CameraInfo.CAMERA_FACING_FRONT) {
+                // 前置摄像头
+                mMediaRecorder.setOrientationHint(270);
+            } else {
+                // 后置摄像头
+                mMediaRecorder.setOrientationHint(90);
+            }
+            // 设置录制完成后视频的封装格式THREE_GPP为3gp.MPEG_4为mp4
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            // 设置录制的视频编码h263 h264
+            mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+            // 设置视频录制的分辨率。必须放在设置编码和格式的后面，否则报错
+            mMediaRecorder.setVideoSize(previewWidth, previewHeight);
+            // 设置视频的比特率
+            mMediaRecorder.setVideoEncodingBitRate(384 * 1024);
+            // // 设置录制的视频帧率。必须放在设置编码和格式的后面，否则报错
+            if(defaultVideoFrameRate != -1) {
+                mMediaRecorder.setVideoFrameRate(defaultVideoFrameRate);
+            }
+
+            Intent intent = getIntent();
+
+            // 获取视频文件输出的路径
+            Uri uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+            if(uri == null || Uri.EMPTY.equals(uri)) {
+                localPath = FileUtil.getVideoRootPath(this) + "/" + System.currentTimeMillis() + ".mp4";
+            } else {
+                localPath = uri.getPath();
+            }
+            // 设置输入目录
+            mMediaRecorder.setOutputFile(localPath);
+
+            // 判断可录制时长限制
+            int maxDuration = intent.getIntExtra(MediaStore.EXTRA_DURATION_LIMIT, 0);
+            if(maxDuration > 0) {
+                mMediaRecorder.setMaxDuration(maxDuration);
+            }
+
+            // 判断可录制文件大小限制
+            long maxSize = intent.getLongExtra(MediaStore.EXTRA_SIZE_LIMIT, 0);
+            if(maxSize > 0) {
+                mMediaRecorder.setMaxFileSize(maxSize);
+            }
+
+            // 设置预览
+            mMediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
+            try {
+                mMediaRecorder.prepare();
+            } catch(IllegalStateException e) {
+                e.printStackTrace();
+                return false;
+            } catch(IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } catch(Exception e){
+            releaseRecorder();
+            releaseCamera();
             e.printStackTrace();
             return false;
         }
@@ -478,13 +488,14 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
      * 释放相机
      */
     protected void releaseCamera() {
-        try {
-            if(mCamera != null) {
+        if(mCamera != null) {
+            try {
                 mCamera.stopPreview();
+            } finally {
                 mCamera.release();
                 mCamera = null;
+
             }
-        } catch(Exception e) {
         }
     }
 
