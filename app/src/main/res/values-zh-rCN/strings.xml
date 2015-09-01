@@ -616,6 +616,6 @@
 
     <string name="text_recording_video">录制视频</string>
     <string name="text_take_photos">拍摄照片</string>
-    <string name="text_record_audio_too_short">录音时间要超过两秒</string>
+    <string name="text_record_audio_too_short">录音时间太短</string>
     <string name="text_hold_and_speak">按住说话</string>
 </resources>
