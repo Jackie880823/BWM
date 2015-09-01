@@ -90,6 +90,12 @@ public class MyStickerActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        initView();
+    }
+
+    @Override
     public void requestData() {
 
     }

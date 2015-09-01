@@ -1,8 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -11,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -43,10 +40,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -58,13 +53,11 @@ import java.util.Locale;
  */
 public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     private static final String Tag = FamilyProfileFragment.class.getSimpleName();
+    private static final int GO_RELATIONSHIP_CHANGE = 1;
     private String useId;//本人Id，这个将来是全局变量
     private String memberId;//本人的memberId
     private String groupId;
     private String groupName;
-//    private String relationship;
-//    private String famNickname;
-//    private String memberStatus;
     private String getDofeelCode;
     private View vProgress;
 
@@ -85,8 +78,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     private static final int GET_USER_ENTITY = 0X11;
 
-    List<String> data_Us = new ArrayList<>();
-
     public static FamilyProfileFragment newInstance(String... params) {
         return createInstance(new FamilyProfileFragment());
     }
@@ -100,36 +91,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         this.layoutId = R.layout.family_profile_fragment;
     }
 
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        switch (requestCode) {
-//            case 1:
-//             if (resultCode == getActivity().RESULT_OK) {
-//                userEntity.setTree_type_name(data.getStringExtra("relationship"));
-//             }
-//        }
-//    }
-    List<String> data_Zh = new ArrayList<>();
-    private List<String> getDataZh() {
-        Configuration configuration = new Configuration();
-        //设置应用为简体中文
-        configuration.locale = Locale.SIMPLIFIED_CHINESE;
-        getResources().updateConfiguration(configuration, null);
-        String[] ralationArrayZh = getResources().getStringArray(R.array.relationship_item);
-        data_Zh = Arrays.asList(ralationArrayZh);
-        return data_Zh;
-    }
-
     @Override
     public void initView() {
-        getDataEn();
-        if (Locale.getDefault().toString().equals("zh_CN")) {
-//            data_Us = Arrays.asList(relationships);
-            getDataZh();
 
-        }
         Intent intent = getActivity().getIntent();
         useId = MainActivity.getUser().getUser_id();//MainActivity.
         memberId = intent.getStringExtra("member_id");
@@ -140,9 +104,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             //如果上个页面没传进groupId或者groupName，显示进度条
             vProgress.setVisibility(View.VISIBLE);
         }
-//        relationship = intent.getStringExtra("relationship");
-//        famNickname = intent.getStringExtra("fam_nickname");
-//        memberStatus = intent.getStringExtra("member_status");
         getDofeelCode = intent.getStringExtra("getDofeel_code");
 
         cniMain = getViewById(R.id.cni_main);
@@ -239,18 +200,12 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             public void onClick(View v) {
                 if (userEntity != null ) {
                     //关系界面
-
-                    Log.d("", "rrrrrrllll---" + userEntity.getTree_type_name() + data_Us.indexOf(userEntity.getTree_type_name()));
-
                     Intent intent = new Intent(getActivity(), PathRelationshipActivity.class);
                     intent.putExtra("member_id", memberId);
                     intent.putExtra("relationship", userEntity.getTree_type_name());
                     intent.putExtra("fam_nickname", userEntity.getFam_nickname());
                     intent.putExtra("member_status", userEntity.getUser_status());
-                    //传index进下个界面,需要判断index可能为-1
-                    intent.putExtra("selectMemeber", data_Us.indexOf(userEntity.getTree_type_name()));
-//                    startActivityForResult(intent, 0);
-                    startActivityForResult(intent, 1);
+                    startActivityForResult(intent, GO_RELATIONSHIP_CHANGE);
                 }
             }
         });
@@ -321,7 +276,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         params.put("from_user_id", MainActivity.getUser().getUser_id());
         params.put("to_user_id", memberId);
         params.put("to_user_fullname", userEntity.getUser_given_name());
-        new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params, Tag, new HttpCallback() {
             @Override
             public void onStart() {
             }
@@ -341,9 +296,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //
 //                    }
 //                    /already
-                    if(-1 != jsonObject.getString("message").indexOf("already")){
+                    if (-1 != jsonObject.getString("message").indexOf("already")) {
                         MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
-                    }else {
+                    } else {
                         MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
 
                     }
@@ -369,6 +324,23 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK)
+        {
+            switch (requestCode)
+            {
+                case GO_RELATIONSHIP_CHANGE:
+                    userEntity.setTree_type_name(data.getStringExtra("relationship"));
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 
     @Override
@@ -422,29 +394,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
             }
         });
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case 1:
-                if (resultCode == Activity.RESULT_OK){
-                    getActivity().setResult(Activity.RESULT_OK);
-                    userEntity.setTree_type_name(data.getStringExtra("relationship"));
-                }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private List<String> getDataEn() {
-        Configuration configuration = new Configuration();
-        //设置应用为英文
-        configuration.locale = Locale.US;
-        getResources().updateConfiguration(configuration, null);
-        String[] ralationArrayUs = getResources().getStringArray(R.array.relationship_item);
-        data_Us = Arrays.asList(ralationArrayUs);
-        return data_Us;
     }
 
     @Override

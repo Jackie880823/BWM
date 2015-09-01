@@ -48,6 +48,7 @@ public class NotificationMessageGenerateUtil {
         } else if ("tag".equals(action)) {
             msg = context.getString(R.string.notification_action_diary_tag, action_owner);
         }
+
         return msg;
     }
 
@@ -85,13 +86,13 @@ public class NotificationMessageGenerateUtil {
 
         String msg = null;
         if ("add".equals(action)) {
-            msg = context.getString(R.string.notification_action_member_add, action_owner, item_name);
+            msg = context.getString(R.string.notification_action_member_add, action_owner, RelationshipUtil.getRelationshipName(context, item_name));
         } else if ("autoAcp".equals(action)) {
-            msg = context.getString(R.string.notification_action_member_autoAcp, action_owner, item_name);
+            msg = context.getString(R.string.notification_action_member_autoAcp, action_owner, RelationshipUtil.getRelationshipName(context, item_name));
         } else if ("accept".equals(action)) {
             msg = context.getString(R.string.notification_action_member_accept, action_owner);
         } else if ("updateRel".equals(action)) {
-            msg = context.getString(R.string.notification_action_member_updateRel, action_owner, item_name);
+            msg = context.getString(R.string.notification_action_member_updateRel, action_owner, RelationshipUtil.getRelationshipName(context, item_name));
         }
         return msg;
     }
@@ -106,7 +107,7 @@ public class NotificationMessageGenerateUtil {
                 msg = action_owner + ":" + snippet;
 //                msg = context.getString(R.string.notification_action_message_postText_personal, action_owner);
             } else {
-                msg = item_name + "-" + action_owner + ":" + snippet;
+                msg = action_owner+"@"+item_name + ":" + snippet;
 //                msg = context.getString(R.string.notification_action_message_postText_group, action_owner, item_name);
             }
         } else if ("postSticker".equals(action)) {

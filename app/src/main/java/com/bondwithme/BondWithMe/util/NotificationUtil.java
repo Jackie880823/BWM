@@ -437,9 +437,9 @@ public class NotificationUtil {
         }
 
 //        if (msgs.size() == 1) {
-//            notification = getSingleNotification(context, contentIntent, title);
+            notification = getSingleNotification(context, contentIntent, title);
 //        } else {
-        notification = getInboxStyleNotification(context, contentIntent, title);
+//        notification = getInboxStyleNotification(context, contentIntent, title);
 //        }
         if (notification != null) {
             notification.priority = Notification.PRIORITY_HIGH;
@@ -507,23 +507,24 @@ public class NotificationUtil {
      */
     private static final int MAX_SHOW = 3;
 
-    private static Notification getSingleNotification(Context context, PendingIntent contentIntent, String title, List<String> msgs) {
-        if (msgs.size() < 1) {
+    private static Notification getSingleNotification(Context context, PendingIntent contentIntent, String title) {
+        List<String> currentMsgs = App.getContextInstance().getNotificationMsgsByType(msgType);
+        if (currentMsgs == null || currentMsgs.size() == 0) {
             return null;
         }
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setContentTitle(title)
-                        .setContentText(msgs.get(0));
+                        .setContentText(currentMsgs.get(currentMsgs.size() - 1));
         if (smallIcon != -1) {
             mBuilder.setSmallIcon(smallIcon);
         }
         mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
         //暂时不启用
-//        if(msgCount>1) {
-//            mBuilder.setNumber(msgCount);
-//        }
+        if(currentMsgs.size()>1) {
+            mBuilder.setNumber(currentMsgs.size());
+        }
         mBuilder.setTicker(title);
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
 

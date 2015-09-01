@@ -165,6 +165,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
             String target;
             File file = new File(targetParent);
             boolean canWrite = file.exists() || file.mkdir();
+            //.....
             target = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(this) + String.format("/%s", fileName);
 
             downloadVideo(url, target);
@@ -211,12 +212,13 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
         if(request != null && !request.isCanceled()) {
             // 下载还在进行，需要停止下载
             request.stopDownload();
+
         }
     }
 
     private void downloadVideo(String url, final String target) {
         Log.i(TAG, "downloadVideo& url: " + url + "; target: " + target);
-        request = new HttpTools(this).download(url, target, true, new HttpCallback() {
+        request = new HttpTools(this).download(App.getContextInstance(),url, target, true, new HttpCallback() {
             @Override
             public void onStart() {
                 pbDownload.setVisibility(View.VISIBLE);
@@ -234,11 +236,12 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
 
             @Override
             public void onResult(String response) {
-
+                LogUtil.i(TAG, "downloadVideo&onLoading$ onResult: " + response);
             }
 
             @Override
             public void onError(Exception e) {
+                LogUtil.i(TAG, "downloadVideo&onLoading$ onError: " );
                 e.printStackTrace();
                 if(videoView.isPlaying()) {
                     videoView.stopPlayback();
@@ -253,11 +256,13 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
 
             @Override
             public void onLoading(long count, long current) {
-                LogUtil.i(TAG, "downloadVideo&onLoading$ count: " + count + "; current: " + current);
+//                LogUtil.i(TAG, "downloadVideo&onLoading$ count: " + count + "; current: " + current);
                 int progress = (int) ((((double) current) / count) * 100);
-                LogUtil.i(TAG, "downloadVideo&onLoading$ progress = " + progress);
+//                LogUtil.i(TAG, "downloadVideo&onLoading$ progress = " + progress);
                 pbDownload.setProgress(progress);
             }
+
+
         });
     }
 

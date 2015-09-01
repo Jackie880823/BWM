@@ -134,7 +134,7 @@ repositories {
 dependencies {
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
     //for 突破65535的限制
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':Volley')
     compile project(':PhotoView')
     compile project(':mupdflibrary')
@@ -149,15 +149,15 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:22.2.+'
     compile 'com.android.support:cardview-v7:22.2.+'
     compile 'com.google.android.gms:play-services:7.5.0'
-
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
-    /** 第三方图片处理库 */
+    /** 第三方图片处理库  */
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
-    compile ('org.apache.httpcomponents:httpmime:4.5'){
+    compile('org.apache.httpcomponents:httpmime:4.5') {
         // avoid "is ignored for the default configuration X" warnings
         // since httpclient is included in the android SDK.
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     compile project(':piwik_sdk')
+    compile files('libs/activation.jar')
 }

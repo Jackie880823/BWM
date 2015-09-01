@@ -352,7 +352,10 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
         }
         mMediaRecorder.setOnInfoListener(this);
         mMediaRecorder.setOnErrorListener(this);
-        mMediaRecorder.start();
+        try {
+            mMediaRecorder.start();
+        } catch(Exception e) {
+        }
         return true;
     }
 
@@ -440,7 +443,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
                 e.printStackTrace();
                 return false;
             }
-        } catch(Exception e){
+        } catch(Exception e) {
             releaseRecorder();
             releaseCamera();
             e.printStackTrace();
@@ -460,7 +463,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
             mMediaRecorder.setOnInfoListener(null);
             try {
                 mMediaRecorder.stop();
-            } catch(IllegalStateException e) {
+            } catch(Exception e) {
                 e.printStackTrace();
             }
         }
