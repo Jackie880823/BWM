@@ -945,6 +945,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     break;
             }
         }
+
+        if(requestCode == OPEN_GPS && LocationUtil.isOPen(getActivity())) {
+            goLocationSetting();
+        }
     }
 
     void changeAtDesc(boolean checkVisible) {

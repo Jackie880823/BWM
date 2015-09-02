@@ -550,6 +550,10 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                     break;
             }
         }
+
+        if(requestCode == OPEN_GPS && LocationUtil.isOPen(getActivity())) {
+            goLocationSetting();
+        }
     }
 
     private void changeData() {

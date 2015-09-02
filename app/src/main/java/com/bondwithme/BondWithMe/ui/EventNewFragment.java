@@ -774,6 +774,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     break;
             }
         }
+
+        if(requestCode == OPEN_GPS && LocationUtil.isOPen(getActivity())) {
+            goLocationSetting();
+        }
     }
 
     //判断输入的内容是否为空
