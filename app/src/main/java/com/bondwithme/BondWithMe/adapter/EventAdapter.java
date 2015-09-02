@@ -1,8 +1,10 @@
 package com.bondwithme.BondWithMe.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,10 @@ import com.bondwithme.BondWithMe.entity.BirthdayEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -37,7 +42,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         mContext = context;
         this.data = data;
         this.birthdayEvents = birthdayEvents;
-        if (birthdayEvents != null && birthdayEvents.size() > 0) {
+        if(birthdayEvents != null && birthdayEvents.size() > 0) {
             hasTop = true;
             otherItemCount = 1;
             defaultTitle = context.getString(R.string.title_birthday_title);
@@ -48,7 +53,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     }
 
-    public void add(List<EventEntity> newEventDatas){
+    public void add(List<EventEntity> newEventDatas) {
         data.addAll(newEventDatas);
         notifyItemInserted(getItemCount());
     }
@@ -56,12 +61,12 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         //或者无头部时
-        if (viewType == TYPE_ITEM || !hasTop) {
+        if(viewType == TYPE_ITEM || !hasTop) {
             // 加载Item的布局.布局中用到的真正的CardView.
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);//一般event的cardview item
             // ViewHolder参数一定要是Item的Root节点.
             return new VHItem(view);
-        } else if (viewType == TYPE_HEADER) {
+        } else if(viewType == TYPE_HEADER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_top, parent, false);//生日cardview item
             return new VHHeader(view);
         }
@@ -72,59 +77,71 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof VHItem || !hasTop) {
+        if(holder instanceof VHItem || !hasTop) {
             VHItem item = (VHItem) holder;
             //一般event item的位置要减去生日item的条目
             EventEntity ee = data.get(position - otherItemCount);
             item.tvTitle.setText(ee.getGroup_name());
-            if ("2".equals(ee.getGroup_event_status())) {
+            if("2".equals(ee.getGroup_event_status())) {
                 item.item_unenable.setVisibility(View.VISIBLE);
                 item.tvUserName.setText(R.string.text_canceled);
                 item.tvUserName.setTextColor(mContext.getResources().getColor(R.color.bold_text_color_red));
                 item.tvUserName.setTypeface(null, Typeface.BOLD);
-//                item.icon_release_date.setVisibility(View.GONE);
+                //                item.icon_release_date.setVisibility(View.GONE);
                 item.tvReleaseDate.setVisibility(View.GONE);
-                if(!"0".equals(ee.getGroup_new_post())){
+                if(!"0".equals(ee.getGroup_new_post())) {
                     this.position = position;
-//                    //去除背景和颜色
-//                    item.item_event.setBackgroundResource(0);
-                    if(clickitemList.size()>0 && clickitemList.contains(position)){
+                    //                    //去除背景和颜色
+                    //                    item.item_event.setBackgroundResource(0);
+                    if(clickitemList.size() > 0 && clickitemList.contains(position)) {
                         item.event_start.setVisibility(View.INVISIBLE);
-                    }else {
+                    } else {
                         item.event_start.setVisibility(View.VISIBLE);
                     }
                 }
-            }else{
+            } else {
 
                 item.item_unenable.setVisibility(View.GONE);
                 item.tvUserName.setTextColor(mContext.getResources().getColor(R.color.default_text_color_light));
                 item.tvUserName.setText(ee.getUser_given_name());
                 item.tvUserName.setTypeface(null, Typeface.NORMAL);
-//                item.icon_release_date.setVisibility(View.VISIBLE);
-//                item.tvReleaseDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
+                //                item.icon_release_date.setVisibility(View.VISIBLE);
+                //                item.tvReleaseDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
                 item.tvReleaseDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext, ee.getGroup_event_date()));
                 item.tvReleaseDate.setVisibility(View.VISIBLE);
-                if(!"0".equals(ee.getGroup_new_post())){
+                if(!"0".equals(ee.getGroup_new_post())) {
                     this.position = position;
-//                    item.item_event.setBackgroundResource(0);
-                    if(clickitemList.size()>0 && clickitemList.contains(position)){
+                    //                    item.item_event.setBackgroundResource(0);
+                    if(clickitemList.size() > 0 && clickitemList.contains(position)) {
                         item.event_start.setVisibility(View.INVISIBLE);
-                    }else {
+                    } else {
                         item.event_start.setVisibility(View.VISIBLE);
                     }
                 }
             }
-        } else if (holder instanceof VHHeader) {
+        } else if(holder instanceof VHHeader) {
             VHHeader item = (VHHeader) holder;
             BirthdayEntity be = birthdayEvents.get(0);
-            if (birthdayEvents.size() == 1) {
+            if(birthdayEvents.size() == 1) {
                 item.tv_top_event_title.setText(String.format(defaultTitle, be.getUser_given_name(), mContext.getString(R.string.title_birthday_title_prefix2)));
             } else {
                 item.tv_top_event_title.setText(String.format(defaultTitle, be.getUser_given_name() + mContext.getString(R.string.title_birthday_title_prefix1), ""));
             }
-            item.date.setText(be.getUser_dob());
 
-            if ("0".equals(be.getDay_count())) {
+            // add start by Jackie
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date date = format.parse(be.getUser_dob());
+                String text = DateUtils.formatDateTime(mContext, date.getTime(), DateUtils.FORMAT_NO_YEAR);
+                item.date.setText(text);
+            } catch(ParseException e) {
+                e.printStackTrace();
+                item.date.setText(be.getUser_dob());
+            }
+            // add end by Jackie
+
+            if("0".equals(be.getDay_count())) {
                 item.left_daty_count.setText(mContext.getString(R.string.text_today));
                 item.tv_date_desc.setVisibility(View.GONE);
             } else {
@@ -143,7 +160,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        if (isPositionHeader(position))
+        if(isPositionHeader(position))
             return TYPE_HEADER;
 
         return TYPE_ITEM;
@@ -158,11 +175,10 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView tvUserName;
         TextView tvReleaseDate;
         TextView item_unenable;
-//        ImageView icon_release_date;
+        //        ImageView icon_release_date;
         RelativeLayout item_event;
         //        FrameLayout event_start;
         RelativeLayout event_start;
-
 
 
         public VHItem(final View itemView) {
@@ -173,27 +189,27 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             tvReleaseDate = (TextView) itemView.findViewById(R.id.tv_release_date);
             item_unenable = (TextView) itemView.findViewById(R.id.item_unenable);
-//            icon_release_date = (ImageView) itemView.findViewById(R.id.icon_release_date);
+            //            icon_release_date = (ImageView) itemView.findViewById(R.id.icon_release_date);
             item_event = (RelativeLayout) itemView.findViewById(R.id.item_event);
             event_start = (RelativeLayout) itemView.findViewById(R.id.event_start);
-//
-//            if(){
-//
-//            }
+            //
+            //            if(){
+            //
+            //            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(itemClickListener!=null) {
-//                        /**取消的event不可点击*/
-//                        if(!"2".equals(data.get(getAdapterPosition()).getGroup_event_status())) {
+                    if(itemClickListener != null) {
+                        //                        /**取消的event不可点击*/
+                        //                        if(!"2".equals(data.get(getAdapterPosition()).getGroup_event_status())) {
                         itemClickListener.contentItemClick(data.get(getAdapterPosition() - otherItemCount));//回调方法
                         //清除点击item的背景和颜色
                         item_event.setBackgroundResource(0);
                         event_start.setVisibility(View.INVISIBLE);
                         clickitemList.add(position);
-//                            Log.i("item_click=======================","");
-//                        }
+                        //                            Log.i("item_click=======================","");
+                        //                        }
                     }
                 }
             });
@@ -221,7 +237,7 @@ public class EventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (itemClickListener != null && birthdayEvents != null) {
+                    if(itemClickListener != null && birthdayEvents != null) {
                         itemClickListener.topItemClick(birthdayEvents);
                     }
                 }

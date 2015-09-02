@@ -27,6 +27,7 @@ import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
 import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
 
@@ -325,11 +326,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         }
 
                         videoCursor.moveToPosition(i);
-                        long size = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.SIZE);
-                        if(size > MediaData.MAX_SIZE) {
-                            // 视频大小超过限定不添加该视频到列表，执行下一循环
-                            continue;
-                        }
 
                         int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
                         int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
@@ -440,6 +436,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         LogUtil.i(TAG, "index = " + index + "; buckets length " + buckets.size());
         if(index < buckets.size() && index >= 0) {
             String bucket = buckets.get(index);
+
+            if(index == 1 && bucket.equals(getString(R.string.text_video))) {
+                MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.show_vidoe_limit));
+            }
+
             mImageUriList.clear();
             mImageUriList.addAll(mMediaUris.get(bucket));
             LogUtil.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);

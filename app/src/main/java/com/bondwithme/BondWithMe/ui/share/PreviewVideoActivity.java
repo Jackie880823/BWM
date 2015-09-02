@@ -246,6 +246,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
                 if(videoView.isPlaying()) {
                     videoView.stopPlayback();
                 }
+                finish();
             }
 
             @Override

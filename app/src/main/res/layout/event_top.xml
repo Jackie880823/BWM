@@ -55,6 +55,7 @@
                     android:id="@+id/date"
                     style="@style/text_light_default"
                     android:layout_marginRight="40dp"
+                    android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/line"
                      />
 
