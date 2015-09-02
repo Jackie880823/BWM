@@ -18,9 +18,8 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 54   //TODO
+        versionCode 55   //TODO
         versionName "2.0.0" //TODO
-//        versionName "1.10.1" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -81,12 +80,14 @@ android {
     }
     // 多渠道打包
     productFlavors {
-        wandoujia {}
-        _360 {}
-        baidu {}
-        xiaomi {}
-        tencent {}
-        taobao {}
+//        wandoujia {}
+//        _360 {}
+//        baidu {}
+//        xiaomi {}
+//        tencent {}
+//        taobao {}
+        appinchina {}
+        googleplay {}
         //...
     }
     //用productFlavors中渠道号替换 AndroidManifest.xml 中 UMENG_CHANNEL_VALUE
@@ -159,5 +160,4 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     compile project(':piwik_sdk')
-    compile files('libs/activation.jar')
 }

@@ -676,9 +676,11 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
-                Intent reintent = getIntent();
-                finish();
-                startActivity(reintent);
+                if(App.isForeground()) {
+                    Intent reintent = getIntent();
+                    finish();
+                    startActivity(reintent);
+                }
             }
         }
     };

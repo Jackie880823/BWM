@@ -64,6 +64,7 @@ public class Constant {
 
 
 
+    public static final String API_CHECK_VERSION = API_SERVER + "/bondwithme/index.php/api/appVersion";
     public static final String GET_MULTI_ORIGINALPHOTO = API_SERVER + "/bondwithme/index.php/api/multiPhoto";
 
     public static final String API_WALL_MAIN = API_SERVER + "/bondwithme/index.php/api/wall";

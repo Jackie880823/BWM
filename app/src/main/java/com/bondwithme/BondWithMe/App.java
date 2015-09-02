@@ -172,7 +172,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         needUpdate = false;
         Map params = new HashMap();
         params.put("os", "android");
-        new HttpTools(context).get("http://dev.bondwith.me/bondwithme/index.php/api/appVersion", params, null, new HttpCallback() {
+        new HttpTools(context).get(Constant.API_CHECK_VERSION, params, null, new HttpCallback() {
             @Override
             public void onStart() {
 

@@ -108,18 +108,11 @@
 }
 
 -dontwarn android.support.**
-#-keep class android.support.v4.app.** { *; }
-#-keep interface android.support.v4.app.** { *; }
-#-keep class android.support.v7.app.** { *; }
-#-keep interface android.support.v7.app.** { *; }
+-keep class android.support.v4.app.** { *; }
+-keep interface android.support.v4.app.** { *; }
+-keep class android.support.v7.app.** { *; }
+-keep interface android.support.v7.app.** { *; }
 
-
-#-dontwarn java.beans.**
-#-dontwarn java.awt.**
-#-dontwarn javax.swing.**
-#-keep class java.beans.** { *;}
-#-keep class java.awt.** { *;}
-#-keep class javax.swing.** { *;}
 
 #pinyin4j
 -dontwarn net.soureceforge.pinyin4j.**
@@ -176,3 +169,20 @@
 -dontwarn com.nostra13.universalimageloader.core.**
 -keep class com.nostra13.universalimageloader.core.**
 -keepclassmembers class com.nostra13.universalimageloader.core.** { *; }
+
+#java mail
+   -dontwarn javax.activation.**
+    -dontwarn javax.security.**
+    -dontwarn java.awt.**
+    -libraryjars <java.home>/lib/rt.jar
+    -keep class javax.** {*;}
+    -keep class com.sun.** {*;}
+    -keep class myjava.** {*;}
+    -keep class org.apache.harmony.** {*;}
+    -keep public class Mail {*;}
+
+
+#piwik
+-dontwarn org.piwik.sdk.**
+-keep class org.piwik.sdk.** {*;}
+-keepclassmembers class org.piwik.sdk.** { *; }
