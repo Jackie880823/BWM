@@ -159,6 +159,10 @@ public class LocationUtil{
      * @return
      */
     public static Intent getPlacePickerIntent(Context context, double latitude, double longitude, String name) {
+        if(!isOPen(context)) {
+            openGPS(context);
+        }
+
         Intent intent = new Intent();
 
         intent.putExtra(Constant.EXTRA_LOCATION_NAME, name);
