@@ -400,7 +400,7 @@
     <string name="alert_no_join_group">加入该群组后方可查看更多详情</string>
     <string name="alert_ask_add_member">添加成员</string>
     <string name="text_group">群组列表</string>
-    <string name="hint_comment_input">写评论…</string>
+    <string name="hint_comment_input">亲，您有什么评论呢？</string>
     <string name="text_character_and"><![CDATA[" & "]]></string>
     <string name="saved_to_path">照片已保存到设备上。</string>
     <string name="location_search_error">地点未找到。</string>
@@ -619,4 +619,6 @@
     <string name="text_record_audio_too_short">录音时间太短</string>
     <string name="text_hold_and_speak">按住说话</string>
     <string name="show_vidoe_limit">只显示不大小超过20M的视频</string>
+    <string name="open_gps_title">要提高位置信息的精确度吗？</string>
+    <string name="use_gps_hint">使用GPS确定位置</string>
 </resources>

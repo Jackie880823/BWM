@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.util;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * Created by wing on 15/3/25.
  */
-public class LocationUtil{
+public class LocationUtil {
     //gcj02,bd09ll(百度经纬度坐标),bd09mc(百度墨卡托坐标),wgs84(gps)
     public static final String LOCATION_TYPE_GCJ02 = "gcj02";
     public static final String LOCATION_TYPE_BD09LL = "bd09ll";
@@ -158,12 +159,9 @@ public class LocationUtil{
      * @param name
      * @return
      */
-    public static Intent getPlacePickerIntent(Context context, double latitude, double longitude, String name) {
-        if(!isOPen(context)) {
-            openGPS(context);
-        }
+    public static Intent getPlacePickerIntent(final Activity context, double latitude, double longitude, String name) {
 
-        Intent intent = new Intent();
+        final Intent intent = new Intent();
 
         intent.putExtra(Constant.EXTRA_LOCATION_NAME, name);
         intent.putExtra(Constant.EXTRA_LATITUDE, latitude);
@@ -176,6 +174,7 @@ public class LocationUtil{
         } else {
             intent.setClass(context, Map4GoogleActivity.class);
         }
+
         return intent;
     }
 

@@ -622,5 +622,7 @@
     <string name="open_the_equipment_failure">Open the equipment failure</string>
     <string name="no_sd_card">No sd card!</string>
     <string name="show_vidoe_limit">Only files below the size of 20MB will be displayed.</string>
+    <string name="open_gps_title">Improve location accuracy?</string>
+    <string name="use_gps_hint">Use GPS for location</string>
 
 </resources>

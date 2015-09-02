@@ -16,9 +16,6 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.material.widget.CircularProgress;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MembersGridAdapter;
@@ -32,6 +29,9 @@ import com.bondwithme.BondWithMe.widget.DatePicker;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MyGridViewForScroolView;
 import com.bondwithme.BondWithMe.widget.TimePicker;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.material.widget.CircularProgress;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -479,9 +479,31 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
     }
     //??
     private void goLocationSetting() {
-        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude,position_name.getText().toString());
-        if(intent!=null)
-            startActivityForResult(intent, GET_LOCATION);
+        final Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude,position_name.getText().toString());
+        if(intent!=null) {
+
+            if(!LocationUtil.isOPen(getActivity())) {
+                final MyDialog myDialog = new MyDialog(getActivity(), getString(R.string.open_gps_title), getString(R.string.use_gps_hint));
+                myDialog.setButtonAccept(R.string.text_yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LocationUtil.openGPS(getActivity());
+                        myDialog.dismiss();
+                        startActivityForResult(intent, GET_LOCATION);
+                    }
+                });
+                myDialog.setButtonCancel(R.string.text_cancel, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        startActivityForResult(intent, GET_LOCATION);
+                    }
+                });
+                myDialog.show();
+            } else {
+                startActivityForResult(intent, GET_LOCATION);
+            }
+        }
     }
 
     @Override

@@ -852,9 +852,31 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goLocationSetting() {
-        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, location_desc.getText().toString());
-        if(intent != null)
-            startActivityForResult(intent, GET_LOCATION);
+        final Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, location_desc.getText().toString());
+        if(intent!=null) {
+
+            if(!LocationUtil.isOPen(getActivity())) {
+                final MyDialog myDialog = new MyDialog(getActivity(), getString(R.string.open_gps_title), getString(R.string.use_gps_hint));
+                myDialog.setButtonAccept(R.string.text_yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LocationUtil.openGPS(getActivity());
+                        myDialog.dismiss();
+                        startActivityForResult(intent, GET_LOCATION);
+                    }
+                });
+                myDialog.setButtonCancel(R.string.text_cancel, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        startActivityForResult(intent, GET_LOCATION);
+                    }
+                });
+                myDialog.show();
+            } else {
+                startActivityForResult(intent, GET_LOCATION);
+            }
+        }
     }
 
     private void goChooseMembers() {
