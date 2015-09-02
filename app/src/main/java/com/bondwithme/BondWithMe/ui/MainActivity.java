@@ -405,6 +405,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         //TODO test mush delete
 //        Intent intent = new Intent(this, CrashActivity.class);
 //        startActivity(intent);
+//        try {
+//            MediaUtil.encodeFile2Mp4(this, FileUtil.getSaveRootPath(this, true).toString() + "/VID_20150827_111334.3gp", FileUtil.getSaveRootPath(this, true).toString() + "/" + System.currentTimeMillis() + ".mp4");
+////            MediaUtil.encodeFile2Mp4(this, FileUtil.getSaveRootPath(this, true).toString() + "/VID_20150827_181646.mp4", FileUtil.getSaveRootPath(this, true).toString() + "/" + System.currentTimeMillis() + ".mp4");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private boolean isEventFragmentDate() {

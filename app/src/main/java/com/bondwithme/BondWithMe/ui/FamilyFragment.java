@@ -1118,7 +1118,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         if (TextUtils.isEmpty(url))
             return;
         Intent intent = new Intent(getActivity(), ViewPDFActivity.class);
-        intent.putExtra(ViewPDFActivity.PARAM_PDF_URL, url);
         startActivity(intent);
     }
 }

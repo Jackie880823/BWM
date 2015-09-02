@@ -47,8 +47,13 @@ public class CrashActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     errorReportDialog.dismiss();
+
+                    CrashActivity.this.finish();
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                    System.exit(0);
+
                     //send report
-                    new SendEmailTask().execute();
+//                    new SendEmailTask().execute();
 
 
 //                    Intent i = new Intent(Intent.ACTION_SEND);
@@ -76,6 +81,7 @@ public class CrashActivity extends Activity {
         protected void onPreExecute() {
 //			pd.show();
         }
+
         @Override
         protected Boolean doInBackground(Void... params) {
             MailSenderModel mailInfo = new MailSenderModel();
@@ -118,12 +124,12 @@ public class CrashActivity extends Activity {
             return true;
         }
 
-        private String[] getCrashFilePaths(){
+        private String[] getCrashFilePaths() {
             File[] files = FileUtil.getCrashFiles(CrashActivity.this);
-            if(files!=null&&files.length>0){
+            if (files != null && files.length > 0) {
                 String[] filePaths = new String[files.length];
                 int length = files.length;
-                for (int i=0;i<length;i++){
+                for (int i = 0; i < length; i++) {
                     filePaths[i] = files[i].toString();
                 }
                 return filePaths;
@@ -134,8 +140,8 @@ public class CrashActivity extends Activity {
         @Override
         protected void onPostExecute(Boolean result) {
 //			pd.dismiss();
-            MessageUtil.showMessage(CrashActivity.this,R.string.say_thanks_for_report);
-            if(result){
+            MessageUtil.showMessage(CrashActivity.this, R.string.say_thanks_for_report);
+            if (result) {
                 FileUtil.clearCrashFiles(CrashActivity.this);
             }
 //                MessageUtil.showMessage(CrashActivity.this,R.string.send_email_successed);
@@ -157,4 +163,5 @@ public class CrashActivity extends Activity {
             errorReportDialog.dismiss();
         super.onDestroy();
     }
+
 }

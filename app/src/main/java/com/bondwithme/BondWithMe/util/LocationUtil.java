@@ -116,6 +116,17 @@ public class LocationUtil{
             new HttpTools(context).get("https://www.google.com/maps", null, TAG, new HttpCallback() {
                 @Override
                 public void onStart() {
+//            Criteria c = new Criteria();
+//            c.setAccuracy(Criteria.ACCURACY_COARSE);          //设置查询精度,(Criteria.ACCURACY_COARSE...)
+//            c.setSpeedRequired(false);                      //设置是否要求速度
+//            c.setCostAllowed(false);                        //设置是否允许产生费用
+//            c.setBearingRequired(false);                    //设置是否需要得到方向
+//            c.setAltitudeRequired(false);                   //设置是否需要得到海拔高度
+//            c.setPowerRequirement(Criteria.POWER_LOW);      //设置允许的电池消耗级别
+//            lm.requestLocationUpdates(2000, 0, c, locationListener, null);
+////            lm.getBestProvider(c, false);
+//        }
+//    }
 
                 }
 
@@ -191,7 +202,7 @@ public class LocationUtil{
      */
     public static Criteria getCriteria() {
         Criteria c = new Criteria();
-        c.setAccuracy(Criteria.ACCURACY_FINE);          //设置查询精度,(Criteria.ACCURACY_COARSE...)
+        c.setAccuracy(Criteria.ACCURACY_LOW);          //设置查询精度,(Criteria.ACCURACY_COARSE...)
         c.setSpeedRequired(false);                      //设置是否要求速度
         c.setCostAllowed(false);                        //设置是否允许产生费用
         c.setBearingRequired(false);                    //设置是否需要得到方向

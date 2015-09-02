@@ -69,7 +69,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     private List<StickerGroupEntity> data = new ArrayList<>();
 //    private final int AUTO_PLAY = 1;
 
-//    int positionFromStickerDetail = -1;
+    //    int positionFromStickerDetail = -1;
     //    private ImageSwitcher isStickerBanner;
     private int currentItem;
     private Map<String, Uri> uriMap = new HashMap<>();
@@ -198,6 +198,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         }
         return 0;
     }
+
     List<String> stickers;
 
     /**
@@ -255,14 +256,14 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
         String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
         final String target = FileUtil.getCacheFilePath(this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
-        DownloadRequest download = new HttpTools(this).download(App.getContextInstance(),urlString, target, true, new HttpCallback() {
+        DownloadRequest download = new HttpTools(this).download(App.getContextInstance(), urlString, target, true, new HttpCallback() {
             @Override
             public void onStart() {
             }
 
             @Override
             public void onFinish() {
-                if(LocalStickerInfoDao.getInstance(StickerStoreActivity.this).hasDownloadSticker(stickerGroupEntity.getPath())){
+                if (LocalStickerInfoDao.getInstance(StickerStoreActivity.this).hasDownloadSticker(stickerGroupEntity.getPath())) {
                     Intent intent = new Intent(StickerStoreActivity.ACTION_FINISHED);
                     intent.putExtra(StickerGroupAdapter.POSITION, position);
                     sendBroadcast(intent);
@@ -504,7 +505,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
             LogUtil.d(TAG, "====url====" + url);
             LogUtil.d(TAG, "====target====" + target);
             final int finalI = i;
-            new HttpTools(this).download(App.getContextInstance(),url, target, false, new HttpCallback() {
+            new HttpTools(this).download(App.getContextInstance(), url, target, false, new HttpCallback() {
                 @Override
                 public void onStart() {
                     LogUtil.d(TAG, "===onStart===" + "target===" + target);
@@ -675,6 +676,10 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
             if (intent != null) {
                 int positionFromStickerDetail = -1;
                 int dataPosition;
+                //避免重新进入activity,dataStickerGroup被销毁时刷新UI
+                if (dataStickerGroup.size() == 0) {
+                    return;
+                }
                 switch (intent.getAction()) {
                     case StickerDetailActivity.ACTION_UPDATE:
                     case StickerStoreActivity.ACTION_UPDATE:
@@ -686,7 +691,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                         if (viewHolder != null) {
                             StickerGroupAdapter.VHItem holder = (StickerGroupAdapter.VHItem) viewHolder;
                             int progress = intent.getIntExtra(PROGRESS, 0);
-                            setViewProgress(holder, progress,dataStickerGroup.get(dataPosition),dataPosition);
+                            setViewProgress(holder, progress, dataStickerGroup.get(dataPosition), dataPosition);
                         }
                         break;
                     case MyStickerActivity.ACTION_UPDATE:
@@ -701,14 +706,14 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 //                        dataStickerGroup.get(dataPosition).setPath(path);
 //                        stickers.remove(path);
                         adapter.removeSticker(path);
-                        adapter.notifyItemChanged(dataPosition+1);
+                        adapter.notifyItemChanged(dataPosition + 1);
                         break;
                     case StickerStoreActivity.ACTION_FINISHED:
-                        dataPosition = intent.getIntExtra(StickerGroupAdapter.POSITION,-1);
-                        if(dataPosition!=-1) {
+                        dataPosition = intent.getIntExtra(StickerGroupAdapter.POSITION, -1);
+                        if (dataPosition != -1) {
                             adapter.addSticker(dataStickerGroup.get(dataPosition).getPath());
                             dataStickerGroup.get(dataPosition).setDownloading(false);
-                            adapter.notifyItemChanged(dataPosition+1);
+                            adapter.notifyItemChanged(dataPosition + 1);
 //                            adapter.notifyDataSetChanged();
                         }
                         break;
@@ -716,10 +721,10 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                 }
             }
 
-         }
+        }
     };
 
-    private void setViewProgress(StickerGroupAdapter.VHItem holder, int progress, StickerGroupEntity stickerGroupEntity,int position) {
+    private void setViewProgress(StickerGroupAdapter.VHItem holder, int progress, StickerGroupEntity stickerGroupEntity, int position) {
         holder.getTvDownload().setVisibility(View.INVISIBLE);
         holder.getPbDownload().setVisibility(View.VISIBLE);
         holder.getPbDownload().setProgress(progress);
