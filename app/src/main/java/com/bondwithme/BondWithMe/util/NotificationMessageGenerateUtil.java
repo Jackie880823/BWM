@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,8 +100,8 @@ public class NotificationMessageGenerateUtil {
 
     public static String getChatMessage(Context context, String action, String item_type, String action_owner, String item_name, String snippet) {
 
-        boolean isPersonnal = !("group".equals(item_type));
-//        boolean isPersonnal = ("" + MessageChatActivity.CHAT_TYPE_PERSONAL).equals(item_type);
+//        boolean isPersonnal = !("group".equals(item_type));
+        boolean isPersonnal = ("" + MessageChatActivity.CHAT_TYPE_PERSONAL).equals(item_type);
         String msg = null;
         if ("postText".equals(action)) {
             if (isPersonnal) {

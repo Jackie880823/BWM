@@ -2,9 +2,11 @@ package com.bondwithme.BondWithMe;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.multidex.MultiDexApplication;
@@ -143,6 +145,12 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
         /** 初始化第三方 Universal Image Loader图片处理类 */
         UniversalImageLoaderUtil.initImageLoader(App.this);
+
+        //注册广播接收器
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+//        filter.addAction("refresh");
+        registerReceiver(mReceiver, filter);
     }
 
 
@@ -564,4 +572,15 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 //        }
 //    }
 
+    /**
+     * 更新UI的广播接收器
+     */
+    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
+                HttpTools.getHeaders().put("X_BWM_APPLANG", Locale.getDefault().getLanguage());
+            }
+        }
+    };
 }

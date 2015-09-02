@@ -38,8 +38,8 @@ public class HttpTools {
     private static Map<String, String> headers = new HashMap<String, String>();
 
     public HttpTools(Context context) {
-        mContext = context.getApplicationContext();
-//        mContext = context;
+//        mContext = context.getApplicationContext();
+        mContext = context;
     }
 
     public static void init(Context context) {
@@ -340,7 +340,7 @@ public class HttpTools {
             sDownloadQueue = Volley.newRequestQueue(context);
 //            sDownloadQueue = Volley.newNoCacheRequestQueue(mContext);
         }
-//        request.setShouldCache(true);
+        request.setShouldCache(true);
         sDownloadQueue.add(request);
         return request;
 

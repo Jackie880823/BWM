@@ -518,8 +518,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                         address = LocationUtil.getAddress(Map4GoogleActivity.this, latLng.latitude, latLng.longitude);
                     } catch(IOException e) {
                         e.printStackTrace();
-                        msgBarChangeByStatus(View.VISIBLE);
-                        tvMsg.setText(getString(R.string.msg_service_not_available));
+                        mHandler.sendEmptyMessage(MSG_SERVICE_NOT_AV);
                     }
                     if(address == null) {
                         // 没有获取到地址信息返回不做任何处理
@@ -550,6 +549,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
     private String POSITION_GETTING = "地址正在加载...";
     private final static int MSG_VIEW_LONGPRESS = 10;
     private final static int MSG_VIEW_ADDRESSNAME = 11;
+    private final static int MSG_SERVICE_NOT_AV = 12;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -572,6 +572,11 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                     if(target != null) {
                         setMarkerContent((Address) msg.obj, target);
                     }
+                    break;
+                case MSG_SERVICE_NOT_AV:
+                    //获取到地址后显示在泡泡上
+                    msgBarChangeByStatus(View.VISIBLE);
+                    tvMsg.setText(getString(R.string.msg_service_not_available));
                     break;
             }
         }
@@ -635,8 +640,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                     address = LocationUtil.getAddress(getApplicationContext(), latitude, longitude);
                 } catch(IOException e) {
                     e.printStackTrace();
-                    msgBarChangeByStatus(View.VISIBLE);
-                    tvMsg.setText(getString(R.string.msg_service_not_available));
+                    mHandler.sendEmptyMessage(MSG_SERVICE_NOT_AV);
                 }
                 if(address == null) {
                     try {
@@ -645,10 +649,11 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                         e.printStackTrace();
                     }
                     lastTime = System.currentTimeMillis();
-                } else {
-                    msgBarChangeByStatus(View.GONE);
-                    break;
                 }
+//                else {
+//                    msgBarChangeByStatus(View.GONE);
+//                    break;
+//                }
             }
 
             Message msg = new Message();

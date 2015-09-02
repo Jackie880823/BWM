@@ -1,10 +1,10 @@
 package com.bondwithme.BondWithMe.ui;
 
 import android.annotation.TargetApi;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.Rect;
 import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.Build;
@@ -21,7 +21,6 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -50,7 +49,6 @@ public class ViewPDFActivity extends BaseActivity {
     private static final String FAMILY_TREE_FILE_PATH_PARENT = Environment.getExternalStorageDirectory() + "/Download";
 
     WebView webView;
-    public static final String PARAM_PDF_URL = "pdf_url";
     private String mFilePath;
     private View vProgress;
 
@@ -92,11 +90,6 @@ public class ViewPDFActivity extends BaseActivity {
     @Override
     public void initView() {
 
-        String url = getIntent().getStringExtra(PARAM_PDF_URL);
-        if (TextUtils.isEmpty(url)) {
-            finish();
-            return;
-        }
         vProgress = getViewById(R.id.rl_progress);
         getPdfUrl();
 
@@ -150,67 +143,44 @@ public class ViewPDFActivity extends BaseActivity {
 
 
     private void showPDF(String path) {
-//    private void showPDF(String url) {
-//        webView = getViewById(R.id.webView);
-//        WebSettings settings = webView.getSettings();
-//        settings.setJavaScriptEnabled(true);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) //required for running javascript on android 4.1 or later
-//        {
-//            settings.setAllowFileAccessFromFileURLs(true);
-//            settings.setAllowUniversalAccessFromFileURLs(true);
-//        }
-//        settings.setBuiltInZoomControls(true);
-//        webView.setWebChromeClient(new
-//                        WebChromeClient()
-//        );
-//        Uri path = Uri.parse(url);
-////        Uri path = Uri.parse("http://sc.bondwith.me/bondwithme/download/7984627910071.pdf");
-////
-//        FileOutputStream fileOutputStream = null;
-//        try {
-//            InputStream ims = getAssets().open("pdfviewer/index.html");
-//            String line = getStringFromInputStream(ims);
-//            if (line.contains("THE_FILE")) {
-//                line = line.replace("THE_FILE", path.toString());
-//                fileOutputStream = openFileOutput("index.html", Context.MODE_PRIVATE);
-//                fileOutputStream.write(line.getBytes());
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }finally {
-//            try {
-//                fileOutputStream.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        webView.loadUrl("file://" + getFilesDir() + "/index.html");
 
         if (SDKUtil.IS_L) {
-            getViewById(R.id.pdflayout1).setVisibility(View.VISIBLE);
-            getViewById(R.id.pdflayout2).setVisibility(View.GONE);
-            mImageView = getViewById(R.id.image);
-//            mButtonPrevious = getViewById(R.id.previous);
-//            mButtonNext = getViewById(R.id.next);
-            // Bind events.
-//            mButtonPrevious.setOnClickListener(this);
-//            mButtonNext.setOnClickListener(this);
-            // Show the first page by default.
-            int index = 0;
-            // If there is a savedInstanceState (screen orientations, etc.), we restore the page index.
-            if (null != mSavedInstanceState) {
-                index = mSavedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0);
-            }
 
+            //调用第三方实现
+            Uri path1 = Uri.fromFile(new File(path));
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(path1, "application/pdf");
             try {
-                openRenderer(this, path);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                this.finish();
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                MessageUtil.showMessage(this, R.string.msg_action_failed);
             }
-
-            showPage(index);
+            finish();
+            //调用api实现
+//            getViewById(R.id.pdflayout1).setVisibility(View.VISIBLE);
+//            getViewById(R.id.pdflayout2).setVisibility(View.GONE);
+//            mImageView = getViewById(R.id.image);
+////            mButtonPrevious = getViewById(R.id.previous);
+////            mButtonNext = getViewById(R.id.next);
+//            // Bind events.
+////            mButtonPrevious.setOnClickListener(this);
+////            mButtonNext.setOnClickListener(this);
+//            // Show the first page by default.
+//            int index = 0;
+//            // If there is a savedInstanceState (screen orientations, etc.), we restore the page index.
+//            if (null != mSavedInstanceState) {
+//                index = mSavedInstanceState.getInt(STATE_CURRENT_PAGE_INDEX, 0);
+//            }
+//
+//            try {
+//                openRenderer(this, path);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                Toast.makeText(this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                this.finish();
+//            }
+//
+//            showPage(index);
 
         } else {
             getViewById(R.id.pdflayout1).setVisibility(View.GONE);
@@ -291,44 +261,44 @@ public class ViewPDFActivity extends BaseActivity {
                     vProgress.setVisibility(View.GONE);
                     File file = new File(target);
                     if (file.exists()) {
-                        if(SDKUtil.IS_L) {
-                            mImageView = getViewById(R.id.image);
-                            int REQ_WIDTH = mImageView.getWidth()*2;
-                            int REQ_HEIGHT = mImageView.getHeight()*2;
-                            Bitmap mBitmap = Bitmap.createBitmap(REQ_WIDTH, REQ_HEIGHT, Bitmap.Config.ARGB_4444);
-                            try {
-                                renderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY));
-                                if(currentPage<0){
-                                    currentPage = 0;
-                                }else if(currentPage>renderer.getPageCount()){
-                                    currentPage = renderer.getPageCount()-1;
-                                }
-                                Matrix m = mImageView.getImageMatrix();
-                                Rect rect = new Rect(0,0,REQ_WIDTH,REQ_HEIGHT);
-                                renderer.openPage(currentPage).render(mBitmap, rect, m, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-                                mImageView.setImageMatrix(m);
-                                mImageView.setImageBitmap(mBitmap);
-                                mImageView.invalidate();
-
-//                                // let us just render all pages
-//                                final int pageCount = renderer.getPageCount();
-//                                for (int i = 0; i < pageCount; i++) {
-//                                    PdfRenderer.Page page = renderer.openPage(i);
-//                                    // say we render for showing on the screen
-//                                    page.render(mBitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
-//                                    // do stuff with the bitmap
-//
-//                                    // close the page
-//                                    page.close();
+//                        if (SDKUtil.IS_L) {
+//                            mImageView = getViewById(R.id.image);
+//                            int REQ_WIDTH = mImageView.getWidth() * 2;
+//                            int REQ_HEIGHT = mImageView.getHeight() * 2;
+//                            Bitmap mBitmap = Bitmap.createBitmap(REQ_WIDTH, REQ_HEIGHT, Bitmap.Config.ARGB_4444);
+//                            try {
+//                                renderer = new PdfRenderer(ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY));
+//                                if (currentPage < 0) {
+//                                    currentPage = 0;
+//                                } else if (currentPage > renderer.getPageCount()) {
+//                                    currentPage = renderer.getPageCount() - 1;
 //                                }
-//                                // close the renderer
-//                                renderer.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }else {
-                            showPDF(target);
-                        }
+//                                Matrix m = mImageView.getImageMatrix();
+//                                Rect rect = new Rect(0, 0, REQ_WIDTH, REQ_HEIGHT);
+//                                renderer.openPage(currentPage).render(mBitmap, rect, m, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+//                                mImageView.setImageMatrix(m);
+//                                mImageView.setImageBitmap(mBitmap);
+//                                mImageView.invalidate();
+//
+////                                // let us just render all pages
+////                                final int pageCount = renderer.getPageCount();
+////                                for (int i = 0; i < pageCount; i++) {
+////                                    PdfRenderer.Page page = renderer.openPage(i);
+////                                    // say we render for showing on the screen
+////                                    page.render(mBitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+////                                    // do stuff with the bitmap
+////
+////                                    // close the page
+////                                    page.close();
+////                                }
+////                                // close the renderer
+////                                renderer.close();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        } else {
+                        showPDF(target);
+//                        }
                     }
                     break;
                 case RECEIVE_PDF_INFO:
@@ -369,7 +339,7 @@ public class ViewPDFActivity extends BaseActivity {
         target = exists ? (FAMILY_TREE_FILE_PATH_PARENT + urlString.substring(urlString.lastIndexOf("/"))) : (Environment.getDataDirectory() + urlString.substring(urlString.lastIndexOf("/")));
 
 
-        new HttpTools(this).download(App.getContextInstance(),urlString, target, true, new HttpCallback() {
+        new HttpTools(this).download(App.getContextInstance(), urlString, target, true, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -497,13 +467,9 @@ public class ViewPDFActivity extends BaseActivity {
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void openRenderer(Context context, String path) throws IOException {
-
-        if (SDKUtil.IS_L) {
-
-            File file = new File(path);
-            mFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
-            mPdfRenderer = new PdfRenderer(mFileDescriptor);
-        }
+        File file = new File(path);
+        mFileDescriptor = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
+        mPdfRenderer = new PdfRenderer(mFileDescriptor);
 
     }
 
@@ -518,10 +484,10 @@ public class ViewPDFActivity extends BaseActivity {
             if (null != mCurrentPage) {
                 mCurrentPage.close();
             }
-            if(mPdfRenderer!=null) {
+            if (mPdfRenderer != null) {
                 mPdfRenderer.close();
             }
-            if(mFileDescriptor!=null) {
+            if (mFileDescriptor != null) {
                 mFileDescriptor.close();
             }
         }

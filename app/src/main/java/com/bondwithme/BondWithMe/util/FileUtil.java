@@ -228,6 +228,7 @@ public class FileUtil {
 
     private static final String RECORD = "Audio";
     private static final String VIDEO = "Video";
+    private static final String PDF = "pdf";
 
     public static File saveAudioFile(Context mContext) {
         return new File(getAudioRootPath(mContext) + File.separator + System.currentTimeMillis() + ".aac");
@@ -248,6 +249,20 @@ public class FileUtil {
         return new File(getVideoRootPath(mContext) + File.separator + System.currentTimeMillis() + ".mp4");
     }
 
+    public static String getPDFSavePath(Context mContext) {
+        return getPDFRootPath(mContext)+String.format("/cache_%s.pdf", "" + System.currentTimeMillis());
+    }
+
+    public static String getPDFRootPath(Context mContext) {
+        File bootFile = getSaveRootPath(mContext, true);
+        String filePath = bootFile.getAbsolutePath();
+        filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + PDF;
+        File file = new File(filePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return filePath;
+    }
     public static String getVideoRootPath(Context mContext) {
         File bootFile = getSaveRootPath(mContext, false);
         String filePath = bootFile.getAbsolutePath();

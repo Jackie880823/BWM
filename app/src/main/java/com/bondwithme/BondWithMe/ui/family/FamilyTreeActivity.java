@@ -158,7 +158,6 @@ public class FamilyTreeActivity extends BaseActivity {
         if (TextUtils.isEmpty(url))
             return;
         Intent intent = new Intent(this, ViewPDFActivity.class);
-        intent.putExtra(ViewPDFActivity.PARAM_PDF_URL, url);
         startActivity(intent);
     }
 
