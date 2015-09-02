@@ -152,7 +152,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onResume() {
-
+        if (refersh) {
+            refersh = false;
+            Intent reintent = getIntent();
+            finish();
+            startActivity(reintent);
+        }
         super.onResume();
         if (fragments != null) {
             for (Fragment f : fragments) {
@@ -669,6 +674,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //            startActivity(intent);
 //    }
 
+    static boolean refersh;
     /**
      * 更新UI的广播接收器
      */
@@ -676,13 +682,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
-                if(App.isForeground()) {
-                    Intent reintent = getIntent();
-                    finish();
-                    startActivity(reintent);
+                if (App.isBackground()) {
+                    refersh = true;
                 }
             }
         }
     };
+
 
 }
