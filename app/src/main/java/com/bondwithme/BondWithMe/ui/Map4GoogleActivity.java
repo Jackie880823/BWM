@@ -30,7 +30,17 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.Constant;
+import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.adapter.PlaceAutocompleteAdapter;
+import com.bondwithme.BondWithMe.task.PlacesDisplayTask;
+import com.bondwithme.BondWithMe.util.LocationUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
+import com.bondwithme.BondWithMe.util.UIUtil;
+import com.bondwithme.BondWithMe.widget.MapWrapperLayout;
+import com.bondwithme.BondWithMe.widget.OnInfoWindowElemTouchListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -47,15 +57,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.bondwithme.BondWithMe.Constant;
-import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.adapter.PlaceAutocompleteAdapter;
-import com.bondwithme.BondWithMe.task.PlacesDisplayTask;
-import com.bondwithme.BondWithMe.util.LocationUtil;
-import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.bondwithme.BondWithMe.util.UIUtil;
-import com.bondwithme.BondWithMe.widget.MapWrapperLayout;
-import com.bondwithme.BondWithMe.widget.OnInfoWindowElemTouchListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -310,12 +311,12 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         //        if (intent.getBooleanExtra("has_location", false)) {
         String locationName = intent.getStringExtra(Constant.EXTRA_LOCATION_NAME);
 
-        if((-1000==intent.getDoubleExtra(Constant.EXTRA_LATITUDE,0))||(-1000==intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0))||TextUtils.isEmpty(locationName)) {
-//            if (!TextUtils.isEmpty(locationName)) {
-                setUpMapIfNeededNoLocation();
-            } else {
-                setUpMapIfNeededWithLocation(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
-//            }
+        if((-1000 == intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0)) || (-1000 == intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0)) || TextUtils.isEmpty(locationName)) {
+            //            if (!TextUtils.isEmpty(locationName)) {
+            setUpMapIfNeededNoLocation();
+        } else {
+            setUpMapIfNeededWithLocation(intent.getDoubleExtra(Constant.EXTRA_LATITUDE, 0), intent.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0));
+            //            }
         }
 
     }
@@ -371,7 +372,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                 toPass[1] = response;
 
                 //for not work in down 11
-                if (SDKUtil.IS_HONEYCOMB) {
+                if(SDKUtil.IS_HONEYCOMB) {
                     task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, toPass);
                 } else {
                     task.execute(toPass);
@@ -575,8 +576,8 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                     break;
                 case MSG_SERVICE_NOT_AV:
                     //获取到地址后显示在泡泡上
-                    msgBarChangeByStatus(View.VISIBLE);
-                    tvMsg.setText(getString(R.string.msg_service_not_available));
+//                    msgBarChangeByStatus(View.VISIBLE);
+//                    tvMsg.setText(getString(R.string.msg_service_not_available));
                     break;
             }
         }
@@ -650,10 +651,10 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
                     }
                     lastTime = System.currentTimeMillis();
                 }
-//                else {
-//                    msgBarChangeByStatus(View.GONE);
-//                    break;
-//                }
+                //                else {
+                //                    msgBarChangeByStatus(View.GONE);
+                //                    break;
+                //                }
             }
 
             Message msg = new Message();
@@ -680,6 +681,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
      * @param latLng
      */
     private void addTarget(LatLng latLng) {
+        LogUtil.i(TAG, "addTarget&");
         //        mMap.clear();
         if(target != null) {
             target.remove();
@@ -688,19 +690,25 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
             tempMarker.setIcon(BitmapDescriptorFactory.defaultMarker());
         }
         target = mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-
+        try {
+            Address address = LocationUtil.getAddress(Map4GoogleActivity.this, latLng.latitude, latLng.longitude);
+            setMarkerContent(address, target);
+        } catch(IOException e) {
+            e.printStackTrace();
+            target.setTitle("");
+            //        target.setTitle(getString(R.string.text_destination));
+            target.setSnippet("");
+        }
         //        target = mMap.setMarkerContent(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target)));
         //        target.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_target));
-        target.setTitle("");
-        //        target.setTitle(getString(R.string.text_destination));
-        target.setSnippet("");
         target.setDraggable(true);
     }
 
     /**
      * 设置显选择地址详细信息弹出框的内容并显示
-     * @param address  地址信息
-     * @param marker 持有弹出框的标识封装对象
+     *
+     * @param address 地址信息
+     * @param marker  持有弹出框的标识封装对象
      * @return 返回持有弹出框的标识封装对象
      */
     private void setMarkerContent(Address address, Marker marker) {
@@ -721,7 +729,7 @@ public class Map4GoogleActivity extends BaseActivity implements GoogleMap.OnMyLo
         // 判空字符对像用""替代
         title = TextUtils.isEmpty(title) ? "" : title;
         snippet = TextUtils.isEmpty(snippet) ? "" : snippet;
-
+        LogUtil.i(TAG, "setMarkerContent& title: " + title + "; snippet: " + snippet);
         marker.setTitle(title);
         marker.setSnippet(snippet);
 
