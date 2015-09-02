@@ -2,11 +2,11 @@
 <resources>
 
     <array name="member_alert">
-        <item>request to add you as</item>
+        <item>request to add you as&#160;</item>
         <item>awaiting member confirmation</item>
         <item>You have auto-accept as member</item>
         <item>accept you as member</item>
-        <item>set you as</item>
+        <item>set you as&#160;</item>
     </array>
 
     <array name="months">
