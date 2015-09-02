@@ -558,13 +558,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     protected void onStop() {
         super.onStop();
-        AudioPlayUtils.stopAudio();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mTimer.cancel();
+        AudioPlayUtils.stopAudio();
         unregisterReceiver(stickerReceiver);
     }
 
@@ -835,6 +835,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     if (AudioPlayUtils.audioIsPlaying()) {
                         AudioPlayUtils.stopAudio();
                         goneView(id_progressbar, null, 0);
+                        id_progressbar.setProgress(0);
+                        handler.removeMessages(PLAY_AUDIO_HANDLER);
                     } else {
                         if (audioFile != null && audioFile.exists()) {
                             handler.removeMessages(PLAY_AUDIO_HANDLER);
