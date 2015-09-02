@@ -55,6 +55,7 @@ public class AudioPlayUtils {
                 }
                 mp.reset();
                 mp.release();
+                mp = null;
             }
         } catch (IllegalStateException e) {
             e.printStackTrace();

@@ -550,6 +550,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             Intent intent;
             switch (v.getId()) {
                 case R.id.message_icon_image://点击头像跳转个人资料
+                    AudioPlayUtils.stopAudio();
                     if (!isIconOnClick) {
                         return;
                     }
@@ -616,6 +617,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     }
                     break;
                 case R.id.message_pic_iv://点击图片跳转大图
+                    AudioPlayUtils.stopAudio();
                     if (msgEntity.getLoc_id() != null) {//地图大图片
                         //图片路径
                         String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=14&q=%f,%f", Double.valueOf(msgEntity.getLoc_latitude()), Double.valueOf(msgEntity.getLoc_longitude()), Double.valueOf(msgEntity.getLoc_latitude()), Double.valueOf(msgEntity.getLoc_longitude()));
@@ -659,6 +661,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     mHandler.sendMessageDelayed(mHandler.obtainMessage(PLAY_AUDIO_HANDLER, map), 500);
                     break;
                 case R.id.pic_linear_re:
+                    AudioPlayUtils.stopAudio();
                     String video_format = msgEntity.getVideo_format1();
                     intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
                     if (video_format != null) {
@@ -670,6 +673,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     context.startActivity(intent);
                     break;
                 case R.id.msg_send_fail_iv:
+                    AudioPlayUtils.stopAudio();
                     VHItem holder1 = (VHItem) recyclerView.findViewHolderForAdapterPosition(position);
                     if (holder1 == null) {
                         return;
