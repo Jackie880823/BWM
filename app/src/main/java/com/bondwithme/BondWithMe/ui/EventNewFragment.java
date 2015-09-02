@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -537,6 +538,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private final static int GET_LOCATION = 1;
     private final static int GET_MEMBERS = 2;
+    private final static int OPEN_GPS = 3;
     private MyDialog pickDateTimeDialog;
 
     @Override
@@ -546,7 +548,29 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 goChooseMembers();
                 break;
             case R.id.position_choose:
-                goLocationSetting();
+                if(!LocationUtil.isOPen(getActivity())) {
+                    LogUtil.i(Tag, "onClick& need open GPS");
+                    final MyDialog myDialog = new MyDialog(getActivity(), R.string.open_gps_title, R.string.use_gps_hint);
+                    myDialog.setButtonAccept(R.string.text_dialog_ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // 转到手机设置界面，用户设置GPS
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, OPEN_GPS);
+                            myDialog.dismiss();
+                        }
+                    });
+                    myDialog.setButtonCancel(R.string.text_cancel, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myDialog.dismiss();
+                        }
+                    });
+                    myDialog.show();
+                } else {
+                    LogUtil.i(Tag, "onClick& GPS opened");
+                    goLocationSetting();
+                }
                 break;
             case R.id.item_date:
                 if(pickDateTimeDialog == null || !pickDateTimeDialog.isShowing()) {
@@ -668,7 +692,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void goLocationSetting() {
-        final Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, position_name.getText().toString());
+        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, position_name.getText().toString());
         if(intent != null) {
             startActivityForResult(intent, GET_LOCATION);
         }
@@ -744,6 +768,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                         //                    Log.i("groups===", groups);
                         changeData();
                     }
+                    break;
+                case OPEN_GPS:
+                    goLocationSetting();
                     break;
             }
         }

@@ -619,6 +619,6 @@
     <string name="text_record_audio_too_short">录音时间太短</string>
     <string name="text_hold_and_speak">按住说话</string>
     <string name="show_vidoe_limit">只显示不大小超过20M的视频</string>
-    <string name="open_gps_title">要提高位置信息的精确度吗？</string>
-    <string name="use_gps_hint">使用GPS确定位置</string>
+    <string name="open_gps_title">需要提高位置信息的精确度</string>
+    <string name="use_gps_hint">请使用GPS确定位置</string>
 </resources>

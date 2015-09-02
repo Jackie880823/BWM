@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -113,6 +114,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     private final static int GET_LOCATION = 1;
     private final static int GET_MEMBERS = 2;
+    private final static int OPEN_GPS = 3;
 
     public final static String PATH_PREFIX = "feeling";
     private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
@@ -470,7 +472,29 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                 }
                 break;
             case R.id.btn_location:
-                goLocationSetting();
+                if(!LocationUtil.isOPen(getActivity())) {
+                    LogUtil.i(TAG, "onClick& need open GPS");
+                    final MyDialog myDialog = new MyDialog(getActivity(), R.string.open_gps_title, R.string.use_gps_hint);
+                    myDialog.setButtonAccept(R.string.text_dialog_ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // 转到手机设置界面，用户设置GPS
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, OPEN_GPS);
+                            myDialog.dismiss();
+                        }
+                    });
+                    myDialog.setButtonCancel(R.string.text_cancel, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myDialog.dismiss();
+                        }
+                    });
+                    myDialog.show();
+                } else {
+                    LogUtil.i(TAG, "onClick& GPS opened");
+                    goLocationSetting();
+                }
                 break;
             case R.id.btn_notify:
                 goChooseMembers();
@@ -852,7 +876,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
     }
 
     private void goLocationSetting() {
-        final Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, location_desc.getText().toString());
+        Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, location_desc.getText().toString());
         if(intent != null) {
             startActivityForResult(intent, GET_LOCATION);
         }
@@ -914,6 +938,10 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {}.getType());
                     changeTab(WALL_TAB_WORD);
                     changeAtDesc(true);
+                    break;
+
+                case OPEN_GPS:
+                    goLocationSetting();
                     break;
             }
         }

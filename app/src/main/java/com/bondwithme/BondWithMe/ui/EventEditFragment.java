@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -23,6 +24,7 @@ import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.LocationUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.DatePicker;
@@ -367,6 +369,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 
     private final static int GET_LOCATION = 1;
     private final static int GET_MEMBERS = 2;
+    private final static int OPEN_GPS = 3;
 
     @Override
     public void onClick(View v) {
@@ -375,7 +378,29 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 goEditMembers();
                 break;
             case R.id.position_choose:
-                goLocationSetting();
+                if(!LocationUtil.isOPen(getActivity())) {
+                    LogUtil.i(Tag, "onClick& need open GPS");
+                    final MyDialog myDialog = new MyDialog(getActivity(), R.string.open_gps_title, R.string.use_gps_hint);
+                    myDialog.setButtonAccept(R.string.text_dialog_ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // 转到手机设置界面，用户设置GPS
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, OPEN_GPS);
+                            myDialog.dismiss();
+                        }
+                    });
+                    myDialog.setButtonCancel(R.string.text_cancel, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myDialog.dismiss();
+                        }
+                    });
+                    myDialog.show();
+                } else {
+                    LogUtil.i(Tag, "onClick& GPS opened");
+                    goLocationSetting();
+                }
                 break;
             case R.id.item_date:
                 if(pickDateTimeDialog == null || !pickDateTimeDialog.isShowing()) {
@@ -519,6 +544,9 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                     String members = data.getStringExtra("members_data");
                     members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
                     changeData();
+                    break;
+                case OPEN_GPS:
+                    goLocationSetting();
                     break;
             }
         }
