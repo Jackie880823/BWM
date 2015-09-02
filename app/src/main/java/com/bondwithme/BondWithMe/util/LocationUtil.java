@@ -7,21 +7,19 @@ import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.Map4BaiduActivity;
 import com.bondwithme.BondWithMe.ui.Map4GoogleActivity;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +27,7 @@ import java.util.List;
 /**
  * Created by wing on 15/3/25.
  */
-public class LocationUtil implements LocationListener, GoogleApiClient.OnConnectionFailedListener {
+public class LocationUtil{
     //gcj02,bd09ll(百度经纬度坐标),bd09mc(百度墨卡托坐标),wgs84(gps)
     public static final String LOCATION_TYPE_GCJ02 = "gcj02";
     public static final String LOCATION_TYPE_BD09LL = "bd09ll";
@@ -104,31 +102,51 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         return address;
     }
 
-    private static LocationListener locationListener = new LocationUtil();
-
     /**
      * <br>注册监听谷歌地图变化，在应用启动是监听获取地后则取消监听，只用于验证是否可以通过谷歌地图获取位置信息，得到
      * <br>判断谷歌地图是否可用的标识，如果没有谷歌服务不启用监听
      *
-     * @param context 上下文件资源
+     * @param context 上下文资源
      */
-    public static void setRequestLocationUpdates(final Context context) {
+    public static void setRequestLocationUpdates(Context context) {
         if(SystemUtil.checkPlayServices(context)) {
             if(lm == null) {
                 lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             }
-            lm.requestLocationUpdates(2000, 0, getCriteria(), locationListener, null);
-        }
-    }
+            new HttpTools(context).get("https://www.google.com/maps", null, TAG, new HttpCallback() {
+                @Override
+                public void onStart() {
 
-    /**
-     * 删除监听用于得到判断谷歌地图是否可用的标识的监听
-     */
-    public static void removerLocationListener() {
-        if(lm == null) {
-            return;
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+
+                @Override
+                public void onResult(String string) {
+                    googleAvailable = true;
+                    LogUtil.i(TAG, string);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    googleAvailable = false;
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
         }
-        lm.removeUpdates(locationListener);
     }
 
     /**
@@ -357,33 +375,6 @@ public class LocationUtil implements LocationListener, GoogleApiClient.OnConnect
         //        LatLng desLatLng = converter.convert();
 
         return desLatLng;
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.i(TAG, "onLocationChanged()& latitude: " + location.getLatitude() + "; longitude: " + location.getLongitude());
-        googleAvailable = true;
-        removerLocationListener();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
 
     }
 }
