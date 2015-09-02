@@ -835,6 +835,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     if (AudioPlayUtils.audioIsPlaying()) {
                         AudioPlayUtils.stopAudio();
                         goneView(id_progressbar, null, 0);
+                        id_progressbar.setProgress(0);
+                        handler.removeMessages(PLAY_AUDIO_HANDLER);
                     } else {
                         if (audioFile != null && audioFile.exists()) {
                             handler.removeMessages(PLAY_AUDIO_HANDLER);
