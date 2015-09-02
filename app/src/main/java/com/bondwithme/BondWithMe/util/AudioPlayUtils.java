@@ -48,11 +48,18 @@ public class AudioPlayUtils {
     }
 
     public static void stopAudio() {
-        if (mp != null) {
-            if (mp.isPlaying()) {
-                mp.stop();
+        try {
+            if (mp != null) {
+                if (mp.isPlaying()) {
+                    mp.stop();
+                }
+                mp.reset();
+                mp.release();
             }
-            mp.release();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (llm != null && messageChatAdapter != null) {
