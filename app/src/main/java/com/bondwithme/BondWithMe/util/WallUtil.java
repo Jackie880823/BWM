@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.util.Linkify;
 import android.view.View;
 import android.widget.TextView;
 
@@ -162,6 +163,7 @@ public class WallUtil {
 
         setClickNormal(ssb, strMember, strGroup, wall);
         tvContent.setText(ssb);
+        tvContent.setAutoLinkMask(Linkify.ALL);
     }
 
 
@@ -249,8 +251,11 @@ public class WallUtil {
         if(start >= 0 && start < end) {
             String strMind = description.substring(start, end);
             SpannableString ssMind = new SpannableString(strMind);
-            setSpanClickShowComments(strMind, ssMind, wallEntity);
-            setSpecialText(ssb, strMind, ssMind);
+            boolean autoLink = Linkify.addLinks(ssMind, Linkify.ALL);
+            if(!autoLink) {
+                setSpanClickShowComments(strMind, ssMind, wallEntity);
+                setSpecialText(ssb, strMind, ssMind);
+            }
         }
     }
 

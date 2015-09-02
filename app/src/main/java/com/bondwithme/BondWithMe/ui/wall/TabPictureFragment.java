@@ -390,7 +390,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
         intent.putExtra("autofocus", true);
 
         // 设置限制文件大小
-        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MediaData.MAX_SIZE);
+//        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MediaData.MAX_SIZE);
 
         // 下面这句指定调用相机后存储的路径
         intent.putExtra(MediaStore.EXTRA_OUTPUT, out);
@@ -412,7 +412,7 @@ public class TabPictureFragment extends BaseFragment<WallNewActivity> implements
      */
     //	byte[] personHeadImage;
     private void addDataAndNotify(List<Uri> uris) {
-        if(uris != null && uris.size() > 0) {
+        if(uris != null) {
             for(Uri uri : uris) {
                 Map<String, Uri> map = new HashMap<>();
                 map.put("pic_resId", uri);
