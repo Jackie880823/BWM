@@ -558,13 +558,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     protected void onStop() {
         super.onStop();
-        AudioPlayUtils.stopAudio();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mTimer.cancel();
+        AudioPlayUtils.stopAudio();
         unregisterReceiver(stickerReceiver);
     }
 
