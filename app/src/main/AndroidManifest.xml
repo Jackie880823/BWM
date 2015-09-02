@@ -405,7 +405,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MessageChatActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:exported="true"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />

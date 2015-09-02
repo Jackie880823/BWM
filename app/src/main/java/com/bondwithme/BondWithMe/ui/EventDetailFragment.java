@@ -69,7 +69,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     private List<EventCommentEntity> data = new ArrayList<EventCommentEntity>();
     private String group_id;
-    private String Content_group_id;
     private boolean isCommentRefresh = true;
     private MySwipeRefreshLayout swipeRefreshLayout;
     private boolean isCommentTest;
@@ -157,7 +156,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         isComment = true;
         isCommentBim = true;
         group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
-        Content_group_id = getArguments().getString(ARG_PARAM_PREFIX + "1");
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
         mContext = getParentActivity();
@@ -700,7 +698,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             }
 
             Map<String, Object> params = new HashMap<>();
-            params.put("content_group_id", Content_group_id);
+            params.put("content_group_id", event.getContent_group_id());
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
             params.put("content_type", "comment");
             params.put("file", f);

@@ -350,7 +350,7 @@
     <string name="text_item_resend">重新发送</string>
     <string name="text_item_remove">删除</string>
 
-    <string name="title_bond_alert">聊天提醒</string>
+    <string name="title_bond_alert">伴通知</string>
     <string name="title_diary_alert">日记提醒</string>
     <string name="title_event_alert">活动提醒</string>
     <string name="title_big_day_alert">大日子提醒</string>
@@ -362,7 +362,7 @@
 
     <string name="text_bond_alert">“伴”通告</string>
     <!--Diary-->
-    <string name="text_bond_alert_diary">动态</string>
+    <string name="text_bond_alert_diary">日记</string>
     <!--Event-->
     <string name="text_bond_alert_event">活动</string>
     <string name="text_big_day">大日子</string>

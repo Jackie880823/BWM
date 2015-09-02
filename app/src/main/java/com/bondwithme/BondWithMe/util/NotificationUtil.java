@@ -415,13 +415,12 @@ public class NotificationUtil {
 
         PendingIntent contentIntent = null;
         Intent intent = getFowwordIntent(context, msg, isGCM);
+
         if (intent != null) {
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(BaseActivity.IS_OUTSIDE_INTENT, true);
             intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             contentIntent = PendingIntent.getActivity(context, msgType.ordinal(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         } else {
             return null;

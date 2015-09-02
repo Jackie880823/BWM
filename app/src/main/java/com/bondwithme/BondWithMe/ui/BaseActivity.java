@@ -123,12 +123,12 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     private void doFinish(){
         if(getIntent().getBooleanExtra(IS_OUTSIDE_INTENT,false)){
-            Intent intent = new Intent(this, MainActivity.class);
+//            Intent intent = new Intent(this, MainActivity.class);
 //            ComponentName cn = intent.getComponent();
 //            Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
 //            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            startActivity(mainIntent);
-            startActivity(intent);
+//            startActivity(intent);
         }else {
             if(!isFinishing()) {
                 UIUtil.hideKeyboard(this, getCurrentFocus());
