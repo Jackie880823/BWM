@@ -621,5 +621,6 @@
     <string name="prompt">Prompt</string>
     <string name="open_the_equipment_failure">Open the equipment failure</string>
     <string name="no_sd_card">No sd card!</string>
+    <string name="show_vidoe_limit">Only files below the size of 20MB will be displayed.</string>
 
 </resources>

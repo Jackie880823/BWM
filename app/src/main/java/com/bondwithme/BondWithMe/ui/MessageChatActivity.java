@@ -752,7 +752,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         // Modify end by Jackie
                         mIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0.9);//画质0.5
                         //mIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 60000);//60s
-                        mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 45 * 1024 * 1024l);
+//                        mIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 45 * 1024 * 1024l);
                         startActivityForResult(mIntent, CAMERA_ACTIVITY);//CAMERA_ACTIVITY = 1
                         showSelectDialog.dismiss();
                     }
