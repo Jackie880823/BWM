@@ -76,7 +76,7 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
             {
                 holder.tvAlertGroupContent.setText(Html.fromHtml(
                                 "<b>"+alertGroupEntity.getAction_username()+"</b>" +  //人名
-                                "<font color=\"#000000\">"+pendingText+"</font>"+   //requested you to join the group
+                                "<font color='#000000'>"+pendingText+"</font>"+   //requested you to join the group
                                 "<b>\""+alertGroupEntity.getModule_name()+"\"</b>"));     //groupName
                 holder.ibOption.setVisibility(View.VISIBLE); //移除option Button
             }
@@ -85,7 +85,7 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
             {
                 holder.tvAlertGroupContent.setText(Html.fromHtml(
                                 "<b>"+alertGroupEntity.getAction_username()+"</b>" +
-                                "<font color=\"#000000\">"+addText+"</font><br/>"+
+                                "<font color='#000000'>"+addText+"</font><br/>"+
                                 "<b>\""+alertGroupEntity.getModule_name()+"\"</b>"));
                 holder.ibOption.setVisibility(View.GONE); //移除option Button
             }
@@ -94,9 +94,9 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
             {
                 holder.tvAlertGroupContent.setText(Html.fromHtml(
                         "<b>"+alertGroupEntity.getAction_username()+"</b>" +   //username
-                        "<font color=\"#000000\">"+rejectTextHas+"<b> "+rejectTextDec+"</b>"+rejectTextInvite+"</font>" + //"has declined (粗体) your invite to"
+                        "<font color='#000000'>"+rejectTextHas+"<b>"+rejectTextDec+"</b>"+rejectTextInvite+"</font>" + //"has declined (粗体) your invite to"
                         "<b>\""+alertGroupEntity.getModule_name()+"\"</b>" +   //groupname
-                        "<font color=\"#000000\">"+rejectTextGroup+"</font>"));  //"group"
+                        "<font color='#000000'>"+rejectTextGroup+"</font>"));  //"group"
                 holder.ibOption.setVisibility(View.GONE);  //移除option Button
 
             }
