@@ -49,16 +49,22 @@ public class InvitedUserEditAdapter extends RecyclerView.Adapter<InvitedUserEdit
         VolleyUtil.initNetworkImageView(mContext, viewHolder.user_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, user.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         viewHolder.user_name.setText(user.getUser_given_name());
         String status = user.getGroup_member_response();
+//        LogUtil.i("status====",status+"_"+i);
         if (!TextUtils.isEmpty(status)) {
-            if ("2".equals(status)) {
-                UIUtil.setViewBackground(mContext, viewHolder.intent_status, R.drawable.status_not_going_press);
-//                viewHolder.intent_status.setImageResource(R.drawable.status_not_going_normal);
-            } else if ("1".equals(status)) {
-                UIUtil.setViewBackground(mContext, viewHolder.intent_status, R.drawable.status_going_press);
-//                viewHolder.intent_status.setImageResource(R.drawable.status_going_normal);
-            } else if ("3".equals(status)) {
-                UIUtil.setViewBackground(mContext, viewHolder.intent_status, R.drawable.status_maybe_press);
-//                viewHolder.intent_status.setImageResource(R.drawable.status_maybe_normal);
+            viewHolder.intent_status.setVisibility(View.VISIBLE);
+            switch (status){
+                case "2":
+                    UIUtil.setViewBackground(mContext, viewHolder.intent_status, R.drawable.status_not_going_press);
+                    break;
+                case "1":
+                    UIUtil.setViewBackground(mContext, viewHolder.intent_status, R.drawable.status_going_press);
+                    break;
+                case "3":
+                    UIUtil.setViewBackground(mContext, viewHolder.intent_status, R.drawable.status_maybe_press);
+                    break;
+                case "0":
+                    viewHolder.intent_status.setBackgroundResource(0);
+                    break;
             }
         }
 
