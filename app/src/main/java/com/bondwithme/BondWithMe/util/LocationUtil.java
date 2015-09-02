@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.util;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -117,17 +116,17 @@ public class LocationUtil {
             new HttpTools(context).get("https://www.google.com/maps", null, TAG, new HttpCallback() {
                 @Override
                 public void onStart() {
-//            Criteria c = new Criteria();
-//            c.setAccuracy(Criteria.ACCURACY_COARSE);          //设置查询精度,(Criteria.ACCURACY_COARSE...)
-//            c.setSpeedRequired(false);                      //设置是否要求速度
-//            c.setCostAllowed(false);                        //设置是否允许产生费用
-//            c.setBearingRequired(false);                    //设置是否需要得到方向
-//            c.setAltitudeRequired(false);                   //设置是否需要得到海拔高度
-//            c.setPowerRequirement(Criteria.POWER_LOW);      //设置允许的电池消耗级别
-//            lm.requestLocationUpdates(2000, 0, c, locationListener, null);
-////            lm.getBestProvider(c, false);
-//        }
-//    }
+                    //            Criteria c = new Criteria();
+                    //            c.setAccuracy(Criteria.ACCURACY_COARSE);          //设置查询精度,(Criteria.ACCURACY_COARSE...)
+                    //            c.setSpeedRequired(false);                      //设置是否要求速度
+                    //            c.setCostAllowed(false);                        //设置是否允许产生费用
+                    //            c.setBearingRequired(false);                    //设置是否需要得到方向
+                    //            c.setAltitudeRequired(false);                   //设置是否需要得到海拔高度
+                    //            c.setPowerRequirement(Criteria.POWER_LOW);      //设置允许的电池消耗级别
+                    //            lm.requestLocationUpdates(2000, 0, c, locationListener, null);
+                    ////            lm.getBestProvider(c, false);
+                    //        }
+                    //    }
 
                 }
 
@@ -170,9 +169,12 @@ public class LocationUtil {
      * @param name
      * @return
      */
-    public static Intent getPlacePickerIntent(final Activity context, double latitude, double longitude, String name) {
+    public static Intent getPlacePickerIntent(Context context, double latitude, double longitude, String name) {
+        if(!isOPen(context)) {
+            openGPS(context);
+        }
 
-        final Intent intent = new Intent();
+        Intent intent = new Intent();
 
         intent.putExtra(Constant.EXTRA_LOCATION_NAME, name);
         intent.putExtra(Constant.EXTRA_LATITUDE, latitude);

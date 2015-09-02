@@ -122,7 +122,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         event_desc = getViewById(R.id.event_desc);
         event_desc.addTextChangedListener(mTextWatcher);
         event_desc.setSelection(event_desc.length());
-        mTextView =  getViewById(R.id.count);
+        mTextView = getViewById(R.id.count);
         position_choose = getViewById(R.id.position_choose);
         item_date = getViewById(R.id.item_date);
 
@@ -131,8 +131,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         position_name.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     // Perform action on key press
                     return true;
                 }
@@ -154,7 +153,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             @Override
             public void afterTextChanged(Editable s) {
                 String tplocation = position_name.getText().toString().trim();
-                if (!tplocation.equals(locationName) && locationName!=null) {
+                if(!tplocation.equals(locationName) && locationName != null) {
                     latitude = -1000;
                     longitude = -1000;
                 }
@@ -170,16 +169,16 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
-                if (v.getId() == getParentActivity().leftButton.getId()) {
-                    if (isEventDate()) {
+                if(v.getId() == getParentActivity().leftButton.getId()) {
+                    if(isEventDate()) {
                         showSaveAlert();
                     } else {
                         getParentActivity().finish();
                     }
-                } else if (v.getId() == getParentActivity().rightButton.getId()) {
+                } else if(v.getId() == getParentActivity().rightButton.getId()) {
                     reomveSP();
                     submit();
-//                    changeData();
+                    //                    changeData();
                 }
                 return false;
             }
@@ -190,13 +189,14 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     /**
      * 返回键监听
+     *
      * @return
      */
     public boolean backCheck() {
-        if(isEventDate()){
+        if(isEventDate()) {
             showSaveAlert();
             return true;
-        }else {
+        } else {
             getParentActivity().finish();
             return false;
         }
@@ -220,7 +220,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
             // 注意这里只能每次都对整个EditText的内容求长度，不能对删除的单个字符求长度
             // 因为是中英文混合，单个字符而言，calculateLength函数都会返回1
-            while (calculateLength(s.toString()) > MAX_COUNT) { // 当输入字符个数超过限制的大小时，进行截断操作
+            while(calculateLength(s.toString()) > MAX_COUNT) { // 当输入字符个数超过限制的大小时，进行截断操作
                 s.delete(editStart - 1, editEnd);
                 editStart--;
                 editEnd--;
@@ -231,13 +231,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             setLeftCount();
         }
 
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
         }
 
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
 
         }
 
@@ -251,15 +249,15 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
      */
     private long calculateLength(CharSequence c) {
         double len = 0;
-        for (int i = 0; i < c.length(); i++) {
+        for(int i = 0; i < c.length(); i++) {
             len++;
 
-//            int tmp = (int) c.charAt(i);
-//            if (tmp > 0 && tmp < 127) {
-//                len += 0.5;
-//            } else {
-//                len++;
-//            }
+            //            int tmp = (int) c.charAt(i);
+            //            if (tmp > 0 && tmp < 127) {
+            //                len += 0.5;
+            //            } else {
+            //                len++;
+            //            }
         }
         return Math.round(len);
     }
@@ -281,40 +279,40 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private boolean isEventDate() {
-        if (!TextUtils.isEmpty(event_title.getText().toString().trim())) {
-//             Log.i("event_title=====================",event_title.getText().toString().trim());
+        if(!TextUtils.isEmpty(event_title.getText().toString().trim())) {
+            //             Log.i("event_title=====================",event_title.getText().toString().trim());
             return true;
         }
-        if (!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
-//             Log.i("Spmemeber_date=====================",event_desc.getText().toString().trim());
+        if(!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
+            //             Log.i("Spmemeber_date=====================",event_desc.getText().toString().trim());
             return true;
         }
-        if (!TextUtils.isEmpty(position_name.getText().toString().trim())) {
-//             Log.i("Spmemeber_date=====================",position_name.getText().toString().trim());
+        if(!TextUtils.isEmpty(position_name.getText().toString().trim())) {
+            //             Log.i("Spmemeber_date=====================",position_name.getText().toString().trim());
             return true;
         }
-        if (!TextUtils.isEmpty(date_desc.getText().toString().trim())) {
-//             Log.i("Spmemeber_date=====================",date_desc.getText().toString().trim());
+        if(!TextUtils.isEmpty(date_desc.getText().toString().trim())) {
+            //             Log.i("Spmemeber_date=====================",date_desc.getText().toString().trim());
             return true;
         }
-        if (users_date != null) {
+        if(users_date != null) {
             String userDate = users_date.trim().replaceAll("\\[([^\\]]*)\\]", "$1");
-            if (!TextUtils.isEmpty(userDate.trim())) {
+            if(!TextUtils.isEmpty(userDate.trim())) {
                 return true;
             }
         }
         return false;
     }
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser) {
-//            //相当于Fragment的onResume
-//            cleanText();
-//        } else {
-//            //相当于Fragment的onPause
-//        }
-//    }
+    //    @Override
+    //    public void setUserVisibleHint(boolean isVisibleToUser) {
+    //        super.setUserVisibleHint(isVisibleToUser);
+    //        if (isVisibleToUser) {
+    //            //相当于Fragment的onResume
+    //            cleanText();
+    //        } else {
+    //            //相当于Fragment的onPause
+    //        }
+    //    }
 
     private void bindData2View() {
         String stlatitude;
@@ -323,9 +321,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         title = PreferencesUtil.getValue(getParentActivity(), "title", "").toString();
         content = PreferencesUtil.getValue(getParentActivity(), "content", "").toString();
         location = PreferencesUtil.getValue(getParentActivity(), "location", "").toString();
-        date =  PreferencesUtil.getValue(getParentActivity().getApplicationContext(), "date", 0L);
-        stlatitude  = PreferencesUtil.getValue(getParentActivity(),"latitude","-1000");
-        stlongitude = PreferencesUtil.getValue(getParentActivity(),"longitude","-1000");
+        date = PreferencesUtil.getValue(getParentActivity().getApplicationContext(), "date", 0L);
+        stlatitude = PreferencesUtil.getValue(getParentActivity(), "latitude", "-1000");
+        stlongitude = PreferencesUtil.getValue(getParentActivity(), "longitude", "-1000");
         latitude = Double.valueOf(stlatitude).doubleValue();
         longitude = Double.valueOf(stlongitude).doubleValue();
 
@@ -340,14 +338,14 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     /**
      * 移除重复的好友
+     *
      * @param userList
      */
     public static void removeDuplicate(List<UserEntity> userList) {
-        for (int i = 0; i < userList.size() - 1; i++) {
-            for (int j = userList.size() - 1; j > i; j--) {
-                if (userList.get(j).getUser_id().equals(userList.get(i).getUser_id()) ||
-                        userList.get(j).getUser_id().equals(MainActivity.getUser().getUser_id())) {
-//                    Log.i("remove===",j+"");
+        for(int i = 0; i < userList.size() - 1; i++) {
+            for(int j = userList.size() - 1; j > i; j--) {
+                if(userList.get(j).getUser_id().equals(userList.get(i).getUser_id()) || userList.get(j).getUser_id().equals(MainActivity.getUser().getUser_id())) {
+                    //                    Log.i("remove===",j+"");
                     userList.remove(j);
                 }
 
@@ -361,7 +359,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("group_list", strGroupsid);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_GROUP_MEMBERS, params);
-        new HttpTools(getActivity()).get(url, null,Tag, new HttpCallback() {
+        new HttpTools(getActivity()).get(url, null, Tag, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -376,11 +374,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-//                Log.i("at_groups_data===", at_groups_data.get(temp).getGroup_id());
-                tempuserList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
-                }.getType());
-//                Log.i("onResult===",response);
-//                Log.i("tempuserList_size===", tempuserList.size()+"");
+                //                Log.i("at_groups_data===", at_groups_data.get(temp).getGroup_id());
+                tempuserList = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                //                Log.i("onResult===",response);
+                //                Log.i("tempuserList_size===", tempuserList.size()+"");
                 userList.addAll(tempuserList);
                 removeDuplicate(userList);
 
@@ -390,7 +387,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
             @Override
             public void onError(Exception e) {
-//                Log.i("onError===",e.getMessage());
+                //                Log.i("onError===",e.getMessage());
                 Toast.makeText(getActivity(), getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
 
@@ -409,10 +406,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private void submit() {
 
-        if (progressBar.getVisibility() == View.VISIBLE) {
+        if(progressBar.getVisibility() == View.VISIBLE) {
             return;
         }
-        if (validateForm()) {
+        if(validateForm()) {
             setText();
             progressBar.setVisibility(View.VISIBLE);
             RequestInfo requestInfo = new RequestInfo();
@@ -425,7 +422,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("group_name", event_title.getText().toString());
             params.put("group_owner_id", MainActivity.getUser().getUser_id());
             params.put("group_type", "1");
-            if (latitude == -1000 || longitude == -1000) {
+            if(latitude == -1000 || longitude == -1000) {
                 params.put("loc_latitude", "");
                 params.put("loc_longitude", "");
             } else {
@@ -440,7 +437,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             params.put("event_member", gson.toJson(setGetMembersIds(userList)));
             requestInfo.putAllParams(params);
 
-            new HttpTools(getActivity()).post(requestInfo,Tag, new HttpCallback() {
+            new HttpTools(getActivity()).post(requestInfo, Tag, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -454,7 +451,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 @Override
                 public void onResult(String response) {
                     getParentActivity().setResult(Activity.RESULT_OK);
-//                    Log.i("new_button_rt====================", "");
+                    //                    Log.i("new_button_rt====================", "");
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     getParentActivity().finish();
                 }
@@ -480,36 +477,33 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void setText() {
-        LogUtil.i("setText_title",title);
-        if (!TextUtils.isEmpty(title)) {
+        LogUtil.i("setText_title", title);
+        if(!TextUtils.isEmpty(title)) {
             event_title.setText(title);
 
         }
-        if (!TextUtils.isEmpty(content)) {
+        if(!TextUtils.isEmpty(content)) {
             event_desc.setText(content);
 
         }
-        if (!TextUtils.isEmpty(location)) {
+        if(!TextUtils.isEmpty(location)) {
             position_name.setText(location);
 
         }
-        if (date != null && date != 0L) {
+        if(date != null && date != 0L) {
             date_desc.setText(MyDateUtils.getEventLocalDateStringFromLocal(getParentActivity(), date));
             mEevent.setGroup_event_date(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
 
         }
-        if (!TextUtils.isEmpty(members)) {
-            members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
-            }.getType());
+        if(!TextUtils.isEmpty(members)) {
+            members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
         }
-        if (!TextUtils.isEmpty(groups)) {
-            at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<UserEntity>>() {
-            }.getType());
+        if(!TextUtils.isEmpty(groups)) {
+            at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<UserEntity>>() {}.getType());
 
         }
-        if (!TextUtils.isEmpty(users_date)) {
-            userList = gson.fromJson(users_date, new TypeToken<ArrayList<UserEntity>>() {
-            }.getType());
+        if(!TextUtils.isEmpty(users_date)) {
+            userList = gson.fromJson(users_date, new TypeToken<ArrayList<UserEntity>>() {}.getType());
             changeData();
         }
 
@@ -519,11 +513,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
      * 删除草稿
      */
     private void reomveSP() {
-//        File file = new File("/data/data/"+getParentActivity().getPackageName().toString()+"/shared_prefs","EventNew_date.xml");
-//        if (file.exists()){
-//            file.delete();
-////            Toast.makeText(getParentActivity(), "删除成功", Toast.LENGTH_LONG).show();
-//        }
+        //        File file = new File("/data/data/"+getParentActivity().getPackageName().toString()+"/shared_prefs","EventNew_date.xml");
+        //        if (file.exists()){
+        //            file.delete();
+        ////            Toast.makeText(getParentActivity(), "删除成功", Toast.LENGTH_LONG).show();
+        //        }
         PreferencesUtil.saveValue(getParentActivity(), "title", "");
         PreferencesUtil.saveValue(getParentActivity(), "content", "");
         PreferencesUtil.saveValue(getParentActivity(), "location", "");
@@ -531,7 +525,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         PreferencesUtil.saveValue(getParentActivity(), "members_data", "");
         PreferencesUtil.saveValue(getParentActivity(), "Groups_date", "");
         PreferencesUtil.saveValue(getParentActivity(), "users_date", "");
-        PreferencesUtil.saveValue(getParentActivity(), "latitude",  "-1000");
+        PreferencesUtil.saveValue(getParentActivity(), "latitude", "-1000");
         PreferencesUtil.saveValue(getParentActivity(), "longitude", "-1000");
 
     }
@@ -547,7 +541,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        switch(v.getId()) {
             case R.id.rl_add_members:
                 goChooseMembers();
                 break;
@@ -555,7 +549,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 goLocationSetting();
                 break;
             case R.id.item_date:
-                if(pickDateTimeDialog==null||!pickDateTimeDialog.isShowing()) {
+                if(pickDateTimeDialog == null || !pickDateTimeDialog.isShowing()) {
                     showDateTimePicker();
                 }
                 break;
@@ -563,33 +557,33 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     }
 
     private void showSaveAlert() {
-        if (saveAlertDialog == null) {
+        if(saveAlertDialog == null) {
             saveAlertDialog = new MyDialog(getActivity(), getString(R.string.text_tips_title), getString(R.string.draft_ask_save));
             saveAlertDialog.setButtonAccept(getString(R.string.event_accept), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     saveAlertDialog.dismiss();
 
-                        PreferencesUtil.saveValue(getParentActivity(), "latitude", Double.toString(latitude));
-                        PreferencesUtil.saveValue(getParentActivity(), "longitude", Double.toString(longitude));
-                    if (!TextUtils.isEmpty(event_title.getText().toString().trim())) {
+                    PreferencesUtil.saveValue(getParentActivity(), "latitude", Double.toString(latitude));
+                    PreferencesUtil.saveValue(getParentActivity(), "longitude", Double.toString(longitude));
+                    if(!TextUtils.isEmpty(event_title.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "title", event_title.getText().toString());
-//                        Log.i("title=============",event_title.getText().toString());
+                        //                        Log.i("title=============",event_title.getText().toString());
                     }
-                    if (!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
+                    if(!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "content", event_desc.getText().toString());
 
-//                        Log.i("content=============",event_desc.getText().toString());
+                        //                        Log.i("content=============",event_desc.getText().toString());
                     }
-                    if (!TextUtils.isEmpty(position_name.getText().toString().trim())) {
+                    if(!TextUtils.isEmpty(position_name.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "location", position_name.getText().toString());
 
-//                        Log.i("location=============",position_name.getText().toString());
+                        //                        Log.i("location=============",position_name.getText().toString());
                     }
-                    if (userList.size() > 0) {
+                    if(userList.size() > 0) {
                         Gson gson = new Gson();
                         PreferencesUtil.saveValue(getParentActivity(), "users_date", gson.toJson(userList));
-//                        Log.i("Set_users_date===", users_date);
+                        //                        Log.i("Set_users_date===", users_date);
                     }
                     getParentActivity().finish();
                 }
@@ -603,7 +597,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 }
             });
         }
-        if (!saveAlertDialog.isShowing()) {
+        if(!saveAlertDialog.isShowing()) {
             saveAlertDialog.show();
         }
     }
@@ -616,15 +610,15 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         final TimePicker timePicker = (TimePicker) dateTimePicker.findViewById(R.id.timePicker);
 
         calendar = Calendar.getInstance();
-//        MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis())
-//        Long ltime =  (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
+        //        MyDateUtils.getUTCDateString4DefaultFromLocal(mCalendar.getTimeInMillis())
+        //        Long ltime =  (Long)SharedPreferencesUtils.getParam(getParentActivity().getApplicationContext(),"date",0L);
         //如果有时间缓存
-        if (mEevent.getGroup_event_date() != null) {
+        if(mEevent.getGroup_event_date() != null) {
             Timestamp ts = Timestamp.valueOf(mEevent.getGroup_event_date());
             calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
             datePicker.setCalendar(calendar);
             timePicker.setCalendar(calendar);
-        } else if (date != null && date != 0L) {
+        } else if(date != null && date != 0L) {
 
             Timestamp ts = Timestamp.valueOf(MyDateUtils.getUTCDateString4DefaultFromLocal(date));
             calendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
@@ -638,7 +632,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             @Override
             public void onClick(View v) {
                 pickDateTimeDialog.dismiss();
-                if (datePicker != null && timePicker != null) {
+                if(datePicker != null && timePicker != null) {
 
                 }
                 mCalendar = Calendar.getInstance();
@@ -648,12 +642,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 mCalendar.set(Calendar.HOUR_OF_DAY, timePicker.getHourOfDay());
                 mCalendar.set(Calendar.MINUTE, timePicker.getMinute());
 
-                if (MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
+                if(MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
                     MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
                     return;
                 }
                 //把时间储存到缓存
-                if (mCalendar != null) {
+                if(mCalendar != null) {
                     PreferencesUtil.saveValue(getParentActivity(), "date", mCalendar.getTimeInMillis());
                 }
                 //将日历的时间转化成字符串
@@ -675,102 +669,79 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private void goLocationSetting() {
         final Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, position_name.getText().toString());
-        if(intent!=null) {
-
-            if(!LocationUtil.isOPen(getActivity())) {
-                final MyDialog myDialog = new MyDialog(getActivity(), getString(R.string.open_gps_title), getString(R.string.use_gps_hint));
-                myDialog.setButtonAccept(R.string.text_yes, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        LocationUtil.openGPS(getActivity());
-                        myDialog.dismiss();
-                        startActivityForResult(intent, GET_LOCATION);
-                    }
-                });
-                myDialog.setButtonCancel(R.string.text_cancel, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myDialog.dismiss();
-                        startActivityForResult(intent, GET_LOCATION);
-                    }
-                });
-                myDialog.show();
-            } else {
-                startActivityForResult(intent, GET_LOCATION);
-            }
+        if(intent != null) {
+            startActivityForResult(intent, GET_LOCATION);
         }
     }
 
     private void goChooseMembers() {
-//        Intent intent = new Intent(getActivity(), SelectPeopleActivity.class);
+        //        Intent intent = new Intent(getActivity(), SelectPeopleActivity.class);
         Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
         intent.putExtra("members_data", gson.toJson(userList));
         intent.putExtra("groups_data", "");
         intent.putExtra("type", 0);
         tempuserList.clear();
-//        userList.clear();
+        //        userList.clear();
         startActivityForResult(intent, GET_MEMBERS);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == getActivity().RESULT_OK) {
-            switch (requestCode) {
+        if(resultCode == getActivity().RESULT_OK) {
+            switch(requestCode) {
                 case GET_LOCATION:
-                    if (data != null) {
+                    if(data != null) {
                         //        intent.putExtra("has_location", position_name.getText().toString());
-//                        if (SystemUtil.checkPlayServices(getActivity())) {
-//                            final Place place = PlacePicker.getPlace(data, getActivity());
-//                            if(place!=null) {
-////                                String locationName = place.getAddress().toString();
-//                                String locationName = place.getName().toString();
-//                                //TODO 弹窗输入目标名称
-//                                if(locationName==null){
-//
-//                                }
-//                                position_name.setText(locationName);
-//                                latitude = place.getLatLng().latitude;
-//                                longitude = place.getLatLng().longitude;
-//                            }
-//
-//                        }else {
-                            locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
-                            if (!TextUtils.isEmpty(locationName)) {
-                                position_name.setText(locationName);
-                                mEevent.setLoc_name(locationName);
-                                latitude = data.getDoubleExtra(Constant.EXTRA_LATITUDE, 0);
-                                longitude = data.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0);
-                            } else {
-                                position_name.setText(null);
-                                latitude = -1000;
-                                longitude = -1000;
-                            }
-                            //坐标数据类型
-                            mEevent.setLoc_type(data.getStringExtra("loc_type"));
-//                        }
+                        //                        if (SystemUtil.checkPlayServices(getActivity())) {
+                        //                            final Place place = PlacePicker.getPlace(data, getActivity());
+                        //                            if(place!=null) {
+                        ////                                String locationName = place.getAddress().toString();
+                        //                                String locationName = place.getName().toString();
+                        //                                //TODO 弹窗输入目标名称
+                        //                                if(locationName==null){
+                        //
+                        //                                }
+                        //                                position_name.setText(locationName);
+                        //                                latitude = place.getLatLng().latitude;
+                        //                                longitude = place.getLatLng().longitude;
+                        //                            }
+                        //
+                        //                        }else {
+                        locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
+                        if(!TextUtils.isEmpty(locationName)) {
+                            position_name.setText(locationName);
+                            mEevent.setLoc_name(locationName);
+                            latitude = data.getDoubleExtra(Constant.EXTRA_LATITUDE, 0);
+                            longitude = data.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0);
+                        } else {
+                            position_name.setText(null);
+                            latitude = -1000;
+                            longitude = -1000;
+                        }
+                        //坐标数据类型
+                        mEevent.setLoc_type(data.getStringExtra("loc_type"));
+                        //                        }
                     }
                     break;
                 case GET_MEMBERS:
                     //获取SelectPeopleActivity回调的参数
                     members = data.getStringExtra("members_data");//获取好友选择页面传来到好友数据
-                    members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
-                    }.getType());
-//                    Log.i("members===",members);
+                    members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                    //                    Log.i("members===",members);
 
                     groups = data.getStringExtra("groups_data");//获取好友选择页面的群组数据
-                    at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {
-                    }.getType());
+                    at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {}.getType());
                     userList.clear();
                     userList.addAll(members_data);
                     List groupIdList = new ArrayList();
-                    for (int i = 0; i < at_groups_data.size(); i++) {
+                    for(int i = 0; i < at_groups_data.size(); i++) {
                         groupIdList.add(at_groups_data.get(i).getGroup_id());
                     }
-                    if (groupIdList.size() != 0) {
-//                        Log.i("groupsid====", gson.toJson(groupIdList));
+                    if(groupIdList.size() != 0) {
+                        //                        Log.i("groupsid====", gson.toJson(groupIdList));
                         getMembersList(gson.toJson(groupIdList));
                     } else {
-//                    Log.i("groups===", groups);
+                        //                    Log.i("groups===", groups);
                         changeData();
                     }
                     break;
@@ -780,31 +751,31 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     //判断输入的内容是否为空
     private boolean validateForm() {
-        if (TextUtils.isEmpty(event_title.getText().toString().trim())) {
+        if(TextUtils.isEmpty(event_title.getText().toString().trim())) {
             MessageUtil.showMessage(getParentActivity(), R.string.alert_text_title_null);
             return false;
         }
-        if (TextUtils.isEmpty(event_desc.getText().toString().trim())) {
+        if(TextUtils.isEmpty(event_desc.getText().toString().trim())) {
             MessageUtil.showMessage(getParentActivity(), R.string.alert_text_desc_null);
             return false;
         }
-        if (TextUtils.isEmpty(position_name.getText().toString().trim())) {
+        if(TextUtils.isEmpty(position_name.getText().toString().trim())) {
             MessageUtil.showMessage(getParentActivity(), R.string.alert_text_location_null);
             return false;
         }
-        if (TextUtils.isEmpty(date_desc.getText())) {
+        if(TextUtils.isEmpty(date_desc.getText())) {
             MessageUtil.showMessage(getParentActivity(), R.string.alert_text_date_null);
             return false;
         }
 
-        if (mCalendar == null) {
-            if (MyDateUtils.isBeforeDate(MyDateUtils.dateString2Timestamp(MyDateUtils.getLocalDateString4DefaultFromUTC(mEevent.getGroup_event_date())).getTime())) {
+        if(mCalendar == null) {
+            if(MyDateUtils.isBeforeDate(MyDateUtils.dateString2Timestamp(MyDateUtils.getLocalDateString4DefaultFromUTC(mEevent.getGroup_event_date())).getTime())) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
                 return false;
             }
 
         } else {
-            if (MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
+            if(MyDateUtils.isBeforeDate(mCalendar.getTimeInMillis())) {
                 MessageUtil.showMessage(getActivity(), R.string.msg_date_not_befort_now);
                 return false;
             }
@@ -815,11 +786,11 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     //刷新数据
     private void changeData() {
-        if (userList == null) {
+        if(userList == null) {
             userList = new ArrayList<>();
         }
-        for (UserEntity u : userList) {
-            if (u.getUser_id().equals(MainActivity.getUser().getUser_id())) {
+        for(UserEntity u : userList) {
+            if(u.getUser_id().equals(MainActivity.getUser().getUser_id())) {
                 userList.remove(u);
             }
         }
@@ -830,9 +801,9 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private List<String> setGetMembersIds(List<UserEntity> users) {
         List<String> ids = new ArrayList<>();
-        if (users != null) {
+        if(users != null) {
             int count = users.size();
-            for (int i = 0; i < count; i++) {
+            for(int i = 0; i < count; i++) {
                 ids.add(users.get(i).getUser_id());
             }
         }
