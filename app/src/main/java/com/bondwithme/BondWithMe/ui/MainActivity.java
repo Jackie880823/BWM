@@ -25,6 +25,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MyFragmentPagerAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.receiver_service.ReportIntentService;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.ui.wall.WallNewActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
@@ -32,6 +33,7 @@ import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
+import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.material.widget.SnackBar;
 
 import java.io.File;
@@ -168,6 +170,37 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //            changeTitleColor();
 //        }
 
+        //提示异常反馈
+        if(PreferencesUtil.getValue(this,Constant.APP_CRASH,false)){
+            PreferencesUtil.saveValue(this,Constant.APP_CRASH,false);
+            showFeedbackDialog();
+        }
+
+    }
+
+    private static MyDialog errorReportDialog;
+    private void showFeedbackDialog() {
+        if (errorReportDialog == null) {
+            errorReportDialog = new MyDialog(this, R.string.error_feedback, R.string.error_feedback_desc);
+            errorReportDialog.setCanceledOnTouchOutside(false);
+            errorReportDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    errorReportDialog.dismiss();
+                }
+            });
+            errorReportDialog.setButtonAccept(R.string.report, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    errorReportDialog.dismiss();
+                    Intent intentService = new Intent(App.getContextInstance(), ReportIntentService.class);
+                    startService(intentService);
+                    MessageUtil.showMessage(MainActivity.this, R.string.say_thanks_for_report);
+                }
+            });
+        }
+        if (!errorReportDialog.isShowing())
+            errorReportDialog.show();
     }
 
     @Override

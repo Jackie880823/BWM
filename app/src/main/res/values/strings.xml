@@ -506,8 +506,8 @@
     <string name="download_apk_content_title">BondWithMe</string>
     <string name="download_apk_content_description">When download finished , click to install.</string>
     <string name="update">Update</string>
-    <string name="error_feedback">Got error</string>
-    <string name="error_feedback_desc">Do you want to report the error to us? Your report can help us to do better,thank you!</string>
+    <string name="error_feedback">Error report</string>
+    <string name="error_feedback_desc">The app has crash before!Do you want to report the error to us? Your report can help us to do better,thank you!</string>
     <string name="report">Report</string>
     <string name="click_again_exit">Click again to exit!</string>
 
@@ -611,7 +611,7 @@
     <string name="text_can_record_time">Can also record%1$ssecond</string>
     <string name="text_previous">Previous</string>
 
-    <string name="say_thanks_for_report">Thank you!</string>
+    <string name="say_thanks_for_report">Thank you for your report!</string>
     <!-- add about recorder video by Jackie -->
     <string name="recording_video">Record video</string>
     <string name="video_start">The video to start</string>

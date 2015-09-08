@@ -2,11 +2,10 @@ package com.bondwithme.BondWithMe;
 
 
 import android.content.Context;
-import android.content.Intent;
 
-import com.bondwithme.BondWithMe.ui.CrashActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.SystemUtil;
 
 import java.io.FileOutputStream;
@@ -27,11 +26,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
 
 
     //系统默认的UncaughtException处理类
-    private Thread.UncaughtExceptionHandler mDefaultHandler;
+    private static Thread.UncaughtExceptionHandler mDefaultHandler;
     //CrashHandler实例
     private static CrashHandler INSTANCE = new CrashHandler();
     //程序的Context对象
-    private Context mContext;
+//    private Context mContext;
     //用来存储设备信息和异常信息
     private Map<String, String> infos = new HashMap<String, String>();
 
@@ -53,12 +52,12 @@ public class CrashHandler implements UncaughtExceptionHandler {
      *
      * @param context
      */
-    public void init(Context context) {
-        mContext = context;
+    public static void init(Context context) {
+//        mContext = context;
         //获取系统默认的UncaughtException处理器
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
         //设置该CrashHandler为程序的默认处理器
-        Thread.setDefaultUncaughtExceptionHandler(this);
+        Thread.setDefaultUncaughtExceptionHandler(new CrashHandler());
     }
 
     /**
@@ -68,26 +67,22 @@ public class CrashHandler implements UncaughtExceptionHandler {
     public void uncaughtException(Thread thread, Throwable ex) {
         ex.printStackTrace();
         if (!handleException(ex) && mDefaultHandler != null) {
-            //如果用户没有处理则让系统默认的异常处理器来处理
+//            //如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
 
-            //        //使用Toast来显示异常信息
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                Looper.prepare();
-//                MessageUtil.showMessage(mContext, R.string.app_crash_message);
-//                Looper.loop();
-//            }
-//        }.start();
+            LogUtil.d("", "uncaughtException onCreate============");
 
-            Intent intent = new Intent(mContext, CrashActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.startActivity(intent);
+//            Intent intent = new Intent(App.getContextInstance(), MainActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            App.getContextInstance().startActivity(intent);
+//            App.getContextInstance().exit();
+
+            //保存发生异常标识，以备下次启动提示反馈
+            PreferencesUtil.saveValue(App.getContextInstance(), Constant.APP_CRASH, true);
             //退出程序
             App.getContextInstance().exit();
-//            showFeedbackDialog();
+
 
         }
     }
@@ -116,7 +111,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
      */
     private void saveCrashInfo2File(Throwable ex) {
         //收集设备参数信息
-        infos = SystemUtil.collectDeviceInfo(mContext);
+        infos = SystemUtil.collectDeviceInfo(App.getContextInstance());
 
         StringBuffer sb = new StringBuffer();
         for (Map.Entry<String, String> entry : infos.entrySet()) {
@@ -137,7 +132,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
         String result = writer.toString();
         sb.append(result);
         try {
-            String filePath = FileUtil.getSaveCrashPath(mContext);
+            String filePath = FileUtil.getSaveCrashPath(App.getContextInstance());
             FileOutputStream fos = new FileOutputStream(filePath);
             fos.write(sb.toString().getBytes());
             fos.close();
@@ -145,4 +140,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
             LogUtil.e(TAG, "an error occured while writing file...");
         }
     }
+
+
 }

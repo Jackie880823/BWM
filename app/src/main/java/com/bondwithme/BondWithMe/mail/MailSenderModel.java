@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.mail;
 
+import java.io.File;
 import java.util.Properties;
 
 
@@ -24,14 +25,16 @@ public class MailSenderModel {
     // 邮件的文本内容   
     private String content;   
     // 邮件附件的文件名   
-    private String[] attachFileNames;
+    private File[] attachFiles;
     
     /**  
       * 获得邮件会话属性  
       */   
-    public Properties getProperties(){   
-      Properties p = new Properties();   
-      p.put("mail.smtp.host", this.mailServerHost);   
+    public Properties getProperties(){
+
+      Properties p = System.getProperties();
+//      Properties p = new Properties();
+      p.put("mail.smtp.host", this.mailServerHost);
       p.put("mail.smtp.port", this.mailServerPort);   
       p.put("mail.smtp.auth", validate ? "true" : "false");   
       return p;   
@@ -55,13 +58,7 @@ public class MailSenderModel {
     public void setValidate(boolean validate) {   
       this.validate = validate;   
     }  
-    public String[] getAttachFileNames() {   
-      return attachFileNames;   
-    }  
-    public void setAttachFileNames(String[] fileNames) {   
-      this.attachFileNames = fileNames;   
-    }  
-    public String getFromAddress() {   
+    public String getFromAddress() {
       return fromAddress;   
     }   
     public void setFromAddress(String fromAddress) {   
@@ -96,5 +93,13 @@ public class MailSenderModel {
     }  
     public void setContent(String textContent) {   
       this.content = textContent;   
-    }   
-}  
+    }
+
+    public File[] getAttachFiles() {
+        return attachFiles;
+    }
+
+    public void setAttachFiles(File[] attachFiles) {
+        this.attachFiles = attachFiles;
+    }
+}

@@ -63,7 +63,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     private Runnable check;
     private Handler handler;
 
-    /**通知记录,方便count*/
+    /**
+     * 通知记录,方便count
+     */
     private List<String> notificaationWallList = new ArrayList<>();
     private List<String> notificaationEventList = new ArrayList<>();
     private List<String> notificaationMemberList = new ArrayList<>();
@@ -74,66 +76,19 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     private List<String> notificaationRecommendList = new ArrayList<>();
     private List<String> notificaationGroupList = new ArrayList<>();
 
-    public List<String> getNotificationMsgsByType(NotificationUtil.MessageType messageType){
-
-        switch (messageType){
-            case BONDALERT_WALL:
-                return notificaationWallList;
-            case BONDALERT_EVENT:
-                return notificaationEventList;
-            case BONDALERT_MEMBER:
-                return notificaationMemberList;
-            case BONDALERT_MESSAGE:
-                return notificaationMessageList;
-            case BONDALERT_MISS:
-                return notificaationMissList;
-            case BONDALERT_BIGDAY:
-                return notificaationBigDayList;
-            case BONDALERT_NEWS:
-                return notificaationNewsList;
-            case BONDALERT_RECOMMENDED:
-                return notificaationRecommendList;
-            case BONDALERT_GROUP:
-                return notificaationGroupList;
-            default:
-                return new ArrayList<>();
-        }
-    }
-
-    public void clearNotificationMsgsByType(NotificationUtil.MessageType messageType){
-        switch (messageType) {
-            case BONDALERT_WALL:
-                notificaationWallList.clear();
-            case BONDALERT_EVENT:
-                notificaationEventList.clear();
-            case BONDALERT_MEMBER:
-                notificaationMemberList.clear();
-            case BONDALERT_MESSAGE:
-                notificaationMessageList.clear();
-            case BONDALERT_MISS:
-                notificaationMissList.clear();
-            case BONDALERT_BIGDAY:
-                notificaationBigDayList.clear();
-            case BONDALERT_NEWS:
-                notificaationNewsList.clear();
-            case BONDALERT_RECOMMENDED:
-                notificaationRecommendList.clear();
-            case BONDALERT_GROUP:
-                notificaationGroupList.clear();
-        }
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
+        LogUtil.d("", "App onCreate============");
         this.registerActivityLifecycleCallbacks(this);
         handler = new Handler();
         appContext = this;
         /**图片工具*/
         BitmapTools.init(this);
         /**异常处理*/
-        CrashHandler crashHandler = CrashHandler.getInstance();
-        crashHandler.init(getApplicationContext());
+//        CrashHandler crashHandler = CrashHandler.getInstance();
+//        crashHandler.init(this);
+        CrashHandler.init(this);
         /**网络工具初始*/
         HttpTools.init(this);
 
@@ -378,6 +333,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         if (context != null && !context.isFinishing()) {
             context.finish();
         }
+//        App.getContextInstance().finishAllActivitys();
         onTerminate();
     }
 
@@ -425,9 +381,22 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     }
 
+    private List<Activity> activityList = new ArrayList<>();
+
+    public void finishAllActivitys(){
+        if(activityList!=null){
+            for (Activity activity:activityList){
+                if (activity != null && !activity.isFinishing()) {
+                    activity.finish();
+                }
+            }
+        }
+    }
+
     @Override
     public void onActivityStarted(Activity activity) {
-
+        if (activityList != null)
+            activityList.add(activity);
     }
 
     @Override
@@ -468,9 +437,9 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-
+        if (activityList != null)
+            activityList.remove(activity);
     }
-
 
 
 //    Tracker piwikTracker;
@@ -583,4 +552,53 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             }
         }
     };
+
+    public List<String> getNotificationMsgsByType(NotificationUtil.MessageType messageType) {
+
+        switch (messageType) {
+            case BONDALERT_WALL:
+                return notificaationWallList;
+            case BONDALERT_EVENT:
+                return notificaationEventList;
+            case BONDALERT_MEMBER:
+                return notificaationMemberList;
+            case BONDALERT_MESSAGE:
+                return notificaationMessageList;
+            case BONDALERT_MISS:
+                return notificaationMissList;
+            case BONDALERT_BIGDAY:
+                return notificaationBigDayList;
+            case BONDALERT_NEWS:
+                return notificaationNewsList;
+            case BONDALERT_RECOMMENDED:
+                return notificaationRecommendList;
+            case BONDALERT_GROUP:
+                return notificaationGroupList;
+            default:
+                return new ArrayList<>();
+        }
+    }
+
+    public void clearNotificationMsgsByType(NotificationUtil.MessageType messageType) {
+        switch (messageType) {
+            case BONDALERT_WALL:
+                notificaationWallList.clear();
+            case BONDALERT_EVENT:
+                notificaationEventList.clear();
+            case BONDALERT_MEMBER:
+                notificaationMemberList.clear();
+            case BONDALERT_MESSAGE:
+                notificaationMessageList.clear();
+            case BONDALERT_MISS:
+                notificaationMissList.clear();
+            case BONDALERT_BIGDAY:
+                notificaationBigDayList.clear();
+            case BONDALERT_NEWS:
+                notificaationNewsList.clear();
+            case BONDALERT_RECOMMENDED:
+                notificaationRecommendList.clear();
+            case BONDALERT_GROUP:
+                notificaationGroupList.clear();
+        }
+    }
 }

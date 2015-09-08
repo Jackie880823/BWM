@@ -152,7 +152,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -161,11 +160,6 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
-
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
         </activity>
 
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
@@ -617,6 +611,12 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
+        <service android:name=".receiver_service.ReportIntentService">
+            <intent-filter>
+                <action android:name="com.service.reportService" />
+            </intent-filter>
+        </service>
 
     </application>
 
