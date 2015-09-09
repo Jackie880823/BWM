@@ -502,8 +502,8 @@
     <string name="download_apk_content_title">伴我玩</string>
     <string name="download_apk_content_description">下载完毕后，点击即可安装。</string>
     <string name="update">更新</string>
-    <string name="error_feedback">发现异常</string>
-    <string name="error_feedback_desc">你想把异常报告给我们吗？你的报告会帮助我们把app做得更好！</string>
+    <string name="error_feedback">报告异常</string>
+    <string name="error_feedback_desc">应用在之前发生了崩溃！你是否愿意把异常报告给我们？你的报告会帮助我们把app做得更好！谢谢！</string>
     <string name="report">报告</string>
     <string name="click_again_exit">再次点击退出!</string>
 
@@ -603,7 +603,7 @@
     <string name="text_previous">上一个</string>
     <string name="text_can_record_time">还能够录制%1$s秒</string>
 
-    <string name="say_thanks_for_report">谢谢!</string>
+    <string name="say_thanks_for_report">谢谢您的报告!</string>
     <!-- add about recorder video by Jackie -->
     <string name="recording_video">录制视频</string>
     <string name="video_start">录像开始</string>

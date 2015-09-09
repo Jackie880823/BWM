@@ -30,6 +30,7 @@ public class Constant {
     public static final String JPUSH_PREF_APP_VERSION = "jpush_appVersion";
     public static final String HTTP_TOKEN = "token";
     public static final String LOGIN_USER = "user";
+    public static final String APP_CRASH = "app_crash";
 
     public static final int ACTION_CREATE_WALL = 10;
     public static final int ACTION_UPDATE_WALL = 11;
