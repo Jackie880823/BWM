@@ -68,7 +68,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:src="@drawable/video_recorder_stop_btn"
+            android:src="@drawable/video_recorder_start_btn"
             android:visibility="visible"/>
 
         <ImageView
