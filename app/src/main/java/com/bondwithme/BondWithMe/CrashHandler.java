@@ -2,9 +2,11 @@ package com.bondwithme.BondWithMe;
 
 
 import android.content.Context;
+import android.os.Looper;
 
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.SystemUtil;
 
@@ -71,7 +73,11 @@ public class CrashHandler implements UncaughtExceptionHandler {
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
 
-            LogUtil.d("", "uncaughtException onCreate============");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
 //            Intent intent = new Intent(App.getContextInstance(), MainActivity.class);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -97,6 +103,17 @@ public class CrashHandler implements UncaughtExceptionHandler {
         if (ex == null) {
             return false;
         }
+        //使用Toast来显示异常信息
+        new Thread() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                MessageUtil.showMessage(App.getContextInstance(), R.string.app_crash_message);
+                Looper.loop();
+            }
+        }.start();
+        //收集设备参数信息
+        infos = SystemUtil.collectDeviceInfo(App.getContextInstance());
         //保存日志文件
         saveCrashInfo2File(ex);
         return true;
