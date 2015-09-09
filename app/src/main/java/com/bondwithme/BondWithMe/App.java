@@ -66,15 +66,15 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     /**
      * 通知记录,方便count
      */
-    private List<String> notificaationWallList = new ArrayList<>();
-    private List<String> notificaationEventList = new ArrayList<>();
-    private List<String> notificaationMemberList = new ArrayList<>();
-    private List<String> notificaationMessageList = new ArrayList<>();
-    private List<String> notificaationMissList = new ArrayList<>();
-    private List<String> notificaationBigDayList = new ArrayList<>();
-    private List<String> notificaationNewsList = new ArrayList<>();
-    private List<String> notificaationRecommendList = new ArrayList<>();
-    private List<String> notificaationGroupList = new ArrayList<>();
+    private static List<String> notificaationWallList = new ArrayList<>();
+    private static List<String> notificaationEventList = new ArrayList<>();
+    private static List<String> notificaationMemberList = new ArrayList<>();
+    private static List<String> notificaationMessageList = new ArrayList<>();
+    private static List<String> notificaationMissList = new ArrayList<>();
+    private static List<String> notificaationBigDayList = new ArrayList<>();
+    private static List<String> notificaationNewsList = new ArrayList<>();
+    private static List<String> notificaationRecommendList = new ArrayList<>();
+    private static List<String> notificaationGroupList = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -553,7 +553,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         }
     };
 
-    public List<String> getNotificationMsgsByType(NotificationUtil.MessageType messageType) {
+    public static List<String> getNotificationMsgsByType(NotificationUtil.MessageType messageType) {
 
         switch (messageType) {
             case BONDALERT_WALL:

@@ -117,6 +117,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         PreferencesUtil.saveValue(this, Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
         //-----------------------------------------------------------------------------
         App.checkVerSion(this);
+
     }
 
     @Override
@@ -444,6 +445,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //        filter.addAction("refresh");
         registerReceiver(mReceiver, filter);
 
+        //检查显示小红点
+        checkAndShowRedPoit();
+
         //TODO test mush delete
 //        Intent intent = new Intent(this, CrashActivity.class);
 //        startActivity(intent);
@@ -453,6 +457,28 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+
+    }
+
+    private void checkAndShowRedPoit(){
+        if(App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MESSAGE).size()!=0){
+            doSomething(TabEnum.chat);
+        }
+        if(App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_EVENT).size()!=0){
+            doSomething(TabEnum.event);
+        }
+        if(App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_WALL).size()!=0){
+            doSomething(TabEnum.wall);
+        }
+        if(App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_BIGDAY).size()!=0
+                ||App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MISS).size()!=0
+                ||App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_NEWS).size()!=0
+                ||App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MEMBER).size()!=0
+                ||App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_RECOMMENDED).size()!=0
+                ||App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_GROUP).size()!=0
+                ){
+            doSomething(TabEnum.more);
+        }
     }
 
     private boolean isEventFragmentDate() {
