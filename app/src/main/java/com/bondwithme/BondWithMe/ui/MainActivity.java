@@ -170,6 +170,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //            changeTitleColor();
 //        }
 
+
+        //初始小红点
+
+
         //提示异常反馈
         if(PreferencesUtil.getValue(this,Constant.APP_CRASH,false)){
             PreferencesUtil.saveValue(this,Constant.APP_CRASH,false);
