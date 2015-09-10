@@ -28,12 +28,10 @@ public class TransitionActivity extends Activity {
         if(isLogin()){
             startActivity(new Intent(this,MainActivity.class));
         }else{
-//            App.piwikGuest();
             MyPiwik.piwikGuest();
             startActivity(new Intent(this, StartActivity.class));
         }
         finish();
-
     }
 
     public boolean isLogin()
