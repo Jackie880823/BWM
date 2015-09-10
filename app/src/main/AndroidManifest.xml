@@ -231,7 +231,6 @@
         <activity
             android:name=".ui.ViewOriginalPicesActivity"
             android:noHistory="true"
-            android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ui.BondAlertActivity"
@@ -595,20 +594,23 @@
 
         <activity android:name=".ui.PickAndCropPictureActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".ui.CrashActivity" android:noHistory="true" android:launchMode="singleTop" android:excludeFromRecents="true"></activity>
-        <activity android:name=".ui.share.PreviewVideoActivity"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".ui.share.PreviewVideoActivity"
+            android:theme="@style/FullscreenTheme">
             <intent-filter>
-                <action android:name="com.bondwithme.BondWithMe.ui.PreviewVideoActivity"/>
+                <action android:name="com.bondwithme.BondWithMe.ui.PreviewVideoActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".ui.family.FamilyTreeActivity"
                   android:screenOrientation="portrait"/>
-        <activity android:name=".ui.share.RecorderVideoActivity"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".ui.share.RecorderVideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme">
             <intent-filter>
-                <action android:name="com.bondwithme.BondWithMe.RECORDER_VIDEO"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.bondwithme.BondWithMe.RECORDER_VIDEO" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
