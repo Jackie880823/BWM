@@ -328,24 +328,6 @@
             android:name=".ui.GroupNameSettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SignUpPhoneActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.ForgetPasswordActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.ResetPasswordActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.SignUpUsernameActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.InformationPhoneActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.InformationUsernameActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.CountryCodeActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -360,12 +342,6 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.MeActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.SignUpPhonePasswordActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.SignUpUsernameVerifyPhoneActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.FamilyViewProfileActivity"

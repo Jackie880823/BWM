@@ -17,8 +17,8 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.FamilyFragment;
+import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
-import com.bondwithme.BondWithMe.util.ToDc;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.io.File;
@@ -180,7 +180,7 @@ public class MyFamilyAdapter extends BaseAdapter implements Filterable {
                 results.count = original.size();
             }else {
                 List<FamilyMemberEntity> mList = new ArrayList<FamilyMemberEntity>();
-                String filterString = ToDc.ToDBC(constraint.toString().trim().toLowerCase());
+                String filterString = MyTextUtil.ToDBC(constraint.toString().trim().toLowerCase());
                 for(FamilyMemberEntity memberEntity : original){
                     String userName = PinYin4JUtil.getPinyinWithMark(memberEntity.getUser_given_name());
                     if(-1 != userName.toLowerCase().indexOf(filterString)){

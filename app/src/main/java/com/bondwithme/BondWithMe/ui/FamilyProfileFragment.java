@@ -289,13 +289,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             public void onResult(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-//                    String missMessage = jsonObject.getString("message");
-//                    if (missMessage.startsWith("You already sent miss")) {
-//
-//                    } else if (missMessage.startsWith("You successfully sent miss")) {
-//
-//                    }
-//                    /already
                     if (-1 != jsonObject.getString("message").indexOf("already")) {
                         MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
                     } else {
