@@ -176,14 +176,15 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
 
         //提示异常反馈
-        if(PreferencesUtil.getValue(this,Constant.APP_CRASH,false)){
-            PreferencesUtil.saveValue(this,Constant.APP_CRASH,false);
+        if (PreferencesUtil.getValue(this, Constant.APP_CRASH, false)) {
+            PreferencesUtil.saveValue(this, Constant.APP_CRASH, false);
             showFeedbackDialog();
         }
 
     }
 
     private static MyDialog errorReportDialog;
+
     private void showFeedbackDialog() {
         if (errorReportDialog == null) {
             errorReportDialog = new MyDialog(this, R.string.error_feedback, R.string.error_feedback_desc);
@@ -210,6 +211,9 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     protected void onStop() {
+        if ("lastLeaveIndex".equals(LAST_LEAVE_INDEX)) {
+            LAST_LEAVE_INDEX += App.getLoginedUser().getUser_id();
+        }
         PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
         LAST_LEAVE_INDEX = "lastLeaveIndex";
         IS_FIRST_LOGIN = "isFirstLogin";
@@ -460,23 +464,23 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     }
 
-    private void checkAndShowRedPoit(){
-        if(App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MESSAGE).size()!=0){
+    private void checkAndShowRedPoit() {
+        if (App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MESSAGE).size() != 0) {
             doSomething(TabEnum.chat);
         }
-        if(App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_EVENT).size()!=0){
+        if (App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_EVENT).size() != 0) {
             doSomething(TabEnum.event);
         }
-        if(App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_WALL).size()!=0){
+        if (App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_WALL).size() != 0) {
             doSomething(TabEnum.wall);
         }
-        if(App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_BIGDAY).size()!=0
-                ||App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MISS).size()!=0
-                ||App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_NEWS).size()!=0
-                ||App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MEMBER).size()!=0
-                ||App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_RECOMMENDED).size()!=0
-                ||App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_GROUP).size()!=0
-                ){
+        if (App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_BIGDAY).size() != 0
+                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MISS).size() != 0
+                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_NEWS).size() != 0
+                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MEMBER).size() != 0
+                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_RECOMMENDED).size() != 0
+                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_GROUP).size() != 0
+                ) {
             doSomething(TabEnum.more);
         }
     }
@@ -667,7 +671,12 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 if (System.currentTimeMillis() - startTime < 1000) {
+                    if ("lastLeaveIndex".equals(LAST_LEAVE_INDEX)) {
+                        LAST_LEAVE_INDEX += App.getLoginedUser().getUser_id();
+                    }
                     PreferencesUtil.saveValue(this, LAST_LEAVE_INDEX, currentTabEnum.ordinal());
+                    LAST_LEAVE_INDEX = "lastLeaveIndex";
+                    IS_FIRST_LOGIN = "isFirstLogin";
                     App.getContextInstance().exit(MainActivity.this);
                 } else {
                     MessageUtil.showMessage(this, R.string.click_again_exit, 1000);
