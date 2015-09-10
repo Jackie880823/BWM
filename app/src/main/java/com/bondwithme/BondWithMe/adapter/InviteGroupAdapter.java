@@ -14,8 +14,8 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
-import com.bondwithme.BondWithMe.util.ToDc;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.util.ArrayList;
@@ -131,7 +131,7 @@ public class InviteGroupAdapter extends BaseAdapter implements Filterable {
                 results.count = original.size();
             }else {
                 List<FamilyGroupEntity> mList = new ArrayList<>();
-                String filterString = ToDc.ToDBC(constraint.toString().trim().toLowerCase());
+                String filterString = MyTextUtil.ToDBC(constraint.toString().trim().toLowerCase());
                 for(FamilyGroupEntity groupEntity : original){
                     String userName = PinYin4JUtil.getPinyinWithMark(groupEntity.getGroup_name());
                     if(-1 != userName.toLowerCase().indexOf(filterString)){
