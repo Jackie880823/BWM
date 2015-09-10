@@ -290,20 +290,21 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     if (-1 != jsonObject.getString("message").indexOf("already")) {
-                        MessageUtil.showMessage(getActivity(),R.string.miss_already_you);
+                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
                     } else {
-                        MessageUtil.showMessage(getActivity(),R.string.miss_you);
+                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
+
                     }
 
                 } catch (JSONException e) {
-                    MessageUtil.showMessage(getActivity(),R.string.text_error);
+                    MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(),R.string.text_error);
+                MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
             }
 
             @Override

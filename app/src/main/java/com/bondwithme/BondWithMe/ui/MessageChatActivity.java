@@ -48,7 +48,7 @@ import com.bondwithme.BondWithMe.util.CustomLengthFilter;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.MslToast;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
@@ -180,6 +180,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private AudioMediaRecorder mRecorder;
     private Timer timer;
     private File audioFile;
+    private boolean isAudition = false;
 
     Map<String, MsgEntity> sendMap = new HashMap<>();
 
@@ -658,7 +659,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 }
                 return true;
         }
-
         return false;
     }
 
@@ -936,8 +936,6 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         goneView(expandFunctionLinear, expandFunctionButton, R.drawable.chat_plus_normal);
         goneView(stickerLinear, stickerImageButton, R.drawable.chat_expression_normal);
     }
-
-    boolean isAudition = false;
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -1330,7 +1328,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             handler.removeMessages(GET_RECORD_TIME);
                             if (audioFile != null && audioFile.exists() && mlCount < 3) {
                                 audioFile.delete();
-                                MslToast.getInstance(mContext).showShortToast(getString(R.string.text_record_audio_too_short));
+                                MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_record_audio_too_short));
                                 mlCount = 1;
                                 hideAudioView();
                             } else if (isInLeft) {
