@@ -27,7 +27,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
-import com.bondwithme.BondWithMe.util.MslToast;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -297,21 +297,21 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //                    }
 //                    /already
                     if (-1 != jsonObject.getString("message").indexOf("already")) {
-                        MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
+                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
                     } else {
-                        MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
+                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
 
                     }
 
                 } catch (JSONException e) {
-                    MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
+                    MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                MslToast.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
+                MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
             }
 
             @Override

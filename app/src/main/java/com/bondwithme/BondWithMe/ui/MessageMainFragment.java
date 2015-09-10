@@ -30,7 +30,6 @@ import com.bondwithme.BondWithMe.adapter.MessagePrivateListAdapter;
 import com.bondwithme.BondWithMe.entity.GroupMessageEntity;
 import com.bondwithme.BondWithMe.entity.PrivateMessageEntity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.bondwithme.BondWithMe.util.MslToast;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
@@ -231,7 +230,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             @Override
             public void onRefresh() {
                 if (!NetworkUtil.isNetworkConnected(getActivity())) {
-                    MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+                    MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
                     userRefreshLayout.setRefreshing(false);
                     return;
                 }
@@ -306,7 +305,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
             @Override
             public void onRefresh() {
                 if (!NetworkUtil.isNetworkConnected(getActivity())) {
-                    MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+                    MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
                     groupRefreshLayout.setRefreshing(false);
                     return;
                 }
@@ -368,7 +367,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 
     private void getData(int beginIndex) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
-            MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+            MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
             userFinishReFresh();
             return;
         }
@@ -513,7 +512,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
 
     private void getDataGroup(int beginIndex) {
         if (!NetworkUtil.isNetworkConnected(getActivity())) {
-            MslToast.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
+            MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_no_network));
             groupFinishReFresh();
             return;
         }
