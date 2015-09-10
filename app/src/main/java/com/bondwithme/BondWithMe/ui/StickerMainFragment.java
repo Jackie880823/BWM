@@ -109,6 +109,9 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
             super.run();
             List<String> stickerList = LocalStickerInfoDao.getInstance(mContext).queryAllSticker();
             for (String string : stickerList) {
+                if ("stickers".equals(MainActivity.STICKERS_NAME)) {
+                    MainActivity.STICKERS_NAME = new LocalStickerInfoDao(mContext).getSavePath();
+                }
                 String path = MainActivity.STICKERS_NAME + File.separator + string;
                 File file = new File(path);
                 File[] files = file.listFiles();
