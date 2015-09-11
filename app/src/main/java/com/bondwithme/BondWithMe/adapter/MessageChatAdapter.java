@@ -41,7 +41,7 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.MslToast;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.HorizontalProgressBarWithNumber;
@@ -591,7 +591,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                                             intent.putExtra(UserEntity.EXTRA_GROUP_NAME, msgEntity.getUser_given_name());
                                             context.startActivity(intent);
                                         } else {
-                                            MslToast.getInstance(context).showShortToast(context.getString(R.string.text_show_message_is_friend));
+                                            MessageUtil.getInstance(context).showShortToast(context.getString(R.string.text_show_message_is_friend));
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -600,7 +600,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
 
                                 @Override
                                 public void onError(Exception e) {
-                                    MslToast.getInstance(context).showShortToast(context.getResources().getString(R.string.text_error));
+                                    MessageUtil.getInstance(context).showShortToast(context.getResources().getString(R.string.text_error));
                                 }
 
                                 @Override

@@ -24,8 +24,8 @@ import com.bondwithme.BondWithMe.exception.StickerTypeException;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallMembersOrGroupsActivity;
+import com.bondwithme.BondWithMe.util.DensityUtil;
 import com.bondwithme.BondWithMe.util.LocationUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
@@ -193,22 +193,22 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 //            T second = (T) holder;
             EventCommentEntity entity =  data.get(0);
             if( Build.VERSION.SDK_INT < 21){
-                itemDistance = dip2px(mContext,12);
+                itemDistance = DensityUtil.dip2px(mContext, 12);
             }else {
-                itemDistance = dip2px(mContext,14);
+                itemDistance = DensityUtil.dip2px(mContext, 14);
             }
 
             if(data.size() == 1){
                 second.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_one_shape));
                 layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-                layoutParam.setMargins(itemDistance,14,itemDistance,dip2px(mContext,60));
+                layoutParam.setMargins(itemDistance,14,itemDistance,DensityUtil.dip2px(mContext, 60));
 //              layoutParam.setMarginEnd(500);
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.INVISIBLE);
             }else {
                 second.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_shape));
                 layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-                layoutParam.setMargins(itemDistance,14,itemDistance,dip2px(mContext,0));
+                layoutParam.setMargins(itemDistance,14,itemDistance,DensityUtil.dip2px(mContext, 0));
 //              layoutParam.setMarginEnd(500);
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.VISIBLE);
@@ -234,7 +234,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 //            T vhItem = holder;
             EventCommentEntity entity =  data.get(position - detailItemCount);
             layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-            layoutParam.setMargins(itemDistance,0,itemDistance,dip2px(mContext,0));
+            layoutParam.setMargins(itemDistance,0,itemDistance,DensityUtil.dip2px(mContext, 0));
             vhItem.itemView.setLayoutParams(layoutParam);
             VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             vhItem.tv_comment_owner_name.setText(entity.getUser_given_name());
@@ -257,7 +257,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mViewHolder footer = (mViewHolder) holder;
             EventCommentEntity entity =  data.get(position - detailItemCount);
             layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-            layoutParam.setMargins(itemDistance,0,itemDistance,dip2px(mContext,60));
+            layoutParam.setMargins(itemDistance,0,itemDistance,DensityUtil.dip2px(mContext,60));
             footer.itemView.setLayoutParams(layoutParam);
             footer.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_footer_shape));
             VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
@@ -278,11 +278,6 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
 
-    }
-
-    public static int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
     }
 
     private void setDetail(RecyclerView.ViewHolder holder,EventEntity entity){

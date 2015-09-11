@@ -38,6 +38,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -80,6 +83,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     public List<GroupEntity> at_groups_data = new ArrayList<>();//群组
     public List<UserEntity> tempuserList = new ArrayList();
     public List<UserEntity> userList = new ArrayList();
+    public List<EventEntity> prepareData = new ArrayList<EventEntity>();
     private final static String USER_HEAD = "user_head";
     private final static String USER_NAME = "user_name";
 
@@ -454,7 +458,20 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     getParentActivity().setResult(Activity.RESULT_OK);
                     //                    Log.i("new_button_rt====================", "");
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                    getParentActivity().finish();
+//                    getParentActivity().finish();
+
+                    try {
+                        JSONObject jsonArray = null;
+                        jsonArray = new JSONObject(response);
+                        String group_id =  jsonArray.getString("group_id");
+                        Intent intent = new Intent(getActivity(), EventDetailActivity.class);
+                        intent.putExtra("group_id",group_id);
+                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
+                        getParentActivity().finish();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                 }
 
                 @Override

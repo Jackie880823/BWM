@@ -9,7 +9,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MsgEntity;
 import com.bondwithme.BondWithMe.ui.MessageChatActivity;
-import com.bondwithme.BondWithMe.util.MslToast;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -126,7 +126,7 @@ public class MessageAction {
                     }
                     mHandler.sendMessage(mHandler.obtainMessage(handlerWhat, jsonObject));
                 } catch (JSONException e) {
-                    MslToast.getInstance(mContext).showShortToast(mContext.getResources().getString(R.string.text_error));
+                    MessageUtil.getInstance(mContext).showShortToast(mContext.getResources().getString(R.string.text_error));
                     e.printStackTrace();
                 }
             }
@@ -197,7 +197,7 @@ public class MessageAction {
                     }
                     mHandler.sendMessage(mHandler.obtainMessage(handlerWhat, jsonObject));
                 } catch (JSONException e) {
-                    MslToast.getInstance(mContext).showShortToast(mContext.getResources().getString(R.string.text_error));
+                    MessageUtil.getInstance(mContext).showShortToast(mContext.getResources().getString(R.string.text_error));
                     e.printStackTrace();
                 }
             }
@@ -248,7 +248,7 @@ public class MessageAction {
 
             @Override
             public void onError(Exception e) {
-                MslToast.getInstance(mContext).showShortToast(mContext.getResources().getString(R.string.text_error));
+                MessageUtil.getInstance(mContext).showShortToast(mContext.getResources().getString(R.string.text_error));
             }
 
             @Override
