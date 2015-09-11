@@ -32,7 +32,7 @@
                     android:id="@+id/tv_inside_sticker_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_24dp"
+                    android:layout_marginTop="@dimen/_18dp"
                     android:layout_toRightOf="@+id/iv_inside_sticker"
                     android:layout_marginLeft="@dimen/_15dp"
                     android:paddingRight="@dimen/_5dp"
@@ -48,10 +48,9 @@
                         android:id="@+id/tv_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingRight="@dimen/_5dp"
+                        android:layout_marginRight="@dimen/_15dp"
                         android:layout_below="@+id/tv_inside_sticker_name"
                         android:layout_alignLeft="@+id/tv_inside_sticker_name"
-                        android:layout_above="@+id/tv_price"
                         android:text=""
                         android:textSize="@dimen/text_small_size"
                         android:visibility="visible"/>
@@ -64,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/price"
                     android:textSize="@dimen/text_small_size"
-                    android:layout_alignBottom="@id/iv_inside_sticker"
+                    android:layout_below="@+id/tv_description"
                     android:layout_toRightOf="@id/iv_inside_sticker"
                     android:layout_alignLeft="@id/tv_inside_sticker_name"
 
@@ -77,61 +76,66 @@
                     android:layout_toRightOf="@id/tv_price"
                     android:layout_alignBottom="@+id/tv_price"
                     />
-                <RelativeLayout
-                    android:id="@+id/download_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/iv_inside_sticker">
-                    <TextView
-                        android:id="@+id/tv_inside_download"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_40dp"
-                        android:background="@drawable/btn_member_add_bg"
-                        android:text="@string/inside_download"
-                        android:textSize="20sp"
-                        android:layout_margin="@dimen/_15dp"
-                        android:gravity="center"
-                        />
 
-                    <ProgressBar
-                        android:id="@+id/pb_download"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_20dp"
-                        android:layout_margin="@dimen/_15dp"
-                        android:max="100"
-                        style="@android:style/Widget.ProgressBar.Horizontal"
-                        android:layout_centerVertical="true"
-                        android:visibility="invisible"
-                        android:progressDrawable="@drawable/progress_bar_sticker"
-                        />
-
-
-
-
-                </RelativeLayout>
-
-
-                <!--<View style="@style/split_line_default"-->
-                    <!--android:layout_below="@+id/download_progress"-->
-                    <!--android:layout_marginLeft="@dimen/_10dp"-->
-                    <!--android:layout_marginRight="@dimen/_10dp"-->
-                    <!--android:layout_marginBottom="@dimen/_15dp"/>-->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/text_long_press_display"
-                    android:layout_centerInParent="true"
-                    android:paddingBottom="@dimen/_10dp"
-                    android:layout_below="@+id/download_progress"/>
 
 
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/download_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rl_sticker_detail">
+                <TextView
+                    android:id="@+id/tv_inside_download"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40dp"
+                    android:background="@drawable/btn_member_add_bg"
+                    android:text="@string/inside_download"
+                    android:textSize="20sp"
+                    android:layout_margin="@dimen/_15dp"
+                    android:gravity="center"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/pb_download"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20dp"
+                    android:layout_margin="@dimen/_15dp"
+                    android:max="100"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_centerVertical="true"
+                    android:visibility="invisible"
+                    android:progressDrawable="@drawable/progress_bar_sticker"
+                    />
+
+
+                <!--<View style="@style/split_line_default"-->
+                <!--android:layout_below="@+id/download_progress"-->
+                <!--android:layout_marginLeft="@dimen/_10dp"-->
+                <!--android:layout_marginRight="@dimen/_10dp"-->
+                <!--android:layout_marginBottom="@dimen/_15dp"/>-->
+
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_hold_preview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_long_press_display"
+                android:layout_centerInParent="true"
+                android:paddingBottom="@dimen/_10dp"
+                android:layout_below="@+id/download_progress"/>
+
+
+
 
             <GridView
                 android:id="@+id/gv_sticker"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rl_sticker_detail"
+                android:layout_below="@id/tv_hold_preview"
                 android:numColumns="3"
                 android:verticalSpacing="@dimen/_25dp"
                 android:horizontalSpacing="@dimen/_25dp"
