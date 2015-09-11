@@ -37,6 +37,8 @@
                     android:layout_marginLeft="@dimen/_15dp"
                     android:paddingRight="@dimen/_5dp"
                     android:text="Henry's Cat"
+                    android:textColor="@color/default_text_color_dark"
+                    android:textStyle="bold"
                     android:textSize="@dimen/text_large_size"/>
                 <!--<ScrollView-->
                     <!--android:layout_width="wrap_content"-->
@@ -63,6 +65,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/price"
                     android:textSize="@dimen/text_small_size"
+                    android:textColor="@color/default_text_color_dark"
+                    android:textStyle="bold"
                     android:layout_below="@+id/tv_description"
                     android:layout_toRightOf="@id/iv_inside_sticker"
                     android:layout_alignLeft="@id/tv_inside_sticker_name"
@@ -73,6 +77,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_small_size"
+                    android:textColor="@color/default_text_color_dark"
+                    android:textStyle="bold"
                     android:layout_toRightOf="@id/tv_price"
                     android:layout_alignBottom="@+id/tv_price"
                     />
