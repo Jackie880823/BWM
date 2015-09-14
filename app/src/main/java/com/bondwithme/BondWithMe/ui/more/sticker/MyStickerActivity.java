@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ScrollView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MyStickerAdapter;
@@ -67,6 +68,10 @@ public class MyStickerActivity extends BaseActivity {
     }
     @Override
     public void initView() {
+//        TextView textView = getViewById(R.id.tv_download_stickers);
+//        textView.requestFocus();
+
+
         try {
             Dao<LocalStickerInfo, String> stickerInfoDao = SQLiteHelperOrm.getHelper(MyStickerActivity.this).getDao(LocalStickerInfo.class);
             QueryBuilder qb = stickerInfoDao.queryBuilder();
@@ -85,6 +90,13 @@ public class MyStickerActivity extends BaseActivity {
 
             MyStickerAdapter adapter = new MyStickerAdapter(MyStickerActivity.this, data);
             rvList.setAdapter(adapter);
+
+            rvList.post(new Runnable() {
+                @Override
+                public void run() {
+                    ((ScrollView)MyStickerActivity.this.getViewById(R.id.sc_my_sticker)).scrollTo(0, 0);
+                }
+            });
 
         }
     }
