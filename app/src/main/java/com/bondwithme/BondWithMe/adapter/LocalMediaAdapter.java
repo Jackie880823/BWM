@@ -3,6 +3,8 @@ package com.bondwithme.BondWithMe.adapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -142,8 +144,12 @@ public class LocalMediaAdapter extends BaseAdapter {
             holder = (HolderView) convertView.getTag();
         }
 
-
-        loadLocalBitmap(holder.iv, position);
+        handler.removeCallbacksAndMessages(holder.iv);
+        Message msg = new Message();
+        msg.what = MSG_LOCAL_BITMAP;
+        msg.obj = holder.iv;
+        msg.arg1 = position;
+        handler.sendMessage(msg);
 
         if(!checkBoxVisible) {
             holder.check.setVisibility(View.GONE);
@@ -226,6 +232,29 @@ public class LocalMediaAdapter extends BaseAdapter {
             String uri = mDatas.get(position).getPath();
             ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options);
         }
+    }
+
+    private static final int MSG_LOCAL_BITMAP = 0;
+
+    private Handler handler = new Handler(){
+        /**
+         * Subclasses must implement this to receive messages.
+         *
+         * @param msg
+         */
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MSG_LOCAL_BITMAP:
+                    loadLocalBitmap((ImageView) msg.obj, msg.arg1);
+                    break;
+            }
+        }
+    };
+
+    public void clearLoad(){
+        handler.removeMessages(MSG_LOCAL_BITMAP);
     }
 
     class HolderView {
