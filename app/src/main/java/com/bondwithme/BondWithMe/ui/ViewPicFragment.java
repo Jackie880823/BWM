@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.android.volley.ext.HttpCallback;
@@ -18,7 +19,7 @@ import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 
-import uk.co.senab.photoview.PhotoView;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Created by wing on 15/3/23.
@@ -26,7 +27,9 @@ import uk.co.senab.photoview.PhotoView;
 public class ViewPicFragment extends BaseLazyLoadFragment {
 
     private String pic_url;
-    private PhotoView iv_pic;
+    private ImageView iv_pic;
+    PhotoViewAttacher mAttacher;
+//    private PhotoView iv_pic;
     private RelativeLayout btn_save_2_local;
     private final static int IMAGE_LOADED_SUCCESSED = 10;
     private final static int HIDE_WAITTING = 11;
@@ -185,7 +188,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
     protected void lazyLoad() {
 
         pic_url = getArguments().getString("pic_url");
-        iv_pic = (PhotoView) getViewById(R.id.iv_pic);
+        iv_pic = (ImageView) getViewById(R.id.iv_pic);
         btn_save_2_local = (RelativeLayout) getViewById(R.id.btn_save_2_local);
         btn_save_2_local.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,6 +274,8 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
                     if (iv_pic != null) {
                         bitmapCache = LocalImageLoader.loadBitmapFromFile(getActivity(), string, iv_pic.getWidth(), iv_pic.getHeight());
                         iv_pic.setImageBitmap(bitmapCache);
+                        mAttacher = new PhotoViewAttacher(iv_pic);
+                        mAttacher.update();
 
 //                    iv_pic.setImageBitmap(getImageFromFile(string, iv_pic.getWidth(), iv_pic.getHeight()));
                     }

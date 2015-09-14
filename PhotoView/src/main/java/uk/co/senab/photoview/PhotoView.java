@@ -45,7 +45,9 @@ public class PhotoView extends ImageView implements IPhotoView {
 
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
-        super.setScaleType(ScaleType.MATRIX);
+        super.setScaleType(ScaleType.FIT_CENTER);
+        setScaleType(ImageView.ScaleType.FIT_CENTER);
+//        setScaleType(ScaleType.MATRIX);
         mAttacher = new PhotoViewAttacher(this);
 
         if (null != mPendingScaleType) {
@@ -53,6 +55,7 @@ public class PhotoView extends ImageView implements IPhotoView {
             mPendingScaleType = null;
         }
     }
+
 
     /**
      * @deprecated use {@link #setRotationTo(float)}

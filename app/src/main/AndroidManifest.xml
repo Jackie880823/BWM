@@ -231,7 +231,9 @@
         <activity
             android:name=".ui.ViewOriginalPicesActivity"
             android:noHistory="true"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/FullscreenTheme"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            />
         <activity
             android:name=".ui.BondAlertActivity"
             android:screenOrientation="portrait" />

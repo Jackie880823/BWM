@@ -10,15 +10,14 @@ public class Constant {
 
 
     /** mail */
-    public final static String REPORT_EMAIL_FROM_ADDRESS = "wingzhong@madxstudio.cn";
-    public final static String REPORT_EMAIL_USERNAME = "wingzhong@madxstudio.cn";
-    public final static String REPORT_EMAIL_PASSWORD = "3271559Aa";
-    // public final static String MAIL_USER_NAME = "suggestions@vigilant.cn";
+    public final static String REPORT_EMAIL_FROM_ADDRESS = "it.dude@bondwith.me";
+    public final static String REPORT_EMAIL_USERNAME = "AKIAJGKWD34V5H7NB2KQ";
+    public final static String REPORT_EMAIL_PASSWORD = "Ao9FeNkRizW7yDpmKzUxuzWLcWtUsm5LJ35HXag5+7WI";
 
-    public static final String REPORT_EMAIL_SERVER_HOST = "smtp.madxstudio.cn";
     public static final boolean REPORT_EMAIL_VALIDATE = false;
     public static final String REPORT_EMAIL_SERVER_PORT = "25";
-    public static final String REPORT_EMAIL_TO_ADDRESS = "wingzhong@madxstudio.cn";//
+    public static final String REPORT_EMAIL_SERVER_HOST = "email-smtp.us-east-1.amazonaws.com";
+    public static final String REPORT_EMAIL_TO_ADDRESS = "uncle.bug@bondwith.me";//
 
     /**
      * for app

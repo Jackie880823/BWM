@@ -43,7 +43,7 @@ public class LocationUtil {
      * <br>    谷歌服务是否可用标识位，在应用启动后获取到位置信息则标识位置设置为true,没有获取到位置信息或服务不用都为
      * <br>false。默认状态也为false
      */
-    public static boolean googleAvailable = false;
+    private static boolean googleAvailable = false;
 
     /**
      * 通过经纬度获取地址
@@ -99,6 +99,10 @@ public class LocationUtil {
             address = addresses.get(0);
         }
         return address;
+    }
+
+    public static boolean isGoogleAvailable(){
+        return googleAvailable;
     }
 
     /**

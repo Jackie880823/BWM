@@ -21,6 +21,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
@@ -51,7 +52,7 @@ import java.util.Map;
 /**
  * Created by wing on 15/3/21.
  */
-public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks {
+public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks,NetChangeObserver {
 
     private static UserEntity user;
     private static App appContext;
@@ -441,106 +442,6 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             activityList.remove(activity);
     }
 
-
-//    Tracker piwikTracker;
-//
-//    public Piwik getGlobalSettings(){
-//        return Piwik.getInstance(this);
-//    }
-//
-//    public Tracker getTracker() {
-//        if (piwikTracker != null) {
-//            return piwikTracker;
-//        }
-//
-//        try {
-//            piwikTracker = getGlobalSettings().newTracker(getTrackerUrl(), getSiteId(), getAuthToken());
-//        } catch (MalformedURLException e) {
-//            return null;
-//        }
-//
-//        return piwikTracker;
-//
-//    }
-//
-//    public String getTrackerUrl() {
-//        return Constant.TRACKER_URL;
-//    }
-//
-//    /**
-//     * AuthToken is deprecated in Piwik >= 2.8.0 due to security reasons.
-//     * @return token or null
-//     */
-//    public String getAuthToken() {
-//        return null;
-////        return "3bde48623ab1cea339c606abd09debd7";
-//    }
-//
-//
-//    public Integer getSiteId() {
-//        return Constant.TRACKER_SITE_ID;
-//    }
-//
-//    public static void piwikUser()
-//    {
-////        Piwik.getInstance(appContext).setAppOptOut(false);//启动piwik
-//
-//        appContext.getGlobalSettings().setDryRun(false);//设置sent to Piwik
-//
-//        appContext.getTracker()
-//                .setUserId(Settings.Secure.getString(appContext.getContentResolver(), Settings.Secure.ANDROID_ID))
-//                .setDispatchInterval(120)
-//                .setSessionTimeout(30);
-//
-//        appContext.getTracker()
-//                .setUserCustomVariable(1, "App Name", AppInfoUtil.getAppPackageName(appContext))
-//                .setUserCustomVariable(2, "App Version", AppInfoUtil.getAppVersionName(appContext))
-//                .setUserCustomVariable(3, "Model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
-//                .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
-//                .trackScreenView("");
-//    }
-//
-//    private static  final  String META_DATA_APP_STORE = "UMENG_CHANNEL";
-//
-//    public static void piwikGuest()
-//    {
-////        Piwik.getInstance(appContext).setAppOptOut(false);//启动piwik
-//
-//        appContext.getGlobalSettings().setDryRun(false);//设置sent to Piwik
-//
-//        appContext.getTracker()
-//                .setUserId("guest")
-//                .setDispatchInterval(120)
-//                .setSessionTimeout(30);
-//
-//        appContext.getTracker()
-//                .setUserCustomVariable(1, "App Name", AppInfoUtil.getAppPackageName(appContext))
-//                .setUserCustomVariable(2, "App Version", AppInfoUtil.getAppVersionName(appContext))
-//                .setUserCustomVariable(3, "Model", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL)
-//                .setUserCustomVariable(4, "OS Version", android.os.Build.VERSION.RELEASE)
-//                .trackAppDownload();
-//
-//        //计算平台下载次数
-//        if (TextUtils.isEmpty(PreferencesUtil.getValue(appContext, Constant.HAS_DOWNLOAD, null))) {
-//            ApplicationInfo appInfo = null;
-//            try {
-//                appInfo = appContext.getPackageManager()
-//                        .getApplicationInfo(appContext.getPackageName(),
-//                                PackageManager.GET_META_DATA);
-//                String msg = appInfo.metaData.getString(META_DATA_APP_STORE);
-//                appContext.getTracker()
-//                        .setScreenCustomVariable(1, "appstore", msg)
-//                        .trackScreenView("");
-//                Log.d("", "msg------" + msg);
-//                PreferencesUtil.saveValue(appContext, Constant.HAS_DOWNLOAD, Constant.HAS_DOWNLOAD);
-//            } catch (PackageManager.NameNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            appContext.getTracker().trackScreenView("");
-//        }
-//    }
-
     /**
      * 更新UI的广播接收器
      */
@@ -600,5 +501,16 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             case BONDALERT_GROUP:
                 notificaationGroupList.clear();
         }
+    }
+
+    @Override
+    public void OnConnect(int netType) {
+
+        PushApi.initPushApi(getContextInstance());
+    }
+
+    @Override
+    public void OnDisConnect() {
+
     }
 }

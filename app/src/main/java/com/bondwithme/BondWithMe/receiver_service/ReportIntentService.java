@@ -35,9 +35,7 @@ public class ReportIntentService extends IntentService {
     public void onDestroy() {
         //所有任务执行完后,自动关闭
         super.onDestroy();
-        System.out.println("IntentService Destory");
         FileUtil.clearCrashFiles(this);
-//        App.getContextInstance().exit();
     }
 
     private void doSendMail() {
