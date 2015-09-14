@@ -282,11 +282,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
              * 加载图片的URI到内存列表
              */
             private void loadImages() {
-                if (imageCursor == null || imageCursor.isClosed()) {
-                    return;
-                }
-
                 synchronized (SelectPhotosFragment.this) {
+                    if (imageCursor == null || imageCursor.isClosed()) {
+                        return;
+                    }
+
                     int cursorCount = imageCursor.getCount();
                     for (int i = 0; i < cursorCount; i++) {
                         String path;
@@ -316,15 +316,19 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
              * 加载视频的URI到内存列表
              */
             private void loadVideos() {
-                if (videoCursor == null || videoCursor.isClosed()) {
-                    return;
-                }
-
-                String bucket;
-                bucket = getParentActivity().getString(R.string.text_video);
-                buckets.add(1, bucket);
-
                 synchronized (SelectPhotosFragment.this) {
+                    if (videoCursor == null || videoCursor.isClosed()) {
+                        return;
+                    }
+
+                    String bucket;
+                    bucket = getParentActivity().getString(R.string.text_video);
+                    buckets.add(1, bucket);
+
+                    if (videoCursor.isClosed()) {
+                        return;
+                    }
+
                     mMediaUris.put(bucket, new ArrayList<MediaData>());
                     int cursorCount = videoCursor.getCount();
 
@@ -333,9 +337,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         String path;
                         Uri contentUri;
                         long duration;
-                        if (videoCursor.isClosed()) {
-                            return;
-                        }
 
                         videoCursor.moveToPosition(i);
 
@@ -480,6 +481,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 localMediaAdapter.setListener(selectImageUirListener);
                 mGvShowPhotos.setAdapter(localMediaAdapter);
             } else {
+                localMediaAdapter.clearLoad();
                 localMediaAdapter.notifyDataSetChanged();
             }
 
