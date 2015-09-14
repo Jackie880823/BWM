@@ -101,15 +101,23 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         private int lastPosition = -1;
 
         @Override
-        public void run() {
+        public synchronized void run() {
             LogUtil.i(TAG, "uiRunnable& update adapter");
             updateBucketsAdapter();
-            if(buckets.size() > 0 && lastPosition != curLoaderPosition) {
+            if (buckets.size() > 0 && lastPosition != curLoaderPosition) {
                 LogUtil.i(TAG, "uiRunnable& loadLocalMediaOrder");
                 // 查找到了图片显示列表第一项的图片
                 loadLocalMediaOrder(curLoaderPosition);
                 lastPosition = curLoaderPosition;
             }
+        }
+    };
+
+    private Runnable adapterRefresh = new Runnable() {
+        @Override
+        public void run() {
+            bucketsAdapter.clear();
+            bucketsAdapter.addAll(buckets);
         }
     };
 
@@ -147,7 +155,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         String imageOrderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
         imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
 
-        if(useVideo) {
+        if (useVideo) {
             // 获取数据库中的视频资源游标
             String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA, MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION};
             String videoOrderBy = MediaStore.Video.Media.DATE_ADDED + " DESC";
@@ -170,10 +178,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 offset = slideOffset;
 
                 // Sometimes slideOffset ends up so close to but not quite 1 or 0.
-                if(slideOffset >= .995) {
+                if (slideOffset >= .995) {
                     flipped = true;
                     drawerArrowDrawable.setFlip(true);
-                } else if(slideOffset <= .005) {
+                } else if (slideOffset <= .005) {
                     flipped = false;
                     drawerArrowDrawable.setFlip(false);
                 }
@@ -212,7 +220,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 // 关闭目录选择列表
                 mDrawerLayout.closeDrawer(mDrawerList);
 
-                if(curLoaderPosition != position) {
+                if (curLoaderPosition != position) {
                     curLoaderPosition = position;
                     // 加载选中目录下的图片
                     loadLocalMediaOrder(curLoaderPosition);
@@ -225,9 +233,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LogUtil.i(TAG, "onItemClick& position: " + position);
 
-                if(selectImageUirListener != null) {
+                if (selectImageUirListener != null) {
                     MediaData itemUri = mImageUriList.get(position);
-                    if(multi) {
+                    if (multi) {
                         selectImageUirListener.preview(itemUri);
                     } else {
                         selectImageUirListener.addUri(itemUri);
@@ -250,9 +258,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
-                switch(msg.what) {
+                switch (msg.what) {
                     case HANDLER_LOAD_FLAG:
-                        String bucketsFirst = getParentActivity().getString(R.string.text_nearest);
+                        String bucketsFirst = getParentActivity().getString(R.string.text_all);
                         ArrayList<MediaData> recent;
                         recent = new ArrayList<>();
                         buckets = new ArrayList<>();
@@ -269,17 +277,17 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
              * 加载图片的URI到内存列表
              */
             private void loadImages() {
-                if(imageCursor == null) {
+                if (imageCursor == null) {
                     return;
                 }
 
                 int cursorCount = imageCursor.getCount();
-                for(int i = 0; i < cursorCount; i++) {
+                for (int i = 0; i < cursorCount; i++) {
                     String path;
                     String bucket;
                     Uri contentUri;
-                    synchronized(SelectPhotosFragment.this) {
-                        if(imageCursor.isClosed()) {
+                    synchronized (SelectPhotosFragment.this) {
+                        if (imageCursor.isClosed()) {
                             return;
                         }
 
@@ -292,7 +300,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         contentUri = Uri.parse("content://media/external/images/media/" + imageCursor.getInt(uriColumnIndex));
                     }
 
-                    if(!TextUtils.isEmpty(path)) {
+                    if (!TextUtils.isEmpty(path)) {
                         MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
                         addToMediaMap(bucket, mediaData);
                     }
@@ -305,7 +313,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
              * 加载视频的URI到内存列表
              */
             private void loadVideos() {
-                if(videoCursor == null) {
+                if (videoCursor == null) {
                     return;
                 }
 
@@ -316,12 +324,12 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 int cursorCount = videoCursor.getCount();
 
                 // 限制定显示的视频大小的最大数为50M
-                for(int i = 0; i < cursorCount; i++) {
+                for (int i = 0; i < cursorCount; i++) {
                     String path;
                     Uri contentUri;
                     long duration;
-                    synchronized(SelectPhotosFragment.this) {
-                        if(videoCursor.isClosed()) {
+                    synchronized (SelectPhotosFragment.this) {
+                        if (videoCursor.isClosed()) {
                             return;
                         }
 
@@ -335,11 +343,12 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         contentUri = Uri.parse("content://media/external/video/media/" + videoCursor.getInt(uriColumnIndex));
                     }
 
-                    if(!TextUtils.isEmpty(path)) {
+                    if (!TextUtils.isEmpty(path)) {
                         MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
                         addToMediaMap(bucket, mediaData);
                     }
                 }
+                getParentActivity().runOnUiThread(adapterRefresh);
                 imageCursor.close();
                 LogUtil.d(TAG, "loadImages(), buckets size: " + buckets.size());
             }
@@ -349,7 +358,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     }
 
     public boolean changeDrawer() {
-        if(mDrawerLayout.isDrawerOpen(mDrawerList)) {
+        if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
             mDrawerLayout.closeDrawer(mDrawerList);
             return false;
         } else {
@@ -373,16 +382,16 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         super.onDestroy();
 
         // 退出Activity关闭数据库游标
-        synchronized(SelectPhotosFragment.this) {
-            if(imageCursor != null) {
-                if(!imageCursor.isClosed()) {
+        synchronized (SelectPhotosFragment.this) {
+            if (imageCursor != null) {
+                if (!imageCursor.isClosed()) {
                     imageCursor.close();
                 }
             }
         }
 
         // 关闭加载图片线程
-        if(Utils.hasJellyBeanMR2()) {
+        if (Utils.hasJellyBeanMR2()) {
             mLoadThread.quitSafely();
         } else {
             mLoadThread.quit();
@@ -392,17 +401,18 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     /**
      * Adds the url or path to the bucket if it exists, and if not, creates it and adds the url/path.
      *
-     * @param bucket  path
+     * @param bucket    path
      * @param mediaData data about of url
      */
-    private void addToMediaMap(String bucket, MediaData mediaData) {
-        ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_nearest));
-        if(nearest.size() < 30 && MediaData.TYPE_IMAGE.equals(mediaData.getType())) {
+    private synchronized void addToMediaMap(String bucket, MediaData mediaData) {
+        ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
+        if (MediaData.TYPE_IMAGE.equals(mediaData.getType())) {
             nearest.add(mediaData);
         }
-        if(mMediaUris.containsKey(bucket)) {
+        if (mMediaUris.containsKey(bucket)) {
             mMediaUris.get(bucket).add(mediaData);
         } else {
+            LogUtil.i(TAG, "addToMediaMap: add map to:" + bucket + ";");
             ArrayList<MediaData> al = new ArrayList<>();
             al.add(mediaData);
             mMediaUris.put(bucket, al);
@@ -417,14 +427,17 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      * 初始化目录图片列表的adapter
      */
     private void updateBucketsAdapter() {
-        if(bucketsAdapter == null) {
+        if (bucketsAdapter == null) {
             ArrayList<String> data = new ArrayList<>();
             data.addAll(buckets);
             bucketsAdapter = new ArrayAdapter<>(getParentActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, data);
             mDrawerList.setAdapter(bucketsAdapter);
         } else {
-            if(buckets.size() > bucketsAdapter.getCount()) {
-                bucketsAdapter.add(buckets.get(buckets.size() - 1));
+            int count = bucketsAdapter.getCount();
+            if (buckets.size() > count) {
+                String name = buckets.get(count);
+                LogUtil.i(TAG, "buckets add to adapter: " + name);
+                bucketsAdapter.add(name);
             }
         }
     }
@@ -434,17 +447,17 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private void loadLocalMediaOrder(int index) {
         LogUtil.i(TAG, "index = " + index + "; buckets length " + buckets.size());
-        if(index < buckets.size() && index >= 0) {
+        if (index < buckets.size() && index >= 0) {
             String bucket = buckets.get(index);
 
-            if(index == 1 && bucket.equals(getString(R.string.text_video))) {
+            if (index == 1 && bucket.equals(getString(R.string.text_video))) {
                 MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.show_vidoe_limit));
             }
 
             mImageUriList.clear();
             mImageUriList.addAll(mMediaUris.get(bucket));
             LogUtil.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
-            if(localMediaAdapter == null) {
+            if (localMediaAdapter == null) {
                 localMediaAdapter = new LocalMediaAdapter(getActivity(), mImageUriList);
                 localMediaAdapter.setCheckBoxVisible(multi);
                 localMediaAdapter.setSelectedImages(mSelectedImageUris);
