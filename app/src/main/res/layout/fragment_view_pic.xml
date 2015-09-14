@@ -4,7 +4,8 @@
                 android:layout_height="match_parent">
 
 
-    <uk.co.senab.photoview.PhotoView
+    <!--<uk.co.senab.photoview.PhotoView-->
+    <ImageView
         android:id="@+id/iv_pic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
