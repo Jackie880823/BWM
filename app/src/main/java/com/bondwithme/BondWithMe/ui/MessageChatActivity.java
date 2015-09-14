@@ -867,13 +867,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     AudioPlayUtils.stopAudio();
                     isAudition = false;
                     goneView(id_progressbar, null, 0);
-                    bend_line.setVisibility(View.VISIBLE);
                     mic_left.setImageResource(R.drawable.chat_play);
                     mic_right.setImageResource(R.drawable.delete_voice);
                     mic_iv.setImageResource(R.drawable.chat_voice);
                     if (audioFile != null && audioFile.exists()) {
                         uploadAudioOrVideo(audioFile, true, null, mlCount);
                     }
+                    hideAudioView();
                     mlCount = 1;
                 }
                 break;
@@ -1326,8 +1326,12 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                                 timer.cancel();
                             }
                             handler.removeMessages(GET_RECORD_TIME);
-                            if (audioFile != null && audioFile.exists() && mlCount < 3) {
+                            if (audioFile != null && audioFile.exists() && mlCount < 3 && !isInRight) {
                                 audioFile.delete();
+                                mic_left.setScaleX(1);
+                                mic_left.setScaleY(1);
+                                mic_right.setScaleX(1);
+                                mic_right.setScaleY(1);
                                 MessageUtil.getInstance(mContext).showShortToast(getString(R.string.text_record_audio_too_short));
                                 mlCount = 1;
                                 hideAudioView();
