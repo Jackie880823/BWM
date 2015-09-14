@@ -358,7 +358,7 @@ public class NotificationUtil {
             case BONDALERT_RECOMMENDED:
                 smallIcon = R.drawable.bondalert_recommended_icon;
 
-                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_NEWS);
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_RECOMMENDED);
                 if (msgs.size() == 0) {
                     intent = new Intent(context, RecommendActivity.class);
                 } else {
