@@ -7,7 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -60,6 +62,9 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
     private int currentId;
     private String memberId;
 
+    /**
+     * 标识是否传入数据(不需请求)
+     */
     private static boolean got_data_in;
 
 
@@ -84,6 +89,11 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
         got_data_in = true;
         data = inDatas;
         return createInstance(new ViewOriginalPicesMainFragment());
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -147,10 +157,11 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
 
     @Override
     public void requestData() {
-        if (got_data_in) {
+        //传入数据或者
+        if (got_data_in ) {
             //默认第一张
             initAdapter();
-            initViewPaper(0);
+            initViewPaper(currentId);
         } else {
             if (TextUtils.isEmpty(request_url)) {
                 getActivity().finish();
@@ -220,25 +231,26 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
      */
     private void initViewPaper(int dataIndex) {
         //        setViewPaperItems(dataIndex);
-            if (data != null && !data.isEmpty()) {
-                int count = data.size();
-                for (int i = 0; i < count; i++) {
-                    fragments.add(generatePicFragment(data.get(i)));
-                }
-                viewPaperAdapter.notifyDataSetChanged();
-
-                tvIndexOfList.setVisibility(View.VISIBLE);
-                String text = null;
-                if (count == 1) {
-                    text = getActivity().getString(R.string.photo_position_no_arrow);
-                } else {
-                    text = getString(R.string.photo_position_right_arrow);
-                }
-                tvIndexOfList.setText(String.format(text, dataIndex + 1, count));
-            } else {
-                //
-                tvIndexOfList.setVisibility(View.GONE);
+        if (data != null && !data.isEmpty()) {
+            int count = data.size();
+            for (int i = 0; i < count; i++) {
+                fragments.add(generatePicFragment(data.get(i)));
             }
+            viewPaperAdapter.notifyDataSetChanged();
+
+            tvIndexOfList.setVisibility(View.VISIBLE);
+            String text = null;
+            if (count == 1) {
+                text = getActivity().getString(R.string.photo_position_no_arrow);
+            } else {
+                text = getString(R.string.photo_position_right_arrow);
+            }
+            tvIndexOfList.setText(String.format(text, dataIndex + 1, count));
+            view_paper.setCurrentItem(currentId);
+        } else {
+            //
+            tvIndexOfList.setVisibility(View.GONE);
+        }
     }
 
     private Fragment generatePicFragment(PhotoEntity photoEntity) {

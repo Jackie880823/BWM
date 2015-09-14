@@ -45,7 +45,8 @@ public class PhotoView extends ImageView implements IPhotoView {
 
     public PhotoView(Context context, AttributeSet attr, int defStyle) {
         super(context, attr, defStyle);
-        super.setScaleType(ScaleType.MATRIX);
+//        super.setScaleType(ScaleType.MATRIX);
+        super.setScaleType(ImageView.ScaleType.FIT_CENTER);
         mAttacher = new PhotoViewAttacher(this);
 
         if (null != mPendingScaleType) {
