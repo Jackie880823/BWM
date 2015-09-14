@@ -153,7 +153,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         // 获取数据库中的图片资源游标
         String[] imageColumns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
         String imageOrderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
-        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
+        String imageSelect = MediaStore.Images.Media.SIZE + ">0";
+        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, imageSelect, null, imageOrderBy).loadInBackground();
 
         if (useVideo) {
             // 获取数据库中的视频资源游标
@@ -481,7 +482,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 localMediaAdapter.setListener(selectImageUirListener);
                 mGvShowPhotos.setAdapter(localMediaAdapter);
             } else {
-                localMediaAdapter.clearLoad();
                 localMediaAdapter.notifyDataSetChanged();
             }
 
