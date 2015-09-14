@@ -250,7 +250,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private void initHandler() {
         mLoadThread.start();
-        Handler mLoadHandler = new Handler(mLoadThread.getLooper()) {
+        final Handler mLoadHandler = new Handler(mLoadThread.getLooper()) {
             /**
              * Subclasses must implement this to receive messages.
              *
@@ -267,8 +267,13 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         buckets.add(bucketsFirst);
                         mMediaUris.put(bucketsFirst, recent);
 
-                        loadImages();
-                        loadVideos();
+                        // 线程没执行完退出程序会出现资源引用无法使用的异常，捕获后关闭线程，释放资源
+                        try {
+                            loadImages();
+                            loadVideos();
+                        } finally {
+                            quitLoadThread();
+                        }
                         break;
                 }
             }
@@ -277,19 +282,16 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
              * 加载图片的URI到内存列表
              */
             private void loadImages() {
-                if (imageCursor == null) {
+                if (imageCursor == null || imageCursor.isClosed()) {
                     return;
                 }
 
-                int cursorCount = imageCursor.getCount();
-                for (int i = 0; i < cursorCount; i++) {
-                    String path;
-                    String bucket;
-                    Uri contentUri;
-                    synchronized (SelectPhotosFragment.this) {
-                        if (imageCursor.isClosed()) {
-                            return;
-                        }
+                synchronized (SelectPhotosFragment.this) {
+                    int cursorCount = imageCursor.getCount();
+                    for (int i = 0; i < cursorCount; i++) {
+                        String path;
+                        String bucket;
+                        Uri contentUri;
 
                         imageCursor.moveToPosition(i);
                         int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
@@ -298,14 +300,15 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         path = imageCursor.getString(pathColumnIndex);
                         bucket = imageCursor.getString(bucketColumnIndex);
                         contentUri = Uri.parse("content://media/external/images/media/" + imageCursor.getInt(uriColumnIndex));
-                    }
 
-                    if (!TextUtils.isEmpty(path)) {
-                        MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
-                        addToMediaMap(bucket, mediaData);
+                        if (!TextUtils.isEmpty(path)) {
+                            MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
+                            addToMediaMap(bucket, mediaData);
+                        }
                     }
+                    imageCursor.close();
                 }
-                imageCursor.close();
+
                 LogUtil.d(TAG, "loadImages(), buckets size: " + buckets.size());
             }
 
@@ -313,22 +316,23 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
              * 加载视频的URI到内存列表
              */
             private void loadVideos() {
-                if (videoCursor == null) {
+                if (videoCursor == null || videoCursor.isClosed()) {
                     return;
                 }
 
                 String bucket;
-                bucket = getActivity().getString(R.string.text_video);
+                bucket = getParentActivity().getString(R.string.text_video);
                 buckets.add(1, bucket);
-                mMediaUris.put(bucket, new ArrayList<MediaData>());
-                int cursorCount = videoCursor.getCount();
 
-                // 限制定显示的视频大小的最大数为50M
-                for (int i = 0; i < cursorCount; i++) {
-                    String path;
-                    Uri contentUri;
-                    long duration;
-                    synchronized (SelectPhotosFragment.this) {
+                synchronized (SelectPhotosFragment.this) {
+                    mMediaUris.put(bucket, new ArrayList<MediaData>());
+                    int cursorCount = videoCursor.getCount();
+
+                    // 限制定显示的视频大小的最大数为50M
+                    for (int i = 0; i < cursorCount; i++) {
+                        String path;
+                        Uri contentUri;
+                        long duration;
                         if (videoCursor.isClosed()) {
                             return;
                         }
@@ -341,15 +345,16 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         duration = videoCursor.getLong(durationColumnIndex);
                         path = videoCursor.getString(pathColumnIndex);
                         contentUri = Uri.parse("content://media/external/video/media/" + videoCursor.getInt(uriColumnIndex));
-                    }
 
-                    if (!TextUtils.isEmpty(path)) {
-                        MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
-                        addToMediaMap(bucket, mediaData);
+                        if (!TextUtils.isEmpty(path)) {
+                            MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
+                            addToMediaMap(bucket, mediaData);
+                        }
                     }
+                    imageCursor.close();
                 }
+
                 getParentActivity().runOnUiThread(adapterRefresh);
-                imageCursor.close();
                 LogUtil.d(TAG, "loadImages(), buckets size: " + buckets.size());
             }
         };
@@ -376,25 +381,36 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      * Called when the fragment is no longer in use.  This is called
      * after {@link #onStop()} and before {@link #onDetach()}.
      */
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onDestroy() {
         super.onDestroy();
 
+        quitLoadThread();
+    }
+
+    /**
+     * 关闭加载图片的线程
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void quitLoadThread() {
         // 退出Activity关闭数据库游标
         synchronized (SelectPhotosFragment.this) {
-            if (imageCursor != null) {
-                if (!imageCursor.isClosed()) {
-                    imageCursor.close();
-                }
+            if (imageCursor != null && !imageCursor.isClosed()) {
+                imageCursor.close();
+            }
+
+            if (videoCursor != null && !videoCursor.isClosed()) {
+                videoCursor.close();
             }
         }
 
-        // 关闭加载图片线程
-        if (Utils.hasJellyBeanMR2()) {
-            mLoadThread.quitSafely();
-        } else {
-            mLoadThread.quit();
+        if (mLoadThread.getState() != Thread.State.TERMINATED) {
+            // 关闭加载图片线程
+            if (Utils.hasJellyBeanMR2()) {
+                mLoadThread.quitSafely();
+            } else {
+                mLoadThread.quit();
+            }
         }
     }
 
