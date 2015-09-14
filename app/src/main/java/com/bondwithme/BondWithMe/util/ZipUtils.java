@@ -147,16 +147,19 @@ public class ZipUtils {
         stickerInfo.setSticker_name("1_B");
         stickerInfo.setVersion("1");
 
-        if (zipFileName.contains("Barry")) {
-            stickerInfo.setType(".png");
-            stickerInfo.setOrder(System.currentTimeMillis() - 3000L);
-        } else if (zipFileName.contains("Bunny")) {
-            stickerInfo.setOrder(System.currentTimeMillis() - 1500L);
-            stickerInfo.setType(".png");
-        } else if (zipFileName.contains("Merdeka")) {
-            stickerInfo.setOrder(System.currentTimeMillis());
-            stickerInfo.setType(".png");
-        }
+        stickerInfo.setType(".png");
+        stickerInfo.setOrder(System.currentTimeMillis());
+
+//        if (zipFileName.contains("Barry")) {
+//            stickerInfo.setType(".png");
+//            stickerInfo.setOrder(System.currentTimeMillis());
+//        } else if (zipFileName.contains("Bunny")) {
+//            stickerInfo.setOrder(System.currentTimeMillis());
+//            stickerInfo.setType(".png");
+//        } else if (zipFileName.contains("Merdeka")) {
+//            stickerInfo.setOrder(System.currentTimeMillis());
+//            stickerInfo.setType(".png");
+//        }
         LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
 
     }
