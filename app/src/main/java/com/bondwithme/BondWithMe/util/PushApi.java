@@ -29,8 +29,16 @@ public class PushApi {
     private static Context mContext;
 
     public static void initPushApi(Context context) {
+
+        //先反注册
+        try {
+            unRegister(context);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         mContext = context;
-        if (SystemUtil.checkPlayServices(mContext)) {
+        if (LocationUtil.isGoogleAvailable()) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(mContext);
             if (TextUtils.isEmpty(regid)) {
@@ -52,6 +60,10 @@ public class PushApi {
         }
 
 
+    }
+
+    private static void unRegister(Context mContext) throws IOException {
+        GoogleCloudMessaging.getInstance(mContext).unregister();
     }
 
     /**
