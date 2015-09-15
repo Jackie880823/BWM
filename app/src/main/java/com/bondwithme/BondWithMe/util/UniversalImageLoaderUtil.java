@@ -14,7 +14,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,7 +68,7 @@ public class UniversalImageLoaderUtil {
         // 设置图片的解码类型
         builder.bitmapConfig(Bitmap.Config.RGB_565);
         // 图片加载好后渐入的动画时间
-        builder.displayer(new FadeInBitmapDisplayer(100));
+//        builder.displayer(new FadeInBitmapDisplayer(100));
         // 加载图片大小为目标控件大小一致
         builder.imageScaleType(ImageScaleType.EXACTLY);
         // 构建完成
