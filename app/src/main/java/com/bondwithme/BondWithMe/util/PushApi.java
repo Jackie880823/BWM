@@ -30,13 +30,6 @@ public class PushApi {
 
     public static void initPushApi(Context context) {
 
-        //先反注册
-        try {
-            unRegister(context);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         mContext = context;
         if (LocationUtil.isGoogleAvailable()) {
             /**GCM推送*/
@@ -60,10 +53,6 @@ public class PushApi {
         }
 
 
-    }
-
-    private static void unRegister(Context mContext) throws IOException {
-        GoogleCloudMessaging.getInstance(mContext).unregister();
     }
 
     /**
@@ -125,6 +114,7 @@ public class PushApi {
     private static String doRegistration2GCM() {
         String msg = "";
         try {
+            GoogleCloudMessaging.getInstance(mContext).unregister();
             GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(mContext);
             regid = gcm.register(mContext.getString(R.string.gcm_sender_id));
 
