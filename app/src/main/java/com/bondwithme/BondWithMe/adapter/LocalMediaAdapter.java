@@ -2,6 +2,8 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +24,8 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +98,16 @@ public class LocalMediaAdapter extends BaseAdapter {
     }
 
     /**
+     * Notifies the attached observers that the underlying data has been changed
+     * and any View reflecting the data set should refresh itself.
+     */
+    @Override
+    public void notifyDataSetChanged() {
+        clearLoad();
+        super.notifyDataSetChanged();
+    }
+
+    /**
      * 设置选中图片列表用于判断显示选择框的选中状态
      *
      * @param selectedMedias
@@ -144,12 +158,12 @@ public class LocalMediaAdapter extends BaseAdapter {
             holder = (HolderView) convertView.getTag();
         }
 
-        handler.removeCallbacksAndMessages(holder.iv);
+        imageLoadHandler.removeCallbacksAndMessages(holder.iv);
         Message msg = new Message();
         msg.what = MSG_LOCAL_BITMAP;
         msg.obj = holder.iv;
         msg.arg1 = position;
-        handler.sendMessage(msg);
+        imageLoadHandler.sendMessage(msg);
 
         if(!checkBoxVisible) {
             holder.check.setVisibility(View.GONE);
@@ -230,13 +244,43 @@ public class LocalMediaAdapter extends BaseAdapter {
     private void loadLocalBitmap(ImageView imageView, int position) {
         if(position < mDatas.size()) {
             String uri = mDatas.get(position).getPath();
-            ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options);
+            ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options, imageLoadingListener);
         }
     }
 
+    /**
+     * 图片加载处理监听
+     */
+    private ImageLoadingListener imageLoadingListener = new ImageLoadingListener() {
+        @Override
+        public void onLoadingStarted(String imageUri, View view) {
+
+        }
+
+        @Override
+        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+            // 图片加载失败从列表中删除
+            mDatas.remove(new MediaData(Uri.parse(imageUri), imageUri, MediaData.TYPE_IMAGE, 0));
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+        }
+
+        @Override
+        public void onLoadingCancelled(String imageUri, View view) {
+
+        }
+    };
+
     private static final int MSG_LOCAL_BITMAP = 0;
 
-    private Handler handler = new Handler(){
+    /**
+     * 加载图片处理{@link Handler}
+     */
+    private Handler imageLoadHandler = new Handler(){
         /**
          * Subclasses must implement this to receive messages.
          *
@@ -253,8 +297,11 @@ public class LocalMediaAdapter extends BaseAdapter {
         }
     };
 
+    /**
+     * 清掉正加载的图片的等待队列
+     */
     public void clearLoad(){
-        handler.removeMessages(MSG_LOCAL_BITMAP);
+        imageLoadHandler.removeMessages(MSG_LOCAL_BITMAP);
     }
 
     class HolderView {
