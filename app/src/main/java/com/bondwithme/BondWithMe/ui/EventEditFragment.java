@@ -33,7 +33,6 @@ import com.bondwithme.BondWithMe.widget.MyGridViewForScroolView;
 import com.bondwithme.BondWithMe.widget.TimePicker;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.material.widget.CircularProgress;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 
     private double latitude = -1000;
     private double longitude = -1000;
-    private CircularProgress progressBar;
+    private View vProgress;
 
     private static final int MAX_COUNT = 300;
 
@@ -95,7 +94,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 
     @Override
     public void initView() {
-        progressBar = getViewById(R.id.progressBar);
+        vProgress = getViewById(R.id.rl_progress);
         mEevent = getParentActivity().eventEntity;
         gvFriends = getViewById(R.id.gv_all_friends);
         isFinish = true;
@@ -174,12 +173,12 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 
     private void submit() {
 
-        if(progressBar.getVisibility() == View.VISIBLE) {
+        if(vProgress.getVisibility() == View.VISIBLE) {
             return;
         }
 
         if(validateForm()) {
-            progressBar.setVisibility(View.VISIBLE);
+            vProgress.setVisibility(View.VISIBLE);
             mEevent.setEvent_member(setGetMembersIds(members_data));
             mEevent.setLoc_name(position_name.getText().toString());
 
@@ -205,7 +204,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
 
                 @Override
                 public void onFinish() {
-                    progressBar.setVisibility(View.GONE);
+                    vProgress.setVisibility(View.GONE);
                 }
 
                 @Override
