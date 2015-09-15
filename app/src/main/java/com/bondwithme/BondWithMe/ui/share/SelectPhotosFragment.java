@@ -151,9 +151,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         boolean useVideo = getParentActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
 
         // 获取数据库中的图片资源游标
-        String[] imageColumns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
-        String imageOrderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
-        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
+        String[] imageColumns = {MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails._ID};
+        String imageOrderBy = MediaStore.Images.Thumbnails.DEFAULT_SORT_ORDER ;
+        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
 
         if (useVideo) {
             // 获取数据库中的视频资源游标
@@ -294,16 +294,23 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         Uri contentUri;
 
                         imageCursor.moveToPosition(i);
-                        int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
-                        int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-                        int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+                        int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Thumbnails._ID);
+//                        int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+                        int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
                         path = imageCursor.getString(pathColumnIndex);
-                        bucket = imageCursor.getString(bucketColumnIndex);
+//                        bucket = imageCursor.getString(bucketColumnIndex);
                         contentUri = Uri.parse("content://media/external/images/media/" + imageCursor.getInt(uriColumnIndex));
 
                         if (!TextUtils.isEmpty(path)) {
                             MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
-                            addToMediaMap(bucket, mediaData);
+                            addToMediaMap(uriColumnIndex+"", mediaData);
+                            //wing
+//                            int id = imageCursor.getInt(uriColumnIndex);
+//                            BitmapFactory.Options options = new BitmapFactory.Options();
+//                            options.inDither = false;
+//                            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//                            imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
+//                            info.b = MediaStore.Video.Thumbnails.getContentUri()getThumbnail(getActivity().getContentResolver(), id,  MediaStore.Images.Thumbnails.MICRO_KIND, options);
                         }
                     }
                     imageCursor.close();
