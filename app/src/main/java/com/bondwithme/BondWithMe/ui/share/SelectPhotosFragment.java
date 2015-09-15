@@ -472,9 +472,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.show_vidoe_limit));
             }
 
-            mImageUriList.clear();
-            mImageUriList.addAll(mMediaUris.get(bucket));
-            LogUtil.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
+            mImageUriList=mMediaUris.get(bucket);
+            LogUtil.i(TAG, "mImageUriList size = " + mImageUriList.size() + "; bucket " + bucket);
             if (localMediaAdapter == null) {
                 localMediaAdapter = new LocalMediaAdapter(getActivity(), mImageUriList);
                 localMediaAdapter.setCheckBoxVisible(multi);
@@ -482,6 +481,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 localMediaAdapter.setListener(selectImageUirListener);
                 mGvShowPhotos.setAdapter(localMediaAdapter);
             } else {
+                localMediaAdapter.setData(mImageUriList);
                 localMediaAdapter.notifyDataSetChanged();
             }
 

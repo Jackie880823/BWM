@@ -107,6 +107,10 @@ public class LocalMediaAdapter extends BaseAdapter {
         super.notifyDataSetChanged();
     }
 
+    public void setData(ArrayList<MediaData> datas) {
+        mDatas = datas;
+    }
+
     /**
      * 设置选中图片列表用于判断显示选择框的选中状态
      *
@@ -145,7 +149,7 @@ public class LocalMediaAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final HolderView holder;
-        if(convertView == null) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.local_images_item_for_gridview, null);
             holder = new HolderView();
             holder.iv = (ImageView) convertView.findViewById(R.id.iv_pic);
@@ -158,27 +162,27 @@ public class LocalMediaAdapter extends BaseAdapter {
             holder = (HolderView) convertView.getTag();
         }
 
-        imageLoadHandler.removeCallbacksAndMessages(holder.iv);
+        mHandler.removeCallbacksAndMessages(holder.iv);
         Message msg = new Message();
         msg.what = MSG_LOCAL_BITMAP;
         msg.obj = holder.iv;
         msg.arg1 = position;
-        imageLoadHandler.sendMessage(msg);
+        mHandler.sendMessage(msg);
 
-        if(!checkBoxVisible) {
+        if (!checkBoxVisible) {
             holder.check.setVisibility(View.GONE);
         } else {
             holder.iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mListener != null) {
+                    if (mListener != null) {
                         mListener.preview(mDatas.get(position));
                     }
                 }
             });
 
             MediaData mediaData = mDatas.get(position);
-            if(MediaData.TYPE_VIDEO.equals(mediaData.getType())) {
+            if (MediaData.TYPE_VIDEO.equals(mediaData.getType())) {
                 holder.llDuration.setVisibility(View.VISIBLE);
                 holder.videoIcon.setVisibility(View.VISIBLE);
                 long duration = mediaData.getDuration();
@@ -198,12 +202,12 @@ public class LocalMediaAdapter extends BaseAdapter {
                     checkBox.setChecked(isChecked);
 
                     MediaData uri = mDatas.get(position);
-                    if(mListener != null) {
+                    if (mListener != null) {
                         LogUtil.i(TAG, "onCheck& check2");
-                        if(isChecked) {
+                        if (isChecked) {
                             LogUtil.i(TAG, "onCheck& check5");
                             boolean result = mListener.addUri(uri);
-                            if(!result) {
+                            if (!result) {
                                 // 添加失败，当前图片不能显示选中
                                 checkBox.setChecked(false);
                             }
@@ -211,7 +215,7 @@ public class LocalMediaAdapter extends BaseAdapter {
                             LogUtil.i(TAG, "onCheck& check4");
                             boolean result = mListener.removeUri(uri);
                             Log.i(TAG, "onCheck& check2: result ＝ " + result);
-                            if(!result) {
+                            if (!result) {
                                 Log.i(TAG, "onCheck& check6:");
                                 // 删除失败，当前图片不能显示未选中
                                 checkBox.setChecked(true);
@@ -222,7 +226,7 @@ public class LocalMediaAdapter extends BaseAdapter {
             });
 
             // 判断当前数据是否被选中，一在设置setOnCheckedChangeListener之后执行否则数据无效添加或删除上一次使用当前View的URI
-            if(mSelectMedias != null && mSelectMedias.contains(mDatas.get(position))) {
+            if (mSelectMedias != null && mSelectMedias.contains(mDatas.get(position))) {
                 LogUtil.i(TAG, "onCheck& check7");
                 // 当前图片已被选中
                 holder.check.setChecked(true);
@@ -242,7 +246,7 @@ public class LocalMediaAdapter extends BaseAdapter {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void loadLocalBitmap(ImageView imageView, int position) {
-        if(position < mDatas.size()) {
+        if (position < mDatas.size()) {
             String uri = mDatas.get(position).getPath();
             ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options, imageLoadingListener);
         }
@@ -261,7 +265,9 @@ public class LocalMediaAdapter extends BaseAdapter {
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
             // 图片加载失败从列表中删除
             mDatas.remove(new MediaData(Uri.parse(imageUri), imageUri, MediaData.TYPE_IMAGE, 0));
-            notifyDataSetChanged();
+
+            mHandler.removeMessages(MSG_NOTIFY);
+            mHandler.sendEmptyMessageDelayed(MSG_NOTIFY, 500);
         }
 
         @Override
@@ -275,12 +281,20 @@ public class LocalMediaAdapter extends BaseAdapter {
         }
     };
 
+    /**
+     * 加载图片的处理事件
+     */
     private static final int MSG_LOCAL_BITMAP = 0;
 
     /**
-     * 加载图片处理{@link Handler}
+     * 刷新处理事件
      */
-    private Handler imageLoadHandler = new Handler(){
+    private static final int MSG_NOTIFY = 1;
+
+    /**
+     * 适配器消息处理{@link Handler}
+     */
+    private Handler mHandler = new Handler() {
         /**
          * Subclasses must implement this to receive messages.
          *
@@ -293,6 +307,9 @@ public class LocalMediaAdapter extends BaseAdapter {
                 case MSG_LOCAL_BITMAP:
                     loadLocalBitmap((ImageView) msg.obj, msg.arg1);
                     break;
+                case MSG_NOTIFY:
+                    notifyDataSetChanged();
+                    break;
             }
         }
     };
@@ -300,8 +317,8 @@ public class LocalMediaAdapter extends BaseAdapter {
     /**
      * 清掉正加载的图片的等待队列
      */
-    public void clearLoad(){
-        imageLoadHandler.removeMessages(MSG_LOCAL_BITMAP);
+    public void clearLoad() {
+        mHandler.removeMessages(MSG_LOCAL_BITMAP);
     }
 
     class HolderView {
