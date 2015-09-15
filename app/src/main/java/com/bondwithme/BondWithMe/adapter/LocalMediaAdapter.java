@@ -2,11 +2,13 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,7 @@ import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.ArrayList;
@@ -214,9 +217,9 @@ public class LocalMediaAdapter extends BaseAdapter {
                         } else {
                             LogUtil.i(TAG, "onCheck& check4");
                             boolean result = mListener.removeUri(uri);
-                            Log.i(TAG, "onCheck& check2: result ＝ " + result);
+                            LogUtil.i(TAG, "onCheck& check2: result ＝ " + result);
                             if (!result) {
-                                Log.i(TAG, "onCheck& check6:");
+                                LogUtil.i(TAG, "onCheck& check6:");
                                 // 删除失败，当前图片不能显示未选中
                                 checkBox.setChecked(true);
                             }
@@ -247,8 +250,58 @@ public class LocalMediaAdapter extends BaseAdapter {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void loadLocalBitmap(ImageView imageView, int position) {
         if (position < mDatas.size()) {
-            String uri = mDatas.get(position).getPath();
-            ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options, imageLoadingListener);
+            MediaData mediaData = mDatas.get(position);
+
+            LogUtil.i(TAG, "loadLocalBitmap& uri: " + mediaData.getContentUri());
+
+            Uri thumbnailUri;
+            if (mediaData.getType() == MediaData.TYPE_IMAGE) {
+                thumbnailUri = getThumbnailUri(mediaData.getContentUri());
+            } else {
+                // 不是图片没有小图
+                thumbnailUri = null;
+            }
+
+            if (thumbnailUri != null) {
+                LogUtil.i(TAG, "loadLocalBitmap& load thumbnail: " + thumbnailUri);
+                ImageLoader.getInstance().displayImage(thumbnailUri.toString(), imageView);
+            } else {
+                String uri = mediaData.getPath();
+                LogUtil.i(TAG, "loadLocalBitmap& load picture: " + uri);
+                ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options, imageLoadingListener);
+            }
+        }
+    }
+
+    /**
+     * 获取小图的{@link Uri}
+     *
+     * @param uri 原图{@link Uri}
+     * @return 返回小图的Uri
+     */
+    private Uri getThumbnailUri(Uri uri) {
+        Uri result = null;
+
+        int start = MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString().length() + 1;
+        String uriStr = uri.toString();
+        long id = Long.valueOf(uriStr.substring(start));
+        LogUtil.i(TAG, "getThumbnailUri& id: " + id);
+
+        Cursor cursor = MediaStore.Images.Thumbnails.queryMiniThumbnail(mContext.getContentResolver(), id, MediaStore.Images.Thumbnails.MINI_KIND, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            String path = ImageDownloader.Scheme.FILE.wrap(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA)));
+            result = Uri.parse(path);
+        }
+
+        try {
+            if (cursor != null) {
+                // 关闭游标
+                cursor.close();
+            }
+        } finally {
+            Log.i(TAG, "getThumbnailUri& result: " + result);
+            return result;
         }
     }
 
@@ -263,6 +316,7 @@ public class LocalMediaAdapter extends BaseAdapter {
 
         @Override
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+            LogUtil.w(TAG, "onLoadingFailed& imageUri: " + imageUri );
             // 图片加载失败从列表中删除
             mDatas.remove(new MediaData(Uri.parse(imageUri), imageUri, MediaData.TYPE_IMAGE, 0));
 
