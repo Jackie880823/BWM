@@ -171,44 +171,24 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
     private void changeTabTitle(int tabIndex) {
         switch (tabIndex) {
             case 0:
-                tab_text_all.setTextColor(getResources().getColor(R.color.default_text_color_dark));
-                tab_text_going.setTextColor(getResources().getColor(R.color.default_text_color_light));
-                tab_text_maybe.setTextColor(getResources().getColor(R.color.default_text_color_light));
-                tab_text_not_going.setTextColor(getResources().getColor(R.color.default_text_color_light));
-
                 tab_icon_all.setImageResource(R.drawable.members_large_press);
                 tab_icon_going.setImageResource(R.drawable.status_going_normal);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_normal);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_normal);
                 break;
             case 1:
-                tab_text_all.setTextColor(getResources().getColor(R.color.default_text_color_light));
-                tab_text_going.setTextColor(getResources().getColor(R.color.default_text_color_dark));
-                tab_text_maybe.setTextColor(getResources().getColor(R.color.default_text_color_light));
-                tab_text_not_going.setTextColor(getResources().getColor(R.color.default_text_color_light));
-
                 tab_icon_all.setImageResource(R.drawable.members_large_normal);
                 tab_icon_going.setImageResource(R.drawable.status_going_press);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_normal);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_normal);
                 break;
             case 2:
-                tab_text_all.setTextColor(getResources().getColor(R.color.default_text_color_light));
-                tab_text_going.setTextColor(getResources().getColor(R.color.default_text_color_light));
-                tab_text_maybe.setTextColor(getResources().getColor(R.color.default_text_color_dark));
-                tab_text_not_going.setTextColor(getResources().getColor(R.color.default_text_color_light));
-
                 tab_icon_all.setImageResource(R.drawable.members_large_normal);
                 tab_icon_going.setImageResource(R.drawable.status_going_normal);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_press);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_normal);
                 break;
             case 3:
-                tab_text_all.setTextColor(getResources().getColor(R.color.default_text_color_light));
-                tab_text_going.setTextColor(getResources().getColor(R.color.default_text_color_light));
-                tab_text_maybe.setTextColor(getResources().getColor(R.color.default_text_color_light));
-                tab_text_not_going.setTextColor(getResources().getColor(R.color.default_text_color_dark));
-
                 tab_icon_all.setImageResource(R.drawable.members_large_normal);
                 tab_icon_going.setImageResource(R.drawable.status_going_normal);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_normal);
