@@ -88,6 +88,8 @@ android {
 //        taobao {}
         appinchina {}
         googleplay {}
+        preload_globe_ph {}
+
         //...
     }
     //用productFlavors中渠道号替换 AndroidManifest.xml 中 UMENG_CHANNEL_VALUE
