@@ -241,7 +241,8 @@ public class MessageAction {
                 msgList = gson.fromJson(response, new TypeToken<ArrayList<MsgEntity>>() {
                 }.getType());
                 if (null != msgList && msgList.size() > 0) {
-                    Collections.sort(msgList, new SortExpertsTeamDate());
+                    Collections.reverse(msgList);
+                   // Collections.sort(msgList, new SortExpertsTeamDate());
                 }
                 mHandler.sendMessage(mHandler.obtainMessage(handlerWhat, msgList));
             }
@@ -263,16 +264,16 @@ public class MessageAction {
         });
     }
 
-    public static class SortExpertsTeamDate implements Comparator<MsgEntity> {
-        public SortExpertsTeamDate() {
-        }
-
-        @Override
-        public int compare(MsgEntity lhs, MsgEntity rhs) {
-            if ((lhs != null) && (rhs != null) && (!rhs.getContent_creation_date().equals(lhs.getContent_creation_date()))) {
-                return lhs.getContent_creation_date().compareTo(rhs.getContent_creation_date());
-            }
-            return 0;
-        }
-    }
+//    public static class SortExpertsTeamDate implements Comparator<MsgEntity> {
+//        public SortExpertsTeamDate() {
+//        }
+//
+//        @Override
+//        public int compare(MsgEntity lhs, MsgEntity rhs) {
+//            if ((lhs != null) && (rhs != null) && (!rhs.getContent_creation_date().equals(lhs.getContent_creation_date()))) {
+//                return lhs.getContent_creation_date().compareTo(rhs.getContent_creation_date());
+//            }
+//            return 0;
+//        }
+//    }
 }
