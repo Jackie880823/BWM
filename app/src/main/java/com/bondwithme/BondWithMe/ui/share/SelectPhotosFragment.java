@@ -31,6 +31,7 @@ import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
 import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -151,14 +152,14 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         boolean useVideo = getParentActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
 
         // 获取数据库中的图片资源游标
-        String[] imageColumns = {MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails._ID};
-        String imageOrderBy = MediaStore.Images.Thumbnails.DEFAULT_SORT_ORDER ;
-        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
+//        String[] imageColumns = {MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails._ID};
+//        String imageOrderBy = MediaStore.Images.Thumbnails.DEFAULT_SORT_ORDER ;
+//        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
 
-//        String[] imageColumns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
-//        String imageOrderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
-//        String imageSelect = MediaStore.Images.Media.SIZE + ">0";
-//        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, imageSelect, null, imageOrderBy).loadInBackground();
+        String[] imageColumns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
+        String imageOrderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
+        String imageSelect = MediaStore.Images.Media.SIZE + ">0";
+        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, imageSelect, null, imageOrderBy).loadInBackground();
 
         if (useVideo) {
             // 获取数据库中的视频资源游标
@@ -299,16 +300,16 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         Uri contentUri;
 
                         imageCursor.moveToPosition(i);
-                        int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Thumbnails._ID);
-//                        int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-                        int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA);
+                        int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+                        int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+                        int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
                         path = imageCursor.getString(pathColumnIndex);
-//                        bucket = imageCursor.getString(bucketColumnIndex);
-                        contentUri = Uri.parse("content://media/external/images/media/" + imageCursor.getInt(uriColumnIndex));
+                        bucket = imageCursor.getString(bucketColumnIndex);
+                        contentUri = Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + imageCursor.getInt(uriColumnIndex));
 
                         if (!TextUtils.isEmpty(path)) {
                             MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
-                            addToMediaMap(uriColumnIndex+"", mediaData);
+                            addToMediaMap(bucket, mediaData);
                             //wing
 //                            int id = imageCursor.getInt(uriColumnIndex);
 //                            BitmapFactory.Options options = new BitmapFactory.Options();
@@ -357,7 +358,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
                         duration = videoCursor.getLong(durationColumnIndex);
                         path = videoCursor.getString(pathColumnIndex);
-                        contentUri = Uri.parse("content://media/external/video/media/" + videoCursor.getInt(uriColumnIndex));
+                        contentUri = Uri.parse(MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + videoCursor.getInt(uriColumnIndex));
 
                         if (!TextUtils.isEmpty(path)) {
                             MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
@@ -483,9 +484,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.show_vidoe_limit));
             }
 
-            mImageUriList.clear();
-            mImageUriList.addAll(mMediaUris.get(bucket));
-            LogUtil.i(TAG, "mImageUriList size = " + mImageUriList + "; bucket " + bucket);
+            mImageUriList=mMediaUris.get(bucket);
+            LogUtil.i(TAG, "mImageUriList size = " + mImageUriList.size() + "; bucket " + bucket);
             if (localMediaAdapter == null) {
                 localMediaAdapter = new LocalMediaAdapter(getActivity(), mImageUriList);
                 localMediaAdapter.setCheckBoxVisible(multi);
@@ -493,6 +493,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 localMediaAdapter.setListener(selectImageUirListener);
                 mGvShowPhotos.setAdapter(localMediaAdapter);
             } else {
+                localMediaAdapter.setData(mImageUriList);
                 localMediaAdapter.notifyDataSetChanged();
             }
 
