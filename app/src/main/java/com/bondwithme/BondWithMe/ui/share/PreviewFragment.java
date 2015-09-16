@@ -12,6 +12,7 @@ import android.widget.VideoView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -90,9 +91,11 @@ public class PreviewFragment extends BaseFragment<SelectPhotosActivity> {
 
                 imageView.setVisibility(View.VISIBLE);
                 videoView.setVisibility(View.GONE);
+                String path = mediaData.getPath();
+                LogUtil.i(TAG, "displayView& uri: " + mediaData.getContentUri());
 
                 // 显示图片预览
-                ImageLoader.getInstance().displayImage(mediaData.getPath(), imageView, UniversalImageLoaderUtil.options);
+                ImageLoader.getInstance().displayImage(path, imageView, UniversalImageLoaderUtil.options);
             }
         }
     }
