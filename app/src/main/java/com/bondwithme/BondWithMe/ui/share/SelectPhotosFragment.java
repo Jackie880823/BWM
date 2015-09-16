@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,6 +31,7 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
 import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -125,7 +127,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     /**
      * 加栽图片Uri的字线程
      */
-    private HandlerThread mLoadThread = new HandlerThread("Loader Image");
+    private HandlerThread mLoadImageThread = new HandlerThread("Loader Image");
 
     public SelectPhotosFragment(ArrayList<MediaData> selectUris) {
         super();
@@ -168,6 +170,14 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             String select = String.format("%s <= %d and %s >= %d", MediaStore.Video.VideoColumns.SIZE, MediaData.MAX_SIZE, MediaStore.Video.VideoColumns.DURATION, 1000);
             videoCursor = new CursorLoader(getActivity(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, select, null, videoOrderBy).loadInBackground();
         }
+
+
+        String bucketsFirst = getParentActivity().getString(R.string.text_all);
+        ArrayList<MediaData> recent;
+        recent = new ArrayList<>();
+        buckets = new ArrayList<>();
+        buckets.add(bucketsFirst);
+        mMediaUris.put(bucketsFirst, recent);
 
         initHandler();
 
@@ -255,8 +265,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      * 初始化用于加载媒体URI的Handler
      */
     private void initHandler() {
-        mLoadThread.start();
-        final Handler mLoadHandler = new Handler(mLoadThread.getLooper()) {
+        mLoadImageThread.start();
+        Handler loadImageHandler = new Handler(mLoadImageThread.getLooper()) {
             /**
              * Subclasses must implement this to receive messages.
              *
@@ -266,19 +276,13 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case HANDLER_LOAD_FLAG:
-                        String bucketsFirst = getParentActivity().getString(R.string.text_all);
-                        ArrayList<MediaData> recent;
-                        recent = new ArrayList<>();
-                        buckets = new ArrayList<>();
-                        buckets.add(bucketsFirst);
-                        mMediaUris.put(bucketsFirst, recent);
 
                         // 线程没执行完退出程序会出现资源引用无法使用的异常，捕获后关闭线程，释放资源
                         try {
                             loadImages();
                             loadVideos();
                         } finally {
-                            quitLoadThread();
+                            quitAllLoadThread();
                         }
                         break;
                 }
@@ -294,9 +298,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                     }
 
                     int cursorCount = imageCursor.getCount();
+                    LogUtil.i(TAG, "loadImages& cursorCount: " + cursorCount);
                     for (int i = 0; i < cursorCount; i++) {
                         String path;
                         String bucket;
+                        long id;
                         Uri contentUri;
 
                         imageCursor.moveToPosition(i);
@@ -305,10 +311,12 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
                         path = imageCursor.getString(pathColumnIndex);
                         bucket = imageCursor.getString(bucketColumnIndex);
-                        contentUri = Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + imageCursor.getInt(uriColumnIndex));
+                        id = imageCursor.getLong(uriColumnIndex);
+                        contentUri = Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + id);
 
                         if (!TextUtils.isEmpty(path)) {
                             MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
+                            mediaData.setThumbnailUri(getImageThumbnailUri(id));
                             addToMediaMap(bucket, mediaData);
                             //wing
 //                            int id = imageCursor.getInt(uriColumnIndex);
@@ -350,6 +358,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         String path;
                         Uri contentUri;
                         long duration;
+                        long id;
 
                         videoCursor.moveToPosition(i);
 
@@ -358,22 +367,84 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
                         duration = videoCursor.getLong(durationColumnIndex);
                         path = videoCursor.getString(pathColumnIndex);
-                        contentUri = Uri.parse(MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + videoCursor.getInt(uriColumnIndex));
+                        id = videoCursor.getLong(uriColumnIndex);
+                        contentUri = Uri.parse(MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + id);
 
                         if (!TextUtils.isEmpty(path)) {
                             MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
+                            mediaData.setThumbnailUri(getVideoThumbnailUri(id));
                             addToMediaMap(bucket, mediaData);
                         }
+
                     }
                     imageCursor.close();
                 }
 
                 getParentActivity().runOnUiThread(adapterRefresh);
-                LogUtil.d(TAG, "loadImages(), buckets size: " + buckets.size());
+                LogUtil.d(TAG, "loadVideos(), buckets size: " + buckets.size());
             }
+
         };
 
-        mLoadHandler.sendEmptyMessage(HANDLER_LOAD_FLAG);
+        loadImageHandler.sendEmptyMessage(HANDLER_LOAD_FLAG);
+    }
+
+    /**
+     * 获取小图的{@link Uri}
+     *
+     * @param origId 原图{@value android.provider.MediaStore.Images.Media#_ID}
+     * @return 返回小图的Uri
+     */
+    private Uri getImageThumbnailUri(long origId) {
+        Uri result = null;
+
+        Log.i(TAG, "getImageThumbnailUri& origId: " + origId);
+        Cursor cursor = MediaStore.Images.Thumbnails.queryMiniThumbnail(getParentActivity().getContentResolver(), origId, MediaStore.Images.Thumbnails.MINI_KIND, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            String path = ImageDownloader.Scheme.FILE.wrap(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA)));
+            result = Uri.parse(path);
+        }
+
+        try {
+            if (cursor != null) {
+                // 关闭游标
+                cursor.close();
+            }
+        } finally {
+            Log.i(TAG, "getImageThumbnailUri& result: " + result);
+            return result;
+        }
+    }
+
+    /**
+     * 获取小图的{@link Uri}
+     *
+     * @param origId 视频{@value android.provider.MediaStore.Video.Media#_ID}
+     * @return 返回小图的Uri
+     */
+    private Uri getVideoThumbnailUri(long origId) {
+        Uri result = null;
+
+        Log.i(TAG, "getVideoThumbnailUri& origId: " + origId);
+        String[] columns = {MediaStore.Images.Thumbnails.DATA};
+        String select = MediaStore.Video.Thumbnails.VIDEO_ID + " = " + origId;
+        Cursor cursor = new CursorLoader(getParentActivity(), MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI, columns, select, null, null).loadInBackground();
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            String path = ImageDownloader.Scheme.FILE.wrap(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA)));
+            result = Uri.parse(path);
+        }
+
+        try {
+            if (cursor != null) {
+                // 关闭游标
+                cursor.close();
+            }
+        } finally {
+            Log.i(TAG, "getVideoThumbnailUri& result: " + result);
+            return result;
+        }
     }
 
     public boolean changeDrawer() {
@@ -398,16 +469,15 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        quitLoadThread();
+        quitAllLoadThread();
     }
 
     /**
-     * 关闭加载图片的线程
+     * 关闭加载的线程
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void quitLoadThread() {
-        // 退出Activity关闭数据库游标
+    private void quitAllLoadThread() {
+        // 关闭数据库游标
         synchronized (SelectPhotosFragment.this) {
             if (imageCursor != null && !imageCursor.isClosed()) {
                 imageCursor.close();
@@ -418,12 +488,12 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             }
         }
 
-        if (mLoadThread.getState() != Thread.State.TERMINATED) {
+        if (mLoadImageThread.getState() != Thread.State.TERMINATED) {
             // 关闭加载图片线程
             if (Utils.hasJellyBeanMR2()) {
-                mLoadThread.quitSafely();
+                mLoadImageThread.quitSafely();
             } else {
-                mLoadThread.quit();
+                mLoadImageThread.quit();
             }
         }
     }
@@ -484,7 +554,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.show_vidoe_limit));
             }
 
-            mImageUriList=mMediaUris.get(bucket);
+            mImageUriList = mMediaUris.get(bucket);
             LogUtil.i(TAG, "mImageUriList size = " + mImageUriList.size() + "; bucket " + bucket);
             if (localMediaAdapter == null) {
                 localMediaAdapter = new LocalMediaAdapter(getActivity(), mImageUriList);
