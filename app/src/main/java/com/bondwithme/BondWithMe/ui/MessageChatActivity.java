@@ -184,10 +184,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     Map<String, MsgEntity> sendMap = new HashMap<>();
 
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_LATEST_MESSAGE:
 //                    progressDialog.dismiss();
@@ -212,7 +211,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             for (String mapKey : sendMap.keySet()) {
                                 msgSendList.add(sendMap.get(mapKey));
                             }
-                            Collections.sort(msgSendList, new MessageAction.SortExpertsTeamDate());
+                            Collections.reverse(msgSendList);
+//                            Collections.sort(msgSendList, new MessageAction.SortExpertsTeamDate());
                         }
                         messageChatAdapter.addSendData(msgSendList);
                     }
@@ -229,7 +229,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             for (String mapKey : sendMap.keySet()) {
                                 msgHistoryList.add(sendMap.get(mapKey));
                             }
-                            Collections.sort(msgHistoryList, new MessageAction.SortExpertsTeamDate());
+                            Collections.reverse(msgHistoryList);
+//                            Collections.sort(msgHistoryList, new MessageAction.SortExpertsTeamDate());
                         }
                         messageChatAdapter.addHistoryData(msgHistoryList);
                     }
@@ -290,7 +291,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             for (String mapKey : sendMap.keySet()) {
                                 msgTimerList.add(sendMap.get(mapKey));
                             }
-                            Collections.sort(msgTimerList, new MessageAction.SortExpertsTeamDate());
+                            Collections.reverse(msgTimerList);
+//                            Collections.sort(msgTimerList, new MessageAction.SortExpertsTeamDate());
                         }
                         messageChatAdapter.addTimerData(msgTimerList);
                     }
@@ -314,7 +316,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 case SEND_AUDIO_MESSAGE:
                     JSONObject audioJsonObject = (JSONObject) msg.obj;
                     if (audioJsonObject == null) {
-                        return;
+                        break;
                     }
                     try {
                         String postType = audioJsonObject.optString("postType");
@@ -349,8 +351,10 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     llm.scrollToPosition(scrollPosition);
                     break;
             }
+
+            return false;
         }
-    };
+    });
 
     @Override
     public int getLayout() {
