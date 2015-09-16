@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe.receiver_service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
@@ -20,7 +19,6 @@ public class GcmIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d(TAG, "22onReceive=========================");
         if (LocationUtil.isGoogleAvailable()) {
             Bundle extras = intent.getExtras();
             GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);

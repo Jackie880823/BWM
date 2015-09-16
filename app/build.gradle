@@ -18,8 +18,8 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 56   //TODO
-        versionName "2.0.1" //TODO
+        versionCode 57   //TODO
+        versionName "2.0.2" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
