@@ -102,7 +102,6 @@ public class LocalMediaAdapter extends BaseAdapter {
      */
     @Override
     public void notifyDataSetChanged() {
-        LogUtil.i(TAG, "notifyDataSetChanged& ");
         clearLoad();
         super.notifyDataSetChanged();
     }
@@ -250,18 +249,9 @@ public class LocalMediaAdapter extends BaseAdapter {
             MediaData mediaData = mDatas.get(position);
 
             LogUtil.i(TAG, "loadLocalBitmap& uri: " + mediaData.getContentUri());
-
-            Uri thumbnailUri;
-            thumbnailUri = mediaData.getThumbnailUri();
-
-            if (thumbnailUri != null) {
-                LogUtil.i(TAG, "loadLocalBitmap& load thumbnail: " + thumbnailUri);
-                ImageLoader.getInstance().displayImage(thumbnailUri.toString(), imageView);
-            } else {
-                String uri = mediaData.getPath();
-                LogUtil.i(TAG, "loadLocalBitmap& load picture: " + uri);
-                ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options, imageLoadingListener);
-            }
+            String uri = mediaData.getPath();
+            LogUtil.i(TAG, "loadLocalBitmap& load picture: " + uri);
+            ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options, imageLoadingListener);
         }
     }
 
