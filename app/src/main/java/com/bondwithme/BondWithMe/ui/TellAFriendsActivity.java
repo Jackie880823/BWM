@@ -178,6 +178,7 @@ public class TellAFriendsActivity extends BaseActivity {
                 @Override
                 public void onResult(String string) {
                     MessageUtil.showMessage(TellAFriendsActivity.this, R.string.action_invitation_successful);
+                    finish();
                 }
 
                 @Override
