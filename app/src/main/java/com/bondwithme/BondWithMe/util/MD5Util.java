@@ -1,5 +1,7 @@
 package com.bondwithme.BondWithMe.util;
 
+import android.text.TextUtils;
+
 import java.security.MessageDigest;
 
 /**
@@ -10,6 +12,9 @@ public class MD5Util {
      * MD5加码 生成32位md5码
      */
     public static String string2MD5(String inStr) {
+        if(TextUtils.isEmpty(inStr)){
+            return inStr;
+        }
         MessageDigest md5 = null;
         try {
             md5 = MessageDigest.getInstance("MD5");
