@@ -31,26 +31,26 @@ public class PushApi {
     public static void initPushApi(Context context) {
 
         mContext = context;
-        if (LocationUtil.isGoogleAvailable()) {
+        if (SystemUtil.checkPlayServices(context)) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(mContext);
             if (TextUtils.isEmpty(regid)) {
                 isGCM = true;
                 registerInBackground();
             }
-        } else {
-            JPushInterface.init(mContext);
-            regid = AppInfoUtil.getJpushRegistrationId(mContext);
-            if (TextUtils.isEmpty(regid)) {
-                isGCM = false;
-                registerInBackground();
-            }
-            /**极光推送*/
+        }
+        //jpush一直启用，防止中国带google service 但是不能用的情况
+        JPushInterface.init(mContext);
+        regid = AppInfoUtil.getJpushRegistrationId(mContext);
+        if (TextUtils.isEmpty(regid)) {
+            isGCM = false;
+            registerInBackground();
+        }
+        /**极光推送*/
 //            JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
 
 //        JPushInterface.stopPush(getApplicationContext());
 //        JPushInterface.resumePush(getApplicationContext());
-        }
 
 
     }
@@ -77,7 +77,7 @@ public class PushApi {
             protected void onPostExecute(String msg) {
                 if (isGCM) {
 
-                }else{
+                } else {
 
                 }
             }
@@ -85,7 +85,7 @@ public class PushApi {
         }.execute(null, null, null);
     }
 
-    private  static String doRegistration2Jpush() {
+    private static String doRegistration2Jpush() {
         String msg = "";
         try {
             Thread.sleep(3000);
@@ -96,7 +96,7 @@ public class PushApi {
 //        if(TextUtils.isEmpty(regid)){
 //            regid = JPushInterface.getRegistrationID(context);
 //        }
-        while (TextUtils.isEmpty(regid)){
+        while (TextUtils.isEmpty(regid)) {
             regid = JPushInterface.getRegistrationID(mContext);
             try {
                 Thread.sleep(1000);
@@ -105,7 +105,7 @@ public class PushApi {
             }
         }
         msg = "Device registered, registration ID=" + regid;
-        Log.d("","hhhhhhhh" + regid);
+        Log.d("", "hhhhhhhh" + regid);
         sendRegistrationIdToBackend(regid, "jpush");
         AppInfoUtil.storeRegistrationId(mContext, regid, false);
         return msg;
@@ -132,7 +132,7 @@ public class PushApi {
             // message using the 'from' address in the message.
 
             // Persist the registration ID - no need to register again.
-            AppInfoUtil.storeRegistrationId(mContext, regid,true);
+            AppInfoUtil.storeRegistrationId(mContext, regid, true);
 
 
         } catch (IOException ex) {

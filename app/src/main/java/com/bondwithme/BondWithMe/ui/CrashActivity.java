@@ -2,7 +2,6 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -81,35 +80,6 @@ public class CrashActivity extends Activity {
         }
         if (!errorReportDialog.isShowing())
             errorReportDialog.show();
-    }
-
-
-    class SendEmailTask extends AsyncTask<Void, Integer, Boolean> {
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            CrashActivity.this.doSendMail();
-            return true;
-        }
-
-        private void doSendMail() {
-
-
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            Message message = mHandler.obtainMessage();
-            message.what = SEND_FINISH;
-            message.arg1 = result ? SUCCESED : FAILED;
-            mHandler.sendMessage(message);
-
-        }
-
     }
 
     private void doSendMail() {
