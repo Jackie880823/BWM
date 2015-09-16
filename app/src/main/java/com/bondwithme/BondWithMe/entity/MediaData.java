@@ -54,19 +54,24 @@ public class MediaData {
     /**
      * 手机本地储存的多媒体数据的{@link Uri}
      */
-    private final Uri contentUri;
+    private Uri contentUri;
 
     /**
      * 手机本地储存的多媒体数据的存储路径
      */
-    private final String path;
+    private String path;
 
     /**
      * 标识封装多媒体数据的类型:{@link #TYPE_VIDEO}、{@link #TYPE_VIDEO}
      */
-    private final String type;
+    private String type;
 
-    private final long duration;
+    /**
+     * 视频的播放时长
+     */
+    private long duration;
+
+    private Uri thumbnailUri = null;
 
     /**
      * 封装{@link SelectPhotosActivity}显示的多媒体数据
@@ -115,6 +120,14 @@ public class MediaData {
 
     public long getDuration() {
         return duration;
+    }
+
+    public Uri getThumbnailUri() {
+        return thumbnailUri;
+    }
+
+    public void setThumbnailUri(Uri thumbnailUri) {
+        this.thumbnailUri = thumbnailUri;
     }
 
     /**
