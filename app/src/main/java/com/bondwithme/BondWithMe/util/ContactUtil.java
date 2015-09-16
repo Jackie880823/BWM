@@ -69,6 +69,35 @@ public class ContactUtil {
             return phoneNumbers;
     }
 
+
+    public static List<String> getContactEmails(Context context,Cursor cursor){
+
+        // 获得联系人的ID号
+        int idColumn = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+        String contactId = cursor.getString(idColumn);
+
+        Cursor emailCursor = getReslover(context).query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                null,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
+                null,
+                null);
+
+        List<String> emails = new ArrayList<>();
+        if(emailCursor!=null) {
+            while (emailCursor.moveToNext()) {
+                emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
+            }
+        }
+        return emails;
+    }
+
+
+    /**
+     * @deprecated
+     * @param context
+     * @param contactId
+     * @return
+     */
     public static List<String> getContactEmails(Context context,int contactId){
         Cursor emailCursor = getReslover(context).query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
                 null,
