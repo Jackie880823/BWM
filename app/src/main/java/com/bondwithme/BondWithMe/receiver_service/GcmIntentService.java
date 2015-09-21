@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe.receiver_service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
@@ -29,7 +28,6 @@ public class GcmIntentService extends IntentService {
 
             if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
 
-                Log.d(TAG, "22onReceive=========================");
             /*
              * Filter messages based on message type. Since it is likely that GCM
              * will be extended in the future with new message types, just ignore
@@ -55,7 +53,6 @@ public class GcmIntentService extends IntentService {
 //                    } catch (InterruptedException e) {
 //                    }
 //                }
-                    if (!LocationUtil.isGoogleAvailable()) {
 //                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
                         // Post notification of received message.
                         try {
@@ -76,7 +73,6 @@ public class GcmIntentService extends IntentService {
                         }
                     }
 
-                }
                 // Release the wake lock provided by the WakefulBroadcastReceiver.
                 GcmBroadcastReceiver.completeWakefulIntent(intent);
             }

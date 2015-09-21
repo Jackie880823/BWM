@@ -49,14 +49,15 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
     private ImageView tab_icon_maybe;
     private ImageView tab_icon_not_going;
 
-
-
     TranslateAnimation translateAnimation1;
     TranslateAnimation translateAnimation2;
     int currentTabIndex;
     FragmentManager fragmentManager;
 
     private int tabIndex = 4;//默认值
+
+    private int blackColor;
+    private int grayColor;
 
     public static InvitedStatusFragment newInstance(String... params) {
         return createInstance(new InvitedStatusFragment(), params);
@@ -82,6 +83,8 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         if (getParentActivity().eventEntity == null) {
             return;
         }
+        blackColor = getResources().getColor(R.color.default_text_color_dark);
+        grayColor = getResources().getColor(R.color.default_text_color_light);
         String group_id = getParentActivity().eventEntity.getGroup_id();
         String owner_id = getParentActivity().eventEntity.getGroup_owner_id();
         tabIndex = getParentActivity().tabIndex;
@@ -175,24 +178,44 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
                 tab_icon_going.setImageResource(R.drawable.status_going_normal);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_normal);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_normal);
+
+                tab_text_all.setTextColor(blackColor);
+                tab_text_going.setTextColor(grayColor);
+                tab_text_maybe.setTextColor(grayColor);
+                tab_text_not_going.setTextColor(grayColor);
                 break;
             case 1:
                 tab_icon_all.setImageResource(R.drawable.members_large_normal);
                 tab_icon_going.setImageResource(R.drawable.status_going_press);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_normal);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_normal);
+
+                tab_text_all.setTextColor(grayColor);
+                tab_text_going.setTextColor(blackColor);
+                tab_text_maybe.setTextColor(grayColor);
+                tab_text_not_going.setTextColor(grayColor);
                 break;
             case 2:
                 tab_icon_all.setImageResource(R.drawable.members_large_normal);
                 tab_icon_going.setImageResource(R.drawable.status_going_normal);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_press);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_normal);
+
+                tab_text_all.setTextColor(grayColor);
+                tab_text_going.setTextColor(grayColor);
+                tab_text_maybe.setTextColor(blackColor);
+                tab_text_not_going.setTextColor(grayColor);
                 break;
             case 3:
                 tab_icon_all.setImageResource(R.drawable.members_large_normal);
                 tab_icon_going.setImageResource(R.drawable.status_going_normal);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_normal);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_press);
+
+                tab_text_all.setTextColor(grayColor);
+                tab_text_going.setTextColor(grayColor);
+                tab_text_maybe.setTextColor(grayColor);
+                tab_text_not_going.setTextColor(blackColor);
                 break;
             default:
                 return;

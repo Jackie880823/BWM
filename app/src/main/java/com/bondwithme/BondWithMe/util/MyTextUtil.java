@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
 public class MyTextUtil {
 
     private MyTextUtil() {
@@ -36,19 +35,19 @@ public class MyTextUtil {
      */
     public static String NoZero(String phone) {
 
-        if (phone.startsWith("0", 0)) {
+        if (!TextUtils.isEmpty(phone) && (phone.startsWith("0", 0))) {
             phone = phone.substring(1);
             return NoZero(phone);
-        } else {
-            return phone;
         }
-
+        return phone;
     }
 
     public static boolean isHasEmpty(String... str) {
-        for (int i = 0; i < str.length; i++) {
-            if (TextUtils.isEmpty(str[i])) {
-                return true;
+        if (str != null) {
+            for (int i = 0; i < str.length; i++) {
+                if (TextUtils.isEmpty(str[i])) {
+                    return true;
+                }
             }
         }
         return false;
@@ -56,6 +55,7 @@ public class MyTextUtil {
 
     /**
      * 获取字符长度，忽略文字和半全角
+     *
      * @param currentMax
      * @param strings
      * @param p
@@ -77,6 +77,7 @@ public class MyTextUtil {
 
     /**
      * 半角转全角
+     *
      * @param input String.
      * @return 全角字符串.
      */
@@ -95,6 +96,7 @@ public class MyTextUtil {
 
     /**
      * 全角转半角
+     *
      * @param input String.
      * @return 半角字符串
      */

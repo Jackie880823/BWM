@@ -449,13 +449,15 @@ public class SignUpPhoneFragment extends Fragment implements View.OnClickListene
 
     public void goMainActivity()
     {
-        App.userLoginSuccessed(getActivity(),userEntity, tokenEntity);
+        App.userLoginSuccessed(getActivity(), userEntity, tokenEntity);
     }
 
     private void goThirdPartyCheckId() {
-        Intent intent = new Intent(getActivity(), ThirdPartyVerifyPhoneActivity.class);
-        intent.putExtra(Constant.TYPE_FACEBOOK, faceBookUserEntity);
-        startActivity(intent);
+        if(getActivity()!=null&&!getActivity().isFinishing()) {
+            Intent intent = new Intent(getActivity(), ThirdPartyVerifyPhoneActivity.class);
+            intent.putExtra(Constant.TYPE_FACEBOOK, faceBookUserEntity);
+            startActivity(intent);
+        }
     }
 
     private FaceBookUserEntity faceBookUserEntity;

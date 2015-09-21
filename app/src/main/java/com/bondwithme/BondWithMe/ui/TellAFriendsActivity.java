@@ -44,6 +44,7 @@ public class TellAFriendsActivity extends BaseActivity {
     private Cursor cursor;
     private ContactCursorAdapter adapter;
     private SearchView search_view;
+    public Cursor allCursor;
 
     public int getLayout() {
         return R.layout.activity_tell_a_friend;
@@ -80,6 +81,8 @@ public class TellAFriendsActivity extends BaseActivity {
     public void initView() {
         reslover = getContentResolver();
         cursor = ContactUtil.getContacts(this, null, null, null, null);
+        allCursor = ContactUtil.getContacts(this, null, null, null, null);
+        allCursor.moveToFirst();
         contact_list = getViewById(R.id.contact_list);
         adapter = new ContactCursorAdapter(this, cursor);
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -122,7 +125,7 @@ public class TellAFriendsActivity extends BaseActivity {
             showSelectDialog.dismiss();
             showSelectDialog = null;
         }
-        if(cursor!=null){
+        if (cursor != null) {
             cursor.close();
         }
         super.onDestroy();
@@ -130,12 +133,13 @@ public class TellAFriendsActivity extends BaseActivity {
 
 
     private boolean validateForm() {
-        if (adapter == null || adapter.getSelectContactIds().size() == 0) {
+        if (adapter == null || adapter.getContactsIds().size() == 0) {
             return false;
         }
 
         return true;
     }
+
 
 //    ProgressDialog mProgressDialog;
 
@@ -144,7 +148,7 @@ public class TellAFriendsActivity extends BaseActivity {
 //            mProgressDialog = new ProgressDialog(this, getString(R.string.text_waiting));
 //            mProgressDialog.show();
 
-            ContactMessageEntity messageEntity = generateMessage("");
+            ContactMessageEntity messageEntity = generateMessage();
 //            params.put("messageEntity", new Gson().toJson(messageEntity));
 
             Map<String, Object> params = new HashMap<>();
@@ -174,6 +178,7 @@ public class TellAFriendsActivity extends BaseActivity {
                 @Override
                 public void onResult(String string) {
                     MessageUtil.showMessage(TellAFriendsActivity.this, R.string.action_invitation_successful);
+                    finish();
                 }
 
                 @Override
@@ -196,6 +201,13 @@ public class TellAFriendsActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 使用Position,有问题的
+     *
+     * @param msg
+     * @return
+     * @deprecated
+     */
     private ContactMessageEntity generateMessage(String msg) {
 
         ContactMessageEntity contactMessageEntity = new ContactMessageEntity();
@@ -222,6 +234,39 @@ public class TellAFriendsActivity extends BaseActivity {
     }
 
 
+    private ContactMessageEntity generateMessage() {
+
+        ContactMessageEntity contactMessageEntity = new ContactMessageEntity();
+
+        List<ContactDetailEntity> contactDetailEntities = new ArrayList<>();
+        ContactDetailEntity contactDetailEntity = new ContactDetailEntity();
+
+        List<String> contactsIds = adapter.getContactsIds();
+        allCursor.moveToFirst();
+        if (contactsIds != null) {
+            do
+            {
+                if (contactsIds.contains(allCursor.getInt(allCursor.getColumnIndex(ContactsContract.Contacts._ID)) + "")) {
+                    contactDetailEntity = new ContactDetailEntity();
+                    contactDetailEntity.setDisplayName(allCursor.getString(0));
+                    contactDetailEntity.setPhoneNumbers(ContactUtil.getContactPhones(this, allCursor));
+                    contactDetailEntity.setEmails(ContactUtil.getContactEmails(this, allCursor));
+                    contactDetailEntities.add(contactDetailEntity);
+                }
+            }
+            while (allCursor.moveToNext());
+        }
+
+        contactMessageEntity.setPersonal_msg("");
+        contactMessageEntity.setContact_list(contactDetailEntities);
+        contactMessageEntity.setUser_country_code(MainActivity.getUser().getUser_country_code());
+        contactMessageEntity.setUser_given_name(MainActivity.getUser().getUser_given_name());
+        contactMessageEntity.setUser_id(MainActivity.getUser().getUser_id());
+
+        return contactMessageEntity;
+    }
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -234,7 +279,6 @@ public class TellAFriendsActivity extends BaseActivity {
                 break;
         }
     }
-
 
 
     @Override
