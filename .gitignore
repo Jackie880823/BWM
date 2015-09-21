@@ -10,6 +10,7 @@
 /**/*-report.txt
 app/out.map
 /app/gradle.properties
+/app/ormlite_config.txt
 
 /*.idea
 # files for the dex VM

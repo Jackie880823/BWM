@@ -295,35 +295,36 @@ public class ViaContactMainActivity extends BaseActivity {
                     Uri contactData = data.getData();
                     //查询就是输入URI等参数,其中URI是必须的,其他是可选的,如果系统能找到URI对应的ContentProvider将返回一个Cursor对象.
                     Cursor cursor = this.getContentResolver().query(contactData, null, null, null, null);
-                    cursor.moveToFirst();
-                    //获得DATA表中的名字
-                    username = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                    //条件为联系人ID
-                    String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
-                    // 获得DATA表中的电话号码，条件为联系人ID,因为手机号码可能会有多个
-                    Cursor phone = reContentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
-                            null,
-                            null);
+                    if(cursor.moveToFirst()) {
+                        //获得DATA表中的名字
+                        username = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                        //条件为联系人ID
+                        String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                        // 获得DATA表中的电话号码，条件为联系人ID,因为手机号码可能会有多个
+                        Cursor phone = reContentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                                null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
+                                null,
+                                null);
 
-                    Cursor email = reContentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-                            null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
-                            null,
-                            null);
+                        Cursor email = reContentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+                                null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + contactId,
+                                null,
+                                null);
 
-                    while (phone.moveToNext()) {
-                        userNumber.add(phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                        while (phone.moveToNext()) {
+                            userNumber.add(phone.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+                        }
+
+                        while (email.moveToNext()) {
+                            userEmail.add(email.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
+                        }
+
+                        tvSelectContact.setText(username);
+                        Adapter adapter = new Adapter(this, R.layout.item_phone_email, userNumber, userEmail);
+                        lvInfo.setAdapter(adapter);
                     }
-
-                    while (email.moveToNext()) {
-                        userEmail.add(email.getString(phone.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
-                    }
-
-                    tvSelectContact.setText(username);
-                    Adapter adapter = new Adapter(this, R.layout.item_phone_email, userNumber, userEmail);
-                    lvInfo.setAdapter(adapter);
                 }
 
             }
