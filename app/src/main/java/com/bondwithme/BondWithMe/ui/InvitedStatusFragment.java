@@ -169,30 +169,52 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         mViewPager.setCurrentItem(tabIndex);
     }
     private void changeTabTitle(int tabIndex) {
+        int blackColor = getResources().getColor(R.color.default_text_color_dark);
+        int grayColor = getResources().getColor(R.color.default_text_color_light);
         switch (tabIndex) {
             case 0:
                 tab_icon_all.setImageResource(R.drawable.members_large_press);
                 tab_icon_going.setImageResource(R.drawable.status_going_normal);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_normal);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_normal);
+
+                tab_text_all.setTextColor(blackColor);
+                tab_text_going.setTextColor(grayColor);
+                tab_text_maybe.setTextColor(grayColor);
+                tab_text_not_going.setTextColor(grayColor);
                 break;
             case 1:
                 tab_icon_all.setImageResource(R.drawable.members_large_normal);
                 tab_icon_going.setImageResource(R.drawable.status_going_press);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_normal);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_normal);
+
+                tab_text_all.setTextColor(grayColor);
+                tab_text_going.setTextColor(blackColor);
+                tab_text_maybe.setTextColor(grayColor);
+                tab_text_not_going.setTextColor(grayColor);
                 break;
             case 2:
                 tab_icon_all.setImageResource(R.drawable.members_large_normal);
                 tab_icon_going.setImageResource(R.drawable.status_going_normal);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_press);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_normal);
+
+                tab_text_all.setTextColor(grayColor);
+                tab_text_going.setTextColor(grayColor);
+                tab_text_maybe.setTextColor(blackColor);
+                tab_text_not_going.setTextColor(grayColor);
                 break;
             case 3:
                 tab_icon_all.setImageResource(R.drawable.members_large_normal);
                 tab_icon_going.setImageResource(R.drawable.status_going_normal);
                 tab_icon_maybe.setImageResource(R.drawable.status_maybe_normal);
                 tab_icon_not_going.setImageResource(R.drawable.status_not_going_press);
+
+                tab_text_all.setTextColor(grayColor);
+                tab_text_going.setTextColor(grayColor);
+                tab_text_maybe.setTextColor(grayColor);
+                tab_text_not_going.setTextColor(blackColor);
                 break;
             default:
                 return;
