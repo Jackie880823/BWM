@@ -1079,10 +1079,13 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         switch (requestCode) {
             case 1:
                 if (resultCode == -1) {
-                    groupAdapter.clearBitmap(groupEntityList);
-                    groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
-                    groupListView.setAdapter(groupAdapter);
-                    getData();
+                    if(groupEntityList != null){
+                        groupAdapter.clearBitmap(groupEntityList);
+                        groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
+                        groupListView.setAdapter(groupAdapter);
+                        getData();
+                    }
+
                 }
         }
 
