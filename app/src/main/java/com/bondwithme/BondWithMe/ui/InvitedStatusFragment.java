@@ -49,14 +49,15 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
     private ImageView tab_icon_maybe;
     private ImageView tab_icon_not_going;
 
-
-
     TranslateAnimation translateAnimation1;
     TranslateAnimation translateAnimation2;
     int currentTabIndex;
     FragmentManager fragmentManager;
 
     private int tabIndex = 4;//默认值
+
+    private int blackColor;
+    private int grayColor;
 
     public static InvitedStatusFragment newInstance(String... params) {
         return createInstance(new InvitedStatusFragment(), params);
@@ -82,6 +83,8 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         if (getParentActivity().eventEntity == null) {
             return;
         }
+        blackColor = getResources().getColor(R.color.default_text_color_dark);
+        grayColor = getResources().getColor(R.color.default_text_color_light);
         String group_id = getParentActivity().eventEntity.getGroup_id();
         String owner_id = getParentActivity().eventEntity.getGroup_owner_id();
         tabIndex = getParentActivity().tabIndex;
@@ -169,8 +172,6 @@ public class InvitedStatusFragment extends BaseFragment<InvitedStatusActivity> i
         mViewPager.setCurrentItem(tabIndex);
     }
     private void changeTabTitle(int tabIndex) {
-        int blackColor = getResources().getColor(R.color.default_text_color_dark);
-        int grayColor = getResources().getColor(R.color.default_text_color_light);
         switch (tabIndex) {
             case 0:
                 tab_icon_all.setImageResource(R.drawable.members_large_press);
