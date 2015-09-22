@@ -461,10 +461,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     private static final int GET_PULL_DATA = 0x12;
     private static final int GET_NEW_DATA_GROUP = 0x13;
     private static final int GET_PULL_DATA_GROUP = 0x14;
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_NEW_DATA:
                     List<PrivateMessageEntity> userEntityList1 = (List<PrivateMessageEntity>) msg.obj;
@@ -483,9 +482,9 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     messageGroupAdapter.AddGroupEntityData(userEntityListPull);
                     break;
             }
-
+            return false;
         }
-    };
+    });
 
     private void groupFinishReFresh() {
         if (isGroupRefresh) {

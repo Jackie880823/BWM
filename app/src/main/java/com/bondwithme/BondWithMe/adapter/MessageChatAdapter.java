@@ -438,44 +438,49 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         }
     }
 
-    private Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            Map<String, Object> map = (Map) msg.obj;
-            if (map == null) {
-                return;
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what) {
+                case PLAY_AUDIO_HANDLER:
+                    Map<String, Object> map = (Map) msg.obj;
+                    if (map == null) {
+                        break;
+                    }
+                    int position = (int) map.get("position");
+                    String duration = (String) map.get("duration");
+                    String name = (String) map.get("name");
+                    int playTime = 0;
+                    try {
+                        playTime = Integer.parseInt(duration);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                    VHItem holder = (VHItem) recyclerView.findViewHolderForAdapterPosition(position);
+                    if (holder == null) {
+                        break;
+                    }
+                    HorizontalProgressBarWithNumber mProgressBar = (HorizontalProgressBarWithNumber) holder.itemView.findViewById(R.id.id_progressbar);
+                    if (mProgressBar == null) {
+                        break;
+                    }
+                    if (playTime != 0) {
+                        mProgressBar.setMax(playTime);
+                        mProgressBar.setProgress(++playPros);
+                        audioName = name;
+                    }
+                    if (playPros > playTime) {
+                        mProgressBar.setProgress(0);
+                        mHandler.removeMessages(PLAY_AUDIO_HANDLER);
+                        audioName = null;
+                        playPros = 0;
+                    } else {
+                        mHandler.sendMessageDelayed(mHandler.obtainMessage(PLAY_AUDIO_HANDLER, map), 1000);
+                    }
             }
-            int position = (int) map.get("position");
-            String duration = (String) map.get("duration");
-            String name = (String) map.get("name");
-            int playTime = 0;
-            try {
-                playTime = Integer.parseInt(duration);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-            VHItem holder = (VHItem) recyclerView.findViewHolderForAdapterPosition(position);
-            if (holder == null) {
-                return;
-            }
-            HorizontalProgressBarWithNumber mProgressBar = (HorizontalProgressBarWithNumber) holder.itemView.findViewById(R.id.id_progressbar);
-            if (mProgressBar == null) {
-                return;
-            }
-            if (playTime != 0) {
-                mProgressBar.setMax(playTime);
-                mProgressBar.setProgress(++playPros);
-                audioName = name;
-            }
-            if (playPros > playTime) {
-                mProgressBar.setProgress(0);
-                mHandler.removeMessages(PLAY_AUDIO_HANDLER);
-                audioName = null;
-                playPros = 0;
-            } else {
-                mHandler.sendMessageDelayed(mHandler.obtainMessage(PLAY_AUDIO_HANDLER, map), 1000);
-            }
+            return false;
         }
-    };
+    });
 
     @Override
     public int getItemCount() {

@@ -161,10 +161,9 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
         });
     }
 
-    Handler handler = new Handler() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case CLICK_POSITION:
                     String name = (String) msg.obj;
@@ -186,8 +185,9 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                     setPage(recyclerAdapter.getFirstStickerName(), 0);
                     break;
             }
+            return false;
         }
-    };
+    });
 
     @Override
     public void requestData() {
@@ -341,21 +341,6 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                             return false;
                         }
                     });
-//                    gv.setOnScrollListener(new AbsListView.OnScrollListener() {
-//                        @Override
-//                        public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                            if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-//                                if (popupWindow != null && popupWindow.isShowing()) {
-//                                    popupWindow.dismiss();
-//                                }
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//
-//                        }
-//                    });
                     mLists.add(gv);
                 }
             }

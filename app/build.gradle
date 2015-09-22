@@ -18,8 +18,8 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 56   //TODO
-        versionName "2.0.1" //TODO
+        versionCode 57   //TODO
+        versionName "2.0.2" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -88,6 +88,8 @@ android {
 //        taobao {}
         appinchina {}
         googleplay {}
+        preload_globe_ph {}
+
         //...
     }
     //用productFlavors中渠道号替换 AndroidManifest.xml 中 UMENG_CHANNEL_VALUE
