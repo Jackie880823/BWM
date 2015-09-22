@@ -125,7 +125,12 @@ public class WallUtil {
             ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
             ssMember.setSpan(colorSpan, 0, ssMember.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            String target = String.format(AT_MEMBER, tagMemberCount);
+            String target;
+            if (atDescription.contains(strMember)){
+                target = strMember;
+            } else {
+                target = String.format(AT_MEMBER, tagMemberCount);
+            }
             setSpecialText(ssb, target, ssMember);
         }
 
@@ -157,11 +162,17 @@ public class WallUtil {
             ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.BLUE);
             ssGroup.setSpan(colorSpan, 0, ssGroup.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            String target = String.format(AT_GROUPS, tagGroupCount);
+            String target;
+            if (atDescription.contains(strGroup)) {
+                target = strGroup;
+            } else {
+                target = String.format(AT_GROUPS, tagGroupCount);
+            }
             setSpecialText(ssb, target, ssGroup);
         }
-
+        LogUtil.i(TAG, "setSpanContent setting end at description: " + ssb.toString());
         setClickNormal(ssb, strMember, strGroup, wall);
+        LogUtil.i(TAG, "setSpanContent setting end normal description: " + ssb.toString());
         tvContent.setText(ssb);
         tvContent.setAutoLinkMask(Linkify.ALL);
     }
@@ -209,52 +220,59 @@ public class WallUtil {
         int endGroup = startGroup + strGroup.length();
         if(endGroup == endMember) {
             // @群组和用户结束所在的位置相等说明没有任何@,全字符可点击
-            LogUtil.w(TAG, "setClickNormal& no action");
-            setSpecialText(ssb, wallEntity, description, 0, description.length());
+            setNormalSpecialText(ssb, wallEntity, 0, description.length());
+            LogUtil.w(TAG, "setClickNormal& no action description: " + ssb.toString());
             return;
         } else {
 
             int length = description.length();
-            if(startMember > startGroup | TextUtils.isEmpty(strMember)) {
-                LogUtil.i(TAG, "setClickNormal& group first");
-
-                setSpecialText(ssb, wallEntity, description, 0, startGroup);
+            if(startMember > startGroup || TextUtils.isEmpty(strMember)) {
+                setNormalSpecialText(ssb, wallEntity, 0, startGroup);
+                LogUtil.i(TAG, "setClickNormal& group first description: " + ssb.toString());
 
                 if(endGroup < startMember) {
-                    LogUtil.i(TAG, "setClickNormal& split 4 part");
-                    setSpecialText(ssb, wallEntity, description, endGroup, startMember);
+                    setNormalSpecialText(ssb, wallEntity, endGroup, startMember);
+                    LogUtil.i(TAG, "setClickNormal& split 4_1 part description: " + ssb.toString());
 
-                    setSpecialText(ssb, wallEntity, description, endMember, length);
+                    setNormalSpecialText(ssb, wallEntity, endMember, length);
+                    LogUtil.i(TAG, "setClickNormal& split 4_2 part description: " + ssb.toString());
                 } else {
                     LogUtil.i(TAG, "setClickNormal& split 1 part");
-                    setSpecialText(ssb, wallEntity, description, endGroup, length);
+                    setNormalSpecialText(ssb, wallEntity, endGroup, length);
                 }
             } else {
+
+                setNormalSpecialText(ssb, wallEntity, 0, startMember);
                 LogUtil.i(TAG, "setClickNormal& member first");
 
-                setSpecialText(ssb, wallEntity, description, 0, startMember);
-
                 if(endMember < startGroup) {
-                    LogUtil.i(TAG, "setClickNormal& split 4 part");
-                    setSpecialText(ssb, wallEntity, description, endMember, startGroup);
+                    setNormalSpecialText(ssb, wallEntity, endMember, startGroup);
+                    LogUtil.i(TAG, "setClickNormal& split 4_1 part description: " + ssb.toString());
 
-                    setSpecialText(ssb, wallEntity, description, endGroup, length);
+                    setNormalSpecialText(ssb, wallEntity, endGroup, length);
+                    LogUtil.i(TAG, "setClickNormal& split 4_2 part description: " + ssb.toString());
                 } else {
-                    LogUtil.i(TAG, "setClickNormal& split 1 part");
-                    setSpecialText(ssb, wallEntity, description, endMember, length);
+                    setNormalSpecialText(ssb, wallEntity, endMember, length);
+                    LogUtil.i(TAG, "setClickNormal& split 1 part description: " + ssb.toString());
                 }
             }
         }
     }
 
-    private void setSpecialText(SpannableStringBuilder ssb, WallEntity wallEntity, String description, int start, int end) {
+    /**
+     * @param ssb
+     * @param wallEntity
+     * @param start
+     * @param end
+     */
+    private void setNormalSpecialText(SpannableStringBuilder ssb, WallEntity wallEntity, int start, int end) {
         if(start >= 0 && start < end) {
-            String strMind = description.substring(start, end);
+            CharSequence strMind = ssb.subSequence(start, end);
             SpannableString ssMind = new SpannableString(strMind);
             boolean autoLink = Linkify.addLinks(ssMind, Linkify.ALL);
             if(!autoLink) {
-                setSpanClickShowComments(strMind, ssMind, wallEntity);
-                setSpecialText(ssb, strMind, ssMind);
+                setSpanClickShowComments(ssMind, wallEntity);
+                ssb.replace(start, end, ssMind);
             }
         }
     }
@@ -262,11 +280,10 @@ public class WallUtil {
     /**
      * 普通文字的点击事件，跳转到评论详情
      *
-     * @param str
      * @param s
      * @param wallEntity
      */
-    private void setSpanClickShowComments(String str, SpannableString s, final WallEntity wallEntity) {
+    private void setSpanClickShowComments(SpannableString s, final WallEntity wallEntity) {
         s.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
@@ -292,7 +309,7 @@ public class WallUtil {
                 ds.setUnderlineText(false);
                 ds.setColor(Color.BLACK);
             }
-        }, 0, str.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }, 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
 

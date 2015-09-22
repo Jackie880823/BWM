@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -159,7 +160,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * @param needFull  是否显示全部日志信息：{@value true} 显示全部日志信息；{@value false} 显示部份日志
      * @param context   用于引导应用资源
      */
-    public WallHolder(Context context, View itemView, HttpTools httpTools, boolean needFull) {
+    public WallHolder(final Context context, View itemView, HttpTools httpTools, boolean needFull) {
         // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
         super(itemView);
         mHttpTools = httpTools;
@@ -183,29 +184,35 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
         ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
         tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
-        tvContent.setMaxLines(9);
 
-        if(!needFull) {
+        if (!needFull) {
+            // 不显示全部内容只显示9九行
+            tvContent.setMaxLines(9);
             tvContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                boolean isSetting = false;
+
                 @Override
                 public void onGlobalLayout() {
-                    // 字符显示超过9行，只显示到第九行
-                    int lineCount = tvContent.getLineCount();
-                    if(lineCount > 8) {
-                        // 第九行只显示十个字符
-                        int maxLineEndIndex = tvContent.getLayout().getLineEnd(8);
-                        int maxLineStartIndex = tvContent.getLayout().getLineStart(8);
-                        String sourceText = tvContent.getText().toString();
-                        if(maxLineEndIndex - maxLineStartIndex > 7) {
-                            // 截取到第九行文字的第7个字符，其余字符用...替代
-                            String newText = sourceText.substring(0, maxLineStartIndex + 7) + "...";
-                            tvContent.setText(newText);
-                        } else if(lineCount > 9) {
-                            // 截取到第九行文字未满7个字符，行数超过9号，说明有换行，将换行替换成"..."
-                            String newText = sourceText.substring(0, maxLineEndIndex - 1) + "...";
-                            tvContent.setText(newText);
+                    if (!isSetting) {
+                        isSetting = true;
+                        // 字符显示超过9行，只显示到第九行
+                        int lineCount = tvContent.getLineCount();
+                        if (lineCount > 8) {
+                            // 第九行只显示十个字符
+                            int maxLineEndIndex = tvContent.getLayout().getLineEnd(8);
+                            int maxLineStartIndex = tvContent.getLayout().getLineStart(8);
+                            CharSequence sourceText = tvContent.getText();
+                            SpannableStringBuilder ssb = new SpannableStringBuilder(sourceText);
+                            if (maxLineEndIndex - maxLineStartIndex > 7) {
+                                // 截取到第九行文字的第7个字符，其余字符用...替代
+                                ssb.replace(maxLineStartIndex + 7, ssb.length() - 1, "...");
+                                setSpanContent(context, ssb.toString());
+                            } else if (lineCount > 9) {
+                                // 截取到第九行文字未满7个字符，行数超过9号，说明有换行，将换行替换成"..."
+                                ssb.replace(maxLineEndIndex - 2, ssb.length() - 1, "...");
+                                setSpanContent(context, ssb.toString());
+                            }
                         }
-
                     }
                 }
             });
@@ -225,12 +232,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
+        switch (v.getId()) {
 
             case R.id.tv_wall_agree_count:
             case R.id.tv_love_list:
-                if(Integer.valueOf(wallEntity.getLove_count()) > 0) {
-                    if(mViewClickListener != null) {
+                if (Integer.valueOf(wallEntity.getLove_count()) > 0) {
+                    if (mViewClickListener != null) {
                         mViewClickListener.showLovedMember(MainActivity.getUser().getUser_id(), wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
                     }
                 }
@@ -240,7 +247,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             case R.id.iv_love:
                 updateLovedView();
 
-                if(TextUtils.isEmpty(wallEntity.getLove_id())) {
+                if (TextUtils.isEmpty(wallEntity.getLove_id())) {
                     doLove(wallEntity, false);
                 } else {
                     doLove(wallEntity, true);
@@ -255,13 +262,13 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             case R.id.tv_wall_content:
             case R.id.ll_comment:
             case R.id.top_event:
-                if(mViewClickListener != null) {
+                if (mViewClickListener != null) {
                     mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
                 }
                 break;
             case R.id.iv_walls_images:
 
-                if(TextUtils.isEmpty(wallEntity.getVideo_filename())) {
+                if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {
                     showOriginPic();
                 } else {
                     showPreviewVideo();
@@ -269,7 +276,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 break;
 
             case R.id.btn_del:
-                if(mViewClickListener != null) {
+                if (mViewClickListener != null) {
                     mViewClickListener.remove(wallEntity.getContent_group_id());
                 }
                 break;
@@ -306,7 +313,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //        String name = MainActivity.getUser().getUser_given_name();
         int resId;
 
-        if(TextUtils.isEmpty(wallEntity.getLove_id())) {
+        if (TextUtils.isEmpty(wallEntity.getLove_id())) {
             count += 1;
             resId = R.drawable.love_press;
             wallEntity.setLove_id(MainActivity.getUser().getUser_id());
@@ -391,7 +398,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
         String atDescription = wallEntity.getText_description();
-        if(TextUtils.isEmpty(atDescription)) {
+        if (TextUtils.isEmpty(atDescription)) {
             tvContent.setVisibility(View.GONE);
         } else {
             tvContent.setVisibility(View.VISIBLE);
@@ -399,25 +406,17 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
         LogUtil.i(TAG, "onBindViewHolder& description: " + atDescription);
 
-        int tagMemberCount = this.wallEntity.getTag_member() == null ? 0 : wallEntity.getTag_member().size();
-        int tagGroupCount = this.wallEntity.getTag_member() == null ? 0 : wallEntity.getTag_group().size();
-        if(tagMemberCount >= 0 || tagGroupCount >= 0) {
-            // 有TAG用户或分组需要显示字符特效
-            WallUtil util = new WallUtil(context, mViewClickListener);
-            util.setSpanContent(tvContent, this.wallEntity, atDescription, tagMemberCount, tagGroupCount);
-        } else {
-            tvContent.setOnClickListener(this);
-        }
+        setSpanContent(context, atDescription);
 
         // 显示发表的时间
         tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(context, wallEntity.getContent_creation_date()));
         //wing modified begin 2015.08.13
         int publicType = 0;
-        if(!TextUtils.isEmpty(wallEntity.getContent_group_public())) {
+        if (!TextUtils.isEmpty(wallEntity.getContent_group_public())) {
             publicType = Integer.valueOf(wallEntity.getContent_group_public());
         }
         //wing modified end 2015.08.13
-        if(publicType == 0) {
+        if (publicType == 0) {
             ivLock.setVisibility(View.VISIBLE);
         } else {
             ivLock.setVisibility(View.GONE);
@@ -426,19 +425,19 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tvUserName.setText(this.wallEntity.getUser_given_name());
 
         // file_id 为空表示没有发表图片，有则需要显示图片
-        if(TextUtils.isEmpty(this.wallEntity.getFile_id()) && TextUtils.isEmpty(wallEntity.getVideo_thumbnail())) {
+        if (TextUtils.isEmpty(this.wallEntity.getFile_id()) && TextUtils.isEmpty(wallEntity.getVideo_thumbnail())) {
             llWallsImage.setVisibility(View.GONE);
         } else {
             llWallsImage.setVisibility(View.VISIBLE);
 
-            if(!TextUtils.isEmpty(this.wallEntity.getVideo_thumbnail())) { // 有视频图片说这条Wall上传的是视频并有图片，显示视频图片
+            if (!TextUtils.isEmpty(this.wallEntity.getVideo_thumbnail())) { // 有视频图片说这条Wall上传的是视频并有图片，显示视频图片
                 String url = String.format(Constant.API_GET_VIDEO_THUMBNAIL, wallEntity.getContent_creator_id(), wallEntity.getVideo_thumbnail());
                 LogUtil.i(TAG, "setContent& video_thumbnail: " + url);
                 videoImage.setVisibility(View.VISIBLE);
                 VolleyUtil.initNetworkImageView(context, imWallsImages, url, R.drawable.network_image_default, R.drawable.network_image_default);
 
                 String duration = MyDateUtils.formatDuration(wallEntity.getVideo_duration());
-                if(TextUtils.isEmpty(duration)) {
+                if (TextUtils.isEmpty(duration)) {
                     tvPhotoCount.setVisibility(View.GONE);
                 } else {
                     tvPhotoCount.setVisibility(View.VISIBLE);
@@ -447,7 +446,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             } else {
                 // 有图片显示图片总数
                 int count = Integer.valueOf(wallEntity.getPhoto_count());
-                if(count > 1) {
+                if (count > 1) {
                     String photoCountStr;
                     photoCountStr = count + " " + context.getString(R.string.text_photos);
                     tvPhotoCount.setText(photoCountStr);
@@ -467,7 +466,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //        }
 
         try {
-            if(this.wallEntity.getDofeel_code() != null) {
+            if (this.wallEntity.getDofeel_code() != null) {
                 StringBuilder b = new StringBuilder(this.wallEntity.getDofeel_code());
                 int charIndex = this.wallEntity.getDofeel_code().lastIndexOf("_");
                 b.replace(charIndex, charIndex + 1, "/");
@@ -477,7 +476,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             } else {
                 iv_mood.setVisibility(View.GONE);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             iv_mood.setVisibility(View.GONE);
         }
 
@@ -499,20 +498,20 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tvCommentCount.setText(this.wallEntity.getComment_count());
 
 
-        if(MainActivity.getUser().getUser_id().equals(this.wallEntity.getUser_id())) {
+        if (MainActivity.getUser().getUser_id().equals(this.wallEntity.getUser_id())) {
             btn_del.setVisibility(View.VISIBLE);
         } else {
             btn_del.setVisibility(View.GONE);
         }
 
-        if(TextUtils.isEmpty(this.wallEntity.getLove_id())) {
+        if (TextUtils.isEmpty(this.wallEntity.getLove_id())) {
             ibAgree.setImageResource(R.drawable.love_normal);
         } else {
             ibAgree.setImageResource(R.drawable.love_press);
         }
 
         String locationName = this.wallEntity.getLoc_name();
-        if(TextUtils.isEmpty(locationName) || TextUtils.isEmpty(this.wallEntity.getLoc_latitude()) || TextUtils.isEmpty(this.wallEntity.getLoc_longitude())) {
+        if (TextUtils.isEmpty(locationName) || TextUtils.isEmpty(this.wallEntity.getLoc_latitude()) || TextUtils.isEmpty(this.wallEntity.getLoc_longitude())) {
             llLocation.setVisibility(View.GONE);
         } else {
             llLocation.setVisibility(View.VISIBLE);
@@ -539,13 +538,31 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     /**
+     * 设置各字段的点击效果
+     *
+     * @param context
+     * @param atDescription
+     */
+    private void setSpanContent(Context context, String atDescription) {
+        int tagMemberCount = this.wallEntity.getTag_member() == null ? 0 : wallEntity.getTag_member().size();
+        int tagGroupCount = this.wallEntity.getTag_member() == null ? 0 : wallEntity.getTag_group().size();
+        if (tagMemberCount >= 0 || tagGroupCount >= 0) {
+            // 有TAG用户或分组需要显示字符特效
+            WallUtil util = new WallUtil(context, mViewClickListener);
+            util.setSpanContent(tvContent, this.wallEntity, atDescription, tagMemberCount, tagGroupCount);
+        } else {
+            tvContent.setOnClickListener(this);
+        }
+    }
+
+    /**
      * 跳至地图
      *
      * @param context 资源
      * @param wall    {@link WallEntity}
      */
     private void gotoLocationSetting(Context context, WallEntity wall) {
-        if(TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
+        if (TextUtils.isEmpty(wall.getLoc_latitude()) || TextUtils.isEmpty(wall.getLoc_longitude())) {
             return;
         }
 
