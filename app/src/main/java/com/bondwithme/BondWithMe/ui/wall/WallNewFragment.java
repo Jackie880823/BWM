@@ -133,11 +133,11 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
 
     private List<String> fileNames = new ArrayList<>();
 
-    public List<UserEntity> at_members_data = new ArrayList();
-    public List<GroupEntity> at_groups_data = new ArrayList();
+    public List<UserEntity> at_members_data = new ArrayList<>();
+    public List<GroupEntity> at_groups_data = new ArrayList<>();
     private String text_content;
     private String locationName;
-    private List<Uri> pic_content;
+    private List<Uri> pic_content = new ArrayList<>();
     private Uri videoUri = Uri.EMPTY;
     private String duration;
     private List<CompressBitmapTask> tasks;
