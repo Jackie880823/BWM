@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
-import com.bondwithme.BondWithMe.Piwik.MyPiwik;
+import com.bondwithme.BondWithMe.Tranck.MyAppsFlyer;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
@@ -23,12 +23,13 @@ public class TransitionActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         FacebookSdk.sdkInitialize(this);
+        MyAppsFlyer.appsFlyerInit();
 
         if(isLogin()){
             startActivity(new Intent(this,MainActivity.class));
         }else{
-            MyPiwik.piwikGuest();
             startActivity(new Intent(this, StartActivity.class));
         }
         finish();
@@ -46,4 +47,6 @@ public class TransitionActivity extends Activity {
         }
         return false;
     }
+
+
 }

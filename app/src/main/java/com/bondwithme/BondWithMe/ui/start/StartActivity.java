@@ -12,9 +12,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.appsflyer.AppsFlyerLib;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.Tranck.MyAppsFlyer;
+import com.bondwithme.BondWithMe.Tranck.MyPiwik;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 
 public class StartActivity extends FragmentActivity implements View.OnClickListener {
@@ -131,9 +134,35 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
     public void checkForShow() {
         if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN, null))) {
             showSignUp();
+            MyAppsFlyer.appsFlyerGuest();
+            MyPiwik.piwikGuest();
         } else {
             showLogIn();
         }
         return;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        AppsFlyerLib.onActivityResume(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        AppsFlyerLib.onActivityPause(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AppsFlyerLib.onActivityResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        AppsFlyerLib.onActivityPause(this);
     }
 }
