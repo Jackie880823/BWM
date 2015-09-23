@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.appsflyer.AppsFlyerLib;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
@@ -212,6 +213,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
         //		Logger.i("test", fragmentManager.getBackStackEntryCount() + "");
         //		fragmentManager.popBackStack();
         super.onPause();
+        AppsFlyerLib.onActivityPause(this);
     }
 
     @Override
@@ -270,6 +272,12 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected void onDestroy() {
         super.onDestroy();
         NetWorkStateReceiver.unRegisterNetStateObserver(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppsFlyerLib.onActivityResume(this);
     }
 
 }

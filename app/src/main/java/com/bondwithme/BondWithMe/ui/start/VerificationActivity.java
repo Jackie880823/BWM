@@ -29,6 +29,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.Tranck.MyAppsFlyer;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.FaceBookUserEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
@@ -1020,6 +1021,16 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
         Intent intent = new Intent(this, SignUpSuccessfulActivity.class);
         intent.putExtra(Constant.LOGIN_USER, userEntity);
         intent.putExtra(Constant.HTTP_TOKEN, tokenEntity);
+        switch (userEntity.getUser_login_type())
+        {
+            case Constant.TYPE_USERNAME:
+                MyAppsFlyer.appsFlyerRegistrationUsername();
+                break;
+
+            case Constant.TYPE_PHONE:
+                MyAppsFlyer.appsFlyerRegistrationPhone();
+                break;
+        }
         startActivity(intent);
     }
 
@@ -1034,6 +1045,7 @@ public class VerificationActivity extends BaseActivity implements EditText.OnEdi
 
     private void goMainActivity() {
         App.userLoginSuccessed(this, userEntity, tokenEntity);
+        MyAppsFlyer.appsFlyerRegistrationFacebook();
     }
 
     @Override

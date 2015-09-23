@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.Piwik;
+package com.bondwithme.BondWithMe.Tranck;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
