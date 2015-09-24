@@ -28,6 +28,7 @@ import com.bondwithme.BondWithMe.adapter.LocalMediaAdapter;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
@@ -124,8 +125,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     private Runnable adapterRefresh = new Runnable() {
         @Override
         public void run() {
-            bucketsAdapter.clear();
-            bucketsAdapter.addAll(buckets);
+            if (bucketsAdapter != null) {
+                bucketsAdapter.clear();
+                bucketsAdapter.addAll(buckets);
+            }
             loading.stop();
             loading.setVisibility(View.GONE);
         }
@@ -324,7 +327,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                         id = imageCursor.getLong(uriColumnIndex);
                         contentUri = Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + id);
 
-                        if (!TextUtils.isEmpty(path)) {
+                        if (!TextUtils.isEmpty(path) && !path.contains(FileUtil.getCacheFilePath(getActivity()))) {
                             MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
                             mediaData.setThumbnailUri(getImageThumbnailUri(id));
                             addToMediaMap(bucket, mediaData);
