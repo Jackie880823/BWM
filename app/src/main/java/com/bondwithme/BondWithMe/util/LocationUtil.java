@@ -20,6 +20,9 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.Map4BaiduActivity;
 import com.bondwithme.BondWithMe.ui.Map4GoogleActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -289,22 +292,8 @@ public class LocationUtil {
          */
         if (LOCATION_TYPE_BD09LL.equals(locationType))//百度
         {
-            //判断没有百度地图
-            if(SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
-                String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
-                try {
-                    intent = Intent.getIntent(uri);
-                    intent.setAction(Intent.ACTION_VIEW);
-                    context.startActivity(intent);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    openWebView4BaiduMap(context, latitude, longitude, locationType);
-                }
+            goWithBaidu(context, latitude, longitude, locationType);
 
-            }
-            else {
-                openWebView4BaiduMap(context, latitude, longitude, locationType);
-            }
         }
         else//google，暂时先直接打开webview
         {
@@ -335,8 +324,28 @@ public class LocationUtil {
 
     }
 
-    private static void openWebViewGoogle2baidu(Context context, double latitude, double longitude) {
-        String url = String.format("http://api.map.baidu.com/geoconv/v1/?coords=%s,%s&from=3&to=5&ak=%s",longitude,latitude,context.getResources().getString(R.string.baidu_maps_key_debug));
+    private static void goWithBaidu(Context context, double latitude, double longitude, String locationType) {
+        Intent intent;//判断没有百度地图
+        if(SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
+            String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
+            try {
+                intent = Intent.getIntent(uri);
+                intent.setAction(Intent.ACTION_VIEW);
+                context.startActivity(intent);
+            } catch(Exception e) {
+                e.printStackTrace();
+                openWebView4BaiduMap(context, latitude, longitude, locationType);
+            }
+
+        }
+        else {
+            openWebView4BaiduMap(context, latitude, longitude, locationType);
+        }
+    }
+
+    private static void openWebViewGoogle2baidu(final Context context, final double latitude, final double longitude) {
+        String url = String.format("http://api.map.baidu.com/geoconv/v1/?coords=%s,%s&mcode=%s&from=3&to=5&ak=%s",longitude,latitude,"E9:37:78:D3:36:04:44:E3:D3:51:84:CA:D3:17:57:07:5A:67:75:E2;com.bondwithme.BondWithMe",context.getResources().getString(R.string.baidu_maps_key));
+        LogUtil.d(TAG, "0string============"+url);
         new HttpTools(context).get(url, null, TAG, new HttpCallback() {
             @Override
             public void onStart() {
@@ -345,12 +354,27 @@ public class LocationUtil {
 
             @Override
             public void onFinish() {
-
+                LogUtil.d(TAG, "2string============");
             }
 
             @Override
             public void onResult(String string) {
-                LogUtil.d(TAG, string);
+                LogUtil.d(TAG, "1string============" + string);
+                try {
+                    JSONArray result = (JSONArray) new JSONObject(string).get("result");
+                    double x = 0;
+                    double y = 0;
+                    if(result!=null&&result.length()>0){
+                        JSONObject jsonObject = (JSONObject) result.get(0);
+                        x = (double) jsonObject.get("x");
+                        y = (double) jsonObject.get("y");
+                    }
+                    LogUtil.d(TAG, "4string============"+x);
+                    LogUtil.d(TAG, "4string============"+y);
+                    goWithBaidu(context, y, x, LOCATION_TYPE_BD09LL);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -375,6 +399,7 @@ public class LocationUtil {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         Uri content_url = Uri.parse(String.format(uri, (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME));
+        LogUtil.d(TAG, "5string============"+content_url);
         intent.setData(content_url);
         context.startActivity(intent);
     }

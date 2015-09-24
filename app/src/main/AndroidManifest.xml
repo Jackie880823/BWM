@@ -108,7 +108,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="@string/baidu_maps_key" />
-        <!-- android:value="@string/baidu_maps_key_debug" /> -->
+        <!--android:value="@string/baidu_maps_key_debug" />-->
         <!-- android:value="@string/jackie_baidu_maps_key_debug" /> -->
 
         <service
