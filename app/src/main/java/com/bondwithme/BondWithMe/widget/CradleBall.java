@@ -38,7 +38,7 @@ public class CradleBall extends View {
 
     private void initView() {
         paint = new Paint();
-        paint.setColor(Color.BLUE);
+        paint.setColor(Color.GRAY);
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
     }
