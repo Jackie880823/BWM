@@ -310,7 +310,15 @@ public class LocationUtil {
             }
             else//不翻墙 google转baidu坐标
             {
-                openWebViewGoogle2baidu(context, latitude, longitude);
+//                openWebViewGoogle2baidu(context, latitude, longitude);
+
+
+                String uri = "http://www.google.cn/maps/place/%s,%s";
+                intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                Uri content_url = Uri.parse(String.format(uri, latitude,longitude));
+                intent.setData(content_url);
+                context.startActivity(intent);
             }
         }
 
