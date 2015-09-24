@@ -236,32 +236,59 @@ public class LocationUtil {
 
         if(TextUtils.isEmpty(locationType)) {
             // 地址类型为空
-            locationType = LOCATION_TYPE_GCJ02;
+            locationType = LOCATION_TYPE_GCJ02;//火星坐标
         }
-        //        if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
-        //            openWebView4BaiduMap(context, latitude, longitude, locationType);
-        //        }else {
+
         Intent intent;
         //14为缩放比例
         Log.i("", "goNavigation======" + latitude + "," + longitude);
         Log.i("", "locationType======" + locationType);
 
+//
+//        艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹
+//        艹艹艹艹艹艹艹艹艹艹艹艹艹艹别用这段代码 坑的一B
+//        艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹
+//        // 判断是否有谷歌服务
+//        if(googleAvailable) {
+//            if(LOCATION_TYPE_BD09LL.equals(locationType)) {
+//                //                if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
+//                openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
+//            } else {
+//                try {
+//                    String uri = String.format("geo:%f,%f?z=14&q=%f,%f", latitude, longitude, latitude, longitude);
+//                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+//                    context.startActivity(intent);
+//                } catch(Exception e) {
+//                    openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
+//                }
+//            }
+//        } else {
+//            //判断没有百度地图
+//            if(SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
+//                String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
+//                try {
+//                    intent = Intent.getIntent(uri);
+//                    intent.setAction(Intent.ACTION_VIEW);
+//                    context.startActivity(intent);
+//                } catch(Exception e) {
+//                    e.printStackTrace();
+//                    openWebView4BaiduMap(context, latitude, longitude, locationType);
+//                }
+//
+//            } else {
+//                openWebView4BaiduMap(context, latitude, longitude, locationType);
+//            }
+//
+//        }
 
-        // 判断是否有谷歌服务
-        if(googleAvailable) {
-            if(LOCATION_TYPE_BD09LL.equals(locationType)) {
-                //                if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
-                openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
-            } else {
-                try {
-                    String uri = String.format("geo:%f,%f?z=14&q=%f,%f", latitude, longitude, latitude, longitude);
-                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                    context.startActivity(intent);
-                } catch(Exception e) {
-                    openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
-                }
-            }
-        } else {
+        /**
+         * christopher begin
+         * 先判断坐标类型：baidu，google
+         * baidu：直接打开
+         * google：判断
+         */
+        if (LOCATION_TYPE_BD09LL.equals(locationType))//百度
+        {
             //判断没有百度地图
             if(SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
                 String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
@@ -274,14 +301,73 @@ public class LocationUtil {
                     openWebView4BaiduMap(context, latitude, longitude, locationType);
                 }
 
-            } else {
+            }
+            else {
                 openWebView4BaiduMap(context, latitude, longitude, locationType);
             }
-
         }
-        //        }
+        else//google，暂时先直接打开webview
+        {
+            if (googleAvailable)//翻墙
+            {
+                try {
+                    String uri = String.format("geo:%f,%f?z=14&q=%f,%f", latitude, longitude, latitude, longitude);
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                    context.startActivity(intent);
+                } catch(Exception e)
+                {
+                    openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
+                }
+            }
+            else//不翻墙 google转baidu坐标
+            {
+                openWebViewGoogle2baidu(context, latitude, longitude);
+            }
+        }
+
+        /**
+         * christopher end
+         */
 
 
+
+
+
+    }
+
+    private static void openWebViewGoogle2baidu(Context context, double latitude, double longitude) {
+        String url = String.format("http://api.map.baidu.com/geoconv/v1/?coords=%s,%s&from=3&to=5&ak=%s",longitude,latitude,context.getResources().getString(R.string.baidu_maps_key_debug));
+        new HttpTools(context).get(url, null, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, string);
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     private static void openWebView4BaiduMap(Context context, double latitude, double longitude, String locationType) {
