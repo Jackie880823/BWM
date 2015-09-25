@@ -262,6 +262,8 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             headers.put("X_BWM_USERLOC", "");
             headers.put("X_BWM_APPVER", AppInfoUtil.getAppVersionName(appContext));
             headers.put("X_BWM_APPLANG", Locale.getDefault().getLanguage());
+            // 接收请求返回的语言
+            headers.put("Accept-Language", Locale.getDefault().getLanguage());
 
             HttpTools.initHeaders(headers);
             //how to use
