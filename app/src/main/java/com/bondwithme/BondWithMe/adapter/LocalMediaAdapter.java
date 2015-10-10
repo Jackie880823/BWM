@@ -2,11 +2,14 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +27,10 @@ import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,6 +107,7 @@ public class LocalMediaAdapter extends BaseAdapter {
      */
     @Override
     public void notifyDataSetChanged() {
+        LogUtil.i(TAG, "notifyDataSetChanged& ");
         clearLoad();
         super.notifyDataSetChanged();
     }
@@ -249,9 +255,18 @@ public class LocalMediaAdapter extends BaseAdapter {
             MediaData mediaData = mDatas.get(position);
 
             LogUtil.i(TAG, "loadLocalBitmap& uri: " + mediaData.getContentUri());
-            String uri = mediaData.getPath();
-            LogUtil.i(TAG, "loadLocalBitmap& load picture: " + uri);
-            ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options, imageLoadingListener);
+
+            Uri thumbnailUri;
+            thumbnailUri = mediaData.getThumbnailUri();
+
+            if (thumbnailUri != null) {
+                LogUtil.i(TAG, "loadLocalBitmap& load thumbnail: " + thumbnailUri);
+                ImageLoader.getInstance().displayImage(thumbnailUri.toString(), imageView, UniversalImageLoaderUtil.options, imageLoadingListener);
+            } else {
+                String uri = mediaData.getPath();
+                LogUtil.i(TAG, "loadLocalBitmap& load picture: " + uri);
+                ImageLoader.getInstance().displayImage(uri, imageView, UniversalImageLoaderUtil.options, imageLoadingListener);
+            }
         }
     }
 
@@ -268,10 +283,28 @@ public class LocalMediaAdapter extends BaseAdapter {
         public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
             LogUtil.w(TAG, "onLoadingFailed& imageUri: " + imageUri);
             // 图片加载失败从列表中删除
-            mDatas.remove(new MediaData(Uri.parse(imageUri), imageUri, MediaData.TYPE_IMAGE, 0));
-
-            mHandler.removeMessages(MSG_NOTIFY);
-            mHandler.sendEmptyMessageDelayed(MSG_NOTIFY, 500);
+            boolean success = mDatas.remove(new MediaData(Uri.parse(imageUri), imageUri, MediaData.TYPE_IMAGE, 0));
+            if (success) {
+                mHandler.removeMessages(MSG_NOTIFY);
+                mHandler.sendEmptyMessageDelayed(MSG_NOTIFY, 500);
+            } else {
+                // 删除不成功有可能是略缩图无法使用加载原图
+                Cursor cursor = null;
+                try {
+                    String select = MediaStore.Images.Thumbnails.DATA + " = " + ImageDownloader.Scheme.FILE.crop(imageUri);
+                    cursor = new CursorLoader(mContext, MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, null, select, null, null).loadInBackground();
+                    if (cursor != null && cursor.getCount() > 0) {
+                        int columnImageId = cursor.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID);
+                        long imageId = cursor.getLong(columnImageId);
+                        String contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + imageId;
+                        ImageLoader.getInstance().displayImage(contentUri, (ImageView) view, UniversalImageLoaderUtil.options);
+                    }
+                } finally {
+                    if (cursor != null && !cursor.isClosed()) {
+                        cursor.close();
+                    }
+                }
+            }
         }
 
         @Override

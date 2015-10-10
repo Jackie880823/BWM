@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,7 +9,6 @@
         android:layout_height="match_parent">
 
 
-
         <com.bondwithme.BondWithMe.widget.CustomGridView
             android:id="@+id/gv_select_photo"
             android:layout_width="match_parent"
@@ -18,20 +16,36 @@
             android:horizontalSpacing="2dp"
             android:numColumns="3"
             android:scrollbars="none"
-            android:verticalSpacing="2dp"/>
+            android:verticalSpacing="2dp" />
 
         <!-- The navigation drawer -->
-        <ListView
-            android:id="@+id/lv_images_titles"
+        <RelativeLayout
+            android:id="@+id/rl_left_list"
             android:layout_width="260dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@android:color/white"
             android:choiceMode="singleChoice"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp"
             android:drawSelectorOnTop="false">
-        </ListView>
+
+            <com.bondwithme.BondWithMe.widget.NewtonCradleLoading
+                android:id="@+id/ncl_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/default_view_margin">
+
+            </com.bondwithme.BondWithMe.widget.NewtonCradleLoading>
+
+            <ListView
+                android:id="@+id/lv_images_titles"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/ncl_loading"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp" />
+        </RelativeLayout>
 
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

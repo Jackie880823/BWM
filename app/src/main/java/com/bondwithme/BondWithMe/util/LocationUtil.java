@@ -8,6 +8,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -20,8 +22,13 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.Map4BaiduActivity;
 import com.bondwithme.BondWithMe.ui.Map4GoogleActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by wing on 15/3/25.
@@ -55,12 +62,12 @@ public class LocationUtil {
         Address address = null;
         try {
             address = getAddress(context, latitude, longitude);
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        if(address != null) {
+        if (address != null) {
             int maxLine = address.getMaxAddressLineIndex();
-            if(maxLine >= 2) {
+            if (maxLine >= 2) {
                 add = address.getAddressLine(1);
             } else {
                 add = address.getAddressLine(0);
@@ -80,9 +87,9 @@ public class LocationUtil {
      */
     public static Address getAddress(Context context, double latitude, double longitude) throws IOException {
         Log.i(TAG, "getAddress& latitude: " + latitude + "; longitude: " + longitude);
-        if(latitude == 0 && longitude == 0) {
+        if (latitude == 0 && longitude == 0) {
             Location location = getLastKnowLocation();
-            if(location != null) {
+            if (location != null) {
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
             }
@@ -90,18 +97,98 @@ public class LocationUtil {
         Address address = null;
 
         // 判断地址编码器是否为空
-        if(geoCoder == null) {
+        if (geoCoder == null) {
             geoCoder = new Geocoder(context);
         }
 
         List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-        if(addresses != null && addresses.size() > 0) {
+        if (addresses != null && addresses.size() > 0) {
             address = addresses.get(0);
         }
         return address;
     }
 
-    public static boolean isGoogleAvailable(){
+    /**
+     * 根据经纬度获取地址信息
+     *
+     * @param context   上下文
+     * @param latitude  纬度
+     * @param longitude 经度
+     * @param handler   得到地址更新的线程
+     * @param what      更新消息的标识
+     */
+    public static void getAddressByHttp(Context context, double latitude, double longitude, final Handler handler, final int what) {
+        Log.i(TAG, "getAddress& latitude: " + latitude + "; longitude: " + longitude);
+        if (latitude == 0 && longitude == 0) {
+            Location location = getLastKnowLocation();
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+            }
+        }
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=%1s,%2s&key=%3s";
+        final String request = String.format(url, latitude, longitude, context.getString(R.string.google_maps_place_key));
+        LogUtil.i(TAG, "getAddressByHttp& " + request);
+        HttpTools httpTools = new HttpTools(context);
+        HttpTools.getHeaders().put("Accept-Language", Locale.getDefault().getLanguage());
+        httpTools.get(request, null, null, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.i(TAG, "getAddressByHttp& onResult: " + string);
+                try {
+                    JSONObject dataJson;
+                    dataJson = new JSONObject(string);
+                    String status = dataJson.getString("status");
+                    if (status.equals("OK")) {
+                        JSONArray resultJson = dataJson.getJSONArray("results");
+//                    JSONArray data = resultJson.get(0);
+//                    JSONArray data = resultJson.getJSONArray("address_components");
+                        if (resultJson.length() > 0) {
+                            JSONObject info = resultJson.getJSONObject(0);
+                            Address address = new Address(null);
+                            address.setAddressLine(0, info.getString("formatted_address"));
+                            JSONObject location = info.getJSONObject("geometry").getJSONObject("location");
+                            address.setLatitude(location.getDouble("lat"));
+                            address.setLongitude(location.getDouble("lng"));
+                            Message message = new Message();
+                            message.what = what;
+                            message.obj = address;
+                            handler.sendMessage(message);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
+    public static boolean isGoogleAvailable() {
         return googleAvailable;
     }
 
@@ -112,8 +199,8 @@ public class LocationUtil {
      * @param context 上下文资源
      */
     public static void setRequestLocationUpdates(Context context) {
-        if(SystemUtil.checkPlayServices(context)) {
-            if(lm == null) {
+        if (SystemUtil.checkPlayServices(context)) {
+            if (lm == null) {
                 lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             }
             new HttpTools(context).get("https://www.google.com/maps", null, TAG, new HttpCallback() {
@@ -181,7 +268,7 @@ public class LocationUtil {
         intent.putExtra(Constant.EXTRA_LONGITUDE, longitude);
 
         //判断是用百度还是google
-        if(!googleAvailable) {
+        if (!googleAvailable) {
             // 应用启动后用谷歌获取了一次地址信息，如果这次地址信息为空则证明谷歌地图不可用，启用百度地
             intent.setClass(context, Map4BaiduActivity.class);
         } else {
@@ -234,54 +321,162 @@ public class LocationUtil {
      */
     public static void goNavigation(Context context, double latitude, double longitude, String locationType) {
 
-        if(TextUtils.isEmpty(locationType)) {
+        if (TextUtils.isEmpty(locationType)) {
             // 地址类型为空
-            locationType = LOCATION_TYPE_GCJ02;
+            locationType = LOCATION_TYPE_GCJ02;//火星坐标
         }
-        //        if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
-        //            openWebView4BaiduMap(context, latitude, longitude, locationType);
-        //        }else {
+
         Intent intent;
         //14为缩放比例
         Log.i("", "goNavigation======" + latitude + "," + longitude);
         Log.i("", "locationType======" + locationType);
 
+//
+//        艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹
+//        艹艹艹艹艹艹艹艹艹艹艹艹艹艹别用这段代码 坑的一B
+//        艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹艹
+//        // 判断是否有谷歌服务
+//        if(googleAvailable) {
+//            if(LOCATION_TYPE_BD09LL.equals(locationType)) {
+//                //                if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
+//                openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
+//            } else {
+//                try {
+//                    String uri = String.format("geo:%f,%f?z=14&q=%f,%f", latitude, longitude, latitude, longitude);
+//                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+//                    context.startActivity(intent);
+//                } catch(Exception e) {
+//                    openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
+//                }
+//            }
+//        } else {
+//            //判断没有百度地图
+//            if(SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
+//                String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
+//                try {
+//                    intent = Intent.getIntent(uri);
+//                    intent.setAction(Intent.ACTION_VIEW);
+//                    context.startActivity(intent);
+//                } catch(Exception e) {
+//                    e.printStackTrace();
+//                    openWebView4BaiduMap(context, latitude, longitude, locationType);
+//                }
+//
+//            } else {
+//                openWebView4BaiduMap(context, latitude, longitude, locationType);
+//            }
+//
+//        }
 
-        // 判断是否有谷歌服务
-        if(googleAvailable) {
-            if(LOCATION_TYPE_BD09LL.equals(locationType)) {
-                //                if(LOCATION_TYPE_BD09LL.equals(locationType)||LOCATION_TYPE_BD09MC.equals(locationType)){
-                openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
-            } else {
+        /**
+         * christopher begin
+         * 先判断坐标类型：baidu，google
+         * baidu：直接打开
+         * google：判断
+         */
+        if (LOCATION_TYPE_BD09LL.equals(locationType))//百度
+        {
+            goWithBaidu(context, latitude, longitude, locationType);
+
+        } else//google，暂时先直接打开webview
+        {
+            if (googleAvailable)//翻墙
+            {
                 try {
                     String uri = String.format("geo:%f,%f?z=14&q=%f,%f", latitude, longitude, latitude, longitude);
                     intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                     context.startActivity(intent);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
                 }
-            }
-        } else {
-            //判断没有百度地图
-            if(SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
-                String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
-                try {
-                    intent = Intent.getIntent(uri);
-                    intent.setAction(Intent.ACTION_VIEW);
-                    context.startActivity(intent);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                    openWebView4BaiduMap(context, latitude, longitude, locationType);
-                }
+            } else//不翻墙 google转baidu坐标
+            {
+//                openWebViewGoogle2baidu(context, latitude, longitude);
 
-            } else {
+
+                String uri = "http://www.google.cn/maps/place/%s,%s";
+                intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                Uri content_url = Uri.parse(String.format(uri, latitude, longitude));
+                intent.setData(content_url);
+                context.startActivity(intent);
+            }
+        }
+
+        /**
+         * christopher end
+         */
+
+
+    }
+
+    private static void goWithBaidu(Context context, double latitude, double longitude, String locationType) {
+        Intent intent;//判断没有百度地图
+        if (SystemUtil.isPackageExists(context, BAIDU_MAP_APP_PACKAGE)) {
+            String uri = String.format("intent://map/geocoder?location=%s&coord_type=%s&src=%s#Intent;scheme=bdapp;package=com.baidu.BaiduMap;end", (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME);
+            try {
+                intent = Intent.getIntent(uri);
+                intent.setAction(Intent.ACTION_VIEW);
+                context.startActivity(intent);
+            } catch (Exception e) {
+                e.printStackTrace();
                 openWebView4BaiduMap(context, latitude, longitude, locationType);
             }
 
+        } else {
+            openWebView4BaiduMap(context, latitude, longitude, locationType);
         }
-        //        }
+    }
 
+    private static void openWebViewGoogle2baidu(final Context context, final double latitude, final double longitude) {
+        String url = String.format("http://api.map.baidu.com/geoconv/v1/?coords=%s,%s&mcode=%s&from=3&to=5&ak=%s", longitude, latitude, "E9:37:78:D3:36:04:44:E3:D3:51:84:CA:D3:17:57:07:5A:67:75:E2;com.bondwithme.BondWithMe", context.getResources().getString(R.string.baidu_maps_key));
+        LogUtil.d(TAG, "0string============" + url);
+        new HttpTools(context).get(url, null, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
 
+            }
+
+            @Override
+            public void onFinish() {
+                LogUtil.d(TAG, "2string============");
+            }
+
+            @Override
+            public void onResult(String string) {
+                LogUtil.d(TAG, "1string============" + string);
+                try {
+                    JSONArray result = (JSONArray) new JSONObject(string).get("result");
+                    double x = 0;
+                    double y = 0;
+                    if (result != null && result.length() > 0) {
+                        JSONObject jsonObject = (JSONObject) result.get(0);
+                        x = (double) jsonObject.get("x");
+                        y = (double) jsonObject.get("y");
+                    }
+                    LogUtil.d(TAG, "4string============" + x);
+                    LogUtil.d(TAG, "4string============" + y);
+                    goWithBaidu(context, y, x, LOCATION_TYPE_BD09LL);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     private static void openWebView4BaiduMap(Context context, double latitude, double longitude, String locationType) {
@@ -289,6 +484,7 @@ public class LocationUtil {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         Uri content_url = Uri.parse(String.format(uri, (latitude + "," + longitude), locationType, AppInfoUtil.APP_NAME));
+        LogUtil.d(TAG, "5string============" + content_url);
         intent.setData(content_url);
         context.startActivity(intent);
     }
@@ -306,9 +502,9 @@ public class LocationUtil {
         LogUtil.i(TAG, "getLocationPicUrl& locationType: " + locationType);
         String location;
         String result;
-        if(googleAvailable) {
+        if (googleAvailable) {
             // 谷歌地图片服务可用，并能获取到位置
-            if(LOCATION_TYPE_BD09LL.equals(locationType)) {
+            if (LOCATION_TYPE_BD09LL.equals(locationType)) {
                 // 坐标类型为百度的坐标从百度服务获取路径
                 location = longitude + "," + latitude;
                 result = String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, location, context.getString(R.string.google_map_pic_size), location);

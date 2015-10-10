@@ -20,7 +20,8 @@ import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
-import com.bondwithme.BondWithMe.Piwik.MyPiwik;
+import com.bondwithme.BondWithMe.Tranck.MyAppsFlyer;
+import com.bondwithme.BondWithMe.Tranck.MyPiwik;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MyFragmentPagerAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
@@ -103,7 +104,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private View red_point_5;
     public static String STICKERS_NAME = "stickers";
     public static String IS_FIRST_LOGIN = "isFirstLogin";
-    public static String STICKER_VERSION = "1";
+    public static String STICKER_VERSION = "2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -372,6 +373,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     public void initView() {
+        MyAppsFlyer.doLoginTrack();
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + STICKER_VERSION + App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
@@ -540,6 +542,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     protected void changeTab(TabEnum tabEnum) {
         MyPiwik.piwikUser();
+        MyAppsFlyer.appsFlyer5MainPager(tabEnum.toString());
         switch (tabEnum) {
             case wall:
                 setDrawable();
@@ -761,6 +764,8 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
             }
         }
     };
+
+
 
 
 }

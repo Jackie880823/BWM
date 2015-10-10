@@ -108,7 +108,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="@string/baidu_maps_key" />
-        <!-- android:value="@string/baidu_maps_key_debug" /> -->
+        <!--android:value="@string/baidu_maps_key_debug" />-->
         <!-- android:value="@string/jackie_baidu_maps_key_debug" /> -->
 
         <service
@@ -595,6 +595,27 @@
                 <action android:name="com.service.reportService" />
             </intent-filter>
         </service>
+
+        <!-- Email: weijuean@madxstudio.cn
+             Password: mCDAUgXI-->
+        <receiver android:name="com.appsflyer.MultipleInstallBroadcastReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.track.conversion.TrackingReceiver" android:exported="true" >
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.appsflyer.AppsFlyerLib">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 

@@ -97,7 +97,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
     /**
      * 预览的宽
      */
-    private int previewWidth = 480;
+    private int previewWidth = 640;
     /**
      * 预览的高
      */
@@ -394,16 +394,18 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
                 // 后置摄像头
                 mMediaRecorder.setOrientationHint(90);
             }
-            // 设置录制完成后视频的封装格式THREE_GPP为3gp.MPEG_4为mp4
+            // 设置录制完成后视频的封装格式MPEG_4为mp4
             mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            // 设置录制的视频编码h263 h264
+            // 设置录制的视频编码h264
             mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
             // 设置视频录制的分辨率。必须放在设置编码和格式的后面，否则报错
             mMediaRecorder.setVideoSize(previewWidth, previewHeight);
             // 设置视频的比特率
             mMediaRecorder.setVideoEncodingBitRate(384 * 1024);
-            // // 设置录制的视频帧率。必须放在设置编码和格式的后面，否则报错
+            // 设置音频的比特率
+            mMediaRecorder.setAudioEncodingBitRate(32 * 1024);
+            // 设置录制的视频帧率。必须放在设置编码和格式的后面，否则报错
             if(defaultVideoFrameRate != -1) {
                 mMediaRecorder.setVideoFrameRate(defaultVideoFrameRate);
             }
