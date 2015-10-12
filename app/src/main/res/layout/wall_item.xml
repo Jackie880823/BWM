@@ -95,7 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_view_margin"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
                     android:id="@+id/tv_wall_content"
@@ -103,6 +103,13 @@
                     android:autoLink="web"
                     android:linksClickable="true"
                     android:textIsSelectable="true"/>
+                <TextView
+                    android:id="@+id/switch_text_show"
+                    style="@style/text_default"
+                    android:text="@string/more"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:textColor="@android:color/holo_blue_bright"/>
             </LinearLayout>
 
             <RelativeLayout
