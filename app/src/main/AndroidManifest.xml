@@ -298,6 +298,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AddMemberWorkFlow"
+            android:theme="@android:style/Theme.Translucent"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.more.BondAlert.BigDayActivity"
