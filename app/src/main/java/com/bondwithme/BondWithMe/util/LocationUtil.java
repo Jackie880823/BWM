@@ -79,6 +79,7 @@ public class LocationUtil {
 
     /**
      * 根据经纬度获取地址信息
+     * 不推荐使用！获取的地址信息少。
      *
      * @param context   上下文
      * @param latitude  纬度
@@ -110,6 +111,7 @@ public class LocationUtil {
 
     /**
      * 根据经纬度获取地址信息
+     * google，网络限制
      *
      * @param context   上下文
      * @param latitude  纬度
@@ -188,11 +190,16 @@ public class LocationUtil {
         });
     }
 
+    /**
+     * @return boonlean 用来判断google服务+翻墙网络 是否都有效
+     */
     public static boolean isGoogleAvailable() {
         return googleAvailable;
     }
 
     /**
+     * 判断google服务和翻墙网络 得出标识boolean googleAvailable 用于后续的使用何种地图
+     *
      * <br>注册监听谷歌地图变化，在应用启动是监听获取地后则取消监听，只用于验证是否可以通过谷歌地图获取位置信息，得到
      * <br>判断谷歌地图是否可用的标识，如果没有谷歌服务不启用监听
      *
@@ -372,15 +379,16 @@ public class LocationUtil {
          * christopher begin
          * 先判断坐标类型：baidu，google
          * baidu：直接打开
-         * google：判断
+         * google：需再判断网络
          */
         if (LOCATION_TYPE_BD09LL.equals(locationType))//百度
         {
             goWithBaidu(context, latitude, longitude, locationType);
 
-        } else//google，暂时先直接打开webview
+        }
+        else//google
         {
-            if (googleAvailable)//翻墙
+            if (googleAvailable)//翻墙+google服务
             {
                 try {
                     String uri = String.format("geo:%f,%f?z=14&q=%f,%f", latitude, longitude, latitude, longitude);
@@ -389,11 +397,9 @@ public class LocationUtil {
                 } catch (Exception e) {
                     openWebView4BaiduMap(context, latitude, longitude, LOCATION_TYPE_BD09LL);
                 }
-            } else//不翻墙 google转baidu坐标
+            }
+            else//不翻墙，暂时先直接打开webview
             {
-//                openWebViewGoogle2baidu(context, latitude, longitude);
-
-
                 String uri = "http://www.google.cn/maps/place/%s,%s";
                 intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
@@ -504,7 +510,7 @@ public class LocationUtil {
         String result;
         if (googleAvailable) {
             // 谷歌地图片服务可用，并能获取到位置
-            if (LOCATION_TYPE_BD09LL.equals(locationType)) {
+            if (LOCATION_TYPE_BD09LL.equals(locationType)) {//这里判断是有google服务和翻墙网络。但是还是使用的百度地图，因为需要经过百度地图坐标转火星坐标。TODO
                 // 坐标类型为百度的坐标从百度服务获取路径
                 location = longitude + "," + latitude;
                 result = String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, location, context.getString(R.string.google_map_pic_size), location);
@@ -518,7 +524,6 @@ public class LocationUtil {
             // 谷歌服用获取不到位置，从百度服务中获取图片路径
             location = longitude + "," + latitude;
             result = String.format(Constant.MAP_API_GET_LOCATION_PIC_BY_BAIDU, location, context.getString(R.string.google_map_pic_size), location);
-
         }
         LogUtil.i(TAG, "getLocationPicUrl& result picture url: " + result);
         return result;
