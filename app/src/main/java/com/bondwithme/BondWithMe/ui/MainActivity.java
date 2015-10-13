@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -115,9 +116,11 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         }
 
         //表示这个用户已经登陆过。提供给登录界面判断显示sign up 还是 log in
-        //-----------------------------------------------------------------------------
-        PreferencesUtil.saveValue(this, Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
-        //-----------------------------------------------------------------------------
+        if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN,"")))
+        {
+            PreferencesUtil.saveValue(this, Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
+        }
+
         App.checkVerSion(this);
 
     }
