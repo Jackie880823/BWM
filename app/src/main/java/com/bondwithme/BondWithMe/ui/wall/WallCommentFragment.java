@@ -744,7 +744,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
                     @Override
                     public void onResult(String string) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                         getParentActivity().setResult(Activity.RESULT_OK);
                         getParentActivity().finish();
                     }
