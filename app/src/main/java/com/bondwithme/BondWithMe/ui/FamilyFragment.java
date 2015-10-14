@@ -40,6 +40,7 @@ import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.family.FamilyTreeActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
@@ -369,20 +370,103 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         return results;
     }
 
-    private void showNoFriendDialog() {
+    private void showNoFriendDialog(final FamilyMemberEntity familyMemberEntity) {
+//        LayoutInflater factory = LayoutInflater.from(mContext);
+//        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
+//        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+//        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
+//        tv_no_member.setText(getString(R.string.text_pending_approval));
+//        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
+//        cancelTv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showSelectDialog.dismiss();
+//            }
+//        });
+//        showSelectDialog.show();
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
         final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
-        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
-        tv_no_member.setText(getString(R.string.text_pending_approval));
-        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
-        cancelTv.setOnClickListener(new View.OnClickListener() {
+        showSelectDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSelectDialog.dismiss();
             }
         });
+        selectIntention.findViewById(R.id.subject_1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onceAdd(familyMemberEntity.getUser_id());
+                showSelectDialog.dismiss();
+            }
+        });
+
+        selectIntention.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                awaitingRemove(familyMemberEntity.getUser_id());
+                showSelectDialog.dismiss();
+            }
+        });
+
         showSelectDialog.show();
+
+    }
+
+    public void onceAdd(String ActionUserId){
+        Intent intent = new Intent(getActivity(), AddMemberWorkFlow.class);
+        intent.putExtra("from", MainActivity.getUser().getUser_id());
+        intent.putExtra("to", ActionUserId);
+        startActivityForResult(intent, ADD_MEMBER);
+    }
+
+    private void awaitingRemove(final String memberId) {
+
+        vProgress.setVisibility(View.VISIBLE);
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.url = Constant.API_BONDALERT_MEMEBER_REMOVE + MainActivity.getUser().getUser_id();
+        Map<String, String> params = new HashMap<>();
+        params.put("member_id", memberId);
+        requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+        new HttpTools(getActivity()).put(requestInfo, null, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String string) {
+
+                vProgress.setVisibility(View.GONE);
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                if (groupEntityList != null) {
+                    groupAdapter.clearBitmap(groupEntityList);
+                    groupAdapter = new FamilyGroupAdapter(mContext, groupEntityList);
+                    groupListView.setAdapter(groupAdapter);
+                    getData();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 
     private void showMemberEmptyView() {
@@ -481,7 +565,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 } else {
                     if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
                         //不是好友,提示等待接收
-                        showNoFriendDialog();
+                        showNoFriendDialog(familyMemberEntity);
+                        LogUtil.i("familyMemberEntity",familyMemberEntity.getUser_id());
+
                         return;
                     } else {
                         //member, 跳转到个人资料页面需要
@@ -1071,6 +1157,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //        }
 //    }
 
+    private final static int ADD_MEMBER = 10;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1087,6 +1175,15 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     }
 
                 }
+                break;
+
+            case ADD_MEMBER:
+                if (resultCode == getActivity().RESULT_OK) {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                }else {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_canceled);
+                }
+                break;
         }
 
     }
