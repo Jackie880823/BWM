@@ -624,5 +624,6 @@
     <string name="show_vidoe_limit">Only files below the size of 20MB will be displayed.</string>
     <string name="open_gps_title">Improve location accuracy</string>
     <string name="use_gps_hint">need use GPS for location</string>
+    <string name="text_collapse">collapse</string>
 
 </resources>
