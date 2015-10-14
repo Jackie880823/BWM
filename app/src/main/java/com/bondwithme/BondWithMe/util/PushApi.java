@@ -24,12 +24,13 @@ import cn.jpush.android.api.JPushInterface;
  */
 public class PushApi {
 
-    private static String regid;
+
     private static boolean isGCM;
     private static Context mContext;
 
     public static void initPushApi(Context context) {
 
+        String regid;
         mContext = context;
         if (SystemUtil.checkPlayServices(context)) {
             /**GCM推送*/
@@ -92,7 +93,7 @@ public class PushApi {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        regid = JPushInterface.getRegistrationID(mContext);
+        String regid = JPushInterface.getRegistrationID(mContext);
 //        if(TextUtils.isEmpty(regid)){
 //            regid = JPushInterface.getRegistrationID(context);
 //        }
@@ -116,7 +117,7 @@ public class PushApi {
         try {
             GoogleCloudMessaging.getInstance(mContext).unregister();
             GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(mContext);
-            regid = gcm.register(mContext.getString(R.string.gcm_sender_id));
+            String regid = gcm.register(mContext.getString(R.string.gcm_sender_id));
 
             msg = "Device registered, registration ID=" + regid;
 
