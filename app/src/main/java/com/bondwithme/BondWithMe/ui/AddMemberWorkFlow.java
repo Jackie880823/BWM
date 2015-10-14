@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.view.Window;
 
 import com.android.volley.ext.HttpCallback;
@@ -29,7 +28,6 @@ public class AddMemberWorkFlow extends Activity {
     private final static int GET_RELATIONSHIP = 10;
     private String add_flag;
     private String response_relationship;
-    private View vProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +35,10 @@ public class AddMemberWorkFlow extends Activity {
 //        setContentView(null);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_member_work_flow);
-        vProgress = findViewById(R.id.rl_progress);
-        vProgress.setVisibility(View.VISIBLE);
         from = getIntent().getStringExtra("from");
         to = getIntent().getStringExtra("to");
 
         if (TextUtils.isEmpty(from) || TextUtils.isEmpty(to)) {
-            vProgress.setVisibility(View.GONE);
             finish();
         }
 
@@ -209,11 +203,9 @@ public class AddMemberWorkFlow extends Activity {
     private void cancle() {
         if("Accept".equals(add_flag)){
             setResult(RESULT_OK);
-            vProgress.setVisibility(View.GONE);
             finish();
         }else{
             setResult(RESULT_CANCELED);
-            vProgress.setVisibility(View.GONE);
             finish();
         }
 

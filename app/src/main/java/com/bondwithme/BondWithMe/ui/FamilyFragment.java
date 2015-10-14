@@ -71,7 +71,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private ViewPager pager;
     private TextView message_member_tv;
     private TextView message_group_tv;
-    private Dialog showSelectDialog;
+//    private Dialog showSelectDialog;
     private Context mContext;
     private boolean isMemberRefresh, isGroupRefresh;
     /**
@@ -111,13 +111,13 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private View emptyMemberTv;
     private View vProgress;
     private GridView groupListView;
+    private Dialog showSelectDialog;
     private String MemeberSearch;
     private String GroupSearch;
     private boolean isup;
     private boolean isopen;
+
     List<FamilyMemberEntity> opendate = new LinkedList<>();
-//    FamilyMemberEntity tpfamilyMemberEntity = new FamilyMemberEntity();//Everyone
-//    FamilyMemberEntity tpfamilyMember = new FamilyMemberEntity();//MyFamily
 
     public static FamilyFragment newInstance(String... params) {
         return createInstance(new FamilyFragment(), params);
@@ -255,15 +255,13 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         getParentActivity().setFamilyCommandListener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
-                showSelectDialog();
-//                Intent intent = new Intent();
-//                if (pager.getCurrentItem() == 0) {
-//                    intent.setClass(getActivity(), AddNewMembersActivity.class);
-//                } else {
-//                    intent.setClass(getActivity(), CreateGroupActivity.class);
-//                }
-//                startActivity(intent);
-                return false;
+                if(showSelectDialog != null && showSelectDialog.isShowing()){
+                    return false;
+                }else {
+                    showSelectDialog();
+                    return false;
+                }
+
             }
         });
         message_member_tv.setOnClickListener(this);
@@ -371,22 +369,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     }
 
     private void showNoFriendDialog(final FamilyMemberEntity familyMemberEntity) {
-//        LayoutInflater factory = LayoutInflater.from(mContext);
-//        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-//        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
-//        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
-//        tv_no_member.setText(getString(R.string.text_pending_approval));
-//        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
-//        cancelTv.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showSelectDialog.dismiss();
-//            }
-//        });
-//        showSelectDialog.show();
+
+
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-        final Dialog showSelectDialog = new MyDialog(mContext, null, selectIntention);
+        showSelectDialog = new MyDialog(mContext, null, selectIntention);
+
         showSelectDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -408,12 +396,13 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 showSelectDialog.dismiss();
             }
         });
-
         showSelectDialog.show();
+
 
     }
 
     public void onceAdd(String ActionUserId){
+        vProgress.setVisibility(View.VISIBLE);
         Intent intent = new Intent(getActivity(), AddMemberWorkFlow.class);
         intent.putExtra("from", MainActivity.getUser().getUser_id());
         intent.putExtra("to", ActionUserId);
@@ -470,21 +459,11 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     }
 
     private void showMemberEmptyView() {
-//        if (memberList != null) {
-//            memberList.clear();
-//            FamilyMemberEntity member = new FamilyMemberEntity();
-//            member.setUser_given_name(FAMILY_TREE);
-//            member.setUser_id(FAMILY_TREE);
-//            memberList.add(member);
-//        }
-//        memberAdapter.addNewData(memberList);
         if (memberRefreshLayout.getVisibility() == View.VISIBLE) {
             memberRefreshLayout.setVisibility(View.GONE);
         }
         emptyMemberLinear.setVisibility(View.VISIBLE);
-//        emptyMemberIv.setImageResource(R.drawable.family_member_msg_empty);
         emptyMemberIv.setVisibility(View.VISIBLE);
-//        emptyMemberTv.setText(getString(R.string.text_empty_add_member));
         emptyMemberTv.setVisibility(View.VISIBLE);
     }
 
@@ -493,9 +472,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             groupRefreshLayout.setVisibility(View.GONE);
         }
         emptyGroupLinear.setVisibility(View.VISIBLE);
-//        emptyGroupIv.setImageResource(R.drawable.family_group_msg_empty);
         emptyGroupIv.setVisibility(View.VISIBLE);
-//        emptyGroupTv.setText(mContext.getString(R.string.text_empty_add_group));
         emptyGroupTv.setVisibility(View.VISIBLE);
     }
 
@@ -515,9 +492,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     private List<View> initPagerView() {
         List<View> mLists = new ArrayList<>();
-//        if(empmemberEntityList != null ){
-//            empmemberEntityList.addAll(moreMemberList);
-//        }
         View userView = LayoutInflater.from(mContext).inflate(R.layout.family_list_view_layout, null);
         final GridView userGridView = (GridView) userView.findViewById(R.id.family_grid_view);
         final ImageButton userIb = (ImageButton) userView.findViewById(R.id.ib_top);
@@ -565,6 +539,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 } else {
                     if ("0".equals(familyMemberEntity.getFam_accept_flag())) {
                         //不是好友,提示等待接收
+                        if(showSelectDialog != null && showSelectDialog.isShowing()){
+                            return;
+                        }
                         showNoFriendDialog(familyMemberEntity);
                         LogUtil.i("familyMemberEntity",familyMemberEntity.getUser_id());
 
@@ -779,16 +756,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //        }.start();
 
     }
-
-    private void getUrl() {
-        if (!NetworkUtil.isNetworkConnected(getActivity())) {
-            Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        showPDF(String.format(Constant.API_FAMILY_TREE, MainActivity.getUser().getUser_id()));
-
-    }
-
 
 
     class MyOnPageChanger implements ViewPager.OnPageChangeListener {
@@ -1179,6 +1146,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
             case ADD_MEMBER:
                 if (resultCode == getActivity().RESULT_OK) {
+                    vProgress.setVisibility(View.GONE);
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                 }else {
                     MessageUtil.showMessage(getActivity(), R.string.msg_action_canceled);
