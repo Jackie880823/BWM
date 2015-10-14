@@ -51,6 +51,7 @@ public class LocationUtil {
      * <br>false。默认状态也为false
      */
     private static boolean googleAvailable = false;
+    private static boolean googleAvailableCheckFinish = false;
 
     /**
      * 通过经纬度获取地址
@@ -229,7 +230,7 @@ public class LocationUtil {
 
                 @Override
                 public void onFinish() {
-
+                    googleAvailableCheckFinish = true;
                 }
 
                 @Override
@@ -274,7 +275,10 @@ public class LocationUtil {
         intent.putExtra(Constant.EXTRA_LATITUDE, latitude);
         intent.putExtra(Constant.EXTRA_LONGITUDE, longitude);
 
+        Log.d("","getPlacePickerIntent" + googleAvailable + googleAvailableCheckFinish);
+
         //判断是用百度还是google
+        //判断这个存在缺陷。如果用户网络状态突然更改不翻墙，此时导致用户无法使用谷歌地图，导致此功能不能使用。
         if (!googleAvailable) {
             // 应用启动后用谷歌获取了一次地址信息，如果这次地址信息为空则证明谷歌地图不可用，启用百度地
             intent.setClass(context, Map4BaiduActivity.class);
