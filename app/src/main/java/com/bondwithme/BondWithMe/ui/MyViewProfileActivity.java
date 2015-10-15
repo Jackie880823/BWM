@@ -575,7 +575,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (PersonalPictureActivity.RESULT_OK == resultCode) {
+        if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 // 取得裁剪后的图片
                 case REQUEST_PHOTO:
