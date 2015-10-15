@@ -155,7 +155,10 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         {
             userEntity = (UserEntity) mSavedInstanceState.getSerializable(Constant.LOGIN_USER);
             tokenEntity = (AppTokenEntity) mSavedInstanceState.getSerializable(Constant.HTTP_TOKEN);
-            mCropImagedUri = Uri.parse(mSavedInstanceState.getString("uri"));
+            if (!TextUtils.isEmpty(mSavedInstanceState.getString("uri")))
+            {
+                mCropImagedUri = Uri.parse(mSavedInstanceState.getString("uri"));
+            }
         }
         getData();
 
