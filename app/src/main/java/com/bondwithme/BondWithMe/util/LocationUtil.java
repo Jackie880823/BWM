@@ -192,13 +192,17 @@ public class LocationUtil {
         return googleAvailable;
     }
 
+    public interface GoogleServiceCheckTaskListener{
+        public void googleServiceCheckFinished(boolean googleAvailable);
+    }
+
     /**
      * <br>注册监听谷歌地图变化，在应用启动是监听获取地后则取消监听，只用于验证是否可以通过谷歌地图获取位置信息，得到
      * <br>判断谷歌地图是否可用的标识，如果没有谷歌服务不启用监听
      *
      * @param context 上下文资源
      */
-    public static void setRequestLocationUpdates(Context context) {
+    public static void setRequestLocationUpdates(Context context, final GoogleServiceCheckTaskListener mGoogleServiceCheckTaskListener) {
         if (SystemUtil.checkPlayServices(context)) {
             if (lm == null) {
                 lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -222,7 +226,9 @@ public class LocationUtil {
 
                 @Override
                 public void onFinish() {
-
+                    if(mGoogleServiceCheckTaskListener!=null) {
+                        mGoogleServiceCheckTaskListener.googleServiceCheckFinished(googleAvailable);
+                    }
                 }
 
                 @Override
@@ -233,8 +239,8 @@ public class LocationUtil {
 
                 @Override
                 public void onError(Exception e) {
-                    googleAvailable = false;
                     e.printStackTrace();
+                    googleAvailable = false;
                 }
 
                 @Override

@@ -3,7 +3,6 @@ package com.bondwithme.BondWithMe.util;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -25,33 +24,39 @@ import cn.jpush.android.api.JPushInterface;
 public class PushApi {
 
 
-    private static boolean isGCM;
     private static Context mContext;
 
-    public static void initPushApi(Context context) {
+    public static void initPushApi(Context context,boolean isGoogleAvailable) {
 
         String regid;
         mContext = context;
-        if (SystemUtil.checkPlayServices(context)) {
+
+        if (isGoogleAvailable) {
+            LogUtil.e("","sssssssssssssss=======1");
+//        if (SystemUtil.checkPlayServices(context)) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(mContext);
             if (TextUtils.isEmpty(regid)) {
-                isGCM = true;
-                registerInBackground();
+                registerInBackground(true);
+            }else {
+                sendRegistrationIdToBackend(regid, "gcm");
             }
-        }
-        //jpush一直启用，防止中国带google service 但是不能用的情况
-        JPushInterface.init(mContext);
-        regid = AppInfoUtil.getJpushRegistrationId(mContext);
-        if (TextUtils.isEmpty(regid)) {
-            isGCM = false;
-            registerInBackground();
-        }
-        /**极光推送*/
+        }else {
+            LogUtil.e("","sssssssssssssss=======2");
+            //jpush一直启用，防止中国带google service 但是不能用的情况
+            JPushInterface.init(mContext);
+            regid = AppInfoUtil.getJpushRegistrationId(mContext);
+            if (TextUtils.isEmpty(regid)) {
+                registerInBackground(false);
+            }else{
+                sendRegistrationIdToBackend(regid, "jpush");
+            }
+            /**极光推送*/
 //            JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
 
 //        JPushInterface.stopPush(getApplicationContext());
 //        JPushInterface.resumePush(getApplicationContext());
+        }
 
 
     }
@@ -62,7 +67,7 @@ public class PushApi {
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
-    private static void registerInBackground() {
+    private static void registerInBackground(final boolean isGCM) {
         new AsyncTask<Void, Void, String>() {
 
             @Override
@@ -106,7 +111,6 @@ public class PushApi {
             }
         }
         msg = "Device registered, registration ID=" + regid;
-        Log.d("", "hhhhhhhh" + regid);
         sendRegistrationIdToBackend(regid, "jpush");
         AppInfoUtil.storeRegistrationId(mContext, regid, false);
         return msg;
@@ -161,7 +165,7 @@ public class PushApi {
         params.put("lang", Locale.getDefault().getCountry());
         params.put("appType", "native");
         params.put("pushService", service);
-        params.put("appID", AppInfoUtil.getAppPackageName(mContext));
+        params.put("appID", AppInfoUtil.getAppPackageName   (mContext));
         requestInfo.putAllParams(params);
         new HttpTools(mContext).post(requestInfo, mContext, new HttpCallback() {
             @Override
