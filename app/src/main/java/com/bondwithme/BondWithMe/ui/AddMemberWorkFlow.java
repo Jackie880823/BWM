@@ -37,9 +37,6 @@ public class AddMemberWorkFlow extends Activity {
 //        setContentView(null);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_member_work_flow);
-        vProgress = findViewById(R.id.rl_progress);
-        vProgress.setVisibility(View.VISIBLE);
         from = getIntent().getStringExtra("from");
         to = getIntent().getStringExtra("to");
 

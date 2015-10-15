@@ -80,6 +80,7 @@ public class MemberActivity extends BaseActivity {
 
     @Override
     public void initView() {
+
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
         tvNoDate = getViewById(R.id.tv_no_data_display);
@@ -215,6 +216,7 @@ public class MemberActivity extends BaseActivity {
             case ADD_MEMBER:
                 if (resultCode == RESULT_OK) {
                     MessageUtil.showMessage(this, R.string.msg_action_successed);
+                    mProgressDialog.setVisibility(View.GONE);
 //                    startIndex = 0;
 //                    isRefresh = true;
                     requestData();//这样直接请求???
@@ -226,6 +228,7 @@ public class MemberActivity extends BaseActivity {
     }
 
     private void doAdd(final MemberEntity member) {
+        mProgressDialog.setVisibility(View.VISIBLE);
         Intent intent = new Intent(this, AddMemberWorkFlow.class);
         intent.putExtra("from", MainActivity.getUser().getUser_id());
         intent.putExtra("to", member.getAction_user_id());
