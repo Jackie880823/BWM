@@ -98,11 +98,11 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private int jumpIndex;
     public static String LAST_LEAVE_INDEX = "lastLeaveIndex";
     private int leavePagerIndex = 0;
-    private View red_point_1;
-    private View red_point_2;
-    private View red_point_3;
-    private View red_point_4;
-    private View red_point_5;
+    private static View red_point_1;
+    private static View red_point_2;
+    private static View red_point_3;
+    private static View red_point_4;
+    private static View red_point_5;
     public static String STICKERS_NAME = "stickers";
     public static String IS_FIRST_LOGIN = "isFirstLogin";
     public static String STICKER_VERSION = "2";
@@ -468,6 +468,27 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 //            e.printStackTrace();
 //        }
 
+    }
+
+    /**
+     * 清除所有tab小红点
+     */
+    public static void clearAllRedPoint(){
+        if(red_point_1!=null) {
+            red_point_1.setVisibility(View.INVISIBLE);
+        }
+        if(red_point_2!=null) {
+            red_point_2.setVisibility(View.INVISIBLE);
+        }
+        if(red_point_3!=null) {
+            red_point_3.setVisibility(View.INVISIBLE);
+        }
+        if(red_point_4!=null) {
+            red_point_4.setVisibility(View.INVISIBLE);
+        }
+        if(red_point_5!=null) {
+            red_point_5.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void checkAndShowRedPoit() {
