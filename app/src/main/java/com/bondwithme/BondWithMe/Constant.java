@@ -327,4 +327,7 @@ public class Constant {
      * 视频存放路径
      */
     public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance()) + "/Video/";
+
+    //删除message消息
+    public static final String API_MESSAGE_DELETE = API_SERVER +"/bondwithme/index.php/api/removeContent/%s";
 }
