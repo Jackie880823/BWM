@@ -101,8 +101,10 @@ public class ViaIdNameActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-                if(!TextUtils.isEmpty(etInfo.getText()) && !TextUtils.isEmpty(tvRelationship.getText())) {
+                if (!TextUtils.isEmpty(etInfo.getText()) && !TextUtils.isEmpty(tvRelationship.getText())) {
                     srAddMember();
+                } else {
+                    Toast.makeText(ViaIdNameActivity.this, getString(R.string.text_all_field_compulsory), Toast.LENGTH_SHORT).show();
                 }
             }
         });
