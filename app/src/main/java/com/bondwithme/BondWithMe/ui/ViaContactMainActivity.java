@@ -27,9 +27,7 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
-import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -207,7 +205,7 @@ public class ViaContactMainActivity extends BaseActivity {
                         }
                     });
                 } else {
-                    showSelectDialog();
+                    Toast.makeText(ViaContactMainActivity.this, getString(R.string.text_all_field_compulsory), Toast.LENGTH_SHORT).show();
                 }
 //                else if(TextUtils.isEmpty(tvSelectContact.getText()))
 //                {
@@ -228,22 +226,6 @@ public class ViaContactMainActivity extends BaseActivity {
             }
         });
 
-    }
-
-    private void showSelectDialog() {
-        LayoutInflater factory = LayoutInflater.from(this);
-        View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
-        final Dialog showSelectDialog = new MyDialog(this, null, selectIntention);
-        TextView tv_no_member = (TextView) selectIntention.findViewById(R.id.tv_no_member);
-        tv_no_member.setText(getString(R.string.text_all_field_compulsory));
-        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_ok);
-        cancelTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSelectDialog.dismiss();
-            }
-        });
-        showSelectDialog.show();
     }
 
     @Override
