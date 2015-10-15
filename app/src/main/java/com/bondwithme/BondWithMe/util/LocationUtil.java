@@ -198,6 +198,10 @@ public class LocationUtil {
         return googleAvailable;
     }
 
+    public interface GoogleServiceCheckTaskListener{
+        public void googleServiceCheckFinished(boolean googleAvailable);
+    }
+
     /**
      * 判断google服务和翻墙网络 得出标识boolean googleAvailable 用于后续的使用何种地图
      *
@@ -206,7 +210,7 @@ public class LocationUtil {
      *
      * @param context 上下文资源
      */
-    public static void setRequestLocationUpdates(Context context) {
+    public static void setRequestLocationUpdates(Context context, final GoogleServiceCheckTaskListener mGoogleServiceCheckTaskListener) {
         if (SystemUtil.checkPlayServices(context)) {
             if (lm == null) {
                 lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -230,6 +234,9 @@ public class LocationUtil {
 
                 @Override
                 public void onFinish() {
+                    if(mGoogleServiceCheckTaskListener!=null) {
+                        mGoogleServiceCheckTaskListener.googleServiceCheckFinished(googleAvailable);
+                    }
                     googleAvailableCheckFinish = true;
                 }
 
@@ -241,8 +248,8 @@ public class LocationUtil {
 
                 @Override
                 public void onError(Exception e) {
-                    googleAvailable = false;
                     e.printStackTrace();
+                    googleAvailable = false;
                 }
 
                 @Override

@@ -370,7 +370,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     private void showNoFriendDialog(final FamilyMemberEntity familyMemberEntity) {
 
-
         LayoutInflater factory = LayoutInflater.from(mContext);
         View selectIntention = factory.inflate(R.layout.dialog_some_empty, null);
         showSelectDialog = new MyDialog(mContext, null, selectIntention);
@@ -396,6 +395,15 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 showSelectDialog.dismiss();
             }
         });
+
+        selectIntention.findViewById(R.id.subject_2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                awaitingRemove(familyMemberEntity.getUser_id());
+                showSelectDialog.dismiss();
+            }
+        });
+
         showSelectDialog.show();
 
 
