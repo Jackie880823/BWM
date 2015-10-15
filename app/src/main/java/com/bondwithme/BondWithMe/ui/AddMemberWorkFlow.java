@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Window;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -32,7 +33,8 @@ public class AddMemberWorkFlow extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(null);
-
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         from = getIntent().getStringExtra("from");
         to = getIntent().getStringExtra("to");
 
@@ -42,7 +44,6 @@ public class AddMemberWorkFlow extends Activity {
 
         getAddFlag();
     }
-
 
     void getAddFlag() {
         RequestInfo requestInfo = new RequestInfo();

@@ -56,6 +56,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private Context context;
 
     /**
+     * 监听日志内容设置的变化，根据{@link #needFull}的值来剪切文字
+     */
+    private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
+
+    /**
      * 头像视图
      */
     private CircularNetworkImage nivHead;
@@ -63,6 +68,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * 日志文字内容
      */
     private FreedomSelectionTextView tvContent;
+
+    /**
+     * 切换日志文件的开关
+     */
+    private TextView tvSwitch;
 
     /**
      * 发表日期显示视图
@@ -142,6 +152,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     private TextView tvLocation;
 
+    private boolean needFull = false;
+
     public final TextView getTvCommentCount() {
         return tvCommentCount;
     }
@@ -155,12 +167,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     /**
-     * @param itemView  日志视图的整个UI
-     * @param httpTools 网络上传工具
-     * @param needFull  是否显示全部日志信息：{@value true} 显示全部日志信息；{@value false} 显示部份日志
-     * @param context   用于引导应用资源
+     * @param itemView   日志视图的整个UI
+     * @param httpTools  网络上传工具
+     * @param isDetailed 是wall的详情：{@value true} 是wall详情；{@value false} 不是wall详情
+     * @param context    用于引导应用资源
      */
-    public WallHolder(final Context context, View itemView, HttpTools httpTools, boolean needFull) {
+    public WallHolder(final Context context, View itemView, HttpTools httpTools, boolean isDetailed) {
         // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
         super(itemView);
         mHttpTools = httpTools;
@@ -169,6 +181,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         nivHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
         tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
         tvContent = (FreedomSelectionTextView) itemView.findViewById(R.id.tv_wall_content);
+        tvSwitch = (TextView) itemView.findViewById(R.id.switch_text_show);
         tvDate = (TextView) itemView.findViewById(R.id.push_date);
         ivLock = (ImageView) itemView.findViewById(R.id.lock_post_iv);
         llWallsImage = itemView.findViewById(R.id.ll_walls_image);
@@ -185,37 +198,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
         tvLocation = (TextView) itemView.findViewById(R.id.tv_location);
 
-        if (!needFull) {
-            // 不显示全部内容只显示9九行
-            tvContent.setMaxLines(9);
-            tvContent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                boolean isSetting = false;
-
-                @Override
-                public void onGlobalLayout() {
-                    if (!isSetting) {
-                        isSetting = true;
-                        // 字符显示超过9行，只显示到第九行
-                        int lineCount = tvContent.getLineCount();
-                        if (lineCount > 8) {
-                            // 第九行只显示十个字符
-                            int maxLineEndIndex = tvContent.getLayout().getLineEnd(8);
-                            int maxLineStartIndex = tvContent.getLayout().getLineStart(8);
-                            CharSequence sourceText = tvContent.getText();
-                            SpannableStringBuilder ssb = new SpannableStringBuilder(sourceText);
-                            if (maxLineEndIndex - maxLineStartIndex > 7) {
-                                // 截取到第九行文字的第7个字符，其余字符用...替代
-                                ssb.replace(maxLineStartIndex + 7, ssb.length() - 1, "...");
-                                setSpanContent(context, ssb.toString());
-                            } else if (lineCount > 9) {
-                                // 截取到第九行文字未满7个字符，行数超过9号，说明有换行，将换行替换成"..."
-                                ssb.replace(maxLineEndIndex - 2, ssb.length() - 1, "...");
-                                setSpanContent(context, ssb.toString());
-                            }
-                        }
-                    }
-                }
-            });
+        if (!isDetailed) { // 是列表要做文字内容切换
+            switchContentShow(needFull);
         }
 
         itemView.findViewById(R.id.top_event).setOnClickListener(this);
@@ -225,6 +209,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         ibAgree.setOnClickListener(this);
         btn_del.setOnClickListener(this);
         imWallsImages.setOnClickListener(this);
+        tvSwitch.setOnClickListener(this);
     }
 
     /**
@@ -279,6 +264,10 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 if (mViewClickListener != null) {
                     mViewClickListener.remove(wallEntity.getContent_group_id());
                 }
+                break;
+
+            case R.id.switch_text_show:
+                switchContentShow(!needFull);
                 break;
         }
     }
@@ -552,6 +541,53 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             util.setSpanContent(tvContent, this.wallEntity, atDescription, tagMemberCount, tagGroupCount);
         } else {
             tvContent.setOnClickListener(this);
+        }
+    }
+
+    /**
+     * 切换日志内容的显示
+     *
+     * @param needFull
+     */
+    private void switchContentShow(boolean needFull) {
+        this.needFull = needFull;
+        if (globalLayoutListener == null) {
+            // 监听
+            globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+
+                @Override
+                public void onGlobalLayout() {
+                    LogUtil.i(TAG, "onGlobalLayout&");
+                    // 字符显示超过5行，只显示到第九行
+                    int lineCount = tvContent.getLineCount();
+                    if (lineCount > 5) {
+                        // 第九行只显示十个字符
+                        int maxLineEndIndex = tvContent.getLayout().getLineEnd(4);
+                        CharSequence sourceText = tvContent.getText();
+                        SpannableStringBuilder ssb = new SpannableStringBuilder(sourceText);
+                        ssb.replace(maxLineEndIndex - 3, ssb.length() - 1, "...");
+                        setSpanContent(context, ssb.toString());
+                        tvSwitch.setVisibility(View.VISIBLE);
+                        tvSwitch.setText(R.string.more);
+                    }
+                }
+            };
+        }
+
+
+        if (!needFull) {
+            // 不显示全部内容只显示5九行
+            tvContent.setMaxLines(5);
+            tvContent.getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
+        } else {
+            tvContent.setMaxLines(Integer.MAX_VALUE);
+            tvContent.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+            tvSwitch.setText(R.string.text_collapse);
+        }
+
+
+        if (wallEntity != null) {
+            setSpanContent(context, wallEntity.getText_description());
         }
     }
 

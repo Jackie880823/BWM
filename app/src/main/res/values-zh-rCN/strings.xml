@@ -621,4 +621,5 @@
     <string name="show_vidoe_limit">只显示大小不超过20M的视频</string>
     <string name="open_gps_title">需要提高位置信息的精确度</string>
     <string name="use_gps_hint">请使用GPS确定位置</string>
+    <string name="text_collapse">collapse</string>
 </resources>
