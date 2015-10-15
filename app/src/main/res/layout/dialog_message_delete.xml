@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/message_copy_linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_add_new_member"
+            style="@style/text_dialog_style"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/default_content_padding"
+            android:text="@string/text_add_new_member" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_split_line" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_create_new_group"
+        style="@style/text_dialog_style"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/default_content_padding"
+        android:text="@string/text_create_new_group" />
+
+    <LinearLayout
+        android:id="@+id/message_cancel_linear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_split_line" />
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            style="@style/text_dialog_style"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/default_content_padding"
+            android:text="@string/cancel"
+            android:textColor="@color/high_light_color"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>
