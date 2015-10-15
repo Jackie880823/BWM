@@ -228,9 +228,10 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     private static void goMain(Activity context) {
         Intent intent = new Intent(context, MainActivity.class);
-        ComponentName cn = intent.getComponent();
-        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-        context.startActivity(mainIntent);
+//        ComponentName cn = intent.getComponent();
+//        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
         context.finish();
     }
 

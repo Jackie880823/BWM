@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,9 +21,9 @@ import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
+import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.Tranck.MyAppsFlyer;
 import com.bondwithme.BondWithMe.Tranck.MyPiwik;
-import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MyFragmentPagerAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.entity.UserEntity;
@@ -30,6 +31,7 @@ import com.bondwithme.BondWithMe.receiver_service.ReportIntentService;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.ui.wall.WallNewActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
@@ -115,9 +117,11 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         }
 
         //表示这个用户已经登陆过。提供给登录界面判断显示sign up 还是 log in
-        //-----------------------------------------------------------------------------
-        PreferencesUtil.saveValue(this, Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
-        //-----------------------------------------------------------------------------
+        if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN,"")))
+        {
+            PreferencesUtil.saveValue(this, Constant.HAS_LOGED_IN, Constant.HAS_LOGED_IN);
+        }
+
         App.checkVerSion(this);
 
     }
@@ -373,6 +377,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
 
     @Override
     public void initView() {
+        LocationUtil.setRequestLocationUpdates(this);//不要提取到启动页中，App中也尝试调用此方法，有时候莫名不起作用。why？？？
         MyAppsFlyer.doLoginTrack();
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + STICKER_VERSION + App.getLoginedUser().getUser_id();
