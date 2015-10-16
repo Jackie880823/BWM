@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
@@ -19,7 +18,7 @@ public class GcmIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (LocationUtil.isGoogleAvailable()) {
+//        if (LocationUtil.isGoogleAvailable()) {
             Bundle extras = intent.getExtras();
             GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
             // The getMessageType() intent parameter must be the intent you received
@@ -76,7 +75,7 @@ public class GcmIntentService extends IntentService {
                 // Release the wake lock provided by the WakefulBroadcastReceiver.
                 GcmBroadcastReceiver.completeWakefulIntent(intent);
             }
-        }
+//        }
     }
 
 }

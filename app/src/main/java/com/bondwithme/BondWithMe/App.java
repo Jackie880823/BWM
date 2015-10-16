@@ -22,12 +22,12 @@ import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
+import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocationUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
@@ -52,7 +52,7 @@ import java.util.Map;
 /**
  * Created by wing on 15/3/21.
  */
-public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks,NetChangeObserver {
+public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks,NetChangeObserver,LocationUtil.GoogleServiceCheckTaskListener {
 
     private static UserEntity user;
     private static App appContext;
@@ -80,7 +80,6 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     @Override
     public void onCreate() {
         super.onCreate();
-        LogUtil.d("", "App onCreate============");
         this.registerActivityLifecycleCallbacks(this);
         handler = new Handler();
         appContext = this;
@@ -97,7 +96,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         SDKInitializer.initialize(this);
 
         /** 设置从歌地图获取位置，当这次设置获取不到位置说明谷歌地图这次无法使用，应用中调用地图时会默认启动百度地图 */
-        LocationUtil.setRequestLocationUpdates(this);
+        LocationUtil.setRequestLocationUpdates(this,this);
 
         /** 初始化第三方 Universal Image Loader图片处理类 */
         UniversalImageLoaderUtil.initImageLoader(App.this);
@@ -107,6 +106,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
 //        filter.addAction("refresh");
         registerReceiver(mReceiver, filter);
+        NetWorkStateReceiver.registerNetStateObserver(this);
     }
 
 
@@ -117,7 +117,6 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public static void userLoginSuccessed(Activity context, UserEntity user, AppTokenEntity tokenEntity) {
 
         changeLoginedUser(user, tokenEntity);
-        PushApi.initPushApi(context);
         goMain(context);
 
     }
@@ -143,7 +142,6 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
             @Override
             public void onResult(String response) {
-                LogUtil.e("", "response===========" + response);
                 try {
                     JSONObject object = new JSONObject(response);
                     //for test
@@ -228,9 +226,10 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     private static void goMain(Activity context) {
         Intent intent = new Intent(context, MainActivity.class);
-        ComponentName cn = intent.getComponent();
-        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
-        context.startActivity(mainIntent);
+//        ComponentName cn = intent.getComponent();
+//        Intent mainIntent = IntentCompat.makeRestartActivityTask(cn);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
         context.finish();
     }
 
@@ -507,12 +506,18 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
     @Override
     public void OnConnect(int netType) {
-
-        PushApi.initPushApi(getContextInstance());
+        //重新检查是否可用google服务
+        LocationUtil.setRequestLocationUpdates(this,this);
     }
 
     @Override
     public void OnDisConnect() {
 
+    }
+
+    @Override
+    public void googleServiceCheckFinished(boolean googleAvailable) {
+        //初始推送api
+        PushApi.initPushApi(getContextInstance(),googleAvailable);
     }
 }
