@@ -169,7 +169,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode);
         if (resultCode == Activity.RESULT_OK) {
-            MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//            MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
             //                    startIndex = 0;
             //                    isRefresh = true;
             requestData();//这样直接请求???
