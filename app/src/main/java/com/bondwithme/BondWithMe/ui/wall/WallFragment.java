@@ -25,7 +25,6 @@ import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
@@ -321,7 +320,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
                     @Override
                     public void onResult(String string) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                         refresh();
                     }
 

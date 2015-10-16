@@ -17,7 +17,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.interfaces.IViewCommon;
 import com.bondwithme.BondWithMe.interfaces.NetChangeObserver;
 import com.bondwithme.BondWithMe.receiver_service.NetWorkStateReceiver;
-import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
@@ -252,8 +251,6 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
 
     @Override
     public void OnConnect(int netType) {
-        //重新检查是否可用google服务
-        LocationUtil.setRequestLocationUpdates(this);
         msgBarChangeByStatus(View.GONE);
     }
 
