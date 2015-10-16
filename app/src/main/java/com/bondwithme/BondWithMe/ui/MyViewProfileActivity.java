@@ -131,12 +131,13 @@ public class MyViewProfileActivity extends BaseActivity {
     protected void titleRightEvent() {
         if (isHeaderChageed()) {
             uploadImage();
-        } else if (isProfileChanged()) {
+        }
+//        else if (isProfileChanged()) {
             updateProfile();
 
-        } else {
+//        } else {
             finish();
-        }
+//        }
     }
 
     @Override
@@ -183,21 +184,21 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     private boolean isProfileChanged() {
-        if (!TextUtils.isEmpty(etFirstName.getText().toString().trim()) && !MainActivity.getUser().getUser_given_name().equals(etFirstName.getText().toString().trim())) {
+        if (!TextUtils.isEmpty(etFirstName.getText().toString().trim()) && !etFirstName.getText().toString().trim().equals(MainActivity.getUser().getUser_given_name())) {
             return true;
         } else {
             if (TextUtils.isEmpty(etFirstName.getText().toString().trim())) {
                 return true;
             }
         }
-        if (!TextUtils.isEmpty(etLastName.getText().toString().trim()) && !MainActivity.getUser().getUser_surname().equals(etLastName.getText().toString().trim())) {
+        if (!TextUtils.isEmpty(etLastName.getText().toString().trim()) && !etLastName.getText().toString().trim().equals(MainActivity.getUser().getUser_surname())) {
             return true;
         } else {
             if (TextUtils.isEmpty(etLastName.getText().toString().trim())) {
                 return true;
             }
         }
-        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()) && !MainActivity.getUser().getUser_dob().equals(strDOB)) {
+        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()) && !strDOB.equals(MainActivity.getUser().getUser_dob())) {
             return true;
         } else {
             if (!TextUtils.isEmpty(strDOB) && !strDOB.equals(MainActivity.getUser().getUser_dob())) {
@@ -217,19 +218,11 @@ public class MyViewProfileActivity extends BaseActivity {
         if (!simpleSex.equals(simpleRealitySex)) {
             return true;
         }
-        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_email()) && !MainActivity.getUser().getUser_email().equals(etEmail.getText().toString().trim())) {
+        if (MainActivity.getUser()!=null&&!etEmail.getText().toString().trim().equals(MainActivity.getUser().getUser_email())) {
             return true;
-        } else {
-            if (!TextUtils.isEmpty(etEmail.getText().toString().trim()) && !MainActivity.getUser().getUser_email().equals(etEmail.getText().toString().trim())) {
-                return true;
-            }
         }
-        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_location_name()) && !MainActivity.getUser().getUser_location_name().equals(etRegion.getText().toString().trim())) {
+        if (!etRegion.getText().toString().trim().equals(MainActivity.getUser().getUser_location_name())) {
             return true;
-        } else {
-            if (!TextUtils.isEmpty(etRegion.getText().toString().trim()) && !MainActivity.getUser().getUser_location_name().equals(etRegion.getText().toString().trim())) {
-                return true;
-            }
         }
         return false;
     }
@@ -446,6 +439,7 @@ public class MyViewProfileActivity extends BaseActivity {
         jsonParams.put("user_location_name", etRegion.getText().toString());
 
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+        LogUtil.e("","jsonParamsStringpp========================="+jsonParamsString);
 
         requestInfo.url = String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id());
         requestInfo.jsonParam = jsonParamsString;
