@@ -44,6 +44,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallHolder> {
         final WallEntity wall = data.get(position);
         holder.setViewClickListener(mViewClickListener);
         holder.setWallEntity(wall);
+        holder.setSwitchVisibility(View.GONE);
         holder.setContent(wall, mContext);
     }
 
