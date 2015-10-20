@@ -255,6 +255,9 @@
             android:screenOrientation="portrait" />
         <!-- More StickerStore相关的Activity -->
         <activity
+            android:name=".ui.more.RewardsActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.more.sticker.StickerStoreActivity"
             android:screenOrientation="portrait" />
         <activity

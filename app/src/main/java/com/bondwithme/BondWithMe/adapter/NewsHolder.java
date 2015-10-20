@@ -37,7 +37,6 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     private String imageUrl;
     private String videoUrl;
-    private String videoThumbnailUrl;
 
     private boolean isDisplayMore;
     private int defaultLineCount = 5;

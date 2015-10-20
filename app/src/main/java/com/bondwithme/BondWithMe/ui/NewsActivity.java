@@ -166,6 +166,7 @@ public class NewsActivity extends BaseActivity {
                 }
                 loading = false;
 
+                //no data!!!
                 if (!data.isEmpty()){
                     tvNoData.setVisibility(View.GONE);
                 }else if (data.isEmpty() && !NewsActivity.this.isFinishing()){
