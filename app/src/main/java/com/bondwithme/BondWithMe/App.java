@@ -314,6 +314,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             }
             context.finish();
         }
+        MainActivity.clearAllRedPoint();
     }
 
     private static void clearPush(Context context) {
@@ -325,6 +326,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_REG_ID, "");
         PreferencesUtil.saveValue(context, Constant.JPUSH_PREF_APP_VERSION, "");
         NotificationUtil.clearNotification(context);
+        clearAllNotificationMsgs();
     }
 
     public void exit() {
@@ -479,6 +481,21 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             default:
                 return new ArrayList<>();
         }
+    }
+
+    /**
+     * 清除缓存的通知消息
+     */
+    public static void clearAllNotificationMsgs(){
+        notificaationWallList.clear();
+        notificaationEventList.clear();
+        notificaationMemberList.clear();
+        notificaationMessageList.clear();
+        notificaationMissList.clear();
+        notificaationBigDayList.clear();
+        notificaationNewsList.clear();
+        notificaationRecommendList.clear();
+        notificaationGroupList.clear();
     }
 
     public void clearNotificationMsgsByType(NotificationUtil.MessageType messageType) {

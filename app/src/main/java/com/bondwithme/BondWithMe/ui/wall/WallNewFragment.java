@@ -709,7 +709,7 @@ public class WallNewFragment extends BaseFragment<WallNewActivity> implements Vi
                     SharedPreferences.Editor editor = draftPreferences.edit();
                     editor.clear().apply();
                     getParentActivity().setResult(Activity.RESULT_OK);
-                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
+//                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                     if(getActivity() != null) {
                         getActivity().finish();
                     }
