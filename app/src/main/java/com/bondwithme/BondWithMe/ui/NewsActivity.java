@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -42,7 +41,7 @@ public class NewsActivity extends BaseActivity {
     private NewsAdapter adapter;
     private RecyclerView rvList;
     private LinearLayoutManager llm;
-    private TextView tvNoDate;
+    private TextView tvNoData;
 
 
 
@@ -81,7 +80,7 @@ public class NewsActivity extends BaseActivity {
     public void initView() {
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
-        tvNoDate = getViewById(R.id.tv_no_data_display);
+        tvNoData = getViewById(R.id.tv_no_data_display);
 
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
@@ -136,7 +135,7 @@ public class NewsActivity extends BaseActivity {
         params.put("limit",""+offSet);
 
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_NEWS, MainActivity.getUser().getUser_id()), params,this, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_NEWS, MainActivity.getUser().getUser_id()), params,this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -168,9 +167,9 @@ public class NewsActivity extends BaseActivity {
                 loading = false;
 
                 if (!data.isEmpty()){
-                    tvNoDate.setVisibility(View.GONE);
+                    tvNoData.setVisibility(View.GONE);
                 }else if (data.isEmpty() && !NewsActivity.this.isFinishing()){
-                    tvNoDate.setText(getResources().getString(R.string.text_no_date_news));
+                    tvNoData.setText(getResources().getString(R.string.text_no_date_news));
                 }
             }
 
