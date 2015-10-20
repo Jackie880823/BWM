@@ -13,6 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.NewsEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.ui.more.ViewLargeImageActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
@@ -24,6 +25,7 @@ import com.bondwithme.BondWithMe.util.MyDateUtils;
 public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private final String TAG = "NewsHolder";
+    public static final String PIC_URL = "pic_url";
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener;
     private NewsEntity newsEntity;
     private Context mContext;
@@ -56,6 +58,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         changeTextDisplay(isDisplayMore);
 
+        ivPic.setOnClickListener(this);
         ibtnVideo.setOnClickListener(this);
         tvMoreOrCollapse.setOnClickListener(this);
     }
@@ -99,13 +102,19 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 break;
 
             case R.id.iv_pic:
-                enlargePic();
+                if(!TextUtils.isEmpty(imageUrl)){
+                    enlargePic();
+                }
                 break;
         }
 
     }
 
     private void enlargePic() {
+        Intent intent = new Intent(mContext, ViewLargeImageActivity.class);
+        intent.putExtra(PIC_URL,newsEntity.getImage());
+        mContext.startActivity(intent);
+
 
     }
 
