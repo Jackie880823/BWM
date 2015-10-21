@@ -1,24 +1,21 @@
 package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.NewsEntity;
-import com.bondwithme.BondWithMe.ui.NewsInfoActivity;
-import com.bondwithme.BondWithMe.util.MyDateUtils;
 
 import java.util.List;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VHItem> {
+public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
     private Context mContext;
     private List<NewsEntity> data;
+    private int contentDisplayStatus = 0;//默认未展开
+    private final int defaultMaxLineCount = 5;
 
 
     public NewsAdapter(Context context, List<NewsEntity> data) {
@@ -27,10 +24,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VHItem> {
     }
 
     @Override
-    public VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NewsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_item, parent, false);
         // ViewHolder参数一定要是Item的Root节点.
-        return new VHItem(view);
+        return new NewsHolder(view,mContext);
     }
 
     public void add(List<NewsEntity> newData) {
@@ -40,11 +37,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VHItem> {
 
 
     @Override
-    public void onBindViewHolder(VHItem holder, int position) {
-        NewsEntity newsEntity = data.get(position);
-        holder.news_title.setText(newsEntity.getModule_name());
-        holder.news_content.setText(newsEntity.getMessage_variable());
-        holder.news_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, newsEntity.getCreation_date()));
+    public void onBindViewHolder(final NewsHolder holder, int position) {
+        final NewsEntity news = data.get(position);
+        holder.setNewsEntity(news);
+        holder.setSwitchVisibility(View.GONE);
+        holder.setContent(news,mContext);
     }
 
 
@@ -52,33 +49,5 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VHItem> {
     public int getItemCount() {
         return data.size();
     }
-
-
-    class VHItem extends RecyclerView.ViewHolder {
-
-        private TextView news_title;
-        private TextView news_content;
-        private TextView news_date;
-
-        public VHItem(View itemView) {
-            // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
-            super(itemView);
-
-            news_title= (TextView) itemView.findViewById(R.id.news_title);
-            news_content= (TextView) itemView.findViewById(R.id.news_content);
-            news_date= (TextView) itemView.findViewById(R.id.news_date);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext,NewsInfoActivity.class);
-                    String newUrl=String.format(Constant.API_BONDALERT_NEWS_ITEM,data.get(getAdapterPosition()).getModule_id());
-                    intent.putExtra("newUrl",newUrl);
-                    mContext.startActivity(intent);
-                }
-            });
-        }
-    }
-
-
 
 }

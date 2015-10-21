@@ -161,6 +161,13 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
             String createdContentId = data.getStringExtra(CONTENT_CREATOR_ID);
             String url = String.format(Constant.API_GET_VIDEO, createdContentId, fileName);
 
+            /*******为适应news、rewards中的视频下载，添加如下代码 **********/
+            if(createdContentId.equals("for_news_or_rewards")){
+                url = fileName;
+                fileName = url.substring(url.lastIndexOf('/') + 1);
+                LogUtil.d(TAG,"fileName" + fileName);
+            }
+
             String targetParent = VIDEO_PATH;
             String target;
             File file = new File(targetParent);
