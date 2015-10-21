@@ -10,6 +10,10 @@ import java.util.List;
  */
 public class WallEntity implements Serializable {
 
+    public static final String CONTENT_TYPE_POST = "post";
+
+    public static final String CONTENT_TYPE_ads = "ads";
+
     /**
      * <br>Post create date
      * <br>such as: "2015-01-28 11:16:57"
@@ -144,6 +148,11 @@ public class WallEntity implements Serializable {
      * Post content ID
      */
     private String content_id;
+
+    /**
+     * {@link #CONTENT_TYPE_POST} – 普通日记, {@link #CONTENT_TYPE_ads} – 广告
+     */
+    private String content_type;
 
     /**
      *
@@ -370,6 +379,14 @@ public class WallEntity implements Serializable {
 
     public void setContent_id(String content_id) {
         this.content_id = content_id;
+    }
+
+    public String getContent_type() {
+        return content_type;
+    }
+
+    public void setContent_type(String content_type) {
+        this.content_type = content_type;
     }
 
     public String getGroup_id() {
