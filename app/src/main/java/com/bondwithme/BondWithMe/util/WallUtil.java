@@ -24,6 +24,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -295,12 +296,14 @@ public class WallUtil {
                     if(currentTime - lastClickTimeMills > 500) {
                         // 部分手机会连续执行两次，500毫秒之内的连续执行被认为一次点击只执行一次点击事件
                         lastClickTimeMills = currentTime;
-                        if (WallEntity.CONTENT_TYPE_ads.equals(wallEntity.getContent_type())) {
-                            String trackUrl = wallEntity.getTrack_url();
-                            if (!TextUtils.isEmpty(trackUrl)) {
-                                Uri uri = Uri.parse(trackUrl);
-                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                                widget.getContext().startActivity(intent);
+                        if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
+                            if (TextUtils.isEmpty(wallEntity.getVideo_filename())) { // 没有视频可以跳转
+                                String trackUrl = wallEntity.getTrack_url() + MainActivity.getUser().getUser_id();
+                                if (!TextUtils.isEmpty(trackUrl)) {
+                                    Uri uri = Uri.parse(trackUrl);
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                    widget.getContext().startActivity(intent);
+                                }
                             }
                         } else {
                             mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
@@ -347,10 +350,11 @@ public class WallUtil {
             public void onResult(String response) {
                 LogUtil.i(TAG, "get loved list onResult& response: " + response);
                 Gson gson = new Gson();
-                ArrayList<UserEntity> users = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                ArrayList<UserEntity> users = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
+                }.getType());
                 int size = users.size();
                 StringBuilder text = new StringBuilder();
-                for(int i = 0; i < size && i < 4; i++) {
+                for (int i = 0; i < size && i < 4; i++) {
                     text.append(users.get(i).getUser_given_name()).append(" ");
                 }
                 textView.setText(text.toString());

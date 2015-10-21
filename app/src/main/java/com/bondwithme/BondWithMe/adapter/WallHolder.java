@@ -260,12 +260,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             case R.id.tv_wall_content:
             case R.id.ll_comment:
             case R.id.top_event:
-                if (WallEntity.CONTENT_TYPE_ads.equals(wallEntity.getContent_type())) {
-                    String trackUrl = wallEntity.getTrack_url();
-                    if (!TextUtils.isEmpty(trackUrl)) {
-                        Uri uri = Uri.parse(trackUrl);
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        context.startActivity(intent);
+                if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
+                    if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {// 没有视频需要打开网页
+                        String trackUrl = wallEntity.getTrack_url() + MainActivity.getUser().getUser_id();
+                        if (!TextUtils.isEmpty(trackUrl)) {
+                            Uri uri = Uri.parse(trackUrl);
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            context.startActivity(intent);
+                        }
                     }
                 } else {
                     if (mViewClickListener != null) {
@@ -274,8 +276,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 }
                 break;
             case R.id.iv_walls_images:
-                if (WallEntity.CONTENT_TYPE_ads.equals(wallEntity.getContent_type())) {
-                    String trackUrl = wallEntity.getTrack_url();
+                if (needOpenWeb(wallEntity)) {
+                    String trackUrl = wallEntity.getTrack_url() + MainActivity.getUser().getUser_id();
                     if (!TextUtils.isEmpty(trackUrl)) {
                         Uri uri = Uri.parse(trackUrl);
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -300,6 +302,19 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 switchContentShow(!needFull);
                 break;
         }
+    }
+
+
+    public boolean needOpenWeb(WallEntity wallEntity) {
+        if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
+            if (!TextUtils.isEmpty(wallEntity.getVideo_filename())) { // 视频不为空
+                new HttpTools(context).get(wallEntity.getTrack_url() + MainActivity.getUser().getUser_id(), null, null, null);
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void showPreviewVideo() {
@@ -514,7 +529,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //            tvLoveList.setText("");
         //        }
 
-        if (WallEntity.CONTENT_TYPE_ads.equals(wallEntity.getContent_type())) {
+        if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
             llComment.setVisibility(View.INVISIBLE);
         } else {
             llComment.setVisibility(View.VISIBLE);
