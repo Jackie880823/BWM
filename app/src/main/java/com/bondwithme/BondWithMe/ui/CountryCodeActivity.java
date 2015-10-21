@@ -34,6 +34,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * 待优化
+ * TODO
+ */
 public class CountryCodeActivity extends BaseActivity {
     String[] dataArray = new String[]{};
     public static final String COUNTRY = "country";

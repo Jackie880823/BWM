@@ -47,6 +47,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     private static final int SUCCESS_GET_CODE = 1;
     private static final int LOG_IN_EXIST = 2;
     private static final int CATCH = 3;
+    private static final int PHONE_ERROR = 4;
 
     private EditText etUsername;
     private TextView tvUsernamePrompt;
@@ -91,6 +92,11 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
                 case ERROR:
                     //请求错误
+                    break;
+
+                case PHONE_ERROR:
+                    //手机号不正确没有生成验证码
+                    etPhoneNumber.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                     break;
 
                 default:
@@ -349,9 +355,17 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
                             //成功获得验证码
                             handler.sendEmptyMessage(SUCCESS_GET_CODE);
                         } else if (Constant.FAIL.equals(jsonObject.getString("response_status"))) {
-                            if (RESPONSE_MESSAGE_ID_EXIST.equals(jsonObject.getString("response_message"))) {
-                                //账号被注册
-                                handler.sendEmptyMessage(LOG_IN_EXIST);
+                            if (jsonObject.has("response_message"))
+                            {
+                                if (RESPONSE_MESSAGE_ID_EXIST.equals(jsonObject.getString("response_message"))) {
+                                    //账号被注册
+                                    handler.sendEmptyMessage(LOG_IN_EXIST);
+                                }
+                            }
+                            else
+                            {
+                                //手机号不对 无法生成验证码
+                                handler.sendEmptyMessage(PHONE_ERROR);
                             }
                         }
 
@@ -382,7 +396,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
         else
         {
             //log id
-            if (TextUtils.isEmpty(etUsername.getText().toString()))
+            if (TextUtils.isEmpty(etUsername.getText().toString()) || etUsername.getText().toString().length() < 5)
             {
                 etUsername.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                 tvUsernamePrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));
@@ -416,7 +430,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
             }
 
             //password
-            if (TextUtils.isEmpty(etPassword.getText().toString()))
+            if (TextUtils.isEmpty(etPassword.getText().toString()) || etPassword.getText().toString().length() < 5)
             {
                 etPassword.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                 tvPasswordPrompt.setTextColor(getResources().getColor(R.color.stroke_color_red_wrong));

@@ -124,6 +124,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     private final TextView tvCommentCount;
 
+    private View llComment;
+
     /**
      * 红心按钮点击添加或者取消赞
      */
@@ -203,7 +205,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         itemView.findViewById(R.id.top_event).setOnClickListener(this);
-        itemView.findViewById(R.id.ll_comment).setOnClickListener(this);
+        llComment = itemView.findViewById(R.id.ll_comment);
+        llComment.setOnClickListener(this);
         tvAgreeCount.setOnClickListener(this);
         //        tvLoveList.setOnClickListener(this);
         ibAgree.setOnClickListener(this);
@@ -493,7 +496,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //            tvLoveList.setText("");
         //        }
 
-        tvCommentCount.setText(this.wallEntity.getComment_count());
+        if (WallEntity.CONTENT_TYPE_ads.equals(wallEntity.getContent_type())) {
+            llComment.setVisibility(View.INVISIBLE);
+        } else {
+            llComment.setVisibility(View.VISIBLE);
+            tvCommentCount.setText(this.wallEntity.getComment_count());
+        }
 
 
         if (MainActivity.getUser().getUser_id().equals(this.wallEntity.getUser_id())) {
