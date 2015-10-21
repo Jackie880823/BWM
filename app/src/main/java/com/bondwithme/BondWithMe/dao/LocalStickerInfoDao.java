@@ -22,10 +22,7 @@ public class LocalStickerInfoDao {
     private static Dao<LocalStickerInfo, Integer> stickerInfoDao;
     private static LocalStickerInfoDao stickerInfoDaoInstance;
     private Context mContext;
-    private static final String STICKER_FILE_PATH_NAME = "Sticker";
-    private static final String DEF_FIRST_STICKER = "Raya_Greeting";
-    private static final String DEF_SECOND_STICKER = "Eggplant";
-    private static final String DEF_THREAD_STICKER = "LittleGG";
+    private static final String STICKER_FILE_PATH_NAME = "NewSticker";
 
     public LocalStickerInfoDao(Context mContext) {
         this.mContext = mContext;
@@ -47,7 +44,7 @@ public class LocalStickerInfoDao {
             if (stickerInfoDaoInstance == null) {
                 stickerInfoDaoInstance = new LocalStickerInfoDao(paramContext);
             }
-            if(stickerInfoDao==null){
+            if (stickerInfoDao == null) {
                 try {
                     stickerInfoDao = SQLiteHelperOrm.getHelper(paramContext).getDao(LocalStickerInfo.class);
                 } catch (Exception e) {
@@ -98,14 +95,14 @@ public class LocalStickerInfoDao {
     }
 
     public List<String> queryAllSticker() {
-        if(stickerInfoDao==null){
-            return  null;
+        if (stickerInfoDao == null) {
+            return null;
         }
         List<String> list = new ArrayList<>();
         try {
             List<LocalStickerInfo> localList = null;
             QueryBuilder qb = stickerInfoDao.queryBuilder();
-            qb.selectColumns("path").orderBy("order",false).where().eq("loginUserId", App.getLoginedUser().getUser_id());
+            qb.selectColumns("path").orderBy("order", false).where().eq("loginUserId", App.getLoginedUser().getUser_id());
             localList = qb.query();
             if (null != localList) {
 //            if (null != localList && localList.size() > 0) {
@@ -117,7 +114,7 @@ public class LocalStickerInfoDao {
 //                    if (DEF_FIRST_STICKER.equalsIgnoreCase(name) || DEF_SECOND_STICKER.equalsIgnoreCase(name) || DEF_THREAD_STICKER.equalsIgnoreCase(name)) {
 //                        continue;
 //                    } else {
-                        list.add(stickerInfo.getPath());
+                    list.add(stickerInfo.getPath());
 //                    }
                 }
             }
@@ -150,4 +147,18 @@ public class LocalStickerInfoDao {
 //        return map;
     }
 
+
+    public List<LocalStickerInfo> queryAllLocalStickerInfo() {
+        if (stickerInfoDao == null) {
+            return null;
+        }
+        List<LocalStickerInfo> localList = null;
+        try {
+            localList = stickerInfoDao.queryForAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return localList;
+    }
 }

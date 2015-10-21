@@ -124,6 +124,10 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 //        adProgressDialog.setVisibility(View.VISIBLE);
 
         recyclerViewList = getViewById(R.id.recyclerview_sticker);
+
+        final View sticker_new_update = getViewById(R.id.sticker_new_update);
+        TextView sticker_store_update = getViewById(R.id.sticker_store_update);
+        TextView sticker_store_close = getViewById(R.id.sticker_store_close);
 //        llm = new FullyLinearLayoutManager(this);
         llm = new LinearLayoutManager(this);
         recyclerViewList.setLayoutManager(llm);
@@ -133,7 +137,42 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 //        requestData();
         /**wing modified for 性能 end*/
 
-
+        String filePath = FileUtil.getSaveRootPath(this, false).getAbsolutePath() + File.separator + "Sticker";
+        File file = new File(filePath);
+        if (file.exists()) {
+            sticker_new_update.setVisibility(View.VISIBLE);
+        } else {
+            sticker_new_update.setVisibility(View.GONE);
+        }
+        sticker_store_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<LocalStickerInfo> list = LocalStickerInfoDao.getInstance(StickerStoreActivity.this).queryAllLocalStickerInfo();
+                if (list == null || list.size() == 0) {
+                    return;
+                }
+                String filePath = FileUtil.getSaveRootPath(StickerStoreActivity.this, false).getAbsolutePath() + File.separator + "Sticker";
+                File file = new File(filePath);
+                deleteFile(file);
+                StickerGroupEntity groupEntity;
+                for (LocalStickerInfo info : list) {
+                    groupEntity = new StickerGroupEntity();
+                    groupEntity.setType(info.getType());
+                    groupEntity.setName(info.getName());
+                    groupEntity.setVersion(info.getVersion());
+                    groupEntity.setFirst_sticker_code(info.getSticker_name());
+                    groupEntity.setPath(info.getPath());
+                    updateSticker(groupEntity);
+                }
+                sticker_new_update.setVisibility(View.GONE);
+            }
+        });
+        sticker_store_close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         //注册广播接收器，更新progressbar、Download按钮状态
         IntentFilter filter = new IntentFilter();
         filter.addAction(StickerDetailActivity.ACTION_UPDATE);
@@ -162,6 +201,67 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
             }
         }).start();
 
+    }
+
+    private void deleteFile(File file) {
+        if (file.exists()) { // 判断文件是否存在
+            if (file.isFile()) { // 判断是否是文件
+                file.delete(); // delete()方法 你应该知道 是删除的意思;
+            } else if (file.isDirectory()) { // 否则如果它是一个目录
+                File files[] = file.listFiles(); // 声明目录下所有的文件 files[];
+                for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
+                    this.deleteFile(files[i]); // 把每个文件 用这个方法进行迭代
+                }
+            }
+            file.delete();
+        } else {
+        }
+    }
+
+    public void updateSticker(final StickerGroupEntity stickerGroupEntity) {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                String urlString = String.format(Constant.API_DOWNLOAD_STICKER_ZIP, MainActivity.getUser().getUser_id(), "1", stickerGroupEntity.getPath());
+                final String target = FileUtil.getCacheFilePath(StickerStoreActivity.this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
+                new HttpTools(StickerStoreActivity.this).download(App.getContextInstance(), urlString, target, true, new HttpCallback() {
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                    }
+
+                    @Override
+                    public void onResult(String response) {
+                        File zipFile = new File(target);
+                        //解压
+                        try {
+                            ZipUtils.unZipFile(zipFile, MainActivity.STICKERS_NAME);
+                            zipFile.delete();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        e.printStackTrace();
+
+                    }
+
+                    @Override
+                    public void onCancelled() {
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+                    }
+                });
+            }
+        }.start();
     }
 
     private int allAdCount = 4;
@@ -254,7 +354,8 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 //        final ProgressBar pbDownload = (ProgressBar) holder.itemView.findViewById(R.id.pb_download);
 //        final ImageView ivExist = (ImageView) holder.itemView.findViewById(R.id.iv_exist);
         final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
-        String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
+//        String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
+        String urlString = String.format(Constant.API_DOWNLOAD_STICKER_ZIP, MainActivity.getUser().getUser_id(), "1", stickerGroupEntity.getPath());
         final String target = FileUtil.getCacheFilePath(this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
         DownloadRequest download = new HttpTools(this).download(App.getContextInstance(), urlString, target, true, new HttpCallback() {
             @Override
@@ -287,7 +388,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                     LocalStickerInfo stickerInfo = new LocalStickerInfo();
                     stickerInfo.setName(stickerGroupEntity.getName());
                     stickerInfo.setPath(stickerGroupEntity.getPath());
-                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
+                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker_code());
                     stickerInfo.setVersion(stickerGroupEntity.getVersion());
                     stickerInfo.setType(stickerGroupEntity.getType());
                     stickerInfo.setOrder(System.currentTimeMillis());
@@ -404,11 +505,11 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
     @Override
     public void requestData() {
-        Map<String, String> params = new HashMap<>();
-        params.put("user_id", MainActivity.getUser().getUser_id());
+        Map<String, String> param = new HashMap<>();
+        param.put("format", "1");
 
 //        //获取 sticker banner 广告图
-        new HttpTools(this).get(Constant.API_STICKER_BANNER, null, TAG, new HttpCallback() {
+        new HttpTools(this).get(Constant.API_STICKER_BANNER, param, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 //                adProgressDialog.setVisibility(View.VISIBLE);
@@ -449,7 +550,11 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         });
 
         //获取sticker group list
-        new HttpTools(this).get(Constant.API_STICKER_GROUP, params, TAG, new HttpCallback() {
+//        new HttpTools(this).get(Constant.API_STICKER_GROUP, params, TAG, new HttpCallback() {
+        Map<String, String> stickerListMap = new HashMap<>();
+        stickerListMap.put("user_id", MainActivity.getUser().getUser_id());
+        stickerListMap.put("format", "1");
+        new HttpTools(this).get(Constant.API_STICKER_GROUP_LIST, stickerListMap, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
