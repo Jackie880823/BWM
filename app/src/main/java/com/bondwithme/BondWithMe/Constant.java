@@ -145,6 +145,7 @@ public class Constant {
     public static final String API_CONTACT_US = API_SERVER + "/bondwithme/index.php/api/contactUs";
     public static final String API_SETTING_CONFIG = API_SERVER + "/bondwithme/index.php/api/setting/%s";
     public static final String API_SHARE2FRIEND = API_SERVER + "/bondwithme/index.php/api/shareToFriend";
+    public static final String API_NEWS = API_SERVER + "/bondwithme/index.php/api/newsList/%s";
     //    public static final String API_BONDALERT_LIST = API_SERVER+"/bondwithme/index.php/api/bondAlertList";
     public static final String API_BONDALERT_LIST = API_SERVER + "/bondwithme/index.php/api/bondAlertList/%S/module/miss";
     public static final String API_BONDALERT_NEWS = API_SERVER + "/bondwithme/index.php/api/bondAlertList/%s/module/other";
@@ -162,6 +163,7 @@ public class Constant {
     public static final String API_BONDALERT_GROUP_CONFIRM = API_SERVER + "/bondwithme/index.php/api/confirmJoinGroup/%s";
     public static final String API_BONDALERT_GROUP_REJECT = API_SERVER + "/bondwithme/index.php/api/rejectJoinGroup/%s";
     public static final String API_BONDALERT_REMOVE_RECOMMEND = API_SERVER + "/bondwithme/index.php/api/removeRecomUser/";
+    public static final String API_REWARDS = API_SERVER +"/bondwithme/index.php/api/rewardList/%s";
 
     /**
      * Api for sticker store

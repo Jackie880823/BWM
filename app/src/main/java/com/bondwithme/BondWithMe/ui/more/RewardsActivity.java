@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.ui;
+package com.bondwithme.BondWithMe.ui.more;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -13,8 +13,11 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.adapter.NewsAdapter;
-import com.bondwithme.BondWithMe.entity.NewsEntity;
+import com.bondwithme.BondWithMe.adapter.RewardsAdapter;
+import com.bondwithme.BondWithMe.entity.RewardsEntity;
+import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,27 +29,26 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 普通Activity,包含了头部和底部，只需定义中间Fragment内容(通过重写getFragment() {)
+ * Created by heweidong on 15/10/16.
  */
-public class NewsActivity extends BaseActivity {
+public class RewardsActivity extends BaseActivity {
 
+    private static final int OFFSET_LEFT_2_LOAD_MORE = 2;
     View mProgressDialog;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean isRefresh;
 
     private int startIndex = 0;
-    private int offSet = 20;
+    private int offSet = 8;
     private boolean loading;
-    private List<NewsEntity> data = new ArrayList<>();
-    private NewsAdapter adapter;
+    private List<RewardsEntity> data = new ArrayList<>();
+    private RewardsAdapter adapter;
     private RecyclerView rvList;
     private LinearLayoutManager llm;
     private TextView tvNoData;
 
-
-
     public int getLayout() {
-        return R.layout.activity_news;
+        return R.layout.activity_rewards;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class NewsActivity extends BaseActivity {
 
     @Override
     protected void setTitle() {
-        tvTitle.setText(R.string.title_news_alert);
+        tvTitle.setText(R.string.title_rewards);
     }
 
     @Override
@@ -87,7 +89,6 @@ public class NewsActivity extends BaseActivity {
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
         initAdapter();
-
         swipeRefreshLayout = getViewById(R.id.swipe_refresh_layout);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -97,7 +98,6 @@ public class NewsActivity extends BaseActivity {
                 startIndex = 0;
                 requestData();
             }
-
         });
 
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -106,36 +106,37 @@ public class NewsActivity extends BaseActivity {
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItem = ((LinearLayoutManager) llm).findLastVisibleItemPosition();
                 int totalItemCount = llm.getItemCount();
+
+                LogUtil.d("onScrolled", "lastVisibleItem=======" + lastVisibleItem);
+                LogUtil.d("onScrolled", "totalItemCount=======" + totalItemCount);
+
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if (!loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                int count = totalItemCount - OFFSET_LEFT_2_LOAD_MORE;
+                if (!loading && count != 0 && lastVisibleItem >= Math.abs(count)  && dy > 0) {
+                    LogUtil.d("onScrolled","REQUEST======="+totalItemCount);
                     loading = true;
                     requestData();//再请求数据
                 }
             }
         });
+
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private void initAdapter() {
+        adapter = new RewardsAdapter(this,data);
+        rvList.setAdapter(adapter);
     }
 
-    private void finishReFresh() {
-        swipeRefreshLayout.setRefreshing(false);
-        isRefresh = false;
-        mProgressDialog.setVisibility(View.INVISIBLE);
-    }
 
     @Override
     public void requestData() {
 
-        Map<String, String> params = new HashMap<>();
-        params.put("start", "" + startIndex);
-        params.put("limit",""+offSet);
+        Map<String,String> params = new HashMap<>();
+        params.put("Start","" + startIndex);
+        params.put("limit","" + offSet);
 
-
-        new HttpTools(this).get(String.format(Constant.API_NEWS, MainActivity.getUser().getUser_id()), params,this, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_REWARDS, MainActivity.getUser().getUser_id()), params, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -150,7 +151,7 @@ public class NewsActivity extends BaseActivity {
             public void onResult(String string) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
-                data = gson.fromJson(string, new TypeToken<ArrayList<NewsEntity>>() {
+                data = gson.fromJson(string, new TypeToken<ArrayList<RewardsEntity>>() {
                 }.getType());
                 if (data != null) {
                     if (isRefresh) {
@@ -164,24 +165,27 @@ public class NewsActivity extends BaseActivity {
                 } else {
                     finishReFresh();
                 }
+
                 loading = false;
 
-                //no data!!!
-                if (!data.isEmpty()){
+                if (!data.isEmpty()) {
                     tvNoData.setVisibility(View.GONE);
-                }else if (data.isEmpty() && !NewsActivity.this.isFinishing()){
-                    tvNoData.setText(getResources().getString(R.string.text_no_date_news));
+                } else if (data.isEmpty() && !RewardsActivity.this.isFinishing()) {
+                    tvNoData.setText(getResources().getString(R.string.text_no_rewards));
                 }
+
+
             }
 
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
-                MessageUtil.showMessage(NewsActivity.this, R.string.msg_action_failed);
+                MessageUtil.showMessage(RewardsActivity.this, R.string.msg_action_failed);
                 if (isRefresh) {
                     finishReFresh();
                 }
                 loading = false;
+
             }
 
             @Override
@@ -194,13 +198,13 @@ public class NewsActivity extends BaseActivity {
 
             }
         });
-
-
     }
 
-    private void initAdapter() {
-        adapter = new NewsAdapter(this, data);
-        rvList.setAdapter(adapter);
+    private void finishReFresh() {
+        swipeRefreshLayout.setRefreshing(false);
+        isRefresh = false;
+        mProgressDialog.setVisibility(View.INVISIBLE);
+
     }
 
     @Override
@@ -208,11 +212,6 @@ public class NewsActivity extends BaseActivity {
 
     }
 
-    /**
-     * add by wing
-     *
-     * @param intent
-     */
     @Override
     protected void onNewIntent(Intent intent) {
         finish();

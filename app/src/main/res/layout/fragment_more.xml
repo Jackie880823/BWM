@@ -236,7 +236,6 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:orientation="horizontal">
 
-
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -245,7 +244,7 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:id="@+id/btn_setting"
+                    android:id="@+id/btn_rewards"
                     android:layout_width="@dimen/default_user_head_width_height"
                     android:layout_height="@dimen/default_user_head_width_height"
                     android:background="@drawable/circular_bg_blue"
@@ -255,16 +254,23 @@
                         android:layout_width="@dimen/default_small_button_width_height"
                         android:layout_height="@dimen/default_small_button_width_height"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/more_setting" />
+                        android:src="@drawable/rewards" />
+
+                    <TextView
+                        android:id="@+id/rewards_alert_num"
+                        style="@style/RedPoint"
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
 
                 <TextView
                     style="@style/text_dark_default"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_setting" />
+                    android:text="@string/title_rewards" />
 
             </LinearLayout>
+
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -369,7 +375,31 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"/>
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/btn_setting"
+                    android:layout_width="@dimen/default_user_head_width_height"
+                    android:layout_height="@dimen/default_user_head_width_height"
+                    android:background="@drawable/circular_bg_blue"
+                    android:clickable="true">
+
+                    <ImageView
+                        android:layout_width="@dimen/default_small_button_width_height"
+                        android:layout_height="@dimen/default_small_button_width_height"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/more_setting" />
+                </RelativeLayout>
+
+                <TextView
+                    style="@style/text_dark_default"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/default_view_margin"
+                    android:text="@string/text_setting" />
+
+            </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="0dp"

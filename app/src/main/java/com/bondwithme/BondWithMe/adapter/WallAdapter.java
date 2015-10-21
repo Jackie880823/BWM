@@ -41,7 +41,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallHolder> {
 
     @Override
     public void onBindViewHolder(final WallHolder holder, int position) {
-        final WallEntity wall = data.get(position);
+        WallEntity wall = data.get(position);
         holder.setViewClickListener(mViewClickListener);
         holder.setWallEntity(wall);
         holder.setSwitchVisibility(View.GONE);

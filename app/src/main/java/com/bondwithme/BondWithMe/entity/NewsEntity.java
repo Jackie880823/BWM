@@ -6,112 +6,86 @@ import java.io.Serializable;
  * Created by wing on 15/4/9.
  */
 public class NewsEntity implements Serializable {
-    private String action_user_id;
-    private String receiver_user_id;
-    private String reference_id;
-    private String module_id;
-    private String module_name;
-    private String module_action;
-    private String message_variable;
-    private String status;
-    private String creation_date;
-    private String action_username;
-    private String postowner_username;
-    private String message;
 
-    public String getAction_user_id() {
-        return action_user_id;
+    //旧的news API
+//    private String action_user_id;
+//    private String receiver_user_id;
+//    private String reference_id;
+//    private String module_id;
+//    private String module_name;
+//    private String module_action;
+//    private String message_variable;
+//    private String status;
+//    private String creation_date;
+//    private String action_username;
+//    private String postowner_username;
+//    private String message;
+//    "release_date": "2015-09-24 00:00:00", //news datetime
+//    "release_timestamp": "1443052800", //news timestamp
+
+
+    //新的news API
+    private String release_date;     //news datetime
+    private String release_timestamp;//news timestamp
+    private String title;            //news headline
+    private String content_text;     //news content
+    private String image;            //news image
+    private String video;            //news video
+    private String video_thumbnail;  //news video thumbnail
+
+    public String getRelease_date() {
+        return release_date;
     }
 
-    public void setAction_user_id(String action_user_id) {
-        this.action_user_id = action_user_id;
+    public void setRelease_date(String release_date) {
+        this.release_date = release_date;
     }
 
-    public String getReceiver_user_id() {
-        return receiver_user_id;
+    public String getRelease_timestamp() {
+        return release_timestamp;
     }
 
-    public void setReceiver_user_id(String receiver_user_id) {
-        this.receiver_user_id = receiver_user_id;
+    public void setRelease_timestamp(String release_timestamp) {
+        this.release_timestamp = release_timestamp;
     }
 
-    public String getReference_id() {
-        return reference_id;
+    public String getTitle() {
+        return title;
     }
 
-    public void setReference_id(String reference_id) {
-        this.reference_id = reference_id;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getModule_id() {
-        return module_id;
+    public String getContent_text() {
+        return content_text;
     }
 
-    public void setModule_id(String module_id) {
-        this.module_id = module_id;
+    public void setContent_text(String content_text) {
+        this.content_text = content_text;
     }
 
-    public String getModule_name() {
-        return module_name;
+    public String getImage() {
+        return image;
     }
 
-    public void setModule_name(String module_name) {
-        this.module_name = module_name;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public String getModule_action() {
-        return module_action;
+    public String getVideo() {
+        return video;
     }
 
-    public void setModule_action(String module_action) {
-        this.module_action = module_action;
+    public void setVideo(String video) {
+        this.video = video;
     }
 
-    public String getMessage_variable() {
-        return message_variable;
+    public String getVideo_thumbnail() {
+        return video_thumbnail;
     }
 
-    public void setMessage_variable(String message_variable) {
-        this.message_variable = message_variable;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getCreation_date() {
-        return creation_date;
-    }
-
-    public void setCreation_date(String creation_date) {
-        this.creation_date = creation_date;
-    }
-
-    public String getAction_username() {
-        return action_username;
-    }
-
-    public void setAction_username(String action_username) {
-        this.action_username = action_username;
-    }
-
-    public String getPostowner_username() {
-        return postowner_username;
-    }
-
-    public void setPostowner_username(String postowner_username) {
-        this.postowner_username = postowner_username;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setVideo_thumbnail(String video_thumbnail) {
+        this.video_thumbnail = video_thumbnail;
     }
 }
