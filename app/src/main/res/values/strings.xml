@@ -629,5 +629,6 @@
 
     <string name="title_rewards">Rewards</string>
     <string name="text_no_rewards">No rewards alert</string>
+    <string name="text_more">More</string>
 
 </resources>
