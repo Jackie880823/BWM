@@ -13,7 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.NewsEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
-import com.bondwithme.BondWithMe.ui.more.ViewLargeImageActivity;
+import com.bondwithme.BondWithMe.ui.more.ViewLargePicActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
@@ -111,7 +111,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     private void enlargePic() {
-        Intent intent = new Intent(mContext, ViewLargeImageActivity.class);
+        Intent intent = new Intent(mContext, ViewLargePicActivity.class);
         intent.putExtra(PIC_URL,newsEntity.getImage());
         mContext.startActivity(intent);
 

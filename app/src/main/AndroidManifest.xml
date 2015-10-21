@@ -257,7 +257,7 @@
             android:name=".ui.more.RewardsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.more.ViewLargeImageActivity"
+            android:name=".ui.more.ViewLargePicActivity"
             android:screenOrientation="portrait" />
         <!-- More StickerStore相关的Activity -->
 
