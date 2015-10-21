@@ -625,5 +625,7 @@
     <string name="open_gps_title">Improve location accuracy</string>
     <string name="use_gps_hint">need use GPS for location</string>
     <string name="text_collapse">collapse</string>
+    <string name="text_tag">Tag</string>
+    <string name="text_feeling">Feeling</string>
 
 </resources>
