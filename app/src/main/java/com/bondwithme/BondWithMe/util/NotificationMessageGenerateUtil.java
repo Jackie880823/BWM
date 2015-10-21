@@ -48,6 +48,10 @@ public class NotificationMessageGenerateUtil {
             msg = context.getString(R.string.notification_action_diary_loveComment, action_owner);
         } else if ("tag".equals(action)) {
             msg = context.getString(R.string.notification_action_diary_tag, action_owner);
+        } else if ("postPhoto".equals(action)) {
+            msg = context.getString(R.string.notification_action_diary_add_photo, action_owner);
+        } else if ("postVideo".equals(action)) {
+            msg = context.getString(R.string.notification_action_diary_add_video, action_owner);
         }
 
         return msg;
