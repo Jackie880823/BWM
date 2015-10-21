@@ -6,18 +6,36 @@ import java.io.Serializable;
  * Created by heweidong on 15/6/17.
  */
 public class StickerGroupEntity implements Serializable {
-    private String first_sticker;          //first sticker name 第一张的表情名字
-    private String path;                   // sticker group path 表情包途径
-    private String name;                   // sticker group name 表情包名称
-    private String type;                   // sticker type 图片格式
-    private String total;                  // sticker total表情总数
-    private String price;                  // sticker price表情包价格
-    private String version;                // sticker version表情包版本
-    private String download_condition;     // download condition表情包下载条件
-    private String condition_type;         // 表情包下载条件分类 （以后用）
-    private String downloadable;           // 表情包下载权限 （0-没权限，1-可以下载） ＊
     private boolean downloading;           // 标识正在下载
-    private String description;             //sticker 描述
+    private String first_sticker_code;//FamilyWishes_S_1.gif 第一张表情的代码（小）
+    private String path;// sticker group path 表情包途径
+    private String name;//Family Wishes ", // sticker group name 表情包名称
+    private String type;//.gif", // sticker type 图片格式
+    private String total;//12", // sticker total表情总数
+    private String price;//0", // sticker price表情包价格
+    private String version;//1.0", // sticker version表情包版本
+    private String download_condition;//normal", // download condition表情包下载条件 （normal： 普通，default：默认app自带， event：活动）现在只有normal 和default
+    private String condition_type;// 表情包下载条件分类 （以后用）
+    private String sticker_new;//表情包新的状态
+    private String expiry_time;// 表情包截止时间
+    private String downloadable;// 表情包下载权限 （0-没权限，1-可以下载） ＊
+    private String description;// 表情包描述
+
+    public String getFirst_sticker_code() {
+        return first_sticker_code;
+    }
+
+    public void setFirst_sticker_code(String first_sticker_code) {
+        this.first_sticker_code = first_sticker_code;
+    }
+
+    public String getExpiry_time() {
+        return expiry_time;
+    }
+
+    public void setExpiry_time(String expiry_time) {
+        this.expiry_time = expiry_time;
+    }
 
     public String getDescription() {
         return description;
@@ -35,8 +53,6 @@ public class StickerGroupEntity implements Serializable {
         this.sticker_new = sticker_new;
     }
 
-    private String sticker_new;            // 判断是否为新的sticker
-
     public String getDownloadable() {
         return downloadable;
     }
@@ -47,14 +63,6 @@ public class StickerGroupEntity implements Serializable {
 
     public StickerGroupEntity() {
         super();
-    }
-
-    public String getFirst_sticker() {
-        return first_sticker;
-    }
-
-    public void setFirst_sticker(String first_sticker) {
-        this.first_sticker = first_sticker;
     }
 
     public String getPath() {

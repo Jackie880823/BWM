@@ -109,8 +109,11 @@ public class StickerDetailActivity extends BaseActivity {
         initDownloadView();
 
 
+//        VolleyUtil.initNetworkImageView(this, insideSticker,
+//                String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()),
+//                R.drawable.network_image_default, R.drawable.network_image_default);
         VolleyUtil.initNetworkImageView(this, insideSticker,
-                String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()),
+                String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_1" + stickerGroupEntity.getType()),
                 R.drawable.network_image_default, R.drawable.network_image_default);
         insideStickerName.setText(stickerGroupEntity.getName());
         if ("0".equals(stickerGroupEntity.getPrice())) {
@@ -125,7 +128,7 @@ public class StickerDetailActivity extends BaseActivity {
 
                 if (dao.hasDownloadSticker(stickerGroupEntity.getPath())) {
                     setTvDownloaded();
-                }else{
+                } else {
                     downloadZip(stickerGroupEntity, position);
                     tvDownload.setVisibility(View.INVISIBLE);
                     pbProgress.setVisibility(View.VISIBLE);
@@ -183,9 +186,10 @@ public class StickerDetailActivity extends BaseActivity {
 
     //下载表情包
     private void downloadZip(final StickerGroupEntity stickerGroupEntity, final int position) {
-        String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
+//        String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
+        String urlString = String.format(Constant.API_DOWNLOAD_STICKER_ZIP, MainActivity.getUser().getUser_id(), "1", stickerGroupEntity.getPath());
         final String target = FileUtil.getCacheFilePath(this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
-        new HttpTools(this).download(App.getContextInstance(),urlString, target, true, new HttpCallback() {
+        new HttpTools(this).download(App.getContextInstance(), urlString, target, true, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -193,7 +197,7 @@ public class StickerDetailActivity extends BaseActivity {
 
             @Override
             public void onFinish() {
-                if(LocalStickerInfoDao.getInstance(StickerDetailActivity.this).hasDownloadSticker(stickerGroupEntity.getPath())) {
+                if (LocalStickerInfoDao.getInstance(StickerDetailActivity.this).hasDownloadSticker(stickerGroupEntity.getPath())) {
                     Intent intent = new Intent(StickerStoreActivity.ACTION_FINISHED);
                     intent.putExtra(StickerGroupAdapter.POSITION, position);
                     sendBroadcast(intent);
@@ -214,20 +218,20 @@ public class StickerDetailActivity extends BaseActivity {
                     //插入sticker info
 //                    try {
 //                        Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
-                        LocalStickerInfo stickerInfo = new LocalStickerInfo();
-                        stickerInfo.setName(stickerGroupEntity.getName());
-                        stickerInfo.setPath(stickerGroupEntity.getPath());
-                        stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker());
-                        stickerInfo.setVersion(stickerGroupEntity.getVersion());
-                        stickerInfo.setType(stickerGroupEntity.getType());
-                        stickerInfo.setOrder(System.currentTimeMillis());
-                        LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
-                        Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
+                    LocalStickerInfo stickerInfo = new LocalStickerInfo();
+                    stickerInfo.setName(stickerGroupEntity.getName());
+                    stickerInfo.setPath(stickerGroupEntity.getPath());
+                    stickerInfo.setSticker_name(stickerGroupEntity.getFirst_sticker_code());
+                    stickerInfo.setVersion(stickerGroupEntity.getVersion());
+                    stickerInfo.setType(stickerGroupEntity.getType());
+                    stickerInfo.setOrder(System.currentTimeMillis());
+                    LocalStickerInfoDao.getInstance(StickerDetailActivity.this).addOrUpdate(stickerInfo);
+                    Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
 
 //                        pbProgress.setVisibility(View.INVISIBLE);
 //                        pbProgress.setProgress(0);
 //                        tvDownload.setVisibility(View.VISIBLE);
-                        setTvDownloaded();
+                    setTvDownloaded();
 //                    } catch (SQLException e) {
 //                        e.printStackTrace();
 //                    }

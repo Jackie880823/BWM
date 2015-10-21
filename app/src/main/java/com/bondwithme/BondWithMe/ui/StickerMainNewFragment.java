@@ -3,8 +3,6 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
@@ -30,6 +28,7 @@ import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.StickerHorizontalRecyclerAdapter;
+import com.bondwithme.BondWithMe.adapter.StickerHorizontalRecyclerNewAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
@@ -51,13 +50,13 @@ import java.util.Map;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
-public class StickerMainFragment extends BaseFragment<MainActivity> {
+public class StickerMainNewFragment extends BaseFragment<MainActivity> {
     private Context mContext;
     private ViewPager viewPager;
     private RecyclerView recyclerView;
     private View layout;
     private LinearLayoutManager linearLayoutManager;
-    private StickerHorizontalRecyclerAdapter recyclerAdapter;
+    private StickerHorizontalRecyclerNewAdapter recyclerAdapter;
     private LinkedHashMap<String, List<String>> STICKER_LIST_MAP = new LinkedHashMap<>();
     private LinkedHashMap<String, Integer> stickerMap = new LinkedHashMap<>();
     private LinearLayout mNumLayout;
@@ -114,19 +113,19 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
             super.run();
             List<String> stickerList = LocalStickerInfoDao.getInstance(mContext).queryAllSticker();
             for (String string : stickerList) {
-                String path = FileUtil.getSaveRootPath(mContext, false).getAbsolutePath() + File.separator + "Sticker" + File.separator + string;
+                if ("stickers".equals(MainActivity.STICKERS_NAME)) {
+                    MainActivity.STICKERS_NAME = new LocalStickerInfoDao(mContext).getSavePath();
+                }
+                String path = MainActivity.STICKERS_NAME + File.separator + string + File.separator + "S";
                 File file = new File(path);
+                if (!file.exists()) {
+                    break;
+                }
                 File[] files = file.listFiles();
                 if (null != files && files.length > 0) {
                     List<String> list = new ArrayList<>();
                     for (File file1 : files) {
-                        if (file1.isDirectory()) {
-                            return;
-                        }
-                        String filePath = file1.getAbsolutePath();
-                        if ((filePath.substring(0, filePath.lastIndexOf("."))).endsWith("S")) {
-                            list.add(filePath);
-                        }
+                        list.add(file1.getAbsolutePath());
                     }
                     STICKER_LIST_MAP.put(string, list);
                 }
@@ -188,9 +187,9 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                     viewPager.setCurrentItem(stickerMap.get(name));
                     break;
                 case GET_DATA:
-                    recyclerAdapter = new StickerHorizontalRecyclerAdapter(STICKER_LIST_MAP, mContext, linearLayoutManager);
+                    recyclerAdapter = new StickerHorizontalRecyclerNewAdapter(STICKER_LIST_MAP, mContext, linearLayoutManager);
                     recyclerView.setAdapter(recyclerAdapter);
-                    recyclerAdapter.setPicClickListener(new StickerHorizontalRecyclerAdapter.StickerItemClickListener() {
+                    recyclerAdapter.setPicClickListener(new StickerHorizontalRecyclerNewAdapter.StickerItemClickListener() {
                         @Override
                         public void showOriginalPic(String positionName) {
                             Message.obtain(handler, CLICK_POSITION, positionName).sendToTarget();
@@ -322,16 +321,13 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                         @Override
                         public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                             String fileName = (String) gridViewAdapter.getItem(arg2);//.get(stickerNameId);
-                            String selectStickerName = fileName.substring(0, fileName.lastIndexOf(File.separator));
+                            String selectStickerName = fileName.substring(0, fileName.lastIndexOf(File.separator) - 2);
                             selectStickerName = selectStickerName.substring(selectStickerName.lastIndexOf(File.separator) + 1);
                             String type = ".gif";
                             if (fileName.indexOf(".") != -1) {
                                 type = fileName.substring(fileName.lastIndexOf("."));
                             }
-                            String sticker_name = "";
-                            if (fileName.indexOf("_") != -1) {
-                                sticker_name = fileName.substring(fileName.lastIndexOf(File.separator) + 1, fileName.lastIndexOf("_"));
-                            }
+                            String sticker_name = fileName.substring(fileName.lastIndexOf(File.separator) + 1, fileName.lastIndexOf("."));
                             if (mViewClickListener != null) {
                                 AudioPlayUtils.stopAudio();
                                 mViewClickListener.showComments(type, selectStickerName, sticker_name);

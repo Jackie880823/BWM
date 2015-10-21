@@ -39,7 +39,6 @@ public class PicturesCacheUtil extends FileUtil {
 
 
     /**
-     *
      * @param context
      */
     private static void makeCacheDir(Context context) {
@@ -106,6 +105,31 @@ public class PicturesCacheUtil extends FileUtil {
 
     }
 
+    /**
+     * @param context
+     * @param oldFile 原文件
+     * @param prefix
+     * @return
+     * @throws IOException
+     */
+    public static String saveImageToGallery(Context context, File oldFile, String prefix) throws IOException {
+        String newPath = getPicPath(context, prefix);
+        File fnew = new File(newPath);
+        oldFile.renameTo(fnew);
+
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, prefix);
+        values.put(MediaStore.Images.Media.DESCRIPTION, prefix);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        values.put(MediaStore.MediaColumns.DATA, newPath);
+
+        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//        // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(newPath)));
+        return newPath;
+    }
+
     public static String saveImageToGallery(Context context, Bitmap bmp, String prefix) throws IOException {
         String fileName = getPicPath(context, prefix);
         File file = new File(fileName);
@@ -113,18 +137,7 @@ public class PicturesCacheUtil extends FileUtil {
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         fos.flush();
         fos.close();
-
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, prefix);
-        values.put(MediaStore.Images.Media.DESCRIPTION, prefix);
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-        values.put(MediaStore.MediaColumns.DATA, fileName);
-
-        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//        // 最后通知图库更新
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(fileName)));
-        return fileName;
+        return saveImageToGallery(context,file,prefix);
 
     }
 
