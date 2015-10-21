@@ -1,7 +1,9 @@
 package com.bondwithme.BondWithMe.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -293,7 +295,16 @@ public class WallUtil {
                     if(currentTime - lastClickTimeMills > 500) {
                         // 部分手机会连续执行两次，500毫秒之内的连续执行被认为一次点击只执行一次点击事件
                         lastClickTimeMills = currentTime;
-                        mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
+                        if (WallEntity.CONTENT_TYPE_ads.equals(wallEntity.getContent_type())) {
+                            String trackUrl = wallEntity.getTrack_url();
+                            if (!TextUtils.isEmpty(trackUrl)) {
+                                Uri uri = Uri.parse(trackUrl);
+                                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                widget.getContext().startActivity(intent);
+                            }
+                        } else {
+                            mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
+                        }
                     }
                 }
             }

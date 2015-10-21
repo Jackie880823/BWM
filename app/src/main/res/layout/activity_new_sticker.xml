@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
@@ -10,13 +10,15 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#ffffff" />
+
     <LinearLayout
         android:id="@+id/fragment_sticker_linear"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/_15dp"
-        android:gravity="center"
         android:background="#ffffff"
+        android:gravity="center"
         android:orientation="horizontal"></LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -30,8 +32,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/sticker_recyclerView"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="#eee" />
 
         <View
@@ -39,18 +41,30 @@
             android:layout_height="match_parent"
             android:background="#ccc" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/sticker_setting_linear"
             android:layout_width="@dimen/_50dp"
             android:layout_height="@dimen/_50dp"
-            android:background="#fff"
-            android:gravity="center">
+            android:layout_gravity="center"
+            android:background="#fff">
 
             <ImageView
+                android:id="@+id/stickies_setting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:background="@drawable/stickies_setting" />
-        </LinearLayout>
+
+            <ImageView
+                android:id="@+id/new_sticker_version"
+                android:layout_width="@dimen/_8dp"
+                android:layout_height="@dimen/_8dp"
+                android:layout_marginRight="@dimen/_3dp"
+                android:layout_marginTop="@dimen/_3dp"
+                android:layout_toRightOf="@id/stickies_setting"
+                android:background="@drawable/bg_num_red_message"
+                android:visibility="gone" />
+        </RelativeLayout>
 
     </LinearLayout>
 </LinearLayout>
