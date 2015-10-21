@@ -213,6 +213,15 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     /**
+     * 设置收起开头的显示/隐藏
+     * @see View#setVisibility(int)
+     * @param visiblity
+     */
+    public void setSwitchVisibility(int visiblity) {
+        tvSwitch.setVisibility(visiblity);
+    }
+
+    /**
      * @param v
      */
     @Override

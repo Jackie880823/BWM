@@ -565,8 +565,10 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            EventCommentEntity commentEntity =  data.get(position - detailItemCount);
+            int commentPosition = position - detailItemCount;
+            if(commentPosition <= 0 && commentPosition >= data.size())return;
 
+            EventCommentEntity commentEntity =  data.get(commentPosition);
             switch(v.getId()) {
                 case R.id.btn_comment_del:
                     if(mCommentActionListener != null){
@@ -594,10 +596,10 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                     lovedate.put(position, tv_agree_count.getText().toString());
                     //判断是否已经有进行中的判断
-                    if (!runningList.contains(position - detailItemCount)) {
-                        runningList.add(position - detailItemCount);
-                        clickList.add(position - detailItemCount);
-                        check(position - detailItemCount);
+                    if (!runningList.contains(commentPosition)) {
+                        runningList.add(commentPosition);
+                        clickList.add(commentPosition);
+                        check(commentPosition);
                     }
                     break;
                 case R.id.tv_like_desc:

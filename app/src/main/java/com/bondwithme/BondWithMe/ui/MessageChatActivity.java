@@ -366,6 +366,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     }
 
+    public void getNewMsg(){
+        getMsg(indexPage * INITIAL_LIMIT, 0, GET_TIMER_MESSAGE);
+    }
 
 //    @Override
 //    public void finish() {

@@ -453,6 +453,10 @@ public class NotificationUtil {
         return notification;
     }
 
+    /**
+     * 清除手机上的通知
+     * @param context
+     */
     public static void clearNotification(Context context) {
         getNotivficationManager(context).cancelAll();
         JPushInterface.clearAllNotifications(context);

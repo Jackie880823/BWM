@@ -329,7 +329,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         mHttpTools.get(url, params, GET_COMMENTS, new HttpCallback() {
             @Override
             public void onStart() {
-                if(progressBar != null) {
+                if (progressBar != null) {
                     progressBar.setVisibility(View.VISIBLE);
                 }
             }
@@ -347,17 +347,18 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 //给GsonBuilder方法单独指定Date类型的反序列化方法
                 //gsonb.registerTypeAdapter(Date.class, ds);
                 Gson gson = gsonb.create();
-                data = gson.fromJson(response, new TypeToken<ArrayList<WallCommentEntity>>() {}.getType());
+                data = gson.fromJson(response, new TypeToken<ArrayList<WallCommentEntity>>() {
+                }.getType());
 
                 LogUtil.i(TAG, "getComments& isRefresh: " + isRefresh);
-                if(isRefresh) {
+                if (isRefresh) {
                     startIndex = data.size();
                     isRefresh = false;
                     swipeRefreshLayout.setRefreshing(false);
                     initAdapter();
                 } else {
                     startIndex += data.size();
-                    if(adapter != null) {
+                    if (adapter != null) {
                         adapter.addData(data);
                     } else {
                         initAdapter();
@@ -365,7 +366,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 }
 
                 LogUtil.i(TAG, "getComments& size: " + adapter.getItemCount());
-                if(progressBar != null) {
+                if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
 
@@ -374,7 +375,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             @Override
             public void onError(Exception e) {
-                progressBar.setVisibility(View.GONE);
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
                 loading = false;
             }
 
@@ -442,7 +445,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             return;
         }
 
-        progressBar.setVisibility(View.VISIBLE);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         HashMap<String, String> params = new HashMap<>();
         params.put("content_group_id", content_group_id);
@@ -492,7 +497,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
             @Override
             public void onError(Exception e) {
-                progressBar.setVisibility(View.GONE);
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
                 if(getActivity()!=null&&!getActivity().isFinishing()) {
                     UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 }
@@ -532,7 +539,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             if(!f.exists()) {
                 return;
             }
-            progressBar.setVisibility(View.VISIBLE);
+            if (progressBar != null) {
+                progressBar.setVisibility(View.VISIBLE);
+            }
             Map<String, Object> params = new HashMap<>();
             params.put("content_group_id", content_group_id);
             params.put("comment_owner_id", MainActivity.getUser().getUser_id());
@@ -744,7 +753,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
                     @Override
                     public void onResult(String string) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                         getParentActivity().setResult(Activity.RESULT_OK);
                         getParentActivity().finish();
                     }
