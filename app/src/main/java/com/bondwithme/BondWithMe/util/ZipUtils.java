@@ -32,10 +32,11 @@ public class ZipUtils {
      */
     public static int unZipFile(File zipFile, String folderPath) throws IOException {
         //wing modified begin
-        if(!zipFile.exists()){
+        if (!zipFile.exists()) {
 //            zipFile.mkdirs();
             return -1;
         }
+        folderPath = folderPath + File.separator;
         //wing modified end
         ZipFile zfile = new ZipFile(zipFile);
         Enumeration zList = zfile.entries();
