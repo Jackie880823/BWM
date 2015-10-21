@@ -181,6 +181,8 @@ public class WallEntity implements Serializable {
      */
     private List<UserEntity> tag_member;
 
+    private String track_url;
+
     public String getContent_creation_date() {
         return content_creation_date;
     }
@@ -435,5 +437,13 @@ public class WallEntity implements Serializable {
 
     public void setTag_member(List<UserEntity> tag_member) {
         this.tag_member = tag_member;
+    }
+
+    public String getTrack_url() {
+        return track_url;
+    }
+
+    public void setTrack_url(String track_url) {
+        this.track_url = track_url;
     }
 }
