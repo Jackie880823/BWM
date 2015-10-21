@@ -173,7 +173,7 @@ public class StickerMainNewFragment extends BaseFragment<MainActivity> {
         if (file.exists()) {
             versionIv.setVisibility(View.VISIBLE);
         } else {
-            versionIv.setVisibility(View.VISIBLE);
+            versionIv.setVisibility(View.GONE);
         }
     }
 
