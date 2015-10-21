@@ -275,7 +275,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 
                     if (iv_pic != null) {
                         cacheFilePath = string;
-                        bitmapCache = LocalImageLoader.loadBitmapFromFile(gedwwdtActivity(), string, iv_pic.getWidth(), iv_pic.getHeight());
+                        bitmapCache = LocalImageLoader.loadBitmapFromFile(getActivity(), string, iv_pic.getWidth(), iv_pic.getHeight());
                         iv_pic.setImageBitmap(bitmapCache);
                         mAttacher = new PhotoViewAttacher(iv_pic);
                         mAttacher.update();
