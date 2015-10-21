@@ -19,6 +19,8 @@ import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 
+import java.io.File;
+
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
@@ -195,7 +197,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
             public void onClick(View v) {
                 if (bitmapCache != null && !bitmapCache.isRecycled()) {
                     try {
-                        String path = PicturesCacheUtil.saveImageToGallery(getActivity(), bitmapCache, "wall");
+                        String path = PicturesCacheUtil.saveImageToGallery(getActivity(), new File(cacheFilePath), "wall");
                         MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.saved_to_path) + path);
                     } catch (Exception e) {
                         MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
@@ -272,7 +274,8 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
                 public void onResult(String string) {
 
                     if (iv_pic != null) {
-                        bitmapCache = LocalImageLoader.loadBitmapFromFile(getActivity(), string, iv_pic.getWidth(), iv_pic.getHeight());
+                        cacheFilePath = string;
+                        bitmapCache = LocalImageLoader.loadBitmapFromFile(gedwwdtActivity(), string, iv_pic.getWidth(), iv_pic.getHeight());
                         iv_pic.setImageBitmap(bitmapCache);
                         mAttacher = new PhotoViewAttacher(iv_pic);
                         mAttacher.update();
@@ -300,8 +303,8 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
                 }
             });
         }
-
-
     }
+
+    private String cacheFilePath;
 
 }
