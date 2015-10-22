@@ -44,9 +44,7 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
     private List<StickerGroupEntity> dataStickerGroup;
     private String url;
     private StickerGroupEntity stickerGroupEntity = null;
-    String urlString = null;
     public static final String POSITION = "position";
-    private int finished;
     public static final String STICKER_GROUP = "STICKER_GROUP";
     private List<String> mStickers;
 
@@ -57,6 +55,12 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
         mStickers = stickers;
         setList(dataStickerGroup);
         this.mAdsPaths = mAdsPaths;
+    }
+
+    public void setMAdsPaths(Map<String, Uri> mAdsMap) {
+        if (mAdsMap != null && mAdsMap.size() > 0) {
+            this.mAdsPaths = mAdsMap;
+        }
     }
 
     public void addSticker(String path) {

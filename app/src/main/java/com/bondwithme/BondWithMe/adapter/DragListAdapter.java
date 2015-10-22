@@ -79,7 +79,7 @@ public class DragListAdapter extends BaseAdapter {
 
         ImageView ivMySticker = (ImageView) convertView.findViewById(R.id.iv_my_sticker);
 //        String picPath = MainActivity.STICKERS_NAME+"/"+mDataList.get(position).getPath()+"/"+mDataList.get(position).getSticker_name()+mDataList.get(position).getType();
-        String picPath = FileUtil.getBigStickerPath(mContext, mDataList.get(position).getPath(), mDataList.get(position).getSticker_name(), mDataList.get(position).getType());
+        String picPath = FileUtil.getBigStickerPath(mContext, mDataList.get(position).getPath(), "1", mDataList.get(position).getType());
         Bitmap bmp = BitmapFactory.decodeFile(picPath);
         ivMySticker.setImageBitmap(bmp);
 

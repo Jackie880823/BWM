@@ -58,24 +58,18 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     public static final String ACTION_UPDATE = "ACTION_UPDATE_FROM_STICKER_STORE";
     public static final String ACTION_FINISHED = "ACTION_FINISHED_FROM_STICKER_STORE";
     public static final String PROGRESS = "progress";
-
-
     View stickerProgressDialog;
-    //    View adProgressDialog;
     private RecyclerView recyclerViewList;
     private LinearLayoutManager llm;
     private List<StickerGroupEntity> dataStickerGroup = new ArrayList<>();
     private List<StickerBannerEntity> dataStickerBanner = new ArrayList<>();
     private List<StickerGroupEntity> data = new ArrayList<>();
-//    private final int AUTO_PLAY = 1;
-
-    //    int positionFromStickerDetail = -1;
-    //    private ImageSwitcher isStickerBanner;
     private int currentItem;
     private Map<String, Uri> uriMap = new HashMap<>();
     private static final int SHOW_ADS = 10;
-    private static final int DOWNLOAD_DONE = 11;
-    StickerGroupAdapter adapter;
+    private static final int GET_STICKER_LIST = 12;
+    private static final int NOTIFY_AD = 13;
+    private StickerGroupAdapter adapter;
 
 
     @Override
@@ -93,7 +87,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         super.initTitleBar();
         tvTitle.setText(getResources().getString(R.string.text_sticker_store));
         rightButton.setImageResource(R.drawable.stickies_setting);
-
     }
 
     @Override
@@ -103,7 +96,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
     @Override
     protected void titleRightEvent() {
-
         Intent intent = new Intent(StickerStoreActivity.this, MyStickerActivity.class);
         startActivity(intent);
     }
@@ -180,27 +172,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         filter.addAction(StickerStoreActivity.ACTION_UPDATE);
         filter.addAction(StickerStoreActivity.ACTION_FINISHED);
         registerReceiver(mReceiver, filter);
-
-
-        //恶心
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (finishedAdCount < allAdCount && !hasError) {
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                handler.sendEmptyMessage(DOWNLOAD_DONE);
-
-//                if(adapter!=null) {
-//                    adapter.setAds(uriMap);
-//                }
-            }
-        }).start();
-
     }
 
     private void deleteFile(File file) {
@@ -264,29 +235,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         }.start();
     }
 
-    private int allAdCount = 4;
-    private int finishedAdCount;
-
-    /**
-     * ImageSwitcher for sticker banner
-     */
-//    private void initStickerBanner() {
-//        isStickerBanner.setFactory(new ViewSwitcher.ViewFactory() {
-//            @Override
-//            public View makeView() {
-//                ImageView i = new ImageView(StickerStoreActivity.this);
-//                i.setScaleType(ImageView.ScaleType.FIT_XY);
-//                i.setLayoutParams(new ImageSwitcher.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-//                        FrameLayout.LayoutParams.MATCH_PARENT));
-//                return i;
-//            }
-//        });
-//        isStickerBanner.setOnTouchListener(this);
-//
-//
-//    }
-
-
     //获取广告图对应的表情包的position
     private int getPosition(String stickerGroupPath, List<StickerGroupEntity> dataStickerGroup) {
         String path = null;
@@ -299,19 +247,15 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         return 0;
     }
 
-    List<String> stickers;
-
     /**
      * sticker group Adapter
      */
     private void initAdapter() {
         /**wing modified for 性能 begin*/
         //查询数据,看表情包是否存在  where name = stickerGroupEntity.getName()
-        LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(this);
-        stickers = dao.queryAllSticker();
 
         /**wing modified for 性能 end*/
-        adapter = new StickerGroupAdapter(this, dataStickerGroup, stickers, uriMap);
+        adapter = new StickerGroupAdapter(this, dataStickerGroup, LocalStickerInfoDao.getInstance(this).queryAllSticker(), uriMap);
         adapter.setItemClickListener(new StickerGroupAdapter.ItemClickListener() {
             @Override
             public void itemClick(StickerGroupEntity stickerGroupEntity, int position) {
@@ -393,8 +337,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                     stickerInfo.setType(stickerGroupEntity.getType());
                     stickerInfo.setOrder(System.currentTimeMillis());
                     LocalStickerInfoDao.getInstance(StickerStoreActivity.this).addOrUpdate(stickerInfo);
-                    Log.i(TAG, "=======tickerInfo==========" + stickerInfo.toString());
-
                 } catch (Exception e) {
                     LogUtil.e(TAG, "插入sticker info", e);
                 }
@@ -442,46 +384,37 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         data = dataStickerGroup;
     }
 
-    private Handler handler = new Handler() {
+    private Handler handler = new Handler(new Handler.Callback() {
         @Override
-        public void handleMessage(Message msg) {
+        public boolean handleMessage(Message msg) {
             switch (msg.what) {
-//                case AUTO_PLAY:
-//                    int totalItem = 0;
-//                    if (dataStickerBanner != null && uriMap != null && uriMap.size() > 0) {
-//                        totalItem = dataStickerBanner.size();
-//                        currentItem = currentItem + 1 == totalItem ? 0 : currentItem + 1;
-//                        setImageSwitcher(currentItem);
-//                    }
-//                    handler.sendEmptyMessageDelayed(AUTO_PLAY, 2000);
-//                    break;
                 case SHOW_ADS:
                     String response = (String) msg.obj;
-//                    isStickerBanner = getViewById(R.id.is_sticker_banner);
-//                    initStickerBanner();
-
                     GsonBuilder gsonb = new GsonBuilder();
                     Gson gson = gsonb.create();
-
                     dataStickerBanner = gson.fromJson(response, new TypeToken<ArrayList<StickerBannerEntity>>() {
                     }.getType());
-
                     downloadPic();
                     break;
-                case DOWNLOAD_DONE:
+                case GET_STICKER_LIST:
+                    String string = (String) msg.obj;
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    Gson gsons = gsonBuilder.create();
+                    dataStickerGroup = gsons.fromJson(string, new TypeToken<ArrayList<StickerGroupEntity>>() {
+                    }.getType());
                     initAdapter();
                     stickerProgressDialog.setVisibility(View.GONE);
                     break;
+                case NOTIFY_AD:
+                    if (adapter != null) {
+                        adapter.setMAdsPaths(uriMap);
+                        adapter.notifyDataSetChanged();
+                    }
+                    break;
             }
+            return false;
         }
-    };
-
-//    protected void setImageSwitcher(int currentItem) {
-//        rightInAnim();
-//        isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
-//        setSwitcherClick();
-//
-//    }
+    });
 
     private void rightInAnim() {
         Animation animIn = AnimationUtils.loadAnimation(this,
@@ -498,10 +431,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     @Override
     protected void onStop() {
         super.onStop();
-//        handler.removeMessages(AUTO_PLAY);
     }
-
-    private boolean hasError;
 
     @Override
     public void requestData() {
@@ -534,8 +464,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                 e.printStackTrace();
                 MessageUtil.showMessage(StickerStoreActivity.this, R.string.msg_action_failed);
 //                adProgressDialog.setVisibility(View.GONE);
-                hasError = true;
-
             }
 
             @Override
@@ -562,26 +490,17 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
             @Override
             public void onFinish() {
-                finishedAdCount++;
             }
 
             @Override
             public void onResult(String response) {
-                GsonBuilder gsonb = new GsonBuilder();
-                Gson gson = gsonb.create();
-
-                dataStickerGroup = gson.fromJson(response, new TypeToken<ArrayList<StickerGroupEntity>>() {
-                }.getType());
-
-//                initAdapter();
-
+                handler.sendMessage(handler.obtainMessage(GET_STICKER_LIST, response));
             }
 
             @Override
             public void onError(Exception e) {
                 e.printStackTrace();
                 MessageUtil.showMessage(StickerStoreActivity.this, R.string.msg_action_failed);
-                hasError = true;
             }
 
             @Override
@@ -604,38 +523,28 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         if (data != null) {
             count = dataStickerBanner.size();
         }
+        final int finalCount = count-1;
         for (int i = 0; i < count; i++) {
             String url = String.format(Constant.API_STICKER_BANNER_PIC, dataStickerBanner.get(i).getBanner_photo());
             final String target = FileUtil.getBannerFilePath(this) + "/" + String.format("%s", "" + dataStickerBanner.get(i).getBanner_photo());
-            LogUtil.d(TAG, "====url====" + url);
-            LogUtil.d(TAG, "====target====" + target);
             final int finalI = i;
+
             new HttpTools(this).download(App.getContextInstance(), url, target, false, new HttpCallback() {
                 @Override
                 public void onStart() {
-                    LogUtil.d(TAG, "===onStart===" + "target===" + target);
                 }
 
                 @Override
                 public void onFinish() {
-                    finishedAdCount++;
-//                    adProgressDialog.setVisibility(View.GONE);
                     if (!StickerStoreActivity.this.isFinishing()) {
                         File f = new File(target);
-                        LogUtil.d(TAG, "===onFinish===" + f.exists());
-
                         if (f.exists()) {
                             Uri uri = Uri.parse(target);
                             uriMap.put(dataStickerBanner.get(finalI).getSticker_group_path(), uri);
+                            if (finalI == finalCount) {
+                                handler.sendEmptyMessage(NOTIFY_AD);
+                            }
                         }
-
-
-//                        //下载好一张banner就显示
-//                        if (uriMap.size() == 1) {
-//                            currentItem = finalI;
-////                            downloadFinish(currentItem);
-////                            stickerProgressDialog.setVisibility(View.INVISIBLE);
-//                        }
                     }
 
                 }
@@ -648,7 +557,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
                 @Override
                 public void onError(Exception e) {
-                    LogUtil.e(TAG, "===onError===", e);
 
                 }
 
@@ -659,7 +567,6 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
                 @Override
                 public void onLoading(long count, long current) {
-                    LogUtil.d(TAG, "====onLoading===" + "=====count==========" + count + "======current=========" + current);
                 }
             });
         }
@@ -697,12 +604,10 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             //当手指按下的时候
             downX = event.getX();
-            LogUtil.d(TAG, "===downX===" + downX);
         }
         if (event.getAction() == MotionEvent.ACTION_UP) {
             //当手指离开的时候
             upX = event.getX();
-            LogUtil.d(TAG, "===upX===" + upX);
             if (downX - upX > 80) {      //左滑
                 int totalItem = 0;
                 if (dataStickerBanner.size() > 0 && uriMap.size() > 0) {
@@ -732,44 +637,19 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                     if (uriMap.size() > 0) {
 //                        isStickerBanner.setImageURI(uriMap.get(dataStickerBanner.get(currentItem).getSticker_group_path()));
                     }
-                    LogUtil.d(TAG, "=========currentItem========" + currentItem);
                 }
                 return true;
             }
         }
 
         if (Math.abs(downX - upX) < 5) {
-            LogUtil.d(TAG, "====return_false===");
 //            setSwitcherClick();
             return false;
         }
-
-        LogUtil.d(TAG, "====return_false===");
         return false;
 
     }
 
-//    private void setSwitcherClick() {
-//        final String path = dataStickerBanner.get(currentItem).getSticker_group_path();
-//        if (dataStickerBanner != null && dataStickerGroup != null && dataStickerBanner.size() > 0 && dataStickerGroup.size() > 0) {
-//            LogUtil.d(TAG, "====setOnClickListener=====" + path + "    " + !path.isEmpty());
-//            final int position = getPosition(path, dataStickerGroup);
-//            final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
-////            isStickerBanner.setOnClickListener(new View.OnClickListener() {
-////                @Override
-////                public void onClick(View v) {
-////                    if (!path.isEmpty()) {
-////                        Intent intent = new Intent(StickerStoreActivity.this, StickerDetailActivity.class);
-////                        intent.putExtra(StickerGroupAdapter.STICKER_GROUP, stickerGroupEntity);
-////                        intent.putExtra(StickerGroupAdapter.POSITION, position);
-////                        StickerStoreActivity.this.startActivity(intent);
-////                    }
-////                }
-////            });
-//
-//
-//        }
-//    }
 
     /**
      * 更新UI的广播接收器
