@@ -14,6 +14,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.RewardsEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.ui.more.ViewLargePicActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 
@@ -47,7 +48,7 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.VHItem> 
 
     @Override
     public void onBindViewHolder(final VHItem holder, int position) {
-        RewardsEntity rewardsEntity = data.get(position);
+        final RewardsEntity rewardsEntity = data.get(position);
 
         imageUrl = rewardsEntity.getImage();
         videoUrl = rewardsEntity.getVideo();
@@ -55,6 +56,14 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.VHItem> 
             //display pic/Video_thumbnail
             VolleyUtil.initNetworkImageView(mContext, holder.ivPic, rewardsEntity.getImage());
             holder.ibtnVideo.setVisibility(View.INVISIBLE);
+            holder.ivPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, ViewLargePicActivity.class);
+                    intent.putExtra(NewsHolder.PIC_URL,rewardsEntity.getImage());
+                    mContext.startActivity(intent);
+                }
+            });
         }else if(!TextUtils.isEmpty(videoUrl)){
             VolleyUtil.initNetworkImageView(mContext,holder.ivPic,rewardsEntity.getVideo_thumbnail());
             holder.ibtnVideo.setVisibility(View.VISIBLE);
