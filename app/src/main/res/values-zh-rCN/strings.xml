@@ -595,6 +595,8 @@
     <string name="notification_action_diary_love_not_owner">%1$s赞你的%2$s日记</string>
     <string name="notification_action_diary_loveComment">%1$s赞你的评论.</string>
     <string name="notification_action_diary_tag">%1$s在日记里艾特了你</string>
+    <string name="notification_action_diary_add_photo">%1$s在日记里添加了图片</string>
+    <string name="notification_action_diary_add_video">%1$s在日记里发了视频</string>
 
     <string name="notification_action_miss_missyou">%1$s想你了</string>
     <string name="text_audio_release">松手发送</string>
