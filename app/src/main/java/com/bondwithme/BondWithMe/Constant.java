@@ -8,8 +8,9 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 public class Constant {
 
 
-
-    /** mail */
+    /**
+     * mail
+     */
     public final static String REPORT_EMAIL_FROM_ADDRESS = "it.dude@bondwith.me";
     public final static String REPORT_EMAIL_USERNAME = "AKIAJGKWD34V5H7NB2KQ";
     public final static String REPORT_EMAIL_PASSWORD = "Ao9FeNkRizW7yDpmKzUxuzWLcWtUsm5LJ35HXag5+7WI";
@@ -60,8 +61,6 @@ public class Constant {
 
 //    public static final int TRACKER_SITE_ID = 5;//m
 //    public static final String API_SERVER = "http://m.bondwith.me";
-
-
 
 
     public static final String API_CHECK_VERSION = API_SERVER + "/bondwithme/index.php/api/appVersion";
@@ -169,12 +168,12 @@ public class Constant {
     /**
      * Api for sticker store
      */
-    public static final String API_STICKERSTORE_FIRST_STICKER = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fid/%s/fpath/%s/ftype/%s";
+//    public static final String API_STICKERSTORE_FIRST_STICKER = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fid/%s/fpath/%s/ftype/%s";
     public static final String API_STICKER_GROUP = API_SERVER + "/bondwithme/index.php/api/stickerGroupList";
     public static final String API_STICKER_ITEM = API_SERVER + "/bondwithme/index.php/api/stickerItemList";
     public static final String API_STICKER_BANNER = API_SERVER + "/bondwithme/index.php/api/stickerBanner";
     public static final String API_STICKER_BANNER_PIC = API_SERVER + "/bondwithme/images/%s";
-    public static final String API_STICKER_ZIP = API_SERVER + "/bondwithme/index.php/api/sticker_zip/%s/fpath/%s";
+    //    public static final String API_STICKER_ZIP = API_SERVER + "/bondwithme/index.php/api/sticker_zip/%s/fpath/%s";
     public static final String API_STICKER_UPDATE = API_SERVER + "/bondwithme/index.php/api/stickerCheckUpdate";
 
 
@@ -332,8 +331,14 @@ public class Constant {
 
     //删除message消息
     public static final String API_MESSAGE_DELETE = API_SERVER +"/bondwithme/index.php/api/removeContent/%s";
-
-
     public static final String API_WALL_UPDATE_CAPTION = API_SERVER +"/bondwithme/index.php/api/editPhoto/%s";
     public static final String API_WALL_DELETE_PHOTO = API_SERVER +"/bondwithme/index.php/api/deletePhoto/%s";
+
+    //新的得到表情包
+    public static final String API_STICKER_GROUP_LIST = API_SERVER + "/bondwithme/index.php/api/stickerGroupList";
+    //新的下载表情包
+    public static final String API_DOWNLOAD_STICKER_ZIP = API_SERVER + "/bondwithme/index.php/api/sticker_zip/%s/format/%s/fpath/%s";
+    //新的显示表情图
+    public static final String API_STICKER_ORIGINAL_IMAGE = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fcode/%s";
+
 }

@@ -595,6 +595,8 @@
     <string name="notification_action_diary_love_not_owner">%1$s赞你的%2$s日记</string>
     <string name="notification_action_diary_loveComment">%1$s赞你的评论.</string>
     <string name="notification_action_diary_tag">%1$s在日记里艾特了你</string>
+    <string name="notification_action_diary_add_photo">%1$s在日记里添加了图片</string>
+    <string name="notification_action_diary_add_video">%1$s在日记里发了视频</string>
 
     <string name="notification_action_miss_missyou">%1$s想你了</string>
     <string name="text_audio_release">松手发送</string>
@@ -625,11 +627,11 @@
     <string name="text_message_copy">复制</string>
 
     <string name="title_rewards">奖励</string>
-    <string name="text_no_rewards">无奖励</string>
-
     <string name="text_wall_view_pic_save">保存当前照片</string>
     <string name="text_wall_view_pic_edit">编辑当前描述</string>
     <string name="text_wall_view_pic_delete">删除当前照片</string>
     <string name="text_wall_view_pic_delete_warning">你确定要删除当前的照片吗?</string>
     <string name="text_wall_view_pic_edit_no_change">描述没有被修改</string>
+    <string name="text_no_rewards">暂无奖励</string>
+    <string name="text_more">全文</string>
 </resources>

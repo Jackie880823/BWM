@@ -22,12 +22,12 @@ import android.widget.TextView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
 
 /***
  * 自定义可拖拽ListView适配器
  *
  * @author zihao
- *
  */
 public class DragListAdapter extends BaseAdapter {
     private List<LocalStickerInfo> mDataList;// 标题数组
@@ -36,10 +36,8 @@ public class DragListAdapter extends BaseAdapter {
     /**
      * DragListAdapter构造方法
      *
-     * @param context
-     *            // 上下文对象
-     * @param dataList
-     *            // 数据集合
+     * @param context  // 上下文对象
+     * @param dataList // 数据集合
      */
     public DragListAdapter(Context context, List<LocalStickerInfo> dataList) {
         this.mContext = context;
@@ -80,7 +78,8 @@ public class DragListAdapter extends BaseAdapter {
         titleTv.setText(mDataList.get(position).getName());
 
         ImageView ivMySticker = (ImageView) convertView.findViewById(R.id.iv_my_sticker);
-        String picPath = MainActivity.STICKERS_NAME+"/"+mDataList.get(position).getPath()+"/"+mDataList.get(position).getSticker_name()+mDataList.get(position).getType();
+//        String picPath = MainActivity.STICKERS_NAME+"/"+mDataList.get(position).getPath()+"/"+mDataList.get(position).getSticker_name()+mDataList.get(position).getType();
+        String picPath = FileUtil.getBigStickerPath(mContext, mDataList.get(position).getPath(), "1", mDataList.get(position).getType());
         Bitmap bmp = BitmapFactory.decodeFile(picPath);
         ivMySticker.setImageBitmap(bmp);
 
@@ -132,7 +131,6 @@ public class DragListAdapter extends BaseAdapter {
     }
 
     /**
-     *
      * 初始化Item视图
      *
      * @param convertView
@@ -160,10 +158,8 @@ public class DragListAdapter extends BaseAdapter {
     /***
      * 动态修改ListView的方位.
      *
-     * @param startPosition
-     *            点击移动的position
-     * @param endPosition
-     *            松开时候的position
+     * @param startPosition 点击移动的position
+     * @param endPosition   松开时候的position
      */
     public void exchange(int startPosition, int endPosition) {
         Object startObject = getItem(startPosition);
@@ -182,10 +178,8 @@ public class DragListAdapter extends BaseAdapter {
     /**
      * 动态修改Item内容
      *
-     * @param startPosition
-     *            // 开始的位置
-     * @param endPosition
-     *            // 当前停留的位置
+     * @param startPosition // 开始的位置
+     * @param endPosition   // 当前停留的位置
      */
     public void exchangeCopy(int startPosition, int endPosition) {
         Object startObject = getCopyItem(startPosition);
@@ -204,8 +198,7 @@ public class DragListAdapter extends BaseAdapter {
     /**
      * 删除指定的Item
      *
-     * @param pos
-     *            // 要删除的下标
+     * @param pos // 要删除的下标
      */
     private void removeItem(int pos) {
         if (mDataList != null && mDataList.size() > pos) {
@@ -248,8 +241,7 @@ public class DragListAdapter extends BaseAdapter {
     /**
      * 添加拖动项
      *
-     * @param start
-     *            // 要进行添加的位置
+     * @param start // 要进行添加的位置
      * @param obj
      */
     public void addDragItem(int start, Object obj) {

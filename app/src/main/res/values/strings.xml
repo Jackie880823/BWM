@@ -600,6 +600,8 @@
     <string name="notification_action_diary_love_not_owner">%1$s loved on %2$s diary</string>
     <string name="notification_action_diary_loveComment">%1$s love your comment.</string>
     <string name="notification_action_diary_tag">%1$s tag you in diary</string>
+    <string name="notification_action_diary_add_photo">%1$s added new photos to diary</string>
+    <string name="notification_action_diary_add_video">%1$s uploaded new video to diary</string>
 
     <string name="notification_action_miss_missyou">%1$s miss you</string>
     <string name="text_audio_release">Release to Send</string>
@@ -628,7 +630,8 @@
     <string name="text_message_copy">Copy</string>
 
     <string name="title_rewards">Rewards</string>
-    <string name="text_no_rewards">No rewards alert</string>
+    <string name="text_no_rewards">No rewards</string>
+    <string name="text_more">More</string>
 
     <string name="text_wall_view_pic_save">Save this Photo</string>
     <string name="text_wall_view_pic_edit">Edit this caption</string>

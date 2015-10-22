@@ -3,6 +3,7 @@ package com.bondwithme.BondWithMe.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -132,7 +133,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     private void changeTextDisplay(boolean isDisplayMore) {
         this.isDisplayMore = isDisplayMore;
-
+        LogUtil.i(TAG, "isDisplayMore=========="+isDisplayMore);
         if (globalLayoutListener == null){
             globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
@@ -141,8 +142,13 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
                     int lineCount = tvContent.getLineCount();
                     if (lineCount > defaultLineCount){
+                        int maxLineEndIndex = tvContent.getLayout().getLineEnd(4);
+                        CharSequence sourceText = tvContent.getText();
+                        SpannableStringBuilder ssb = new SpannableStringBuilder(sourceText);
+                        ssb.replace(maxLineEndIndex - 3, ssb.length() , "...");
+                        tvContent.setText(ssb);
                         tvMoreOrCollapse.setVisibility(View.VISIBLE);
-                        tvMoreOrCollapse.setText(R.string.more);
+                        tvMoreOrCollapse.setText(R.string.text_more);
                     }
                 }
             };
@@ -154,6 +160,10 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
             tvContent.setMaxLines(Integer.MAX_VALUE);
             tvContent.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
             tvMoreOrCollapse.setText(R.string.text_collapse);
+        }
+
+        if (newsEntity != null){
+            tvContent.setText(newsEntity.getContent_text());
         }
 
     }

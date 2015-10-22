@@ -3,6 +3,7 @@ package com.bondwithme.BondWithMe.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -124,6 +125,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     private final TextView tvCommentCount;
 
+    private View llComment;
+
     /**
      * 红心按钮点击添加或者取消赞
      */
@@ -203,7 +206,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         itemView.findViewById(R.id.top_event).setOnClickListener(this);
-        itemView.findViewById(R.id.ll_comment).setOnClickListener(this);
+        llComment = itemView.findViewById(R.id.ll_comment);
+        llComment.setOnClickListener(this);
         tvAgreeCount.setOnClickListener(this);
         //        tvLoveList.setOnClickListener(this);
         ibAgree.setOnClickListener(this);
@@ -256,16 +260,35 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             case R.id.tv_wall_content:
             case R.id.ll_comment:
             case R.id.top_event:
-                if (mViewClickListener != null) {
-                    mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
+                if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
+                    if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {// 没有视频需要打开网页
+                        String trackUrl = wallEntity.getTrack_url() + MainActivity.getUser().getUser_id();
+                        if (!TextUtils.isEmpty(trackUrl)) {
+                            Uri uri = Uri.parse(trackUrl);
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            context.startActivity(intent);
+                        }
+                    }
+                } else {
+                    if (mViewClickListener != null) {
+                        mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
+                    }
                 }
                 break;
             case R.id.iv_walls_images:
-
-                if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {
-                    showOriginPic();
+                if (needOpenWeb(wallEntity)) {
+                    String trackUrl = wallEntity.getTrack_url() + MainActivity.getUser().getUser_id();
+                    if (!TextUtils.isEmpty(trackUrl)) {
+                        Uri uri = Uri.parse(trackUrl);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        context.startActivity(intent);
+                    }
                 } else {
-                    showPreviewVideo();
+                    if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {
+                        showOriginPic();
+                    } else {
+                        showPreviewVideo();
+                    }
                 }
                 break;
 
@@ -279,6 +302,19 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 switchContentShow(!needFull);
                 break;
         }
+    }
+
+
+    public boolean needOpenWeb(WallEntity wallEntity) {
+        if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
+            if (!TextUtils.isEmpty(wallEntity.getVideo_filename())) { // 视频不为空
+                new HttpTools(context).get(wallEntity.getTrack_url() + MainActivity.getUser().getUser_id(), null, null, null);
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void showPreviewVideo() {
@@ -493,7 +529,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //            tvLoveList.setText("");
         //        }
 
-        tvCommentCount.setText(this.wallEntity.getComment_count());
+        if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
+            llComment.setVisibility(View.INVISIBLE);
+        } else {
+            llComment.setVisibility(View.VISIBLE);
+            tvCommentCount.setText(this.wallEntity.getComment_count());
+        }
 
 
         if (MainActivity.getUser().getUser_id().equals(this.wallEntity.getUser_id())) {

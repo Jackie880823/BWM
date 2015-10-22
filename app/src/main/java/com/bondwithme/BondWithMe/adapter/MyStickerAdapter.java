@@ -16,6 +16,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.MyStickerActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
@@ -26,7 +27,7 @@ import java.util.List;
  * 本地表情包列表适配器
  * Created by heweidong on 15/6/11.
  */
-public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHItem>{
+public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHItem> {
     private final String TAG = "MyStickerAdapter";
     private Context mContext;
     private List<LocalStickerInfo> data;
@@ -46,7 +47,8 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
     public void onBindViewHolder(final MyStickerAdapter.VHItem holder, final int position) {
         final LocalStickerInfo stickerInfo = data.get(position);
 
-        String picPath = MainActivity.STICKERS_NAME+"/"+stickerInfo.getPath()+"/"+stickerInfo.getSticker_name()+stickerInfo.getType();
+//        String picPath = MainActivity.STICKERS_NAME + "/" + stickerInfo.getPath() + "/S/1" + stickerInfo.getType();
+        String picPath = FileUtil.getSmallStickerPath(mContext, stickerInfo.getPath(), "1", stickerInfo.getType());
         Bitmap bmp = BitmapFactory.decodeFile(picPath);
 //        Bitmap bmp = LocalImageLoader.loadBitmapFromFile(mContext, picPath, holder.ivMySticker.getWidth(), holder.ivMySticker.getHeight());
         holder.ivMySticker.setImageBitmap(bmp);
@@ -60,19 +62,19 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
 //                deleted = deleteDirectory(f);
 //                if (deleted){
                 try {
-                    Dao<LocalStickerInfo,Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+                    Dao<LocalStickerInfo, Integer> stickerDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
                     stickerDao.delete(stickerInfo);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 //发广播更新StickerStoreActivity的DOWNLOAD or √
                 Intent intent = new Intent(MyStickerActivity.ACTION_UPDATE);
-                intent.putExtra(StickerGroupAdapter.PATH,stickerInfo.getPath());
+                intent.putExtra(StickerGroupAdapter.PATH, stickerInfo.getPath());
 //                    intent.putExtra("position",stickerInfo.getPosition());
                 mContext.sendBroadcast(intent);
 
                 int position = data.indexOf(stickerInfo);
-                if (position != -1){
+                if (position != -1) {
                     data.remove(position);
                     notifyItemRemoved(position);
                 }
@@ -82,21 +84,20 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
     }
 
     private boolean deleteDirectory(File path) {
-        if( path.exists() ) {
+        if (path.exists()) {
             File[] files = path.listFiles();
             if (files == null) {
                 return true;
             }
-            for(int i=0; i<files.length; i++) {
-                if(files[i].isDirectory()) {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
                     deleteDirectory(files[i]);
-                }
-                else {
+                } else {
                     files[i].delete();
                 }
             }
         }
-        return( path.delete() );
+        return (path.delete());
     }
 
     @Override
@@ -104,7 +105,7 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
         return data.size();
     }
 
-    class VHItem extends RecyclerView.ViewHolder{
+    class VHItem extends RecyclerView.ViewHolder {
         private ImageView ivMySticker;
         private TextView tvName;
         private TextView tvRemove;

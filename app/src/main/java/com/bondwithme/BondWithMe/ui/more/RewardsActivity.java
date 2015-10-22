@@ -171,7 +171,7 @@ public class RewardsActivity extends BaseActivity {
                 if (!data.isEmpty()) {
                     tvNoData.setVisibility(View.GONE);
                 } else if (data.isEmpty() && !RewardsActivity.this.isFinishing()) {
-                    tvNoData.setText(getResources().getString(R.string.text_no_date_news));
+                    tvNoData.setText(getResources().getString(R.string.text_no_rewards));
                 }
 
 

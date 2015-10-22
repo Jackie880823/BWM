@@ -10,6 +10,10 @@ import java.util.List;
  */
 public class WallEntity implements Serializable {
 
+    public static final String CONTENT_TYPE_POST = "post";
+
+    public static final String CONTENT_TYPE_ADS = "ads";
+
     /**
      * <br>Post create date
      * <br>such as: "2015-01-28 11:16:57"
@@ -146,6 +150,11 @@ public class WallEntity implements Serializable {
     private String content_id;
 
     /**
+     * {@link #CONTENT_TYPE_POST} – 普通日记, {@link #CONTENT_TYPE_ADS} – 广告
+     */
+    private String content_type;
+
+    /**
      *
      */
     private String group_id;
@@ -171,6 +180,8 @@ public class WallEntity implements Serializable {
      * member tag list, if null - no member tag
      */
     private List<UserEntity> tag_member;
+
+    private String track_url;
 
     public String getContent_creation_date() {
         return content_creation_date;
@@ -372,6 +383,14 @@ public class WallEntity implements Serializable {
         this.content_id = content_id;
     }
 
+    public String getContent_type() {
+        return content_type;
+    }
+
+    public void setContent_type(String content_type) {
+        this.content_type = content_type;
+    }
+
     public String getGroup_id() {
         return group_id;
     }
@@ -418,5 +437,13 @@ public class WallEntity implements Serializable {
 
     public void setTag_member(List<UserEntity> tag_member) {
         this.tag_member = tag_member;
+    }
+
+    public String getTrack_url() {
+        return track_url;
+    }
+
+    public void setTrack_url(String track_url) {
+        this.track_url = track_url;
     }
 }
