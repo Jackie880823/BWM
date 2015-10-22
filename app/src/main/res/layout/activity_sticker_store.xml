@@ -93,7 +93,7 @@
             android:paddingLeft="@dimen/_15dp"
             android:paddingRight="@dimen/_15dp"
             android:paddingTop="@dimen/_10dp"
-            android:text="Update Now!"
+            android:text="@string/text_sticker_update_now"
             android:textColor="#ffffff"
             android:textSize="@dimen/_22dp" />
 
@@ -104,7 +104,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/_20dp"
             android:gravity="center"
-            android:text="Stickers Store UpDate Available"
+            android:text="@string/text_sticker_update_detail"
             android:textColor="#ffffff"
             android:textSize="@dimen/_18dp" />
 
@@ -118,7 +118,7 @@
             android:background="@drawable/bg_stroke_sticker_store"
             android:gravity="bottom"
             android:padding="@dimen/_8dp"
-            android:text="Close"
+            android:text="@string/text_close_update_sticker"
             android:textColor="#ffffff"
             android:textSize="@dimen/_20dp" />
     </RelativeLayout>
