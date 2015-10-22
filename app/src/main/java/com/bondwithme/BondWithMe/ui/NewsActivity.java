@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -208,14 +207,4 @@ public class NewsActivity extends BaseActivity {
 
     }
 
-    /**
-     * add by wing
-     *
-     * @param intent
-     */
-    @Override
-    protected void onNewIntent(Intent intent) {
-        finish();
-        startActivity(intent);
-    }
 }
