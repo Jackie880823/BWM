@@ -632,6 +632,9 @@
     <string name="title_rewards">Rewards</string>
     <string name="text_no_rewards">No rewards</string>
     <string name="text_more">More</string>
+    <string name="text_close_update_sticker">Close</string>
+    <string name="text_sticker_update_now">Update Now!</string>
+    <string name="text_sticker_update_detail">Stickers Store Update Available</string>
 
     <string name="text_wall_view_pic_save">Save this Photo</string>
     <string name="text_wall_view_pic_edit">Edit this caption</string>
