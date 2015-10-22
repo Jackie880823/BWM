@@ -626,4 +626,10 @@
 
     <string name="title_rewards">奖励</string>
     <string name="text_no_rewards">无奖励</string>
+
+    <string name="text_wall_view_pic_save">保存当前照片</string>
+    <string name="text_wall_view_pic_edit">编辑当前描述</string>
+    <string name="text_wall_view_pic_delete">删除当前照片</string>
+    <string name="text_wall_view_pic_delete_warning">你确定要删除当前的照片吗?</string>
+    <string name="text_wall_view_pic_edit_no_change">描述没有被修改</string>
 </resources>

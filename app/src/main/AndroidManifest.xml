@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bondwithme.BondWithMe"
-    android:installLocation="auto">
+    android:installLocation="auto" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -92,16 +92,15 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
 
         <!-- 友盟统计 -->
-         <meta-data
-         android:name="UMENG_CHANNEL"
-         android:value="${UMENG_CHANNEL_VALUE}" />
         <meta-data
-         android:name="CHANNEL"
-         android:value="mobile360" />
-
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
+        <meta-data
+            android:name="CHANNEL"
+            android:value="mobile360" />
 
         <!-- gaode map -->
         <!-- <meta-data -->
@@ -111,7 +110,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="@string/baidu_maps_key" />
-        <!--android:value="@string/baidu_maps_key_debug" />-->
+        <!-- android:value="@string/baidu_maps_key_debug" /> -->
         <!-- android:value="@string/jackie_baidu_maps_key_debug" /> -->
 
         <service
@@ -133,7 +132,7 @@
         <!-- gcm receiver -->
         <receiver
             android:name=".receiver_service.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
@@ -143,7 +142,7 @@
 
         <service
             android:name=".receiver_service.GcmIntentService"
-            android:enabled="true">
+            android:enabled="true" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
@@ -152,9 +151,10 @@
         <activity
             android:name=".ui.start.TransitionActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -162,18 +162,17 @@
             android:name=".ui.start.StartActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
 
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
-        <!--android:launchMode="singleInstance"  此Activity的单例模式慎，会与其它Activity完全独立使用不同的上下文资源，有导致资源、数据无法传递的危险-->
+        <!-- android:launchMode="singleInstance"  此Activity的单例模式慎，会与其它Activity完全独立使用不同的上下文资源，有导致资源、数据无法传递的危险 -->
         <activity
             android:name=".ui.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
         <activity
             android:name=".ui.EventDetailActivity"
@@ -197,7 +196,7 @@
         <activity
             android:name=".ui.share.SelectPhotosActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.PICK" />
 
@@ -233,10 +232,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ViewOriginalPicesActivity"
-            android:noHistory="true"
-            android:theme="@style/FullscreenTheme"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            />
+            android:noHistory="true"
+            android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".ui.BondAlertActivity"
             android:screenOrientation="portrait" />
@@ -278,29 +276,28 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MissListActivity"
-            android:launchMode="singleTop"
             android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.NewsActivity"
-            android:launchMode="singleTop"
             android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.RecommendActivity"
-            android:launchMode="singleTop"
             android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AlertEventActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
             android:exported="true"
-            />
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AlertWallActivity"
-            android:launchMode="singleTop"
             android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.NewsInfoActivity"
@@ -308,17 +305,17 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AddMemberWorkFlow"
-            android:theme="@android:style/Theme.Translucent"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".ui.more.BondAlert.BigDayActivity"
-            android:launchMode="singleTop"
             android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MemberActivity"
-            android:launchMode="singleTop"
             android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AlertGroupActivity"
@@ -387,8 +384,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MessageChatActivity"
-            android:screenOrientation="portrait"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
         <activity
             android:name=".ui.more.ArchiveActivity"
@@ -413,16 +410,16 @@
         <activity
             android:name=".ui.more.Archive.ArchivePrivateCommentActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.more.MoreSettingActivity"></activity>
+        <activity android:name=".ui.more.MoreSettingActivity" />
         <activity
             android:name=".ui.more.AutoAcceptActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.more.BirthdayAlertActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.more.GroupPrivacyActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.InviteMemberActivity"
             android:screenOrientation="portrait"
@@ -436,15 +433,14 @@
         <activity
             android:name=".ui.ViewPDFActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
 
         <!-- 极光推送 -->
         <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
@@ -462,7 +458,7 @@
         <service
             android:name="cn.jpush.android.service.PushService"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTER" />
                 <action android:name="cn.jpush.android.intent.REPORT" />
@@ -474,8 +470,8 @@
         <!-- Required SDK核心功能 -->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
-            android:enabled="true">
-            <intent-filter android:priority="1000">
+            android:enabled="true" >
+            <intent-filter android:priority="1000" >
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
                 <!-- Required  显示通知栏 -->
                 <category android:name="com.bondwithme.BondWithMe" />
@@ -498,7 +494,7 @@
         <!-- 极光自定义的广播接收器 -->
         <receiver
             android:name=".receiver_service.JiGuangBroadcastReceiver"
-            android:enabled="true">
+            android:enabled="true" >
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION" />
                 <!-- Required  用户注册SDK的intent -->
@@ -529,7 +525,7 @@
 
 
         <!-- 全局网络状态监听广播接收器 -->
-        <receiver android:name=".receiver_service.NetWorkStateReceiver">
+        <receiver android:name=".receiver_service.NetWorkStateReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <!-- <action android:name="android.net.wifi.WIFI_STATE_CHANGED"> -->
@@ -539,33 +535,33 @@
         <activity
             android:name=".ui.start.LogInUsernameActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.start.VerificationActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.start.DetailsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.start.SignUpUsernameActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.start.ForgotPasswordActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.start.SignUpSuccessfulActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.start.SelectAccountActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.start.ResetPasswordActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".ui.start.ResetPasswordSuccessfulActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -579,55 +575,76 @@
         <activity
             android:name=".ui.start.ThirdPartyVerifyPhoneActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
-
-        <activity android:name=".ui.PickAndCropPictureActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".ui.CrashActivity" android:noHistory="true" android:launchMode="singleTop" android:excludeFromRecents="true"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
-            android:name=".ui.share.PreviewVideoActivity">
+            android:name=".ui.PickAndCropPictureActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.CrashActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:noHistory="true" />
+        <activity android:name=".ui.share.PreviewVideoActivity" >
             <intent-filter>
                 <action android:name="com.bondwithme.BondWithMe.ui.PreviewVideoActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.family.FamilyTreeActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.family.FamilyTreeActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.share.RecorderVideoActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="com.bondwithme.BondWithMe.RECORDER_VIDEO" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <service android:name=".receiver_service.ReportIntentService">
+        <service android:name=".receiver_service.ReportIntentService" >
             <intent-filter>
                 <action android:name="com.service.reportService" />
             </intent-filter>
         </service>
 
-        <!-- Email: weijuean@madxstudio.cn
-             Password: mCDAUgXI-->
-        <receiver android:name="com.appsflyer.MultipleInstallBroadcastReceiver" android:exported="true">
+        <!--
+             Email: weijuean@madxstudio.cn
+             Password: mCDAUgXI
+        -->
+        <receiver
+            android:name="com.appsflyer.MultipleInstallBroadcastReceiver"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name="com.track.conversion.TrackingReceiver" android:exported="true" >
+        <receiver
+            android:name="com.track.conversion.TrackingReceiver"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name="com.appsflyer.AppsFlyerLib">
+        <receiver android:name="com.appsflyer.AppsFlyerLib" >
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-                <data android:scheme="package"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".ui.wall.WallViewPicActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" >
+        </activity>
+        <activity
+            android:name=".ui.wall.WallEditCaptionActivity"
+            android:theme="@android:style/Theme.Translucent"
+            android:windowSoftInputMode="stateVisible" >
+        </activity>
     </application>
 
 </manifest>

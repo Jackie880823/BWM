@@ -4,13 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!--
+    android:minHeight="?android:attr/actionBarSize"
+    android:minHeight="?attr/actionBarSize"
+    区别？？？
+    -->
+
     <LinearLayout
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/tab_color_press1"
         android:gravity="center_vertical"
-        android:minHeight="?attr/actionBarSize"
+        android:minHeight="?android:attr/actionBarSize"
         android:paddingLeft="@dimen/default_content_padding"
         android:paddingRight="@dimen/default_content_padding"
         >

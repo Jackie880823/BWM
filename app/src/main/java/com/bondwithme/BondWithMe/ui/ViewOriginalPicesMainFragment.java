@@ -81,7 +81,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
 
     /**
      * 只用于数据实体传入
-     *
+     * 单张图片的时候
      * @param inDatas
      * @return
      */

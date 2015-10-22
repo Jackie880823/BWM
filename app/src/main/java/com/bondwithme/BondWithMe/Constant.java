@@ -332,4 +332,8 @@ public class Constant {
 
     //删除message消息
     public static final String API_MESSAGE_DELETE = API_SERVER +"/bondwithme/index.php/api/removeContent/%s";
+
+
+    public static final String API_WALL_UPDATE_CAPTION = API_SERVER +"/bondwithme/index.php/api/editPhoto/%s";
+    public static final String API_WALL_DELETE_PHOTO = API_SERVER +"/bondwithme/index.php/api/deletePhoto/%s";
 }

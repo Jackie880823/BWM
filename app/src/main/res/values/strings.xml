@@ -630,4 +630,9 @@
     <string name="title_rewards">Rewards</string>
     <string name="text_no_rewards">No rewards alert</string>
 
+    <string name="text_wall_view_pic_save">Save this Photo</string>
+    <string name="text_wall_view_pic_edit">Edit this caption</string>
+    <string name="text_wall_view_pic_delete">Delete this Photo</string>
+    <string name="text_wall_view_pic_delete_warning">Are you sure you want to delete this photo?</string>
+    <string name="text_wall_view_pic_edit_no_change">Captions are not change</string>
 </resources>

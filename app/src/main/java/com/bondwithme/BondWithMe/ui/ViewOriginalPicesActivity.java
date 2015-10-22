@@ -30,8 +30,10 @@ public class ViewOriginalPicesActivity extends BaseFragmentActivity {
         ViewOriginalPicesMainFragment fragment;
         Bundle bundle = new Bundle();
         if (getIntent().getBooleanExtra("is_data", false)) {
+            //浏览单张图片的情况
             fragment = ViewOriginalPicesMainFragment.newInstance((java.util.List<com.bondwithme.BondWithMe.entity.PhotoEntity>) getIntent().getSerializableExtra("datas"));
         } else {
+            //多张图片的时候
             fragment = new ViewOriginalPicesMainFragment();
             request_url = getIntent().getStringExtra("request_url");
             memberId = getIntent().getStringExtra("memberId");

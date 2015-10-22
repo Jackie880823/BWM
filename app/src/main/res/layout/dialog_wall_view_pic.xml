@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/tv_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_transparent_gray"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/save_photo"/>
+            <TextView
+                android:layout_width="wrap_content"
+                style="@style/text_dialog_style"
+                android:gravity="center_horizontal"
+                android:text="@string/text_wall_view_pic_save"
+                android:padding="@dimen/default_content_padding"
+                />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_split_line"/>
+
+    <LinearLayout
+        android:id="@+id/tv_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_transparent_gray"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/edit_caption"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                style="@style/text_dialog_style"
+                android:gravity="center_horizontal"
+                android:text="@string/text_wall_view_pic_edit"
+                android:padding="@dimen/default_content_padding" />
+    </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_split_line"/>
+
+    <LinearLayout
+        android:id="@+id/tv_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_transparent_gray"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/delete_photo"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                style="@style/text_dialog_style"
+                android:gravity="center_horizontal"
+                android:text="@string/text_wall_view_pic_delete"
+                android:padding="@dimen/default_content_padding" />
+    </LinearLayout>
+
+</LinearLayout>
