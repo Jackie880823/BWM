@@ -12,7 +12,7 @@ public class WallEntity implements Serializable {
 
     public static final String CONTENT_TYPE_POST = "post";
 
-    public static final String CONTENT_TYPE_ads = "ads";
+    public static final String CONTENT_TYPE_ADS = "ads";
 
     /**
      * <br>Post create date
@@ -150,7 +150,7 @@ public class WallEntity implements Serializable {
     private String content_id;
 
     /**
-     * {@link #CONTENT_TYPE_POST} – 普通日记, {@link #CONTENT_TYPE_ads} – 广告
+     * {@link #CONTENT_TYPE_POST} – 普通日记, {@link #CONTENT_TYPE_ADS} – 广告
      */
     private String content_type;
 
@@ -180,6 +180,8 @@ public class WallEntity implements Serializable {
      * member tag list, if null - no member tag
      */
     private List<UserEntity> tag_member;
+
+    private String track_url;
 
     public String getContent_creation_date() {
         return content_creation_date;
@@ -435,5 +437,13 @@ public class WallEntity implements Serializable {
 
     public void setTag_member(List<UserEntity> tag_member) {
         this.tag_member = tag_member;
+    }
+
+    public String getTrack_url() {
+        return track_url;
+    }
+
+    public void setTrack_url(String track_url) {
+        this.track_url = track_url;
     }
 }

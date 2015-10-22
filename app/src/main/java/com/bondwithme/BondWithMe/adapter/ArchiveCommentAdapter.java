@@ -22,6 +22,7 @@ import com.bondwithme.BondWithMe.entity.ArchiveCommentEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.ArchiveChatViewClickListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
@@ -47,31 +48,32 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<ArchiveChatEntity> detailData;
     private int detailItemCount;
 
-    public ArchiveCommentAdapter(Context context,List<ArchiveCommentEntity> data,List<ArchiveChatEntity> detailData){
+    public ArchiveCommentAdapter(Context context, List<ArchiveCommentEntity> data, List<ArchiveChatEntity> detailData) {
         mContext = context;
         this.detailData = detailData;
         this.data = data;
-        if(detailData != null && detailData.size()>0){
+        if (detailData != null && detailData.size() > 0) {
             detailItemCount = 1;
         }
     }
 
-    public void addData(List<ArchiveCommentEntity> newData){
+    public void addData(List<ArchiveCommentEntity> newData) {
         data.addAll(newData);
         notifyItemInserted(getItemCount());
     }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
         RecyclerView.ViewHolder viewHolder = null;
         switch (viewType) {
             case TYPE_HEADER:
-                view = LayoutInflater.from(mContext).inflate(R.layout.fragment_archive_comment_head,parent,false);
+                view = LayoutInflater.from(mContext).inflate(R.layout.fragment_archive_comment_head, parent, false);
                 viewHolder = new VHHeader(view);
 //                return new VHHeader(view);
                 break;
             case TYPE_ITEM:
-                view = LayoutInflater.from(mContext).inflate(R.layout.archive_comment_item,parent,false);
+                view = LayoutInflater.from(mContext).inflate(R.layout.archive_comment_item, parent, false);
                 viewHolder = new VHItem(view);
 //                return new VHItem(view);
                 break;
@@ -93,7 +95,7 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(position == 0){
+        if (position == 0) {
             VHHeader item = (VHHeader) holder;
             ArchiveChatEntity archive = detailData.get(0);
             /*
@@ -135,7 +137,7 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             String Content = archive.getText_description();
             String locationName = archive.getLoc_name();
 
-            if(!TextUtils.isEmpty(Content)){
+            if (!TextUtils.isEmpty(Content)) {
 //            holder.liContent.setVisibility(View.VISIBLE);
                 item.tvContent.setText(Content);
                 item.liContent.setVisibility(View.VISIBLE);
@@ -143,10 +145,10 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 item.liContent.setVisibility(View.GONE);
             }
 
-            if(!TextUtils.isEmpty(locationName)){
+            if (!TextUtils.isEmpty(locationName)) {
                 item.locationName.setText(locationName);
                 item.lllocation.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 item.lllocation.setVisibility(View.GONE);
             }
             item.tvLoveCount.setText(archive.getLove_count());
@@ -154,19 +156,19 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 //        String tempdate = MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date());
             item.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, archive.getContent_creation_date()));
 //        holder.tvDate.setText(tempdate);
-            setCommentPic(item,archive);
-        }else {
+            setCommentPic(item, archive);
+        } else {
             VHItem item = (VHItem) holder;
-            ArchiveCommentEntity commentEntity = data.get(position-detailItemCount);
+            ArchiveCommentEntity commentEntity = data.get(position - detailItemCount);
             item.tvUserName.setText(commentEntity.getUser_given_name());
             item.tvContent.setText(commentEntity.getComment_content());
             item.tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, commentEntity.getComment_creation_date()));
         }
     }
 
-    private void setCommentPic(RecyclerView.ViewHolder item,ArchiveChatEntity archive){
+    private void setCommentPic(RecyclerView.ViewHolder item, ArchiveChatEntity archive) {
         VHHeader holder = (VHHeader) item;
-        if(!TextUtils.isEmpty(archive.getFile_id())){
+        if (!TextUtils.isEmpty(archive.getFile_id())) {
 //            Log.i("照片====", archive.getFile_id());
             //如果有照片
             holder.llArchiveImage.setVisibility(View.VISIBLE);
@@ -175,35 +177,36 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             holder.imArchivePic.setVisibility(View.GONE);
             //照片的总数
             int PhotoCount = Integer.valueOf(archive.getPhoto_count());
-            if(PhotoCount > 1){
+            if (PhotoCount > 1) {
                 String photoCountStr;
                 photoCountStr = PhotoCount + " " + mContext.getString(R.string.text_photos);
                 holder.tvPhotoCount.setText(photoCountStr);
                 holder.tvPhotoCount.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 holder.tvPhotoCount.setVisibility(View.GONE);
             }
             //加载照片
             VolleyUtil.initNetworkImageView(mContext, holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
-        }else if(!TextUtils.isEmpty(archive.getSticker_group_path())){
+        } else if (!TextUtils.isEmpty(archive.getSticker_group_path())) {
             //如果有大表情
             holder.llArchiveImage.setVisibility(View.VISIBLE);
             holder.imArchivePic.setVisibility(View.VISIBLE);
             holder.imArchivePic.setImageDrawable(null);
             holder.imArchiveImages.setVisibility(View.GONE);
             holder.tvPhotoCount.setVisibility(View.GONE);
-            if(Constant.Sticker_Gif.equals(archive.getSticker_type())){
+            if (Constant.Sticker_Gif.equals(archive.getSticker_type())) {
 //                Log.i("GIF====",archive.getSticker_type());
                 //如果大表情是GIF
                 String stickerGroupPath = archive.getSticker_group_path();
-                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
+                if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
                 }
                 try {
-                    String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + archive.getSticker_name() + "_B.gif";
+//                    String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + archive.getSticker_name() + "_B.gif";
+                    String gifFilePath = FileUtil.getBigStickerPath(mContext, stickerGroupPath, archive.getSticker_name(), archive.getSticker_type());
                     GifDrawable gifDrawable = new GifDrawable(new File(gifFilePath));
-                    if(gifDrawable != null) {
+                    if (gifDrawable != null) {
                         holder.imArchivePic.setImageDrawable(gifDrawable);
                         //                    if ("true".equals(comment.getIsNate())) {
                         //                        holder.progressBar.setVisibility(View.VISIBLE);
@@ -214,33 +217,34 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, archive.getSticker_type());
                         downloadAsyncTask(holder.imArchivePic, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
                     }
-                }catch (IOException e){
+                } catch (IOException e) {
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, archive.getSticker_type());
                     downloadAsyncTask(holder.imArchivePic, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
                     e.printStackTrace();
                 }
 
 
-            }else if(Constant.Sticker_Png.equals(archive.getSticker_type())){
+            } else if (Constant.Sticker_Png.equals(archive.getSticker_type())) {
 //                Log.i("PNG====",archive.getSticker_type());
                 //如果大表情是PNG
                 String stickerGroupPath = archive.getSticker_group_path();
-                if(null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
+                if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
                 }
 
                 try {
-                    String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + archive.getSticker_name() + "_B.png";
+//                    String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + archive.getSticker_name() + "_B.png";
+                    String pngFileName = FileUtil.getBigStickerPath(mContext, stickerGroupPath, archive.getSticker_name(), archive.getSticker_type());
 //                    InputStream is = mContext.getAssets().open(pngFileName);
                     InputStream is = new FileInputStream(new File(pngFileName));
-                    if(is != null) {
+                    if (is != null) {
                         Bitmap bitmap = BitmapFactory.decodeStream(is);
                         holder.imArchivePic.setImageBitmap(bitmap);
                     } else {
                         String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
                         downloadAsyncTask(holder.imArchivePic, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
                     }
-                } catch(IOException e) {
+                } catch (IOException e) {
                     //本地没有png的时候，从服务器下载
                     String stickerUrl = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(), archive.getSticker_name(), stickerGroupPath, Constant.Sticker_Png);
                     downloadAsyncTask(holder.imArchivePic, stickerUrl, archive.getSticker_type(), R.drawable.network_image_default);
@@ -259,7 +263,7 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return data.size() + detailItemCount;
     }
 
-    class VHHeader extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class VHHeader extends RecyclerView.ViewHolder implements View.OnClickListener {
         /**
          * 用户昵称视图
          */
@@ -303,6 +307,7 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         View lllocation;
 
         NetworkImageView imArchiveImages;
+
         public VHHeader(View itemView) {
             super(itemView);
             tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
@@ -323,16 +328,16 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 public void onGlobalLayout() {
                     // 字符显示超过9行，只显示到第九行
                     int lineCount = tvContent.getLineCount();
-                    if(lineCount > 8) {
+                    if (lineCount > 8) {
                         // 第九行只显示十个字符
                         int maxLineEndIndex = tvContent.getLayout().getLineEnd(8);
                         int maxLineStartIndex = tvContent.getLayout().getLineStart(8);
                         String sourceText = tvContent.getText().toString();
-                        if(maxLineEndIndex - maxLineStartIndex > 7) {
+                        if (maxLineEndIndex - maxLineStartIndex > 7) {
                             // 截取到第九行文字的第7个字符，其余字符用...替代
                             String newText = sourceText.substring(0, maxLineStartIndex + 7) + "...";
                             tvContent.setText(newText);
-                        } else if(lineCount > 9) {
+                        } else if (lineCount > 9) {
                             // 截取到第九行文字未满7个字符，行数超过9号，说明有换行，将换行替换成"..."
                             String newText = sourceText.substring(0, maxLineEndIndex - 1) + "...";
                             tvContent.setText(newText);
@@ -344,12 +349,13 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             imArchiveImages.setOnClickListener(this);
         }
+
         @Override
         public void onClick(View v) {
             ArchiveChatEntity archive = detailData.get(0);
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.iv_chats_images:
-                    if(marchiveChatViewClickListener != null){
+                    if (marchiveChatViewClickListener != null) {
                         marchiveChatViewClickListener.showOriginalPic(archive.getContent_id());
                     }
             }
@@ -383,16 +389,16 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 public void onGlobalLayout() {
                     // 字符显示超过9行，只显示到第九行
                     int lineCount = tvContent.getLineCount();
-                    if(lineCount > 8) {
+                    if (lineCount > 8) {
                         // 第九行只显示十个字符
                         int maxLineEndIndex = tvContent.getLayout().getLineEnd(8);
                         int maxLineStartIndex = tvContent.getLayout().getLineStart(8);
                         String sourceText = tvContent.getText().toString();
-                        if(maxLineEndIndex - maxLineStartIndex > 7) {
+                        if (maxLineEndIndex - maxLineStartIndex > 7) {
                             // 截取到第九行文字的第7个字符，其余字符用...替代
                             String newText = sourceText.substring(0, maxLineStartIndex + 7) + "...";
                             tvContent.setText(newText);
-                        } else if(lineCount > 9) {
+                        } else if (lineCount > 9) {
                             // 截取到第九行文字未满7个字符，行数超过9号，说明有换行，将换行替换成"..."
                             String newText = sourceText.substring(0, maxLineEndIndex - 1) + "...";
                             tvContent.setText(newText);
@@ -428,17 +434,17 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             protected void onPostExecute(byte[] resultByte) {
                 super.onPostExecute(resultByte);
                 try {
-                    if(null != resultByte) {
-                        if(Constant.Sticker_Png.equals(type)) {
+                    if (null != resultByte) {
+                        if (Constant.Sticker_Png.equals(type)) {
                             Bitmap bitmap = BitmapFactory.decodeByteArray(resultByte, 0, resultByte.length);
-                            if(bitmap != null && gifImageView != null) {
+                            if (bitmap != null && gifImageView != null) {
                                 gifImageView.setImageBitmap(bitmap);
                             } else {
                                 gifImageView.setImageResource(defaultResource);
                             }
-                        } else if(Constant.Sticker_Gif.equals(type)) {
+                        } else if (Constant.Sticker_Gif.equals(type)) {
                             GifDrawable gifDrawable = new GifDrawable(resultByte);
-                            if(gifDrawable != null && gifImageView != null) {
+                            if (gifDrawable != null && gifImageView != null) {
                                 gifImageView.setImageDrawable(gifDrawable);
                             } else {
                                 gifImageView.setImageResource(defaultResource);
@@ -447,7 +453,7 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     } else {
                         gifImageView.setImageResource(defaultResource);
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -464,7 +470,8 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public ArchiveChatViewClickListener marchiveChatViewClickListener;
-    public void setPicClickListener(ArchiveChatViewClickListener archiveChatViewClickListener){
+
+    public void setPicClickListener(ArchiveChatViewClickListener archiveChatViewClickListener) {
         marchiveChatViewClickListener = archiveChatViewClickListener;
     }
 }
