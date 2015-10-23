@@ -335,6 +335,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         params.put("condition", UrlUtil.mapToJsonstring(condition));
         String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
         intent.putExtra("request_url", url);
+        intent.putExtra("user_id", wallEntity.getUser_id());
         context.startActivity(intent);
     }
 

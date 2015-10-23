@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallViewPicPagerAdapter;
@@ -45,7 +46,7 @@ public class WallViewPicActivity extends BaseActivity {
     private ViewPager viewPager;
     private String request_url;
     private LayoutInflater layoutInflater;
-    private static List<PhotoEntity> data;
+    private List<PhotoEntity> data;
     private WallViewPicPagerAdapter wallViewPicPagerAdapter;
 
     private static final int EDIT_CAPTION = 1;
@@ -53,6 +54,8 @@ public class WallViewPicActivity extends BaseActivity {
     private Dialog dialog;
 
     private View vProgress;
+
+    private String user_id;
 
     private static final int REQUEST_DATA_SUCCESS = 1;
 
@@ -69,6 +72,7 @@ public class WallViewPicActivity extends BaseActivity {
             }
         }
     };
+    ;
 
     @Override
     public int getLayout() {
@@ -97,7 +101,7 @@ public class WallViewPicActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        showDialog();
+            showDialog();
     }
 
     @Override
@@ -110,6 +114,7 @@ public class WallViewPicActivity extends BaseActivity {
     public void initView() {
 
         request_url = getIntent().getExtras().getString("request_url");
+        user_id = getIntent().getExtras().getString("user_id");
         if (TextUtils.isEmpty(request_url))
         {
             finish();
@@ -195,6 +200,9 @@ public class WallViewPicActivity extends BaseActivity {
      */
     private void showDialog()
     {
+        if (data == null)
+            return;
+
         View selectIntention = layoutInflater.inflate(R.layout.dialog_wall_view_pic, null);
 
         dialog = new MyDialog(this, null, selectIntention);
@@ -202,6 +210,12 @@ public class WallViewPicActivity extends BaseActivity {
         LinearLayout llSave = (LinearLayout) selectIntention.findViewById(R.id.tv_save);
         LinearLayout llEdit = (LinearLayout) selectIntention.findViewById(R.id.tv_edit);
         LinearLayout llDelete = (LinearLayout) selectIntention.findViewById(R.id.tv_delete);
+
+        if (!App.getLoginedUser().getUser_id().equals(user_id))
+        {
+            llEdit.setVisibility(View.GONE);
+            llDelete.setVisibility(View.GONE);
+        }
 
         //保存当前图片
         llSave.setOnClickListener(new View.OnClickListener() {
@@ -211,9 +225,7 @@ public class WallViewPicActivity extends BaseActivity {
                 {
                     dialog.dismiss();
                 }
-
                 savePhoto();
-
             }
         });
 
@@ -286,11 +298,14 @@ public class WallViewPicActivity extends BaseActivity {
      * @param data
      */
     private void updateCaption(Intent data) {
-        TextView textView = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content);
-        TextView textViewAll = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content_all);
-        textView.setText(data.getStringExtra("update_caption"));
-        textViewAll.setText(data.getStringExtra("update_caption"));
-        this.data.get(viewPager.getCurrentItem()).setPhoto_caption(data.getStringExtra("update_caption"));
+        if (this.data.size() != 0)
+        {
+            TextView textView = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content);
+            TextView textViewAll = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content_all);
+            textView.setText(data.getStringExtra("update_caption"));
+            textViewAll.setText(data.getStringExtra("update_caption"));
+            this.data.get(viewPager.getCurrentItem()).setPhoto_caption(data.getStringExtra("update_caption"));
+        }
     }
 
     /**
