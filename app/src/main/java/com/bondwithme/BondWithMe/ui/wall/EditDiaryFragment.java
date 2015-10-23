@@ -8,9 +8,12 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -18,7 +21,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,32 +30,50 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.FeelingAdapter;
+import com.bondwithme.BondWithMe.adapter.ImagesRecyclerViewAdapter;
+import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.interfaces.ImagesRecyclerListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.InviteMemberActivity;
+import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
+import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.WallEditView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.json.JSONObject;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created 10/20/15.
@@ -77,6 +97,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public static final String PREFERENCE_KEY_IS_SAVE = "IS_SAVE";
 
     private static final String PREFERENCE_KEY_PIC_CONTENT = "PIC_CONTENT";
+    private static final String PREFERENCE_KEY_PIC_CAPTION = "PIC_CAPTION";
     private static final String PREFERENCE_KEY_PIC_COUNT = "PIC_COUNT";
     private static final String PREFERENCE_KEY_LOC_NAME = "LOC_NAME";
     private static final String PREFERENCE_KEY_LOC_LONGITUDE = "LOC_LONGITUDE";
@@ -131,11 +152,14 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 存放图片Uri列表
      */
     private List<Uri> imageUris = new ArrayList<>();
+    private ArrayList<DiaryPhotoEntity> photoEntities = new ArrayList<>();
+
+    private ImagesRecyclerViewAdapter mAdapter;
 
     /**
      * 视频Uri
      */
-    private Uri videoUri;
+    private Uri videoUri = Uri.EMPTY;
 
     /**
      * 视频时长
@@ -192,17 +216,18 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     private TextView tvLocationDesc;
 
+    /**
+     * 公开性提示控件：private or ALL
+     */
     private TextView tvPrivacy;
 
-    /**
-     * 视频或图片的布局
-     */
-    private RelativeLayout rlMediaDisplay;
+    private View headView;
+
     /**
      * 得到的视频显示在这个控件上
      */
-    private ImageView ivDisplay;
     private View previewVideoView;
+    private ImageView ivDisplay;
     private TextView tvDuration;
 
     private RecyclerView rvImages;
@@ -211,6 +236,42 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     private RelativeLayout rlProgress;
 
+    MyDialog myDialog;
+
+    private List<CompressBitmapTask> tasks;
+    private static final int SHOW_PROGRESS = 11;
+    private static final int HIDE_PROGRESS = 12;
+    private static final int ACTION_FAILED = 13;
+    private static final int ACTION_SUCCEED = 14;
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case ACTION_FAILED:
+//                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_failed);
+                    sendEmptyMessage(HIDE_PROGRESS);
+                    break;
+                case ACTION_SUCCEED:
+                    SharedPreferences.Editor editor = draftPreferences.edit();
+                    editor.clear().apply();
+                    getParentActivity().setResult(Activity.RESULT_OK);
+//                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
+                    if (getActivity() != null) {
+                        getActivity().finish();
+                    }
+                    sendEmptyMessage(HIDE_PROGRESS);
+                    break;
+                case SHOW_PROGRESS:
+                    rlProgress.setVisibility(View.VISIBLE);
+                    break;
+                case HIDE_PROGRESS:
+                    rlProgress.setVisibility(View.GONE);
+                    break;
+            }
+        }
+    };
+
     @Override
     public void setLayoutId() {
         layoutId = R.layout.fragment_edit_diary;
@@ -218,25 +279,72 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     @Override
     public void initView() {
+        recoverList();
+        gson = new Gson();
+
         rlProgress = getViewById(R.id.rl_progress);
-        wevContent = getViewById(R.id.diary_edit_content);
 
-        iv_feeling = getViewById(R.id.iv_feeling);
-        tvLocationDesc = getViewById(R.id.location_desc);
-        tvPrivacy = getViewById(R.id.tv_privacy);
         rvImages = getViewById(R.id.rcv_post_photos);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        rvImages.setLayoutManager(llm);
+        mAdapter = new ImagesRecyclerViewAdapter(getContext(), photoEntities);
+        mAdapter.setListener(new ImagesRecyclerListener() {
+            @Override
+            public void loadHeadView(HeadHolder headHolder) {
+                LogUtil.d(TAG, "loadHeadView");
+                headView = headHolder.itemView;
+                //头部分
+                UserEntity owner = MainActivity.getUser();
+                CircularNetworkImage cniHead = (CircularNetworkImage) headView.findViewById(R.id.owner_head);
+                TextView tvUserName = (TextView) headView.findViewById(R.id.owner_name);
+                VolleyUtil.initNetworkImageView(getContext(), cniHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, owner.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                tvUserName.setText(owner.getUser_given_name());
 
-        rlMediaDisplay = getViewById(R.id.media_display_rl);
-        previewVideoView = LayoutInflater.from(getActivity()).inflate(R.layout.tab_picture_voide_view, null);
-        tvDuration = (TextView) previewVideoView.findViewById(R.id.duration_tv);
-        ivDisplay = (ImageView) previewVideoView.findViewById(R.id.video_view_iv);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        previewVideoView.setLayoutParams(params);
+                // 显示的列表
+                iv_feeling = (ImageView) headView.findViewById(R.id.iv_feeling);
+                tvLocationDesc = (TextView) headView.findViewById(R.id.location_desc);
+                wevContent = (WallEditView) headView.findViewById(R.id.diary_edit_content);
+            }
 
-        // 删除视频
-        previewVideoView.findViewById(R.id.delete_video_view).setOnClickListener(this);
-        previewVideoView.findViewById(R.id.go_to_preview_video_iv).setOnClickListener(this);
+            @Override
+            public void loadVideoView(VideoHolder videoHolder) {
+                LogUtil.d(TAG, "loadVideoView");
+                previewVideoView = videoHolder.itemView;
+                initVideoView();
+                if (!Uri.EMPTY.equals(videoUri)) {
+                    ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
+                    tvDuration.setText(MyDateUtils.formatDuration(duration));
+                }
+            }
+
+            @Override
+            public void deletePhoto(int position) {
+                LogUtil.d(TAG, "deletePhoto");
+                if (position < imageUris.size()) {
+                    imageUris.remove(position);
+                }
+            }
+
+            @Override
+            public void loadFinish() {
+                LogUtil.d(TAG, "loadFinish");
+                try {
+                    recoverDraft();
+                } catch (Exception e) {
+                    draftPreferences.edit().clear().apply();
+                    e.printStackTrace();
+                }
+            }
+        });
+        if (!Uri.EMPTY.equals(videoUri)) {
+            clearPhotos();
+        } else if (!photoEntities.isEmpty()) {
+            clearVideo();
+        }
+        rvImages.setAdapter(mAdapter);
+
+        tvPrivacy = getViewById(R.id.tv_privacy);
 
         // 选择图片的点击监听
         getViewById(R.id.tv_camera).setOnClickListener(this);
@@ -247,54 +355,63 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         // 选择位置的点击监听
         getViewById(R.id.tv_location).setOnClickListener(this);
         // 切换锁的点击监听
-        getViewById(R.id.tv_private).setOnClickListener(this);
+        getViewById(R.id.tv_privacy).setOnClickListener(this);
+    }
 
-        if(!imageUris.isEmpty()) {
-            clearVideo();
-//            addDataAndNotify(imageUris);
-        } else {
-            if(!Uri.EMPTY.equals(videoUri)) {
-                clearPhotos();
-                ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
-                tvDuration.setText(MyDateUtils.formatDuration(duration));
-            }
-        }
+    private void initVideoView() {
+        tvDuration = (TextView) previewVideoView.findViewById(R.id.duration_tv);
+        ivDisplay = (ImageView) previewVideoView.findViewById(R.id.video_view_iv);
+        // 删除视频
+        previewVideoView.findViewById(R.id.delete_video_view).setOnClickListener(this);
+        previewVideoView.findViewById(R.id.go_to_preview_video_iv).setOnClickListener(this);
     }
 
     /**
      * 清空选择的视频和显示的UI
      */
     private void clearVideo() {
+        LogUtil.i(TAG, "clearVideo&");
         videoUri = Uri.EMPTY;
-
-        // 删除视频View
-        if(rlMediaDisplay.indexOfChild(previewVideoView) >= 0) {
-            rlMediaDisplay.removeView(previewVideoView);
+        if (rvImages.getChildCount() > 1 && !mAdapter.isPhoto()) {
+            rvImages.removeView(previewVideoView);
         }
-
-        // 添加图片显示View
-        if(rlMediaDisplay.indexOfChild(rvImages) < 0) {
-            rlMediaDisplay.addView(rvImages, 0);
-        }
+        mAdapter.setIsPhoto(true);
     }
 
     /**
      * 清除选择的图片数据和UI
      */
     private void clearPhotos() {
-        // 删除图片显示View
-        if(rlMediaDisplay.indexOfChild(rvImages) >= 0) {
-            rlMediaDisplay.removeView(rvImages);
-        }
-
-        // 显示视频View
-        if(rlMediaDisplay.indexOfChild(previewVideoView) < 0) {
-            rlMediaDisplay.addView(previewVideoView, 0);
-        }
-
+        LogUtil.i(TAG, "clearPhotos&");
         // 清册选择的图片
         imageUris.clear();
+        photoEntities.clear();
+        if (photoEntities.size() > 0 && mAdapter.isPhoto()) {
+            rvImages.removeViews(1, photoEntities.size());
+        }
+        mAdapter.setIsPhoto(false);
         // datas.clear();
+    }
+
+    /**
+     * 添加Activity请求返回的视频数据
+     *
+     * @param data 请求返回的{@link Intent}
+     */
+    private void addVideoFromActivityResult(Intent data) {
+        clearPhotos();
+        mAdapter.notifyDataSetChanged();
+        videoUri = data.getData();
+        MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
+        metadataRetriever.setDataSource(getActivity(), videoUri);
+        duration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        metadataRetriever.release();
+        if (!Uri.EMPTY.equals(videoUri) && ivDisplay != null) {
+            ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
+            tvDuration.setText(MyDateUtils.formatDuration(duration));
+        }
+        LogUtil.i(TAG, "addVideoFromActivityResult& videoUri: " + videoUri);
+        LogUtil.i(TAG, "addVideoFromActivityResult& videoDuration: " + duration);
     }
 
     /**
@@ -306,24 +423,17 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onResume() {
         super.onResume();
-
-        try {
-            recoverDraft();
-        } catch(Exception e) {
-            draftPreferences.edit().clear().apply();
-            e.printStackTrace();
-        }
     }
 
     /**
-     * 恢复草稿
+     * 当运行到{@link #onResume()}时恢复草稿
      */
     private void recoverDraft() throws Exception {
         LogUtil.i(TAG, "recoverDraft");
-        if(draftPreferences == null) {
+        if (draftPreferences == null) {
             draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         }
-        if(!draftPreferences.getBoolean(PREFERENCE_KEY_IS_SAVE, false)) {
+        if (!draftPreferences.getBoolean(PREFERENCE_KEY_IS_SAVE, false)) {
             return;
         }
         tvLocationDesc.setText(draftPreferences.getString(PREFERENCE_KEY_LOC_NAME, ""));
@@ -331,26 +441,18 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         latitude = draftPreferences.getFloat(PREFERENCE_KEY_LOC_LATITUDE, (float) latitude);
 
         selectFeelingPath = draftPreferences.getString(PREFERENCE_KEY_DO_FEEL_CODE, selectFeelingPath);
-        if(!TextUtils.isEmpty(selectFeelingPath)) {
+        if (!TextUtils.isEmpty(selectFeelingPath)) {
             checkItemIndex = draftPreferences.getInt(PREFERENCE_KEY_CHECK_ITEM_INDEX, checkItemIndex);
             iv_feeling.setVisibility(View.VISIBLE);
             try {
                 iv_feeling.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(selectFeelingPath)));
-            } catch(IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         allRange = draftPreferences.getBoolean(PREFERENCE_KEY_CONTENT_GROUP_PUBLIC, allRange);
-        Resources resources = getResources();
-        Drawable[] drawables = tvPrivacy.getCompoundDrawables();
-        if(allRange) {
-            tvPrivacy.setCompoundDrawables(drawables[0], resources.getDrawable(R.drawable.privacy_open), drawables[2], drawables[3]);
-            tvPrivacy.setText(R.string.text_all);
-        } else {
-            tvPrivacy.setCompoundDrawables(drawables[0], resources.getDrawable(R.drawable.privacy_lock), drawables[2], drawables[3]);
-            tvPrivacy.setText(R.string.text_private);
-        }
+        switchPrivacy(allRange);
 
         String members = draftPreferences.getString(PREFERENCE_KEY_TAG_MEMBERS, "");
         at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
@@ -363,32 +465,64 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         wevContent.setOldGroupText(draftPreferences.getString(PREFERENCE_KEY_OLD_GROUP_TEXT, wevContent.getOldGroupText()));
         wevContent.setText(draftPreferences.getString(PREFERENCE_KEY_TEXT_CONTENT, wevContent.getRelText()));
         changeAtDesc(false);
+        // 恢复了草稿，清除保存
+        draftPreferences.edit().clear().apply();
+    }
 
+    /**
+     * 恢复保存的图片列表或者视频，一定要在setAdapter之前恢复否则无法显示
+     */
+    private void recoverList() {
+        if (draftPreferences == null) {
+            draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        }
+        if (!draftPreferences.getBoolean(PREFERENCE_KEY_IS_SAVE, false)) {
+            return;
+        }
         int picCount = draftPreferences.getInt(PREFERENCE_KEY_PIC_COUNT, 0);
-        if(picCount > 0) {
+        if (picCount > 0) {
             imageUris = new ArrayList<>();
-            for(int i = 0; i < picCount; i++) {
+            photoEntities = new ArrayList<>();
+            for (int i = 0; i < picCount; i++) {
                 String strUri = draftPreferences.getString(PREFERENCE_KEY_PIC_CONTENT + i, "");
+                String strCaption = draftPreferences.getString(PREFERENCE_KEY_PIC_CAPTION + i, "");
                 LogUtil.i(TAG, "recoverDraft& uri: " + strUri);
-                if(!TextUtils.isEmpty(strUri)) {
+                if (!TextUtils.isEmpty(strUri)) {
                     Uri uri = Uri.parse(strUri);
                     imageUris.add(uri);
+                    DiaryPhotoEntity diaryPhotoEntity = new DiaryPhotoEntity();
+                    diaryPhotoEntity.setUri(uri);
+                    diaryPhotoEntity.setPhotoCaption(strCaption);
+                    photoEntities.add(diaryPhotoEntity);
                 }
             }
         } else {
             String videoUriStr = draftPreferences.getString(PREFERENCE_KEY_VIDEO_PATH, "");
 
             Log.i(TAG, "recoverDraft& videoUri: " + videoUriStr);
-            if(!TextUtils.isEmpty(videoUriStr)) {
+            if (!TextUtils.isEmpty(videoUriStr)) {
                 videoUri = Uri.parse(videoUriStr);
                 duration = draftPreferences.getString(PREFERENCE_KEY_VIDEO_DURATION, "");
-//                fragment2.setVideoUri(videoUri);
-//                fragment2.setVideoDuration(duration);
             }
         }
+    }
 
-        // 恢复了草稿，清除保存
-        draftPreferences.edit().clear().apply();
+    private void switchPrivacy(boolean allRange) {
+        Resources resources = getResources();
+        Drawable drawable;
+
+        if (allRange) {
+            drawable = resources.getDrawable(R.drawable.privacy_open);
+            tvPrivacy.setText(R.string.text_all);
+        } else {
+            drawable = resources.getDrawable(R.drawable.privacy_lock);
+            tvPrivacy.setText(R.string.text_private);
+        }
+        Drawable[] drawables = tvPrivacy.getCompoundDrawables();
+        if (drawable != null) {
+            drawable.setBounds(drawables[1].getBounds());
+        }
+        tvPrivacy.setCompoundDrawables(null, drawable, null, null);
     }
 
     @Override
@@ -418,7 +552,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void onStop() {
         super.onStop();
 
-        if(popupwindow != null && popupwindow.isShowing()) {
+        if (popupwindow != null && popupwindow.isShowing()) {
             popupwindow.dismiss();
         }
     }
@@ -429,14 +563,17 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private void saveDraft() {
         LogUtil.i(TAG, "saveDraft");
         SharedPreferences.Editor editor = draftPreferences.edit();
-        if(!imageUris.isEmpty()) {
+        if (!photoEntities.isEmpty()) {
             int i = 0;
-            for(Uri uri : imageUris) {
-                editor.putString(PREFERENCE_KEY_PIC_CONTENT + i++, uri.toString());
-                LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CONTENT + ": " + uri.toString());
+            for (DiaryPhotoEntity entity : photoEntities) {
+                editor.putString(PREFERENCE_KEY_PIC_CONTENT + i, entity.getUri().toString());
+                editor.putString(PREFERENCE_KEY_PIC_CAPTION + i, getPhotoCaptionByPositio(i + 1));
+                LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CONTENT + i + ": " + entity.getUri().toString());
+                LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CAPTION + i + ": " + entity.getPhotoCaption());
+                i++;
             }
             editor.putInt(PREFERENCE_KEY_PIC_COUNT, i);
-        } else if(!Uri.EMPTY.equals(videoUri)) {
+        } else if (!Uri.EMPTY.equals(videoUri)) {
             editor.putString(PREFERENCE_KEY_VIDEO_PATH, videoUri.toString());
             editor.putString(PREFERENCE_KEY_VIDEO_DURATION, duration);
         }
@@ -479,16 +616,16 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         LogUtil.i(TAG, "onActivityResult");
 
         // 没有退出编辑不用保存蓝草稿
-        if(draftPreferences != null) {
+        if (draftPreferences != null) {
             draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).apply();
         }
 
-        if(resultCode == Activity.RESULT_OK) {
-            switch(requestCode) {
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
                 case GET_LOCATION:
-                    if(data != null) {
+                    if (data != null) {
                         String locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
-                        if(!TextUtils.isEmpty(locationName)) {
+                        if (!TextUtils.isEmpty(locationName)) {
                             tvLocationDesc.setText(locationName);
                             latitude = data.getDoubleExtra(Constant.EXTRA_LATITUDE, 0);
                             longitude = data.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0);
@@ -504,22 +641,51 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     break;
                 case GET_MEMBERS:
                     String members = data.getStringExtra("members_data");
-                    at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {}.getType());
+                    at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
+                    }.getType());
                     LogUtil.i(TAG, "onActivityResult: size = " + at_members_data.size());
                     String groups = data.getStringExtra("groups_data");
-                    at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {}.getType());
+                    at_groups_data = gson.fromJson(groups, new TypeToken<ArrayList<GroupEntity>>() {
+                    }.getType());
                     changeAtDesc(true);
                     break;
 
                 case OPEN_GPS:
                     openMap();
                     break;
+                case REQUEST_HEAD_PHOTO:
+                    if (data != null) {
+                        String type = data.getStringExtra(MediaData.EXTRA_MEDIA_TYPE);
+                        if (MediaData.TYPE_VIDEO.equals(type)) {
+                            LogUtil.i(TAG, "onActivityResult& play video uri: " + data.getData());
+                            addVideoFromActivityResult(data);
+                        } else {
+                            clearVideo();
+                            ArrayList<Uri> pickUris;
+                            pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
+                            imageUris.clear();
+                            addDataAndNotify(pickUris);
+                            imageUris.addAll(pickUris);
+                        }
+                    }
+                    break;
             }
         }
 
-        if(requestCode == OPEN_GPS && LocationUtil.isOPen(getActivity())) {
+        if (requestCode == OPEN_GPS && LocationUtil.isOPen(getActivity())) {
             openMap();
         }
+    }
+
+    private void addDataAndNotify(ArrayList<Uri> pickUris) {
+        photoEntities.clear();
+        for (Uri uri : pickUris) {
+            LogUtil.i(TAG, "addDataAndNotify& add uri: " + uri.toString());
+            DiaryPhotoEntity entity = new DiaryPhotoEntity();
+            entity.setUri(uri);
+            photoEntities.add(entity);
+        }
+        mAdapter.notifyDataSetChanged();
     }
 
 
@@ -527,21 +693,21 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         String memberText;
         String groupText;
-        if(at_members_data != null && at_members_data.size() > 0) {
+        if (at_members_data != null && at_members_data.size() > 0) {
             memberText = String.format(getParentActivity().getString(R.string.text_diary_content_at_member_desc), at_members_data.size());
             Log.i(TAG, "changeAtDesc& member of at description is " + memberText);
         } else {
             Log.i(TAG, "changeAtDesc& no member of at description");
             memberText = "";
         }
-        if(at_groups_data != null && at_groups_data.size() > 0) {
+        if (at_groups_data != null && at_groups_data.size() > 0) {
             groupText = String.format(getParentActivity().getString(R.string.text_diary_content_at_group_desc), at_groups_data.size());
             Log.i(TAG, "changeAtDesc& group of at description is " + groupText);
         } else {
             Log.i(TAG, "changeAtDesc& no group of at description");
             groupText = "";
         }
-        if(!checkVisible) {
+        if (!checkVisible) {
             wevContent.addAtDesc(memberText, groupText, true);
         } else {
             wevContent.addAtDesc(memberText, groupText, isVisible());
@@ -565,7 +731,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             case R.id.tv_feeling:
                 UIUtil.hideKeyboard(getParentActivity(), wevContent);
                 InputMethodManager imm = (InputMethodManager) getParentActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if(imm.isActive()) {
+                if (imm.isActive()) {
                     imm.hideSoftInputFromWindow(wevContent.getWindowToken(), 0);
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -580,7 +746,20 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             case R.id.tv_location:
                 checkGPS();
                 break;
-            case R.id.tv_private:
+            case R.id.tv_privacy:
+                allRange = !allRange;
+                switchPrivacy(allRange);
+                break;
+
+            case R.id.delete_video_view:
+                clearVideo();
+                mAdapter.notifyItemRemoved(1);
+                break;
+
+            case R.id.go_to_preview_video_iv:
+                Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
+                intent.putExtra(PreviewVideoActivity.EXTRA_VIDEO_URI, videoUri.toString());
+                startActivity(intent);
                 break;
         }
     }
@@ -698,8 +877,317 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     private void openMap() {
         Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, tvLocationDesc.getText().toString());
-        if(intent != null) {
+        if (intent != null) {
             startActivityForResult(intent, GET_LOCATION);
+        }
+    }
+
+
+    /**
+     * 上传日记
+     */
+    public void submitWall() {
+        String text_content = wevContent.getRelText();
+
+        if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)) {
+            // 没文字、没图片、没视频不能上传日记
+            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            return;
+        }
+
+        mHandler.sendEmptyMessage(SHOW_PROGRESS);
+
+        String locationDesc = tvLocationDesc.getText().toString();
+        String latitudeDesc;
+        String longitudeDesc;
+
+        if (!TextUtils.isEmpty(locationDesc)) {
+            locationDesc = tvLocationDesc.getText().toString();
+            latitudeDesc = "" + latitude;
+            longitudeDesc = "" + longitude;
+        } else {
+            locationDesc = "";
+            latitudeDesc = "";
+            longitudeDesc = "";
+        }
+
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("content_creator_id", MainActivity.getUser().getUser_id());
+        params.put("content_type", "post");
+        params.put("text_description", text_content);
+        params.put("loc_latitude", latitudeDesc);
+        params.put("loc_longitude", longitudeDesc);
+        params.put("loc_name", locationDesc);
+        params.put("loc_caption", "");
+        params.put("sticker_group_path", "");
+        params.put("loc_type", loc_type);
+
+
+        if (!Uri.EMPTY.equals(videoUri)) {
+            params.put("video", "1");
+            /**wing modifi for pic too big begin*/
+            /**wing modifi for pic too big begin*/
+            File f = new File(videoUri.getPath());
+            params.put("file", f);
+            //            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoUri.toString(), new ImageSize(640, 480));
+            //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            //            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            //            String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+            String strThumbnail = LocalImageLoader.getVideoThumbnail(getActivity(), videoUri);
+            strThumbnail = String.format("data:image/png;base64,%s", strThumbnail);
+            params.put("video_thumbnail", strThumbnail);
+            params.put("video_duration", duration);
+            LogUtil.i(TAG, "submitPic$ strThumbnail: " + strThumbnail);
+        }
+
+
+        try {
+            if (!TextUtils.isEmpty(selectFeelingPath)) {
+                StringBuilder b = new StringBuilder(selectFeelingPath);
+                int charIndex = selectFeelingPath.lastIndexOf("/");
+                b.replace(charIndex, charIndex + 1, "_");
+                params.put("dofeel_code", b.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        params.put("sticker_type", "");
+        params.put("group_ind_type", "2");
+        params.put("content_group_public", (allRange ? "1" : "0"));
+
+        if (photoEntities.isEmpty()) {
+            params.put("upload_photo", "0");
+        } else {
+            params.put("upload_photo", "1");
+        }
+
+        params.put("tag_group", gson.toJson(setGetGroupIds(at_groups_data)));
+        params.put("tag_member", gson.toJson(setGetMembersIds(at_members_data)));
+
+        new HttpTools(App.getContextInstance()).upload(Constant.API_WALL_TEXT_POST, params, POST_WALL, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+            @Override
+            public void onResult(String response) {
+                Log.i(TAG, "submitWall& #onResult response: " + response);
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    if ("1".equals(obj.getString("resultStatus")) && !TextUtils.isEmpty(obj.getString("contentID"))) {
+                        String contentId = obj.getString("contentID");
+                        if (photoEntities.isEmpty()) {
+                            mHandler.sendEmptyMessage(ACTION_SUCCEED);
+                        } else {
+                            int count = photoEntities.size();
+                            boolean multiple = (count <= 0);
+                            tasks = new ArrayList<>();
+                            for (int index = 0; index < count; index++) {
+                                DiaryPhotoEntity photoEntity = photoEntities.get(index);
+                                photoEntity.setPhotoCaption(getPhotoCaptionByPositio(index + 1));
+                                if (index == count - 1) {
+                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
+                                    tasks.add(task);
+                                    //for not work in down 11
+                                    if (SDKUtil.IS_HONEYCOMB) {
+                                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntities.get(index));
+                                    } else {
+                                        task.execute(photoEntities.get(index));
+                                    }
+                                } else {
+                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, false);
+                                    tasks.add(task);
+                                    //for not work in down 11
+                                    if (SDKUtil.IS_HONEYCOMB) {
+                                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntities.get(index));
+                                    } else {
+                                        task.execute(photoEntities.get(index));
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        mHandler.sendEmptyMessage(ACTION_FAILED);
+                    }
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                    mHandler.sendEmptyMessage(ACTION_FAILED);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+                mHandler.sendEmptyMessage(ACTION_FAILED);
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
+    }
+
+    private String getPhotoCaptionByPositio(int position) {
+        RecyclerView.ViewHolder holder = rvImages.findViewHolderForAdapterPosition(position);
+        if (holder instanceof ImagesRecyclerViewAdapter.ImageHolder) {
+            return ((ImagesRecyclerViewAdapter.ImageHolder) holder).wevContent.getRelText();
+        }
+        return "";
+    }
+
+    /**
+     * 上传图片
+     *
+     * @param path      - 图片路径
+     * @param contentId
+     * @param index
+     * @param multiple
+     * @param lastPic
+     */
+    private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
+        File f = new File(path);
+        if (!f.exists()) {
+            if (lastPic) {
+                mHandler.sendEmptyMessage(ACTION_FAILED);
+            }
+            return;
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("content_creator_id", MainActivity.getUser().getUser_id());
+        params.put("content_id", contentId);
+        params.put("photo_index", "" + index);
+        params.put("photo_caption", photoEntities.get(index).getPhotoCaption());
+        params.put("file", f);
+        params.put("multiple", multiple ? "1" : "0");
+
+
+        new HttpTools(App.getContextInstance()).upload(Constant.API_WALL_PIC_POST, params, UPLOAD_PIC, new HttpCallback() {
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onResult(String string) {
+                if (lastPic) {
+                    mHandler.sendEmptyMessage(ACTION_SUCCEED);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                e.printStackTrace();
+                if (lastPic) {
+                    mHandler.sendEmptyMessage(ACTION_FAILED);
+                }
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
+    }
+
+
+    private List<String> setGetMembersIds(List<UserEntity> users) {
+        List<String> ids = new ArrayList<>();
+        if (users != null) {
+            int count = users.size();
+            for (int i = 0; i < count; i++) {
+                ids.add(users.get(i).getUser_id());
+            }
+        }
+        return ids;
+    }
+
+    private List<String> setGetGroupIds(List<GroupEntity> groups) {
+        List<String> ids = new ArrayList<>();
+        if (groups != null) {
+            int count = groups.size();
+            for (int i = 0; i < count; i++) {
+                ids.add(groups.get(i).getGroup_id());
+            }
+        }
+        return ids;
+    }
+
+    /**
+     * 返回检测，如正在上传或有数据返回为true，表示不能禁止返回
+     *
+     * @return
+     */
+    public boolean backCheck() {
+        if (popupwindow != null && popupwindow.isShowing()) {
+            popupwindow.dismiss();
+            return true;
+        } else if (rlProgress != null && rlProgress.getVisibility() == View.VISIBLE) {
+            MessageUtil.showMessage(App.getContextInstance(), R.string.waiting_upload);
+            return true;
+        }
+        if (tasks != null && tasks.size() > 0) {
+            // 图片上传务正在执行
+            LogUtil.i(TAG, "backCheck& tasks size: " + tasks.size());
+            return true;
+        } else {
+            String text_content = wevContent.getRelText();
+            if (draftPreferences == null) {
+                draftPreferences = getParentActivity().getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+            }
+            SharedPreferences.Editor editor = draftPreferences.edit();
+            if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)) {
+                // 没有需要上传的内容
+                editor.clear().apply();
+                return false;
+            }
+
+            // 提示是否将内容保存到草稿
+            if (myDialog == null) {
+                myDialog = new MyDialog(getActivity(), "", getActivity().getString(R.string.text_dialog_save_draft));
+                myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        saveDraft();
+                        getActivity().finish();
+                    }
+                });
+                myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        myDialog.dismiss();
+                        getActivity().finish();
+                    }
+                });
+            }
+            if (!myDialog.isShowing()) {
+                myDialog.show();
+            }
+            return true;
         }
     }
 
@@ -733,6 +1221,35 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             String str1 = lhs.substring(0, 1).toUpperCase();
             String str2 = rhs.substring(0, 1).toUpperCase();
             return str1.compareTo(str2);
+        }
+    }
+
+    class CompressBitmapTask extends AsyncTask<DiaryPhotoEntity, Void, String> {
+
+        String contentId;
+        int index;
+        boolean multiple;
+        boolean lastPic;
+
+        public CompressBitmapTask(String contentId, int index, boolean multiple, final boolean lastPic) {
+            this.contentId = contentId;
+            this.index = index;
+            this.multiple = multiple;
+            this.lastPic = lastPic;
+        }
+
+        @Override
+        protected String doInBackground(DiaryPhotoEntity... params) {
+            if (params == null) {
+                return null;
+            }
+            return LocalImageLoader.compressBitmap(App.getContextInstance(), params[0].getUri(), 480, 800, false);
+        }
+
+        @Override
+        protected void onPostExecute(String path) {
+            submitPic(path, contentId, index, multiple, lastPic);
+            tasks.remove(this);
         }
     }
 }

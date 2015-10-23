@@ -34,8 +34,8 @@ public class NewDiaryActivity extends BaseActivity {
     @Override
     protected void titleLeftEvent() {
         Fragment fragment = getFragmentInstance();
-        if(fragment instanceof WallNewFragment) {
-            banBack = ((WallNewFragment) fragment).backCheck();
+        if(fragment instanceof EditDiaryFragment) {
+            banBack = ((EditDiaryFragment) fragment).backCheck();
         }
         if(!banBack) {
             super.titleLeftEvent();
@@ -44,13 +44,17 @@ public class NewDiaryActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        finish();
+        Fragment fragment = getFragmentInstance();
+        if (fragment instanceof  EditDiaryFragment) {
+            ((EditDiaryFragment) fragment).submitWall();
+        }
     }
 
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        rightButton.setVisibility(View.INVISIBLE);
+        rightButton.setVisibility(View.VISIBLE);
+        rightButton.setImageResource(R.drawable.send_icon);
     }
 
     @Override
@@ -81,8 +85,8 @@ public class NewDiaryActivity extends BaseActivity {
         if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             if(event.getAction() == KeyEvent.ACTION_DOWN) {
                 Fragment fragment = getFragmentInstance();
-                if(fragment instanceof WallNewFragment) {
-                    banBack = ((WallNewFragment) fragment).backCheck();
+                if(fragment instanceof EditDiaryFragment) {
+                    banBack = ((EditDiaryFragment) fragment).backCheck();
                 }
                 LogUtil.i(TAG, "dispatchKeyEvent& banBack: " + banBack);
                 return banBack ? banBack : super.dispatchKeyEvent(event);
