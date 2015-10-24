@@ -59,7 +59,7 @@ public class SelectPhotosActivity extends BaseActivity {
     /**
      * 限制最多可选图片张数
      */
-    public final static int MAX_SELECT = 10;
+    public final static int MAX_SELECT = 20;
     public static final int REQUEST_HEAD_VIDEO = 100;
     public static final int REQUEST_HEAD_IMAGE = 101;
 

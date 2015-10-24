@@ -100,6 +100,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static final String PUT_WALL = TAG + "_PUT_WALL";
     private static final String PUT_PHOTO_MAX = TAG + "_PHOTO_MAX";
     private static final String UPLOAD_PIC = TAG + "_UPLOAD_PIC";
+    private static final String UPLOAD_VIDEO = TAG + "_UPLOAD_VIDEO";
+    private static final String GET_DETAIL = TAG + "_GET_DETAIL";
 
     public static final String PREFERENCE_NAME = "SAVE_DRAFT";
     public static final String PREFERENCE_KEY_IS_SAVE = "IS_SAVE";
@@ -128,7 +130,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     public final static String PATH_PREFIX = "feeling";
     private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
-    private static final String GET_DETAIL = TAG + "_GET_DETAIL";
 
     /**
      * 保存草稿的首选项
@@ -380,7 +381,23 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             callBack.setLinkType(CallBack.LINK_TYPE_PUT_PHOTO_MAX);
             mHttpTools.put(requestInfo, PUT_PHOTO_MAX, callBack);
         } else if (!Uri.EMPTY.equals(videoUri)) {
+            Map<String, Object> params = new HashMap<>();
 
+            File f = new File(videoUri.getPath());
+            params.put("file", f);
+            //            Bitmap bitmap = ImageLoader.getInstance().loadImageSync(videoUri.toString(), new ImageSize(640, 480));
+            //            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            //            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            //            String strThumbnail = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+            String strThumbnail = LocalImageLoader.getVideoThumbnail(getActivity(), videoUri);
+            strThumbnail = String.format("data:image/png;base64,%s", strThumbnail);
+            params.put("video_thumbnail", strThumbnail);
+            params.put("video_duration", duration);
+            params.put("content_creator_id", MainActivity.getUser().getUser_id());
+            params.put("content_id", wall.getContent_id());
+            LogUtil.i(TAG, "submitPic$ strThumbnail: " + strThumbnail);
+            callBack.setLinkType(CallBack.LINK_TYPE_UPLOAD_VOID);
+            mHttpTools.upload(Constant.API_UPLOAD_VIDEO, params, UPLOAD_VIDEO, callBack);
         } else {
             mHandler.sendEmptyMessage(ACTION_SUCCEED);
         }
@@ -415,7 +432,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             tasks = new ArrayList<>();
             for (int index = 0; index < count; index++) {
                 DiaryPhotoEntity photoEntity = locaEntities.get(index);
-                photoEntity.setPhoto_caption(getPhotoCaptionByPositio(index + 1));
+                photoEntity.setPhoto_caption(getPhotoCaptionByPosition(index + 1));
                 if (index == count - 1) {
                     CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
                     tasks.add(task);
@@ -759,7 +776,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             for (PushedPhotoEntity entity : photoEntities) {
                 if (entity instanceof DiaryPhotoEntity) {
                     editor.putString(PREFERENCE_KEY_PIC_CONTENT + i, ((DiaryPhotoEntity) entity).getUri().toString());
-                    editor.putString(PREFERENCE_KEY_PIC_CAPTION + i, getPhotoCaptionByPositio(i + 1));
+                    editor.putString(PREFERENCE_KEY_PIC_CAPTION + i, getPhotoCaptionByPosition(i + 1));
                     LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CONTENT + i + ": " + ((DiaryPhotoEntity) entity).getUri().toString());
                     LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CAPTION + i + ": " + entity.getPhoto_caption());
                     i++;
@@ -1226,6 +1243,17 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         if (!Uri.EMPTY.equals(videoUri)) {
             entity.setNew_video("1");
+        } else {
+            ArrayList<PushedPhotoEntity> pushedPhotoEntities = new ArrayList<>();
+            for (int i = 0; i < photoEntities.size() - locaEntities.size(); i++) {
+                String caption = getPhotoCaptionByPosition(i + 1);
+                PushedPhotoEntity photoEntity = photoEntities.get(i);
+                if (!caption.equals(photoEntity.getPhoto_caption())) {
+                    photoEntity.setPhoto_caption(caption);
+                    pushedPhotoEntities.add(photoEntity);
+                }
+            }
+            entity.setEdit_photo(pushedPhotoEntities);
         }
 
         if (!locaEntities.isEmpty()) {
@@ -1253,10 +1281,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     }
 
-    private String getPhotoCaptionByPositio(int position) {
-        RecyclerView.ViewHolder holder = rvImages.findViewHolderForAdapterPosition(position);
-        if (holder instanceof ImagesRecyclerViewAdapter.ImageHolder) {
-            return ((ImagesRecyclerViewAdapter.ImageHolder) holder).wevContent.getRelText();
+    private String getPhotoCaptionByPosition(int position) {
+        if (position < rvImages.getChildCount()) {
+            RecyclerView.ViewHolder holder = rvImages.findViewHolderForAdapterPosition(position);
+            if (holder != null && holder instanceof ImagesRecyclerViewAdapter.ImageHolder) {
+                return ((ImagesRecyclerViewAdapter.ImageHolder) holder).wevContent.getRelText();
+            }
         }
         return "";
     }
@@ -1284,7 +1314,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         params.put("content_creator_id", MainActivity.getUser().getUser_id());
         params.put("content_id", contentId);
         params.put("photo_index", "" + index);
-        params.put("photo_caption", photoEntities.get(index).getPhoto_caption());
+        if (index < photoEntities.size() - locaEntities.size()) {
+            params.put("photo_caption", photoEntities.get(index).getPhoto_caption());
+        } else {
+            params.put("photo_caption", getPhotoCaptionByPosition(index + 1));
+        }
         params.put("file", f);
         params.put("multiple", multiple ? "1" : "0");
         LogUtil.d(TAG, "submitPic: params: " + params);
@@ -1456,6 +1490,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
          * 更新照版的最大序号
          */
         public static final int LINK_TYPE_PUT_PHOTO_MAX = 4;
+        public static final int LINK_TYPE_UPLOAD_VOID = 5;
 
         /**
          * 当前回调标识，用于识别当前同调用类别
@@ -1486,7 +1521,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         @Override
         public void onResult(String string) {
-            LogUtil.i(TAG, "onResult# typy: " + linkType +" response: " + string);
+            LogUtil.i(TAG, "onResult# typy: " + linkType + " response: " + string);
             switch (linkType) {
                 case LINK_TYPE_GET_WALL:
                     wall = new Gson().fromJson(string, WallEntity.class);
@@ -1494,6 +1529,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     break;
                 case LINK_TYPE_SUBMIT_WALL:
                     resultBySubmitWall(string);
+                    break;
+                case LINK_TYPE_UPLOAD_VOID:
+                    mHandler.sendEmptyMessage(ACTION_SUCCEED);
                     break;
                 case LINK_TYPE_SUBMIT_PICTURE:
                     if (lastPic) {

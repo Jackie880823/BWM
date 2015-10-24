@@ -2,7 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/default_content_padding">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp" />
 
     <LinearLayout
         android:id="@+id/ll_post_head"
@@ -74,13 +79,10 @@
             android:id="@+id/diary_edit_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_view_margin"
-            android:layout_marginRight="@dimen/default_view_margin"
             android:background="@color/default_text_color_while"
             android:fitsSystemWindows="true"
             android:gravity="top"
             android:minLines="5"
-            android:padding="@dimen/default_content_padding"
             android:textColor="@color/default_text_color_dark"
             android:textSize="@dimen/text_medium_size" />
 

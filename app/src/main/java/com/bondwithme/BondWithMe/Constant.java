@@ -264,6 +264,7 @@ public class Constant {
      * 照片最大号，用于在日志列表直接上传照片的时候，上传全部照片前先更新。
      */
     public static final String API_PUT_PHOTO_MAX = API_SERVER + "/bondwithme/index.php/api/updatePhotoMax/%s";
+    public static final String API_UPLOAD_VIDEO = API_SERVER + "/bondwithme/index.php/api/uploadVideo";
 
     //获取sticker, 4个参数. 1.user_id, 2.sticker_name, 3.sticker_path, 4.sticker_type
     public static final String API_STICKER = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fid/%s_B/fpath/%s/ftype/%s";
