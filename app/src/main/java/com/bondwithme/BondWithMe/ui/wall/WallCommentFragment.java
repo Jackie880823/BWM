@@ -262,8 +262,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     @Override
     public void requestData() {
         HashMap<String, String> params = new HashMap<>();
-        params.put("content_group_id", content_group_id);
-        params.put("user_id", MainActivity.getUser().getUser_id());
+        params.put(Constant.CONTENT_GROUP_ID, content_group_id);
+        params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
 
         mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, new HttpCallback() {
             @Override
@@ -313,9 +313,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void getComments() {
         HashMap<String, String> jsonParams = new HashMap<>();
-        jsonParams.put(WallCommentEntity.CONTENT_GROUP_ID, content_group_id);
-        jsonParams.put(WallCommentEntity.GROUP_ID, group_id);
-        jsonParams.put(WallCommentEntity.USER_ID, MainActivity.getUser().getUser_id());
+        jsonParams.put(Constant.CONTENT_GROUP_ID, content_group_id);
+        jsonParams.put(Constant.GROUP_ID, group_id);
+        jsonParams.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
         HashMap<String, String> params = new HashMap<>();
@@ -450,13 +450,13 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         }
 
         HashMap<String, String> params = new HashMap<>();
-        params.put("content_group_id", content_group_id);
-        params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-        params.put("content_type", "comment");
-        params.put("comment_content", commentText);
-        params.put("sticker_group_path", stickerGroupPath);
-        params.put("sticker_name", stickerName);
-        params.put("sticker_type", stickerType);
+        params.put(Constant.CONTENT_GROUP_ID, content_group_id);
+        params.put(Constant.COMMENT_OWNER_ID, MainActivity.getUser().getUser_id());
+        params.put(Constant.CONTENT_TYPE, "comment");
+        params.put(Constant.COMMENT_CONTENT, commentText);
+        params.put(Constant.STICKER_GROUP_PATH, stickerGroupPath);
+        params.put(Constant.STICKER_NAME, stickerName);
+        params.put(Constant.STICKER_TYPE, stickerType);
 
         mHttpTools.post(Constant.API_WALL_COMMENT_TEXT_POST, params, POST_COMMENTS, new HttpCallback() {
             @Override
@@ -490,7 +490,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 stickerGroupPath = "";
 
                 getParentActivity().setResult(Activity.RESULT_OK);
-                if(getActivity()!=null&&!getActivity().isFinishing()) {
+                if (getActivity() != null && !getActivity().isFinishing()) {
                     UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 }
             }
@@ -500,7 +500,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
-                if(getActivity()!=null&&!getActivity().isFinishing()) {
+                if (getActivity() != null && !getActivity().isFinishing()) {
                     UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 }
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
@@ -543,11 +543,11 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 progressBar.setVisibility(View.VISIBLE);
             }
             Map<String, Object> params = new HashMap<>();
-            params.put("content_group_id", content_group_id);
-            params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-            params.put("content_type", "comment");
-            params.put("file", f);
-            params.put("photo_fullsize", "1");
+            params.put(Constant.CONTENT_GROUP_ID, content_group_id);
+            params.put(Constant.COMMENT_OWNER_ID, MainActivity.getUser().getUser_id());
+            params.put(Constant.CONTENT_TYPE, "comment");
+            params.put(Constant.FILE, f);
+            params.put(Constant.PHOTO_FULLSIZE, "1");
 
 
             mHttpTools.upload(Constant.API_WALL_COMMENT_PIC_POST, params, UPLOAD_PIC, new HttpCallback() {
@@ -717,11 +717,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     /**
      * 显示Wall详情包括评论
      *
-     * @param content_group_id {@link WallEntity#content_group_id}
-     * @param group_id         {@link WallEntity#group_id}
      */
     @Override
-    public void showComments(String content_group_id, String group_id) {}
+    public void showComments(WallEntity wallEntity) {}
 
 
     MyDialog removeAlertDialog;
@@ -797,8 +795,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void showMembers(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_USER);
-        intent.putExtra("content_group_id", content_group_id);
-        intent.putExtra("group_id", group_id);
+        intent.putExtra(Constant.CONTENT_GROUP_ID, content_group_id);
+        intent.putExtra(Constant.GROUP_ID, group_id);
         startActivity(intent);
     }
 
@@ -812,8 +810,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void showGroups(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_GROUP);
-        intent.putExtra("content_group_id", content_group_id);
-        intent.putExtra("group_id", group_id);
+        intent.putExtra(Constant.CONTENT_GROUP_ID, content_group_id);
+        intent.putExtra(Constant.GROUP_ID, group_id);
         startActivity(intent);
     }
 

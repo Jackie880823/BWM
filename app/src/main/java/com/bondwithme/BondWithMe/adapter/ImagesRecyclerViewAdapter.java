@@ -10,15 +10,28 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.HttpTools;
+import com.android.volley.toolbox.NetworkImageView;
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
+import com.bondwithme.BondWithMe.entity.PhotoEntity;
+import com.bondwithme.BondWithMe.entity.PushedPhotoEntity;
+import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.ImagesRecyclerListener;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.wall.HeadHolder;
 import com.bondwithme.BondWithMe.ui.wall.VideoHolder;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.WallEditView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,16 +50,25 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
 
     private ImagesRecyclerListener listener;
     private boolean isPhoto = true;
-
+    private String userId = MainActivity.getUser().getUser_id();
     private Context context;
-    private ArrayList<DiaryPhotoEntity> entities = new ArrayList<>();
+    private ArrayList<PushedPhotoEntity> entities = new ArrayList<>();
+    private boolean isEdit;
+    private String request_url;
+    private ArrayList<PhotoEntity> data = new ArrayList<>();
 
     public HeadHolder headHolder = null;
     public VideoHolder videoHolder = null;
 
-    public ImagesRecyclerViewAdapter(Context context, ArrayList<DiaryPhotoEntity> entities) {
+    public ImagesRecyclerViewAdapter(Context context, ArrayList<PushedPhotoEntity> entities) {
         this.context = context;
         this.entities = entities;
+    }
+
+    public void setRequest_url(String request_url) {
+        LogUtil.d(TAG, "setRequest_url: " + request_url);
+        this.request_url = request_url;
+        loadLinkPhoto();
     }
 
     public boolean isPhoto() {
@@ -127,15 +149,23 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
         LogUtil.d(TAG, "onBindViewHolder& position = " + position);
         if (position > 0) {
             if (isPhoto) {
-                DiaryPhotoEntity entity = entities.get(position - 1);
                 ImageHolder imageHolder = (ImageHolder) holder;
-                imageHolder.setCaption(entity.getPhotoCaption());
-                imageHolder.setImage(entity.getUri());
+                PushedPhotoEntity entity = entities.get(position - 1);
+                imageHolder.setCaption(entity.getPhoto_caption());
+                if (entity instanceof DiaryPhotoEntity) {
+                    Uri uri = ((DiaryPhotoEntity) entity).getUri();
+                    LogUtil.d(TAG, "onBindViewHolder& DiaryPhotoEntity uri: " + uri.toString());
+                    imageHolder.setImage(uri);
+                } else if (entity instanceof PhotoEntity) {
+                    VolleyUtil.initNetworkImageView(context, imageHolder.ivDisplay, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity)entity).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                }
                 imageHolder.setPosition(position);
             }
 
+        } else if (position == 0) {
+            ((HeadHolder)holder).wevContent.requestFocus();
         }
-        if (position == getItemCount() - 1){
+        if (position == getItemCount() - 1) {
             listener.loadFinish();
         }
     }
@@ -178,6 +208,64 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
         return isPhoto ? entities.size() + 1 : 2;
     }
 
+    private void loadLinkPhoto() {
+        LogUtil.i(TAG, "loadLinkPhoto");
+
+        new HttpTools(context).get(request_url, null, this, new HttpCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onResult(String response) {
+                LogUtil.i(TAG, "onResult& response: " + response);
+                try {
+                    GsonBuilder gsonb = new GsonBuilder();
+                    //Json中的日期表达方式没有办法直接转换成我们的Date类型, 因此需要单独注册一个Date的反序列化类.
+                    //DateDeserializer ds = new DateDeserializer();
+                    //给GsonBuilder方法单独指定Date类型的反序列化方法
+                    //gsonb.registerTypeAdapter(Date.class, ds);
+                    Gson gson = gsonb.create();
+                    if (response.startsWith("{\"data\":")) {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String dataString = jsonObject.optString("data");
+                        data = gson.fromJson(dataString, new TypeToken<ArrayList<PhotoEntity>>() {
+                        }.getType());
+                    } else {
+                        data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
+                        }.getType());
+                    }
+                    int index = entities.size();
+                    entities.addAll(data);
+                    notifyItemRangeInserted(index, data.size());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+    }
+
     public void setListener(ImagesRecyclerListener listener) {
         this.listener = listener;
     }
@@ -185,22 +273,22 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
     public class ImageHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivDelete;
-        private ImageView ivDisplay;
+        public NetworkImageView ivDisplay;
         public WallEditView wevContent;
         private int position;
 
         public ImageHolder(View itemView) {
             super(itemView);
             ivDelete = (ImageView) itemView.findViewById(R.id.pic_delete);
-            ivDisplay = (ImageView) itemView.findViewById(R.id.iv_pic);
+            ivDisplay = (NetworkImageView) itemView.findViewById(R.id.iv_pic);
             wevContent = (WallEditView) itemView.findViewById(R.id.diary_edit_content);
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (position > 0) {
-                        entities.remove(position - 1);
+                        PushedPhotoEntity entity = entities.remove(position - 1);
                         notifyItemRemoved(position);
-                        listener.deletePhoto(position);
+                        listener.deletePhoto(entity);
                     }
                 }
             });

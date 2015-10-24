@@ -637,5 +637,6 @@
     <string name="text_close_update_sticker">Close</string>
     <string name="text_sticker_update_now">Update Now!</string>
     <string name="text_sticker_update_detail">Stickers Store Update Available</string>
+    <string name="title_edit_post">Edit Post</string>
 
 </resources>

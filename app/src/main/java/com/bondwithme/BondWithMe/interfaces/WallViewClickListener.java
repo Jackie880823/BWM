@@ -15,10 +15,8 @@ public interface WallViewClickListener {
 
     /**
      * 显示Wall详情包括评论
-     * @param content_group_id {@link WallEntity#content_group_id}
-     * @param group_id         {@link WallEntity#group_id}
      */
-    void showComments(final String content_group_id, final String group_id);
+    void showComments(WallEntity wallEntity);
 
     /**
      * 显示被@的用户列表

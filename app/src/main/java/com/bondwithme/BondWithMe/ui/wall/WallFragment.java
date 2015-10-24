@@ -19,6 +19,7 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallAdapter;
+import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
@@ -90,7 +91,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     @Override
     public void initView() {
 
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             member_id = getArguments().getString(ARG_PARAM_PREFIX + 0);
         }
 
@@ -113,7 +114,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if(data.size() >= offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                if (data.size() >= offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
                 }
@@ -150,7 +151,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("limit", offset + "");
         params.put("start", startIndex + "");
-        if(!TextUtils.isEmpty(member_id)) {
+        if (!TextUtils.isEmpty(member_id)) {
             params.put("member_id", member_id + "");
         }
 
@@ -178,9 +179,10 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 Gson gson = gsonb.create();
                 try {
                     boolean hasData = data != null && data.size() > 0;
-                    data = gson.fromJson(response, new TypeToken<ArrayList<WallEntity>>() {}.getType());
+                    data = gson.fromJson(response, new TypeToken<ArrayList<WallEntity>>() {
+                    }.getType());
                     LogUtil.i(TAG, "requestData& isRefresh: " + isRefresh);
-                    if(isRefresh) {
+                    if (isRefresh) {
                         startIndex = data.size();
                         finishReFresh();
                         initAdapter();
@@ -189,8 +191,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         adapter.add(data);
                     }
                     LogUtil.i(TAG, "requestData& adapter size: " + adapter.getItemCount());
-                    if(data.size() <= 0 && !hasData) {
-                        if(TextUtils.isEmpty(member_id)) {
+                    if (data.size() <= 0 && !hasData) {
+                        if (TextUtils.isEmpty(member_id)) {
                             tvNoData.setVisibility(View.GONE);
                             flWallStartUp.setVisibility(View.VISIBLE);
                         } else {
@@ -204,7 +206,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         tvNoData.setVisibility(View.GONE);
                     }
                     loading = false;
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     reInitDataStatus();
                 } finally {
@@ -214,7 +216,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
             @Override
             public void onError(Exception e) {
-                if(isRefresh) {
+                if (isRefresh) {
                     finishReFresh();
                 }
                 loading = false;
@@ -249,15 +251,17 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
     /**
      * 显示Wall详情包括评论
-     *
-     * @param content_group_id {@link WallEntity#content_group_id}
-     * @param group_id         {@link WallEntity#group_id}
      */
     @Override
-    public void showComments(String content_group_id, String group_id) {
-        Intent intent = new Intent(getActivity(), WallCommentActivity.class);
-        intent.putExtra("content_group_id", content_group_id);
-        intent.putExtra("group_id", group_id);
+    public void showComments(WallEntity wallEntity) {
+        Intent intent;
+        if (MainActivity.getUser().getUser_id().equals(wallEntity.getUser_id())) {
+            intent = new Intent(getActivity(), DiaryPhotoEntity.class);
+        } else {
+            intent = new Intent(getActivity(), WallCommentActivity.class);
+        }
+        intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
+        intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
         startActivityForResult(intent, Constant.ACTION_COMMENT_WALL);
     }
 
@@ -271,8 +275,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     public void showMembers(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_USER);
-        intent.putExtra("content_group_id", content_group_id);
-        intent.putExtra("group_id", group_id);
+        intent.putExtra(Constant.CONTENT_GROUP_ID, content_group_id);
+        intent.putExtra(Constant.GROUP_ID, group_id);
         startActivity(intent);
     }
 
@@ -286,8 +290,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     public void showGroups(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_GROUP);
-        intent.putExtra("content_group_id", content_group_id);
-        intent.putExtra("group_id", group_id);
+        intent.putExtra(Constant.CONTENT_GROUP_ID, content_group_id);
+        intent.putExtra(Constant.GROUP_ID, group_id);
         startActivity(intent);
     }
 
@@ -348,7 +352,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 removeAlertDialog.dismiss();
             }
         });
-        if(!removeAlertDialog.isShowing()) {
+        if (!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
 
@@ -374,13 +378,13 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
-        if(resultCode == Activity.RESULT_OK) {
-            switch(requestCode) {
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
                 case Constant.ACTION_CREATE_WALL:
                     //wait a mement for the pic handle on server
                     try {
                         Thread.sleep(2000);
-                    } catch(InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 case Constant.ACTION_COMMENT_WALL:

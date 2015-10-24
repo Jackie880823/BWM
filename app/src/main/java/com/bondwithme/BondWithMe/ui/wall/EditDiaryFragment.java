@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
@@ -40,7 +41,11 @@ import com.bondwithme.BondWithMe.adapter.ImagesRecyclerViewAdapter;
 import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
 import com.bondwithme.BondWithMe.entity.MediaData;
+import com.bondwithme.BondWithMe.entity.PushedPhotoEntity;
+import com.bondwithme.BondWithMe.entity.PutWallEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
+import com.bondwithme.BondWithMe.entity.WallEntity;
+import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.ImagesRecyclerListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
@@ -57,6 +62,7 @@ import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
+import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.WallEditView;
@@ -91,6 +97,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static final String TAG = EditDiaryFragment.class.getSimpleName();
 
     private static final String POST_WALL = TAG + "_POST_WALL";
+    private static final String PUT_WALL = TAG + "_PUT_WALL";
     private static final String UPLOAD_PIC = TAG + "_UPLOAD_PIC";
 
     public static final String PREFERENCE_NAME = "SAVE_DRAFT";
@@ -120,16 +127,24 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     public final static String PATH_PREFIX = "feeling";
     private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
+    private static final String GET_DETAIL = TAG + "_GET_DETAIL";
 
     /**
      * 保存草稿的首选项
      */
-    public static SharedPreferences draftPreferences;
+    private static SharedPreferences draftPreferences;
+    private HttpTools mHttpTools;
+    private WallEntity wall;
 
     public static EditDiaryFragment newInstance(String... params) {
 
-        return createInstance(new EditDiaryFragment());
+        return createInstance(new EditDiaryFragment(), params);
     }
+
+    private boolean isEdit = false;
+
+    private String contentGroupId;
+    private String groupId;
 
     private double latitude;
     private double longitude;
@@ -140,11 +155,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     /**
      * TAG的用户列表
      */
-    public List<UserEntity> at_members_data = new ArrayList<>();
+    private List<UserEntity> at_members_data = new ArrayList<>();
     /**
      * TAG的组群列表
      */
-    public List<GroupEntity> at_groups_data = new ArrayList<>();
+    private List<GroupEntity> at_groups_data = new ArrayList<>();
 
     private String loc_type;
 
@@ -152,7 +167,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 存放图片Uri列表
      */
     private List<Uri> imageUris = new ArrayList<>();
-    private ArrayList<DiaryPhotoEntity> photoEntities = new ArrayList<>();
+    private ArrayList<PushedPhotoEntity> photoEntities = new ArrayList<>();
+    private ArrayList<DiaryPhotoEntity> locaEntities = new ArrayList<>();
+    private List<String> deletePhoto = new ArrayList<>();
 
     private ImagesRecyclerViewAdapter mAdapter;
 
@@ -243,6 +260,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static final int HIDE_PROGRESS = 12;
     private static final int ACTION_FAILED = 13;
     private static final int ACTION_SUCCEED = 14;
+    private static final int GET_WALL_SUCCEED = 15;
 
     Handler mHandler = new Handler() {
         @Override
@@ -253,8 +271,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     sendEmptyMessage(HIDE_PROGRESS);
                     break;
                 case ACTION_SUCCEED:
-                    SharedPreferences.Editor editor = draftPreferences.edit();
-                    editor.clear().apply();
+                    if (!isEdit) {
+                        SharedPreferences.Editor editor = draftPreferences.edit();
+                        editor.clear().apply();
+                    }
+
                     getParentActivity().setResult(Activity.RESULT_OK);
 //                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                     if (getActivity() != null) {
@@ -268,7 +289,151 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 case HIDE_PROGRESS:
                     rlProgress.setVisibility(View.GONE);
                     break;
+                case GET_WALL_SUCCEED:
+                    // 得到纬度
+                    String strLatitude = wall.getLoc_latitude();
+                    if (!TextUtils.isEmpty(strLatitude)) {
+                        latitude = Double.valueOf(strLatitude);
+                    }
+                    // 得到经度
+                    String strLongitude = wall.getLoc_longitude();
+                    if (!TextUtils.isEmpty(strLongitude)) {
+                        longitude = Double.valueOf(strLatitude);
+                    }
+                    loc_type = wall.getLoc_type();
+                    // 地名
+                    String locName = wall.getLoc_name();
+                    tvLocationDesc.setText(locName);
+
+                    // AT 用户列表
+                    at_members_data = wall.getTag_member();
+                    if (at_members_data != null && at_members_data.size() > 0) {
+                        wevContent.setOldMemberText(String.format(WallUtil.AT_MEMBER, at_members_data.size()));
+                    }
+                    // AT 群组列表
+                    at_groups_data = wall.getTag_group();
+                    if (at_groups_data != null && at_groups_data.size() > 0) {
+                        wevContent.setOldGroupText(String.format(WallUtil.AT_GROUPS, at_groups_data.size()));
+                    }
+                    // 设置描述显示
+                    wevContent.setText(wall.getText_description());
+                    changeAtDesc(true);
+
+                    String feel = wall.getDofeel_code();
+                    if (!TextUtils.isEmpty(feel)) {
+                        int charIndex = feel.lastIndexOf("_");
+                        String name = feel.substring(charIndex + 1);
+                        checkItemIndex = fileNames.indexOf(name);
+                        selectFeelingPath = String.format(FEEL_ICON_NAME, name);
+                        LogUtil.d(TAG, "path: " + selectFeelingPath);
+                        try {
+                            iv_feeling.setVisibility(View.VISIBLE);
+                            iv_feeling.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(selectFeelingPath)));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    String videoName = wall.getVideo_filename();
+                    if (TextUtils.isEmpty(videoName)) {
+                        mAdapter.setIsPhoto(true);
+                        // 检测网络上的图片
+                        int photoCount = Integer.valueOf(wall.getPhoto_count());
+                        LogUtil.d(TAG, "GET_WALL_SUCCEED photoCount = " + photoCount);
+                        if (photoCount > 0) {
+                            Map<String, String> condition = new HashMap<>();
+                            condition.put("content_id", wall.getContent_id());
+                            Map<String, String> params = new HashMap<>();
+                            params.put("condition", UrlUtil.mapToJsonstring(condition));
+                            String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
+                            mAdapter.setRequest_url(url);
+                        }
+                    } else {
+                        mAdapter.setIsPhoto(false);
+                    }
+                    break;
             }
+        }
+    };
+
+    HttpCallback callback = new HttpCallback() {
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onFinish() {
+
+        }
+
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+        @Override
+        public void onResult(String response) {
+            Log.i(TAG, "submitWall& #onResult response: " + response);
+            if (isEdit) {
+                mHandler.sendEmptyMessage(ACTION_SUCCEED);
+                return;
+            }
+            try {
+                JSONObject obj = new JSONObject(response);
+                if ("1".equals(obj.getString("resultStatus")) && !TextUtils.isEmpty(obj.getString("contentID"))) {
+                    String contentId = obj.getString("contentID");
+                    if (photoEntities.isEmpty()) {
+                        mHandler.sendEmptyMessage(ACTION_SUCCEED);
+                    } else {
+                        int count = photoEntities.size();
+                        boolean multiple = (count <= 0);
+                        tasks = new ArrayList<>();
+                        for (int index = 0; index < count; index++) {
+                            PushedPhotoEntity photoEntity = photoEntities.get(index);
+                            photoEntity.setPhoto_caption(getPhotoCaptionByPositio(index + 1));
+                            if (photoEntity instanceof DiaryPhotoEntity) {
+                                if (index == count - 1) {
+                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
+                                    tasks.add(task);
+                                    //for not work in down 11
+                                    if (SDKUtil.IS_HONEYCOMB) {
+                                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (DiaryPhotoEntity) photoEntity);
+                                    } else {
+                                        task.execute((DiaryPhotoEntity) photoEntity);
+                                    }
+                                } else {
+                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, false);
+                                    tasks.add(task);
+                                    //for not work in down 11
+                                    if (SDKUtil.IS_HONEYCOMB) {
+                                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (DiaryPhotoEntity) photoEntity);
+                                    } else {
+                                        task.execute((DiaryPhotoEntity) photoEntity);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    mHandler.sendEmptyMessage(ACTION_FAILED);
+                }
+            } catch (Throwable t) {
+                t.printStackTrace();
+                mHandler.sendEmptyMessage(ACTION_FAILED);
+            }
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+            mHandler.sendEmptyMessage(ACTION_FAILED);
+        }
+
+        @Override
+        public void onCancelled() {
+
+        }
+
+        @Override
+        public void onLoading(long count, long current) {
+
         }
     };
 
@@ -279,10 +444,22 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     @Override
     public void initView() {
-        recoverList();
+        try {
+            contentGroupId = getArguments().getString(ARG_PARAM_PREFIX + "0");
+            groupId = getArguments().getString(ARG_PARAM_PREFIX + "1");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mHttpTools = new HttpTools(getContext());
+        isEdit = !TextUtils.isEmpty(contentGroupId);
+        if (!isEdit) {
+            recoverList();
+        }
+
         gson = new Gson();
 
         rlProgress = getViewById(R.id.rl_progress);
+
 
         rvImages = getViewById(R.id.rcv_post_photos);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -319,11 +496,14 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             }
 
             @Override
-            public void deletePhoto(int position) {
+            public void deletePhoto(PushedPhotoEntity photo) {
                 LogUtil.d(TAG, "deletePhoto");
-                if (position < imageUris.size()) {
-                    imageUris.remove(position);
+                if (photo instanceof DiaryPhotoEntity) {
+                    imageUris.remove(((DiaryPhotoEntity) photo).getUri());
+                } else {
+                    deletePhoto.add(photo.getPhoto_id());
                 }
+
             }
 
             @Override
@@ -365,6 +545,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         previewVideoView.findViewById(R.id.delete_video_view).setOnClickListener(this);
         previewVideoView.findViewById(R.id.go_to_preview_video_iv).setOnClickListener(this);
     }
+
 
     /**
      * 清空选择的视频和显示的UI
@@ -492,7 +673,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     imageUris.add(uri);
                     DiaryPhotoEntity diaryPhotoEntity = new DiaryPhotoEntity();
                     diaryPhotoEntity.setUri(uri);
-                    diaryPhotoEntity.setPhotoCaption(strCaption);
+                    diaryPhotoEntity.setPhoto_caption(strCaption);
                     photoEntities.add(diaryPhotoEntity);
                 }
             }
@@ -527,7 +708,51 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     @Override
     public void requestData() {
+        if (isEdit) {
 
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constant.CONTENT_GROUP_ID, contentGroupId);
+            params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
+
+
+            mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, new HttpCallback() {
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onFinish() {
+                    if (wall == null) {
+                        getParentActivity().finish();
+                    } else {
+                        rlProgress.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onResult(String response) {
+                    LogUtil.i(TAG, "request& onResult# response: " + response);
+                    wall = new Gson().fromJson(response, WallEntity.class);
+                    mHandler.sendEmptyMessage(GET_WALL_SUCCEED);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                    getParentActivity().finish();
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -565,12 +790,14 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         SharedPreferences.Editor editor = draftPreferences.edit();
         if (!photoEntities.isEmpty()) {
             int i = 0;
-            for (DiaryPhotoEntity entity : photoEntities) {
-                editor.putString(PREFERENCE_KEY_PIC_CONTENT + i, entity.getUri().toString());
-                editor.putString(PREFERENCE_KEY_PIC_CAPTION + i, getPhotoCaptionByPositio(i + 1));
-                LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CONTENT + i + ": " + entity.getUri().toString());
-                LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CAPTION + i + ": " + entity.getPhotoCaption());
-                i++;
+            for (PushedPhotoEntity entity : photoEntities) {
+                if (entity instanceof DiaryPhotoEntity) {
+                    editor.putString(PREFERENCE_KEY_PIC_CONTENT + i, ((DiaryPhotoEntity) entity).getUri().toString());
+                    editor.putString(PREFERENCE_KEY_PIC_CAPTION + i, getPhotoCaptionByPositio(i + 1));
+                    LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CONTENT + i + ": " + ((DiaryPhotoEntity) entity).getUri().toString());
+                    LogUtil.i(TAG, "saveDraft& " + PREFERENCE_KEY_PIC_CAPTION + i + ": " + entity.getPhoto_caption());
+                    i++;
+                }
             }
             editor.putInt(PREFERENCE_KEY_PIC_COUNT, i);
         } else if (!Uri.EMPTY.equals(videoUri)) {
@@ -664,8 +891,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                             ArrayList<Uri> pickUris;
                             pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
                             imageUris.clear();
-                            addDataAndNotify(pickUris);
                             imageUris.addAll(pickUris);
+                            addDataAndNotify(pickUris);
                         }
                     }
                     break;
@@ -678,13 +905,15 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
     private void addDataAndNotify(ArrayList<Uri> pickUris) {
-        photoEntities.clear();
+        photoEntities.removeAll(locaEntities);
+        locaEntities.clear();
         for (Uri uri : pickUris) {
             LogUtil.i(TAG, "addDataAndNotify& add uri: " + uri.toString());
             DiaryPhotoEntity entity = new DiaryPhotoEntity();
             entity.setUri(uri);
-            photoEntities.add(entity);
+            locaEntities.add(entity);
         }
+        photoEntities.addAll(locaEntities);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -887,6 +1116,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 上传日记
      */
     public void submitWall() {
+        if (isEdit) {
+            putWall();
+            return;
+        }
+
         String text_content = wevContent.getRelText();
 
         if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)) {
@@ -912,16 +1146,16 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
 
 
-        HashMap<String, Object> params = new HashMap<>();
-        params.put("content_creator_id", MainActivity.getUser().getUser_id());
-        params.put("content_type", "post");
-        params.put("text_description", text_content);
-        params.put("loc_latitude", latitudeDesc);
-        params.put("loc_longitude", longitudeDesc);
-        params.put("loc_name", locationDesc);
-        params.put("loc_caption", "");
-        params.put("sticker_group_path", "");
-        params.put("loc_type", loc_type);
+        Map<String, Object> params = new HashMap<>();
+        params.put(Constant.PARAM_CONTENT_CREATOR_ID, MainActivity.getUser().getUser_id());
+        params.put(Constant.PARAM_CONTENT_TYPE, "post");
+        params.put(Constant.PARAM_TEXT_DESCRIPTION, text_content);
+        params.put(Constant.PARAM_LOC_LATITUDE, latitudeDesc);
+        params.put(Constant.PARAM_LOC_LONGITUDE, longitudeDesc);
+        params.put(Constant.PARAM_LOC_NAME, locationDesc);
+        params.put(Constant.PARAM_LOC_CAPTION, "");
+        params.put(Constant.PARAM_STICKER_GROUP_PATH, "");
+        params.put(Constant.PARAM_LOC_TYPE, loc_type);
 
 
         if (!Uri.EMPTY.equals(videoUri)) {
@@ -964,81 +1198,78 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         params.put("tag_group", gson.toJson(setGetGroupIds(at_groups_data)));
         params.put("tag_member", gson.toJson(setGetMembersIds(at_members_data)));
+        String url;
+        url = Constant.API_WALL_TEXT_POST;
+        mHttpTools.upload(url, params, POST_WALL, callback);
 
-        new HttpTools(App.getContextInstance()).upload(Constant.API_WALL_TEXT_POST, params, POST_WALL, new HttpCallback() {
-            @Override
-            public void onStart() {
+    }
 
+    /**
+     * 上传日记
+     */
+    public void putWall() {
+        String text_content = wevContent.getRelText();
+
+        if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)) {
+            // 没文字、没图片、没视频不能上传日记
+            MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
+            return;
+        }
+
+        mHandler.sendEmptyMessage(SHOW_PROGRESS);
+
+        String locationDesc = tvLocationDesc.getText().toString();
+        String latitudeDesc;
+        String longitudeDesc;
+
+        if (!TextUtils.isEmpty(locationDesc)) {
+            locationDesc = tvLocationDesc.getText().toString();
+            latitudeDesc = "" + latitude;
+            longitudeDesc = "" + longitude;
+        } else {
+            locationDesc = "";
+            latitudeDesc = "";
+            longitudeDesc = "";
+        }
+
+
+        PutWallEntity entity = new PutWallEntity();
+        entity.setNew_photo("0");
+        entity.setUser_id(MainActivity.getUser().getUser_id());
+        entity.setText_description(text_content);
+        entity.setLoc_latitude(latitudeDesc);
+        entity.setLoc_longitude(longitudeDesc);
+        entity.setLoc_name(locationDesc);
+        entity.setLoc_type(loc_type);
+        entity.setDelete_photo(deletePhoto);
+        entity.setTag_group(setGetGroupIds(at_groups_data));
+        entity.setTag_member(setGetMembersIds(at_members_data));
+
+        if (!Uri.EMPTY.equals(videoUri)) {
+            entity.setNew_video("1");
+        }
+
+        if (!locaEntities.isEmpty()) {
+            entity.setNew_photo("1");
+        }
+
+
+        try {
+            if (!TextUtils.isEmpty(selectFeelingPath)) {
+                StringBuilder b = new StringBuilder(selectFeelingPath);
+                int charIndex = selectFeelingPath.lastIndexOf("/");
+                b.replace(charIndex, charIndex + 1, "_");
+                entity.setDofeel_code(b.toString());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onFinish() {
-
-            }
-
-            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-            @Override
-            public void onResult(String response) {
-                Log.i(TAG, "submitWall& #onResult response: " + response);
-                try {
-                    JSONObject obj = new JSONObject(response);
-                    if ("1".equals(obj.getString("resultStatus")) && !TextUtils.isEmpty(obj.getString("contentID"))) {
-                        String contentId = obj.getString("contentID");
-                        if (photoEntities.isEmpty()) {
-                            mHandler.sendEmptyMessage(ACTION_SUCCEED);
-                        } else {
-                            int count = photoEntities.size();
-                            boolean multiple = (count <= 0);
-                            tasks = new ArrayList<>();
-                            for (int index = 0; index < count; index++) {
-                                DiaryPhotoEntity photoEntity = photoEntities.get(index);
-                                photoEntity.setPhotoCaption(getPhotoCaptionByPositio(index + 1));
-                                if (index == count - 1) {
-                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
-                                    tasks.add(task);
-                                    //for not work in down 11
-                                    if (SDKUtil.IS_HONEYCOMB) {
-                                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntities.get(index));
-                                    } else {
-                                        task.execute(photoEntities.get(index));
-                                    }
-                                } else {
-                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, false);
-                                    tasks.add(task);
-                                    //for not work in down 11
-                                    if (SDKUtil.IS_HONEYCOMB) {
-                                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntities.get(index));
-                                    } else {
-                                        task.execute(photoEntities.get(index));
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        mHandler.sendEmptyMessage(ACTION_FAILED);
-                    }
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                    mHandler.sendEmptyMessage(ACTION_FAILED);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-                mHandler.sendEmptyMessage(ACTION_FAILED);
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.url = String.format(Constant.API_UPDATE_WALL, wall.getContent_id());
+        requestInfo.jsonParam = gson.toJson(entity);
+        LogUtil.d(TAG, "params: " + requestInfo.jsonParam);
+        mHttpTools.put(requestInfo, POST_WALL, callback);
 
     }
 
@@ -1072,7 +1303,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         params.put("content_creator_id", MainActivity.getUser().getUser_id());
         params.put("content_id", contentId);
         params.put("photo_index", "" + index);
-        params.put("photo_caption", photoEntities.get(index).getPhotoCaption());
+        params.put("photo_caption", photoEntities.get(index).getPhoto_caption());
         params.put("file", f);
         params.put("multiple", multiple ? "1" : "0");
 
@@ -1153,6 +1384,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             // 图片上传务正在执行
             LogUtil.i(TAG, "backCheck& tasks size: " + tasks.size());
             return true;
+        } else if (isEdit) {
+            // 是修改正已经发表的日志，不需要保存草稿
+            LogUtil.i(TAG, "backCheck& tasks size: ");
+            return false;
         } else {
             String text_content = wevContent.getRelText();
             if (draftPreferences == null) {

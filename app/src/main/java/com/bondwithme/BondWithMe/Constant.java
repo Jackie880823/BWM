@@ -256,6 +256,8 @@ public class Constant {
 
     public static final String API_UPDATE_MISS = API_SERVER + "/bondwithme/index.php/api/miss/%s";//消除好友的miss
 
+    public static final String API_UPDATE_WALL = API_SERVER + "/bondwithme/index.php/api/updateContent/%s";//消除好友的miss
+
     //获取sticker, 4个参数. 1.user_id, 2.sticker_name, 3.sticker_path, 4.sticker_type
     public static final String API_STICKER = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fid/%s_B/fpath/%s/ftype/%s";
     public static final String Sticker_Png = ".png";
@@ -279,6 +281,19 @@ public class Constant {
      */
     public static final String EXTRA_LONGITUDE = "longitude";
 
+    // 用于网络连拉的参数
+    public static final String PARAM_USER_ID= "user_id";
+    public static final String PARAM_CONTENT_CREATOR_ID = "content_creator_id";
+    public static final String PARAM_CONTENT_TYPE = "content_type";
+    public static final String PARAM_TEXT_DESCRIPTION = "text_description";
+    public static final String PARAM_LOC_LATITUDE = "loc_latitude";
+    public static final String PARAM_LOC_LONGITUDE = "loc_longitude";
+    public static final String PARAM_LOC_NAME = "loc_name";
+    public static final String PARAM_LOC_CAPTION = "loc_caption";
+    public static final String PARAM_STICKER_GROUP_PATH = "sticker_group_path";
+    public static final String PARAM_LOC_TYPE = "loc_type";
+    public static final String PARAM_DELETE_PHOTO = "delete_photo";
+
     public static final String HAS_LOGED_IN = "has_loged_in";
     public static final String HAS_DOWNLOAD = "has_download";
 
@@ -293,6 +308,22 @@ public class Constant {
     public static final String FAIL = "Fail";
     public static final String TYPE = "type";
 
+
+    /**
+     * about wall, user extra
+     */
+    public static final String CONTENT_GROUP_ID = "content_group_id";
+    public static final String GROUP_ID = "group_id";
+    public static final String USER_ID = "user_id";
+
+    public static final String COMMENT_OWNER_ID = "comment_owner_id";
+    public static final String CONTENT_TYPE = "content_type";
+    public static final String COMMENT_CONTENT = "comment_content";
+    public static final String STICKER_GROUP_PATH = "sticker_group_path";
+    public static final String STICKER_NAME = "sticker_name";
+    public static final String STICKER_TYPE = "sticker_type";
+    public static final String FILE = "file";
+    public static final String PHOTO_FULLSIZE = "photo_fullsize";
 
     public static final String API_START_CHECK_LOG_ID = API_SERVER + "/bondwithme/index.php/api/loginID";//查询账号是否可用和获取验证码／重新获取验证码
     public static final String API_START_PHONE_CREATE_USER = API_SERVER + "/bondwithme/index.php/api/verifyUser"; //Verify code and Create User (Phone)

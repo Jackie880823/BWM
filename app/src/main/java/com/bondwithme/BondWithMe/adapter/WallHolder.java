@@ -271,7 +271,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     }
                 } else {
                     if (mViewClickListener != null) {
-                        mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
+                        mViewClickListener.showComments(wallEntity);
                     }
                 }
                 break;
