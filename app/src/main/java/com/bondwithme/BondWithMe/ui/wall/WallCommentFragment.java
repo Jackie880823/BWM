@@ -7,12 +7,16 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.internal.view.menu.MenuPopupHelper;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -41,6 +45,7 @@ import com.google.gson.reflect.TypeToken;
 import com.material.widget.CircularProgress;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -730,59 +735,107 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
      * @param content_group_id {@link WallEntity#content_group_id}
      */
     @Override
-    public void remove(final String content_group_id) {
+    public void remove(View view,final String content_group_id) {
+        /**wing add begin*/
 
-        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
-        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
+        initItemMeau(view);
+
+        /**wing add end*/
+
+//        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
+//        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, content_group_id), null);
+//                mHttpTools.put(requestInfo, POST_DELETE, new HttpCallback() {
+//                    @Override
+//                    public void onStart() {
+//                        vProgress.setVisibility(View.VISIBLE);
+//                    }
+//
+//                    @Override
+//                    public void onFinish() {
+//                        vProgress.setVisibility(View.GONE);
+//                    }
+//
+//                    @Override
+//                    public void onResult(String string) {
+////                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+//                        getParentActivity().setResult(Activity.RESULT_OK);
+//                        getParentActivity().finish();
+//                    }
+//
+//                    @Override
+//                    public void onError(Exception e) {
+//                    }
+//
+//                    @Override
+//                    public void onCancelled() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onLoading(long count, long current) {
+//
+//                    }
+//                });
+//                removeAlertDialog.dismiss();
+//            }
+//        });
+//        removeAlertDialog.setButtonCancel(getActivity().getString(R.string.cancel), new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                removeAlertDialog.dismiss();
+//            }
+//        });
+//        if(!removeAlertDialog.isShowing()) {
+//            removeAlertDialog.show();
+//        }
+
+    }
+
+    private PopupWindow popupWindow;
+    private void initItemMeau(View v){
+        PopupMenu popupMenu = new PopupMenu(getActivity(), v);
+        popupMenu.inflate(R.menu.wall_item_menu);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
-            public void onClick(View v) {
-
-                RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, content_group_id), null);
-                mHttpTools.put(requestInfo, POST_DELETE, new HttpCallback() {
-                    @Override
-                    public void onStart() {
-                        vProgress.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        vProgress.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onResult(String string) {
-//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                        getParentActivity().setResult(Activity.RESULT_OK);
-                        getParentActivity().finish();
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                    }
-
-                    @Override
-                    public void onCancelled() {
-
-                    }
-
-                    @Override
-                    public void onLoading(long count, long current) {
-
-                    }
-                });
-                removeAlertDialog.dismiss();
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.menu_item_add_photo:
+                        break;
+                    case R.id.menu_edit_this_post:
+                        break;
+                    case R.id.menu_save_all_photos:
+                        break;
+                    case R.id.menu_delete_this_post:
+                        break;
+                }
+                return true;
             }
         });
-        removeAlertDialog.setButtonCancel(getActivity().getString(R.string.cancel), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeAlertDialog.dismiss();
-            }
-        });
-        if(!removeAlertDialog.isShowing()) {
-            removeAlertDialog.show();
+
+        //使用反射，强制显示菜单图标
+        try {
+            Field field = popupMenu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+            mHelper.setForceShowIcon(true);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
         }
 
+        popupMenu.show();
+
+//        PopupWindow popupMenu = new PopupWindow(getActivity());
+//
+//        popupMenu = new PopupWindow(getActivity().getLayoutInflater().inflate(R.layout.wall_item_menu,null),
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT);
+//
+//        popupMenu.setOutsideTouchable(true);
+//        popupMenu.showAsDropDown(v,0,0);
     }
 
     /**
