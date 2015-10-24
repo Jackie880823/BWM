@@ -256,7 +256,14 @@ public class Constant {
 
     public static final String API_UPDATE_MISS = API_SERVER + "/bondwithme/index.php/api/miss/%s";//消除好友的miss
 
-    public static final String API_UPDATE_WALL = API_SERVER + "/bondwithme/index.php/api/updateContent/%s";//消除好友的miss
+    /**
+     * 编制日记
+     */
+    public static final String API_PUT_WALL = API_SERVER + "/bondwithme/index.php/api/updateContent/%s";
+    /**
+     * 照片最大号，用于在日志列表直接上传照片的时候，上传全部照片前先更新。
+     */
+    public static final String API_PUT_PHOTO_MAX = API_SERVER + "/bondwithme/index.php/api/updatePhotoMax/%s";
 
     //获取sticker, 4个参数. 1.user_id, 2.sticker_name, 3.sticker_path, 4.sticker_type
     public static final String API_STICKER = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fid/%s_B/fpath/%s/ftype/%s";
@@ -292,7 +299,7 @@ public class Constant {
     public static final String PARAM_LOC_CAPTION = "loc_caption";
     public static final String PARAM_STICKER_GROUP_PATH = "sticker_group_path";
     public static final String PARAM_LOC_TYPE = "loc_type";
-    public static final String PARAM_DELETE_PHOTO = "delete_photo";
+    public static final String PARAM_PHOTO_MAX = "photo_max";
 
     public static final String HAS_LOGED_IN = "has_loged_in";
     public static final String HAS_DOWNLOAD = "has_download";

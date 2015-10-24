@@ -7,9 +7,16 @@
     android:layout_height="match_parent">
 
     <com.android.volley.toolbox.NetworkImageView
-        android:id="@+id/iv_pic"
+        android:id="@+id/iv_pic_network"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
+        android:scaleType="centerCrop" />
+    <ImageView
+        android:id="@+id/iv_pic_normal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
         android:scaleType="centerCrop" />
 
     <ImageView

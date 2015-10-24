@@ -19,7 +19,6 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallAdapter;
-import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
@@ -256,7 +255,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     public void showComments(WallEntity wallEntity) {
         Intent intent;
         if (MainActivity.getUser().getUser_id().equals(wallEntity.getUser_id())) {
-            intent = new Intent(getActivity(), DiaryPhotoEntity.class);
+            intent = new Intent(getActivity(), NewDiaryActivity.class);
         } else {
             intent = new Intent(getActivity(), WallCommentActivity.class);
         }

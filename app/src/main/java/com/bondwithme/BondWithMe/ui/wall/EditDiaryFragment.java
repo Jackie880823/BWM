@@ -98,6 +98,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     private static final String POST_WALL = TAG + "_POST_WALL";
     private static final String PUT_WALL = TAG + "_PUT_WALL";
+    private static final String PUT_PHOTO_MAX = TAG + "_PHOTO_MAX";
     private static final String UPLOAD_PIC = TAG + "_UPLOAD_PIC";
 
     public static final String PREFERENCE_NAME = "SAVE_DRAFT";
@@ -135,12 +136,14 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static SharedPreferences draftPreferences;
     private HttpTools mHttpTools;
     private WallEntity wall;
+    private boolean lastPic;
 
     public static EditDiaryFragment newInstance(String... params) {
 
         return createInstance(new EditDiaryFragment(), params);
     }
 
+    private CallBack callBack = new CallBack();
     private boolean isEdit = false;
 
     private String contentGroupId;
@@ -267,7 +270,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ACTION_FAILED:
-//                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_failed);
+                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_failed);
                     sendEmptyMessage(HIDE_PROGRESS);
                     break;
                 case ACTION_SUCCEED:
@@ -356,86 +359,85 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
     };
 
-    HttpCallback callback = new HttpCallback() {
-        @Override
-        public void onStart() {
 
-        }
-
-        @Override
-        public void onFinish() {
-
-        }
-
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-        @Override
-        public void onResult(String response) {
-            Log.i(TAG, "submitWall& #onResult response: " + response);
-            if (isEdit) {
-                mHandler.sendEmptyMessage(ACTION_SUCCEED);
-                return;
+    /**
+     * 更新日志成功结果处理
+     */
+    private void resultByPutWall() {
+        if (!locaEntities.isEmpty()) {
+            int max;
+            String maxPhoto = wall.getPhoto_max();
+            if (TextUtils.isEmpty(maxPhoto)) {
+                max = locaEntities.size();
+            } else {
+                max = Integer.valueOf(maxPhoto) - deletePhoto.size() + locaEntities.size();
             }
-            try {
-                JSONObject obj = new JSONObject(response);
-                if ("1".equals(obj.getString("resultStatus")) && !TextUtils.isEmpty(obj.getString("contentID"))) {
-                    String contentId = obj.getString("contentID");
-                    if (photoEntities.isEmpty()) {
-                        mHandler.sendEmptyMessage(ACTION_SUCCEED);
-                    } else {
-                        int count = photoEntities.size();
-                        boolean multiple = (count <= 0);
-                        tasks = new ArrayList<>();
-                        for (int index = 0; index < count; index++) {
-                            PushedPhotoEntity photoEntity = photoEntities.get(index);
-                            photoEntity.setPhoto_caption(getPhotoCaptionByPositio(index + 1));
-                            if (photoEntity instanceof DiaryPhotoEntity) {
-                                if (index == count - 1) {
-                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
-                                    tasks.add(task);
-                                    //for not work in down 11
-                                    if (SDKUtil.IS_HONEYCOMB) {
-                                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (DiaryPhotoEntity) photoEntity);
-                                    } else {
-                                        task.execute((DiaryPhotoEntity) photoEntity);
-                                    }
-                                } else {
-                                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, false);
-                                    tasks.add(task);
-                                    //for not work in down 11
-                                    if (SDKUtil.IS_HONEYCOMB) {
-                                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (DiaryPhotoEntity) photoEntity);
-                                    } else {
-                                        task.execute((DiaryPhotoEntity) photoEntity);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    mHandler.sendEmptyMessage(ACTION_FAILED);
-                }
-            } catch (Throwable t) {
-                t.printStackTrace();
+            Map<String, String> params = new HashMap<>();
+            params.put(Constant.PARAM_PHOTO_MAX, String.valueOf(max));
+            RequestInfo requestInfo = new RequestInfo();
+            requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+            requestInfo.url = String.format(Constant.API_PUT_PHOTO_MAX, wall.getContent_id());
+            callBack.setLinkType(CallBack.LINK_TYPE_PUT_PHOTO_MAX);
+            mHttpTools.put(requestInfo, PUT_PHOTO_MAX, callBack);
+        } else if (!Uri.EMPTY.equals(videoUri)) {
+
+        } else {
+            mHandler.sendEmptyMessage(ACTION_SUCCEED);
+        }
+    }
+
+    /**
+     * 发送日志成功返回结果处理
+     *
+     * @param response
+     */
+    private void resultBySubmitWall(String response) {
+        try {
+            JSONObject obj = new JSONObject(response);
+            if ("1".equals(obj.getString("resultStatus")) && !TextUtils.isEmpty(obj.getString("contentID"))) {
+                String contentId = obj.getString("contentID");
+                submitLocaPhotos(contentId);
+            } else {
                 mHandler.sendEmptyMessage(ACTION_FAILED);
             }
-        }
-
-        @Override
-        public void onError(Exception e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
             mHandler.sendEmptyMessage(ACTION_FAILED);
         }
+    }
 
-        @Override
-        public void onCancelled() {
-
+    private void submitLocaPhotos(String contentId) {
+        if (locaEntities.isEmpty()) {
+            mHandler.sendEmptyMessage(ACTION_SUCCEED);
+        } else {
+            int count = locaEntities.size();
+            boolean multiple = (count <= 0);
+            tasks = new ArrayList<>();
+            for (int index = 0; index < count; index++) {
+                DiaryPhotoEntity photoEntity = locaEntities.get(index);
+                photoEntity.setPhoto_caption(getPhotoCaptionByPositio(index + 1));
+                if (index == count - 1) {
+                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
+                    tasks.add(task);
+                    //for not work in down 11
+                    if (SDKUtil.IS_HONEYCOMB) {
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntity);
+                    } else {
+                        task.execute(photoEntity);
+                    }
+                } else {
+                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, false);
+                    tasks.add(task);
+                    //for not work in down 11
+                    if (SDKUtil.IS_HONEYCOMB) {
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntity);
+                    } else {
+                        task.execute(photoEntity);
+                    }
+                }
+            }
         }
-
-        @Override
-        public void onLoading(long count, long current) {
-
-        }
-    };
+    }
 
     @Override
     public void setLayoutId() {
@@ -509,11 +511,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             @Override
             public void loadFinish() {
                 LogUtil.d(TAG, "loadFinish");
-                try {
-                    recoverDraft();
-                } catch (Exception e) {
-                    draftPreferences.edit().clear().apply();
-                    e.printStackTrace();
+                if (!isEdit) {
+                    try {
+                        recoverDraft();
+                    } catch (Exception e) {
+                        draftPreferences.edit().clear().apply();
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -709,49 +713,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void requestData() {
         if (isEdit) {
-
             HashMap<String, String> params = new HashMap<>();
             params.put(Constant.CONTENT_GROUP_ID, contentGroupId);
             params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
-
-
-            mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, new HttpCallback() {
-                @Override
-                public void onStart() {
-                }
-
-                @Override
-                public void onFinish() {
-                    if (wall == null) {
-                        getParentActivity().finish();
-                    } else {
-                        rlProgress.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onResult(String response) {
-                    LogUtil.i(TAG, "request& onResult# response: " + response);
-                    wall = new Gson().fromJson(response, WallEntity.class);
-                    mHandler.sendEmptyMessage(GET_WALL_SUCCEED);
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
-                    getParentActivity().finish();
-                }
-
-                @Override
-                public void onCancelled() {
-
-                }
-
-                @Override
-                public void onLoading(long count, long current) {
-
-                }
-            });
+            callBack.setLinkType(CallBack.LINK_TYPE_GET_WALL);
+            mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, callBack);
         }
     }
 
@@ -918,6 +884,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
 
+    /**
+     * 修改描述
+     *
+     * @param checkVisible
+     */
     public void changeAtDesc(boolean checkVisible) {
 
         String memberText;
@@ -1017,6 +988,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     private void goChooseMembers() {
         Intent intent = new Intent(getActivity(), InviteMemberActivity.class);
+        if (at_groups_data == null) {
+            at_groups_data = new ArrayList<>();
+        }
+
+        if (at_members_data == null) {
+            at_members_data = new ArrayList<>();
+        }
         intent.putExtra("members_data", gson.toJson(at_members_data));
         intent.putExtra("groups_data", gson.toJson(at_groups_data));
         intent.putExtra("type", 0);
@@ -1200,7 +1178,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         params.put("tag_member", gson.toJson(setGetMembersIds(at_members_data)));
         String url;
         url = Constant.API_WALL_TEXT_POST;
-        mHttpTools.upload(url, params, POST_WALL, callback);
+        callBack.setLinkType(CallBack.LINK_TYPE_SUBMIT_WALL);
+        mHttpTools.upload(url, params, POST_WALL, callBack);
 
     }
 
@@ -1266,10 +1245,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
 
         RequestInfo requestInfo = new RequestInfo();
-        requestInfo.url = String.format(Constant.API_UPDATE_WALL, wall.getContent_id());
+        requestInfo.url = String.format(Constant.API_PUT_WALL, wall.getContent_id());
         requestInfo.jsonParam = gson.toJson(entity);
         LogUtil.d(TAG, "params: " + requestInfo.jsonParam);
-        mHttpTools.put(requestInfo, POST_WALL, callback);
+        callBack.setLinkType(CallBack.LINK_TYPE_PUT_WALL);
+        mHttpTools.put(requestInfo, PUT_WALL, callBack);
 
     }
 
@@ -1291,6 +1271,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * @param lastPic
      */
     private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
+        this.lastPic = lastPic;
         File f = new File(path);
         if (!f.exists()) {
             if (lastPic) {
@@ -1306,41 +1287,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         params.put("photo_caption", photoEntities.get(index).getPhoto_caption());
         params.put("file", f);
         params.put("multiple", multiple ? "1" : "0");
-
-
-        new HttpTools(App.getContextInstance()).upload(Constant.API_WALL_PIC_POST, params, UPLOAD_PIC, new HttpCallback() {
-            @Override
-            public void onStart() {
-            }
-
-            @Override
-            public void onFinish() {
-            }
-
-            @Override
-            public void onResult(String string) {
-                if (lastPic) {
-                    mHandler.sendEmptyMessage(ACTION_SUCCEED);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                e.printStackTrace();
-                if (lastPic) {
-                    mHandler.sendEmptyMessage(ACTION_FAILED);
-                }
-            }
-
-            @Override
-            public void onCancelled() {
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
+        LogUtil.d(TAG, "submitPic: params: " + params);
+        callBack.setLinkType(CallBack.LINK_TYPE_SUBMIT_PICTURE);
+        mHttpTools.upload(Constant.API_WALL_PIC_POST, params, UPLOAD_PIC, callBack);
 
     }
 
@@ -1485,6 +1434,106 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         protected void onPostExecute(String path) {
             submitPic(path, contentId, index, multiple, lastPic);
             tasks.remove(this);
+        }
+    }
+
+    class CallBack implements HttpCallback {
+        /**
+         * 获取日志
+         */
+        public static final int LINK_TYPE_GET_WALL = 0;
+        /**
+         * 发送新的日志
+         */
+        public static final int LINK_TYPE_SUBMIT_WALL = 1;
+        public static final int LINK_TYPE_SUBMIT_PICTURE = 2;
+        /**
+         * put新的日志
+         */
+        public static final int LINK_TYPE_PUT_WALL = 3;
+
+        /**
+         * 更新照版的最大序号
+         */
+        public static final int LINK_TYPE_PUT_PHOTO_MAX = 4;
+
+        /**
+         * 当前回调标识，用于识别当前同调用类别
+         */
+        private int linkType = LINK_TYPE_GET_WALL;
+
+        public void setLinkType(int linkType) {
+            this.linkType = linkType;
+        }
+
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onFinish() {
+            switch (linkType) {
+                case LINK_TYPE_GET_WALL:
+                    if (wall == null) {
+                        getParentActivity().finish();
+                    } else {
+                        rlProgress.setVisibility(View.GONE);
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onResult(String string) {
+            LogUtil.i(TAG, "onResult# typy: " + linkType +" response: " + string);
+            switch (linkType) {
+                case LINK_TYPE_GET_WALL:
+                    wall = new Gson().fromJson(string, WallEntity.class);
+                    mHandler.sendEmptyMessage(GET_WALL_SUCCEED);
+                    break;
+                case LINK_TYPE_SUBMIT_WALL:
+                    resultBySubmitWall(string);
+                    break;
+                case LINK_TYPE_SUBMIT_PICTURE:
+                    if (lastPic) {
+                        mHandler.sendEmptyMessage(ACTION_SUCCEED);
+                    }
+                    break;
+                case LINK_TYPE_PUT_WALL:
+                    resultByPutWall();
+                    break;
+                case LINK_TYPE_PUT_PHOTO_MAX:
+                    if (wall != null) {
+                        submitLocaPhotos(wall.getContent_id());
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+            switch (linkType) {
+                case LINK_TYPE_GET_WALL:
+                    getParentActivity().finish();
+                    break;
+                case LINK_TYPE_SUBMIT_PICTURE:
+                    if (lastPic) {
+                        mHandler.sendEmptyMessage(ACTION_FAILED);
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onCancelled() {
+
+        }
+
+        @Override
+        public void onLoading(long count, long current) {
+
         }
     }
 }

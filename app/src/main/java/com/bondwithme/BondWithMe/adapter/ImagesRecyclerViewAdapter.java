@@ -157,7 +157,9 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
                     LogUtil.d(TAG, "onBindViewHolder& DiaryPhotoEntity uri: " + uri.toString());
                     imageHolder.setImage(uri);
                 } else if (entity instanceof PhotoEntity) {
-                    VolleyUtil.initNetworkImageView(context, imageHolder.ivDisplay, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity)entity).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                    imageHolder.ivDisplay.setVisibility(View.GONE);
+                    imageHolder.networkImageView.setVisibility(View.VISIBLE);
+                    VolleyUtil.initNetworkImageView(context, imageHolder.networkImageView, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity)entity).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
                 }
                 imageHolder.setPosition(position);
             }
@@ -273,14 +275,16 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
     public class ImageHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivDelete;
-        public NetworkImageView ivDisplay;
+        public NetworkImageView networkImageView;
+        public ImageView ivDisplay;
         public WallEditView wevContent;
         private int position;
 
         public ImageHolder(View itemView) {
             super(itemView);
             ivDelete = (ImageView) itemView.findViewById(R.id.pic_delete);
-            ivDisplay = (NetworkImageView) itemView.findViewById(R.id.iv_pic);
+            networkImageView = (NetworkImageView) itemView.findViewById(R.id.iv_pic_network);
+            ivDisplay = (ImageView) itemView.findViewById(R.id.iv_pic_normal);
             wevContent = (WallEditView) itemView.findViewById(R.id.diary_edit_content);
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -303,6 +307,8 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
         }
 
         public void setImage(Uri uri) {
+            ivDisplay.setVisibility(View.VISIBLE);
+            networkImageView.setVisibility(View.GONE);
             ImageLoader.getInstance().displayImage(uri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
         }
     }
