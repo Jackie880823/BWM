@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.adapter;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
@@ -43,9 +45,12 @@ import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.HorizontalProgressBarWithNumber;
+import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.material.widget.CircularProgress;
+import com.material.widget.Dialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -335,7 +340,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                 stickerGroupPath = stickerGroupPath.replace("/", "");
             }
-            String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.gif";
+//            String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator +"B"+ File.separator+ msgEntity.getSticker_name() + ".gif";
+            String gifFilePath = FileUtil.getBigStickerPath(context, stickerGroupPath, msgEntity.getSticker_name(), msgEntity.getSticker_type());
             try {
                 //GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
                 Log.i("stickerPath", gifFilePath);
@@ -365,7 +371,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
                 }
-                String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.png";
+//                String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator +"B"+ File.separator+ msgEntity.getSticker_name() + ".png";
+                String pngFileName = FileUtil.getBigStickerPath(context, stickerGroupPath, msgEntity.getSticker_name(), msgEntity.getSticker_type());
                 try {
                     //拼接大图路径
                     //InputStream is = context.getAssets().open(pngFileName);//得到数据流
@@ -544,6 +551,60 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             if (msgFail != null) {
                 msgFail.setOnClickListener(this);
             }
+
+            if (null != messageText) {
+                messageText.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        setOnLongClickListener(getAdapterPosition());
+                        return true;
+                    }
+                });
+            }
+            if (null != networkImageView) {
+                networkImageView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        setOnLongClickListener(getAdapterPosition());
+                        return true;
+                    }
+                });
+            }
+            if (null != gifImageView) {
+                gifImageView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        setOnLongClickListener(getAdapterPosition());
+                        return true;
+                    }
+                });
+            }
+            if (null != pngImageView) {
+                pngImageView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        setOnLongClickListener(getAdapterPosition());
+                        return true;
+                    }
+                });
+            }
+            if (null != pic_linear) {
+                pic_linear.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        setOnLongClickListener(getAdapterPosition());
+                        return true;
+                    }
+                });
+            }
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    setOnLongClickListener(getAdapterPosition());
+                    return false;
+                }
+            });
         }
 
         //点击事件
@@ -693,6 +754,105 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     break;
             }
         }
+    }
+
+    public void setOnLongClickListener(final int position) {
+        VHItem holder = (VHItem) recyclerView.findViewHolderForAdapterPosition(position);
+        if (holder == null) {
+            return;
+        }
+        if (myList != null && position > myList.size()) {
+            return;
+        }
+        final MsgEntity msgEntity = myList.get(position);
+        boolean showCopy = false;
+        if (null != msgEntity.getText_id()) {
+            showCopy = true;
+        }
+        View selectIntention = LayoutInflater.from(context).inflate(R.layout.dialog_message_delete, null);
+        final Dialog showSelectDialog = new MyDialog(context, null, selectIntention);
+        TextView copyText = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
+        TextView deleteText = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
+        TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
+        View copyLinear = selectIntention.findViewById(R.id.message_copy_linear);
+        copyText.setText(R.string.text_message_copy);
+        deleteText.setText(context.getString(R.string.text_delete));
+        if (!showCopy) {
+            copyLinear.setVisibility(View.GONE);
+        } else {
+            copyLinear.setVisibility(View.VISIBLE);
+        }
+        copyText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                String content = msgEntity.getText_description();
+                if (SDKUtil.IS_HONEYCOMB) {
+                    android.content.ClipboardManager c = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    c.setPrimaryClip(ClipData.newPlainText("", content));
+                } else {
+                    android.text.ClipboardManager c = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                    c.setText(content);
+                }
+            }
+        });
+
+        deleteText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+                RequestInfo requestInfo = new RequestInfo();
+                requestInfo.headers = HttpTools.getHeaders();
+                requestInfo.url = String.format(Constant.API_MESSAGE_DELETE, msgEntity.getContent_group_id());
+                new HttpTools(context).put(requestInfo, "MessageChatActivity", new HttpCallback() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onResult(String string) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(string);
+                            if (("Server.DeleteSuccess").equals(jsonObject.optString("response_message"))) {
+                                messageChatActivity.getNewMsg();
+//                                myList.remove(position);
+//                                notifyItemRemoved(position);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+
+                    @Override
+                    public void onCancelled() {
+
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+            }
+        });
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectDialog.dismiss();
+            }
+        });
+        showSelectDialog.show();
     }
 
     public SendFailMsgClick sendFailMsgClick;

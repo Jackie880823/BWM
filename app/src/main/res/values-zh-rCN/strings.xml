@@ -595,6 +595,8 @@
     <string name="notification_action_diary_love_not_owner">%1$s赞你的%2$s日记</string>
     <string name="notification_action_diary_loveComment">%1$s赞你的评论.</string>
     <string name="notification_action_diary_tag">%1$s在日记里艾特了你</string>
+    <string name="notification_action_diary_add_photo">%1$s在日记里添加了图片</string>
+    <string name="notification_action_diary_add_video">%1$s在日记里发了视频</string>
 
     <string name="notification_action_miss_missyou">%1$s想你了</string>
     <string name="text_audio_release">松手发送</string>
@@ -618,10 +620,18 @@
     <string name="text_take_photos">拍摄照片</string>
     <string name="text_record_audio_too_short">录音时间太短</string>
     <string name="text_hold_and_speak">按住说话</string>
-    <string name="show_vidoe_limit">只显示大小不超过20M的视频</string>
+    <string name="show_video_limit">只显示大小不超过20M的视频</string>
     <string name="open_gps_title">需要提高位置信息的精确度</string>
     <string name="use_gps_hint">请使用GPS确定位置</string>
-    <string name="text_collapse">collapse</string>
     <string name="text_tag">Tag</string>
     <string name="text_feeling">Feeling</string>
+    <string name="text_collapse">收起</string>
+    <string name="text_message_copy">复制</string>
+
+    <string name="title_rewards">奖励</string>
+    <string name="text_no_rewards">暂无奖励</string>
+    <string name="text_more">全文</string>
+    <string name="text_close_update_sticker">关闭</string>
+    <string name="text_sticker_update_now">立即更新</string>
+    <string name="text_sticker_update_detail">已推出新版本表情商店</string>
 </resources>

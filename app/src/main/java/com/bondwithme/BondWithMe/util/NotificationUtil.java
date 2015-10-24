@@ -415,12 +415,10 @@ public class NotificationUtil {
 
         PendingIntent contentIntent = null;
         Intent intent = getFowwordIntent(context, msg, isGCM);
-        LogUtil.d("","getNotification===========");
         //应用在前台不发通知,不写在最前面是因为需要刷新红点(getFowwordIntent里)
         if(App.isForeground()) {
             return null;
         }
-        LogUtil.d("","2getNotification===========");
 
         if (intent != null) {
             intent.putExtra(BaseActivity.IS_OUTSIDE_INTENT, true);
@@ -453,6 +451,10 @@ public class NotificationUtil {
         return notification;
     }
 
+    /**
+     * 清除手机上的通知
+     * @param context
+     */
     public static void clearNotification(Context context) {
         getNotivficationManager(context).cancelAll();
         JPushInterface.clearAllNotifications(context);

@@ -51,6 +51,7 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.RoundProgressBarWidthNumber;
@@ -366,6 +367,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
     }
 
+    public void getNewMsg() {
+        getMsg(indexPage * INITIAL_LIMIT, 0, GET_TIMER_MESSAGE);
+    }
 
 //    @Override
 //    public void finish() {
@@ -679,9 +683,17 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         }
         // 开启一个Fragment事务
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
-        mainFragment.setPicClickListener(this);
-        transaction.replace(R.id.sticker_message_fragment, mainFragment);
+        String filePath = FileUtil.getSaveRootPath(mContext, false).getAbsolutePath() + File.separator + "Sticker";
+        File file = new File(filePath);
+        if (file.exists()) {
+            StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
+            mainFragment.setPicClickListener(this);
+            transaction.replace(R.id.sticker_message_fragment, mainFragment);
+        } else {
+            StickerMainNewFragment mainFragment = new StickerMainNewFragment();//selectStickerName, MessageChatActivity.this, groupId);
+            mainFragment.setPicClickListener(this);
+            transaction.replace(R.id.sticker_message_fragment, mainFragment);
+        }
         transaction.addToBackStack(null);
         transaction.commitAllowingStateLoss();
     }

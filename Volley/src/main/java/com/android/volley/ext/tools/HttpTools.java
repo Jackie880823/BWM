@@ -323,7 +323,9 @@ public class HttpTools {
                 return headers;
             }
         };
-        request.setResume(isResume);
+        //暂时信用断点续传，因为不确定服务器是否支持
+        request.setResume(false);
+//        request.setResume(isResume);
         request.setTarget(target);
         if (httpResult != null) {
             httpResult.onStart();

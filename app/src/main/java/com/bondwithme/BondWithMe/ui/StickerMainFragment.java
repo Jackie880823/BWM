@@ -3,6 +3,8 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
@@ -32,7 +34,9 @@ import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.util.AnimatedGifDrawable;
+import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.AudioPlayUtils;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.widget.NoScrollGridView;
 
 import java.io.File;
@@ -51,7 +55,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
     private Context mContext;
     private ViewPager viewPager;
     private RecyclerView recyclerView;
-    private LinearLayout layout;
+    private View layout;
     private LinearLayoutManager linearLayoutManager;
     private StickerHorizontalRecyclerAdapter recyclerAdapter;
     private LinkedHashMap<String, List<String>> STICKER_LIST_MAP = new LinkedHashMap<>();
@@ -65,6 +69,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
     private LinkedHashMap<Integer, StickerGridViewAdapter> adapterMap = new LinkedHashMap<>();
     private int lastPage;
     private PopupWindow popupWindow;
+    private ImageView versionIv;
 
     private void setPage(String clickName, int position) {
         mNumLayout.removeAllViews();
@@ -109,15 +114,15 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
             super.run();
             List<String> stickerList = LocalStickerInfoDao.getInstance(mContext).queryAllSticker();
             for (String string : stickerList) {
-                if ("stickers".equals(MainActivity.STICKERS_NAME)) {
-                    MainActivity.STICKERS_NAME = new LocalStickerInfoDao(mContext).getSavePath();
-                }
-                String path = MainActivity.STICKERS_NAME + File.separator + string;
+                String path = FileUtil.getSaveRootPath(mContext, false).getAbsolutePath() + File.separator + "Sticker" + File.separator + string;
                 File file = new File(path);
                 File[] files = file.listFiles();
                 if (null != files && files.length > 0) {
                     List<String> list = new ArrayList<>();
                     for (File file1 : files) {
+                        if (file1.isDirectory()) {
+                            return;
+                        }
                         String filePath = file1.getAbsolutePath();
                         if ((filePath.substring(0, filePath.lastIndexOf("."))).endsWith("S")) {
                             list.add(filePath);
@@ -137,6 +142,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
         recyclerView = getViewById(R.id.sticker_recyclerView);
         layout = getViewById(R.id.sticker_setting_linear);
         mNumLayout = getViewById(R.id.fragment_sticker_linear);
+        versionIv = getViewById(R.id.new_sticker_version);
         linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -159,6 +165,17 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                 return false;
             }
         });
+        hasNewStickerVersion();
+    }
+
+    private void hasNewStickerVersion() {
+        String filePath = FileUtil.getSaveRootPath(mContext, false).getAbsolutePath() + File.separator + "Sticker";
+        File file = new File(filePath);
+        if (file.exists()) {
+            versionIv.setVisibility(View.VISIBLE);
+        } else {
+            versionIv.setVisibility(View.GONE);
+        }
     }
 
     Handler handler = new Handler(new Handler.Callback() {

@@ -127,7 +127,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
      * @return
      */
     public static String getLocalDateString4DefaultFromUTC(String dateString) {
-        return formatDate2Default(new Date(dateString2Timestamp(dateString).getTime() + TimeZone.getDefault().getRawOffset()));
+        return formatDate2Default(new Date(dateString2Timestamp(dateString).getTime() + getZoneTime()));
     }
 
     /**
@@ -140,16 +140,32 @@ public class MyDateUtils extends android.text.format.DateUtils {
     public static String getLocalDateStringFromUTC(Context context, String dateString) {
         if (TextUtils.isEmpty(dateString))
             return null;
-        return formatTimeStampString(context, dateString2Timestamp(dateString).getTime() + TimeZone.getDefault().getRawOffset(), false);
+        return formatTimeStampString(context, dateString2Timestamp(dateString).getTime() + getZoneTime(), false);
     }
 
     //event 专用
     public static String getEventLocalDateStringFromUTC(Context context, String dateString) {
         if (TextUtils.isEmpty(dateString))
             return null;
-        return EventformatTimeStampString(context, dateString2Timestamp(dateString).getTime() + TimeZone.getDefault().getRawOffset(), true);
+        return EventformatTimeStampString(context, dateString2Timestamp(dateString).getTime() + getZoneTime(), true);
 //        return formatTimeStampString(context, dateString2Timestamp(dateString).getTime() + TimeZone.getDefault().getRawOffset(), true);
 
+    }
+
+    /**
+     * 得到时区的GMT偏移量
+     * @return
+     */
+    public static int getZoneTime(){
+        int time;
+        TimeZone timeZone = TimeZone.getDefault();
+        //判断是否是夏利令时
+        if(timeZone.inDaylightTime(new Date()) && timeZone.useDaylightTime()){
+            time = timeZone.getRawOffset() + 3600000;
+        }else {
+            time = timeZone.getRawOffset();
+        }
+        return time;
     }
 
     public static String getLocalDateStringFromLocal(Context context, long timestamp) {
@@ -193,11 +209,11 @@ public class MyDateUtils extends android.text.format.DateUtils {
 
 
     public static long formatTimestamp2UTC(long timestamp) {
-        return timestamp - TimeZone.getDefault().getRawOffset();
+        return timestamp - getZoneTime();
     }
 
     public static long formatTimestamp2Local(long timestamp) {
-        return timestamp + TimeZone.getDefault().getRawOffset();
+        return timestamp + getZoneTime();
     }
 
     public static boolean isBeforeDate(long timestamp) {

@@ -19,62 +19,107 @@
 
         <!--<ScrollView-->
 
-            <!--android:id="@+id/sc_sticker_store"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:fillViewport="true">-->
+        <!--android:id="@+id/sc_sticker_store"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fillViewport="true">-->
 
-            <!--<RelativeLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content">-->
-
-
-                <!--<RelativeLayout-->
-                    <!--android:id="@+id/rl_ads"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="@dimen/_200dp">-->
-
-                    <!--<ImageSwitcher-->
-                        <!--android:id="@+id/is_sticker_banner"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:visibility="visible" />-->
-
-                    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-                        <!--android:id="@+id/ad_progress"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_centerInParent="true"-->
-                        <!--android:visibility="gone"-->
-                        <!--android:clickable="true">-->
-
-                        <!--<com.material.widget.CircularProgress-->
-                            <!--android:id="@+id/top_full_progress_bar"-->
-                            <!--android:layout_width="32dp"-->
-                            <!--android:layout_height="32dp"-->
-                            <!--android:layout_centerInParent="true"-->
-                            <!--android:visibility="visible"/>-->
-                    <!--</RelativeLayout>-->
-
-                <!--</RelativeLayout>-->
+        <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerview_sticker"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_ads"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/_200dp">-->
+
+        <!--<ImageSwitcher-->
+        <!--android:id="@+id/is_sticker_banner"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:visibility="visible" />-->
+
+        <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:id="@+id/ad_progress"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:visibility="gone"-->
+        <!--android:clickable="true">-->
+
+        <!--<com.material.widget.CircularProgress-->
+        <!--android:id="@+id/top_full_progress_bar"-->
+        <!--android:layout_width="32dp"-->
+        <!--android:layout_height="32dp"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:visibility="visible"/>-->
+        <!--</RelativeLayout>-->
+
+        <!--</RelativeLayout>-->
 
 
-            <!--</RelativeLayout>-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_sticker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <!--</RelativeLayout>-->
 
 
         <!--</ScrollView>-->
 
         <include
-        android:id="@+id/sticker_progress"
-        layout="@layout/progress_layout" />
+            android:id="@+id/sticker_progress"
+            layout="@layout/progress_layout" />
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/sticker_new_update"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#e01C242B"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/sticker_store_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_stroke_sticker_store"
+            android:paddingBottom="@dimen/_10dp"
+            android:paddingLeft="@dimen/_15dp"
+            android:paddingRight="@dimen/_15dp"
+            android:paddingTop="@dimen/_10dp"
+            android:text="@string/text_sticker_update_now"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/_22dp" />
+
+        <TextView
+            android:layout_width="@dimen/_150dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/sticker_store_update"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/_20dp"
+            android:gravity="center"
+            android:text="@string/text_sticker_update_detail"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/_18dp" />
+
+        <TextView
+            android:id="@+id/sticker_store_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="57dp"
+            android:background="@drawable/bg_stroke_sticker_store"
+            android:gravity="bottom"
+            android:padding="@dimen/_8dp"
+            android:text="@string/text_close_update_sticker"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/_20dp" />
+    </RelativeLayout>
 </RelativeLayout>
