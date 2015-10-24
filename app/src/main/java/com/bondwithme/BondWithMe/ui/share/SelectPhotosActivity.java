@@ -1,25 +1,34 @@
 package com.bondwithme.BondWithMe.ui.share;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.hardware.Camera;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageButton;
 
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MediaData;
+import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.interfaces.SelectImageUirChangeListener;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -36,13 +45,23 @@ public class SelectPhotosActivity extends BaseActivity {
     public static final String EXTRA_IMAGES_STR = "images";
     public static final String EXTRA_SELECTED_PHOTOS = "selected_photos";
 
+    /**
+     * 临时文件用户裁剪
+     */
+    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp_";
+
     public final static String EXTRA_RESIDUE = "residue";
+    public static final String MP4 = ".mp4";
+    private String videoPaht;
+    private String imagePaht;
 
     //    public static final String EXTRA_SELECTED_PHOTOS = "selected_photos";
     /**
      * 限制最多可选图片张数
      */
     public final static int MAX_SELECT = 10;
+    public static final int REQUEST_HEAD_VIDEO = 100;
+    public static final int REQUEST_HEAD_IMAGE = 101;
 
     private SelectPhotosFragment fragment;
     private ArrayList<MediaData> mSelectedImages = new ArrayList<>();
@@ -173,6 +192,11 @@ public class SelectPhotosActivity extends BaseActivity {
 
     };
 
+    @Override
+    public int getLayout() {
+        return R.layout.activity_select_photos_base;
+    }
+
     /**
      * 初始底部栏，没有可以不操作
      */
@@ -183,8 +207,23 @@ public class SelectPhotosActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        rightButton.setImageResource(R.drawable.btn_done);
+        ImageButton addButton = getViewById(R.id.ib_top_button_add);
+        addButton.setImageResource(R.drawable.add_photo);
+        rightButton.setImageResource(R.drawable.add_video);
         leftButton.setImageResource(R.drawable.text_title_seletor);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            int cache_count = 0;
+            @Override
+            public void onClick(View v) {
+                File file = PicturesCacheUtil.getCachePicFileByName(SelectPhotosActivity.this, CACHE_PIC_NAME_TEMP + cache_count++);
+                if (file != null) {
+                    imagePaht = file.getAbsolutePath();
+                }
+                Uri out = Uri.fromFile(file);
+                openCamera(MediaStore.ACTION_IMAGE_CAPTURE, out, REQUEST_HEAD_IMAGE);
+            }
+        });
     }
 
     /**
@@ -214,26 +253,84 @@ public class SelectPhotosActivity extends BaseActivity {
      */
     @Override
     protected void titleRightEvent() {
-        if(isPreview) {
-            changeFragment(fragment, false);
-            if(!mSelectedImages.contains(currentData)) {
-                listener.addUri(currentData);
-            }
-            isPreview = false;
-        } else {
-            Intent intent = new Intent();
-            ArrayList<Uri> uriList = new ArrayList<>();
-            for(MediaData mediaData : mSelectedImages) {
-                if(useUniversal) {
-                    uriList.add(Uri.parse(mediaData.getPath()));
-                } else {
-                    uriList.add(mediaData.getContentUri());
-                }
-            }
-            intent.putParcelableArrayListExtra(EXTRA_IMAGES_STR, uriList);
-            setResult(RESULT_OK, intent);
-            finish();
+
+        Uri out = getOutVideoUri();
+        openCamera(MediaData.ACTION_RECORDER_VIDEO, out, REQUEST_HEAD_VIDEO);
+//        if(isPreview) {
+//            changeFragment(fragment, false);
+//            if(!mSelectedImages.contains(currentData)) {
+//                listener.addUri(currentData);
+//            }
+//            isPreview = false;
+//        } else {
+//            Intent intent = new Intent();
+//            ArrayList<Uri> uriList = new ArrayList<>();
+//            for(MediaData mediaData : mSelectedImages) {
+//                if(useUniversal) {
+//                    uriList.add(Uri.parse(mediaData.getPath()));
+//                } else {
+//                    uriList.add(mediaData.getContentUri());
+//                }
+//            }
+//            intent.putParcelableArrayListExtra(EXTRA_IMAGES_STR, uriList);
+//            setResult(RESULT_OK, intent);
+//            finish();
+//        }
+    }
+    /**
+     * @return 获取保存视频的{@link Uri}
+     */
+    private Uri getOutVideoUri() {
+        File file = new File(Constant.VIDEO_PATH);
+        if(!file.exists()){
+            file.mkdirs();
         }
+//        boolean exists = file.exists() || file.mkdir();
+//        File video;
+//        video = exists ? new File(Constant.VIDEO_PATH + System.currentTimeMillis() + MP4) : new File(Environment.getDataDirectory().getAbsolutePath() + "/" + System.currentTimeMillis() + MP4);
+        videoPaht = file+"/" + System.currentTimeMillis() + MP4;
+        return Uri.fromFile(new File(videoPaht));
+    }
+
+    /**
+     * 调用此函数为打开相机，启动系统中相机拍摄图片或视频
+     *
+     * @param action  打开相机方式动作
+     *                <br>{@link MediaStore#ACTION_IMAGE_CAPTURE} - 拍摄照片
+     *                <br>{@link MediaData#ACTION_RECORDER_VIDEO} - 拍摄视频
+     * @param request 请求代码
+     *                <br>{@link #REQUEST_HEAD_IMAGE} - 拍照
+     *                <br> {@link #REQUEST_HEAD_VIDEO} - 视频
+     */
+    private void openCamera(String action, Uri out, int request) {
+        Intent intent = new Intent(action);
+        intent.putExtra("android.intent.extras.CAMERA_FACING", getCameraId(false));
+        intent.putExtra("autofocus", true);
+
+        // 设置限制文件大小
+//        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MediaData.MAX_SIZE);
+
+        // 下面这句指定调用相机后存储的路径
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, out);
+        // 图片质量为高
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, request);
+    }
+
+    public static int getCameraId(boolean front) {
+        int num = Camera.getNumberOfCameras();
+        for(int i = 0; i < num; i++) {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if(info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT && front) {
+                return i;
+            }
+            if(info.facing == Camera.CameraInfo.CAMERA_FACING_BACK && !front) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -274,28 +371,28 @@ public class SelectPhotosActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        LogUtil.i(TAG, "onKeyDown& " + keyCode);
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
-            if(isPreview) {
-                changeFragment(fragment, false);
-                isPreview = false;
-                LogUtil.i(TAG, "onKeyDown& back is false");
-                return false;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
             LogUtil.i(TAG, "dispatchKeyEvent& back");
-            if(isPreview) {
+            if (isPreview) {
                 LogUtil.i(TAG, "dispatchKeyEvent& back is false");
                 changeFragment(fragment, false);
                 isPreview = false;
                 return false;
+            } else {
+                Intent intent = new Intent();
+                ArrayList<Uri> uriList = new ArrayList<>();
+                for (MediaData mediaData : mSelectedImages) {
+                    if (useUniversal) {
+                        uriList.add(Uri.parse(mediaData.getPath()));
+                    } else {
+                        uriList.add(mediaData.getContentUri());
+                    }
+                }
+                intent.putParcelableArrayListExtra(EXTRA_IMAGES_STR, uriList);
+                setResult(RESULT_OK, intent);
+                finish();
+                return true;
             }
         }
         return super.dispatchKeyEvent(event);
@@ -365,5 +462,35 @@ public class SelectPhotosActivity extends BaseActivity {
         intent.setData(Uri.parse(mediaData.getPath()));
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    /**
+     * Dispatch incoming result to the correct fragment.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(Activity.RESULT_OK == resultCode) {
+            switch (requestCode) {
+                case REQUEST_HEAD_VIDEO:
+                    Uri uri = data.getData();
+                    MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
+                    metadataRetriever.setDataSource(this, uri);
+                    String duration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);;
+                    metadataRetriever.release();
+                    MediaData video = new MediaData(data.getData(), videoPaht, MediaData.TYPE_VIDEO, Long.valueOf(duration));
+                    listener.addUri(video);
+                    break;
+                case REQUEST_HEAD_IMAGE:
+                    Uri imageUri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(imagePaht));
+                    MediaData image = new MediaData(imageUri, imagePaht, MediaData.TYPE_IMAGE, 0);
+                    listener.addUri(image);
+                    break;
+            }
+        }
     }
 }
