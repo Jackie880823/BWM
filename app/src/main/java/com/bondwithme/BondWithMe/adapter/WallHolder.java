@@ -294,7 +294,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
             case R.id.btn_del:
                 if (mViewClickListener != null) {
-                    mViewClickListener.remove(wallEntity.getContent_group_id());
+                    mViewClickListener.remove(v,wallEntity.getContent_group_id());
                 }
                 break;
 

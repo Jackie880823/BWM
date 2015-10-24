@@ -632,4 +632,9 @@
     <string name="text_close_update_sticker">关闭</string>
     <string name="text_sticker_update_now">立即更新</string>
     <string name="text_sticker_update_detail">已推出新版本表情商店</string>
+
+    <string name="add_photo_to_this_post">Add Photo to this Post</string>
+    <string name="save_all_photos">Save All Photos</string>
+    <string name="edit_this_post">Edit this Post</string>
+    <string name="delete_this_post">Delete this Post</string>
 </resources>

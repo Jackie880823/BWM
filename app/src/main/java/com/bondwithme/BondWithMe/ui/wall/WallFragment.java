@@ -1,16 +1,24 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.internal.view.menu.MenuPopupHelper;
+import android.support.v7.internal.widget.ViewUtils;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
@@ -32,6 +40,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -178,9 +187,10 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 Gson gson = gsonb.create();
                 try {
                     boolean hasData = data != null && data.size() > 0;
-                    data = gson.fromJson(response, new TypeToken<ArrayList<WallEntity>>() {}.getType());
+                    data = gson.fromJson(response, new TypeToken<ArrayList<WallEntity>>() {
+                    }.getType());
                     LogUtil.i(TAG, "requestData& isRefresh: " + isRefresh);
-                    if(isRefresh) {
+                    if (isRefresh) {
                         startIndex = data.size();
                         finishReFresh();
                         initAdapter();
@@ -189,8 +199,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         adapter.add(data);
                     }
                     LogUtil.i(TAG, "requestData& adapter size: " + adapter.getItemCount());
-                    if(data.size() <= 0 && !hasData) {
-                        if(TextUtils.isEmpty(member_id)) {
+                    if (data.size() <= 0 && !hasData) {
+                        if (TextUtils.isEmpty(member_id)) {
                             tvNoData.setVisibility(View.GONE);
                             flWallStartUp.setVisibility(View.VISIBLE);
                         } else {
@@ -204,7 +214,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         tvNoData.setVisibility(View.GONE);
                     }
                     loading = false;
-                } catch(Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     reInitDataStatus();
                 } finally {
@@ -214,7 +224,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
             @Override
             public void onError(Exception e) {
-                if(isRefresh) {
+                if (isRefresh) {
                     finishReFresh();
                 }
                 loading = false;
@@ -299,8 +309,16 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
      * @param content_group_id {@link WallEntity#content_group_id}
      */
     @Override
-    public void remove(final String content_group_id) {
+    public void remove(View view,final String content_group_id) {
+        /**wing add begin*/
 
+        initItemMeau(view);
+//        showDeleteDialog(content_group_id);
+        /**wing add end*/
+
+    }
+
+    private void showDeleteDialog(final String content_group_id) {
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
@@ -351,7 +369,52 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         if(!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
+    }
 
+    private MyDialog itemMenu;
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void initItemMeau(View v){
+
+//        PopupMenu popupMenu = new PopupMenu(getActivity(), v);
+//        popupMenu.inflate(R.menu.wall_item_menu);
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem menuItem) {
+//                switch (menuItem.getItemId()) {
+//                    case R.id.menu_item_add_photo:
+//                        break;
+//                    case R.id.menu_edit_this_post:
+//                        break;
+//                    case R.id.menu_save_all_photos:
+//                        break;
+//                    case R.id.menu_delete_this_post:
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
+//
+//        //使用反射，强制显示菜单图标
+//        try {
+//            Field field = popupMenu.getClass().getDeclaredField("mPopup");
+//            field.setAccessible(true);
+//            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+//            mHelper.setForceShowIcon(true);
+//        } catch (IllegalAccessException | NoSuchFieldException e) {
+//            e.printStackTrace();
+//        }
+//
+//        popupMenu.show();
+
+        PopupWindow popupMenu = new PopupWindow(getActivity());
+        popupMenu.setAnimationStyle(R.style.PopupAnimation);
+//
+//        popupMenu = new PopupWindow(getActivity().getLayoutInflater().inflate(R.layout.wall_item_menu,null),
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT);
+//
+//        popupMenu.setOutsideTouchable(true);
+//        popupMenu.showAsDropDown(v,0,0);
     }
 
     /**

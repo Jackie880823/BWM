@@ -1,5 +1,7 @@
 package com.bondwithme.BondWithMe.interfaces;
 
+import android.view.View;
+
 import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.util.WallUtil;
@@ -41,7 +43,7 @@ public interface WallViewClickListener {
      *
      * @param content_group_id {@link WallEntity#content_group_id}
      */
-    void remove(final String content_group_id);
+    void remove(View view,final String content_group_id);
 
     /**
      * 显示点赞的用户列表
