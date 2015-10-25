@@ -48,7 +48,6 @@ import com.bondwithme.BondWithMe.entity.PutWallEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.ImagesRecyclerListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.InviteMemberActivity;
@@ -65,7 +64,6 @@ import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
-import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.WallEditView;
 import com.google.gson.Gson;
@@ -494,17 +492,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             public void loadHeadView(HeadHolder headHolder) {
                 LogUtil.d(TAG, "loadHeadView");
                 headView = headHolder.itemView;
-                //头部分
-                UserEntity owner = MainActivity.getUser();
-                CircularNetworkImage cniHead = (CircularNetworkImage) headView.findViewById(R.id.owner_head);
-                TextView tvUserName = (TextView) headView.findViewById(R.id.owner_name);
-                VolleyUtil.initNetworkImageView(getContext(), cniHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, owner.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-                tvUserName.setText(owner.getUser_given_name());
 
                 // 显示的列表
                 iv_feeling = (ImageView) headView.findViewById(R.id.iv_feeling);
 
                 llLocation = (LinearLayout) headView.findViewById(R.id.ll_location);
+                llLocation.setOnClickListener(EditDiaryFragment.this);
                 tvLocationDesc = (TextView) headView.findViewById(R.id.location_desc);
                 wevContent = (WallEditView) headView.findViewById(R.id.diary_edit_content);
                 wevContent.setTextChangeListener(new WallEditView.TextChangeListener() {
@@ -1021,6 +1014,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     showChooseFeeling();
                 }
                 break;
+            case R.id.ll_location:
             case R.id.tv_location:
                 checkGPS();
                 break;

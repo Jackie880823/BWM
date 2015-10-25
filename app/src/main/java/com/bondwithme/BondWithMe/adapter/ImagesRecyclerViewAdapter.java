@@ -18,6 +18,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.PushedPhotoEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.ImagesRecyclerListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
@@ -159,13 +160,18 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
                 } else if (entity instanceof PhotoEntity) {
                     imageHolder.ivDisplay.setVisibility(View.GONE);
                     imageHolder.networkImageView.setVisibility(View.VISIBLE);
-                    VolleyUtil.initNetworkImageView(context, imageHolder.networkImageView, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity)entity).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                    VolleyUtil.initNetworkImageView(context, imageHolder.networkImageView, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity) entity).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
                 }
                 imageHolder.setPosition(position);
             }
 
         } else if (position == 0) {
-            ((HeadHolder)holder).wevContent.requestFocus();
+            HeadHolder headHolder = (HeadHolder) holder;
+            headHolder.wevContent.requestFocus();
+            //头部分
+            UserEntity owner = MainActivity.getUser();
+            VolleyUtil.initNetworkImageView(context, headHolder.cniHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, owner.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            headHolder.tvUserName.setText(owner.getUser_given_name());
         }
         if (position == getItemCount() - 1) {
             listener.loadFinish();
