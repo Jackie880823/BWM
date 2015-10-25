@@ -427,7 +427,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 case Constant.ACTION_UPDATE_WALL:
                     refresh();
                     break;
-                case Constant.REQUEST_HEAD_MULTI_PHOTO:
+                case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
                     if (data != null && holder != null) {
                         ArrayList<Uri> pickUris;
                         pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);

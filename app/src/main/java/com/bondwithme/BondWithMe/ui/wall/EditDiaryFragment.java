@@ -564,7 +564,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             @Override
             public void deletePhoto(PushedPhotoEntity photo) {
                 LogUtil.d(TAG, "deletePhoto");
+                photoEntities.remove(photo);
                 if (photo instanceof DiaryPhotoEntity) {
+                    localEntities.remove((DiaryPhotoEntity)photo);
                     imageUris.remove(((DiaryPhotoEntity) photo).getUri());
                 } else {
                     deletePhoto.add(photo.getPhoto_id());
@@ -915,10 +917,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     changeAtDesc(true);
                     break;
 
-                case Constant.OPEN_GPS:
+                case Constant.INTENT_REQUEST_OPEN_GPS:
                     openMap();
                     break;
-                case Constant.REQUEST_HEAD_MULTI_PHOTO:
+                case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
                     if (data != null) {
                         String type = data.getStringExtra(MediaData.EXTRA_MEDIA_TYPE);
                         if (MediaData.TYPE_VIDEO.equals(type)) {
@@ -937,7 +939,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             }
         }
 
-        if (requestCode == Constant.OPEN_GPS && LocationUtil.isOPen(getActivity())) {
+        if (requestCode == Constant.INTENT_REQUEST_OPEN_GPS && LocationUtil.isOPen(getActivity())) {
             openMap();
         }
     }
@@ -994,7 +996,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_camera:
+            case R.id.tv_camera:// 打开相册
                 boolean needAlert;
                 if (isEdit) {
                     needAlert = wall != null && !TextUtils.isEmpty(wall.getVideo_filename());
@@ -1024,8 +1026,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 } else {
                     openPhotos();
                 }
-                openPhotos();
                 break;
+
             case R.id.tv_tag:
                 goChooseMembers();
                 break;
@@ -1083,7 +1085,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         int residue = SelectPhotosActivity.MAX_SELECT - photoEntities.size();
         intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        startActivityForResult(intent, Constant.REQUEST_HEAD_MULTI_PHOTO);
+        startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO);
     }
 
     /**
@@ -1168,7 +1170,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 public void onClick(View v) {
                     // 转到手机设置界面，用户设置GPS
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivityForResult(intent, Constant.OPEN_GPS);
+                    startActivityForResult(intent, Constant.INTENT_REQUEST_OPEN_GPS);
                     myDialog.dismiss();
                 }
             });

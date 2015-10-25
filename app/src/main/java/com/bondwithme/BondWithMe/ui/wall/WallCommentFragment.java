@@ -258,7 +258,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         switch (requestCode) {
-            case Constant.REQUEST_HEAD_MULTI_PHOTO:
+            case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
                 if (data != null) {
                     ArrayList<Uri> pickUris;
                     pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);

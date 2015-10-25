@@ -804,7 +804,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
         intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        fragment.startActivityForResult(intent, Constant.REQUEST_HEAD_MULTI_PHOTO);
+        fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO);
     }
 
     public void setLocalPhotos(List<Uri> localPhotos) {

@@ -198,7 +198,6 @@ public class SelectPhotosActivity extends BaseActivity {
             }
             changeFragment(previewFragment, true);
             previewFragment.displayImage(currentData);
-            isPreview = true;
             leftButton.setImageResource(R.drawable.back_normal);
         }
 
@@ -216,6 +215,11 @@ public class SelectPhotosActivity extends BaseActivity {
     protected void initBottomBar() {
     }
 
+    /**
+     * 切换顶部右边功能提示
+     *
+     * @param isEntry 是否显示确认功能提示
+     */
     private void switchRightTitleView(boolean isEntry) {
         if (isEntry) {
             addButton.setVisibility(View.GONE);
@@ -247,6 +251,12 @@ public class SelectPhotosActivity extends BaseActivity {
                 openCamera(MediaStore.ACTION_IMAGE_CAPTURE, out, REQUEST_HEAD_IMAGE);
             }
         });
+
+        if (mSelectedImages.isEmpty()) {
+            switchRightTitleView(false);
+        } else {
+            switchRightTitleView(true);
+        }
     }
 
     /**
@@ -265,7 +275,6 @@ public class SelectPhotosActivity extends BaseActivity {
     protected void titleLeftEvent() {
         if (isPreview) {
             changeFragment(fragment, false);
-            isPreview = false;
         } else {
             fragment.changeDrawer();
         }
@@ -277,13 +286,15 @@ public class SelectPhotosActivity extends BaseActivity {
     @Override
     protected void titleRightEvent() {
         if (isPreview) {
+            LogUtil.d(TAG, "titleRightEvent& is preview");
             changeFragment(fragment, false);
             if (!mSelectedImages.contains(currentData)) {
                 listener.addUri(currentData);
             }
-            isPreview = false;
         } else {
+            LogUtil.d(TAG, "titleRightEvent& is select images view");
             if (!mSelectedImages.isEmpty()) {
+                LogUtil.d(TAG, "titleRightEvent& selected images is empty");
                 Intent intent = new Intent();
                 ArrayList<Uri> uriList = new ArrayList<>();
                 for (MediaData mediaData : mSelectedImages) {
@@ -297,6 +308,7 @@ public class SelectPhotosActivity extends BaseActivity {
                 setResult(RESULT_OK, intent);
                 finish();
             } else {
+                LogUtil.d(TAG, "titleRightEvent& open camera");
                 Uri out = getOutVideoUri();
                 openCamera(MediaData.ACTION_RECORDER_VIDEO, out, REQUEST_HEAD_VIDEO);
             }
@@ -404,7 +416,6 @@ public class SelectPhotosActivity extends BaseActivity {
             if (isPreview) {
                 LogUtil.i(TAG, "dispatchKeyEvent& back is false");
                 changeFragment(fragment, false);
-                isPreview = false;
                 return false;
             } else {
                 Intent intent = new Intent();
@@ -436,7 +447,9 @@ public class SelectPhotosActivity extends BaseActivity {
             if (mSelectedImages.isEmpty()) {
                 switchRightTitleView(false);
             }
+            isPreview = false;
         } else {
+            isPreview = true;
             switchRightTitleView(true);
         }
     }

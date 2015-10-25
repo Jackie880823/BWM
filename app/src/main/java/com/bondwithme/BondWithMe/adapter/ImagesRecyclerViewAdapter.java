@@ -145,12 +145,12 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         LogUtil.d(TAG, "onBindViewHolder& position = " + position);
         if (position > 0) {
             if (isPhoto) {
                 ImageHolder imageHolder = (ImageHolder) holder;
-                PushedPhotoEntity entity = entities.get(position - 1);
+                final PushedPhotoEntity entity = entities.get(position - 1);
                 imageHolder.setCaption(entity.getPhoto_caption());
                 if (entity instanceof DiaryPhotoEntity) {
                     Uri uri = ((DiaryPhotoEntity) entity).getUri();
@@ -161,7 +161,14 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
                     imageHolder.networkImageView.setVisibility(View.VISIBLE);
                     VolleyUtil.initNetworkImageView(context, imageHolder.networkImageView, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity) entity).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
                 }
-                imageHolder.setPosition(position);
+                imageHolder.ivDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LogUtil.d(TAG, "onClick& position = " + position + "; entities size " + entities.size());
+                        listener.deletePhoto(entity);
+                        notifyDataSetChanged();
+                    }
+                });
             }
 
         } else if (position == 0) {
@@ -283,7 +290,6 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
         public NetworkImageView networkImageView;
         public ImageView ivDisplay;
         public WallEditView wevContent;
-        private int position;
 
         public ImageHolder(View itemView) {
             super(itemView);
@@ -291,24 +297,10 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
             networkImageView = (NetworkImageView) itemView.findViewById(R.id.iv_pic_network);
             ivDisplay = (ImageView) itemView.findViewById(R.id.iv_pic_normal);
             wevContent = (WallEditView) itemView.findViewById(R.id.diary_edit_content);
-            ivDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (position > 0 && position <= entities.size()) {
-                        PushedPhotoEntity entity = entities.remove(position - 1);
-                        notifyItemRemoved(position);
-                        listener.deletePhoto(entity);
-                    }
-                }
-            });
         }
 
         public void setCaption(String caption) {
             wevContent.setText(caption);
-        }
-
-        public void setPosition(int position) {
-            this.position = position;
         }
 
         public void setImage(Uri uri) {
