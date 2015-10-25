@@ -306,7 +306,7 @@ public class WallUtil {
                                 }
                             }
                         } else {
-                            mViewClickListener.showComments(wallEntity.getContent_group_id(), wallEntity.getGroup_id());
+                            mViewClickListener.showComments(wallEntity);
                         }
                     }
                 }

@@ -623,10 +623,12 @@
     <string name="prompt">Prompt</string>
     <string name="open_the_equipment_failure">Open the equipment failure</string>
     <string name="no_sd_card">No sd card!</string>
-    <string name="show_vidoe_limit">Only files below the size of 20MB will be displayed.</string>
+    <string name="show_video_limit">Only files below the size of 20MB will be displayed.</string>
     <string name="open_gps_title">Improve location accuracy</string>
     <string name="use_gps_hint">need use GPS for location</string>
     <string name="text_collapse">collapse</string>
+    <string name="text_tag">Tag</string>
+    <string name="text_feeling">Feeling</string>
     <string name="text_message_copy">Copy</string>
 
     <string name="title_rewards">Rewards</string>
@@ -635,6 +637,12 @@
     <string name="text_close_update_sticker">Close</string>
     <string name="text_sticker_update_now">Update Now!</string>
     <string name="text_sticker_update_detail">Stickers Store Update Available</string>
+    <string name="title_edit_post">Edit Post</string>
+
+    <string name="add_photo_to_this_post">Add Photo to this Post</string>
+    <string name="save_all_photos">Save All Photos</string>
+    <string name="edit_this_post">Edit this Post</string>
+    <string name="delete_this_post">Delete this Post</string>
 
     <string name="text_wall_view_pic_save">Save this Photo</string>
     <string name="text_wall_view_pic_edit">Edit this caption</string>

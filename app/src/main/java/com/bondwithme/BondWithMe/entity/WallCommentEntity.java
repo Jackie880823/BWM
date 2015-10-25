@@ -6,9 +6,6 @@ import java.io.Serializable;
  * Created by wing on 15/1/23.
  */
 public class WallCommentEntity implements Serializable {
-    public static final String CONTENT_GROUP_ID = "content_group_id";
-    public static final String GROUP_ID = "group_id";
-    public static final String USER_ID = "user_id";
     public static final String LIMIT = "limit";
 
 

@@ -96,8 +96,8 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
         String url;
         if(!Constant.ACTION_SHOW_LOVED_USER.equals(getActivity().getIntent().getAction())) {
             url = Constant.API_WALL_DETAIL;
-            pparams.put("content_group_id", content_group_id);
-            pparams.put("user_id", MainActivity.getUser().getUser_id());
+            pparams.put(Constant.CONTENT_GROUP_ID, content_group_id);
+            pparams.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
         } else {
             url = Constant.API_WALL_GET_LOVE_MEMBER_LIST;
             pparams.put(WallUtil.GET_LOVE_LIST_VIEWER_ID, viewer_id);

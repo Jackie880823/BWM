@@ -1,16 +1,12 @@
 package com.bondwithme.BondWithMe.entity;
 
-import java.io.Serializable;
-
 /**
  * Created by wing on 15/1/23.
  */
-public class PhotoEntity implements Serializable{
+public class PhotoEntity extends PushedPhotoEntity{
 
     private String content_id;
     private String file_id;
-    private String photo_caption;
-    private String photo_id;
     private String photo_multipe;
     private String user_id;
 
@@ -32,22 +28,6 @@ public class PhotoEntity implements Serializable{
 
     public void setFile_id(String file_id) {
         this.file_id = file_id;
-    }
-
-    public String getPhoto_caption() {
-        return photo_caption;
-    }
-
-    public void setPhoto_caption(String photo_caption) {
-        this.photo_caption = photo_caption;
-    }
-
-    public String getPhoto_id() {
-        return photo_id;
-    }
-
-    public void setPhoto_id(String photo_id) {
-        this.photo_id = photo_id;
     }
 
     public String getPhoto_multipe() {

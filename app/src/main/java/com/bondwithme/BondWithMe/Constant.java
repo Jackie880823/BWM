@@ -37,6 +37,12 @@ public class Constant {
     public static final int ACTION_COMMENT_WALL = 12;
     public static final int ACTION_COMMENT_MEMBERS = 13;
     public static final int ACTION_COMMENT_GROUPS = 14;
+    public static final int REQUEST_HEAD_PHOTO = 15;
+    public static final int REQUEST_HEAD_CAMERA = 16;
+    public static final int GET_LOCATION = 17;
+    public static final int GET_MEMBERS = 18;
+    public static final int OPEN_GPS = 19;
+    public static final int REQUEST_HEAD_MULTI_PHOTO = 20;
 
     public static final int ACTION_EVENT_CREATE = 20;
     public static final int ACTION_EVENT_UPDATE = 21;
@@ -47,6 +53,10 @@ public class Constant {
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
 
+    /**
+     * 临时文件用户裁剪
+     */
+    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
 
     /**
      * for api
@@ -256,6 +266,16 @@ public class Constant {
 
     public static final String API_UPDATE_MISS = API_SERVER + "/bondwithme/index.php/api/miss/%s";//消除好友的miss
 
+    /**
+     * 编制日记
+     */
+    public static final String API_PUT_WALL = API_SERVER + "/bondwithme/index.php/api/updateContent/%s";
+    /**
+     * 照片最大号，用于在日志列表直接上传照片的时候，上传全部照片前先更新。
+     */
+    public static final String API_PUT_PHOTO_MAX = API_SERVER + "/bondwithme/index.php/api/updatePhotoMax/%s";
+    public static final String API_UPLOAD_VIDEO = API_SERVER + "/bondwithme/index.php/api/uploadVideo";
+
     //获取sticker, 4个参数. 1.user_id, 2.sticker_name, 3.sticker_path, 4.sticker_type
     public static final String API_STICKER = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fid/%s_B/fpath/%s/ftype/%s";
     public static final String Sticker_Png = ".png";
@@ -279,6 +299,19 @@ public class Constant {
      */
     public static final String EXTRA_LONGITUDE = "longitude";
 
+    // 用于网络连拉的参数
+    public static final String PARAM_USER_ID= "user_id";
+    public static final String PARAM_CONTENT_CREATOR_ID = "content_creator_id";
+    public static final String PARAM_CONTENT_TYPE = "content_type";
+    public static final String PARAM_TEXT_DESCRIPTION = "text_description";
+    public static final String PARAM_LOC_LATITUDE = "loc_latitude";
+    public static final String PARAM_LOC_LONGITUDE = "loc_longitude";
+    public static final String PARAM_LOC_NAME = "loc_name";
+    public static final String PARAM_LOC_CAPTION = "loc_caption";
+    public static final String PARAM_STICKER_GROUP_PATH = "sticker_group_path";
+    public static final String PARAM_LOC_TYPE = "loc_type";
+    public static final String PARAM_PHOTO_MAX = "photo_max";
+
     public static final String HAS_LOGED_IN = "has_loged_in";
     public static final String HAS_DOWNLOAD = "has_download";
 
@@ -293,6 +326,22 @@ public class Constant {
     public static final String FAIL = "Fail";
     public static final String TYPE = "type";
 
+
+    /**
+     * about wall, user extra
+     */
+    public static final String CONTENT_GROUP_ID = "content_group_id";
+    public static final String GROUP_ID = "group_id";
+    public static final String USER_ID = "user_id";
+
+    public static final String COMMENT_OWNER_ID = "comment_owner_id";
+    public static final String CONTENT_TYPE = "content_type";
+    public static final String COMMENT_CONTENT = "comment_content";
+    public static final String STICKER_GROUP_PATH = "sticker_group_path";
+    public static final String STICKER_NAME = "sticker_name";
+    public static final String STICKER_TYPE = "sticker_type";
+    public static final String FILE = "file";
+    public static final String PHOTO_FULLSIZE = "photo_fullsize";
 
     public static final String API_START_CHECK_LOG_ID = API_SERVER + "/bondwithme/index.php/api/loginID";//查询账号是否可用和获取验证码／重新获取验证码
     public static final String API_START_PHONE_CREATE_USER = API_SERVER + "/bondwithme/index.php/api/verifyUser"; //Verify code and Create User (Phone)
