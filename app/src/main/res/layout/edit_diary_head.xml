@@ -83,6 +83,7 @@
             android:fitsSystemWindows="true"
             android:gravity="top"
             android:minLines="5"
+            android:maxLines="5"
             android:textColor="@color/default_text_color_dark"
             android:textSize="@dimen/text_medium_size" />
 
@@ -94,6 +95,7 @@
             android:clickable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:visibility="invisible"
             android:padding="@dimen/default_content_padding">
 
             <ImageView

@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -123,11 +125,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static final String PREFERENCE_KEY_VIDEO_PATH = "VIDEO_PATH";
     private static final String PREFERENCE_KEY_VIDEO_DURATION = "VIDEO_DURATION";
 
-    private final static int GET_LOCATION = 1;
-    private final static int GET_MEMBERS = 2;
-    private final static int OPEN_GPS = 3;
-    private final static int REQUEST_HEAD_PHOTO = 4;
-
     public final static String PATH_PREFIX = "feeling";
     private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
 
@@ -172,7 +169,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     private List<Uri> imageUris = new ArrayList<>();
     private ArrayList<PushedPhotoEntity> photoEntities = new ArrayList<>();
-    private ArrayList<DiaryPhotoEntity> locaEntities = new ArrayList<>();
+    private ArrayList<DiaryPhotoEntity> localEntities = new ArrayList<>();
     private List<String> deletePhoto = new ArrayList<>();
 
     private ImagesRecyclerViewAdapter mAdapter;
@@ -232,6 +229,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     private ImageView iv_feeling;
 
+    private LinearLayout llLocation;
+
     /**
      * 地址描述
      */
@@ -280,7 +279,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         editor.clear().apply();
                     }
 
-                    getParentActivity().setResult(Activity.RESULT_OK);
+                    getActivity().setResult(Activity.RESULT_OK);
 //                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                     if (getActivity() != null) {
                         getActivity().finish();
@@ -307,6 +306,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     loc_type = wall.getLoc_type();
                     // 地名
                     String locName = wall.getLoc_name();
+                    if (!TextUtils.isEmpty(locName)) {
+                        llLocation.setVisibility(View.VISIBLE);
+                    } else {
+                        llLocation.setVisibility(View.GONE);
+                    }
                     tvLocationDesc.setText(locName);
 
                     // AT 用户列表
@@ -365,13 +369,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 更新日志成功结果处理
      */
     private void resultByPutWall() {
-        if (!locaEntities.isEmpty()) {
+        if (!localEntities.isEmpty()) {
             int max;
             String maxPhoto = wall.getPhoto_max();
             if (TextUtils.isEmpty(maxPhoto)) {
-                max = locaEntities.size();
+                max = localEntities.size();
             } else {
-                max = Integer.valueOf(maxPhoto) - deletePhoto.size() + locaEntities.size();
+                max = Integer.valueOf(maxPhoto) - deletePhoto.size() + localEntities.size();
             }
             Map<String, String> params = new HashMap<>();
             params.put(Constant.PARAM_PHOTO_MAX, String.valueOf(max));
@@ -413,7 +417,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             JSONObject obj = new JSONObject(response);
             if ("1".equals(obj.getString("resultStatus")) && !TextUtils.isEmpty(obj.getString("contentID"))) {
                 String contentId = obj.getString("contentID");
-                submitLocaPhotos(contentId);
+                submitLocalPhotos(contentId);
             } else {
                 mHandler.sendEmptyMessage(ACTION_FAILED);
             }
@@ -423,15 +427,15 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
     }
 
-    private void submitLocaPhotos(String contentId) {
-        if (locaEntities.isEmpty()) {
+    private void submitLocalPhotos(String contentId) {
+        if (localEntities.isEmpty()) {
             mHandler.sendEmptyMessage(ACTION_SUCCEED);
         } else {
-            int count = locaEntities.size();
+            int count = localEntities.size();
             boolean multiple = (count <= 0);
             tasks = new ArrayList<>();
             for (int index = 0; index < count; index++) {
-                DiaryPhotoEntity photoEntity = locaEntities.get(index);
+                DiaryPhotoEntity photoEntity = localEntities.get(index);
                 photoEntity.setPhoto_caption(getPhotoCaptionByPosition(index + 1));
                 if (index == count - 1) {
                     CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
@@ -499,8 +503,57 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
                 // 显示的列表
                 iv_feeling = (ImageView) headView.findViewById(R.id.iv_feeling);
+
+                llLocation = (LinearLayout) headView.findViewById(R.id.ll_location);
                 tvLocationDesc = (TextView) headView.findViewById(R.id.location_desc);
                 wevContent = (WallEditView) headView.findViewById(R.id.diary_edit_content);
+                wevContent.setTextChangeListener(new WallEditView.TextChangeListener() {
+                    int lastChange = CHANGE_MODE_NORMAL;
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s, int change) {
+                        switch(change) {
+                            case CHANGE_MODE_NORMAL:
+                                if(lastChange == CHANGE_MODE_BLACK_CHANGE) {
+                                    lastChange = change;
+                                    changeAtDesc(true);
+                                    return;
+                                }
+                                break;
+                            case CHANGE_MODE_DELETE_AT_ALL:
+                                if(at_members_data != null) {
+                                    at_members_data.clear();
+                                }
+                                if(at_groups_data != null) {
+                                    at_groups_data.clear();
+                                }
+                                break;
+
+                            case CHANGE_MODE_DELETE_AT_GROUPS:
+                                if(at_groups_data != null) {
+                                    at_groups_data.clear();
+                                }
+                                break;
+
+                            case CHANGE_MODE_DELETE_AT_MEMBER:
+                                if(at_members_data != null) {
+                                    at_members_data.clear();
+                                }
+                                break;
+                        }
+                        lastChange = change;
+                    }
+                });
             }
 
             @Override
@@ -588,6 +641,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         // 清册选择的图片
         imageUris.clear();
         photoEntities.clear();
+        localEntities.clear();
         if (photoEntities.size() > 0 && mAdapter.isPhoto()) {
             rvImages.removeViews(1, photoEntities.size());
         }
@@ -638,7 +692,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (!draftPreferences.getBoolean(PREFERENCE_KEY_IS_SAVE, false)) {
             return;
         }
-        tvLocationDesc.setText(draftPreferences.getString(PREFERENCE_KEY_LOC_NAME, ""));
+        String locationDesc = draftPreferences.getString(PREFERENCE_KEY_LOC_NAME, "");
+        if (!TextUtils.isEmpty(locationDesc)) {
+            llLocation.setVisibility(View.VISIBLE);
+        } else {
+            llLocation.setVisibility(View.GONE);
+        }
+        tvLocationDesc.setText(locationDesc);
         longitude = draftPreferences.getFloat(PREFERENCE_KEY_LOC_LONGITUDE, (float) longitude);
         latitude = draftPreferences.getFloat(PREFERENCE_KEY_LOC_LATITUDE, (float) latitude);
 
@@ -683,8 +743,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
         int picCount = draftPreferences.getInt(PREFERENCE_KEY_PIC_COUNT, 0);
         if (picCount > 0) {
-            imageUris = new ArrayList<>();
-            photoEntities = new ArrayList<>();
             for (int i = 0; i < picCount; i++) {
                 String strUri = draftPreferences.getString(PREFERENCE_KEY_PIC_CONTENT + i, "");
                 String strCaption = draftPreferences.getString(PREFERENCE_KEY_PIC_CAPTION + i, "");
@@ -695,9 +753,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     DiaryPhotoEntity diaryPhotoEntity = new DiaryPhotoEntity();
                     diaryPhotoEntity.setUri(uri);
                     diaryPhotoEntity.setPhoto_caption(strCaption);
-                    photoEntities.add(diaryPhotoEntity);
+                    localEntities.add(diaryPhotoEntity);
                 }
             }
+            photoEntities.addAll(localEntities);
         } else {
             String videoUriStr = draftPreferences.getString(PREFERENCE_KEY_VIDEO_PATH, "");
 
@@ -832,14 +891,16 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case GET_LOCATION:
+                case Constant.GET_LOCATION:
                     if (data != null) {
                         String locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
                         if (!TextUtils.isEmpty(locationName)) {
+                            llLocation.setVisibility(View.VISIBLE);
                             tvLocationDesc.setText(locationName);
                             latitude = data.getDoubleExtra(Constant.EXTRA_LATITUDE, 0);
                             longitude = data.getDoubleExtra(Constant.EXTRA_LONGITUDE, 0);
                         } else {
+                            llLocation.setVisibility(View.GONE);
                             tvLocationDesc.setText(null);
                             latitude = -1000;
                             longitude = -1000;
@@ -849,7 +910,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         loc_type = data.getStringExtra("loc_type");
                     }
                     break;
-                case GET_MEMBERS:
+                case Constant.GET_MEMBERS:
                     String members = data.getStringExtra("members_data");
                     at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                     }.getType());
@@ -860,10 +921,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     changeAtDesc(true);
                     break;
 
-                case OPEN_GPS:
+                case Constant.OPEN_GPS:
                     openMap();
                     break;
-                case REQUEST_HEAD_PHOTO:
+                case Constant.REQUEST_HEAD_PHOTO:
                     if (data != null) {
                         String type = data.getStringExtra(MediaData.EXTRA_MEDIA_TYPE);
                         if (MediaData.TYPE_VIDEO.equals(type)) {
@@ -882,21 +943,21 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             }
         }
 
-        if (requestCode == OPEN_GPS && LocationUtil.isOPen(getActivity())) {
+        if (requestCode == Constant.OPEN_GPS && LocationUtil.isOPen(getActivity())) {
             openMap();
         }
     }
 
     private void addDataAndNotify(ArrayList<Uri> pickUris) {
-        photoEntities.removeAll(locaEntities);
-        locaEntities.clear();
+        photoEntities.removeAll(localEntities);
+        localEntities.clear();
         for (Uri uri : pickUris) {
             LogUtil.i(TAG, "addDataAndNotify& add uri: " + uri.toString());
             DiaryPhotoEntity entity = new DiaryPhotoEntity();
             entity.setUri(uri);
-            locaEntities.add(entity);
+            localEntities.add(entity);
         }
-        photoEntities.addAll(locaEntities);
+        photoEntities.addAll(localEntities);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -997,7 +1058,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         intent.putParcelableArrayListExtra(SelectPhotosActivity.EXTRA_SELECTED_PHOTOS, (ArrayList<? extends Parcelable>) imageUris);
 //        intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        startActivityForResult(intent, REQUEST_HEAD_PHOTO);
+        startActivityForResult(intent, Constant.REQUEST_HEAD_PHOTO);
     }
 
     /**
@@ -1015,7 +1076,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         intent.putExtra("members_data", gson.toJson(at_members_data));
         intent.putExtra("groups_data", gson.toJson(at_groups_data));
         intent.putExtra("type", 0);
-        startActivityForResult(intent, GET_MEMBERS);
+        startActivityForResult(intent, Constant.GET_MEMBERS);
     }
 
     private void showChooseFeeling() {
@@ -1082,7 +1143,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 public void onClick(View v) {
                     // 转到手机设置界面，用户设置GPS
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivityForResult(intent, OPEN_GPS);
+                    startActivityForResult(intent, Constant.OPEN_GPS);
                     myDialog.dismiss();
                 }
             });
@@ -1102,7 +1163,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private void openMap() {
         Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, tvLocationDesc.getText().toString());
         if (intent != null) {
-            startActivityForResult(intent, GET_LOCATION);
+            startActivityForResult(intent, Constant.GET_LOCATION);
         }
     }
 
@@ -1245,8 +1306,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             entity.setNew_video("1");
         } else {
             ArrayList<PushedPhotoEntity> pushedPhotoEntities = new ArrayList<>();
-            for (int i = 0; i < photoEntities.size() - locaEntities.size(); i++) {
+            for (int i = 0; i < photoEntities.size() - localEntities.size(); i++) {
                 String caption = getPhotoCaptionByPosition(i + 1);
+                LogUtil.d(TAG, "putWall& caption: " + caption);
                 PushedPhotoEntity photoEntity = photoEntities.get(i);
                 if (!caption.equals(photoEntity.getPhoto_caption())) {
                     photoEntity.setPhoto_caption(caption);
@@ -1256,7 +1318,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             entity.setEdit_photo(pushedPhotoEntities);
         }
 
-        if (!locaEntities.isEmpty()) {
+        if (!localEntities.isEmpty()) {
             entity.setNew_photo("1");
         }
 
@@ -1282,11 +1344,16 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
     private String getPhotoCaptionByPosition(int position) {
-        if (position < rvImages.getChildCount()) {
+        if (position < mAdapter.getItemCount()) {
             RecyclerView.ViewHolder holder = rvImages.findViewHolderForAdapterPosition(position);
             if (holder != null && holder instanceof ImagesRecyclerViewAdapter.ImageHolder) {
                 return ((ImagesRecyclerViewAdapter.ImageHolder) holder).wevContent.getRelText();
+            } else {
+                LogUtil.e(TAG, "getPhotoCaptionByPosition& IllegalStateException");
             }
+
+        } else {
+            LogUtil.e(TAG, "getPhotoCaptionByPosition& position " + position + ", count is " + rvImages.getChildCount());
         }
         return "";
     }
@@ -1314,7 +1381,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         params.put("content_creator_id", MainActivity.getUser().getUser_id());
         params.put("content_id", contentId);
         params.put("photo_index", "" + index);
-        if (index < photoEntities.size() - locaEntities.size()) {
+        if (index < photoEntities.size() - localEntities.size()) {
             params.put("photo_caption", photoEntities.get(index).getPhoto_caption());
         } else {
             params.put("photo_caption", getPhotoCaptionByPosition(index + 1));
@@ -1543,7 +1610,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     break;
                 case LINK_TYPE_PUT_PHOTO_MAX:
                     if (wall != null) {
-                        submitLocaPhotos(wall.getContent_id());
+                        submitLocalPhotos(wall.getContent_id());
                     }
                     break;
             }

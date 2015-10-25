@@ -37,6 +37,11 @@ public class Constant {
     public static final int ACTION_COMMENT_WALL = 12;
     public static final int ACTION_COMMENT_MEMBERS = 13;
     public static final int ACTION_COMMENT_GROUPS = 14;
+    public static final int REQUEST_HEAD_PHOTO = 15;
+    public static final int REQUEST_HEAD_CAMERA = 16;
+    public static final int GET_LOCATION = 17;
+    public static final int GET_MEMBERS = 18;
+    public static final int OPEN_GPS = 19;
 
     public static final int ACTION_EVENT_CREATE = 20;
     public static final int ACTION_EVENT_UPDATE = 21;
@@ -47,6 +52,10 @@ public class Constant {
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
 
+    /**
+     * 临时文件用户裁剪
+     */
+    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
 
     /**
      * for api

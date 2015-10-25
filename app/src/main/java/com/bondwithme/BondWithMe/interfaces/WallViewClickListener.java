@@ -39,9 +39,10 @@ public interface WallViewClickListener {
     /**
      * 删除Wall
      *
-     * @param content_group_id {@link WallEntity#content_group_id}
+     * @param view
+     * @param wallEntity {@link WallEntity}
      */
-    void remove(View view,final String content_group_id);
+    void remove(WallEntity wallEntity);
 
     /**
      * 显示点赞的用户列表

@@ -7,16 +7,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.internal.view.menu.MenuPopupHelper;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.PopupWindow;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
@@ -45,7 +41,6 @@ import com.google.gson.reflect.TypeToken;
 import com.material.widget.CircularProgress;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -131,7 +126,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         try {
             content_group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
             group_id = getArguments().getString(ARG_PARAM_PREFIX + "2");
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -147,7 +142,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         rvList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(sendCommentView != null) {
+                if (sendCommentView != null) {
                     sendCommentView.hideAllViewState(true);
                 }
                 return false;
@@ -173,11 +168,11 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onReceiveBitmapUri(Uri uri) {
-                if(uri != null) { // 传输图片
+                if (uri != null) { // 传输图片
                     CompressBitmapTask task = new CompressBitmapTask();
                     vProgress.setVisibility(View.VISIBLE);
                     //for not work in down 11
-                    if(SDKUtil.IS_HONEYCOMB) {
+                    if (SDKUtil.IS_HONEYCOMB) {
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
                     } else {
                         task.execute(uri);
@@ -218,7 +213,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if(data.size() >= offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                if (data.size() >= offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
                     LogUtil.i(TAG, "onScrolled& getComments");
                     loading = true;
                     getComments();//再请求数据
@@ -229,14 +224,14 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void initWallView(View wallView) {
 
-        holder = new WallHolder(getParentActivity(), wallView, mHttpTools, true);
+        holder = new WallHolder(this, wallView, mHttpTools, true);
     }
 
     private void initListHeadView(View listHeadView) {
 
-        if(listHeadView != null) {
+        if (listHeadView != null) {
             progressBar = (CircularProgress) listHeadView.findViewById(R.id.wall_comment_progress_bar);
-            if(loading) {
+            if (loading) {
                 progressBar.setVisibility(View.VISIBLE);
             } else {
                 progressBar.setVisibility(View.GONE);
@@ -261,7 +256,16 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
-        sendCommentView.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Constant.ACTION_UPDATE_WALL:
+                if (Activity.RESULT_OK == resultCode) {
+                    getParentActivity().setResult(Activity.RESULT_OK);
+                    requestData();
+                }
+                break;
+            default:
+                sendCommentView.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -401,7 +405,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void initAdapter() {
-        if(adapter == null) {
+        if (adapter == null) {
             adapter = new WallCommentAdapter(getParentActivity(), data);
             adapter.setPicClickListener(this);
             adapter.setCommentActionListener(new WallCommentAdapter.CommentActionListener() {
@@ -419,7 +423,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 @Override
                 public void updateWallView(View wallView) {
                     initWallView(wallView);
-                    if(wall != null) {
+                    if (wall != null) {
                         setWallContext();
                     }
                 }
@@ -441,11 +445,11 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void sendComment(EditText et) {
         String commentText = "";
-        if(et != null) {
+        if (et != null) {
             commentText = et.getText().toString();
             et.setText(null);
         }
-        if(TextUtils.isEmpty(commentText) && TextUtils.isEmpty(stickerGroupPath)) {
+        if (TextUtils.isEmpty(commentText) && TextUtils.isEmpty(stickerGroupPath)) {
             // 如果没有输入字符且没有添加表情，不发送评论
             return;
         }
@@ -528,7 +532,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         @Override
         protected String doInBackground(Uri... params) {
-            if(params == null) {
+            if (params == null) {
                 return null;
             }
             return LocalImageLoader.compressBitmap(getActivity(), params[0], 480, 800, false);
@@ -541,7 +545,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         private void submitPic(String path) {
             File f = new File(path);
-            if(!f.exists()) {
+            if (!f.exists()) {
                 return;
             }
             if (progressBar != null) {
@@ -661,7 +665,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                         swipeRefreshLayout.setRefreshing(true);
 
                         int commentCount = Integer.valueOf((String) holder.getTvCommentCount().getText()) - 1;
-                        if(commentCount >= 0) {
+                        if (commentCount >= 0) {
                             wall.setComment_count(String.valueOf(commentCount));
                             holder.getTvCommentCount().setText(String.valueOf(commentCount));
                         }
@@ -693,7 +697,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 removeAlertDialog.dismiss();
             }
         });
-        if(!removeAlertDialog.isShowing()) {
+        if (!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
     }
@@ -708,7 +712,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void onResume() {
         super.onResume();
 
-        if(sendCommentView != null) {
+        if (sendCommentView != null) {
             sendCommentView.commitAllowingStateLoss();
         }
     }
@@ -721,10 +725,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     /**
      * 显示Wall详情包括评论
-     *
      */
     @Override
-    public void showComments(WallEntity wallEntity) {}
+    public void showComments(WallEntity wallEntity) {
+    }
 
 
     MyDialog removeAlertDialog;
@@ -732,110 +736,62 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     /**
      * 删除Wall
      *
-     * @param content_group_id {@link WallEntity#content_group_id}
+     * @param wallEntity {@link WallEntity}
      */
     @Override
-    public void remove(View view,final String content_group_id) {
-        /**wing add begin*/
+    public void remove(WallEntity wallEntity) {
 
-        initItemMeau(view);
-
-        /**wing add end*/
-
-//        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
-//        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, content_group_id), null);
-//                mHttpTools.put(requestInfo, POST_DELETE, new HttpCallback() {
-//                    @Override
-//                    public void onStart() {
-//                        vProgress.setVisibility(View.VISIBLE);
-//                    }
-//
-//                    @Override
-//                    public void onFinish() {
-//                        vProgress.setVisibility(View.GONE);
-//                    }
-//
-//                    @Override
-//                    public void onResult(String string) {
-////                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-//                        getParentActivity().setResult(Activity.RESULT_OK);
-//                        getParentActivity().finish();
-//                    }
-//
-//                    @Override
-//                    public void onError(Exception e) {
-//                    }
-//
-//                    @Override
-//                    public void onCancelled() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onLoading(long count, long current) {
-//
-//                    }
-//                });
-//                removeAlertDialog.dismiss();
-//            }
-//        });
-//        removeAlertDialog.setButtonCancel(getActivity().getString(R.string.cancel), new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                removeAlertDialog.dismiss();
-//            }
-//        });
-//        if(!removeAlertDialog.isShowing()) {
-//            removeAlertDialog.show();
-//        }
-
-    }
-
-    private PopupWindow popupWindow;
-    private void initItemMeau(View v){
-        PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-        popupMenu.inflate(R.menu.wall_item_menu);
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
+        removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.menu_item_add_photo:
-                        break;
-                    case R.id.menu_edit_this_post:
-                        break;
-                    case R.id.menu_save_all_photos:
-                        break;
-                    case R.id.menu_delete_this_post:
-                        break;
-                }
-                return true;
+            public void onClick(View v) {
+
+                RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, content_group_id), null);
+                mHttpTools.put(requestInfo, POST_DELETE, new HttpCallback() {
+                    @Override
+                    public void onStart() {
+                        vProgress.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        vProgress.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onResult(String string) {
+//                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                        getParentActivity().setResult(Activity.RESULT_OK);
+                        getParentActivity().finish();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                    }
+
+                    @Override
+                    public void onCancelled() {
+
+                    }
+
+                    @Override
+                    public void onLoading(long count, long current) {
+
+                    }
+                });
+                removeAlertDialog.dismiss();
             }
         });
-
-        //使用反射，强制显示菜单图标
-        try {
-            Field field = popupMenu.getClass().getDeclaredField("mPopup");
-            field.setAccessible(true);
-            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
-            mHelper.setForceShowIcon(true);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
-            e.printStackTrace();
+        removeAlertDialog.setButtonCancel(getActivity().getString(R.string.cancel), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeAlertDialog.dismiss();
+            }
+        });
+        if (!removeAlertDialog.isShowing()) {
+            removeAlertDialog.show();
         }
 
-        popupMenu.show();
-
-//        PopupWindow popupMenu = new PopupWindow(getActivity());
-//
-//        popupMenu = new PopupWindow(getActivity().getLayoutInflater().inflate(R.layout.wall_item_menu,null),
-//                ViewGroup.LayoutParams.WRAP_CONTENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT);
-//
-//        popupMenu.setOutsideTouchable(true);
-//        popupMenu.showAsDropDown(v,0,0);
     }
 
     /**

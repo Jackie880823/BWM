@@ -1,12 +1,17 @@
 package com.bondwithme.BondWithMe.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v7.internal.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
@@ -24,9 +29,11 @@ import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
+import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
+import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
@@ -35,6 +42,7 @@ import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +63,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private WallEntity wallEntity;
     private HttpTools mHttpTools;
     private Context context;
+    private BaseFragment fragment;
 
     /**
      * 监听日志内容设置的变化，根据{@link #needFull}的值来剪切文字
@@ -135,7 +144,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     /**
      * 删除按钮，点击删除日志
      */
-    private ImageButton btn_del;
+    private ImageButton btnOption;
 
     /**
      * 心情视图
@@ -173,13 +182,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * @param itemView   日志视图的整个UI
      * @param httpTools  网络上传工具
      * @param isDetailed 是wall的详情：{@value true} 是wall详情；{@value false} 不是wall详情
-     * @param context    用于引导应用资源
+     * @param fragment    用于引导应用资源
      */
-    public WallHolder(final Context context, View itemView, HttpTools httpTools, boolean isDetailed) {
+    public WallHolder(BaseFragment fragment, View itemView, HttpTools httpTools, boolean isDetailed) {
         // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
         super(itemView);
         mHttpTools = httpTools;
-        this.context = context;
+        this.context = fragment.getContext();
+        this.fragment = fragment;
 
         nivHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
         tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
@@ -195,7 +205,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //        tvLoveList = (TextView) itemView.findViewById(R.id.tv_love_list);
         tvCommentCount = (TextView) itemView.findViewById(R.id.tv_wall_relay_count);
         ibAgree = (ImageButton) itemView.findViewById(R.id.iv_love);
-        btn_del = (ImageButton) itemView.findViewById(R.id.btn_del);
+        btnOption = (ImageButton) itemView.findViewById(R.id.btn_option);
         iv_mood = (ImageView) itemView.findViewById(R.id.iv_mood);
         llLocation = (LinearLayout) itemView.findViewById(R.id.ll_location);
         ivLocation = (ImageView) itemView.findViewById(R.id.iv_location);
@@ -211,7 +221,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         tvAgreeCount.setOnClickListener(this);
         //        tvLoveList.setOnClickListener(this);
         ibAgree.setOnClickListener(this);
-        btn_del.setOnClickListener(this);
+        btnOption.setOnClickListener(this);
         imWallsImages.setOnClickListener(this);
         tvSwitch.setOnClickListener(this);
     }
@@ -219,10 +229,10 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     /**
      * 设置收起开头的显示/隐藏
      * @see View#setVisibility(int)
-     * @param visiblity
+     * @param visibility
      */
-    public void setSwitchVisibility(int visiblity) {
-        tvSwitch.setVisibility(visiblity);
+    public void setSwitchVisibility(int visibility) {
+        tvSwitch.setVisibility(visibility);
     }
 
     /**
@@ -292,10 +302,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 }
                 break;
 
-            case R.id.btn_del:
-                if (mViewClickListener != null) {
-                    mViewClickListener.remove(v,wallEntity.getContent_group_id());
-                }
+            case R.id.btn_option:
+                initItemMenu(v, wallEntity);
                 break;
 
             case R.id.switch_text_show:
@@ -538,9 +546,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
 
         if (MainActivity.getUser().getUser_id().equals(this.wallEntity.getUser_id())) {
-            btn_del.setVisibility(View.VISIBLE);
+            btnOption.setVisibility(View.VISIBLE);
         } else {
-            btn_del.setVisibility(View.GONE);
+            btnOption.setVisibility(View.GONE);
         }
 
         if (TextUtils.isEmpty(this.wallEntity.getLove_id())) {
@@ -653,5 +661,57 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         LocationUtil.goNavigation(context, Double.valueOf(wall.getLoc_latitude()), Double.valueOf(wall.getLoc_longitude()), wall.getLoc_type());
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void initItemMenu(View v, final WallEntity wallEntity) {
+
+        PopupMenu popupMenu = new PopupMenu(context, v);
+        popupMenu.inflate(R.menu.wall_item_menu);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.menu_item_add_photo:
+                        break;
+                    case R.id.menu_edit_this_post:
+                        Intent intent;
+                        intent = new Intent(context, NewDiaryActivity.class);
+                        intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
+                        intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
+                        fragment.startActivityForResult(intent, Constant.ACTION_UPDATE_WALL);
+                        break;
+                    case R.id.menu_save_all_photos:
+                        break;
+                    case R.id.menu_delete_this_post:
+                        mViewClickListener.remove(wallEntity);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        //使用反射，强制显示菜单图标
+        try {
+            Field field = popupMenu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+            mHelper.setForceShowIcon(true);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+//
+        popupMenu.show();
+
+//        PopupWindow popupMenu = new PopupWindow(getActivity());
+//        popupMenu.setAnimationStyle(R.style.PopupAnimation);
+//
+//        popupMenu = new PopupWindow(getActivity().getLayoutInflater().inflate(R.layout.wall_item_menu,null),
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT);
+//
+//        popupMenu.setOutsideTouchable(true);
+//        popupMenu.showAsDropDown(v,0,0);
     }
 }

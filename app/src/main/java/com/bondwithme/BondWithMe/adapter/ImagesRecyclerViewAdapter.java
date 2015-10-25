@@ -289,7 +289,7 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (position > 0) {
+                    if (position > 0 && position <= entities.size()) {
                         PushedPhotoEntity entity = entities.remove(position - 1);
                         notifyItemRemoved(position);
                         listener.deletePhoto(entity);
