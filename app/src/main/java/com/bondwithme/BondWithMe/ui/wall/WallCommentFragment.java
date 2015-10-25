@@ -882,4 +882,11 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         }
     }
 
+    @Override
+    public void onSavePhoto() {
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
 }

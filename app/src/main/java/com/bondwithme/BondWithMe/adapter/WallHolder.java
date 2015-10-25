@@ -766,6 +766,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     private void savePhotos() {
+        mViewClickListener.onSavePhoto();
         int photoCount = Integer.valueOf(wallEntity.getPhoto_count());
         LogUtil.d(TAG, "GET_WALL_SUCCEED photoCount = " + photoCount);
         if (photoCount > 0) {

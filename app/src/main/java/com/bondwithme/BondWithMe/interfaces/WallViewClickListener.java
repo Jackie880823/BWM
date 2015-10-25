@@ -59,4 +59,6 @@ public interface WallViewClickListener {
     void addPhotoed(WallEntity wallEntity, boolean succeed);
 
     void savePhotoed(WallEntity wallEntity, boolean succeed);
+
+    void onSavePhoto();
 }

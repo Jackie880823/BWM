@@ -405,6 +405,13 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     }
 
     @Override
+    public void onSavePhoto() {
+        if (vProgress != null) {
+            vProgress.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (resultCode == Activity.RESULT_OK) {
