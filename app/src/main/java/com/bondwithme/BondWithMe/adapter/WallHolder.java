@@ -568,12 +568,13 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             tvCommentCount.setText(this.wallEntity.getComment_count());
         }
 
-
-        if (MainActivity.getUser().getUser_id().equals(this.wallEntity.getUser_id())) {
-            btnOption.setVisibility(View.VISIBLE);
-        } else {
-            btnOption.setVisibility(View.GONE);
-        }
+        /**wing modified*/
+//        if (MainActivity.getUser().getUser_id().equals(this.wallEntity.getUser_id())) {
+//            btnOption.setVisibility(View.VISIBLE);
+//        } else {
+//            btnOption.setVisibility(View.GONE);
+//        }
+        /**wing modified*/
 
         if (TextUtils.isEmpty(this.wallEntity.getLove_id())) {
             ibAgree.setImageResource(R.drawable.love_normal);
@@ -694,6 +695,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private void initItemMenu(View v, final WallEntity wallEntity) {
         PopupMenu popupMenu = new PopupMenu(context, v);
         popupMenu.inflate(R.menu.wall_item_menu);
+
+
+        if (!MainActivity.getUser().getUser_id().equals(this.wallEntity.getUser_id())) {
+            popupMenu.getMenu().findItem(R.id.menu_item_add_photo).setVisible(false);
+            popupMenu.getMenu().findItem(R.id.menu_edit_this_post).setVisible(false);
+            popupMenu.getMenu().findItem(R.id.menu_delete_this_post).setVisible(false);
+        }
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -989,7 +998,10 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     int downloadCount = 0;
     private void downloadPhoto(ArrayList<PhotoEntity> photoEntities) {
         for (PhotoEntity photoEntity : photoEntities) {
-            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, MainActivity.getUser().getUser_id(), photoEntity.getFile_id());
+            /**wing modified*/
+//            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, MainActivity.getUser().getUser_id(), photoEntity.getFile_id());
+            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, photoEntity.getUser_id(), photoEntity.getFile_id());
+            /**wing modified*/
             mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context), true, new HttpCallback() {
                 @Override
                 public void onStart() {
