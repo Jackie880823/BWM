@@ -855,7 +855,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     @Override
     public void showPopClick(WallHolder holder) {
-
+        this.holder = holder;
     }
 
     @Override
@@ -867,6 +867,18 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 progressBar.setVisibility(View.GONE);
             }
             LogUtil.e(TAG, "add Photo Fail");
+        }
+    }
+
+    @Override
+    public void savePhotoed(WallEntity wallEntity, boolean succeed) {
+        if (succeed) {
+            requestData();
+        } else {
+            if (progressBar != null) {
+                progressBar.setVisibility(View.GONE);
+            }
+            LogUtil.e(TAG, "save Photo Fail");
         }
     }
 

@@ -57,4 +57,6 @@ public interface WallViewClickListener {
     void showPopClick(WallHolder holder);
 
     void addPhotoed(WallEntity wallEntity, boolean succeed);
+
+    void savePhotoed(WallEntity wallEntity, boolean succeed);
 }

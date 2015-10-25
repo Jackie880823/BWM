@@ -31,7 +31,9 @@ import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MediaData;
+import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
+import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
@@ -50,6 +52,11 @@ import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;
@@ -72,6 +79,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     private static final String POST_LOVE = TAG + "_POST_LOVE";
     private static final String UPLOAD_PIC = TAG + "_UPLOAD_PIC";
+    private static final String SAVE_PHOTO = TAG + "_SAVE_PHOTO";
     private static final int ACTION_POST_PHOTOS_SUCCEED = 100;
     private static final int ACTION_POST_PHOTOS_FAIL = 101;
 
@@ -187,7 +195,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private List<Uri> localPhotos = new ArrayList<>();
     private boolean lastPic;
     private CallBack callBack = new CallBack();
-    Handler mHandler = new Handler(){
+    Handler mHandler = new Handler() {
         /**
          * Subclasses must implement this to receive messages.
          *
@@ -206,6 +214,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             }
         }
     };
+    private ArrayList<PhotoEntity> data = new ArrayList<>();
 
     public final TextView getTvCommentCount() {
         return tvCommentCount;
@@ -676,7 +685,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
 
-            MyDialog myDialog;
+    MyDialog myDialog;
+
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void initItemMenu(View v, final WallEntity wallEntity) {
         PopupMenu popupMenu = new PopupMenu(context, v);
@@ -688,7 +698,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 LogUtil.d(TAG, "onMenuItemClick& id: " + menuItem.getItemId());
                 switch (menuItem.getItemId()) {
                     case R.id.menu_item_add_photo:
-                        if(!TextUtils.isEmpty(wallEntity.getVideo_filename())) {
+                        if (!TextUtils.isEmpty(wallEntity.getVideo_filename())) {
                             LogUtil.i(TAG, "onMenuItemClick& need Alert");
                             // 已经选择了视频需要弹出提示
                             myDialog = new MyDialog(context, "", context.getString(R.string.will_remove_selected_video));
@@ -715,20 +725,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         break;
                     case R.id.menu_save_all_photos:
                         LogUtil.d(TAG, "onMenuItemClick&  save all photos");
-                        String videoName = wallEntity.getVideo_filename();
-                        if (TextUtils.isEmpty(videoName)) {
-                            // 检测网络上的图片
-                            int photoCount = Integer.valueOf(wallEntity.getPhoto_count());
-                            LogUtil.d(TAG, "GET_WALL_SUCCEED photoCount = " + photoCount);
-                            if (photoCount > 0) {
-                                Map<String, String> condition = new HashMap<>();
-                                condition.put("content_id", wallEntity.getContent_id());
-                                Map<String, String> params = new HashMap<>();
-                                params.put("condition", UrlUtil.mapToJsonstring(condition));
-                                String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
-
-                            }
-                        }
+                        savePhotos();
                         break;
                     case R.id.menu_edit_this_post:
                         Intent intent;
@@ -768,7 +765,20 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //        popupMenu.showAsDropDown(v,0,0);
     }
 
-    private void savePhotos(){
+    private void savePhotos() {
+        int photoCount = Integer.valueOf(wallEntity.getPhoto_count());
+        LogUtil.d(TAG, "GET_WALL_SUCCEED photoCount = " + photoCount);
+        if (photoCount > 0) {
+            Map<String, String> condition = new HashMap<>();
+            condition.put("content_id", wallEntity.getContent_id());
+            Map<String, String> params = new HashMap<>();
+            params.put("condition", UrlUtil.mapToJsonstring(condition));
+            String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
+            callBack.setLinkType(CallBack.LINK_TYPE_SAVE_PHOTOS);
+            new HttpTools(context).get(url, null, SAVE_PHOTO, callBack);
+        } else {
+            LogUtil.e(TAG, "save Photo Fail");
+        }
 //        String.format(Constant.API_GET_PIC, Constant.Module_Original, userId, photoEntity.getFile_id());
     }
 
@@ -897,6 +907,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     class CallBack implements HttpCallback {
         public static final int LINK_TYPE_SUBMIT_PICTURE = 2;
         public static final int LINK_TYPE_POST_LOVE = 3;
+        public static final int LINK_TYPE_SAVE_PHOTOS = 4;
 
         /**
          * 当前回调标识，用于识别当前同调用类别
@@ -913,15 +924,40 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         @Override
-        public void onFinish() {}
+        public void onFinish() {
+        }
 
         @Override
-        public void onResult(String string) {
-            LogUtil.i(TAG, "onResult# typy: " + linkType + " response: " + string);
+        public void onResult(String response) {
+            LogUtil.i(TAG, "onResult# typy: " + linkType + " response: " + response);
             switch (linkType) {
                 case LINK_TYPE_SUBMIT_PICTURE:
                     if (lastPic) {
                         mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_SUCCEED);
+                    }
+                    break;
+                case LINK_TYPE_SAVE_PHOTOS:
+
+                    LogUtil.i(TAG, "onResult& response: " + response);
+                    try {
+                        GsonBuilder gsonb = new GsonBuilder();
+                        //Json中的日期表达方式没有办法直接转换成我们的Date类型, 因此需要单独注册一个Date的反序列化类.
+                        //DateDeserializer ds = new DateDeserializer();
+                        //给GsonBuilder方法单独指定Date类型的反序列化方法
+                        //gsonb.registerTypeAdapter(Date.class, ds);
+                        Gson gson = gsonb.create();
+                        if (response.startsWith("{\"data\":")) {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String dataString = jsonObject.optString("data");
+                            data = gson.fromJson(dataString, new TypeToken<ArrayList<PhotoEntity>>() {
+                            }.getType());
+                        } else {
+                            data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
+                            }.getType());
+                        }
+                        downloadPhoto(data);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     break;
             }
@@ -940,6 +976,45 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         @Override
         public void onLoading(long count, long current) {
 
+        }
+    }
+    int downloadCount = 0;
+    private void downloadPhoto(ArrayList<PhotoEntity> photoEntities) {
+        for (PhotoEntity photoEntity : photoEntities) {
+            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, MainActivity.getUser().getUser_id(), photoEntity.getFile_id());
+            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context), true, new HttpCallback() {
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onFinish() {
+                    downloadCount++;
+                    if (downloadCount == data.size()) {
+                        mViewClickListener.savePhotoed(wallEntity, true);
+                    }
+                }
+
+                @Override
+                public void onResult(String string) {
+
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    mViewClickListener.savePhotoed(wallEntity, false);
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onCancelled() {
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
         }
     }
 }
