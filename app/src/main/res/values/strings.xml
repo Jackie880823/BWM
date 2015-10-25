@@ -649,4 +649,5 @@
     <string name="text_wall_view_pic_delete">Delete this Photo</string>
     <string name="text_wall_view_pic_delete_warning">Are you sure you want to delete this photo?</string>
     <string name="text_wall_view_pic_edit_no_change">Captions are not change</string>
+    <string name="no_photo_2_save">No Photo to Save!</string>
 </resources>

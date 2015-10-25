@@ -46,6 +46,7 @@ import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
@@ -59,6 +60,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -767,10 +769,13 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     private void savePhotos() {
-        mViewClickListener.onSavePhoto();
+
         int photoCount = Integer.valueOf(wallEntity.getPhoto_count());
         LogUtil.d(TAG, "GET_WALL_SUCCEED photoCount = " + photoCount);
         if (photoCount > 0) {
+            /**wing add*/
+            mViewClickListener.onSavePhoto();
+            /**wing add*/
             Map<String, String> condition = new HashMap<>();
             condition.put("content_id", wallEntity.getContent_id());
             Map<String, String> params = new HashMap<>();
@@ -779,6 +784,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             callBack.setLinkType(CallBack.LINK_TYPE_SAVE_PHOTOS);
             new HttpTools(context).get(url, null, SAVE_PHOTO, callBack);
         } else {
+            MessageUtil.showMessage(context,R.string.no_photo_2_save);
             LogUtil.e(TAG, "save Photo Fail");
         }
 //        String.format(Constant.API_GET_PIC, Constant.Module_Original, userId, photoEntity.getFile_id());
@@ -1000,6 +1006,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 @Override
                 public void onResult(String string) {
 
+                    /**wing modified*/
+                    String path = null;
+                    try {
+                        path = PicturesCacheUtil.saveImageToGallery(context, new File(string), "wall");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    /**wing modified*/
                 }
 
                 @Override

@@ -645,4 +645,5 @@
     <string name="save_all_photos">Save All Photos</string>
     <string name="edit_this_post">Edit this Post</string>
     <string name="delete_this_post">Delete this Post</string>
+    <string name="no_photo_2_save">No Photo to Save!</string>
 </resources>
