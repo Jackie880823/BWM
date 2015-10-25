@@ -88,7 +88,7 @@
                     android:layout_alignParentRight="true"
                     android:background="@null"
                     android:contentDescription="@string/delete"
-                    android:src="@drawable/icon_delete"/>
+                    android:src="@drawable/option_dots"/>
             </RelativeLayout>
 
             <LinearLayout
