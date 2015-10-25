@@ -629,6 +629,11 @@
     <string name="text_message_copy">复制</string>
 
     <string name="title_rewards">奖励</string>
+    <string name="text_wall_view_pic_save">保存当前照片</string>
+    <string name="text_wall_view_pic_edit">编辑当前描述</string>
+    <string name="text_wall_view_pic_delete">删除当前照片</string>
+    <string name="text_wall_view_pic_delete_warning">你确定要删除当前的照片吗?</string>
+    <string name="text_wall_view_pic_edit_no_change">描述没有被修改</string>
     <string name="text_no_rewards">暂无奖励</string>
     <string name="text_more">全文</string>
     <string name="text_close_update_sticker">关闭</string>
@@ -640,4 +645,6 @@
     <string name="save_all_photos">保存图片</string>
     <string name="edit_this_post">编辑日记</string>
     <string name="delete_this_post">删除</string>
+    <string name="no_photo_2_save">No Photo to Save!</string>
+>>>>>>> e7d6e3e7edc7c3f3512b6bb68a241d5f7db6e10b
 </resources>

@@ -35,25 +35,27 @@ public class ViewOriginalPicesActivity extends BaseFragmentActivity {
         setContentView(R.layout.activity_view_original_pices);
         ViewOriginalPicesMainFragment fragment;
         Bundle bundle = new Bundle();
-        if (getIntent().getBooleanExtra(IS_DATA, false)) {
-            fragment = ViewOriginalPicesMainFragment.newInstance((java.util.List<com.bondwithme.BondWithMe.entity.PhotoEntity>) getIntent().getSerializableExtra("datas"));
-        } else {
-            fragment = new ViewOriginalPicesMainFragment();
-            request_url = getIntent().getStringExtra(REQUEST_URL);
-            memberId = getIntent().getStringExtra(MEMBER_ID);
-            bundle.putString(REQUEST_URL, request_url);
-            bundle.putString(MEMBER_ID, memberId);
-        }
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.images_witcher, fragment).commit();
+        if (getIntent().getBooleanExtra("is_data", false)) {
+            //浏览单张图片的情况
+            if (getIntent().getBooleanExtra(IS_DATA, false)) {
+                fragment = ViewOriginalPicesMainFragment.newInstance((java.util.List<com.bondwithme.BondWithMe.entity.PhotoEntity>) getIntent().getSerializableExtra("datas"));
+            } else {
+                //多张图片的时候
+                fragment = new ViewOriginalPicesMainFragment();
+                request_url = getIntent().getStringExtra(REQUEST_URL);
+                memberId = getIntent().getStringExtra(MEMBER_ID);
+                bundle.putString(REQUEST_URL, request_url);
+                bundle.putString(MEMBER_ID, memberId);
+            }
+            fragment.setArguments(bundle);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.images_witcher, fragment).commit();
 
 //        changeFragment(ViewOriginalPicesMainFragment.createInstance(new ViewOriginalPicesMainFragment(), url), true);
-        initView();
-        requestData();
+            initView();
+            requestData();
+        }
     }
-
-
     private void initView() {
 
     }

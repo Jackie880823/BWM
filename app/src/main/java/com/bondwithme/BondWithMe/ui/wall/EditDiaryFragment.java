@@ -1073,7 +1073,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void openPhotos() {
-
+        LogUtil.d("","openPhotos========");
         Intent intent = new Intent(getParentActivity(), SelectPhotosActivity.class);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         /**

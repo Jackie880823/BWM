@@ -385,8 +385,9 @@ public class Constant {
     public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance()) + "/Video/";
 
     //删除message消息
-    public static final String API_MESSAGE_DELETE = API_SERVER + "/bondwithme/index.php/api/removeContent/%s";
-
+    public static final String API_MESSAGE_DELETE = API_SERVER +"/bondwithme/index.php/api/removeContent/%s";
+    public static final String API_WALL_UPDATE_CAPTION = API_SERVER +"/bondwithme/index.php/api/editPhoto/%s";
+    public static final String API_WALL_DELETE_PHOTO = API_SERVER +"/bondwithme/index.php/api/deletePhoto/%s";
 
     //新的得到表情包
     public static final String API_STICKER_GROUP_LIST = API_SERVER + "/bondwithme/index.php/api/stickerGroupList";
