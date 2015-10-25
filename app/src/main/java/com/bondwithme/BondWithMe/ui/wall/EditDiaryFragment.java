@@ -40,6 +40,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.FeelingAdapter;
 import com.bondwithme.BondWithMe.adapter.ImagesRecyclerViewAdapter;
+import com.bondwithme.BondWithMe.adapter.VideoHolder;
 import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
 import com.bondwithme.BondWithMe.entity.MediaData;
@@ -917,7 +918,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 case Constant.OPEN_GPS:
                     openMap();
                     break;
-                case Constant.REQUEST_HEAD_PHOTO:
+                case Constant.REQUEST_HEAD_MULTI_PHOTO:
                     if (data != null) {
                         String type = data.getStringExtra(MediaData.EXTRA_MEDIA_TYPE);
                         if (MediaData.TYPE_VIDEO.equals(type)) {
@@ -994,6 +995,35 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_camera:
+                boolean needAlert;
+                if (isEdit) {
+                    needAlert = wall != null && !TextUtils.isEmpty(wall.getVideo_filename());
+                } else {
+                    needAlert = !Uri.EMPTY.equals(videoUri);
+                }
+
+                if(needAlert) {
+                    // 已经选择了视频需要弹出提示
+                    myDialog = new MyDialog(getContext(), "", getContext().getString(R.string.will_remove_selected_video));
+                    myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myDialog.dismiss();
+                            openPhotos();
+                        }
+                    });
+
+                    // 不选择视频
+                    myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            myDialog.dismiss();
+                        }
+                    });
+                    myDialog.show();
+                } else {
+                    openPhotos();
+                }
                 openPhotos();
                 break;
             case R.id.tv_tag:
@@ -1050,9 +1080,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
         intent.putExtra(MediaData.USE_VIDEO_AVAILABLE, true);
         intent.putParcelableArrayListExtra(SelectPhotosActivity.EXTRA_SELECTED_PHOTOS, (ArrayList<? extends Parcelable>) imageUris);
-//        intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
+        int residue = SelectPhotosActivity.MAX_SELECT - photoEntities.size();
+        intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        startActivityForResult(intent, Constant.REQUEST_HEAD_PHOTO);
+        startActivityForResult(intent, Constant.REQUEST_HEAD_MULTI_PHOTO);
     }
 
     /**

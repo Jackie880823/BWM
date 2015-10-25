@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.interfaces;
 
 import android.view.View;
 
+import com.bondwithme.BondWithMe.adapter.WallHolder;
 import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.util.WallUtil;
@@ -52,4 +53,8 @@ public interface WallViewClickListener {
      * @param type  {@link WallUtil#LOVE_MEMBER_COMMENT_TYPE} or {@link WallUtil#LOVE_MEMBER_WALL_TYPE}
      */
     void showLovedMember(String viewer_id, String refer_id, String type);
+
+    void showPopClick(WallHolder holder);
+
+    void addPhotoed(WallEntity wallEntity, boolean succeed);
 }

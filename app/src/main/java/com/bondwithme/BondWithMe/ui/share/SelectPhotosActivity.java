@@ -55,14 +55,16 @@ public class SelectPhotosActivity extends BaseActivity {
     private String videoPaht;
     private String imagePaht;
 
+
     //    public static final String EXTRA_SELECTED_PHOTOS = "selected_photos";
     /**
      * 限制最多可选图片张数
      */
-    public final static int MAX_SELECT = 20;
+    public final static int MAX_SELECT = 50;
     public static final int REQUEST_HEAD_VIDEO = 100;
     public static final int REQUEST_HEAD_IMAGE = 101;
 
+    private int residue = MAX_SELECT;
     private SelectPhotosFragment fragment;
     private ArrayList<MediaData> mSelectedImages = new ArrayList<>();
 
@@ -121,12 +123,12 @@ public class SelectPhotosActivity extends BaseActivity {
                 LogUtil.i(TAG, "addUri& uri path: " + mediaData.getPath());
                 if (multi) {
                     //                    if(mSelectedImages.size() < residue) {
-                    if (mSelectedImages.size() < MAX_SELECT) {
+                    if (mSelectedImages.size() <= residue) {
                         // 没有超过限制的图片数量可以继续添加并返回添加结果的返回值
                         result = mSelectedImages.contains(mediaData) || mSelectedImages.add(mediaData);
                     } else {
                         // 提示用户添加的图片超过限制的数量
-                        MessageUtil.showMessage(SelectPhotosActivity.this, String.format(SelectPhotosActivity.this.getString(R.string.select_too_many), MAX_SELECT));
+                        MessageUtil.showMessage(SelectPhotosActivity.this, String.format(SelectPhotosActivity.this.getString(R.string.select_too_many), residue));
                     }
                 } else {
                     // 不是同时添加多张图片，添加完成关闭当前Activity
@@ -214,7 +216,7 @@ public class SelectPhotosActivity extends BaseActivity {
     protected void initBottomBar() {
     }
 
-    private void switchRightTitleView(boolean isEntry){
+    private void switchRightTitleView(boolean isEntry) {
         if (isEntry) {
             addButton.setVisibility(View.GONE);
             rightButton.setImageResource(R.drawable.btn_done);
@@ -274,14 +276,14 @@ public class SelectPhotosActivity extends BaseActivity {
      */
     @Override
     protected void titleRightEvent() {
-        if (!mSelectedImages.isEmpty()) {
-            if (isPreview) {
-                changeFragment(fragment, false);
-                if (!mSelectedImages.contains(currentData)) {
-                    listener.addUri(currentData);
-                }
-                isPreview = false;
-            } else {
+        if (isPreview) {
+            changeFragment(fragment, false);
+            if (!mSelectedImages.contains(currentData)) {
+                listener.addUri(currentData);
+            }
+            isPreview = false;
+        } else {
+            if (!mSelectedImages.isEmpty()) {
                 Intent intent = new Intent();
                 ArrayList<Uri> uriList = new ArrayList<>();
                 for (MediaData mediaData : mSelectedImages) {
@@ -294,10 +296,10 @@ public class SelectPhotosActivity extends BaseActivity {
                 intent.putParcelableArrayListExtra(EXTRA_IMAGES_STR, uriList);
                 setResult(RESULT_OK, intent);
                 finish();
+            } else {
+                Uri out = getOutVideoUri();
+                openCamera(MediaData.ACTION_RECORDER_VIDEO, out, REQUEST_HEAD_VIDEO);
             }
-        } else {
-            Uri out = getOutVideoUri();
-            openCamera(MediaData.ACTION_RECORDER_VIDEO, out, REQUEST_HEAD_VIDEO);
         }
     }
 
@@ -371,6 +373,7 @@ public class SelectPhotosActivity extends BaseActivity {
         multi = intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
         useUniversal = intent.getBooleanExtra(MediaData.EXTRA_USE_UNIVERSAL, false);
         useVideo = intent.getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
+        residue = intent.getIntExtra(EXTRA_RESIDUE, MAX_SELECT);
         // 总共需要添加的图片数量
         //        residue = intent.getIntExtra(EXTRA_RESIDUE, 10);
         fragment.setSelectImageUirListener(listener);

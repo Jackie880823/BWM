@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.ui.wall;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,11 +20,13 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallAdapter;
+import com.bondwithme.BondWithMe.adapter.WallHolder;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
@@ -50,7 +53,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
     private static final String GET_WALL = TAG + "_GET_WALL";
     private static final String PUT_REMOVE = TAG + "_PUT_REMOVE";
-
+    private WallHolder holder;
 
     public static WallFragment newInstance(String... params) {
         return createInstance(new WallFragment(), params);
@@ -373,6 +376,23 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     }
 
     @Override
+    public void showPopClick(WallHolder holder) {
+        this.holder = holder;
+    }
+
+    @Override
+    public void addPhotoed(WallEntity wallEntity, boolean succeed) {
+        if (succeed) {
+            refresh();
+        } else {
+            if (vProgress != null) {
+                vProgress.setVisibility(View.GONE);
+            }
+            LogUtil.e(TAG, "addPhoto Fail");
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (resultCode == Activity.RESULT_OK) {
@@ -387,6 +407,18 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 case Constant.ACTION_COMMENT_WALL:
                 case Constant.ACTION_UPDATE_WALL:
                     refresh();
+                    break;
+                case Constant.REQUEST_HEAD_MULTI_PHOTO:
+                    if (data != null && holder != null) {
+                        ArrayList<Uri> pickUris;
+                        pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
+                        if (pickUris != null && !pickUris.isEmpty()) {
+                            if (vProgress != null) {
+                                vProgress.setVisibility(View.VISIBLE);
+                            }
+                            holder.setLocalPhotos(pickUris);
+                        }
+                    }
                     break;
             }
         }

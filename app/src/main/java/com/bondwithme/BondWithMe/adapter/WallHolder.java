@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v7.internal.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -23,8 +27,10 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
@@ -33,17 +39,24 @@ import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
+import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
+import com.bondwithme.BondWithMe.widget.MyDialog;
 
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +71,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private static final String TAG = WallHolder.class.getSimpleName();
 
     private static final String POST_LOVE = TAG + "_POST_LOVE";
+    private static final String UPLOAD_PIC = TAG + "_UPLOAD_PIC";
+    private static final int ACTION_POST_PHOTOS_SUCCEED = 100;
+    private static final int ACTION_POST_PHOTOS_FAIL = 101;
 
     private WallViewClickListener mViewClickListener;
     private WallEntity wallEntity;
@@ -166,6 +182,31 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     private boolean needFull = false;
 
+
+    private List<CompressBitmapTask> tasks = new ArrayList<>();
+    private List<Uri> localPhotos = new ArrayList<>();
+    private boolean lastPic;
+    private CallBack callBack = new CallBack();
+    Handler mHandler = new Handler(){
+        /**
+         * Subclasses must implement this to receive messages.
+         *
+         * @param msg
+         */
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case ACTION_POST_PHOTOS_SUCCEED:
+                    mViewClickListener.addPhotoed(wallEntity, true);
+                    break;
+                case ACTION_POST_PHOTOS_FAIL:
+                    mViewClickListener.addPhotoed(wallEntity, false);
+                    break;
+            }
+        }
+    };
+
     public final TextView getTvCommentCount() {
         return tvCommentCount;
     }
@@ -182,7 +223,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * @param itemView   日志视图的整个UI
      * @param httpTools  网络上传工具
      * @param isDetailed 是wall的详情：{@value true} 是wall详情；{@value false} 不是wall详情
-     * @param fragment    用于引导应用资源
+     * @param fragment   用于引导应用资源
      */
     public WallHolder(BaseFragment fragment, View itemView, HttpTools httpTools, boolean isDetailed) {
         // super这个参数一定要注意,必须为Item的根节点.否则会出现莫名的FC.
@@ -228,8 +269,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     /**
      * 设置收起开头的显示/隐藏
-     * @see View#setVisibility(int)
+     *
      * @param visibility
+     * @see View#setVisibility(int)
      */
     public void setSwitchVisibility(int visibility) {
         tvSwitch.setVisibility(visibility);
@@ -398,38 +440,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         params.put("user_id", "" + MainActivity.getUser().getUser_id());
 
         RequestInfo requestInfo = new RequestInfo(Constant.API_WALL_LOVE, params);
-
-        mHttpTools.post(requestInfo, POST_LOVE, new HttpCallback() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onFinish() {
-
-            }
-
-            @Override
-            public void onResult(String response) {
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-
-            @Override
-            public void onCancelled() {
-
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
+        callBack.setLinkType(CallBack.LINK_TYPE_POST_LOVE);
+        mHttpTools.post(requestInfo, POST_LOVE, callBack);
 
     }
 
@@ -664,16 +676,59 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
 
+            MyDialog myDialog;
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void initItemMenu(View v, final WallEntity wallEntity) {
-
         PopupMenu popupMenu = new PopupMenu(context, v);
         popupMenu.inflate(R.menu.wall_item_menu);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
+                mViewClickListener.showPopClick(WallHolder.this);
+                LogUtil.d(TAG, "onMenuItemClick& id: " + menuItem.getItemId());
                 switch (menuItem.getItemId()) {
                     case R.id.menu_item_add_photo:
+                        if(!TextUtils.isEmpty(wallEntity.getVideo_filename())) {
+                            LogUtil.i(TAG, "onMenuItemClick& need Alert");
+                            // 已经选择了视频需要弹出提示
+                            myDialog = new MyDialog(context, "", context.getString(R.string.will_remove_selected_video));
+                            myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myDialog.dismiss();
+                                    openPhotos();
+                                }
+                            });
+
+                            // 不选择视频
+                            myDialog.setButtonCancel(R.string.text_dialog_no, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    myDialog.dismiss();
+                                }
+                            });
+                            myDialog.show();
+                        } else {
+                            LogUtil.d(TAG, "onMenuItemClick& openPhoto");
+                            openPhotos();
+                        }
+                        break;
+                    case R.id.menu_save_all_photos:
+                        LogUtil.d(TAG, "onMenuItemClick&  save all photos");
+                        String videoName = wallEntity.getVideo_filename();
+                        if (TextUtils.isEmpty(videoName)) {
+                            // 检测网络上的图片
+                            int photoCount = Integer.valueOf(wallEntity.getPhoto_count());
+                            LogUtil.d(TAG, "GET_WALL_SUCCEED photoCount = " + photoCount);
+                            if (photoCount > 0) {
+                                Map<String, String> condition = new HashMap<>();
+                                condition.put("content_id", wallEntity.getContent_id());
+                                Map<String, String> params = new HashMap<>();
+                                params.put("condition", UrlUtil.mapToJsonstring(condition));
+                                String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
+
+                            }
+                        }
                         break;
                     case R.id.menu_edit_this_post:
                         Intent intent;
@@ -681,8 +736,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
                         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
                         fragment.startActivityForResult(intent, Constant.ACTION_UPDATE_WALL);
-                        break;
-                    case R.id.menu_save_all_photos:
                         break;
                     case R.id.menu_delete_this_post:
                         mViewClickListener.remove(wallEntity);
@@ -713,5 +766,180 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //
 //        popupMenu.setOutsideTouchable(true);
 //        popupMenu.showAsDropDown(v,0,0);
+    }
+
+    private void savePhotos(){
+//        String.format(Constant.API_GET_PIC, Constant.Module_Original, userId, photoEntity.getFile_id());
+    }
+
+    /**
+     * 打开相册，选择图片
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void openPhotos() {
+        LogUtil.i(TAG, "openPhoto&");
+        Intent intent = new Intent(context, SelectPhotosActivity.class);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        /**
+         * 使用了Universal Image Loader库来处理图片需要返回的Uri与传统有差异，传此值用于区分
+         */
+        intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
+        intent.putExtra(MediaData.USE_VIDEO_AVAILABLE, false);
+//        intent.putParcelableArrayListExtra(SelectPhotosActivity.EXTRA_SELECTED_PHOTOS, (ArrayList<? extends Parcelable>) imageUris);
+        int residue = SelectPhotosActivity.MAX_SELECT;
+        String photoCountStr = wallEntity.getPhoto_count();
+        if (!TextUtils.isEmpty(photoCountStr)) {
+            residue = SelectPhotosActivity.MAX_SELECT - Integer.valueOf(photoCountStr);
+        }
+        intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        fragment.startActivityForResult(intent, Constant.REQUEST_HEAD_MULTI_PHOTO);
+    }
+
+    public void setLocalPhotos(List<Uri> localPhotos) {
+        this.localPhotos = localPhotos;
+        submitLocalPhotos(wallEntity.getContent_id());
+    }
+
+    private void submitLocalPhotos(String contentId) {
+        if (localPhotos.isEmpty()) {
+            mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_SUCCEED);
+        } else {
+            int count = localPhotos.size();
+            boolean multiple = (count <= 0);
+            tasks = new ArrayList<>();
+            for (int index = 0; index < count; index++) {
+                Uri photoEntity = localPhotos.get(index);
+                if (index == count - 1) {
+                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
+                    tasks.add(task);
+                    //for not work in down 11
+                    if (SDKUtil.IS_HONEYCOMB) {
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntity);
+                    } else {
+                        task.execute(photoEntity);
+                    }
+                } else {
+                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, false);
+                    tasks.add(task);
+                    //for not work in down 11
+                    if (SDKUtil.IS_HONEYCOMB) {
+                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntity);
+                    } else {
+                        task.execute(photoEntity);
+                    }
+                }
+            }
+        }
+    }
+
+    class CompressBitmapTask extends AsyncTask<Uri, Void, String> {
+
+        String contentId;
+        int index;
+        boolean multiple;
+        boolean lastPic;
+
+        public CompressBitmapTask(String contentId, int index, boolean multiple, final boolean lastPic) {
+            this.contentId = contentId;
+            this.index = index;
+            this.multiple = multiple;
+            this.lastPic = lastPic;
+        }
+
+        @Override
+        protected String doInBackground(Uri... params) {
+            if (params == null) {
+                return null;
+            }
+            return LocalImageLoader.compressBitmap(App.getContextInstance(), params[0], 480, 800, false);
+        }
+
+        @Override
+        protected void onPostExecute(String path) {
+            submitPic(path, contentId, index, multiple, lastPic);
+            tasks.remove(this);
+        }
+    }
+
+    /**
+     * 上传图片
+     *
+     * @param path      - 图片路径
+     * @param contentId
+     * @param index
+     * @param multiple
+     * @param lastPic
+     */
+    private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
+        this.lastPic = lastPic;
+        File f = new File(path);
+        if (!f.exists()) {
+            if (lastPic) {
+                mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_FAIL);
+            }
+            return;
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("content_creator_id", MainActivity.getUser().getUser_id());
+        params.put("content_id", contentId);
+        params.put("photo_index", "" + index);
+        params.put("photo_caption", "");
+        params.put("file", f);
+        params.put("multiple", multiple ? "1" : "0");
+        LogUtil.d(TAG, "submitPic: params: " + params);
+        callBack.setLinkType(CallBack.LINK_TYPE_SUBMIT_PICTURE);
+        mHttpTools.upload(Constant.API_WALL_PIC_POST, params, UPLOAD_PIC, callBack);
+
+    }
+
+    class CallBack implements HttpCallback {
+        public static final int LINK_TYPE_SUBMIT_PICTURE = 2;
+        public static final int LINK_TYPE_POST_LOVE = 3;
+
+        /**
+         * 当前回调标识，用于识别当前同调用类别
+         */
+        private int linkType = LINK_TYPE_SUBMIT_PICTURE;
+
+        public void setLinkType(int linkType) {
+            this.linkType = linkType;
+        }
+
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onFinish() {}
+
+        @Override
+        public void onResult(String string) {
+            LogUtil.i(TAG, "onResult# typy: " + linkType + " response: " + string);
+            switch (linkType) {
+                case LINK_TYPE_SUBMIT_PICTURE:
+                    if (lastPic) {
+                        mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_SUCCEED);
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void onError(Exception e) {
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onCancelled() {
+
+        }
+
+        @Override
+        public void onLoading(long count, long current) {
+
+        }
     }
 }

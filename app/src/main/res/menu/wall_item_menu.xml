@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_save_all_photos"
+        android:id="@+id/menu_item_add_photo"
         android:icon="@drawable/add_photo"
         android:orderInCategory="80"
         android:title="@string/add_photo_to_this_post" />
 
     <item
-        android:id="@+id/menu_setting_gps"
+        android:id="@+id/menu_save_all_photos"
         android:icon="@drawable/option_save_all_photo"
         android:orderInCategory="90"
         android:title="@string/save_all_photos" />

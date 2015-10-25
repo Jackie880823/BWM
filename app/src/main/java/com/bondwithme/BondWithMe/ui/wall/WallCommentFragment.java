@@ -27,6 +27,7 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -257,6 +258,17 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         switch (requestCode) {
+            case Constant.REQUEST_HEAD_MULTI_PHOTO:
+                if (data != null) {
+                    ArrayList<Uri> pickUris;
+                    pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
+                    if (pickUris != null && pickUris.isEmpty()) {
+                        if (progressBar != null) {
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+                        holder.setLocalPhotos(pickUris);
+                    }
+                }
             case Constant.ACTION_UPDATE_WALL:
                 if (Activity.RESULT_OK == resultCode) {
                     getParentActivity().setResult(Activity.RESULT_OK);
@@ -839,6 +851,23 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         intent.putExtra(WallUtil.GET_LOVE_LIST_REFER_ID, refer_id);
         intent.putExtra(WallUtil.GET_LOVE_LIST_TYPE, type);
         startActivity(intent);
+    }
+
+    @Override
+    public void showPopClick(WallHolder holder) {
+
+    }
+
+    @Override
+    public void addPhotoed(WallEntity wallEntity, boolean succeed) {
+        if (succeed) {
+            requestData();
+        } else {
+            if (progressBar != null) {
+                progressBar.setVisibility(View.GONE);
+            }
+            LogUtil.e(TAG, "add Photo Fail");
+        }
     }
 
 }

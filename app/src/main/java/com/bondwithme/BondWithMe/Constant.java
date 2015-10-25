@@ -42,6 +42,7 @@ public class Constant {
     public static final int GET_LOCATION = 17;
     public static final int GET_MEMBERS = 18;
     public static final int OPEN_GPS = 19;
+    public static final int REQUEST_HEAD_MULTI_PHOTO = 20;
 
     public static final int ACTION_EVENT_CREATE = 20;
     public static final int ACTION_EVENT_UPDATE = 21;
