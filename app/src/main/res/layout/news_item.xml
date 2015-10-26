@@ -32,7 +32,7 @@
                 android:id="@+id/iv_pic"
                 android:layout_width="match_parent"
                 android:layout_height="320dp"
-
+                android:visibility="gone"
                 />
 
             <ImageButton

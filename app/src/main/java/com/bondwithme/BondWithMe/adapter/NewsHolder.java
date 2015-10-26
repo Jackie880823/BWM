@@ -78,9 +78,11 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         videoUrl = newsEntity.getVideo();
         if (!TextUtils.isEmpty(imageUrl)){
             //display pic
+            ivPic.setVisibility(View.VISIBLE);
             VolleyUtil.initNetworkImageView(mContext,ivPic,newsEntity.getImage());
             ibtnVideo.setVisibility(View.INVISIBLE);
         }else if(!TextUtils.isEmpty(videoUrl)){
+            ivPic.setVisibility(View.VISIBLE);
             VolleyUtil.initNetworkImageView(mContext,ivPic,newsEntity.getVideo_thumbnail());
             ibtnVideo.setVisibility(View.VISIBLE);
         }else if(TextUtils.isEmpty(imageUrl) && TextUtils.isEmpty(videoUrl)){
