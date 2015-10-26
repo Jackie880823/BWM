@@ -571,8 +571,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             tvCommentCount.setText(this.wallEntity.getComment_count());
         }
 
-        if (!accountUserId.equals(this.wallEntity.getUser_id()) && Integer.valueOf(wallEntity.getPhoto_count()) <= 0) {
-            // 不是当前用户并且没有图片则不需要显更多功能按钮
+        if (!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename()))) {
+            // 不是当前用户：没有图片或者有视频都不显示功能没有图片则不需要显更多功能按钮
             btnOption.setVisibility(View.GONE);
         } else {
             btnOption.setVisibility(View.VISIBLE);
@@ -712,7 +712,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         String photoCount = wallEntity.getPhoto_count();
-        if (Integer.valueOf(photoCount) <= 0) { // 没有图片不需要显示:保存图片功能
+        if (Integer.valueOf(photoCount) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())) { // 没有图片不需要显示:保存图片功能
             popupMenu.getMenu().findItem(R.id.menu_save_all_photos).setVisible(false);
         }
 
