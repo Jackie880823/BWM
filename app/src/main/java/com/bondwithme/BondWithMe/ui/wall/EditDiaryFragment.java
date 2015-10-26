@@ -171,6 +171,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private ArrayList<PushedPhotoEntity> photoEntities = new ArrayList<>();
     private ArrayList<DiaryPhotoEntity> localEntities = new ArrayList<>();
     private List<String> deletePhoto = new ArrayList<>();
+    private List<String> deleteVideo = new ArrayList<>();
 
     private ImagesRecyclerViewAdapter mAdapter;
 
@@ -623,6 +624,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         videoUri = Uri.EMPTY;
         if (rvImages.getChildCount() > 1 && !mAdapter.isPhoto()) {
             rvImages.removeView(previewVideoView);
+        }
+        if (!TextUtils.isEmpty(wall.getVideo_filename())) {
+            deleteVideo.add(wall.getVideo_id());
+            wall.setVideo_filename("");
         }
         mAdapter.setIsPhoto(true);
     }
@@ -1341,6 +1346,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         entity.setLoc_name(locationDesc);
         entity.setLoc_type(loc_type);
         entity.setDelete_photo(deletePhoto);
+        entity.setDelete_video(deleteVideo);
         entity.setTag_group(setGetGroupIds(at_groups_data));
         entity.setTag_member(setGetMembersIds(at_members_data));
 

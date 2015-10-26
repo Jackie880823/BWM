@@ -643,8 +643,7 @@
 
     <string name="add_photo_to_this_post">添加图片</string>
     <string name="save_all_photos">保存图片</string>
-    <string name="edit_this_post">编辑日记</string>
+    <string name="edit_this_post">编辑</string>
     <string name="delete_this_post">删除</string>
     <string name="no_photo_2_save">No Photo to Save!</string>
->>>>>>> e7d6e3e7edc7c3f3512b6bb68a241d5f7db6e10b
 </resources>

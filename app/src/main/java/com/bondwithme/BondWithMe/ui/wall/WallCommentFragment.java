@@ -76,7 +76,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private int startIndex = 0;
     private final static int offset = 10;
     private boolean loading;
-    LinearLayoutManager llm;
+    private LinearLayoutManager llm;
     private RecyclerView rvList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CircularProgress progressBar;
@@ -298,6 +298,18 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     getParentActivity().finish();
                 } else {
                     vProgress.setVisibility(View.GONE);
+
+                    if (holder != null) {
+                        startIndex = 0;
+                        isRefresh = true;
+                        swipeRefreshLayout.setRefreshing(true);
+
+                        // 更新评论总数
+                        int commentCount = Integer.valueOf((String) holder.getTvCommentCount().getText()) + 1;
+                        wall.setComment_count(String.valueOf(commentCount));
+                        holder.getTvCommentCount().setText(String.valueOf(commentCount));
+                    }
+
                     getComments();
                 }
             }
@@ -862,6 +874,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     @Override
     public void addPhotoed(WallEntity wallEntity, boolean succeed) {
         if (succeed) {
+            getParentActivity().setResult(Activity.RESULT_OK);
             requestData();
         } else {
             if (progressBar != null) {
@@ -873,12 +886,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     @Override
     public void savePhotoed(WallEntity wallEntity, boolean succeed) {
-        if (succeed) {
-            requestData();
-        } else {
-            if (progressBar != null) {
-                progressBar.setVisibility(View.GONE);
-            }
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }
+        if (!succeed) {
             LogUtil.e(TAG, "save Photo Fail");
         }
     }

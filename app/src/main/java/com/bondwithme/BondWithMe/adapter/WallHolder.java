@@ -1058,6 +1058,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     String path = null;
                     try {
                         path = PicturesCacheUtil.saveImageToGallery(context, new File(string), "wall");
+                        LogUtil.d(TAG, "download photo to path: " + path);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
