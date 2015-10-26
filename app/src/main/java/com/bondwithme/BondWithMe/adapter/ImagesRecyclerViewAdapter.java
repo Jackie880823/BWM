@@ -150,14 +150,15 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
                 ImageHolder imageHolder = (ImageHolder) holder;
                 final PushedPhotoEntity entity = entities.get(position - 1);
                 imageHolder.setCaption(entity.getPhoto_caption());
+                Uri uri = Uri.EMPTY;
                 if (entity instanceof DiaryPhotoEntity) {
-                    Uri uri = ((DiaryPhotoEntity) entity).getUri();
-                    LogUtil.d(TAG, "onBindViewHolder& DiaryPhotoEntity uri: " + uri.toString());
-                    imageHolder.setImage(uri);
+                    uri = ((DiaryPhotoEntity) entity).getUri();
                 } else if (entity instanceof PhotoEntity) {
                     String url = String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity) entity).getFile_id());
-                    ImageLoader.getInstance().displayImage(url, imageHolder.ivDisplay, UniversalImageLoaderUtil.options);
+                    uri = Uri.parse(url);
                 }
+                LogUtil.d(TAG, "onBindViewHolder& DiaryPhotoEntity uri: " + uri.toString());
+                imageHolder.setImage(uri);
                 imageHolder.ivDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
