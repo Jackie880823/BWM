@@ -12,7 +12,6 @@ import android.widget.ListView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
@@ -22,7 +21,6 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.ImagesRecyclerListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.wall.HeadHolder;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.WallEditView;
@@ -157,9 +155,8 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
                     LogUtil.d(TAG, "onBindViewHolder& DiaryPhotoEntity uri: " + uri.toString());
                     imageHolder.setImage(uri);
                 } else if (entity instanceof PhotoEntity) {
-                    imageHolder.ivDisplay.setVisibility(View.GONE);
-                    imageHolder.networkImageView.setVisibility(View.VISIBLE);
-                    VolleyUtil.initNetworkImageView(context, imageHolder.networkImageView, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity) entity).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                    String url = String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity) entity).getFile_id());
+                    ImageLoader.getInstance().displayImage(url, imageHolder.ivDisplay, UniversalImageLoaderUtil.options);
                 }
                 imageHolder.ivDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -287,14 +284,12 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
     public class ImageHolder extends RecyclerView.ViewHolder {
 
         private ImageView ivDelete;
-        public NetworkImageView networkImageView;
         public ImageView ivDisplay;
         public WallEditView wevContent;
 
         public ImageHolder(View itemView) {
             super(itemView);
             ivDelete = (ImageView) itemView.findViewById(R.id.pic_delete);
-            networkImageView = (NetworkImageView) itemView.findViewById(R.id.iv_pic_network);
             ivDisplay = (ImageView) itemView.findViewById(R.id.iv_pic_normal);
             wevContent = (WallEditView) itemView.findViewById(R.id.diary_edit_content);
         }
@@ -305,7 +300,6 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
 
         public void setImage(Uri uri) {
             ivDisplay.setVisibility(View.VISIBLE);
-            networkImageView.setVisibility(View.GONE);
             ImageLoader.getInstance().displayImage(uri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
         }
     }

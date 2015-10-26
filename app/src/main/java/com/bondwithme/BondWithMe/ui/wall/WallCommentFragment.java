@@ -257,26 +257,27 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
-        switch (requestCode) {
-            case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
-                if (data != null) {
-                    ArrayList<Uri> pickUris;
-                    pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
-                    if (pickUris != null && pickUris.isEmpty()) {
-                        if (progressBar != null) {
-                            progressBar.setVisibility(View.VISIBLE);
+        if (Activity.RESULT_OK == resultCode) {
+            switch (requestCode) {
+                case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
+                    if (data != null) {
+                        ArrayList<Uri> pickUris;
+                        pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
+                        if (pickUris != null && pickUris.isEmpty()) {
+                            if (progressBar != null) {
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
+                            holder.setLocalPhotos(pickUris);
                         }
-                        holder.setLocalPhotos(pickUris);
                     }
-                }
-            case Constant.INTENT_REQUEST_UPDATE_WALL:
-                if (Activity.RESULT_OK == resultCode) {
+                case Constant.INTENT_REQUEST_UPDATE_PHOTOS:
+                case Constant.INTENT_REQUEST_UPDATE_WALL:
                     getParentActivity().setResult(Activity.RESULT_OK);
                     requestData();
-                }
-                break;
-            default:
-                sendCommentView.onActivityResult(requestCode, resultCode, data);
+                    break;
+                default:
+                    sendCommentView.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 

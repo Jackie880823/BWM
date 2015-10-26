@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.internal.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -78,13 +79,14 @@ import java.util.Map;
  */
 public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static final String TAG = WallHolder.class.getSimpleName();
+    private static final int ACTION_POST_PHOTOS_SUCCEED = 100;
+    private static final int ACTION_POST_PHOTOS_FAIL = 101;
 
+    private static final String accountUserId = MainActivity.getUser().getUser_id();
     private static final String POST_LOVE = TAG + "_POST_LOVE";
     private static final String UPLOAD_PIC = TAG + "_UPLOAD_PIC";
     private static final String SAVE_PHOTO = TAG + "_SAVE_PHOTO";
-    private static final int ACTION_POST_PHOTOS_SUCCEED = 100;
-    private static final int ACTION_POST_PHOTOS_FAIL = 101;
-    private static final String accountUserId = MainActivity.getUser().getUser_id();
+    private static final String PUT_PHOTO_MAX = TAG + "_PUT_PHOTO_MAX";
 
     private WallViewClickListener mViewClickListener;
     private WallEntity wallEntity;
@@ -837,9 +839,25 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO);
     }
 
-    public void setLocalPhotos(List<Uri> localPhotos) {
+    public void setLocalPhotos(@NonNull List<Uri> localPhotos) {
         this.localPhotos = localPhotos;
-        submitLocalPhotos(wallEntity.getContent_id());
+        if (!localPhotos.isEmpty()) {
+
+            int max;
+            String maxPhoto = wallEntity.getPhoto_max();
+            if (TextUtils.isEmpty(maxPhoto)) {
+                max = localPhotos.size();
+            } else {
+                max = Integer.valueOf(maxPhoto) + localPhotos.size();
+            }
+            Map<String, String> params = new HashMap<>();
+            params.put(Constant.PARAM_PHOTO_MAX, String.valueOf(max));
+            RequestInfo requestInfo = new RequestInfo();
+            requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
+            requestInfo.url = String.format(Constant.API_PUT_PHOTO_MAX, wallEntity.getContent_id());
+            callBack.setLinkType(CallBack.LINK_TYPE_PUT_PHOTO_MAX);
+            mHttpTools.put(requestInfo, PUT_PHOTO_MAX, callBack);
+        }
     }
 
     private void submitLocalPhotos(String contentId) {
@@ -939,6 +957,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         public static final int LINK_TYPE_SUBMIT_PICTURE = 2;
         public static final int LINK_TYPE_POST_LOVE = 3;
         public static final int LINK_TYPE_SAVE_PHOTOS = 4;
+        public static final int LINK_TYPE_PUT_PHOTO_MAX = 5;
 
         /**
          * 当前回调标识，用于识别当前同调用类别
@@ -990,6 +1009,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    break;
+                case LINK_TYPE_PUT_PHOTO_MAX:
+                    submitLocalPhotos(wallEntity.getContent_id());
                     break;
             }
         }

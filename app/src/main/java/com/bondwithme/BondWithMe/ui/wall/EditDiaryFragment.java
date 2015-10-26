@@ -39,6 +39,7 @@ import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.FeelingAdapter;
+import com.bondwithme.BondWithMe.adapter.HeadHolder;
 import com.bondwithme.BondWithMe.adapter.ImagesRecyclerViewAdapter;
 import com.bondwithme.BondWithMe.adapter.VideoHolder;
 import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
@@ -369,20 +370,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     private void resultByPutWall() {
         if (!localEntities.isEmpty()) {
-            int max;
-            String maxPhoto = wall.getPhoto_max();
-            if (TextUtils.isEmpty(maxPhoto)) {
-                max = localEntities.size();
-            } else {
-                max = Integer.valueOf(maxPhoto) - deletePhoto.size() + localEntities.size();
+
+            if (wall != null) {
+                submitLocalPhotos(wall.getContent_id());
             }
-            Map<String, String> params = new HashMap<>();
-            params.put(Constant.PARAM_PHOTO_MAX, String.valueOf(max));
-            RequestInfo requestInfo = new RequestInfo();
-            requestInfo.jsonParam = UrlUtil.mapToJsonstring(params);
-            requestInfo.url = String.format(Constant.API_PUT_PHOTO_MAX, wall.getContent_id());
-            callBack.setLinkType(CallBack.LINK_TYPE_PUT_PHOTO_MAX);
-            mHttpTools.put(requestInfo, PUT_PHOTO_MAX, callBack);
         } else if (!Uri.EMPTY.equals(videoUri)) {
             Map<String, Object> params = new HashMap<>();
 
@@ -516,31 +507,31 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
                     @Override
                     public void afterTextChanged(Editable s, int change) {
-                        switch(change) {
+                        switch (change) {
                             case CHANGE_MODE_NORMAL:
-                                if(lastChange == CHANGE_MODE_BLACK_CHANGE) {
+                                if (lastChange == CHANGE_MODE_BLACK_CHANGE) {
                                     lastChange = change;
                                     changeAtDesc(true);
                                     return;
                                 }
                                 break;
                             case CHANGE_MODE_DELETE_AT_ALL:
-                                if(at_members_data != null) {
+                                if (at_members_data != null) {
                                     at_members_data.clear();
                                 }
-                                if(at_groups_data != null) {
+                                if (at_groups_data != null) {
                                     at_groups_data.clear();
                                 }
                                 break;
 
                             case CHANGE_MODE_DELETE_AT_GROUPS:
-                                if(at_groups_data != null) {
+                                if (at_groups_data != null) {
                                     at_groups_data.clear();
                                 }
                                 break;
 
                             case CHANGE_MODE_DELETE_AT_MEMBER:
-                                if(at_members_data != null) {
+                                if (at_members_data != null) {
                                     at_members_data.clear();
                                 }
                                 break;
@@ -557,8 +548,15 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 initVideoView();
                 if (!Uri.EMPTY.equals(videoUri)) {
                     ImageLoader.getInstance().displayImage(videoUri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
-                    tvDuration.setText(MyDateUtils.formatDuration(duration));
+                } else {
+                    if (!TextUtils.isEmpty(wall.getVideo_filename())) {
+                        String url = String.format(Constant.API_GET_VIDEO_THUMBNAIL, wall.getContent_creator_id(), wall.getVideo_thumbnail());
+                        ImageLoader.getInstance().displayImage(url, ivDisplay, UniversalImageLoaderUtil.options);
+//                        VolleyUtil.initNetworkImageView(getContext(), nivVideo, url, R.drawable.network_image_default, R.drawable.network_image_default);
+                        duration = wall.getVideo_duration();
+                    }
                 }
+                tvDuration.setText(MyDateUtils.formatDuration(duration));
             }
 
             @Override
@@ -566,7 +564,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 LogUtil.d(TAG, "deletePhoto");
                 photoEntities.remove(photo);
                 if (photo instanceof DiaryPhotoEntity) {
-                    localEntities.remove((DiaryPhotoEntity)photo);
+                    localEntities.remove(photo);
                     imageUris.remove(((DiaryPhotoEntity) photo).getUri());
                 } else {
                     deletePhoto.add(photo.getPhoto_id());
@@ -1004,7 +1002,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     needAlert = !Uri.EMPTY.equals(videoUri);
                 }
 
-                if(needAlert) {
+                if (needAlert) {
                     // 已经选择了视频需要弹出提示
                     myDialog = new MyDialog(getContext(), "", getContext().getString(R.string.will_remove_selected_video));
                     myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
@@ -1061,11 +1059,28 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 break;
 
             case R.id.go_to_preview_video_iv:
-                Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
-                intent.putExtra(PreviewVideoActivity.EXTRA_VIDEO_URI, videoUri.toString());
-                startActivity(intent);
+                if (!Uri.EMPTY.equals(videoUri)) {
+                    Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
+                    intent.putExtra(PreviewVideoActivity.EXTRA_VIDEO_URI, videoUri.toString());
+                    startActivity(intent);
+                } else if (wall != null &&  !TextUtils.isEmpty(wall.getVideo_filename())){
+                    showPreviewVideo();
+                }
                 break;
         }
+    }
+
+    /**
+     * 启动网络播放视频
+     */
+    private void showPreviewVideo() {
+        // 启动网络视频预览Activity的隐式意图，也可选择显示启动PreviewVideoActivity
+        Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
+        // 传的值对应视频的content_creator_id
+        intent.putExtra(PreviewVideoActivity.CONTENT_CREATOR_ID, wall.getContent_creator_id());
+        // 传的值对应video_filename
+        intent.putExtra(PreviewVideoActivity.VIDEO_FILENAME, wall.getVideo_filename());
+        startActivity(intent);
     }
 
     /**
@@ -1073,7 +1088,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void openPhotos() {
-        LogUtil.d("","openPhotos========");
+        LogUtil.d("", "openPhotos========");
         Intent intent = new Intent(getParentActivity(), SelectPhotosActivity.class);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         /**
@@ -1579,12 +1594,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
          * put新的日志
          */
         public static final int LINK_TYPE_PUT_WALL = 3;
-
-        /**
-         * 更新照版的最大序号
-         */
-        public static final int LINK_TYPE_PUT_PHOTO_MAX = 4;
-        public static final int LINK_TYPE_UPLOAD_VOID = 5;
+        public static final int LINK_TYPE_UPLOAD_VOID = 4;
 
         /**
          * 当前回调标识，用于识别当前同调用类别
@@ -1634,11 +1644,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     break;
                 case LINK_TYPE_PUT_WALL:
                     resultByPutWall();
-                    break;
-                case LINK_TYPE_PUT_PHOTO_MAX:
-                    if (wall != null) {
-                        submitLocalPhotos(wall.getContent_id());
-                    }
                     break;
             }
         }

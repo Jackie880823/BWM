@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/CardViewDefault"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -82,8 +83,8 @@
             android:background="@color/default_text_color_while"
             android:fitsSystemWindows="true"
             android:gravity="top"
-            android:minLines="5"
             android:maxLines="5"
+            android:minLines="5"
             android:textColor="@color/default_text_color_dark"
             android:textSize="@dimen/text_medium_size" />
 
@@ -95,8 +96,8 @@
             android:clickable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="invisible"
-            android:padding="@dimen/default_content_padding">
+            android:padding="@dimen/default_content_padding"
+            android:visibility="invisible">
 
             <ImageView
                 android:layout_width="@dimen/_20dp"

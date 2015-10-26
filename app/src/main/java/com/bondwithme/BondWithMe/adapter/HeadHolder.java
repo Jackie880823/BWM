@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.ui.wall;
+package com.bondwithme.BondWithMe.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
