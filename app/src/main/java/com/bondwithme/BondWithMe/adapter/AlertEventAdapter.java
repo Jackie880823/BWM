@@ -28,7 +28,7 @@ public class AlertEventAdapter extends RecyclerView.Adapter<AlertEventAdapter.VH
 
     @Override
     public VHItem onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.alert_event_item, parent, false);
         // ViewHolder参数一定要是Item的Root节点.
         return new VHItem(view);
     }
