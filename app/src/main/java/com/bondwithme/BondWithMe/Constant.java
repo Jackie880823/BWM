@@ -32,15 +32,31 @@ public class Constant {
     public static final String LOGIN_USER = "user";
     public static final String APP_CRASH = "app_crash";
 
-    public static final int ACTION_CREATE_WALL = 10;
-    public static final int ACTION_UPDATE_WALL = 11;
-    public static final int ACTION_COMMENT_WALL = 12;
+    /**
+     * 更新图片的意图请求标识
+     */
+    public static final int INTENT_REQUEST_UPDATE_PHOTOS = 9;
+    /**
+     * 创建日记的意图标识
+     */
+    public static final int INTENT_REQUEST_CREATE_WALL = 10;
+    public static final int INTENT_REQUEST_UPDATE_WALL = 11;
+    public static final int INTENT_REQUEST_COMMENT_WALL = 12;
     public static final int ACTION_COMMENT_MEMBERS = 13;
     public static final int ACTION_COMMENT_GROUPS = 14;
-    public static final int REQUEST_HEAD_PHOTO = 15;
-    public static final int REQUEST_HEAD_CAMERA = 16;
-    public static final int GET_LOCATION = 17;
-    public static final int GET_MEMBERS = 18;
+    /**
+     * 打开相册的意图请求标识
+     */
+    public static final int INTENT_REQUEST_HEAD_PHOTO = 15;
+    /**
+     * 打开相机的意图标识
+     */
+    public static final int INTENT_REQUEST_HEAD_CAMERA = 16;
+    /**
+     *
+     */
+    public static final int INTENT_REQUEST_GET_LOCATION = 17;
+    public static final int INTENT_REQUEST_GET_MEMBERS = 18;
     /**
      * 打开GPS请求
      */

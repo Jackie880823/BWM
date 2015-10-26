@@ -215,7 +215,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     // 图片质量为高
                     intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                     intent2.putExtra("return-data", true);
-                    fragment.startActivityForResult(intent2, Constant.REQUEST_HEAD_CAMERA);
+                    fragment.startActivityForResult(intent2, Constant.INTENT_REQUEST_HEAD_CAMERA);
                 }
                 break;
             case R.id.album_tv://打开本地相册
@@ -226,7 +226,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                     intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    fragment.startActivityForResult(intent, Constant.REQUEST_HEAD_PHOTO);
+                    fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_PHOTO);
                 }
                 break;
             case R.id.location_tv://打开地图
@@ -325,7 +325,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
 
             switch (requestCode) {
                 // 如果是直接从相册获取
-                case Constant.REQUEST_HEAD_PHOTO:
+                case Constant.INTENT_REQUEST_HEAD_PHOTO:
                     if (data != null) {
                         Uri uri = data.getData();
                         if (commentListener != null) {
@@ -337,7 +337,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     }
                     break;
                 // 如果是调用相机拍照时
-                case Constant.REQUEST_HEAD_CAMERA:
+                case Constant.INTENT_REQUEST_HEAD_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, Constant.CACHE_PIC_NAME_TEMP + cache_count));
                     uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
                     LogUtil.i(TAG, "onActivityResult& uri: " + uri.getPath());

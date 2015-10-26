@@ -260,7 +260,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         intent = new Intent(getActivity(), WallCommentActivity.class);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
-        startActivityForResult(intent, Constant.ACTION_COMMENT_WALL);
+        startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
     }
 
     /**
@@ -416,15 +416,16 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case Constant.ACTION_CREATE_WALL:
+                case Constant.INTENT_REQUEST_CREATE_WALL:
                     //wait a mement for the pic handle on server
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                case Constant.ACTION_COMMENT_WALL:
-                case Constant.ACTION_UPDATE_WALL:
+                case Constant.INTENT_REQUEST_COMMENT_WALL: // 更新了评论
+                case Constant.INTENT_REQUEST_UPDATE_WALL: // 更新了日志
+                case Constant.INTENT_REQUEST_UPDATE_PHOTOS: // 更新了图片的日志
                     refresh();
                     break;
                 case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:

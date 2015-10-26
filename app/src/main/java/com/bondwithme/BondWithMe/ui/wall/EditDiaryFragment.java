@@ -887,7 +887,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case Constant.GET_LOCATION:
+                case Constant.INTENT_REQUEST_GET_LOCATION:
                     if (data != null) {
                         String locationName = data.getStringExtra(Constant.EXTRA_LOCATION_NAME);
                         if (!TextUtils.isEmpty(locationName)) {
@@ -906,7 +906,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         loc_type = data.getStringExtra("loc_type");
                     }
                     break;
-                case Constant.GET_MEMBERS:
+                case Constant.INTENT_REQUEST_GET_MEMBERS:
                     String members = data.getStringExtra("members_data");
                     at_members_data = gson.fromJson(members, new TypeToken<ArrayList<UserEntity>>() {
                     }.getType());
@@ -1103,7 +1103,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         intent.putExtra("members_data", gson.toJson(at_members_data));
         intent.putExtra("groups_data", gson.toJson(at_groups_data));
         intent.putExtra("type", 0);
-        startActivityForResult(intent, Constant.GET_MEMBERS);
+        startActivityForResult(intent, Constant.INTENT_REQUEST_GET_MEMBERS);
     }
 
     private void showChooseFeeling() {
@@ -1190,7 +1190,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private void openMap() {
         Intent intent = LocationUtil.getPlacePickerIntent(getActivity(), latitude, longitude, tvLocationDesc.getText().toString());
         if (intent != null) {
-            startActivityForResult(intent, Constant.GET_LOCATION);
+            startActivityForResult(intent, Constant.INTENT_REQUEST_GET_LOCATION);
         }
     }
 

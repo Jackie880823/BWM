@@ -282,7 +282,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 case RIGHT_CLICK_EVENT:
                     switch (currentTabEnum) {
                         case wall:
-                            fragment.startActivityForResult(new Intent(getApplicationContext(), NewDiaryActivity.class), Constant.ACTION_CREATE_WALL);
+                            fragment.startActivityForResult(new Intent(getApplicationContext(), NewDiaryActivity.class), Constant.INTENT_REQUEST_CREATE_WALL);
                             break;
                         case event:
                             fragment.startActivityForResult(new Intent(getApplicationContext(), EventNewActivity.class), Constant.ACTION_EVENT_CREATE);

@@ -269,7 +269,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                         holder.setLocalPhotos(pickUris);
                     }
                 }
-            case Constant.ACTION_UPDATE_WALL:
+            case Constant.INTENT_REQUEST_UPDATE_WALL:
                 if (Activity.RESULT_OK == resultCode) {
                     getParentActivity().setResult(Activity.RESULT_OK);
                     requestData();

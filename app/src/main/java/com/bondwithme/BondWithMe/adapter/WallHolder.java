@@ -84,6 +84,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private static final String SAVE_PHOTO = TAG + "_SAVE_PHOTO";
     private static final int ACTION_POST_PHOTOS_SUCCEED = 100;
     private static final int ACTION_POST_PHOTOS_FAIL = 101;
+    private static final String accountUserId = MainActivity.getUser().getUser_id();
 
     private WallViewClickListener mViewClickListener;
     private WallEntity wallEntity;
@@ -299,7 +300,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             case R.id.tv_love_list:
                 if (Integer.valueOf(wallEntity.getLove_count()) > 0) {
                     if (mViewClickListener != null) {
-                        mViewClickListener.showLovedMember(MainActivity.getUser().getUser_id(), wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+                        mViewClickListener.showLovedMember(accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
                     }
                 }
                 break;
@@ -325,7 +326,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             case R.id.top_event:
                 if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
                     if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {// 没有视频需要打开网页
-                        String trackUrl = wallEntity.getTrack_url() + MainActivity.getUser().getUser_id();
+                        String trackUrl = wallEntity.getTrack_url() + accountUserId;
                         if (!TextUtils.isEmpty(trackUrl)) {
                             Uri uri = Uri.parse(trackUrl);
                             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -340,7 +341,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 break;
             case R.id.iv_walls_images:
                 if (needOpenWeb(wallEntity)) {
-                    String trackUrl = wallEntity.getTrack_url() + MainActivity.getUser().getUser_id();
+                    String trackUrl = wallEntity.getTrack_url() + accountUserId;
                     if (!TextUtils.isEmpty(trackUrl)) {
                         Uri uri = Uri.parse(trackUrl);
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -356,7 +357,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 break;
 
             case R.id.btn_option:
-                initItemMenu(v, wallEntity);
+                initItemMenu(v);
                 break;
 
             case R.id.switch_text_show:
@@ -369,7 +370,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     public boolean needOpenWeb(WallEntity wallEntity) {
         if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
             if (!TextUtils.isEmpty(wallEntity.getVideo_filename())) { // 视频不为空
-                new HttpTools(context).get(wallEntity.getTrack_url() + MainActivity.getUser().getUser_id(), null, null, null);
+                new HttpTools(context).get(wallEntity.getTrack_url() + accountUserId, null, null, null);
                 return false;
             } else {
                 return true;
@@ -385,7 +386,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         intent.putExtra(PreviewVideoActivity.CONTENT_CREATOR_ID, wallEntity.getContent_creator_id());
         // 传的值对应video_filename
         intent.putExtra(PreviewVideoActivity.VIDEO_FILENAME, wallEntity.getVideo_filename());
-        context.startActivity(intent);
+        fragment.startActivity(intent);
     }
 
     private void showOriginPic() {
@@ -397,7 +398,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
         intent.putExtra("request_url", url);
         intent.putExtra("user_id", wallEntity.getUser_id());
-        context.startActivity(intent);
+        fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_PHOTOS);
     }
 
     /**
@@ -412,7 +413,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         if (TextUtils.isEmpty(wallEntity.getLove_id())) {
             count += 1;
             resId = R.drawable.love_press;
-            wallEntity.setLove_id(MainActivity.getUser().getUser_id());
+            wallEntity.setLove_id(accountUserId);
 
             //            if(count > 1) {
             //                text += (name + " ");
@@ -449,7 +450,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         HashMap<String, String> params = new HashMap<>();
         params.put("content_id", wallEntity.getContent_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
-        params.put("user_id", "" + MainActivity.getUser().getUser_id());
+        params.put("user_id", "" + accountUserId);
 
         RequestInfo requestInfo = new RequestInfo(Constant.API_WALL_LOVE, params);
         callBack.setLinkType(CallBack.LINK_TYPE_POST_LOVE);
@@ -556,7 +557,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //        int count = Integer.valueOf(this.wallEntity.getLove_count());
         tvAgreeCount.setText(String.format(tvAgreeCount.getContext().getString(R.string.loves_count), Integer.valueOf(this.wallEntity.getLove_count())));
         //        if(count > 0) {
-        //            WallUtil.getLoveList(mHttpTools, tvLoveList, MainActivity.getUser().getUser_id(), wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+        //            WallUtil.getLoveList(mHttpTools, tvLoveList, accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
         //        } else {
         //            tvLoveList.setText("");
         //        }
@@ -568,13 +569,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             tvCommentCount.setText(this.wallEntity.getComment_count());
         }
 
-        /**wing modified*/
-//        if (MainActivity.getUser().getUser_id().equals(this.wallEntity.getUser_id())) {
-//            btnOption.setVisibility(View.VISIBLE);
-//        } else {
-//            btnOption.setVisibility(View.GONE);
-//        }
-        /**wing modified*/
+        if (!accountUserId.equals(this.wallEntity.getUser_id()) && Integer.valueOf(wallEntity.getPhoto_count()) <= 0) {
+            // 不是当前用户并且没有图片则不需要显更多功能按钮
+            btnOption.setVisibility(View.GONE);
+        } else {
+            btnOption.setVisibility(View.VISIBLE);
+        }
 
         if (TextUtils.isEmpty(this.wallEntity.getLove_id())) {
             ibAgree.setImageResource(R.drawable.love_normal);
@@ -691,16 +691,27 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     MyDialog myDialog;
 
+    /**
+     * 选择功能：保存图片；添加图片；编辑日记；删除日志
+     * @see PopupMenu
+     * @param v 需要弹出选择视图的{@link View};
+     */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void initItemMenu(View v, final WallEntity wallEntity) {
+    private void initItemMenu(View v) {
+
         PopupMenu popupMenu = new PopupMenu(context, v);
         popupMenu.inflate(R.menu.wall_item_menu);
 
 
-        if (!MainActivity.getUser().getUser_id().equals(this.wallEntity.getUser_id())) {
+        if (!accountUserId.equals(this.wallEntity.getUser_id())) { // 不是当前用户的日志不能显示：添加图片；编辑日记；删除日志等功能
             popupMenu.getMenu().findItem(R.id.menu_item_add_photo).setVisible(false);
             popupMenu.getMenu().findItem(R.id.menu_edit_this_post).setVisible(false);
             popupMenu.getMenu().findItem(R.id.menu_delete_this_post).setVisible(false);
+        }
+
+        String photoCount = wallEntity.getPhoto_count();
+        if (Integer.valueOf(photoCount) <= 0) { // 没有图片不需要显示:保存图片功能
+            popupMenu.getMenu().findItem(R.id.menu_save_all_photos).setVisible(false);
         }
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -744,7 +755,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         intent = new Intent(context, NewDiaryActivity.class);
                         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
                         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
-                        fragment.startActivityForResult(intent, Constant.ACTION_UPDATE_WALL);
+                        fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_WALL);
                         break;
                     case R.id.menu_delete_this_post:
                         mViewClickListener.remove(wallEntity);
@@ -777,6 +788,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //        popupMenu.showAsDropDown(v,0,0);
     }
 
+    /**
+     * 保存选择的日志上伟平的所有图片
+     */
     private void savePhotos() {
 
         int photoCount = Integer.valueOf(wallEntity.getPhoto_count());
@@ -909,7 +923,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         Map<String, Object> params = new HashMap<>();
-        params.put("content_creator_id", MainActivity.getUser().getUser_id());
+        params.put("content_creator_id", accountUserId);
         params.put("content_id", contentId);
         params.put("photo_index", "" + index);
         params.put("photo_caption", "");
@@ -999,7 +1013,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private void downloadPhoto(ArrayList<PhotoEntity> photoEntities) {
         for (PhotoEntity photoEntity : photoEntities) {
             /**wing modified*/
-//            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, MainActivity.getUser().getUser_id(), photoEntity.getFile_id());
+//            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, accountUserId, photoEntity.getFile_id());
             String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, photoEntity.getUser_id(), photoEntity.getFile_id());
             /**wing modified*/
             mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context), true, new HttpCallback() {
