@@ -1,16 +1,21 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.internal.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +41,7 @@ import com.material.widget.Dialog;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +92,7 @@ public class WallViewPicActivity extends BaseActivity {
         // 需要新的图
         titleBar.setBackgroundColor(Color.BLACK);
         leftButton.setImageResource(R.drawable.back_press);
-        rightButton.setImageResource(R.drawable.more);
+        rightButton.setImageResource(R.drawable.option_dots);
     }
 
     @Override
@@ -101,7 +107,8 @@ public class WallViewPicActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-            showDialog();
+//        showDialog();
+        popUpMenu();
     }
 
     @Override
@@ -402,5 +409,57 @@ public class WallViewPicActivity extends BaseActivity {
                 break;
             }
         }
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void popUpMenu()
+    {
+        android.support.v7.widget.PopupMenu popupMenu = new android.support.v7.widget.PopupMenu(this, rightButton);
+        popupMenu.getMenuInflater().inflate(R.menu.wall_view_pic_menu, popupMenu.getMenu());
+
+        if (!App.getLoginedUser().getUser_id().equals(user_id))
+        {
+            popupMenu.getMenu().findItem(R.id.menu_edit_this_post).setVisible(false);
+            popupMenu.getMenu().findItem(R.id.menu_delete_this_post).setVisible(false);
+        }
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_save_photos:
+                        savePhoto();
+                        break;
+                    case R.id.menu_edit_this_post:
+                        if (data.size() != 0)
+                        {
+                            TextView tvCaption = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content);
+                            TextView tvCaptionAll = (TextView)wallViewPicPagerAdapter.getmCurrentView().findViewById(R.id.tv_content_all);
+
+                            Intent intent = new Intent(WallViewPicActivity.this, WallEditCaptionActivity.class);
+                            intent.putExtra("caption", tvCaptionAll.getText().toString());
+                            intent.putExtra("photo_id", data.get(viewPager.getCurrentItem()).getPhoto_id());
+                            startActivityForResult(intent, EDIT_CAPTION);
+                        }
+                        break;
+                    case R.id.menu_delete_this_post:
+                        deletePhoto();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        try {
+            Field field = popupMenu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+            mHelper.setForceShowIcon(true);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        popupMenu.show();
     }
 }
