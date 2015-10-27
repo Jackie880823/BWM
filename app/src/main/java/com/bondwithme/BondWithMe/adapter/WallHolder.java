@@ -726,13 +726,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         String photoCount = wallEntity.getPhoto_count();
 
-        if (TextUtils.isEmpty(photoCount) || Integer.valueOf(photoCount) <= 0 ) { // 没有图片不需要显示:保存图片功能
+        if (TextUtils.isEmpty(photoCount) || Integer.valueOf(photoCount) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())) { // 没有图片不需要显示:保存图片功能
             popupMenu.getMenu().findItem(R.id.menu_save_all_photos).setVisible(false);
-        }
-
-        if (!TextUtils.isEmpty(wallEntity.getVideo_filename())) {
-            popupMenu.getMenu().findItem(R.id.menu_save_all_photos).setVisible(false);
-            popupMenu.getMenu().findItem(R.id.menu_item_add_photo).setVisible(false);
         }
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -745,7 +740,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         if (!TextUtils.isEmpty(wallEntity.getVideo_filename())) {
                             LogUtil.i(TAG, "onMenuItemClick& need Alert");
                             // 已经选择了视频需要弹出提示
-                            myDialog = new MyDialog(context, "", context.getString(R.string.will_remove_selected_video));
+                            myDialog = new MyDialog(context, "", context.getString(R.string.add_photo_before_title));
                             myDialog.setButtonAccept(R.string.text_dialog_yes, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

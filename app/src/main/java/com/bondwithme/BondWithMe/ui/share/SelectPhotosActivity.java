@@ -78,7 +78,7 @@ public class SelectPhotosActivity extends BaseActivity {
     private boolean useUniversal;
 
     /**
-     * 请求数据
+     * 请求数据是否可以包含视频
      */
     private boolean useVideo;
     /**
@@ -223,10 +223,18 @@ public class SelectPhotosActivity extends BaseActivity {
     private void switchRightTitleView(boolean isEntry) {
         if (isEntry) {
             addButton.setVisibility(View.GONE);
+            rightButton.setVisibility(View.VISIBLE);
             rightButton.setImageResource(R.drawable.btn_done);
         } else {
             addButton.setVisibility(View.VISIBLE);
-            rightButton.setImageResource(R.drawable.add_video);
+
+            if (useVideo) {
+                rightButton.setVisibility(View.VISIBLE);
+                rightButton.setImageResource(R.drawable.add_video);
+            } else {
+                // 若不能选视频则不出现录制功能
+                rightButton.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -235,8 +243,14 @@ public class SelectPhotosActivity extends BaseActivity {
         super.initTitleBar();
         addButton = getViewById(R.id.ib_top_button_add);
         addButton.setImageResource(R.drawable.add_photo);
-        rightButton.setImageResource(R.drawable.add_video);
         leftButton.setImageResource(R.drawable.text_title_seletor);
+
+        if (useVideo) {
+            rightButton.setVisibility(View.VISIBLE);
+            rightButton.setImageResource(R.drawable.add_video);
+        } else {
+            rightButton.setVisibility(View.GONE);
+        }
 
         addButton.setOnClickListener(new View.OnClickListener() {
             int cache_count = 0;
