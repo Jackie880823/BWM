@@ -327,7 +327,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                             }
                         }
                         if ("postVideo".equalsIgnoreCase(postType) || "postAudio".equalsIgnoreCase(postType)) {
-//                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
