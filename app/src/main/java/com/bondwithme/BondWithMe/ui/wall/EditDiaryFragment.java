@@ -625,9 +625,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (rvImages.getChildCount() > 1 && !mAdapter.isPhoto()) {
             rvImages.removeView(previewVideoView);
         }
-        if (!TextUtils.isEmpty(wall.getVideo_filename())) {
-            deleteVideo.add(wall.getVideo_id());
-            wall.setVideo_filename("");
+        if (isEdit) {
+            if (!TextUtils.isEmpty(wall.getVideo_filename())) {
+                deleteVideo.add(wall.getVideo_id());
+                wall.setVideo_filename("");
+            }
         }
         mAdapter.setIsPhoto(true);
     }

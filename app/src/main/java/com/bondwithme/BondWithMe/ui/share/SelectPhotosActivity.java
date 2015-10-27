@@ -417,20 +417,6 @@ public class SelectPhotosActivity extends BaseActivity {
                 LogUtil.i(TAG, "dispatchKeyEvent& back is false");
                 changeFragment(fragment, false);
                 return false;
-            } else {
-                Intent intent = new Intent();
-                ArrayList<Uri> uriList = new ArrayList<>();
-                for (MediaData mediaData : mSelectedImages) {
-                    if (useUniversal) {
-                        uriList.add(Uri.parse(mediaData.getPath()));
-                    } else {
-                        uriList.add(mediaData.getContentUri());
-                    }
-                }
-                intent.putParcelableArrayListExtra(EXTRA_IMAGES_STR, uriList);
-                setResult(RESULT_OK, intent);
-                finish();
-                return true;
             }
         }
         return super.dispatchKeyEvent(event);
