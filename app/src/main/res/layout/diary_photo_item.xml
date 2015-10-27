@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<com.bondwithme.BondWithMe.widget.SquareRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/CardViewDefault"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_transparent"
-    android:padding="@dimen/default_content_padding">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/iv_pic_normal"
+    <com.bondwithme.BondWithMe.widget.SquareRelativeLayout
+        style="@style/CardViewDefault"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:visibility="visible" />
+        android:background="@drawable/background_transparent"
+        android:padding="@dimen/default_content_padding">
+
+        <ImageView
+            android:id="@+id/iv_pic_normal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="visible" />
 
 
-    <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
-        android:id="@+id/tv_photo_caption"
-        style="@style/text_dark_default"
-        android:autoLink="web"
-        android:maxLines="3"
-        android:linksClickable="true"
-        android:textIsSelectable="true"/>
+        <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+            android:id="@+id/tv_photo_caption"
+            style="@style/text_dark_default"
+            android:layout_below="@+id/iv_pic_normal"
+            android:autoLink="web"
+            android:linksClickable="true"
+            android:maxLines="3"
+            android:textIsSelectable="true" />
 
-</com.bondwithme.BondWithMe.widget.SquareRelativeLayout>
+    </com.bondwithme.BondWithMe.widget.SquareRelativeLayout>
 
-
+</android.support.v7.widget.CardView>
 

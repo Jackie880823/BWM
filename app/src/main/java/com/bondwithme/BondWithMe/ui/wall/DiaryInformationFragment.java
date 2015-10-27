@@ -16,7 +16,6 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.DiaryInformationAdapter;
 import com.bondwithme.BondWithMe.adapter.WallHolder;
-import com.bondwithme.BondWithMe.entity.PushedPhotoEntity;
 import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
@@ -58,8 +57,6 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
     private RecyclerView rvList;
 
     private DiaryInformationAdapter mAdapter;
-
-    private ArrayList<PushedPhotoEntity> photoEntities = new ArrayList<>();
 
     private WallEntity wall;
     /**
@@ -401,6 +398,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                 vProgress.setVisibility(View.GONE);
             }
             LogUtil.e(TAG, "add Photo Fail");
+            getParentActivity().finish();
         }
     }
 

@@ -38,9 +38,9 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.adapter.EditDiaryAdapter;
 import com.bondwithme.BondWithMe.adapter.FeelingAdapter;
 import com.bondwithme.BondWithMe.adapter.HeadHolder;
-import com.bondwithme.BondWithMe.adapter.EditDiaryAdapter;
 import com.bondwithme.BondWithMe.adapter.VideoHolder;
 import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
@@ -75,6 +75,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -100,7 +101,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     private static final String POST_WALL = TAG + "_POST_WALL";
     private static final String PUT_WALL = TAG + "_PUT_WALL";
-    private static final String PUT_PHOTO_MAX = TAG + "_PHOTO_MAX";
     private static final String UPLOAD_PIC = TAG + "_UPLOAD_PIC";
     private static final String UPLOAD_VIDEO = TAG + "_UPLOAD_VIDEO";
     private static final String GET_DETAIL = TAG + "_GET_DETAIL";
@@ -134,7 +134,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static SharedPreferences draftPreferences;
     private HttpTools mHttpTools;
     private WallEntity wall;
-    private boolean lastPic;
+    private int lastPic = 0;
 
     public static EditDiaryFragment newInstance(String... params) {
 
@@ -145,7 +145,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private boolean isEdit = false;
 
     private String contentGroupId;
-    private String groupId;
 
     private double latitude;
     private double longitude;
@@ -186,11 +185,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private String duration;
 
     /**
-     * 心情列表适配器
-     */
-    private FeelingAdapter feelingAdapter;
-
-    /**
      * private CircularProgress progressBar;
      */
     private RecyclerView feeling_icons;
@@ -199,11 +193,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 心情选择弹出框
      */
     private PopupWindow popupwindow;
-
-    /**
-     * 心情布局
-     */
-    private LinearLayoutManager llmFeeling;
 
     /**
      * 心情图标名称列表
@@ -419,6 +408,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
     private void submitLocalPhotos(String contentId) {
+        LogUtil.d(TAG, "submitLocalPhotos& contentId: " + contentId);
         if (localEntities.isEmpty()) {
             mHandler.sendEmptyMessage(ACTION_SUCCEED);
         } else {
@@ -428,24 +418,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             for (int index = 0; index < count; index++) {
                 DiaryPhotoEntity photoEntity = localEntities.get(index);
                 photoEntity.setPhoto_caption(getPhotoCaptionByPosition(index + 1));
-                if (index == count - 1) {
-                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, true);
-                    tasks.add(task);
-                    //for not work in down 11
-                    if (SDKUtil.IS_HONEYCOMB) {
-                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntity);
-                    } else {
-                        task.execute(photoEntity);
-                    }
+                CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple);
+                tasks.add(task);
+                //for not work in down 11
+                if (SDKUtil.IS_HONEYCOMB) {
+                    task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntity);
                 } else {
-                    CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple, false);
-                    tasks.add(task);
-                    //for not work in down 11
-                    if (SDKUtil.IS_HONEYCOMB) {
-                        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoEntity);
-                    } else {
-                        task.execute(photoEntity);
-                    }
+                    task.execute(photoEntity);
                 }
             }
         }
@@ -460,7 +439,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void initView() {
         try {
             contentGroupId = getArguments().getString(ARG_PARAM_PREFIX + "0");
-            groupId = getArguments().getString(ARG_PARAM_PREFIX + "1");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1070,7 +1048,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     Intent intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
                     intent.putExtra(PreviewVideoActivity.EXTRA_VIDEO_URI, videoUri.toString());
                     startActivity(intent);
-                } else if (wall != null &&  !TextUtils.isEmpty(wall.getVideo_filename())){
+                } else if (wall != null && !TextUtils.isEmpty(wall.getVideo_filename())) {
                     showPreviewVideo();
                 }
                 break;
@@ -1160,7 +1138,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         });
 
         RecyclerView feeling_icons = (RecyclerView) customView.findViewById(R.id.feeling_icons);
-        llmFeeling = new LinearLayoutManager(getParentActivity());
+        /*
+      心情布局
+     */
+        LinearLayoutManager llmFeeling = new LinearLayoutManager(getParentActivity());
         feeling_icons.setLayoutManager(llmFeeling);
         fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), PATH_PREFIX);
         // 对文件进行按首字的大小排序
@@ -1172,7 +1153,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 filePaths.add(PATH_PREFIX + "/" + name);
             }
         }
-        feelingAdapter = new FeelingAdapter(getActivity(), filePaths);
+        /*
+      心情列表适配器
+     */
+        FeelingAdapter feelingAdapter = new FeelingAdapter(getActivity(), filePaths);
         feelingAdapter.setCheckIndex(checkItemIndex);
         feeling_icons.setAdapter(feelingAdapter);
 
@@ -1221,6 +1205,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 上传日记
      */
     public void submitWall() {
+        Log.i(TAG, "submitWall&");
         if (isEdit) {
             putWall();
             return;
@@ -1415,16 +1400,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * @param contentId
      * @param index
      * @param multiple
-     * @param lastPic
      */
-    private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
-        this.lastPic = lastPic;
+    private void submitPic(String path, String contentId, int index, boolean multiple) throws FileNotFoundException {
         File f = new File(path);
         if (!f.exists()) {
-            if (lastPic) {
-                mHandler.sendEmptyMessage(ACTION_FAILED);
-            }
-            return;
+            throw new FileNotFoundException("path: " + path + "; not found");
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -1564,13 +1544,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         String contentId;
         int index;
         boolean multiple;
-        boolean lastPic;
 
-        public CompressBitmapTask(String contentId, int index, boolean multiple, final boolean lastPic) {
+        public CompressBitmapTask(String contentId, int index, boolean multiple) {
             this.contentId = contentId;
             this.index = index;
             this.multiple = multiple;
-            this.lastPic = lastPic;
         }
 
         @Override
@@ -1583,7 +1561,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         @Override
         protected void onPostExecute(String path) {
-            submitPic(path, contentId, index, multiple, lastPic);
+            try {
+                submitPic(path, contentId, index, multiple);
+            } catch (FileNotFoundException e) {
+                mHandler.sendEmptyMessage(ACTION_FAILED);
+                e.printStackTrace();
+                getActivity().finish();
+            }
             tasks.remove(this);
         }
     }
@@ -1646,7 +1630,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     mHandler.sendEmptyMessage(ACTION_SUCCEED);
                     break;
                 case LINK_TYPE_SUBMIT_PICTURE:
-                    if (lastPic) {
+                    lastPic ++;
+                    if (lastPic == localEntities.size()) {
                         mHandler.sendEmptyMessage(ACTION_SUCCEED);
                     }
                     break;
@@ -1658,15 +1643,16 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         @Override
         public void onError(Exception e) {
+            LogUtil.e(TAG, "onError& linkType = " + linkType);
+            rlProgress.setVisibility(View.GONE);
             e.printStackTrace();
+            mHandler.sendEmptyMessage(ACTION_FAILED);
             switch (linkType) {
                 case LINK_TYPE_GET_WALL:
                     getParentActivity().finish();
                     break;
                 case LINK_TYPE_SUBMIT_PICTURE:
-                    if (lastPic) {
-                        mHandler.sendEmptyMessage(ACTION_FAILED);
-                    }
+                    getParentActivity().finish();
                     break;
             }
         }

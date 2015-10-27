@@ -62,6 +62,7 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -199,7 +200,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     private List<CompressBitmapTask> tasks = new ArrayList<>();
     private List<Uri> localPhotos = new ArrayList<>();
-    private boolean lastPic;
     private CallBack callBack = new CallBack();
     Handler mHandler = new Handler() {
         /**
@@ -221,6 +221,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
     };
     private ArrayList<PhotoEntity> data = new ArrayList<>();
+    private int lastPic = 0;
 
     public final TextView getTvCommentCount() {
         return tvCommentCount;
@@ -724,8 +725,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
 
         String photoCount = wallEntity.getPhoto_count();
-        if (Integer.valueOf(photoCount) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())) { // 没有图片不需要显示:保存图片功能
+
+        if (TextUtils.isEmpty(photoCount) || Integer.valueOf(photoCount) <= 0 ) { // 没有图片不需要显示:保存图片功能
             popupMenu.getMenu().findItem(R.id.menu_save_all_photos).setVisible(false);
+        }
+
+        if (!TextUtils.isEmpty(wallEntity.getVideo_filename())) {
+            popupMenu.getMenu().findItem(R.id.menu_save_all_photos).setVisible(false);
+            popupMenu.getMenu().findItem(R.id.menu_item_add_photo).setVisible(false);
         }
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -743,7 +750,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                                 @Override
                                 public void onClick(View v) {
                                     myDialog.dismiss();
-                                    openPhotos();
+                                    editDiaryAction();
                                 }
                             });
 
@@ -765,11 +772,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         savePhotos();
                         break;
                     case R.id.menu_edit_this_post:
-                        Intent intent;
-                        intent = new Intent(context, NewDiaryActivity.class);
-                        intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
-                        intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
-                        fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_WALL);
+                        editDiaryAction();
                         break;
                     case R.id.menu_delete_this_post:
                         mViewClickListener.remove(wallEntity);
@@ -800,6 +803,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //
 //        popupMenu.setOutsideTouchable(true);
 //        popupMenu.showAsDropDown(v,0,0);
+    }
+
+    private void editDiaryAction() {
+        Intent intent;
+        intent = new Intent(context, NewDiaryActivity.class);
+        intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
+        intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
+        fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_WALL);
     }
 
     /**
@@ -928,7 +939,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         @Override
         protected void onPostExecute(String path) {
-            submitPic(path, contentId, index, multiple, lastPic);
+            try {
+                submitPic(path, contentId, index, multiple);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_FAIL);
+            }
             tasks.remove(this);
         }
     }
@@ -940,16 +956,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * @param contentId
      * @param index
      * @param multiple
-     * @param lastPic
      */
-    private void submitPic(String path, String contentId, int index, boolean multiple, final boolean lastPic) {
-        this.lastPic = lastPic;
+    private void submitPic(String path, String contentId, int index, boolean multiple) throws FileNotFoundException {
         File f = new File(path);
         if (!f.exists()) {
-            if (lastPic) {
-                mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_FAIL);
-            }
-            return;
+            throw new FileNotFoundException("path: " + path + "; not found");
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -991,10 +1002,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         @Override
         public void onResult(String response) {
-            LogUtil.i(TAG, "onResult# typy: " + linkType + " response: " + response);
+            LogUtil.i(TAG, "onResult# type: " + linkType + " response: " + response);
             switch (linkType) {
                 case LINK_TYPE_SUBMIT_PICTURE:
-                    if (lastPic) {
+                    lastPic ++;
+                    if (lastPic == localPhotos.size()) {
                         mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_SUCCEED);
                     }
                     break;
@@ -1030,6 +1042,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         @Override
         public void onError(Exception e) {
+            switch (linkType) {
+                case LINK_TYPE_PUT_PHOTO_MAX:
+                case LINK_TYPE_SUBMIT_PICTURE:
+                    mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_FAIL);
+                    break;
+            }
             e.printStackTrace();
         }
 
