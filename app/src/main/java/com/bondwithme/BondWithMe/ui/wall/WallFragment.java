@@ -257,7 +257,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     @Override
     public void showComments(WallEntity wallEntity) {
         Intent intent;
-        intent = new Intent(getActivity(), WallCommentActivity.class);
+        intent = new Intent(getActivity(), DiaryInformationActivity.class);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
         startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);

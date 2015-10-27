@@ -132,7 +132,7 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
             count = Integer.valueOf(agreeCount);
         }
         tvAgreeCount.setText(String.format(getContext().getString(R.string.loves_count), count));
-        getViewById(R.id.ll_agree).setOnClickListener(new View.OnClickListener() {
+        getViewById(R.id.rl_agree).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showLovedMember(MainActivity.getUser().getUser_id(), content_id, WallUtil.LOVE_MEMBER_WALL_TYPE);

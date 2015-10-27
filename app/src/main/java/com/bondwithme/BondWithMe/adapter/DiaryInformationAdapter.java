@@ -14,16 +14,11 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
-import com.bondwithme.BondWithMe.entity.PushedPhotoEntity;
-import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
-import com.bondwithme.BondWithMe.interfaces.ImagesRecyclerListener;
-import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
-import com.bondwithme.BondWithMe.widget.WallEditView;
+import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -40,41 +35,37 @@ import java.util.List;
  * @author Jackie
  * @version 1.0
  */
-public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class DiaryInformationAdapter extends RecyclerView.Adapter<ViewHolder> {
     private static final int VIEW_TYPE_HEAD = 0;
-    private static final int VIEW_TYPE_PHOTO = 10;
-    private static final int VIEW_TYPE_VIDEO = 100;
-    public static final String TAG = ImagesRecyclerViewAdapter.class.getSimpleName();
+    public static final String TAG = DiaryInformationAdapter.class.getSimpleName();
 
-    private ImagesRecyclerListener listener;
-    private boolean isPhoto = true;
-    private String userId = MainActivity.getUser().getUser_id();
+    private DiaryInformationListener listener;
+    private String userId;
+    private BaseFragment fragment;
     private Context context;
-    private ArrayList<PushedPhotoEntity> entities = new ArrayList<>();
-    private boolean isEdit;
     private String request_url;
     private ArrayList<PhotoEntity> data = new ArrayList<>();
 
-    public HeadHolder headHolder = null;
-    public VideoHolder videoHolder = null;
+    public WallHolder headHolder = null;
 
-    public ImagesRecyclerViewAdapter(Context context, ArrayList<PushedPhotoEntity> entities) {
-        this.context = context;
-        this.entities = entities;
+    public DiaryInformationAdapter(BaseFragment fragment) {
+        this.fragment = fragment;
+        this.context = fragment.getContext();
     }
 
-    public void setRequest_url(String request_url) {
+    public void clearData(){
+        if (!data.isEmpty()) {
+            int end = data.size();
+            data.clear();
+            notifyItemRangeRemoved(1, end);
+        }
+    }
+
+    public void setRequest_url(String request_url, String userId) {
         LogUtil.d(TAG, "setRequest_url: " + request_url);
         this.request_url = request_url;
+        this.userId = userId;
         loadLinkPhoto();
-    }
-
-    public boolean isPhoto() {
-        return isPhoto;
-    }
-
-    public void setIsPhoto(boolean isPhoto) {
-        this.isPhoto = isPhoto;
     }
 
     /**
@@ -104,20 +95,13 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
         switch (viewType) {
             case VIEW_TYPE_HEAD:
                 if (headHolder == null) {
-                    view = LayoutInflater.from(context).inflate(R.layout.edit_diary_head, null);
-                    headHolder = new HeadHolder(view);
+                    view = LayoutInflater.from(context).inflate(R.layout.wall_item, null);
+                    headHolder = new WallHolder(fragment, view, new HttpTools(context), true);
                 }
                 listener.loadHeadView(headHolder);
                 return headHolder;
-            case VIEW_TYPE_VIDEO:
-                if (videoHolder == null) {
-                    view = LayoutInflater.from(context).inflate(R.layout.tab_picture_voide_view, null);
-                    videoHolder = new VideoHolder(view);
-                }
-                listener.loadVideoView(videoHolder);
-                return videoHolder;
             default:
-                view = LayoutInflater.from(context).inflate(R.layout.photo_item, null);
+                view = LayoutInflater.from(context).inflate(R.layout.diary_photo_item, null);
                 return new ImageHolder(view);
         }
     }
@@ -146,39 +130,20 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, final int position) {
         LogUtil.d(TAG, "onBindViewHolder& position = " + position);
         if (position > 0) {
-            if (isPhoto) {
-                ImageHolder imageHolder = (ImageHolder) holder;
-                final PushedPhotoEntity entity = entities.get(position - 1);
-                imageHolder.setCaption(entity.getPhoto_caption());
-                Uri uri = Uri.EMPTY;
-                if (entity instanceof DiaryPhotoEntity) {
-                    uri = ((DiaryPhotoEntity) entity).getUri();
-                } else if (entity instanceof PhotoEntity) {
-                    String url = String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity) entity).getFile_id());
-                    uri = Uri.parse(url);
-                }
-                LogUtil.d(TAG, "onBindViewHolder& DiaryPhotoEntity uri: " + uri.toString());
-                imageHolder.setImage(uri);
-                imageHolder.ivDelete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        LogUtil.d(TAG, "onClick& position = " + position + "; entities size " + entities.size());
-                        listener.deletePhoto(entity);
-                        notifyDataSetChanged();
-                    }
-                });
-            }
+            ImageHolder imageHolder = (ImageHolder) holder;
+            PhotoEntity entity = data.get(position - 1);
+            imageHolder.setCaption(entity.getPhoto_caption());
+            Uri uri;
+            String url = String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, entity.getFile_id());
+            uri = Uri.parse(url);
+            LogUtil.d(TAG, "onBindViewHolder& DiaryPhotoEntity uri: " + uri.toString());
+            imageHolder.setImage(uri);
 
         } else if (position == 0) {
-            HeadHolder headHolder = (HeadHolder) holder;
-            headHolder.wevContent.requestFocus();
-            //头部分
-            UserEntity owner = MainActivity.getUser();
-            VolleyUtil.initNetworkImageView(context, headHolder.cniHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, owner.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-            headHolder.tvUserName.setText(owner.getUser_given_name());
-        }
-        if (position == getItemCount() - 1) {
-            listener.loadFinish();
+            if (holder instanceof WallHolder) {
+                listener.loadHeadView((WallHolder) holder);
+            }
+
         }
     }
 
@@ -201,12 +166,12 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
      */
     @Override
     public int getItemViewType(int position) {
-        LogUtil.d(TAG, "getItemViewType position = " + position + "; is photo " + isPhoto);
+        LogUtil.d(TAG, "getItemViewType position = " + position + ";");
         switch (position) {
             case 0: // Adpate的第一项必须返回是头部UI的类型
                 return VIEW_TYPE_HEAD;
             default:// 是图片list显示图片的UI类型，否则显示视频类型
-                return isPhoto ? VIEW_TYPE_PHOTO : VIEW_TYPE_VIDEO;
+                return position;
         }
     }
 
@@ -217,7 +182,7 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
      */
     @Override
     public int getItemCount() {
-        return isPhoto ? entities.size() + 1 : 2;
+        return data.size() + 1;
     }
 
     private void loadLinkPhoto() {
@@ -243,6 +208,7 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
                     //DateDeserializer ds = new DateDeserializer();
                     //给GsonBuilder方法单独指定Date类型的反序列化方法
                     //gsonb.registerTypeAdapter(Date.class, ds);
+                    clearData();
                     Gson gson = gsonb.create();
                     if (response.startsWith("{\"data\":")) {
                         JSONObject jsonObject = new JSONObject(response);
@@ -253,9 +219,7 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
                         data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
                         }.getType());
                     }
-                    int index = entities.size();
-                    entities.addAll(data);
-                    notifyItemRangeInserted(index, data.size());
+                    notifyItemRangeInserted(1, data.size());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -278,30 +242,32 @@ public class ImagesRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> 
         });
     }
 
-    public void setListener(ImagesRecyclerListener listener) {
+    public void setListener(DiaryInformationListener listener) {
         this.listener = listener;
     }
 
-    public class ImageHolder extends RecyclerView.ViewHolder {
+    public class ImageHolder extends ViewHolder {
 
-        private ImageView ivDelete;
         public ImageView ivDisplay;
-        public WallEditView wevContent;
+        public FreedomSelectionTextView tvCaption;
 
         public ImageHolder(View itemView) {
             super(itemView);
-            ivDelete = (ImageView) itemView.findViewById(R.id.pic_delete);
             ivDisplay = (ImageView) itemView.findViewById(R.id.iv_pic_normal);
-            wevContent = (WallEditView) itemView.findViewById(R.id.diary_edit_content);
+            tvCaption = (FreedomSelectionTextView) itemView.findViewById(R.id.tv_photo_caption);
         }
 
         public void setCaption(String caption) {
-            wevContent.setText(caption);
+            this.tvCaption.setText(caption);
         }
 
         public void setImage(Uri uri) {
             ivDisplay.setVisibility(View.VISIBLE);
             ImageLoader.getInstance().displayImage(uri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
         }
+    }
+
+    public interface DiaryInformationListener {
+        void loadHeadView(WallHolder wallHolder);
     }
 }

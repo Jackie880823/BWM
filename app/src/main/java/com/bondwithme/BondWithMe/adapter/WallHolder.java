@@ -132,7 +132,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     /**
      * 网络图片视图父控件
      */
-    private View llWallsImage;
+    public View llWallsImage;
 
     /**
      * 显示网络图片的视图控件

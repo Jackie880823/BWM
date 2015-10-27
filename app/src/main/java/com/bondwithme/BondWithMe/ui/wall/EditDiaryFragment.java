@@ -40,7 +40,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.FeelingAdapter;
 import com.bondwithme.BondWithMe.adapter.HeadHolder;
-import com.bondwithme.BondWithMe.adapter.ImagesRecyclerViewAdapter;
+import com.bondwithme.BondWithMe.adapter.EditDiaryAdapter;
 import com.bondwithme.BondWithMe.adapter.VideoHolder;
 import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
@@ -173,7 +173,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private List<String> deletePhoto = new ArrayList<>();
     private List<String> deleteVideo = new ArrayList<>();
 
-    private ImagesRecyclerViewAdapter mAdapter;
+    private EditDiaryAdapter mAdapter;
 
     /**
      * 视频Uri
@@ -479,7 +479,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         rvImages.setLayoutManager(llm);
-        mAdapter = new ImagesRecyclerViewAdapter(getContext(), photoEntities);
+        mAdapter = new EditDiaryAdapter(getContext(), photoEntities);
         mAdapter.setListener(new ImagesRecyclerListener() {
             @Override
             public void loadHeadView(HeadHolder headHolder) {
@@ -1396,8 +1396,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private String getPhotoCaptionByPosition(int position) {
         if (position < mAdapter.getItemCount()) {
             RecyclerView.ViewHolder holder = rvImages.findViewHolderForAdapterPosition(position);
-            if (holder != null && holder instanceof ImagesRecyclerViewAdapter.ImageHolder) {
-                return ((ImagesRecyclerViewAdapter.ImageHolder) holder).wevContent.getRelText();
+            if (holder != null && holder instanceof EditDiaryAdapter.ImageHolder) {
+                return ((EditDiaryAdapter.ImageHolder) holder).wevContent.getRelText();
             } else {
                 LogUtil.e(TAG, "getPhotoCaptionByPosition& IllegalStateException");
             }
