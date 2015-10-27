@@ -1,6 +1,7 @@
 package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -16,6 +17,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
+import com.bondwithme.BondWithMe.ui.wall.WallViewPicActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
@@ -138,7 +140,16 @@ public class DiaryInformationAdapter extends RecyclerView.Adapter<ViewHolder> {
             uri = Uri.parse(url);
             LogUtil.d(TAG, "onBindViewHolder& DiaryPhotoEntity uri: " + uri.toString());
             imageHolder.setImage(uri);
-
+            imageHolder.ivDisplay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, WallViewPicActivity.class);
+                    intent.putExtra(Constant.REQUEST_URL, request_url);
+                    intent.putExtra(Constant.USER_ID, userId);
+                    intent.putExtra(Constant.POSITION, position - 1);
+                    fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_PHOTOS);
+                }
+            });
         } else if (position == 0) {
             if (holder instanceof WallHolder) {
                 listener.loadHeadView((WallHolder) holder);

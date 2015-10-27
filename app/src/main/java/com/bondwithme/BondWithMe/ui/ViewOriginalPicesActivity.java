@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 
 /**
@@ -21,7 +22,6 @@ public class ViewOriginalPicesActivity extends BaseFragmentActivity {
     /**标识是否传入数据*/
     public static final String IS_DATA = "is_data";
     /**当IS_DATA为false时下面两参数生效,两个参数是请求图片的必须条件*/
-    public static final String REQUEST_URL = "request_url";
     public static final String MEMBER_ID = "memberId";
 
     @Override
@@ -42,9 +42,9 @@ public class ViewOriginalPicesActivity extends BaseFragmentActivity {
             } else {
                 //多张图片的时候
                 fragment = new ViewOriginalPicesMainFragment();
-                request_url = getIntent().getStringExtra(REQUEST_URL);
+                request_url = getIntent().getStringExtra(Constant.REQUEST_URL);
                 memberId = getIntent().getStringExtra(MEMBER_ID);
-                bundle.putString(REQUEST_URL, request_url);
+                bundle.putString(Constant.REQUEST_URL, request_url);
                 bundle.putString(MEMBER_ID, memberId);
             }
             fragment.setArguments(bundle);

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -62,6 +63,8 @@ public class WallViewPicActivity extends BaseActivity {
     private View vProgress;
 
     private String user_id;
+
+    private int position;
 
     private static final int REQUEST_DATA_SUCCESS = 1;
 
@@ -119,9 +122,14 @@ public class WallViewPicActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        Bundle bundle = getIntent().getExtras();
+        request_url = bundle.getString(Constant.REQUEST_URL);
+        user_id = bundle.getString(Constant.USER_ID);
 
-        request_url = getIntent().getExtras().getString("request_url");
-        user_id = getIntent().getExtras().getString("user_id");
+        /**add by Jackie*/
+        position = bundle.getInt(Constant.POSITION, -1);
+        /**add by Jackie*/
+
         if (TextUtils.isEmpty(request_url))
         {
             finish();
@@ -136,6 +144,7 @@ public class WallViewPicActivity extends BaseActivity {
 
     @Override
     public void requestData() {
+
         new HttpTools(this).get(request_url, null, this, new HttpCallback() {
             @Override
             public void onStart() {
@@ -195,6 +204,12 @@ public class WallViewPicActivity extends BaseActivity {
     private void initAdapter() {
         wallViewPicPagerAdapter = new WallViewPicPagerAdapter(this, layoutInflater, data);
         viewPager.setAdapter(wallViewPicPagerAdapter);
+
+        /** add by Jackie **/
+        if (position >= 0 && position < data.size()) {
+            viewPager.setCurrentItem(position);
+        }
+        /** add by Jackie **/
     }
 
     @Override

@@ -406,12 +406,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private void showOriginPic() {
         Intent intent = new Intent(context, WallViewPicActivity.class);
         Map<String, String> condition = new HashMap<>();
-        condition.put("content_id", wallEntity.getContent_id());
+        condition.put(Constant.CONTENT_ID, wallEntity.getContent_id());
         Map<String, String> params = new HashMap<>();
-        params.put("condition", UrlUtil.mapToJsonstring(condition));
+        params.put(Constant.CONDITION, UrlUtil.mapToJsonstring(condition));
         String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
-        intent.putExtra("request_url", url);
-        intent.putExtra("user_id", wallEntity.getUser_id());
+        intent.putExtra(Constant.REQUEST_URL, url);
+        intent.putExtra(Constant.USER_ID, wallEntity.getUser_id());
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_PHOTOS);
     }
 

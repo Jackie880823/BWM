@@ -216,10 +216,6 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
      */
     private void updatePhotoList() {
         if (holder != null) {
-            // 更新评论总数
-            int commentCount = Integer.valueOf((String) holder.getTvCommentCount().getText()) + 1;
-            wall.setComment_count(String.valueOf(commentCount));
-            holder.getTvCommentCount().setText(String.valueOf(commentCount));
 
             String videoName = wall.getVideo_filename();
             if (TextUtils.isEmpty(videoName) && !TextUtils.isEmpty(wall.getPhoto_count())) {
@@ -244,7 +240,6 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
     private void setWallContext() {
         holder.setViewClickListener(this);
-        holder.setWallEntity(wall);
         holder.setContent(wall, getActivity());
     }
 
