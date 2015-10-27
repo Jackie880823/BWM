@@ -148,8 +148,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     }
 
     public void addMsgEntity(MsgEntity msgEntity) {
-        messageChatActivity.empty_message.setVisibility(View.GONE);
-        messageChatActivity.swipeRefreshLayout.setVisibility(View.VISIBLE);
+        if (messageChatActivity.empty_message.getVisibility() == View.VISIBLE) {
+            messageChatActivity.empty_message.setVisibility(View.GONE);
+            messageChatActivity.swipeRefreshLayout.setVisibility(View.VISIBLE);
+        }
         int listSize = myList.size();
         myList.add(msgEntity);
         notifyDataSetChanged();

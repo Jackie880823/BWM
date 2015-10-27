@@ -14,7 +14,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.NewsEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
-import com.bondwithme.BondWithMe.ui.more.ViewLargePicActivity;
+import com.bondwithme.BondWithMe.ui.more.ViewUrlPicActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
@@ -78,9 +78,11 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         videoUrl = newsEntity.getVideo();
         if (!TextUtils.isEmpty(imageUrl)){
             //display pic
+            ivPic.setVisibility(View.VISIBLE);
             VolleyUtil.initNetworkImageView(mContext,ivPic,newsEntity.getImage());
             ibtnVideo.setVisibility(View.INVISIBLE);
         }else if(!TextUtils.isEmpty(videoUrl)){
+            ivPic.setVisibility(View.VISIBLE);
             VolleyUtil.initNetworkImageView(mContext,ivPic,newsEntity.getVideo_thumbnail());
             ibtnVideo.setVisibility(View.VISIBLE);
         }else if(TextUtils.isEmpty(imageUrl) && TextUtils.isEmpty(videoUrl)){
@@ -112,7 +114,8 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
     }
 
     private void enlargePic() {
-        Intent intent = new Intent(mContext, ViewLargePicActivity.class);
+//        Intent intent = new Intent(mContext, ViewLargePicActivity.class);
+        Intent intent = new Intent(mContext, ViewUrlPicActivity.class);
         intent.putExtra(PIC_URL,newsEntity.getImage());
         mContext.startActivity(intent);
 

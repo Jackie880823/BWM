@@ -266,7 +266,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     try {
                         String postType = jsonObject.optString("postType");
                         if ("postPhoto".equals(postType) || "postSticker".equals(postType)) {
-                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+//                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -275,7 +275,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     JSONObject textJsonObject = (JSONObject) msg.obj;
                     try {
                         if ("postText".equals(textJsonObject.getString("postType"))) {
-                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
+//                            getMsg(indexPage * INITIAL_LIMIT, 0, GET_SEND_OVER_MESSAGE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

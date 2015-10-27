@@ -629,11 +629,6 @@
     <string name="text_message_copy">复制</string>
 
     <string name="title_rewards">奖励</string>
-    <string name="text_wall_view_pic_save">保存当前照片</string>
-    <string name="text_wall_view_pic_edit">编辑当前描述</string>
-    <string name="text_wall_view_pic_delete">删除当前照片</string>
-    <string name="text_wall_view_pic_delete_warning">你确定要删除当前的照片吗?</string>
-    <string name="text_wall_view_pic_edit_no_change">描述没有被修改</string>
     <string name="text_no_rewards">暂无奖励</string>
     <string name="text_more">全文</string>
     <string name="text_close_update_sticker">关闭</string>
@@ -641,9 +636,15 @@
     <string name="text_sticker_update_detail">已推出新版本表情商店</string>
     <string name="title_edit_post">修改帖子</string>
 
-    <string name="add_photo_to_this_post">添加图片</string>
-    <string name="save_all_photos">保存图片</string>
-    <string name="edit_this_post">编辑</string>
-    <string name="delete_this_post">删除</string>
+    <string name="add_photo_to_this_post">添加照片到帖子</string>
+    <string name="save_all_photos">保存所有照片</string>
+    <string name="edit_this_post">编辑帖子</string>
+    <string name="delete_this_post">删除帖子</string>
+
+    <string name="text_wall_view_pic_save">保存照片</string>
+    <string name="text_wall_view_pic_edit">编辑说明</string>
+    <string name="text_wall_view_pic_delete">删除照片</string>
+    <string name="text_wall_view_pic_delete_warning">Are you sure you want to delete this photo?</string>
+    <string name="text_wall_view_pic_edit_no_change">Captions are not change</string>
     <string name="no_photo_2_save">No Photo to Save!</string>
 </resources>

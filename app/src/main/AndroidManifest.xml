@@ -649,6 +649,10 @@
             android:theme="@android:style/Theme.Translucent"
             android:windowSoftInputMode="stateVisible" >
         </activity>
+        <activity
+            android:name=".ui.more.ViewUrlPicActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
     </application>
 
 </manifest>

@@ -18,9 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/fragment_main_top"
-        android:paddingLeft="@dimen/default_content_padding"
-        android:paddingRight="@dimen/default_content_padding"
-        android:paddingTop="@dimen/default_view_margin">
+        >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvList"
