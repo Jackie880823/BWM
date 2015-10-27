@@ -1,0 +1,65 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ll_agree"
+        android:padding="@dimen/default_content_padding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/translucence_color"
+        android:gravity="left">
+
+        <ImageButton
+            android:id="@+id/iv_agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:paddingRight="@dimen/_15dp"
+            android:src="@drawable/love_press" />
+
+        <TextView
+            android:id="@+id/tv_agree_count"
+            style="@style/text_dark_default"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/send_comment"
+        android:layout_below="@+id/ll_agree"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding">
+
+        <android.support.v7.widget.CardView
+            style="@style/CardViewDefault"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:paddingRight="@dimen/default_content_padding"
+            android:paddingTop="@dimen/default_view_margin">
+
+            <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_wall_comment_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
+            </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+    <com.bondwithme.BondWithMe.widget.SendComment
+        android:id="@+id/send_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+    <include layout="@layout/progress_layout" />
+</RelativeLayout>

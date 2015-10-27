@@ -41,9 +41,10 @@ import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
-import com.bondwithme.BondWithMe.ui.wall.WallViewPicActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.ui.wall.DiaryCommentActivity;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
+import com.bondwithme.BondWithMe.ui.wall.WallViewPicActivity;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -323,8 +324,18 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 //                    check(position);
                 //                }
                 break;
+            case R.id.ll_comment: {
+                Intent intent;
+                intent = new Intent(context, DiaryCommentActivity.class);
+                intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
+                intent.putExtra(Constant.CONTENT_ID, wallEntity.getContent_id());
+                intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
+                intent.putExtra(Constant.AGREE_COUNT, wallEntity.getLove_count());
+                fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
+            }
+            break;
+
             case R.id.tv_wall_content:
-            case R.id.ll_comment:
             case R.id.top_event:
                 if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
                     if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {// 没有视频需要打开网页
@@ -695,8 +706,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     /**
      * 选择功能：保存图片；添加图片；编辑日记；删除日志
-     * @see PopupMenu
+     *
      * @param v 需要弹出选择视图的{@link View};
+     * @see PopupMenu
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private void initItemMenu(View v) {
@@ -809,7 +821,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             callBack.setLinkType(CallBack.LINK_TYPE_SAVE_PHOTOS);
             new HttpTools(context).get(url, null, SAVE_PHOTO, callBack);
         } else {
-            MessageUtil.showMessage(context,R.string.no_photo_2_save);
+            MessageUtil.showMessage(context, R.string.no_photo_2_save);
             LogUtil.e(TAG, "save Photo Fail");
         }
 //        String.format(Constant.API_GET_PIC, Constant.Module_Original, userId, photoEntity.getFile_id());
@@ -1031,7 +1043,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         }
     }
+
     int downloadCount = 0;
+
     private void downloadPhoto(ArrayList<PhotoEntity> photoEntities) {
         for (PhotoEntity photoEntity : photoEntities) {
             /**wing modified*/

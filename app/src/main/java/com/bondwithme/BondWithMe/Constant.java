@@ -354,7 +354,9 @@ public class Constant {
      */
     public static final String CONTENT_GROUP_ID = "content_group_id";
     public static final String GROUP_ID = "group_id";
+    public static final String CONTENT_ID = "content_id";
     public static final String USER_ID = "user_id";
+    public static final String AGREE_COUNT = "agree_count";
 
     public static final String COMMENT_OWNER_ID = "comment_owner_id";
     public static final String CONTENT_TYPE = "content_type";
