@@ -119,13 +119,6 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return data.size();
     }
 
-    class VHHeadItem extends RecyclerView.ViewHolder {
-
-        public VHHeadItem(View itemView) {
-            super(itemView);
-        }
-    }
-
     class VHItem extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         CircularNetworkImage civ_comment_owner_head;

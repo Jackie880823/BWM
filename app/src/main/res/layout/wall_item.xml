@@ -87,6 +87,7 @@
                     android:layout_height="@dimen/default_small_button_width_height"
                     android:layout_alignParentRight="true"
                     android:background="@null"
+                    android:visibility="gone"
                     android:contentDescription="@string/delete"
                     android:src="@drawable/option_dots"/>
             </RelativeLayout>

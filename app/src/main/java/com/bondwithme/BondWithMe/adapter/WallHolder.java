@@ -173,7 +173,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private ImageButton ibAgree;
 
     /**
-     * 删除按钮，点击删除日志
+     * 更多功能视图
      */
     private ImageButton btnOption;
 
@@ -196,6 +196,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private TextView tvLocation;
 
     private boolean needFull = false;
+
+    private boolean isDetailed;
 
 
     private List<CompressBitmapTask> tasks = new ArrayList<>();
@@ -247,7 +249,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         mHttpTools = httpTools;
         this.context = fragment.getContext();
         this.fragment = fragment;
-
+        this.isDetailed = isDetailed;
         nivHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
         tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
         tvContent = (FreedomSelectionTextView) itemView.findViewById(R.id.tv_wall_content);
@@ -583,11 +585,16 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             tvCommentCount.setText(this.wallEntity.getComment_count());
         }
 
-        if (!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename()))) {
+        if (isDetailed) {
+            // 在详情界面不需要在Holder显更多功能按钮视图
+            btnOption.setVisibility(View.GONE);
+        } else if ((!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())))) {
             // 不是当前用户：没有图片或者有视频都不显示功能没有图片则不需要显更多功能按钮
             btnOption.setVisibility(View.GONE);
         } else {
-            btnOption.setVisibility(View.VISIBLE);
+            if (!isDetailed) {
+                btnOption.setVisibility(View.VISIBLE);
+            }
         }
 
         if (TextUtils.isEmpty(this.wallEntity.getLove_id())) {
@@ -712,7 +719,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      * @see PopupMenu
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void initItemMenu(View v) {
+    public void initItemMenu(View v) {
 
         PopupMenu popupMenu = new PopupMenu(context, v);
         popupMenu.inflate(R.menu.wall_item_menu);
@@ -1000,7 +1007,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             LogUtil.i(TAG, "onResult# type: " + linkType + " response: " + response);
             switch (linkType) {
                 case LINK_TYPE_SUBMIT_PICTURE:
-                    lastPic ++;
+                    lastPic++;
                     if (lastPic == localPhotos.size()) {
                         mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_SUCCEED);
                     }

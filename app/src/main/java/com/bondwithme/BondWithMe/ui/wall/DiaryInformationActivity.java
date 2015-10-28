@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.bondwithme.BondWithMe.Constant;
+import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 
 /**
@@ -13,10 +14,7 @@ import com.bondwithme.BondWithMe.ui.BaseActivity;
  */
 public class DiaryInformationActivity extends BaseActivity {
 
-
-    private String content_group_id;
-    private String user_id;
-    private String group_id;
+    private DiaryInformationFragment diaryInformationFragment;
 
     @Override
     protected void initBottomBar() {
@@ -25,7 +23,8 @@ public class DiaryInformationActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        rightButton.setVisibility(View.INVISIBLE);
+        rightButton.setVisibility(View.VISIBLE);
+        rightButton.setImageResource(R.drawable.option_dots);
     }
 
     @Override
@@ -35,17 +34,18 @@ public class DiaryInformationActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
+        diaryInformationFragment.getHolder().initItemMenu(rightButton);
     }
 
     @Override
     protected Fragment getFragment() {
         Intent intent = getIntent();
 
-        content_group_id = intent.getStringExtra(Constant.CONTENT_GROUP_ID);
-        user_id = intent.getStringExtra(Constant.USER_ID);
-        group_id = intent.getStringExtra(Constant.GROUP_ID);
-
-        return  DiaryInformationFragment.newInstance(content_group_id, user_id, group_id);
+        String content_group_id = intent.getStringExtra(Constant.CONTENT_GROUP_ID);
+        String user_id = intent.getStringExtra(Constant.USER_ID);
+        String group_id = intent.getStringExtra(Constant.GROUP_ID);
+        diaryInformationFragment = DiaryInformationFragment.newInstance(content_group_id, user_id, group_id);
+        return  diaryInformationFragment;
     }
 
     @Override

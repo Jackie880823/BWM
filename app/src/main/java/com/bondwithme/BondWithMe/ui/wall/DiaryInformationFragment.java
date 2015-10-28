@@ -383,6 +383,10 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
         this.holder = holder;
     }
 
+    public WallHolder getHolder() {
+        return holder;
+    }
+
     @Override
     public void addPhotoed(WallEntity wallEntity, boolean succeed) {
         if (succeed) {
