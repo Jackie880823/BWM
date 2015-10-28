@@ -722,6 +722,10 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void initItemMenu(View v) {
+        if (wallEntity == null) {
+            // wallEntity 为null说明数据还没有加载成功
+            return;
+        }
 
         PopupMenu popupMenu = new PopupMenu(context, v);
         popupMenu.inflate(R.menu.wall_item_menu);
