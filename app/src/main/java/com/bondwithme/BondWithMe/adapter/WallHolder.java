@@ -373,7 +373,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 break;
 
             case R.id.btn_option:
-                initItemMenu(v);
+                if (wallEntity != null) {
+                    initItemMenu(v);
+                }
                 break;
 
             case R.id.switch_text_show:
