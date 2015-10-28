@@ -13,7 +13,7 @@ public class StickerGroupEntity implements Serializable {
     private String type;//.gif", // sticker type 图片格式
     private String total;//12", // sticker total表情总数
     private String price;//0", // sticker price表情包价格
-    private String version;//1.0", // sticker version表情包版本
+    private String sticker_version;//1.0", // sticker version表情包版本
     private String download_condition;//normal", // download condition表情包下载条件 （normal： 普通，default：默认app自带， event：活动）现在只有normal 和default
     private String condition_type;// 表情包下载条件分类 （以后用）
     private String sticker_new;//表情包新的状态
@@ -106,11 +106,11 @@ public class StickerGroupEntity implements Serializable {
     }
 
     public String getVersion() {
-        return version;
+        return sticker_version;
     }
 
     public void setVersion(String version) {
-        this.version = version;
+        this.sticker_version = version;
     }
 
     public String getDownload_condition() {

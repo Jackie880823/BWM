@@ -415,6 +415,6 @@ public class Constant {
     //新的下载表情包
     public static final String API_DOWNLOAD_STICKER_ZIP = API_SERVER + "/bondwithme/index.php/api/sticker_zip/%s/format/%s/fpath/%s";
     //新的显示表情图
-    public static final String API_STICKER_ORIGINAL_IMAGE = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fcode/%s";
+    public static final String API_STICKER_ORIGINAL_IMAGE = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fcode/%s/version/%s";
 
 }

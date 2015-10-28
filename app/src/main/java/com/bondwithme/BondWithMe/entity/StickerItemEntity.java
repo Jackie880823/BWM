@@ -8,6 +8,19 @@ import java.io.Serializable;
 public class StickerItemEntity implements Serializable{
     private String sticker_name;        // sticker name表情名称
     private String sticker_tag;         // sticker tag表情标签 （以后如果需要用文字来找出表情 ）
+    private String sticker_version;     //sticker version表情版本
+
+
+
+
+    public String getSticker_version() {
+        return sticker_version;
+    }
+
+    public void setSticker_version(String sticker_version) {
+        this.sticker_version = sticker_version;
+    }
+
 
     public StickerItemEntity() {
         super();

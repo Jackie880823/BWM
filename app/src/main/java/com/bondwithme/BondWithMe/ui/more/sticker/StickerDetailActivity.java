@@ -113,7 +113,7 @@ public class StickerDetailActivity extends BaseActivity {
 //                String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()),
 //                R.drawable.network_image_default, R.drawable.network_image_default);
         VolleyUtil.initNetworkImageView(this, insideSticker,
-                String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_1" + stickerGroupEntity.getType()),
+                String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_1" + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()),
                 R.drawable.network_image_default, R.drawable.network_image_default);
         insideStickerName.setText(stickerGroupEntity.getName());
         if ("0".equals(stickerGroupEntity.getPrice())) {
