@@ -95,7 +95,7 @@ public class WallViewPicActivity extends BaseActivity {
         // 需要新的图
         titleBar.setBackgroundColor(Color.BLACK);
         leftButton.setImageResource(R.drawable.back_press);
-        rightButton.setImageResource(R.drawable.option_dots);
+        rightButton.setImageResource(R.drawable.option_dots_view);
     }
 
     @Override
