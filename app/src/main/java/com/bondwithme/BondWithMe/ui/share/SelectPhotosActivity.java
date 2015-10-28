@@ -123,7 +123,7 @@ public class SelectPhotosActivity extends BaseActivity {
                 LogUtil.i(TAG, "addUri& uri path: " + mediaData.getPath());
                 if (multi) {
                     //                    if(mSelectedImages.size() < residue) {
-                    if (mSelectedImages.size() <= residue) {
+                    if (mSelectedImages.size() < residue) {
                         // 没有超过限制的图片数量可以继续添加并返回添加结果的返回值
                         result = mSelectedImages.contains(mediaData) || mSelectedImages.add(mediaData);
                     } else {

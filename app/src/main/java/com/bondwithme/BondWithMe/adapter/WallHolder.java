@@ -373,7 +373,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 break;
 
             case R.id.btn_option:
-                initItemMenu(v);
+                if (wallEntity != null) {
+                    initItemMenu(v);
+                }
                 break;
 
             case R.id.switch_text_show:
@@ -720,6 +722,10 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void initItemMenu(View v) {
+        if (wallEntity == null) {
+            // wallEntity 为null说明数据还没有加载成功
+            return;
+        }
 
         PopupMenu popupMenu = new PopupMenu(context, v);
         popupMenu.inflate(R.menu.wall_item_menu);

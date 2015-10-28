@@ -228,7 +228,7 @@
 
     <!-- end -->
 
-    <string name="select_too_many">You can only select 10 photos at a time.</string>
+    <string name="select_too_many">You can only select %d photos at a time.</string>
     <string name="text_nearest">recent</string>
 
 
