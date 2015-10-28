@@ -648,4 +648,5 @@
     <string name="text_wall_view_pic_edit_no_change">描述没改变</string>
     <string name="no_photo_2_save">No Photo to Save!</string>
     <string name="add_photo_before_title">添加照片前需要删除视频</string>
+    <string name="text_add_caption">添加图片描述</string>
 </resources>

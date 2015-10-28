@@ -40,7 +40,8 @@
             android:padding="@dimen/default_content_padding"
             android:paddingTop="@dimen/default_content_padding"
             android:singleLine="true"
-            android:textColor="@color/default_text_color_dark"
+            android:textColor="@android:color/widget_edittext_dark"
+            android:hint="@string/text_add_caption"
             android:textSize="@dimen/text_medium_size" />
 
     </com.bondwithme.BondWithMe.widget.SquareRelativeLayout>

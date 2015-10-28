@@ -651,5 +651,6 @@
     <string name="text_wall_view_pic_edit_no_change">Captions are not change</string>
     <string name="no_photo_2_save">No Photo to Save!</string>
     <string name="add_photo_before_title">Please remove your video before you can add new photo.</string>
+    <string name="text_add_caption">add caption</string>
 
 </resources>

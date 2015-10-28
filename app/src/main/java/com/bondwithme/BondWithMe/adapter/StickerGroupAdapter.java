@@ -80,7 +80,7 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
         VHItem holder = (VHItem) viewHolder;
         stickerGroupEntity = dataStickerGroup.get(position);
 //        url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_S", stickerGroupEntity.getPath(), stickerGroupEntity.getType());
-        url = String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getFirst_sticker_code());
+        url = String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getFirst_sticker_code(),stickerGroupEntity.getVersion());
         //设置new sticker
         if (stickerGroupEntity.getSticker_new().trim().equals("1")) {
             holder.ivNewSticker.setVisibility(View.VISIBLE);

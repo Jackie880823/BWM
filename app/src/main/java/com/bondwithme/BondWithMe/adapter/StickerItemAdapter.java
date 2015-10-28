@@ -3,9 +3,6 @@ package com.bondwithme.BondWithMe.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
-
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -25,7 +21,6 @@ import com.bondwithme.BondWithMe.entity.StickerItemEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.SDKUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -36,8 +31,6 @@ import java.util.List;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
-
-import static android.view.Gravity.NO_GRAVITY;
 
 
 /**
@@ -94,7 +87,7 @@ public class StickerItemAdapter extends BaseAdapter {
 //                String.format( Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), stickerItemEntity.getSticker_name()+"_S", stickerGroupEntity.getPath(),stickerGroupEntity.getType()),
 //                R.drawable.network_image_default, R.drawable.network_image_default);
         VolleyUtil.initNetworkImageView(mContext, viewHolder.ivStickerItem,
-                String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_S_" + stickerItemEntity.getSticker_name() + stickerGroupEntity.getType()),
+                String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_S_" + stickerItemEntity.getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()),
                 R.drawable.network_image_default, R.drawable.network_image_default);
         viewHolder.ivStickerItem.setOnLongClickListener(new LongClickListener(position));
         viewHolder.ivStickerItem.setOnTouchListener(new View.OnTouchListener() {
@@ -234,7 +227,7 @@ public class StickerItemAdapter extends BaseAdapter {
 //                VolleyUtil.initNetworkImageView(mContext, bigSticker,
 //                        String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), data.get(position).getSticker_name() + "_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()));
                 VolleyUtil.initNetworkImageView(mContext, bigSticker,
-                        String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType()),
+                        String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()),
                         R.drawable.network_image_default, R.drawable.network_image_default);
 
                 popupBigSticker.setContentView(bigSticker);
@@ -244,7 +237,7 @@ public class StickerItemAdapter extends BaseAdapter {
                 bigSticker.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 bigSticker.setPadding(2, 2, 2, 2);
 //                downloadAsyncTask(bigSticker, String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), data.get(position).getSticker_name() + "_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()));
-                downloadAsyncTask(bigSticker, String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType()));
+                downloadAsyncTask(bigSticker, String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()));
                 popupBigSticker.setContentView(bigSticker);
             }
             popupBigSticker.setOutsideTouchable(true);
