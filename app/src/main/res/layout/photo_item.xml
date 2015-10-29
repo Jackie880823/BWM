@@ -1,50 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/CardViewDefault"
+<com.bondwithme.BondWithMe.widget.SquareRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_transparent"
+    android:padding="@dimen/default_content_padding">
 
-    <com.bondwithme.BondWithMe.widget.SquareRelativeLayout
-        style="@style/CardViewDefault"
+    <ImageView
+        android:id="@+id/iv_pic_normal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_transparent"
-        android:padding="@dimen/default_content_padding">
+        android:scaleType="centerCrop"
+        android:visibility="visible" />
 
-        <ImageView
-            android:id="@+id/iv_pic_normal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/pic_delete"
-            android:layout_width="@dimen/default_small_button_width_height"
-            android:layout_height="@dimen/default_small_button_width_height"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@color/translucence_color"
-            android:scaleType="centerInside"
-            android:src="@drawable/x_delete_icon" />
+    <ImageView
+        android:id="@+id/pic_delete"
+        android:layout_width="@dimen/default_small_button_width_height"
+        android:layout_height="@dimen/default_small_button_width_height"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/translucence_color"
+        android:scaleType="centerInside"
+        android:src="@drawable/x_delete_icon" />
 
 
-        <com.bondwithme.BondWithMe.widget.WallEditView
-            android:id="@+id/diary_edit_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/default_text_color_while"
-            android:fitsSystemWindows="true"
-            android:padding="@dimen/default_content_padding"
-            android:paddingTop="@dimen/default_content_padding"
-            android:singleLine="true"
-            android:textColor="@android:color/widget_edittext_dark"
-            android:hint="@string/text_add_caption"
-            android:textSize="@dimen/text_medium_size" />
+    <com.bondwithme.BondWithMe.widget.WallEditView
+        android:id="@+id/diary_edit_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/default_text_color_while"
+        android:fitsSystemWindows="true"
+        android:hint="@string/text_add_caption"
+        android:padding="@dimen/default_content_padding"
+        android:paddingTop="@dimen/default_content_padding"
+        android:singleLine="true"
+        android:textColor="@android:color/widget_edittext_dark"
+        android:textSize="@dimen/text_medium_size" />
 
-    </com.bondwithme.BondWithMe.widget.SquareRelativeLayout>
-</android.support.v7.widget.CardView>
+</com.bondwithme.BondWithMe.widget.SquareRelativeLayout>
 
 

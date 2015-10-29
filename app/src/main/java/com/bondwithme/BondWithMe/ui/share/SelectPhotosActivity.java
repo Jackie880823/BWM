@@ -301,10 +301,10 @@ public class SelectPhotosActivity extends BaseActivity {
     protected void titleRightEvent() {
         if (isPreview) {
             LogUtil.d(TAG, "titleRightEvent& is preview");
-            changeFragment(fragment, false);
             if (!mSelectedImages.contains(currentData)) {
                 listener.addUri(currentData);
             }
+            changeFragment(fragment, false);
         } else {
             LogUtil.d(TAG, "titleRightEvent& is select images view");
             if (!mSelectedImages.isEmpty()) {
