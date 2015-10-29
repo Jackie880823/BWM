@@ -77,6 +77,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     private boolean multi;
 
     /**
+     * 请求数据是否可以包含视频
+     */
+    private boolean useVideo;
+
+    /**
      * 已经选择的图Ur列表
      */
     ArrayList<MediaData> mSelectedImageUris;
@@ -164,7 +169,8 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         loading.start();
 
         multi = getParentActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-        boolean useVideo = getParentActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
+
+        useVideo = getParentActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
 
         // 获取数据库中的图片资源游标
 //        String[] imageColumns = {MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails._ID};
@@ -351,46 +357,45 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
              */
             private void loadVideos() {
                 synchronized (SelectPhotosFragment.this) {
-                    if (videoCursor == null || videoCursor.isClosed()) {
-                        return;
-                    }
+                    if (videoCursor != null && !videoCursor.isClosed()) {
 
-                    String bucket;
-                    bucket = getParentActivity().getString(R.string.text_video);
-                    buckets.add(1, bucket);
+                        String bucket;
+                        bucket = getParentActivity().getString(R.string.text_video);
+                        buckets.add(1, bucket);
 
-                    if (videoCursor.isClosed()) {
-                        return;
-                    }
-
-                    mMediaUris.put(bucket, new ArrayList<MediaData>());
-                    int cursorCount = videoCursor.getCount();
-
-                    // 限制定显示的视频大小的最大数为50M
-                    for (int i = 0; i < cursorCount; i++) {
-                        String path;
-                        Uri contentUri;
-                        long duration;
-                        long id;
-
-                        videoCursor.moveToPosition(i);
-
-                        int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
-                        int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
-                        int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
-                        duration = videoCursor.getLong(durationColumnIndex);
-                        path = videoCursor.getString(pathColumnIndex);
-                        id = videoCursor.getLong(uriColumnIndex);
-                        contentUri = Uri.parse(MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + id);
-
-                        if (!TextUtils.isEmpty(path)) {
-                            MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
-                            mediaData.setThumbnailUri(getVideoThumbnailUri(id));
-                            addToMediaMap(bucket, mediaData);
+                        if (videoCursor.isClosed()) {
+                            return;
                         }
 
+                        mMediaUris.put(bucket, new ArrayList<MediaData>());
+                        int cursorCount = videoCursor.getCount();
+
+                        // 限制定显示的视频大小的最大数为50M
+                        for (int i = 0; i < cursorCount; i++) {
+                            String path;
+                            Uri contentUri;
+                            long duration;
+                            long id;
+
+                            videoCursor.moveToPosition(i);
+
+                            int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
+                            int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
+                            int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
+                            duration = videoCursor.getLong(durationColumnIndex);
+                            path = videoCursor.getString(pathColumnIndex);
+                            id = videoCursor.getLong(uriColumnIndex);
+                            contentUri = Uri.parse(MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + id);
+
+                            if (!TextUtils.isEmpty(path)) {
+                                MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
+                                mediaData.setThumbnailUri(getVideoThumbnailUri(id));
+                                addToMediaMap(bucket, mediaData);
+                            }
+
+                        }
+                        imageCursor.close();
                     }
-                    imageCursor.close();
                 }
 
                 getParentActivity().runOnUiThread(adapterRefresh);
@@ -572,7 +577,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             String bucket = buckets.get(index);
 
             if (index == 1 && bucket.equals(getString(R.string.text_video))) {
-                MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.show_vidoe_limit));
+                MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.show_video_limit));
             }
 
             mImageUriList = mMediaUris.get(bucket);

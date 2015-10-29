@@ -70,12 +70,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/default_view_margin"
-            android:background="@drawable/btn_chat_send_bg"
+            android:background="@drawable/btn_chat_send_bg_for_comment"
             android:paddingBottom="@dimen/default_content_padding"
             android:paddingLeft="@dimen/default_view_margin"
             android:paddingRight="@dimen/default_view_margin"
             android:paddingTop="@dimen/default_content_padding"
-            android:text="@string/text_send"
             android:textColor="#ffffff"
             android:textSize="@dimen/text_medium_size"/>
     </LinearLayout>

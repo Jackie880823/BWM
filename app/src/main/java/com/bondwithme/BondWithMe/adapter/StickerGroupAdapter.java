@@ -44,9 +44,7 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
     private List<StickerGroupEntity> dataStickerGroup;
     private String url;
     private StickerGroupEntity stickerGroupEntity = null;
-    String urlString = null;
     public static final String POSITION = "position";
-    private int finished;
     public static final String STICKER_GROUP = "STICKER_GROUP";
     private List<String> mStickers;
 
@@ -59,8 +57,14 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
         this.mAdsPaths = mAdsPaths;
     }
 
+    public void setMAdsPaths(Map<String, Uri> mAdsMap) {
+        if (mAdsMap != null && mAdsMap.size() > 0) {
+            this.mAdsPaths = mAdsMap;
+        }
+    }
+
     public void addSticker(String path) {
-        if (mStickers != null&&!mStickers.contains(path)) {
+        if (mStickers != null && !mStickers.contains(path)) {
             mStickers.add(path);
         }
     }
@@ -75,7 +79,8 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
     public void onBindItemViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         VHItem holder = (VHItem) viewHolder;
         stickerGroupEntity = dataStickerGroup.get(position);
-        url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_S", stickerGroupEntity.getPath(), stickerGroupEntity.getType());
+//        url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_S", stickerGroupEntity.getPath(), stickerGroupEntity.getType());
+        url = String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getFirst_sticker_code(),stickerGroupEntity.getVersion());
         //设置new sticker
         if (stickerGroupEntity.getSticker_new().trim().equals("1")) {
             holder.ivNewSticker.setVisibility(View.VISIBLE);
@@ -198,7 +203,7 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             //对ViewPager页号求模取出View列表中要显示的项
-            if (!viewlist.isEmpty()){
+            if (!viewlist.isEmpty()) {
                 position %= viewlist.size();
                 if (position < 0) {
                     position = viewlist.size() + position;

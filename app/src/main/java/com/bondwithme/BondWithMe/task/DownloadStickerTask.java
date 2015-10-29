@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
@@ -39,8 +40,9 @@ public class DownloadStickerTask {
                                    final int defaultResource, final GifImageView gifImageView) {
         final String urlPath = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
                 stickerName, stickerGroupPath, Constant.Sticker_Gif);
-        final String downloadPath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath +
-                File.separator + stickerName + "_B.gif";
+//        final String downloadPath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + "B" +
+//                File.separator + stickerName + ".gif";
+        final String downloadPath = FileUtil.getBigStickerPath(App.getContextInstance(), stickerGroupPath, stickerName, Constant.Sticker_Gif);
         AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
             @Override
             protected byte[] doInBackground(Object... params) {
@@ -96,8 +98,9 @@ public class DownloadStickerTask {
                                    final int defaultResource, final ImageView imageView) {
         final String urlPath = String.format(Constant.API_STICKER, MainActivity.getUser().getUser_id(),
                 stickerName, stickerGroupPath, Constant.Sticker_Png);
-        final String downloadPath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator
-                + stickerName + "_B.png";
+//        final String downloadPath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + "B" + File.separator
+//                + stickerName + ".png";
+        final String downloadPath = FileUtil.getBigStickerPath(App.getContextInstance(), stickerGroupPath, stickerName, Constant.Sticker_Png);
         AsyncTask task = new AsyncTask<Object, Void, byte[]>() {
             @Override
             protected byte[] doInBackground(Object... params) {

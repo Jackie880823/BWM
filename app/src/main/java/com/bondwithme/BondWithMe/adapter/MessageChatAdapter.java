@@ -148,8 +148,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     }
 
     public void addMsgEntity(MsgEntity msgEntity) {
-        messageChatActivity.empty_message.setVisibility(View.GONE);
-        messageChatActivity.swipeRefreshLayout.setVisibility(View.VISIBLE);
+        if (messageChatActivity.empty_message.getVisibility() == View.VISIBLE) {
+            messageChatActivity.empty_message.setVisibility(View.GONE);
+            messageChatActivity.swipeRefreshLayout.setVisibility(View.VISIBLE);
+        }
         int listSize = myList.size();
         myList.add(msgEntity);
         notifyDataSetChanged();
@@ -340,7 +342,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                 stickerGroupPath = stickerGroupPath.replace("/", "");
             }
-            String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.gif";
+//            String gifFilePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator +"B"+ File.separator+ msgEntity.getSticker_name() + ".gif";
+            String gifFilePath = FileUtil.getBigStickerPath(context, stickerGroupPath, msgEntity.getSticker_name(), msgEntity.getSticker_type());
             try {
                 //GifDrawable gifDrawable = new GifDrawable(context.getAssets(), gifFilePath);
                 Log.i("stickerPath", gifFilePath);
@@ -370,7 +373,8 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                 if (null != stickerGroupPath && stickerGroupPath.indexOf("/") != -1) {
                     stickerGroupPath = stickerGroupPath.replace("/", "");
                 }
-                String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + msgEntity.getSticker_name() + "_B.png";
+//                String pngFileName = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator +"B"+ File.separator+ msgEntity.getSticker_name() + ".png";
+                String pngFileName = FileUtil.getBigStickerPath(context, stickerGroupPath, msgEntity.getSticker_name(), msgEntity.getSticker_type());
                 try {
                     //拼接大图路径
                     //InputStream is = context.getAssets().open(pngFileName);//得到数据流

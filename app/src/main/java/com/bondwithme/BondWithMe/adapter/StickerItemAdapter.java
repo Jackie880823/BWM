@@ -3,9 +3,6 @@ package com.bondwithme.BondWithMe.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
-
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -25,7 +21,6 @@ import com.bondwithme.BondWithMe.entity.StickerItemEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.SDKUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,13 +32,11 @@ import java.util.List;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
-import static android.view.Gravity.NO_GRAVITY;
-
 
 /**
  * Created by heweidong on 15/6/11.
  */
-public class StickerItemAdapter extends BaseAdapter{
+public class StickerItemAdapter extends BaseAdapter {
     private String TAG = StickerItemAdapter.class.getSimpleName();
     private Context mContext;
     private List<StickerItemEntity> data;
@@ -51,7 +44,7 @@ public class StickerItemAdapter extends BaseAdapter{
     private int addSize = 60;
 
 
-    public StickerItemAdapter(Context mContext, List<StickerItemEntity> data,StickerGroupEntity stickerGroupEntity) {
+    public StickerItemAdapter(Context mContext, List<StickerItemEntity> data, StickerGroupEntity stickerGroupEntity) {
         this.mContext = mContext;
         this.data = data;
         this.stickerGroupEntity = stickerGroupEntity;
@@ -71,26 +64,30 @@ public class StickerItemAdapter extends BaseAdapter{
     public long getItemId(int position) {
         return position;
     }
+
     ViewHolder viewHolder;
     PopupWindow popupBigSticker = null;
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        if(convertView == null){
+        if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.sticker_item_for_grid,null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.sticker_item_for_grid, null);
             viewHolder.ivStickerItem = (NetworkImageView) convertView.findViewById(R.id.iv_sticker_item);
             AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, (int) mContext.getResources().getDimension(R.dimen._90dp));
 //            AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT );
             convertView.setLayoutParams(layoutParams);
             convertView.setTag(viewHolder);
-        }else {
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
 
         }
         StickerItemEntity stickerItemEntity = data.get(position);
-        VolleyUtil.initNetworkImageView(mContext,viewHolder.ivStickerItem,
-                String.format( Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), stickerItemEntity.getSticker_name()+"_S", stickerGroupEntity.getPath(),stickerGroupEntity.getType()),
+//        VolleyUtil.initNetworkImageView(mContext,viewHolder.ivStickerItem,
+//                String.format( Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), stickerItemEntity.getSticker_name()+"_S", stickerGroupEntity.getPath(),stickerGroupEntity.getType()),
+//                R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(mContext, viewHolder.ivStickerItem,
+                String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_S_" + stickerItemEntity.getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()),
                 R.drawable.network_image_default, R.drawable.network_image_default);
         viewHolder.ivStickerItem.setOnLongClickListener(new LongClickListener(position));
         viewHolder.ivStickerItem.setOnTouchListener(new View.OnTouchListener() {
@@ -114,7 +111,7 @@ public class StickerItemAdapter extends BaseAdapter{
      *
      * @param path
      */
-    public void downloadAsyncTask( final GifImageView gifImageView, final String path) {
+    public void downloadAsyncTask(final GifImageView gifImageView, final String path) {
         new AsyncTask<String, Void, byte[]>() {
             @Override
             protected byte[] doInBackground(String... params) {
@@ -203,12 +200,12 @@ public class StickerItemAdapter extends BaseAdapter{
     }
 
 
-    class ViewHolder{
+    class ViewHolder {
         private NetworkImageView ivStickerItem;
 
     }
 
-    class LongClickListener implements View.OnLongClickListener{
+    class LongClickListener implements View.OnLongClickListener {
         int position;
 
         public LongClickListener(int position) {
@@ -218,24 +215,29 @@ public class StickerItemAdapter extends BaseAdapter{
         @Override
         public boolean onLongClick(View view) {
             popupBigSticker = new PopupWindow();
-            popupBigSticker.setWidth(view.getWidth()+addSize);
-            popupBigSticker.setHeight(view.getWidth() +addSize);
+            popupBigSticker.setWidth(view.getWidth() + addSize);
+            popupBigSticker.setHeight(view.getWidth() + addSize);
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.gif_big_sticker);
             popupBigSticker.setBackgroundDrawable(drawable);
-            if (stickerGroupEntity!=null && stickerGroupEntity.getType().equals(".png")){
+            if (stickerGroupEntity != null && stickerGroupEntity.getType().equals(".png")) {
                 NetworkImageView bigSticker = new NetworkImageView(mContext);
                 bigSticker.setScaleType(ImageView.ScaleType.FIT_XY);
                 bigSticker.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 //                    bigSticker.setPadding(5,5,5,5);
+//                VolleyUtil.initNetworkImageView(mContext, bigSticker,
+//                        String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), data.get(position).getSticker_name() + "_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()));
                 VolleyUtil.initNetworkImageView(mContext, bigSticker,
-                        String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), data.get(position).getSticker_name() + "_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()));
+                        String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()),
+                        R.drawable.network_image_default, R.drawable.network_image_default);
+
                 popupBigSticker.setContentView(bigSticker);
-            }else if (stickerGroupEntity!=null && stickerGroupEntity.getType().equals(".gif")){
+            } else if (stickerGroupEntity != null && stickerGroupEntity.getType().equals(".gif")) {
                 GifImageView bigSticker = new GifImageView(mContext);
                 bigSticker.setScaleType(ImageView.ScaleType.FIT_XY);
                 bigSticker.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                bigSticker.setPadding(2,2,2,2);
-                downloadAsyncTask(bigSticker,String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), data.get(position).getSticker_name() + "_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()));
+                bigSticker.setPadding(2, 2, 2, 2);
+//                downloadAsyncTask(bigSticker, String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), data.get(position).getSticker_name() + "_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()));
+                downloadAsyncTask(bigSticker, String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()));
                 popupBigSticker.setContentView(bigSticker);
             }
             popupBigSticker.setOutsideTouchable(true);
@@ -250,7 +252,7 @@ public class StickerItemAdapter extends BaseAdapter{
 //                }
             LogUtil.d(TAG, "==v.getWidth()==" + view.getWidth() + "==v.getHeight()==" + view.getHeight());
 
-            popupBigSticker.showAsDropDown(view, -addSize/2, -(int) 3 * view.getHeight());
+            popupBigSticker.showAsDropDown(view, -addSize / 2, -(int) 3 * view.getHeight());
             return true;
         }
     }

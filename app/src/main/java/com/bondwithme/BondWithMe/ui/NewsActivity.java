@@ -1,7 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -36,13 +34,13 @@ public class NewsActivity extends BaseActivity {
     private boolean isRefresh;
 
     private int startIndex = 0;
-    private int offSet = 20;
+    private int offSet = 8;
     private boolean loading;
     private List<NewsEntity> data = new ArrayList<>();
     private NewsAdapter adapter;
     private RecyclerView rvList;
     private LinearLayoutManager llm;
-    private TextView tvNoDate;
+    private TextView tvNoData;
 
 
 
@@ -81,7 +79,7 @@ public class NewsActivity extends BaseActivity {
     public void initView() {
         mProgressDialog = getViewById(R.id.rl_progress);
         mProgressDialog.setVisibility(View.VISIBLE);
-        tvNoDate = getViewById(R.id.tv_no_data_display);
+        tvNoData = getViewById(R.id.tv_no_data_display);
 
         rvList = getViewById(R.id.rvList);
         llm = new LinearLayoutManager(this);
@@ -109,7 +107,8 @@ public class NewsActivity extends BaseActivity {
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if (!loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                int count = Math.abs(totalItemCount - 3);
+                if (!loading && count!=0 && lastVisibleItem >= count && dy > 0) {
                     loading = true;
                     requestData();//再请求数据
                 }
@@ -136,7 +135,7 @@ public class NewsActivity extends BaseActivity {
         params.put("limit",""+offSet);
 
 
-        new HttpTools(this).get(String.format(Constant.API_BONDALERT_NEWS, MainActivity.getUser().getUser_id()), params,this, new HttpCallback() {
+        new HttpTools(this).get(String.format(Constant.API_NEWS, MainActivity.getUser().getUser_id()), params, this, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -167,10 +166,11 @@ public class NewsActivity extends BaseActivity {
                 }
                 loading = false;
 
-                if (!data.isEmpty()){
-                    tvNoDate.setVisibility(View.GONE);
-                }else if (data.isEmpty() && !NewsActivity.this.isFinishing()){
-                    tvNoDate.setText(getResources().getString(R.string.text_no_date_news));
+                //no data!!!
+                if (!data.isEmpty()) {
+                    tvNoData.setVisibility(View.GONE);
+                } else if (data.isEmpty() && !NewsActivity.this.isFinishing()) {
+                    tvNoData.setText(getResources().getString(R.string.text_no_date_news));
                 }
             }
 
@@ -208,14 +208,4 @@ public class NewsActivity extends BaseActivity {
 
     }
 
-    /**
-     * add by wing
-     *
-     * @param intent
-     */
-    @Override
-    protected void onNewIntent(Intent intent) {
-        finish();
-        startActivity(intent);
-    }
 }

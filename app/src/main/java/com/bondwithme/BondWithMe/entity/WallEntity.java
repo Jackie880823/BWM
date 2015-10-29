@@ -10,6 +10,10 @@ import java.util.List;
  */
 public class WallEntity implements Serializable {
 
+    public static final String CONTENT_TYPE_POST = "post";
+
+    public static final String CONTENT_TYPE_ADS = "ads";
+
     /**
      * <br>Post create date
      * <br>such as: "2015-01-28 11:16:57"
@@ -85,6 +89,8 @@ public class WallEntity implements Serializable {
      */
     private String sticker_type;
 
+    private String video_id;
+
     /**
      * <br>视频文件名，若没有视频是null
      * <br> such as: "1439522914995561.MOV"
@@ -125,6 +131,11 @@ public class WallEntity implements Serializable {
     private String photo_count;
 
     /**
+     * 照片最大序号，增加照片的时候有用，照片顺序可以用这个再续加
+     */
+    private String photo_max;
+
+    /**
      * <br>Other format for posting date time
      * <br>"{\"day\":\"1\",\"month\":\"0\",\"year\":\"0\",\"hour\":\"3\",\"min\":\"46\",\"sec\":\"4\"}"
      */
@@ -144,6 +155,11 @@ public class WallEntity implements Serializable {
      * Post content ID
      */
     private String content_id;
+
+    /**
+     * {@link #CONTENT_TYPE_POST} – 普通日记, {@link #CONTENT_TYPE_ADS} – 广告
+     */
+    private String content_type;
 
     /**
      *
@@ -171,6 +187,8 @@ public class WallEntity implements Serializable {
      * member tag list, if null - no member tag
      */
     private List<UserEntity> tag_member;
+
+    private String track_url;
 
     public String getContent_creation_date() {
         return content_creation_date;
@@ -292,6 +310,14 @@ public class WallEntity implements Serializable {
         this.video_thumbnail = video_thumbnail;
     }
 
+    public String getVideo_id() {
+        return video_id;
+    }
+
+    public void setVideo_id(String video_id) {
+        this.video_id = video_id;
+    }
+
     public String getVideo_filename() {
         return video_filename;
     }
@@ -344,6 +370,14 @@ public class WallEntity implements Serializable {
         return post_date_info;
     }
 
+    public String getPhoto_max() {
+        return photo_max;
+    }
+
+    public void setPhoto_max(String photo_max) {
+        this.photo_max = photo_max;
+    }
+
     public void setPost_date_info(String post_date_info) {
         this.post_date_info = post_date_info;
     }
@@ -370,6 +404,14 @@ public class WallEntity implements Serializable {
 
     public void setContent_id(String content_id) {
         this.content_id = content_id;
+    }
+
+    public String getContent_type() {
+        return content_type;
+    }
+
+    public void setContent_type(String content_type) {
+        this.content_type = content_type;
     }
 
     public String getGroup_id() {
@@ -418,5 +460,13 @@ public class WallEntity implements Serializable {
 
     public void setTag_member(List<UserEntity> tag_member) {
         this.tag_member = tag_member;
+    }
+
+    public String getTrack_url() {
+        return track_url;
+    }
+
+    public void setTrack_url(String track_url) {
+        this.track_url = track_url;
     }
 }

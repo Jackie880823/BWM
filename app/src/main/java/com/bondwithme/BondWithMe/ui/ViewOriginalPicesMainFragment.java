@@ -81,7 +81,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
 
     /**
      * 只用于数据实体传入
-     *
+     * 单张图片的时候
      * @param inDatas
      * @return
      */
@@ -103,7 +103,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
         llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         rvList.setLayoutManager(llm);
         //        got_data_in = getArguments().getBoolean("is_data",false);
-        request_url = getArguments().getString("request_url");
+        request_url = getArguments().getString(Constant.REQUEST_URL);
         memberId = getArguments().getString("memberId");
         if (getArguments() == null || TextUtils.isEmpty(request_url)) {
             got_data_in = true;

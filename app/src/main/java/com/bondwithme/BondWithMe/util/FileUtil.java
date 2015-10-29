@@ -13,9 +13,13 @@ import android.provider.MediaStore;
 import android.text.format.DateUtils;
 
 import com.bondwithme.BondWithMe.App;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +83,7 @@ public class FileUtil {
 
     public static void clearCrashFiles(Context context) {
         File[] cacheFiles = getCrashFiles(context);
-        if(cacheFiles!=null) {
+        if (cacheFiles != null) {
             for (File file : cacheFiles) {
                 file.delete();
             }
@@ -250,7 +254,7 @@ public class FileUtil {
     }
 
     public static String getPDFSavePath(Context mContext) {
-        return getPDFRootPath(mContext)+String.format("/cache_%s.pdf", "" + System.currentTimeMillis());
+        return getPDFRootPath(mContext) + String.format("/cache_%s.pdf", "" + System.currentTimeMillis());
     }
 
     public static String getPDFRootPath(Context mContext) {
@@ -263,6 +267,7 @@ public class FileUtil {
         }
         return filePath;
     }
+
     public static String getVideoRootPath(Context mContext) {
         File bootFile = getSaveRootPath(mContext, false);
         String filePath = bootFile.getAbsolutePath();
@@ -273,4 +278,36 @@ public class FileUtil {
         }
         return filePath;
     }
+
+    public static String getBigStickerPath(Context mContext, String stickerPath, String stickerName, String stickerType) {
+        String filePath = FileUtil.getSaveRootPath(mContext, false).getAbsolutePath() + File.separator + "Sticker";
+        File file = new File(filePath);
+        if (file.exists()) {
+            return filePath + File.separator + stickerPath + File.separator + stickerName + "_B" + stickerType;
+        }
+        return MainActivity.STICKERS_NAME + File.separator + stickerPath + File.separator + "B" + File.separator + stickerName + stickerType;
+    }
+
+    public static String getSmallStickerPath(Context mContext, String stickerPath, String stickerName, String stickerType) {
+        String filePath = FileUtil.getSaveRootPath(mContext, false).getAbsolutePath() + File.separator + "Sticker";
+        File file = new File(filePath);
+        if (file.exists()) {
+            return filePath + File.separator + stickerPath + File.separator + stickerName + "_S" + stickerType;
+        }
+        return MainActivity.STICKERS_NAME + File.separator + stickerPath + File.separator + "S" + File.separator + stickerName + stickerType;
+    }
+
+    public static void copyFileUsingChannel(File source, File dest) throws IOException {
+        FileChannel sourceChannel = null;
+        FileChannel destChannel = null;
+        try {
+            sourceChannel = new FileInputStream(source).getChannel();
+            destChannel = new FileOutputStream(dest).getChannel();
+            destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+        } finally {
+            sourceChannel.close();
+            destChannel.close();
+        }
+    }
+
 }

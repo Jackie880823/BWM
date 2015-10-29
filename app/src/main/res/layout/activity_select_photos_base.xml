@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/default_content_bg"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/select_photos_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_below="@+id/fragment_main_top"
+        android:background="@color/default_content_bg"
+        tools:context=".ui.BaseActivity"
+        />
+
+
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:clickable="true"-->
+            <!--android:layout_centerInParent="true">-->
+
+            <!--<com.material.widget.CircularProgress-->
+                <!--android:id="@+id/progressBar"-->
+                <!--android:layout_width="32dp"-->
+                <!--android:layout_height="32dp"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:background="@color/bg_progressBar"-->
+                 <!--/>-->
+        <!--</RelativeLayout>-->
+
+</RelativeLayout>

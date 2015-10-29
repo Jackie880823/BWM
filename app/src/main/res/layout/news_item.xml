@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="@dimen/default_content_padding">
+        android:padding="@dimen/_5dp"
+        >
 
 
         <TextView
@@ -20,15 +21,46 @@
             />
 
         <TextView
-            android:id="@+id/news_content"
-            style="@style/text_dark_default"
-             />
-
-
-        <TextView
             android:id="@+id/news_date"
             style="@style/text_light_default"
              />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/iv_pic"
+                android:layout_width="match_parent"
+                android:layout_height="360dp"
+                android:scaleType="fitXY"
+                />
+
+            <ImageButton
+                android:id="@+id/ibtn_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_video"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/news_content"
+            style="@style/text_dark_default"
+            android:autoLink="web"
+            android:linksClickable="true"
+            />
+
+        <TextView
+            android:id="@+id/tv_more_or_collapse"
+            style="@style/text_default"
+            android:text="@string/more"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:textColor="@android:color/holo_blue_bright"/>
 
     </LinearLayout>
 

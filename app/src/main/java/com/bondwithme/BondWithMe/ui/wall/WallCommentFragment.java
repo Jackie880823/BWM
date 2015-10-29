@@ -27,6 +27,7 @@ import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -75,7 +76,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     private int startIndex = 0;
     private final static int offset = 10;
     private boolean loading;
-    LinearLayoutManager llm;
+    private LinearLayoutManager llm;
     private RecyclerView rvList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CircularProgress progressBar;
@@ -126,7 +127,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         try {
             content_group_id = getArguments().getString(ARG_PARAM_PREFIX + "0");
             group_id = getArguments().getString(ARG_PARAM_PREFIX + "2");
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -142,7 +143,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         rvList.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(sendCommentView != null) {
+                if (sendCommentView != null) {
                     sendCommentView.hideAllViewState(true);
                 }
                 return false;
@@ -168,11 +169,11 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onReceiveBitmapUri(Uri uri) {
-                if(uri != null) { // 传输图片
+                if (uri != null) { // 传输图片
                     CompressBitmapTask task = new CompressBitmapTask();
                     vProgress.setVisibility(View.VISIBLE);
                     //for not work in down 11
-                    if(SDKUtil.IS_HONEYCOMB) {
+                    if (SDKUtil.IS_HONEYCOMB) {
                         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
                     } else {
                         task.execute(uri);
@@ -213,7 +214,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 int totalItemCount = llm.getItemCount();
                 //lastVisibleItem >= totalItemCount - 5 表示剩下5个item自动加载
                 // dy>0 表示向下滑动
-                if(data.size() >= offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
+                if (data.size() >= offset && !loading && lastVisibleItem >= totalItemCount - 5 && dy > 0) {
                     LogUtil.i(TAG, "onScrolled& getComments");
                     loading = true;
                     getComments();//再请求数据
@@ -224,14 +225,14 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void initWallView(View wallView) {
 
-        holder = new WallHolder(getParentActivity(), wallView, mHttpTools, true);
+        holder = new WallHolder(this, wallView, mHttpTools, true);
     }
 
     private void initListHeadView(View listHeadView) {
 
-        if(listHeadView != null) {
+        if (listHeadView != null) {
             progressBar = (CircularProgress) listHeadView.findViewById(R.id.wall_comment_progress_bar);
-            if(loading) {
+            if (loading) {
                 progressBar.setVisibility(View.VISIBLE);
             } else {
                 progressBar.setVisibility(View.GONE);
@@ -256,14 +257,37 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
-        sendCommentView.onActivityResult(requestCode, resultCode, data);
+        if (Activity.RESULT_OK == resultCode) {
+            switch (requestCode) {
+                case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
+                    if (data != null) {
+                        ArrayList<Uri> pickUris;
+                        pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
+                        if (pickUris != null && pickUris.isEmpty()) {
+                            if (progressBar != null) {
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
+                            holder.setLocalPhotos(pickUris);
+                        }
+                        getParentActivity().setResult(Activity.RESULT_OK);
+                    }
+                    break;
+                case Constant.INTENT_REQUEST_UPDATE_PHOTOS:
+                case Constant.INTENT_REQUEST_UPDATE_WALL:
+                    getParentActivity().setResult(Activity.RESULT_OK);
+                    requestData();
+                    break;
+                default:
+                    sendCommentView.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 
     @Override
     public void requestData() {
         HashMap<String, String> params = new HashMap<>();
-        params.put("content_group_id", content_group_id);
-        params.put("user_id", MainActivity.getUser().getUser_id());
+        params.put(Constant.CONTENT_GROUP_ID, content_group_id);
+        params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
 
         mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, new HttpCallback() {
             @Override
@@ -276,6 +300,18 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                     getParentActivity().finish();
                 } else {
                     vProgress.setVisibility(View.GONE);
+
+                    if (holder != null) {
+                        startIndex = 0;
+                        isRefresh = true;
+                        swipeRefreshLayout.setRefreshing(true);
+
+                        // 更新评论总数
+                        int commentCount = Integer.valueOf((String) holder.getTvCommentCount().getText()) + 1;
+                        wall.setComment_count(String.valueOf(commentCount));
+                        holder.getTvCommentCount().setText(String.valueOf(commentCount));
+                    }
+
                     getComments();
                 }
             }
@@ -313,9 +349,9 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void getComments() {
         HashMap<String, String> jsonParams = new HashMap<>();
-        jsonParams.put(WallCommentEntity.CONTENT_GROUP_ID, content_group_id);
-        jsonParams.put(WallCommentEntity.GROUP_ID, group_id);
-        jsonParams.put(WallCommentEntity.USER_ID, MainActivity.getUser().getUser_id());
+        jsonParams.put(Constant.CONTENT_GROUP_ID, content_group_id);
+        jsonParams.put(Constant.GROUP_ID, group_id);
+        jsonParams.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
         HashMap<String, String> params = new HashMap<>();
@@ -396,7 +432,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     }
 
     private void initAdapter() {
-        if(adapter == null) {
+        if (adapter == null) {
             adapter = new WallCommentAdapter(getParentActivity(), data);
             adapter.setPicClickListener(this);
             adapter.setCommentActionListener(new WallCommentAdapter.CommentActionListener() {
@@ -414,7 +450,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 @Override
                 public void updateWallView(View wallView) {
                     initWallView(wallView);
-                    if(wall != null) {
+                    if (wall != null) {
                         setWallContext();
                     }
                 }
@@ -436,11 +472,11 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     private void sendComment(EditText et) {
         String commentText = "";
-        if(et != null) {
+        if (et != null) {
             commentText = et.getText().toString();
             et.setText(null);
         }
-        if(TextUtils.isEmpty(commentText) && TextUtils.isEmpty(stickerGroupPath)) {
+        if (TextUtils.isEmpty(commentText) && TextUtils.isEmpty(stickerGroupPath)) {
             // 如果没有输入字符且没有添加表情，不发送评论
             return;
         }
@@ -450,13 +486,13 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         }
 
         HashMap<String, String> params = new HashMap<>();
-        params.put("content_group_id", content_group_id);
-        params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-        params.put("content_type", "comment");
-        params.put("comment_content", commentText);
-        params.put("sticker_group_path", stickerGroupPath);
-        params.put("sticker_name", stickerName);
-        params.put("sticker_type", stickerType);
+        params.put(Constant.CONTENT_GROUP_ID, content_group_id);
+        params.put(Constant.COMMENT_OWNER_ID, MainActivity.getUser().getUser_id());
+        params.put(Constant.CONTENT_TYPE, "comment");
+        params.put(Constant.COMMENT_CONTENT, commentText);
+        params.put(Constant.STICKER_GROUP_PATH, stickerGroupPath);
+        params.put(Constant.STICKER_NAME, stickerName);
+        params.put(Constant.STICKER_TYPE, stickerType);
 
         mHttpTools.post(Constant.API_WALL_COMMENT_TEXT_POST, params, POST_COMMENTS, new HttpCallback() {
             @Override
@@ -490,7 +526,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 stickerGroupPath = "";
 
                 getParentActivity().setResult(Activity.RESULT_OK);
-                if(getActivity()!=null&&!getActivity().isFinishing()) {
+                if (getActivity() != null && !getActivity().isFinishing()) {
                     UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 }
             }
@@ -500,7 +536,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 if (progressBar != null) {
                     progressBar.setVisibility(View.GONE);
                 }
-                if(getActivity()!=null&&!getActivity().isFinishing()) {
+                if (getActivity() != null && !getActivity().isFinishing()) {
                     UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 }
                 MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
@@ -523,7 +559,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         @Override
         protected String doInBackground(Uri... params) {
-            if(params == null) {
+            if (params == null) {
                 return null;
             }
             return LocalImageLoader.compressBitmap(getActivity(), params[0], 480, 800, false);
@@ -536,18 +572,18 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
         private void submitPic(String path) {
             File f = new File(path);
-            if(!f.exists()) {
+            if (!f.exists()) {
                 return;
             }
             if (progressBar != null) {
                 progressBar.setVisibility(View.VISIBLE);
             }
             Map<String, Object> params = new HashMap<>();
-            params.put("content_group_id", content_group_id);
-            params.put("comment_owner_id", MainActivity.getUser().getUser_id());
-            params.put("content_type", "comment");
-            params.put("file", f);
-            params.put("photo_fullsize", "1");
+            params.put(Constant.CONTENT_GROUP_ID, content_group_id);
+            params.put(Constant.COMMENT_OWNER_ID, MainActivity.getUser().getUser_id());
+            params.put(Constant.CONTENT_TYPE, "comment");
+            params.put(Constant.FILE, f);
+            params.put(Constant.PHOTO_FULLSIZE, "1");
 
 
             mHttpTools.upload(Constant.API_WALL_COMMENT_PIC_POST, params, UPLOAD_PIC, new HttpCallback() {
@@ -656,7 +692,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                         swipeRefreshLayout.setRefreshing(true);
 
                         int commentCount = Integer.valueOf((String) holder.getTvCommentCount().getText()) - 1;
-                        if(commentCount >= 0) {
+                        if (commentCount >= 0) {
                             wall.setComment_count(String.valueOf(commentCount));
                             holder.getTvCommentCount().setText(String.valueOf(commentCount));
                         }
@@ -688,7 +724,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 removeAlertDialog.dismiss();
             }
         });
-        if(!removeAlertDialog.isShowing()) {
+        if (!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
     }
@@ -703,7 +739,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void onResume() {
         super.onResume();
 
-        if(sendCommentView != null) {
+        if (sendCommentView != null) {
             sendCommentView.commitAllowingStateLoss();
         }
     }
@@ -716,12 +752,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
 
     /**
      * 显示Wall详情包括评论
-     *
-     * @param content_group_id {@link WallEntity#content_group_id}
-     * @param group_id         {@link WallEntity#group_id}
      */
     @Override
-    public void showComments(String content_group_id, String group_id) {}
+    public void showComments(WallEntity wallEntity) {
+    }
 
 
     MyDialog removeAlertDialog;
@@ -729,10 +763,10 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     /**
      * 删除Wall
      *
-     * @param content_group_id {@link WallEntity#content_group_id}
+     * @param wallEntity {@link WallEntity}
      */
     @Override
-    public void remove(final String content_group_id) {
+    public void remove(WallEntity wallEntity) {
 
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
@@ -781,7 +815,7 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
                 removeAlertDialog.dismiss();
             }
         });
-        if(!removeAlertDialog.isShowing()) {
+        if (!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
 
@@ -797,8 +831,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void showMembers(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_USER);
-        intent.putExtra("content_group_id", content_group_id);
-        intent.putExtra("group_id", group_id);
+        intent.putExtra(Constant.CONTENT_GROUP_ID, content_group_id);
+        intent.putExtra(Constant.GROUP_ID, group_id);
         startActivity(intent);
     }
 
@@ -812,8 +846,8 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
     public void showGroups(String content_group_id, String group_id) {
         Intent intent = new Intent(getActivity(), WallMembersOrGroupsActivity.class);
         intent.setAction(Constant.ACTION_SHOW_NOTIFY_GROUP);
-        intent.putExtra("content_group_id", content_group_id);
-        intent.putExtra("group_id", group_id);
+        intent.putExtra(Constant.CONTENT_GROUP_ID, content_group_id);
+        intent.putExtra(Constant.GROUP_ID, group_id);
         startActivity(intent);
     }
 
@@ -832,6 +866,41 @@ public class WallCommentFragment extends BaseFragment<WallCommentActivity> imple
         intent.putExtra(WallUtil.GET_LOVE_LIST_REFER_ID, refer_id);
         intent.putExtra(WallUtil.GET_LOVE_LIST_TYPE, type);
         startActivity(intent);
+    }
+
+    @Override
+    public void showPopClick(WallHolder holder) {
+        this.holder = holder;
+    }
+
+    @Override
+    public void addPhotoed(WallEntity wallEntity, boolean succeed) {
+        if (succeed) {
+            getParentActivity().setResult(Activity.RESULT_OK);
+            requestData();
+        } else {
+            if (progressBar != null) {
+                progressBar.setVisibility(View.GONE);
+            }
+            LogUtil.e(TAG, "add Photo Fail");
+        }
+    }
+
+    @Override
+    public void savePhotoed(WallEntity wallEntity, boolean succeed) {
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }
+        if (!succeed) {
+            LogUtil.e(TAG, "save Photo Fail");
+        }
+    }
+
+    @Override
+    public void onSavePhoto() {
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
     }
 
 }

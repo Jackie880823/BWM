@@ -8,8 +8,9 @@ import com.bondwithme.BondWithMe.util.FileUtil;
 public class Constant {
 
 
-
-    /** mail */
+    /**
+     * mail
+     */
     public final static String REPORT_EMAIL_FROM_ADDRESS = "it.dude@bondwith.me";
     public final static String REPORT_EMAIL_USERNAME = "AKIAJGKWD34V5H7NB2KQ";
     public final static String REPORT_EMAIL_PASSWORD = "Ao9FeNkRizW7yDpmKzUxuzWLcWtUsm5LJ35HXag5+7WI";
@@ -31,11 +32,39 @@ public class Constant {
     public static final String LOGIN_USER = "user";
     public static final String APP_CRASH = "app_crash";
 
-    public static final int ACTION_CREATE_WALL = 10;
-    public static final int ACTION_UPDATE_WALL = 11;
-    public static final int ACTION_COMMENT_WALL = 12;
+    /**
+     * 更新图片的意图请求标识
+     */
+    public static final int INTENT_REQUEST_UPDATE_PHOTOS = 9;
+    /**
+     * 创建日记的意图标识
+     */
+    public static final int INTENT_REQUEST_CREATE_WALL = 10;
+    public static final int INTENT_REQUEST_UPDATE_WALL = 11;
+    public static final int INTENT_REQUEST_COMMENT_WALL = 12;
     public static final int ACTION_COMMENT_MEMBERS = 13;
     public static final int ACTION_COMMENT_GROUPS = 14;
+    /**
+     * 打开相册的意图请求标识
+     */
+    public static final int INTENT_REQUEST_HEAD_PHOTO = 15;
+    /**
+     * 打开相机的意图标识
+     */
+    public static final int INTENT_REQUEST_HEAD_CAMERA = 16;
+    /**
+     *
+     */
+    public static final int INTENT_REQUEST_GET_LOCATION = 17;
+    public static final int INTENT_REQUEST_GET_MEMBERS = 18;
+    /**
+     * 打开GPS请求
+     */
+    public static final int INTENT_REQUEST_OPEN_GPS = 19;
+    /**
+     * 请求获取多张图片的意图请求
+     */
+    public static final int INTENT_REQUEST_HEAD_MULTI_PHOTO = 20;
 
     public static final int ACTION_EVENT_CREATE = 20;
     public static final int ACTION_EVENT_UPDATE = 21;
@@ -46,6 +75,10 @@ public class Constant {
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
 
+    /**
+     * 临时文件用户裁剪
+     */
+    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
 
     /**
      * for api
@@ -60,8 +93,6 @@ public class Constant {
 
 //    public static final int TRACKER_SITE_ID = 5;//m
 //    public static final String API_SERVER = "http://m.bondwith.me";
-
-
 
 
     public static final String API_CHECK_VERSION = API_SERVER + "/bondwithme/index.php/api/appVersion";
@@ -146,6 +177,7 @@ public class Constant {
     public static final String API_CONTACT_US = API_SERVER + "/bondwithme/index.php/api/contactUs";
     public static final String API_SETTING_CONFIG = API_SERVER + "/bondwithme/index.php/api/setting/%s";
     public static final String API_SHARE2FRIEND = API_SERVER + "/bondwithme/index.php/api/shareToFriend";
+    public static final String API_NEWS = API_SERVER + "/bondwithme/index.php/api/newsList/%s";
     //    public static final String API_BONDALERT_LIST = API_SERVER+"/bondwithme/index.php/api/bondAlertList";
     public static final String API_BONDALERT_LIST = API_SERVER + "/bondwithme/index.php/api/bondAlertList/%S/module/miss";
     public static final String API_BONDALERT_NEWS = API_SERVER + "/bondwithme/index.php/api/bondAlertList/%s/module/other";
@@ -163,16 +195,17 @@ public class Constant {
     public static final String API_BONDALERT_GROUP_CONFIRM = API_SERVER + "/bondwithme/index.php/api/confirmJoinGroup/%s";
     public static final String API_BONDALERT_GROUP_REJECT = API_SERVER + "/bondwithme/index.php/api/rejectJoinGroup/%s";
     public static final String API_BONDALERT_REMOVE_RECOMMEND = API_SERVER + "/bondwithme/index.php/api/removeRecomUser/";
+    public static final String API_REWARDS = API_SERVER +"/bondwithme/index.php/api/rewardList/%s";
 
     /**
      * Api for sticker store
      */
-    public static final String API_STICKERSTORE_FIRST_STICKER = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fid/%s/fpath/%s/ftype/%s";
+//    public static final String API_STICKERSTORE_FIRST_STICKER = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fid/%s/fpath/%s/ftype/%s";
     public static final String API_STICKER_GROUP = API_SERVER + "/bondwithme/index.php/api/stickerGroupList";
     public static final String API_STICKER_ITEM = API_SERVER + "/bondwithme/index.php/api/stickerItemList";
     public static final String API_STICKER_BANNER = API_SERVER + "/bondwithme/index.php/api/stickerBanner";
     public static final String API_STICKER_BANNER_PIC = API_SERVER + "/bondwithme/images/%s";
-    public static final String API_STICKER_ZIP = API_SERVER + "/bondwithme/index.php/api/sticker_zip/%s/fpath/%s";
+    //    public static final String API_STICKER_ZIP = API_SERVER + "/bondwithme/index.php/api/sticker_zip/%s/fpath/%s";
     public static final String API_STICKER_UPDATE = API_SERVER + "/bondwithme/index.php/api/stickerCheckUpdate";
 
 
@@ -255,6 +288,16 @@ public class Constant {
 
     public static final String API_UPDATE_MISS = API_SERVER + "/bondwithme/index.php/api/miss/%s";//消除好友的miss
 
+    /**
+     * 编制日记
+     */
+    public static final String API_PUT_WALL = API_SERVER + "/bondwithme/index.php/api/updateContent/%s";
+    /**
+     * 照片最大号，用于在日志列表直接上传照片的时候，上传全部照片前先更新。
+     */
+    public static final String API_PUT_PHOTO_MAX = API_SERVER + "/bondwithme/index.php/api/updatePhotoMax/%s";
+    public static final String API_UPLOAD_VIDEO = API_SERVER + "/bondwithme/index.php/api/uploadVideo";
+
     //获取sticker, 4个参数. 1.user_id, 2.sticker_name, 3.sticker_path, 4.sticker_type
     public static final String API_STICKER = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fid/%s_B/fpath/%s/ftype/%s";
     public static final String Sticker_Png = ".png";
@@ -278,6 +321,19 @@ public class Constant {
      */
     public static final String EXTRA_LONGITUDE = "longitude";
 
+    // 用于网络连拉的参数
+    public static final String PARAM_USER_ID= "user_id";
+    public static final String PARAM_CONTENT_CREATOR_ID = "content_creator_id";
+    public static final String PARAM_CONTENT_TYPE = "content_type";
+    public static final String PARAM_TEXT_DESCRIPTION = "text_description";
+    public static final String PARAM_LOC_LATITUDE = "loc_latitude";
+    public static final String PARAM_LOC_LONGITUDE = "loc_longitude";
+    public static final String PARAM_LOC_NAME = "loc_name";
+    public static final String PARAM_LOC_CAPTION = "loc_caption";
+    public static final String PARAM_STICKER_GROUP_PATH = "sticker_group_path";
+    public static final String PARAM_LOC_TYPE = "loc_type";
+    public static final String PARAM_PHOTO_MAX = "photo_max";
+
     public static final String HAS_LOGED_IN = "has_loged_in";
     public static final String HAS_DOWNLOAD = "has_download";
 
@@ -292,6 +348,27 @@ public class Constant {
     public static final String FAIL = "Fail";
     public static final String TYPE = "type";
 
+
+    /**
+     * about wall, user extra
+     */
+    public static final String CONTENT_GROUP_ID = "content_group_id";
+    public static final String GROUP_ID = "group_id";
+    public static final String CONTENT_ID = "content_id";
+    public static final String USER_ID = "user_id";
+    public static final String AGREE_COUNT = "agree_count";
+    public static final String REQUEST_URL = "request_url";
+    public static final String CONDITION = "condition";
+    public static final String POSITION = "position";
+
+    public static final String COMMENT_OWNER_ID = "comment_owner_id";
+    public static final String CONTENT_TYPE = "content_type";
+    public static final String COMMENT_CONTENT = "comment_content";
+    public static final String STICKER_GROUP_PATH = "sticker_group_path";
+    public static final String STICKER_NAME = "sticker_name";
+    public static final String STICKER_TYPE = "sticker_type";
+    public static final String FILE = "file";
+    public static final String PHOTO_FULLSIZE = "photo_fullsize";
 
     public static final String API_START_CHECK_LOG_ID = API_SERVER + "/bondwithme/index.php/api/loginID";//查询账号是否可用和获取验证码／重新获取验证码
     public static final String API_START_PHONE_CREATE_USER = API_SERVER + "/bondwithme/index.php/api/verifyUser"; //Verify code and Create User (Phone)
@@ -330,4 +407,14 @@ public class Constant {
 
     //删除message消息
     public static final String API_MESSAGE_DELETE = API_SERVER +"/bondwithme/index.php/api/removeContent/%s";
+    public static final String API_WALL_UPDATE_CAPTION = API_SERVER +"/bondwithme/index.php/api/editPhoto/%s";
+    public static final String API_WALL_DELETE_PHOTO = API_SERVER +"/bondwithme/index.php/api/deletePhoto/%s";
+
+    //新的得到表情包
+    public static final String API_STICKER_GROUP_LIST = API_SERVER + "/bondwithme/index.php/api/stickerGroupList";
+    //新的下载表情包
+    public static final String API_DOWNLOAD_STICKER_ZIP = API_SERVER + "/bondwithme/index.php/api/sticker_zip/%s/format/%s/fpath/%s";
+    //新的显示表情图
+    public static final String API_STICKER_ORIGINAL_IMAGE = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fcode/%s/version/%s";
+
 }

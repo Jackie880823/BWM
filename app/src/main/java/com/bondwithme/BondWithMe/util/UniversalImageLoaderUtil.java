@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.exception.StickerTypeException;
@@ -94,8 +95,8 @@ public class UniversalImageLoaderUtil {
      */
     public static void decodeStickerPic(GifImageView imageView, String stickerGroupPath, String stickerName, String type) throws StickerTypeException {
 
-        if(!TextUtils.isEmpty(stickerGroupPath)) {
-            if(stickerGroupPath.contains("/")) {
+        if (!TextUtils.isEmpty(stickerGroupPath)) {
+            if (stickerGroupPath.contains("/")) {
                 // 替换老版本表情中多余的"/"
                 stickerGroupPath = stickerGroupPath.replace("/", "");
             }
@@ -105,29 +106,30 @@ public class UniversalImageLoaderUtil {
 
         // 先从文件中读取对应表情，如果读取不到再从网络获取图片
         // 表情目录
-        String filePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + stickerName;
+//        String filePath = MainActivity.STICKERS_NAME + File.separator + stickerGroupPath + File.separator + stickerName;
+        String filePath = FileUtil.getBigStickerPath(App.getContextInstance(), stickerGroupPath, stickerName, type);
         // 表情文件
         File stickerFile;
 
-        if(Constant.Sticker_Gif.equals(type)) {
+        if (Constant.Sticker_Gif.equals(type)) {
             // gif格式的表情图片
-            filePath += "_B.gif";
+//            filePath += "_B.gif";
             stickerFile = new File(filePath);
-            if(stickerFile.exists()) {
+            if (stickerFile.exists()) {
                 // 图片存在直接读取显示
                 try {
                     GifDrawable gifDrawable = new GifDrawable(stickerFile);
                     imageView.setImageDrawable(gifDrawable);
                     return;
-                } catch(IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-        } else if(Constant.Sticker_Png.equals(type)) {
+        } else if (Constant.Sticker_Png.equals(type)) {
             // png格式的表情图片
-            filePath += "_B.png";
+//            filePath += "_B.png";
             stickerFile = new File(filePath);
-            if(stickerFile.exists()) {
+            if (stickerFile.exists()) {
                 // 图片存在直接读取显示
                 InputStream is;
                 // 得到数据流
@@ -137,7 +139,7 @@ public class UniversalImageLoaderUtil {
                     Bitmap bitmap = BitmapFactory.decodeStream(is);
                     imageView.setImageBitmap(bitmap);//显示图片
                     return;
-                } catch(FileNotFoundException e) {
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }

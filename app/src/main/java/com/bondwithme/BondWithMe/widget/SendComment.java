@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MediaData;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
@@ -29,7 +30,9 @@ import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.StickerMainFragment;
+import com.bondwithme.BondWithMe.ui.StickerMainNewFragment;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
@@ -43,13 +46,6 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
 
     private static final String TAG = SendComment.class.getSimpleName();
 
-    /**
-     * 临时文件用户裁剪
-     */
-    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
-
-    public final static int REQUEST_HEAD_PHOTO = 1;
-    public final static int REQUEST_HEAD_CAMERA = 2;
     private int cache_count = 0;
     private ImageButton ibMore;
     private ImageButton ibSticker;
@@ -72,7 +68,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
     public void initViewPager(BaseActivity activity, BaseFragment fragment) {
         mActivity = activity;
         this.fragment = fragment;
-        if(mActivity.isFinishing()) {
+        if (mActivity.isFinishing()) {
             return;
         }
     }
@@ -81,9 +77,17 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
 
         // 开启一个Fragment事务
         FragmentTransaction transaction = mActivity.getSupportFragmentManager().beginTransaction();
-        StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
-        mainFragment.setPicClickListener(this);
-        transaction.replace(R.id.sticker_message_fragment, mainFragment);
+        String filePath = FileUtil.getSaveRootPath(mActivity, false).getAbsolutePath() + File.separator + "Sticker";
+        File file = new File(filePath);
+        if (file.exists()) {
+            StickerMainFragment mainFragment = new StickerMainFragment();//selectStickerName, MessageChatActivity.this, groupId);
+            mainFragment.setPicClickListener(this);
+            transaction.replace(R.id.sticker_message_fragment, mainFragment);
+        } else {
+            StickerMainNewFragment mainFragment = new StickerMainNewFragment();//selectStickerName, MessageChatActivity.this, groupId);
+            mainFragment.setPicClickListener(this);
+            transaction.replace(R.id.sticker_message_fragment, mainFragment);
+        }
         //        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.addToBackStack(null);
         transaction.commitAllowingStateLoss();
@@ -159,12 +163,12 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
      */
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
+        switch (v.getId()) {
             case R.id.ib_more://扩展功能按钮
-                if(llMore.getVisibility() == View.VISIBLE) {
+                if (llMore.getVisibility() == View.VISIBLE) {
                     hideAllViewState();
                 } else {
-                    if(imm.isActive()) {
+                    if (imm.isActive()) {
                         imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -178,11 +182,11 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 }
                 break;
             case R.id.ib_sticker://表情功能按钮
-                if(llSticker.getVisibility() == View.VISIBLE) {
+                if (llSticker.getVisibility() == View.VISIBLE) {
                     hideAllViewState();
                 } else {
 
-                    if(imm.isActive()) {
+                    if (imm.isActive()) {
                         imm.hideSoftInputFromWindow(etChat.getWindowToken(), 0);
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -200,29 +204,29 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                 break;
             case R.id.camera_tv://打开相机
 
-                if(mActivity != null) {
+                if (mActivity != null) {
                     cache_count++;
                     Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     intent2.putExtra("android.intent.extras.CAMERA_FACING", getCameraId(false));
                     intent2.putExtra("autofocus", true);
 
                     // 下面这句指定调用相机拍照后的照片存储的路径
-                    intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, CACHE_PIC_NAME_TEMP + cache_count)));
+                    intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, Constant.CACHE_PIC_NAME_TEMP + cache_count)));
                     // 图片质量为高
                     intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                     intent2.putExtra("return-data", true);
-                    fragment.startActivityForResult(intent2, REQUEST_HEAD_CAMERA);
+                    fragment.startActivityForResult(intent2, Constant.INTENT_REQUEST_HEAD_CAMERA);
                 }
                 break;
             case R.id.album_tv://打开本地相册
 
-                if(mActivity != null) {
+                if (mActivity != null) {
                     Intent intent = new Intent(mActivity, SelectPhotosActivity.class);
                     //                Intent intent = new Intent(Intent.ACTION_PICK, null);
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                     intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    fragment.startActivityForResult(intent, SendComment.REQUEST_HEAD_PHOTO);
+                    fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_PHOTO);
                 }
                 break;
             case R.id.location_tv://打开地图
@@ -234,13 +238,13 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
             case R.id.tv_send:
                 hideAllViewState();
                 cvLayout.setVisibility(View.GONE);
-                if(commentListener != null) {
+                if (commentListener != null) {
                     commentListener.onSendCommentClick(etChat);
                 }
                 break;
             case R.id.pic_delete:
                 cvLayout.setVisibility(GONE);
-                if(commentListener != null) {
+                if (commentListener != null) {
                     commentListener.onRemoveClick();
                 }
                 break;
@@ -249,13 +253,13 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
 
     private int getCameraId(boolean front) {
         int num = android.hardware.Camera.getNumberOfCameras();
-        for(int i = 0; i < num; i++) {
+        for (int i = 0; i < num; i++) {
             android.hardware.Camera.CameraInfo info = new android.hardware.Camera.CameraInfo();
             android.hardware.Camera.getCameraInfo(i, info);
-            if(info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT && front) {
+            if (info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT && front) {
                 return i;
             }
-            if(info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK && !front) {
+            if (info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_BACK && !front) {
                 return i;
             }
         }
@@ -266,7 +270,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
      * 显示扩展功能视图
      */
     private void showExpandFunctionView() {
-        if(llSticker.getVisibility() == View.VISIBLE) {
+        if (llSticker.getVisibility() == View.VISIBLE) {
             llSticker.setVisibility(View.GONE);
             ibSticker.setImageResource(R.drawable.chat_expression_normal);
         }
@@ -278,7 +282,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
      * 显示表视图
      */
     private void showStickerView() {
-        if(llMore.getVisibility() == View.VISIBLE) {
+        if (llMore.getVisibility() == View.VISIBLE) {
             llMore.setVisibility(View.GONE);
             ibMore.setImageResource(R.drawable.chat_plus_normal);
         }
@@ -297,7 +301,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
     }
 
     public void hideAllViewState(boolean hideKeyboard) {
-        if(hideKeyboard) {
+        if (hideKeyboard) {
             UIUtil.hideKeyboard(getContext(), etChat);
         }
         hideAllViewState();
@@ -317,14 +321,14 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
-        if(mActivity.RESULT_OK == resultCode) {
+        if (Activity.RESULT_OK == resultCode) {
 
-            switch(requestCode) {
+            switch (requestCode) {
                 // 如果是直接从相册获取
-                case REQUEST_HEAD_PHOTO:
-                    if(data != null) {
+                case Constant.INTENT_REQUEST_HEAD_PHOTO:
+                    if (data != null) {
                         Uri uri = data.getData();
-                        if(commentListener != null) {
+                        if (commentListener != null) {
                             commentListener.onReceiveBitmapUri(uri);
                             hideAllViewState();
                         }
@@ -333,12 +337,12 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     }
                     break;
                 // 如果是调用相机拍照时
-                case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, CACHE_PIC_NAME_TEMP + cache_count));
+                case Constant.INTENT_REQUEST_HEAD_CAMERA:
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, Constant.CACHE_PIC_NAME_TEMP + cache_count));
                     uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
                     LogUtil.i(TAG, "onActivityResult& uri: " + uri.getPath());
-                    if(new File(uri.getPath()).exists()) {
-                        if(commentListener != null) {
+                    if (new File(uri.getPath()).exists()) {
+                        if (commentListener != null) {
                             commentListener.onReceiveBitmapUri(uri);
                             hideAllViewState();
                         }
@@ -360,7 +364,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
      */
     public void showComments(String type, String folderName, String filName) {
         LogUtil.i(TAG, "showComments& type: " + type);
-        if(commentListener != null) {
+        if (commentListener != null) {
             commentListener.onStickerItemClick(type, folderName, filName);
             hideAllViewState(true);
         }

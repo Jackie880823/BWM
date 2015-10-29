@@ -1,5 +1,8 @@
 package com.bondwithme.BondWithMe.interfaces;
 
+import android.view.View;
+
+import com.bondwithme.BondWithMe.adapter.WallHolder;
 import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.util.WallUtil;
@@ -15,10 +18,8 @@ public interface WallViewClickListener {
 
     /**
      * 显示Wall详情包括评论
-     * @param content_group_id {@link WallEntity#content_group_id}
-     * @param group_id         {@link WallEntity#group_id}
      */
-    void showComments(final String content_group_id, final String group_id);
+    void showComments(WallEntity wallEntity);
 
     /**
      * 显示被@的用户列表
@@ -39,9 +40,10 @@ public interface WallViewClickListener {
     /**
      * 删除Wall
      *
-     * @param content_group_id {@link WallEntity#content_group_id}
+     * @param view
+     * @param wallEntity {@link WallEntity}
      */
-    void remove(final String content_group_id);
+    void remove(WallEntity wallEntity);
 
     /**
      * 显示点赞的用户列表
@@ -51,4 +53,12 @@ public interface WallViewClickListener {
      * @param type  {@link WallUtil#LOVE_MEMBER_COMMENT_TYPE} or {@link WallUtil#LOVE_MEMBER_WALL_TYPE}
      */
     void showLovedMember(String viewer_id, String refer_id, String type);
+
+    void showPopClick(WallHolder holder);
+
+    void addPhotoed(WallEntity wallEntity, boolean succeed);
+
+    void savePhotoed(WallEntity wallEntity, boolean succeed);
+
+    void onSavePhoto();
 }

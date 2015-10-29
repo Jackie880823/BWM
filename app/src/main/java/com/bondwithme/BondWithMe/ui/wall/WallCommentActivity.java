@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 
@@ -41,9 +42,9 @@ public class WallCommentActivity extends BaseActivity {
     protected Fragment getFragment() {
         Intent intent = getIntent();
 
-        content_group_id = intent.getStringExtra("content_group_id");
-        user_id = intent.getStringExtra("user_id");
-        group_id = intent.getStringExtra("group_id");
+        content_group_id = intent.getStringExtra(Constant.CONTENT_GROUP_ID);
+        user_id = intent.getStringExtra(Constant.USER_ID);
+        group_id = intent.getStringExtra(Constant.GROUP_ID);
 
         return  WallCommentFragment.newInstance(content_group_id, user_id, group_id);
     }

@@ -1,7 +1,5 @@
 package com.bondwithme.BondWithMe.http;
 
-import android.text.TextUtils;
-
 import com.google.gson.JsonObject;
 
 import java.util.Iterator;
@@ -33,7 +31,7 @@ public class UrlUtil {
         while (iterator.hasNext()) {
             String key = iterator.next();
             String value = params.get(key);
-            if(!TextUtils.isEmpty(value)) {
+            if(value!=null) {
                 jsonObject.addProperty(key, value);
             }
         }

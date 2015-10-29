@@ -46,9 +46,9 @@ public class WallMembersOrGroupsActivity extends BaseActivity {
         Intent intent = getIntent();
         Fragment fragment;
         if(!Constant.ACTION_SHOW_LOVED_USER.equals(intent.getAction())) {
-            String content_group_id = intent.getStringExtra("content_group_id");
-            String user_id = intent.getStringExtra("user_id");
-            String group_id = intent.getStringExtra("group_id");
+            String content_group_id = intent.getStringExtra(Constant.CONTENT_GROUP_ID);
+            String user_id = intent.getStringExtra(Constant.USER_ID);
+            String group_id = intent.getStringExtra(Constant.GROUP_ID);
             fragment = WallMembersOrGroupsFragment.newInstance(content_group_id, user_id, group_id);
         } else {
             String viewer = intent.getStringExtra(WallUtil.GET_LOVE_LIST_VIEWER_ID);
