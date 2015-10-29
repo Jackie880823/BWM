@@ -114,9 +114,9 @@ public class PicturesCacheUtil extends FileUtil {
      */
     public static String saveImageToGallery(Context context, File oldFile, String prefix) throws IOException {
         String newPath = getPicPath(context, prefix);
-        File fnew = new File(newPath);
-        oldFile.renameTo(fnew);
-
+        File newFile = new File(newPath);
+//        oldFile.renameTo(newFile);//移动文件
+        copyFileUsingChannel(oldFile,newFile);
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, prefix);
         values.put(MediaStore.Images.Media.DESCRIPTION, prefix);
