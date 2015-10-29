@@ -26,7 +26,7 @@ import com.bondwithme.BondWithMe.ui.MissListActivity;
 import com.bondwithme.BondWithMe.ui.NewsActivity;
 import com.bondwithme.BondWithMe.ui.RecommendActivity;
 import com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity;
-import com.bondwithme.BondWithMe.ui.wall.WallCommentActivity;
+import com.bondwithme.BondWithMe.ui.wall.DiaryCommentActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -399,7 +399,7 @@ public class NotificationUtil {
 //    private static List<String> currentMsgs = new ArrayList<>();
 
     private static Intent goWallDetailIntent(Context mContext, String content_group_id, String group_id) {
-        Intent intent = new Intent(mContext, WallCommentActivity.class);
+        Intent intent = new Intent(mContext, DiaryCommentActivity.class);
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);
         return intent;
