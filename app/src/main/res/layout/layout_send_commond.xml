@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/btn_chat_send_bg_for_comment"
-            android:paddingRight="@dimen/default_view_margin" />
+            android:layout_marginRight="@dimen/default_view_margin" />
     </LinearLayout>
 
     <LinearLayout
