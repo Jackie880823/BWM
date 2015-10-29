@@ -10,10 +10,10 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.FeelingAdapter;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.SortComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -81,38 +81,5 @@ public class FeelingFragment extends BaseFragment<FeelingActivity> implements Fe
         intent.putExtra(Constant.EXTRA_CHECK_ITEM_INDEX, checkItemIndex);
         getParentActivity().setResult(Activity.RESULT_OK, intent);
         getParentActivity().finish();
-    }
-
-    /**
-     * 对字符串按首字母排序按首字母排序，并忽略大小字的排序规则
-     */
-    class SortComparator implements Comparator<String> {
-
-        /**
-         * Compares the two specified objects to determine their relative ordering. The ordering
-         * implied by the return value of this method for all possible pairs of
-         * {@code (lhs, rhs)} should form an <i>equivalence relation</i>.
-         * This means that
-         * <ul>
-         * <li>{@code compare(a,a)} returns zero for all {@code a}</li>
-         * <li>the sign of {@code compare(a,b)} must be the opposite of the sign of {@code
-         * compare(b,a)} for all pairs of (a,b)</li>
-         * <li>From {@code compare(a,b) > 0} and {@code compare(b,c) > 0} it must
-         * follow {@code compare(a,c) > 0} for all possible combinations of {@code
-         * (a,b,c)}</li>
-         * </ul>
-         *
-         * @param lhs an {@code Object}.
-         * @param rhs a second {@code Object} to compare with {@code lhs}.
-         * @return an integer < 0 if {@code lhs} is less than {@code rhs}, 0 if they are
-         * equal, and > 0 if {@code lhs} is greater than {@code rhs}.
-         * @throws ClassCastException if objects are not of the correct type.
-         */
-        @Override
-        public int compare(String lhs, String rhs) {
-            String str1 = lhs.substring(0, 1).toUpperCase();
-            String str2 = rhs.substring(0, 1).toUpperCase();
-            return str1.compareTo(str2);
-        }
     }
 }

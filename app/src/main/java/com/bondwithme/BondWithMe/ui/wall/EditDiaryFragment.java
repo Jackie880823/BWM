@@ -60,6 +60,7 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.SDKUtil;
+import com.bondwithme.BondWithMe.util.SortComparator;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
@@ -75,6 +76,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +89,7 @@ import java.util.Map;
  *          <p/>
  *          日志编辑
  */
-public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements View.OnClickListener{
+public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements View.OnClickListener {
 
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
@@ -313,6 +315,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     if (!TextUtils.isEmpty(feel)) {
                         if (fileNames.isEmpty()) {
                             fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), Constant.PATH_PREFIX);
+                            // 对文件进行按首字的大小排序
+                            SortComparator comparator = new SortComparator();
+                            Collections.sort(fileNames, comparator);
                         }
 
                         int charIndex = feel.lastIndexOf("_");
@@ -907,6 +912,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     checkItemIndex = data.getIntExtra(Constant.EXTRA_CHECK_ITEM_INDEX, 0);
                     if (fileNames.isEmpty()) {
                         fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), Constant.PATH_PREFIX);
+                        // 对文件进行按首字的大小排序
+                        SortComparator comparator = new SortComparator();
+                        Collections.sort(fileNames, comparator);
                     }
 
                     selectFeelingPath = String.format(Constant.FEEL_ICON_NAME, fileNames.get(checkItemIndex));
@@ -1543,7 +1551,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     mHandler.sendEmptyMessage(ACTION_SUCCEED);
                     break;
                 case LINK_TYPE_SUBMIT_PICTURE:
-                    lastPic ++;
+                    lastPic++;
                     if (lastPic == localEntities.size()) {
                         mHandler.sendEmptyMessage(ACTION_SUCCEED);
                     }
