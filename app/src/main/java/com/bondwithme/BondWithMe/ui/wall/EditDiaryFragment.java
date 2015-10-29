@@ -22,9 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +37,6 @@ import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.EditDiaryAdapter;
-import com.bondwithme.BondWithMe.adapter.FeelingAdapter;
 import com.bondwithme.BondWithMe.adapter.HeadHolder;
 import com.bondwithme.BondWithMe.adapter.VideoHolder;
 import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
@@ -78,8 +75,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +87,7 @@ import java.util.Map;
  *          <p/>
  *          日志编辑
  */
-public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements View.OnClickListener, FeelingAdapter.ItemCheckListener {
+public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements View.OnClickListener{
 
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
@@ -124,9 +119,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static final String PREFERENCE_KEY_TEXT_CONTENT = "TEXT_CONTENT";
     private static final String PREFERENCE_KEY_VIDEO_PATH = "VIDEO_PATH";
     private static final String PREFERENCE_KEY_VIDEO_DURATION = "VIDEO_DURATION";
-
-    public final static String PATH_PREFIX = "feeling";
-    private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
 
     /**
      * 保存草稿的首选项
@@ -319,10 +311,14 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
                     String feel = wall.getDofeel_code();
                     if (!TextUtils.isEmpty(feel)) {
+                        if (fileNames.isEmpty()) {
+                            fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), Constant.PATH_PREFIX);
+                        }
+
                         int charIndex = feel.lastIndexOf("_");
                         String name = feel.substring(charIndex + 1);
                         checkItemIndex = fileNames.indexOf(name);
-                        selectFeelingPath = String.format(FEEL_ICON_NAME, name);
+                        selectFeelingPath = String.format(Constant.FEEL_ICON_NAME, name);
                         LogUtil.d(TAG, "path: " + selectFeelingPath);
                         try {
                             iv_feeling.setVisibility(View.VISIBLE);
@@ -776,19 +772,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
     }
 
-    @Override
-    public void onItemCheckedChange(int position) {
-        checkItemIndex = position;
-        selectFeelingPath = String.format(FEEL_ICON_NAME, fileNames.get(checkItemIndex));
-        iv_feeling.setVisibility(View.VISIBLE);
-        try {
-            iv_feeling.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(selectFeelingPath)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        popupwindow.dismiss();
-    }
-
     /**
      * Called when the Fragment is no longer started.  This is generally
      * tied to {@link Activity#onStop() Activity.onStop} of the containing
@@ -917,6 +900,21 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                             imageUris.addAll(pickUris);
                             addDataAndNotify(pickUris);
                         }
+                    }
+                    break;
+
+                case Constant.INTENT_REQUEST_FEELING:
+                    checkItemIndex = data.getIntExtra(Constant.EXTRA_CHECK_ITEM_INDEX, 0);
+                    if (fileNames.isEmpty()) {
+                        fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), Constant.PATH_PREFIX);
+                    }
+
+                    selectFeelingPath = String.format(Constant.FEEL_ICON_NAME, fileNames.get(checkItemIndex));
+                    iv_feeling.setVisibility(View.VISIBLE);
+                    try {
+                        iv_feeling.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(selectFeelingPath)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     break;
             }
@@ -1107,61 +1105,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
     private void showChooseFeeling() {
-        if (popupwindow != null && popupwindow.isShowing()) {
-            popupwindow.dismiss();
-        } else {
-            initPopupWindowView();
-            popupwindow.showAsDropDown(getViewById(R.id.option_bar), 0, 5);
-        }
-    }
-
-    public void initPopupWindowView() {
-        // // 获取自定义布局文件pop.xml的视图
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.feeling_list, null, false);
-        // 创建PopupWindow实例,200,150分别是宽度和高度
-        popupwindow = new PopupWindow(customView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        // 设置动画效果 [R.style.AnimationFade 是自己事先定义好的]
-
-        popupwindow.setAnimationStyle(R.style.PopupAnimation);
-        // 自定义view添加触摸事件
-        customView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                //                if (popupwindow != null && popupwindow.isShowing()) {
-                //                    popupwindow.dismiss();
-                //                    popupwindow = null;
-                //                }
-
-                return false;
-            }
-        });
-
-        RecyclerView feeling_icons = (RecyclerView) customView.findViewById(R.id.feeling_icons);
-        /*
-      心情布局
-     */
-        LinearLayoutManager llmFeeling = new LinearLayoutManager(getParentActivity());
-        feeling_icons.setLayoutManager(llmFeeling);
-        fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), PATH_PREFIX);
-        // 对文件进行按首字的大小排序
-        SortComparator compartor = new SortComparator();
-        Collections.sort(fileNames, compartor);
-        List<String> filePaths = new ArrayList<>();
-        if (fileNames != null) {
-            for (String name : fileNames) {
-                filePaths.add(PATH_PREFIX + "/" + name);
-            }
-        }
-        /*
-      心情列表适配器
-     */
-        FeelingAdapter feelingAdapter = new FeelingAdapter(getActivity(), filePaths);
-        feelingAdapter.setCheckIndex(checkItemIndex);
-        feeling_icons.setAdapter(feelingAdapter);
-
-        feelingAdapter.setItemCheckListener(this);
-
+        Intent intent = new Intent(getContext(), FeelingActivity.class);
+        intent.putExtra(Constant.EXTRA_CHECK_ITEM_INDEX, checkItemIndex);
+        startActivityForResult(intent, Constant.INTENT_REQUEST_FEELING);
     }
 
     /**
@@ -1503,39 +1449,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 myDialog.show();
             }
             return true;
-        }
-    }
-
-    /**
-     * 对字符串按首字母排序按首字母排序，并忽略大小字的排序规则
-     */
-    class SortComparator implements Comparator<String> {
-
-        /**
-         * Compares the two specified objects to determine their relative ordering. The ordering
-         * implied by the return value of this method for all possible pairs of
-         * {@code (lhs, rhs)} should form an <i>equivalence relation</i>.
-         * This means that
-         * <ul>
-         * <li>{@code compare(a,a)} returns zero for all {@code a}</li>
-         * <li>the sign of {@code compare(a,b)} must be the opposite of the sign of {@code
-         * compare(b,a)} for all pairs of (a,b)</li>
-         * <li>From {@code compare(a,b) > 0} and {@code compare(b,c) > 0} it must
-         * follow {@code compare(a,c) > 0} for all possible combinations of {@code
-         * (a,b,c)}</li>
-         * </ul>
-         *
-         * @param lhs an {@code Object}.
-         * @param rhs a second {@code Object} to compare with {@code lhs}.
-         * @return an integer < 0 if {@code lhs} is less than {@code rhs}, 0 if they are
-         * equal, and > 0 if {@code lhs} is greater than {@code rhs}.
-         * @throws ClassCastException if objects are not of the correct type.
-         */
-        @Override
-        public int compare(String lhs, String rhs) {
-            String str1 = lhs.substring(0, 1).toUpperCase();
-            String str2 = rhs.substring(0, 1).toUpperCase();
-            return str1.compareTo(str2);
         }
     }
 
