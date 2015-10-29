@@ -1103,6 +1103,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         e.printStackTrace();
                     }
                     /**wing modified*/
+
+                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                 }
 
                 @Override
