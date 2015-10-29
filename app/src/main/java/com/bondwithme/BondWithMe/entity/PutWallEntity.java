@@ -20,6 +20,7 @@ public class PutWallEntity implements Serializable {
     private String photo_max;
     private String new_video;
     private String new_photo;
+    private String content_group_public;
     private List<PushedPhotoEntity> edit_photo;
     private List<String> delete_photo;
     private List<String> delete_video;
@@ -104,6 +105,14 @@ public class PutWallEntity implements Serializable {
 
     public void setNew_photo(String new_photo) {
         this.new_photo = new_photo;
+    }
+
+    public String getContent_group_public() {
+        return content_group_public;
+    }
+
+    public void setContent_group_public(String content_group_public) {
+        this.content_group_public = content_group_public;
     }
 
     public List<PushedPhotoEntity> getEdit_photo() {
