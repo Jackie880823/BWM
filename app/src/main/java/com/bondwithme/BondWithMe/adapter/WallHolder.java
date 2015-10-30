@@ -543,6 +543,20 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 VolleyUtil.initNetworkImageView(context, imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, wallEntity.getUser_id(), wallEntity.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             }
         }
+
+        if (isDetailed) {
+            // 在详情界面不需要在Holder显更多功能按钮视图
+            btnOption.setVisibility(View.GONE);
+            llWallsImage.setVisibility(View.GONE);
+        } else if ((!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())))) {
+            // 不是当前用户：没有图片或者有视频都不需要显更多功能按钮
+            btnOption.setVisibility(View.GONE);
+        } else {
+            if (!isDetailed) {
+                btnOption.setVisibility(View.VISIBLE);
+            }
+        }
+
          /*is owner wall*/
         //        if (!TextUtils.isEmpty(wall.getUser_id())&&wall.getUser_id().equals("49")) {
         //            ibDelete.setVisibility(View.VISIBLE);
@@ -585,18 +599,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         } else {
             llComment.setVisibility(View.VISIBLE);
             tvCommentCount.setText(this.wallEntity.getComment_count());
-        }
-
-        if (isDetailed) {
-            // 在详情界面不需要在Holder显更多功能按钮视图
-            btnOption.setVisibility(View.GONE);
-        } else if ((!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())))) {
-            // 不是当前用户：没有图片或者有视频都不显示功能没有图片则不需要显更多功能按钮
-            btnOption.setVisibility(View.GONE);
-        } else {
-            if (!isDetailed) {
-                btnOption.setVisibility(View.VISIBLE);
-            }
         }
 
         if (TextUtils.isEmpty(this.wallEntity.getLove_id())) {
