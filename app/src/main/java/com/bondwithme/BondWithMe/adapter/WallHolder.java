@@ -547,7 +547,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         if (isDetailed) {
             // 在详情界面不需要在Holder显更多功能按钮视图
             btnOption.setVisibility(View.GONE);
-            llWallsImage.setVisibility(View.GONE);
+            if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {
+                llWallsImage.setVisibility(View.GONE);
+            }
         } else if ((!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())))) {
             // 不是当前用户：没有图片或者有视频都不需要显更多功能按钮
             btnOption.setVisibility(View.GONE);

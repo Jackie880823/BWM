@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_vertical">
+    android:layout_gravity="center_vertical"
+    android:orientation="vertical">
 
-    <com.bondwithme.BondWithMe.widget.CircularNetworkImage
-        android:id="@+id/owner_head"
-        android:layout_width="@dimen/default_user_head_width_height"
-        android:layout_height="@dimen/default_user_head_width_height" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/owner_name"
-        style="@style/text_user_name"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/default_view_margin"
-        android:textColor="@color/tab_color_press4"
-        android:textSize="@dimen/text_medium_size" />
+        <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+            android:id="@+id/owner_head"
+            android:layout_width="@dimen/default_user_head_width_height"
+            android:layout_height="@dimen/default_user_head_width_height" />
+
+        <TextView
+            android:id="@+id/owner_name"
+            style="@style/text_user_name"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:textColor="@color/tab_color_press4"
+            android:textSize="@dimen/text_medium_size" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:background="@color/background_material_dark" />
 
 </LinearLayout>
