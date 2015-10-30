@@ -230,9 +230,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                     String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
                     mAdapter.setRequest_url(url, wall.getUser_id());
                 }
-                holder.llWallsImage.setVisibility(View.GONE);
             } else {
-                holder.llWallsImage.setVisibility(View.VISIBLE);
                 mAdapter.clearData();
             }
         }

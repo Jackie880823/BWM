@@ -1290,6 +1290,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         entity.setDelete_video(deleteVideo);
         entity.setTag_group(setGetGroupIds(at_groups_data));
         entity.setTag_member(setGetMembersIds(at_members_data));
+        entity.setContent_group_public(allRange ? String.valueOf(1) : String.valueOf(0));
 
         if (!Uri.EMPTY.equals(videoUri)) {
             entity.setNew_video("1");
@@ -1502,11 +1503,17 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
          * 发送新的日志
          */
         public static final int LINK_TYPE_SUBMIT_WALL = 1;
+        /**
+         * 上传图片
+         */
         public static final int LINK_TYPE_SUBMIT_PICTURE = 2;
         /**
-         * put新的日志
+         * put修改的日志
          */
         public static final int LINK_TYPE_PUT_WALL = 3;
+        /**
+         * 上传视频
+         */
         public static final int LINK_TYPE_UPLOAD_VOID = 4;
 
         /**
