@@ -333,6 +333,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         }
                     }
 
+                    allRange = String.valueOf(1).equals(wall.getContent_group_public());
+                    switchPrivacy(allRange);
+
                     String videoName = wall.getVideo_filename();
                     if (TextUtils.isEmpty(videoName)) {
                         mAdapter.setIsPhoto(true);
@@ -1291,6 +1294,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         entity.setTag_group(setGetGroupIds(at_groups_data));
         entity.setTag_member(setGetMembersIds(at_members_data));
         entity.setContent_group_public(allRange ? String.valueOf(1) : String.valueOf(0));
+        entity.setPhoto_max(String.valueOf(photoEntities.size() - 1));
 
         if (!Uri.EMPTY.equals(videoUri)) {
             entity.setNew_video("1");
@@ -1339,7 +1343,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             if (holder != null && holder instanceof EditDiaryAdapter.ImageHolder) {
                 return ((EditDiaryAdapter.ImageHolder) holder).wevContent.getRelText();
             } else {
-                LogUtil.e(TAG, "getPhotoCaptionByPosition& IllegalStateException");
+                LogUtil.e(TAG, "getPhotoCaptionByPosition& Class Cast Exception");
             }
 
         } else {

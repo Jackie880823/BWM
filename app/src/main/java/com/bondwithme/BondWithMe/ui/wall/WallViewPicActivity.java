@@ -40,8 +40,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.material.widget.Dialog;
 
-import org.json.JSONObject;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,27 +156,17 @@ public class WallViewPicActivity extends BaseActivity {
 
             @Override
             public void onResult(String response) {
-                LogUtil.d(getClass().getSimpleName(), response);
+                LogUtil.d(TAG, "------------###" + response);
                 try {
                     GsonBuilder gsonb = new GsonBuilder();
-                    //Json中的日期表达方式没有办法直接转换成我们的Date类型, 因此需要单独注册一个Date的反序列化类.
-                    //DateDeserializer ds = new DateDeserializer();
-                    //给GsonBuilder方法单独指定Date类型的反序列化方法
-                    //gsonb.registerTypeAdapter(Date.class, ds);
 
-
-                    //这解析。。。。。。。。。什么鬼？？？
                     Gson gson = gsonb.create();
-                    if (response.startsWith("{\"data\":")) {
-                        JSONObject jsonObject = new JSONObject(response);
-                        String dataString = jsonObject.optString("data");
-                        data = gson.fromJson(dataString, new TypeToken<ArrayList<PhotoEntity>>() {
+                    //这个接口返回的数据和ViewOriginalPicesMainFragment（其他查看大图的接口）返回的数据不同。
+                    data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
                         }.getType());
-                    } else {
-                        data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
-                        }.getType());
-                    }
-                    handler.sendEmptyMessage(REQUEST_DATA_SUCCESS);
+
+                    if (data.size() > 0)
+                        handler.sendEmptyMessage(REQUEST_DATA_SUCCESS);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
