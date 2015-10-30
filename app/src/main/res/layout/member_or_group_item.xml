@@ -24,8 +24,7 @@
     </LinearLayout>
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_1dp"
-        android:background="@color/background_material_dark" />
+        style="@style/split_line_default"
+        android:layout_marginTop="@dimen/default_view_margin" />
 
 </LinearLayout>
