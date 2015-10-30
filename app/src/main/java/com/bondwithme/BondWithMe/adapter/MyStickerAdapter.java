@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
-import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.MyStickerActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.j256.ormlite.dao.Dao;
@@ -31,6 +30,15 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
     private final String TAG = "MyStickerAdapter";
     private Context mContext;
     private List<LocalStickerInfo> data;
+
+    private String path;
+    private String DEFAULT_STICKER_1 = "PapaPanda2";
+    private String DEFAULT_STICKER_2 = "Barry2";
+    private String DEFAULT_STICKER_3 = "MamaHippo";
+    private String DEFAULT_STICKER_4 = "GranpaTurtle";
+    private String DEFAULT_STICKER_5 = "GranmaGoose";
+    private String DEFAULT_STICKER_6 = "Bunny";
+
 
     public MyStickerAdapter(Context mContext, List<LocalStickerInfo> data) {
         this.mContext = mContext;
@@ -52,8 +60,14 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
         Bitmap bmp = BitmapFactory.decodeFile(picPath);
 //        Bitmap bmp = LocalImageLoader.loadBitmapFromFile(mContext, picPath, holder.ivMySticker.getWidth(), holder.ivMySticker.getHeight());
         holder.ivMySticker.setImageBitmap(bmp);
-
         holder.tvName.setText(stickerInfo.getName());
+
+        path = stickerInfo.getPath();
+        if (path.equals(DEFAULT_STICKER_1)|path.equals(DEFAULT_STICKER_2)|path.equals(DEFAULT_STICKER_3)|path.equals(DEFAULT_STICKER_4)|path.equals(DEFAULT_STICKER_5)|path.equals(DEFAULT_STICKER_6)){
+            holder.tvRemove.setVisibility(View.GONE);
+        }else{
+            holder.tvRemove.setVisibility(View.VISIBLE);
+        }
         holder.tvRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
