@@ -37,11 +37,8 @@ import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.material.widget.Dialog;
-
-import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
