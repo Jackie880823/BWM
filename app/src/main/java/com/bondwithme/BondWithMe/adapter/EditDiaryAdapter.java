@@ -167,6 +167,7 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
                         notifyDataSetChanged();
                     }
                 });
+                ((ImageHolder) holder).setTag(entity);
             }
 
         } else if (position == 0) {
@@ -183,7 +184,18 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
+    public void onViewDetachedFromWindow(ViewHolder holder) {
+        LogUtil.d(TAG, "onViewDetachedFromWindow&");
+        super.onViewDetachedFromWindow(holder);
+        if (holder instanceof ImageHolder) {
+            PushedPhotoEntity entity = ((ImageHolder) holder).getTag();
+            entity.setPhoto_caption(((ImageHolder) holder).wevContent.getRelText());
+        }
+    }
+
+    @Override
     public void onViewRecycled(ViewHolder holder) {
+        LogUtil.d(TAG, "onViewRecycled&");
         super.onViewRecycled(holder);
     }
 
@@ -287,6 +299,15 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
         private ImageView ivDelete;
         public ImageView ivDisplay;
         public WallEditView wevContent;
+        private PushedPhotoEntity tag;
+
+        public PushedPhotoEntity getTag() {
+            return tag;
+        }
+
+        public void setTag(PushedPhotoEntity tag) {
+            this.tag = tag;
+        }
 
         public ImageHolder(View itemView) {
             super(itemView);
