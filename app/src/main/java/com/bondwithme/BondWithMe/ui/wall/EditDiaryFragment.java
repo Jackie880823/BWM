@@ -789,6 +789,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onStop() {
         super.onStop();
+        // 隐藏键盘
+        UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
 
         if (popupwindow != null && popupwindow.isShowing()) {
             popupwindow.dismiss();

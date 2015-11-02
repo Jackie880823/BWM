@@ -978,7 +978,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         Map<String, Object> params = new HashMap<>();
         params.put("content_creator_id", accountUserId);
         params.put("content_id", contentId);
-        params.put("photo_index", String.valueOf(index));
+        int photoMax;
+        String photoMaxStr = wallEntity.getPhoto_max();
+        if (TextUtils.isEmpty(photoMaxStr)) {
+            photoMax = 0;
+        } else {
+            photoMax = Integer.valueOf(photoMaxStr);
+        }
+        params.put("photo_index", String.valueOf(index + photoMax));
         params.put("photo_caption", "");
         params.put("file", f);
         params.put("multiple", multiple ? "1" : "0");

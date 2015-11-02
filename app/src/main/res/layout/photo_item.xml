@@ -39,6 +39,9 @@
         android:textColor="@android:color/widget_edittext_dark"
         android:textSize="@dimen/text_medium_size" />
 
+    <View
+        style="@style/split_line_default"
+        android:layout_alignParentBottom="true"/>
 </com.bondwithme.BondWithMe.widget.SquareRelativeLayout>
 
 
