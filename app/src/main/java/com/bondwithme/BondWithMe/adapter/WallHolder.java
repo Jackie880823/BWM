@@ -981,9 +981,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         int photoMax;
         String photoMaxStr = wallEntity.getPhoto_max();
         if (TextUtils.isEmpty(photoMaxStr)) {
-            photoMax = 0;
+            photoMax = 1;
         } else {
-            photoMax = Integer.valueOf(photoMaxStr);
+            photoMax = Integer.valueOf(photoMaxStr) + 1;
         }
         params.put("photo_index", String.valueOf(index + photoMax));
         params.put("photo_caption", "");
