@@ -1166,6 +1166,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     public void submitWall() {
         Log.i(TAG, "submitWall&");
+        // 隐藏键盘
+        UIUtil.hideKeyboard(getContext(), getActivity().getCurrentFocus());
         if (isEdit) {
             putWall();
             return;
