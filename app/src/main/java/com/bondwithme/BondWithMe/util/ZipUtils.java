@@ -151,16 +151,6 @@ public class ZipUtils {
         stickerInfo.setType(".png");
         stickerInfo.setOrder(System.currentTimeMillis());
 
-//        if (zipFileName.contains("Barry")) {
-//            stickerInfo.setType(".png");
-//            stickerInfo.setOrder(System.currentTimeMillis());
-//        } else if (zipFileName.contains("Bunny")) {
-//            stickerInfo.setOrder(System.currentTimeMillis());
-//            stickerInfo.setType(".png");
-//        } else if (zipFileName.contains("Merdeka")) {
-//            stickerInfo.setOrder(System.currentTimeMillis());
-//            stickerInfo.setType(".png");
-//        }
         LocalStickerInfoDao.getInstance(context).addOrUpdate(stickerInfo);
 
     }

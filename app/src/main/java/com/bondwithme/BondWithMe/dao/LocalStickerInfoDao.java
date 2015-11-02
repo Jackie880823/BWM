@@ -94,6 +94,34 @@ public class LocalStickerInfoDao {
         return false;
     }
 
+    public LocalStickerInfo queryStickerByPath(Context mContext ,String path){
+        try {
+            Dao<LocalStickerInfo, String> stickerInfoDao = SQLiteHelperOrm.getHelper(mContext).getDao(LocalStickerInfo.class);
+            QueryBuilder qb = stickerInfoDao.queryBuilder();
+            qb.where().eq("path",path);
+            List<LocalStickerInfo> stickerInfoList = qb.query();
+            LocalStickerInfo stickerInfo = stickerInfoList.get(0);
+            return stickerInfo;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void deleteSticker(Context mContext,String path){
+        if (hasDownloadSticker(path)){
+            LocalStickerInfo stickerInfo = queryStickerByPath(mContext, path);
+            try {
+                stickerInfoDao =  App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+                stickerInfoDao.delete(stickerInfo);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     public List<String> queryAllSticker() {
         if (stickerInfoDao == null) {
             return null;
