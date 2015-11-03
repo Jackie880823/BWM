@@ -11,6 +11,9 @@ import java.io.Serializable;
  */
 @DatabaseTable(tableName = "sticker_info")
 public class LocalStickerInfo implements Serializable {
+    public static final String DEFAULT_STICKER = "1";
+    public static final String DEFAULT_INSTALL_STICKER= "0";
+
     @DatabaseField(generatedId = true)
     private int id;
     @DatabaseField
@@ -23,11 +26,22 @@ public class LocalStickerInfo implements Serializable {
     private String version;         //sticker group version
     @DatabaseField
     private String type;                //picture type
-    @DatabaseField(unique=true)
+    @DatabaseField(unique = true)
     private long order;               //sticker group order
     @DatabaseField
     private String loginUserId;
-//    @DatabaseField(foreign = true, foreignAutoRefresh = true,columnName="user_id")
+    @DatabaseField
+    private String defaultSticker;
+
+    public String getDefaultSticker() {
+        return defaultSticker;
+    }
+
+    public void setDefaultSticker(String defaultSticker) {
+        this.defaultSticker = defaultSticker;
+    }
+
+    //    @DatabaseField(foreign = true, foreignAutoRefresh = true,columnName="user_id")
 //    private UserEntity userEntity;
 
     public String getLoginUserId() {
