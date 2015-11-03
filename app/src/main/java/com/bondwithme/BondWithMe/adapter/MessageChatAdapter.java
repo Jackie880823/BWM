@@ -767,6 +767,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             return;
         }
         final MsgEntity msgEntity = myList.get(position);
+        boolean isFromMe = msgEntity.getUser_id().equals(MainActivity.getUser().getUser_id());
+        if (!isFromMe) {
+            return;
+        }
         boolean showCopy = false;
         if (null != msgEntity.getText_id()) {
             showCopy = true;
