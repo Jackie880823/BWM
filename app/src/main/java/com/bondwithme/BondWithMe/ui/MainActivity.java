@@ -105,7 +105,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private static View red_point_5;
     public static String STICKERS_NAME = "stickers";
     public static String IS_FIRST_LOGIN = "isFirstLogin";
-    public static String STICKER_VERSION = "2";
+    public static String STICKER_VERSION = "3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

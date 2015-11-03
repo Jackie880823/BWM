@@ -63,9 +63,10 @@ public class MyStickerActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        Intent intent = new Intent(this,StickerSortActivity.class);
+        Intent intent = new Intent(this, StickerSortActivity.class);
         startActivity(intent);
     }
+
     @Override
     public void initView() {
 //        TextView textView = getViewById(R.id.tv_download_stickers);
@@ -75,7 +76,7 @@ public class MyStickerActivity extends BaseActivity {
         try {
             Dao<LocalStickerInfo, String> stickerInfoDao = SQLiteHelperOrm.getHelper(MyStickerActivity.this).getDao(LocalStickerInfo.class);
             QueryBuilder qb = stickerInfoDao.queryBuilder();
-            qb.orderBy("order", false).where().eq("loginUserId", MainActivity.getUser().getUser_id());
+            qb.orderBy("order", false).where().eq("loginUserId", MainActivity.getUser().getUser_id()).and().eq("defaultSticker", LocalStickerInfo.DEFAULT_INSTALL_STICKER);
             data = qb.query();
         } catch (Exception e) {
             LogUtil.e(TAG, "", e);
@@ -94,7 +95,7 @@ public class MyStickerActivity extends BaseActivity {
             rvList.post(new Runnable() {
                 @Override
                 public void run() {
-                    ((ScrollView)MyStickerActivity.this.getViewById(R.id.sc_my_sticker)).scrollTo(0, 0);
+                    ((ScrollView) MyStickerActivity.this.getViewById(R.id.sc_my_sticker)).scrollTo(0, 0);
                 }
             });
 

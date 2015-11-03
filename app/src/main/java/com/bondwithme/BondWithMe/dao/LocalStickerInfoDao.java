@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.dao;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
@@ -67,10 +68,29 @@ public class LocalStickerInfoDao {
             queryBuilder.where().eq("loginUserId", App.getLoginedUser().getUser_id()).and().eq("path", stickerInfo.getPath());
             List<LocalStickerInfo> localList = queryBuilder.query();
             if ((localList != null) && (localList.size() > 0)) {
-                stickerInfoDao.update(stickerInfo);
-                return;
+                LocalStickerInfo info = localList.get(0);
+                if (!TextUtils.isEmpty(stickerInfo.getName())) {
+                    info.setName(stickerInfo.getName());
+                }
+                if (stickerInfo.getOrder() != 0) {
+                    info.setOrder(stickerInfo.getOrder());
+                }
+                if (!TextUtils.isEmpty(stickerInfo.getSticker_name())) {
+                    info.setSticker_name(stickerInfo.getSticker_name());
+                }
+                if (!TextUtils.isEmpty(stickerInfo.getType())) {
+                    info.setType(stickerInfo.getType());
+                }
+                if (!TextUtils.isEmpty(stickerInfo.getVersion())) {
+                    info.setVersion(stickerInfo.getVersion());
+                }
+                if (!TextUtils.isEmpty(stickerInfo.getDefaultSticker())) {
+                    info.setDefaultSticker(stickerInfo.getDefaultSticker());
+                }
+                stickerInfoDao.update(info);
+            } else {
+                stickerInfoDao.createIfNotExists(stickerInfo);
             }
-            stickerInfoDao.createIfNotExists(stickerInfo);
         } catch (SQLException localSQLException) {
             localSQLException.printStackTrace();
         }
