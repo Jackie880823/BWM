@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 
     private static final String DB_NAME = "bwm.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
     private static SQLiteHelperOrm helper = null;
     private static final AtomicInteger usageCounter = new AtomicInteger(0);
 
@@ -58,11 +58,11 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
                     TableUtils.dropTable(connectionSource, LocalStickerInfo.class, true);
                     TableUtils.createTable(connectionSource, LocalStickerInfo.class);
                     break;
-//                case 2:
+                case 2:
 //                    TableUtils.createTable(connectionSource, UserEntity.class);
 //                    Dao<LocalStickerInfo, Integer> stickerInfoDao = SQLiteHelperOrm.getHelper(App.getContextInstance()).getDao(LocalStickerInfo.class);
 //                    stickerInfoDao.executeRaw("ALTER TABLE 'account' ADD COLUMN weight INTEGER;");
-//                    break;
+                    break;
             }
         } catch (SQLException e) {
         }

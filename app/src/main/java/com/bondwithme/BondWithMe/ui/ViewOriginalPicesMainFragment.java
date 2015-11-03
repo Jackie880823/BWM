@@ -188,15 +188,15 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                         //给GsonBuilder方法单独指定Date类型的反序列化方法
                         //gsonb.registerTypeAdapter(Date.class, ds);
                         Gson gson = gsonb.create();
-                        if (response.startsWith("{\"data\":")) {
+//                        if (response.startsWith("{\"data\":")) {
                             JSONObject jsonObject = new JSONObject(response);
                             String dataString = jsonObject.optString("data");
                             data = gson.fromJson(dataString, new TypeToken<ArrayList<PhotoEntity>>() {
                             }.getType());
-                        } else {
-                            data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
-                            }.getType());
-                        }
+//                        } else {
+//                            data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
+//                            }.getType());
+//                        }
                         //默认第一张
                         initAdapter();
                         initViewPaper(0);
