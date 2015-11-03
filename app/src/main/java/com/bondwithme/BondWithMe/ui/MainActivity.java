@@ -31,6 +31,7 @@ import com.bondwithme.BondWithMe.receiver_service.ReportIntentService;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
@@ -380,12 +381,17 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + STICKER_VERSION + App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
+        LogUtil.d(TAG,"isFirstLogin========="+isFirstLogin+"======IS_FIRST_LOGIN======"+IS_FIRST_LOGIN);
         if (isFirstLogin) {
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
                     try {
+                        LogUtil.d(TAG,"isFirstLogin");
+                        LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(MainActivity.this);
+                        dao.deleteSticker(MainActivity.this,"Barry");
+                        dao.deleteSticker(MainActivity.this,"PapaPanda");
                         List<String> pathList = FileUtil.getAllFilePathsFromAssets(MainActivity.this, "stickers");
                         if (null != pathList) {
                             for (String string : pathList) {

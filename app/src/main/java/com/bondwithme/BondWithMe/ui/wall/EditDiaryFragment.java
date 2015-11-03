@@ -333,6 +333,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         }
                     }
 
+                    allRange = String.valueOf(1).equals(wall.getContent_group_public());
+                    switchPrivacy(allRange);
+
                     String videoName = wall.getVideo_filename();
                     if (TextUtils.isEmpty(videoName)) {
                         mAdapter.setIsPhoto(true);
@@ -413,11 +416,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (localEntities.isEmpty()) {
             mHandler.sendEmptyMessage(ACTION_SUCCEED);
         } else {
-            int count = localEntities.size();
-            boolean multiple = (count <= 0);
+            int count = photoEntities.size();
+            int pushedCount = count - localEntities.size();
+            boolean multiple = (pushedCount < count - 1);
             tasks = new ArrayList<>();
-            for (int index = 0; index < count; index++) {
-                DiaryPhotoEntity photoEntity = localEntities.get(index);
+            for (int index = pushedCount; index < count; index++) {
+                DiaryPhotoEntity photoEntity = (DiaryPhotoEntity) photoEntities.get(index);
                 photoEntity.setPhoto_caption(getPhotoCaptionByPosition(index + 1));
                 CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple);
                 tasks.add(task);
@@ -785,6 +789,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onStop() {
         super.onStop();
+        // 隐藏键盘
+        UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
 
         if (popupwindow != null && popupwindow.isShowing()) {
             popupwindow.dismiss();
@@ -1160,6 +1166,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     public void submitWall() {
         Log.i(TAG, "submitWall&");
+        // 隐藏键盘
+        UIUtil.hideKeyboard(getContext(), getActivity().getCurrentFocus());
         if (isEdit) {
             putWall();
             return;
@@ -1291,6 +1299,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         entity.setTag_group(setGetGroupIds(at_groups_data));
         entity.setTag_member(setGetMembersIds(at_members_data));
         entity.setContent_group_public(allRange ? String.valueOf(1) : String.valueOf(0));
+        entity.setPhoto_max(String.valueOf(photoEntities.size() - 1));
 
         if (!Uri.EMPTY.equals(videoUri)) {
             entity.setNew_video("1");
@@ -1300,10 +1309,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 String caption = getPhotoCaptionByPosition(i + 1);
                 LogUtil.d(TAG, "putWall& caption: " + caption);
                 PushedPhotoEntity photoEntity = photoEntities.get(i);
-                if (!caption.equals(photoEntity.getPhoto_caption())) {
-                    photoEntity.setPhoto_caption(caption);
-                    pushedPhotoEntities.add(photoEntity);
-                }
+                photoEntity.setPhoto_caption(caption);
+                pushedPhotoEntities.add(photoEntity);
             }
             entity.setEdit_photo(pushedPhotoEntities);
         }
@@ -1334,18 +1341,24 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
     private String getPhotoCaptionByPosition(int position) {
+        LogUtil.d(TAG, "getPhotoCaptionByPosition& position = " + position);
         if (position < mAdapter.getItemCount()) {
-            RecyclerView.ViewHolder holder = rvImages.findViewHolderForAdapterPosition(position);
+            RecyclerView.ViewHolder holder = rvImages.findViewHolderForLayoutPosition(position);
             if (holder != null && holder instanceof EditDiaryAdapter.ImageHolder) {
                 return ((EditDiaryAdapter.ImageHolder) holder).wevContent.getRelText();
             } else {
-                LogUtil.e(TAG, "getPhotoCaptionByPosition& IllegalStateException");
+                if (holder == null) {
+                    LogUtil.e(TAG, "getPhotoCaptionByPosition& get holder is null");
+                }
+                LogUtil.e(TAG, "getPhotoCaptionByPosition& Class Cast Exception");
             }
 
         } else {
             LogUtil.e(TAG, "getPhotoCaptionByPosition& position " + position + ", count is " + rvImages.getChildCount());
         }
-        return "";
+        String result = photoEntities.get(position - 1).getPhoto_caption();
+        LogUtil.e(TAG, "getPhotoCaptionByPosition& result: " + result);
+        return result;
     }
 
     /**
@@ -1365,12 +1378,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         Map<String, Object> params = new HashMap<>();
         params.put("content_creator_id", MainActivity.getUser().getUser_id());
         params.put("content_id", contentId);
-        params.put("photo_index", "" + index);
-        if (index < photoEntities.size() - localEntities.size()) {
-            params.put("photo_caption", photoEntities.get(index).getPhoto_caption());
-        } else {
-            params.put("photo_caption", getPhotoCaptionByPosition(index + 1));
-        }
+        params.put("photo_index", String.valueOf(index));
+        params.put("photo_caption", getPhotoCaptionByPosition(index + 1));
         params.put("file", f);
         params.put("multiple", multiple ? "1" : "0");
         LogUtil.d(TAG, "submitPic: params: " + params);

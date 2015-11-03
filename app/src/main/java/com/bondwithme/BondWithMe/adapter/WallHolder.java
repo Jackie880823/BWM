@@ -881,9 +881,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             int max;
             String maxPhoto = wallEntity.getPhoto_max();
             if (TextUtils.isEmpty(maxPhoto)) {
-                max = localPhotos.size();
+                max = localPhotos.size() - 1;
             } else {
-                max = Integer.valueOf(maxPhoto) + localPhotos.size();
+                max = Integer.valueOf(maxPhoto) + localPhotos.size() - 1;
             }
             Map<String, String> params = new HashMap<>();
             params.put(Constant.PARAM_PHOTO_MAX, String.valueOf(max));
@@ -978,7 +978,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         Map<String, Object> params = new HashMap<>();
         params.put("content_creator_id", accountUserId);
         params.put("content_id", contentId);
-        params.put("photo_index", "" + index);
+        int photoMax;
+        String photoMaxStr = wallEntity.getPhoto_max();
+        if (TextUtils.isEmpty(photoMaxStr)) {
+            photoMax = 1;
+        } else {
+            photoMax = Integer.valueOf(photoMaxStr) + 1;
+        }
+        params.put("photo_index", String.valueOf(index + photoMax));
         params.put("photo_caption", "");
         params.put("file", f);
         params.put("multiple", multiple ? "1" : "0");
