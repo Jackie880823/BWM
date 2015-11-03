@@ -76,7 +76,7 @@ public class MyStickerActivity extends BaseActivity {
         try {
             Dao<LocalStickerInfo, String> stickerInfoDao = SQLiteHelperOrm.getHelper(MyStickerActivity.this).getDao(LocalStickerInfo.class);
             QueryBuilder qb = stickerInfoDao.queryBuilder();
-            qb.orderBy("order", false).where().eq("loginUserId", MainActivity.getUser().getUser_id()).and().eq("defaultSticker", LocalStickerInfo.DEFAULT_INSTALL_STICKER);
+            qb.orderBy("order", false).where().eq("loginUserId", MainActivity.getUser().getUser_id());
             data = qb.query();
         } catch (Exception e) {
             LogUtil.e(TAG, "", e);
