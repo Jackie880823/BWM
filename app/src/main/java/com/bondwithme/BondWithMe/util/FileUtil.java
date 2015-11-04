@@ -288,6 +288,14 @@ public class FileUtil {
         return MainActivity.STICKERS_NAME + File.separator + stickerPath + File.separator + "B" + File.separator + stickerName + stickerType;
     }
 
+    /**
+     *
+     * @param mContext
+     * @param stickerPath 表情包名
+     * @param stickerName
+     * @param stickerType
+     * @return
+     */
     public static String getSmallStickerPath(Context mContext, String stickerPath, String stickerName, String stickerType) {
         String filePath = FileUtil.getSaveRootPath(mContext, false).getAbsolutePath() + File.separator + "Sticker";
         File file = new File(filePath);

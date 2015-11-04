@@ -1,6 +1,8 @@
 package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
@@ -20,9 +22,11 @@ import com.bondwithme.BondWithMe.entity.StickerGroupEntity;
 import com.bondwithme.BondWithMe.entity.StickerItemEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -82,13 +86,25 @@ public class StickerItemAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
 
         }
-        StickerItemEntity stickerItemEntity = data.get(position);
-//        VolleyUtil.initNetworkImageView(mContext,viewHolder.ivStickerItem,
-//                String.format( Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), stickerItemEntity.getSticker_name()+"_S", stickerGroupEntity.getPath(),stickerGroupEntity.getType()),
-//                R.drawable.network_image_default, R.drawable.network_image_default);
-        VolleyUtil.initNetworkImageView(mContext, viewHolder.ivStickerItem,
-                String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_S_" + stickerItemEntity.getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()),
-                R.drawable.network_image_default, R.drawable.network_image_default);
+
+        setStickerItem(viewHolder.ivStickerItem,position,false);
+
+//        StickerItemEntity stickerItemEntity = data.get(position);
+//        String picPath = FileUtil.getSmallStickerPath(mContext, stickerGroupEntity.getPath(), stickerItemEntity.getSticker_name(), stickerGroupEntity.getType());
+//        File file = new File(picPath);
+//        if(file.exists()){
+//            Bitmap bmp = BitmapFactory.decodeFile(picPath);
+////        Bitmap bmp = LocalImageLoader.loadBitmapFromFile(mContext, picPath, holder.ivMySticker.getWidth(), holder.ivMySticker.getHeight());
+//            viewHolder.ivStickerItem.setImageBitmap(bmp);
+//            LogUtil.d(TAG,"file.exists()");
+//        }else{
+//            LogUtil.d(TAG,"initNetworkImageView()");
+//            VolleyUtil.initNetworkImageView(mContext, viewHolder.ivStickerItem,
+//                    String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_S_" + stickerItemEntity.getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()),
+//                    R.drawable.network_image_default, R.drawable.network_image_default);
+//        }
+
+
         viewHolder.ivStickerItem.setOnLongClickListener(new LongClickListener(position));
         viewHolder.ivStickerItem.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -226,10 +242,8 @@ public class StickerItemAdapter extends BaseAdapter {
 //                    bigSticker.setPadding(5,5,5,5);
 //                VolleyUtil.initNetworkImageView(mContext, bigSticker,
 //                        String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), data.get(position).getSticker_name() + "_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()));
-                VolleyUtil.initNetworkImageView(mContext, bigSticker,
-                        String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()),
-                        R.drawable.network_image_default, R.drawable.network_image_default);
 
+                setStickerItem(bigSticker,position,false);
                 popupBigSticker.setContentView(bigSticker);
             } else if (stickerGroupEntity != null && stickerGroupEntity.getType().equals(".gif")) {
                 GifImageView bigSticker = new GifImageView(mContext);
@@ -237,7 +251,7 @@ public class StickerItemAdapter extends BaseAdapter {
                 bigSticker.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 bigSticker.setPadding(2, 2, 2, 2);
 //                downloadAsyncTask(bigSticker, String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), data.get(position).getSticker_name() + "_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()));
-                downloadAsyncTask(bigSticker, String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()));
+                setStickerItem(bigSticker,position,true);
                 popupBigSticker.setContentView(bigSticker);
             }
             popupBigSticker.setOutsideTouchable(true);
@@ -254,6 +268,32 @@ public class StickerItemAdapter extends BaseAdapter {
 
             popupBigSticker.showAsDropDown(view, -addSize / 2, -(int) 3 * view.getHeight());
             return true;
+        }
+    }
+    private void setStickerItem(ImageView item,int position,boolean isGif) {
+        StickerItemEntity stickerItemEntity = data.get(position);
+        String picPath = FileUtil.getBigStickerPath(mContext, stickerGroupEntity.getPath(), stickerItemEntity.getSticker_name(), stickerGroupEntity.getType());
+        File file = new File(picPath);
+        if(file.exists()){
+            if (isGif){
+                try{
+                    item.setImageDrawable(new GifDrawable(file));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }else {
+                Bitmap bmp = BitmapFactory.decodeFile(picPath);
+                item.setImageBitmap(bmp);
+            }
+            LogUtil.d(TAG, "file.exists()");
+        }else{
+            if (isGif){
+                downloadAsyncTask((GifImageView) item, String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(), stickerGroupEntity.getVersion()));
+            }else {
+                VolleyUtil.initNetworkImageView(mContext, (NetworkImageView)item,
+                        String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(), stickerGroupEntity.getVersion()),
+                        R.drawable.network_image_default, R.drawable.network_image_default);
+            }
         }
     }
 }
