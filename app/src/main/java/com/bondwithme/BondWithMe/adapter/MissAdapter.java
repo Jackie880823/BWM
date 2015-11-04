@@ -38,7 +38,7 @@ public class MissAdapter extends RecyclerView.Adapter<MissAdapter.VHItem> {
 
     public void add(List<MissEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 

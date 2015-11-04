@@ -45,7 +45,7 @@ public class DiaryCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void addData(List<WallCommentEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
     public void setData(List<WallCommentEntity> data) {

@@ -42,7 +42,7 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.VHItem> 
 
     public void add(List<RewardsEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 

@@ -44,7 +44,7 @@ public class AlertWallAdapter extends RecyclerView.Adapter<AlertWallAdapter.VHIt
 
     public void add(List<AlertWallEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 

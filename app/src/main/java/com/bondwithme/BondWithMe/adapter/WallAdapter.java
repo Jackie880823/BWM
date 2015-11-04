@@ -38,7 +38,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallHolder> {
 
     public void add(List<WallEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 

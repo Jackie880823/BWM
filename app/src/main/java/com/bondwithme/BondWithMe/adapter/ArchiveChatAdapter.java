@@ -49,7 +49,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
 
     public void add(List<ArchiveChatEntity> newData){
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
     @Override
