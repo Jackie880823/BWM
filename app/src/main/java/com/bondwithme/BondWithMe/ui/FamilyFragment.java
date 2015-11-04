@@ -834,7 +834,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onClick(View v) {
                 //打开添加成员页面
-                startActivity(new Intent(getActivity(), AddNewMembersActivity.class));
+                startActivity(new Intent(getActivity(), AddMembersActivity.class));
                 showSelectDialog.dismiss();
             }
         });

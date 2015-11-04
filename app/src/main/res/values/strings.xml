@@ -652,5 +652,12 @@
     <string name="no_photo_2_save">No Photo to Save!</string>
     <string name="add_photo_before_title">Please remove your video before you can add new photo.</string>
     <string name="text_add_caption">add caption</string>
+    
+    <string name="text_add_members_search_hint">Search by ID/Username/Phone Number</string>
+    <string name="text_add_members_options_head">Add family member to chat. share moments and create events. Start bonding now!</string>
+    <string name="text_add_members_via_contact">Add via Contacts</string>
+    <string name="text_add_members_facebook">Facebook Account</string>
+    <string name="text_add_members_qq">QQ Account</string>
+    <string name="text_add_members_content">Members you may know</string>
 
 </resources>
