@@ -11,13 +11,12 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 
     private static final String DB_NAME = "bwm.db";
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 1;
     private static SQLiteHelperOrm helper = null;
     private static final AtomicInteger usageCounter = new AtomicInteger(0);
 
@@ -50,30 +49,20 @@ public class SQLiteHelperOrm extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-
         try {
-            switch (oldVersion) {
-                case 1:
-                    TableUtils.dropTable(connectionSource, OrmEntityDemo.class, true);
-                    TableUtils.dropTable(connectionSource, LocalStickerInfo.class, true);
-                    TableUtils.createTable(connectionSource, LocalStickerInfo.class);
-                    break;
-//                case 2:
-//                    TableUtils.createTable(connectionSource, UserEntity.class);
-//                    Dao<LocalStickerInfo, Integer> stickerInfoDao = SQLiteHelperOrm.getHelper(App.getContextInstance()).getDao(LocalStickerInfo.class);
-//                    stickerInfoDao.executeRaw("ALTER TABLE 'account' ADD COLUMN weight INTEGER;");
-//                    break;
+            if (oldVersion < 2) {
+                TableUtils.dropTable(connectionSource, OrmEntityDemo.class, true);
+                TableUtils.dropTable(connectionSource, LocalStickerInfo.class, true);
+                TableUtils.createTable(connectionSource, LocalStickerInfo.class);
             }
-        } catch (SQLException e) {
+            if (oldVersion < 3) {
+//                Dao<LocalStickerInfo, Integer> recordItemDao = getDao(LocalStickerInfo.class);
+//                recordItemDao.executeRaw("ALTER TABLE `sticker_info` ADD COLUMN defaultSticker VARCHAR default '0';");
+                db.execSQL("ALTER TABLE `sticker_info` ADD COLUMN defaultSticker VARCHAR default '0';");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-        //TODO
-        // try {
-        // TableUtils.dropTable(connectionSource, POUser.class, true);
-        // onCreate(db, connectionSource);
-        // } catch (SQLException e) {
-        // Log.e("SQLiteHelperOrm", "onUpgrade", e);
-        // }
     }
 
     public static synchronized SQLiteHelperOrm getHelper(Context paramContext) {

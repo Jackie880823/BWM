@@ -62,10 +62,11 @@ public class MyStickerAdapter extends RecyclerView.Adapter<MyStickerAdapter.VHIt
         holder.ivMySticker.setImageBitmap(bmp);
         holder.tvName.setText(stickerInfo.getName());
 
-        path = stickerInfo.getPath();
-        if (path.equals(DEFAULT_STICKER_1)|path.equals(DEFAULT_STICKER_2)|path.equals(DEFAULT_STICKER_3)|path.equals(DEFAULT_STICKER_4)|path.equals(DEFAULT_STICKER_5)|path.equals(DEFAULT_STICKER_6)){
+//        path = stickerInfo.getPath();
+//        if (path.equals(DEFAULT_STICKER_1)|path.equals(DEFAULT_STICKER_2)|path.equals(DEFAULT_STICKER_3)|path.equals(DEFAULT_STICKER_4)|path.equals(DEFAULT_STICKER_5)|path.equals(DEFAULT_STICKER_6)){
+        if (LocalStickerInfo.DEFAULT_STICKER.equals(stickerInfo.getDefaultSticker())) {
             holder.tvRemove.setVisibility(View.GONE);
-        }else{
+        } else {
             holder.tvRemove.setVisibility(View.VISIBLE);
         }
         holder.tvRemove.setOnClickListener(new View.OnClickListener() {

@@ -16,7 +16,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.util.MessageUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -193,13 +192,13 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
 
             @Override
             public void onResult(String string) {
-                MessageUtil.showMessage(AutoAcceptActivity.this,R.string.msg_action_successed);
+//                MessageUtil.showMessage(AutoAcceptActivity.this,R.string.msg_action_successed);
                 AutoAcceptActivity.this.finish();
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(AutoAcceptActivity.this,R.string.msg_action_failed);
+//                MessageUtil.showMessage(AutoAcceptActivity.this,R.string.msg_action_failed);
             }
 
             @Override
@@ -246,12 +245,12 @@ public class AutoAcceptActivity extends BaseActivity implements CheckBox.OnCheck
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                MessageUtil.showMessage(AutoAcceptActivity.this, R.string.msg_load_config_successed);
+//                MessageUtil.showMessage(AutoAcceptActivity.this, R.string.msg_load_config_successed);
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(AutoAcceptActivity.this,R.string.msg_load_config_failed);
+//                MessageUtil.showMessage(AutoAcceptActivity.this,R.string.msg_load_config_failed);
             }
 
             @Override
