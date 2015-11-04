@@ -9,6 +9,7 @@ import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -253,11 +254,10 @@ public class SelectPhotosActivity extends BaseActivity {
         }
 
         addButton.setOnClickListener(new View.OnClickListener() {
-            int cache_count = 0;
 
             @Override
             public void onClick(View v) {
-                File file = PicturesCacheUtil.getCachePicFileByName(SelectPhotosActivity.this, CACHE_PIC_NAME_TEMP + cache_count++);
+                File file = PicturesCacheUtil.getCachePicFileByName(SelectPhotosActivity.this, CACHE_PIC_NAME_TEMP + SystemClock.currentThreadTimeMillis());
                 if (file != null) {
                     imagePaht = file.getAbsolutePath();
                 }
