@@ -5,25 +5,19 @@
     android:layout_gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/message_copy_linear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <TextView
+        android:id="@+id/tv_add_new_member"
+        style="@style/text_dialog_style"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/default_content_padding"
+        android:text="@string/text_add_new_member" />
 
-        <TextView
-            android:id="@+id/tv_add_new_member"
-            style="@style/text_dialog_style"
-            android:layout_width="match_parent"
-            android:gravity="center_horizontal"
-            android:padding="@dimen/default_content_padding"
-            android:text="@string/text_add_new_member" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/default_split_line" />
-    </LinearLayout>
+    <View
+        android:id="@+id/message_copy_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/default_split_line" />
 
     <TextView
         android:id="@+id/tv_create_new_group"
