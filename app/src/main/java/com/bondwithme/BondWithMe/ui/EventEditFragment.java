@@ -27,6 +27,7 @@ import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.widget.DatePicker;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MyGridViewForScroolView;
@@ -178,6 +179,7 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
         }
 
         if(validateForm()) {
+            UIUtil.hideKeyboard(getParentActivity(), event_title);
             vProgress.setVisibility(View.VISIBLE);
             mEevent.setEvent_member(setGetMembersIds(members_data));
             mEevent.setLoc_name(position_name.getText().toString());
