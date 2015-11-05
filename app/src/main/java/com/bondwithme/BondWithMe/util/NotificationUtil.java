@@ -21,6 +21,7 @@ import com.bondwithme.BondWithMe.ui.AlertWallActivity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.EventDetailActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.MemberActivity;
 import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 import com.bondwithme.BondWithMe.ui.MissListActivity;
 import com.bondwithme.BondWithMe.ui.NewsActivity;
@@ -282,10 +283,10 @@ public class NotificationUtil {
                 smallIcon = R.drawable.bondalert_member_icon;
                 msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_MEMBER);
                 if (msgs.size() == 0) {
-                    intent = new Intent(context, AlertEventActivity.class);
+                    intent = new Intent(context, MemberActivity.class);
                 } else {
                     //TODO
-                    intent = new Intent(context, AlertEventActivity.class);
+                    intent = new Intent(context, MemberActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MEMBER);
                 newMsg = NotificationMessageGenerateUtil.getMemberMessage(context, action, action_owner, item_name);
