@@ -18,7 +18,6 @@ import com.bondwithme.BondWithMe.adapter.EventAdapter;
 import com.bondwithme.BondWithMe.entity.BirthdayEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
@@ -101,9 +100,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
-                            LogUtil.i("==============event_create", "onDismiss");
                             PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT, true);
-                            //存储本地
                         }
                     });
                     popupWindow.showPopupWindow(true);
@@ -180,9 +177,7 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
-                            LogUtil.i("==============event_create", "onDismiss");
                             PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT,true);
-                            //存储本地
                         }
                     });
                     popupWindow.showPopupWindow(true);
@@ -190,15 +185,9 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,1000);
                     InteractivePopupWindow.firstOpPop = true;
                 }
-//            newPopAddPhoto();
             }
 
         }
-//        else {
-//            if(popupWindow != null){
-//                popupWindow.dismissPopupWindow();
-//            }
-//        }
     }
 
     private void newPopAddPhoto(){

@@ -123,9 +123,6 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
-//            newPopAddPhoto();
-        }
     }
 
     private void newPopAddPhoto(){

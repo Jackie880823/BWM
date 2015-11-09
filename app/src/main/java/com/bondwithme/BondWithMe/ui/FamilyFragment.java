@@ -538,16 +538,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                    InteractivePopupWindow.firstOpPop = true;
                }
 
-//           newPopAddPhoto();
            }
 
        }
-//       else {
-//           //相当于Fragment的onPause
-//           if(popupWindow != null){
-//               popupWindow.dismissPopupWindow();
-//           }
-//       }
     }
 
     private void showMemberEmptyView() {
@@ -655,9 +648,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //                        intent.putExtra("relationship",familyMemberEntity.getTree_type_name());
 //                        intent.putExtra("fam_nickname",familyMemberEntity.getFam_nickname());
 //                        intent.putExtra("member_status",familyMemberEntity.getUser_status());
-                        intent.putExtra("getDofeel_code", familyMemberEntity.getDofeel_code());
 //                        startActivity(intent);
-//                        startActivityForResult(intent, 1);
+                        intent.putExtra("getDofeel_code", familyMemberEntity.getDofeel_code());
+                        startActivityForResult(intent, 1);
                     }
                 }
             }

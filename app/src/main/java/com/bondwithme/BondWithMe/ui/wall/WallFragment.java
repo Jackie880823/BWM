@@ -107,9 +107,9 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
-                            LogUtil.i("==============2", "onDismiss");
-                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, true);
                             //存储本地
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, true);
+
                         }
                     });
                     popupWindow.showPopupWindow(true);
@@ -276,7 +276,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
-                            LogUtil.i("==============2", "onDismiss");
                             PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY,true);
                             //存储本地
                         }
