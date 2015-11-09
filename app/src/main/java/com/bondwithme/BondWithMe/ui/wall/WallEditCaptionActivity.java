@@ -57,14 +57,9 @@ public class WallEditCaptionActivity extends BaseActivity{
     @Override
     protected void titleRightEvent() {
         //更新成功后执行以下代码
-        if (!strEditBefore.equals(editText.getText().toString()))
-        {
+
             updateCaption();
-        }
-        else
-        {
-            MessageUtil.showMessage(this, R.string.text_wall_view_pic_edit_no_change);
-        }
+
     }
 
     private void updateCaption() {

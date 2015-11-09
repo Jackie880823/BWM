@@ -22,9 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +37,6 @@ import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.EditDiaryAdapter;
-import com.bondwithme.BondWithMe.adapter.FeelingAdapter;
 import com.bondwithme.BondWithMe.adapter.HeadHolder;
 import com.bondwithme.BondWithMe.adapter.VideoHolder;
 import com.bondwithme.BondWithMe.entity.DiaryPhotoEntity;
@@ -64,6 +61,7 @@ import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
+import com.bondwithme.BondWithMe.util.SortComparator;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
@@ -81,7 +79,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +91,7 @@ import java.util.Map;
  *          <p/>
  *          日志编辑
  */
-public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements View.OnClickListener, FeelingAdapter.ItemCheckListener {
+public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements View.OnClickListener {
 
     /**
      * 当前类LGO信息的TAG，打印调试信息时用于识别输出LOG所在的类
@@ -128,7 +125,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static final String PREFERENCE_KEY_VIDEO_DURATION = "VIDEO_DURATION";
 
     private static final int GET_DELAY = 0x28;
-    private InteractivePopupWindow popupWindow;
+    private InteractivePopupWindow interactivePopupWindow;
 
     public final static String PATH_PREFIX = "feeling";
     private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
@@ -324,10 +321,17 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
                     String feel = wall.getDofeel_code();
                     if (!TextUtils.isEmpty(feel)) {
+                        if (fileNames.isEmpty()) {
+                            fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), Constant.PATH_PREFIX);
+                            // 对文件进行按首字的大小排序
+                            SortComparator comparator = new SortComparator();
+                            Collections.sort(fileNames, comparator);
+                        }
+
                         int charIndex = feel.lastIndexOf("_");
                         String name = feel.substring(charIndex + 1);
                         checkItemIndex = fileNames.indexOf(name);
-                        selectFeelingPath = String.format(FEEL_ICON_NAME, name);
+                        selectFeelingPath = String.format(Constant.FEEL_ICON_NAME, name);
                         LogUtil.d(TAG, "path: " + selectFeelingPath);
                         try {
                             iv_feeling.setVisibility(View.VISIBLE);
@@ -336,6 +340,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                             e.printStackTrace();
                         }
                     }
+
+                    allRange = String.valueOf(1).equals(wall.getContent_group_public());
+                    switchPrivacy(allRange);
 
                     String videoName = wall.getVideo_filename();
                     if (TextUtils.isEmpty(videoName)) {
@@ -383,28 +390,28 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
 //        for (int i = j ; i < strings.size();i++){
             if(j < strings.size() - 1 ){
-                popupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j),1);
+                interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j),1);
                 final int finalJ = j + 1;
-                popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                     @Override
                     public void popDismiss() {
                         LogUtil.i("==============event_save", "onDismiss");
                         //存储本地
-                        cutPopInteractive(strings,views, finalJ);
+                        cutPopInteractive(strings, views, finalJ);
                     }
                 });
-                popupWindow.showPopupWindowUp();
+                interactivePopupWindow.showPopupWindowUp();
             }else {
-                popupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j),strings.get(j),0);
-                popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j),strings.get(j),0);
+                interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                     @Override
                     public void popDismiss() {
                         LogUtil.i("==============event_save", "onDismiss");
-                        PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST,true);
+                        PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, true);
                         //存储本地
                     }
                 });
-                popupWindow.showPopupWindow(true);
+                interactivePopupWindow.showPopupWindow(true);
             }
 //        }
     }
@@ -465,11 +472,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (localEntities.isEmpty()) {
             mHandler.sendEmptyMessage(ACTION_SUCCEED);
         } else {
-            int count = localEntities.size();
-            boolean multiple = (count <= 0);
+            int count = photoEntities.size();
+            int pushedCount = count - localEntities.size();
+            boolean multiple = (pushedCount < count - 1);
             tasks = new ArrayList<>();
-            for (int index = 0; index < count; index++) {
-                DiaryPhotoEntity photoEntity = localEntities.get(index);
+            for (int index = pushedCount; index < count; index++) {
+                DiaryPhotoEntity photoEntity = (DiaryPhotoEntity) photoEntities.get(index);
                 photoEntity.setPhoto_caption(getPhotoCaptionByPosition(index + 1));
                 CompressBitmapTask task = new CompressBitmapTask(contentId, index, multiple);
                 tasks.add(task);
@@ -845,19 +853,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
     }
 
-    @Override
-    public void onItemCheckedChange(int position) {
-        checkItemIndex = position;
-        selectFeelingPath = String.format(FEEL_ICON_NAME, fileNames.get(checkItemIndex));
-        iv_feeling.setVisibility(View.VISIBLE);
-        try {
-            iv_feeling.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(selectFeelingPath)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        popupwindow.dismiss();
-    }
-
     /**
      * Called when the Fragment is no longer started.  This is generally
      * tied to {@link Activity#onStop() Activity.onStop} of the containing
@@ -866,6 +861,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onStop() {
         super.onStop();
+        // 隐藏键盘
+        UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
 
         if (popupwindow != null && popupwindow.isShowing()) {
             popupwindow.dismiss();
@@ -986,6 +983,24 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                             imageUris.addAll(pickUris);
                             addDataAndNotify(pickUris);
                         }
+                    }
+                    break;
+
+                case Constant.INTENT_REQUEST_FEELING:
+                    checkItemIndex = data.getIntExtra(Constant.EXTRA_CHECK_ITEM_INDEX, 0);
+                    if (fileNames.isEmpty()) {
+                        fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), Constant.PATH_PREFIX);
+                        // 对文件进行按首字的大小排序
+                        SortComparator comparator = new SortComparator();
+                        Collections.sort(fileNames, comparator);
+                    }
+
+                    selectFeelingPath = String.format(Constant.FEEL_ICON_NAME, fileNames.get(checkItemIndex));
+                    iv_feeling.setVisibility(View.VISIBLE);
+                    try {
+                        iv_feeling.setImageBitmap(BitmapFactory.decodeStream(getResources().getAssets().open(selectFeelingPath)));
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                     break;
             }
@@ -1176,61 +1191,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
     private void showChooseFeeling() {
-        if (popupwindow != null && popupwindow.isShowing()) {
-            popupwindow.dismiss();
-        } else {
-            initPopupWindowView();
-            popupwindow.showAsDropDown(getViewById(R.id.option_bar), 0, 5);
-        }
-    }
-
-    public void initPopupWindowView() {
-        // // 获取自定义布局文件pop.xml的视图
-        View customView = getActivity().getLayoutInflater().inflate(R.layout.feeling_list, null, false);
-        // 创建PopupWindow实例,200,150分别是宽度和高度
-        popupwindow = new PopupWindow(customView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        // 设置动画效果 [R.style.AnimationFade 是自己事先定义好的]
-
-        popupwindow.setAnimationStyle(R.style.PopupAnimation);
-        // 自定义view添加触摸事件
-        customView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                //                if (popupwindow != null && popupwindow.isShowing()) {
-                //                    popupwindow.dismiss();
-                //                    popupwindow = null;
-                //                }
-
-                return false;
-            }
-        });
-
-        RecyclerView feeling_icons = (RecyclerView) customView.findViewById(R.id.feeling_icons);
-        /*
-      心情布局
-     */
-        LinearLayoutManager llmFeeling = new LinearLayoutManager(getParentActivity());
-        feeling_icons.setLayoutManager(llmFeeling);
-        fileNames = FileUtil.getAllFilePathsFromAssets(getActivity(), PATH_PREFIX);
-        // 对文件进行按首字的大小排序
-        SortComparator compartor = new SortComparator();
-        Collections.sort(fileNames, compartor);
-        List<String> filePaths = new ArrayList<>();
-        if (fileNames != null) {
-            for (String name : fileNames) {
-                filePaths.add(PATH_PREFIX + "/" + name);
-            }
-        }
-        /*
-      心情列表适配器
-     */
-        FeelingAdapter feelingAdapter = new FeelingAdapter(getActivity(), filePaths);
-        feelingAdapter.setCheckIndex(checkItemIndex);
-        feeling_icons.setAdapter(feelingAdapter);
-
-        feelingAdapter.setItemCheckListener(this);
-
+        Intent intent = new Intent(getContext(), FeelingActivity.class);
+        intent.putExtra(Constant.EXTRA_CHECK_ITEM_INDEX, checkItemIndex);
+        startActivityForResult(intent, Constant.INTENT_REQUEST_FEELING);
     }
 
     /**
@@ -1275,6 +1238,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      */
     public void submitWall() {
         Log.i(TAG, "submitWall&");
+        // 隐藏键盘
+        UIUtil.hideKeyboard(getContext(), getActivity().getCurrentFocus());
         if (isEdit) {
             putWall();
             return;
@@ -1405,6 +1370,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         entity.setDelete_video(deleteVideo);
         entity.setTag_group(setGetGroupIds(at_groups_data));
         entity.setTag_member(setGetMembersIds(at_members_data));
+        entity.setContent_group_public(allRange ? String.valueOf(1) : String.valueOf(0));
+        entity.setPhoto_max(String.valueOf(photoEntities.size() - 1));
 
         if (!Uri.EMPTY.equals(videoUri)) {
             entity.setNew_video("1");
@@ -1414,10 +1381,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 String caption = getPhotoCaptionByPosition(i + 1);
                 LogUtil.d(TAG, "putWall& caption: " + caption);
                 PushedPhotoEntity photoEntity = photoEntities.get(i);
-                if (!caption.equals(photoEntity.getPhoto_caption())) {
-                    photoEntity.setPhoto_caption(caption);
-                    pushedPhotoEntities.add(photoEntity);
-                }
+                photoEntity.setPhoto_caption(caption);
+                pushedPhotoEntities.add(photoEntity);
             }
             entity.setEdit_photo(pushedPhotoEntities);
         }
@@ -1448,18 +1413,24 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     }
 
     private String getPhotoCaptionByPosition(int position) {
+        LogUtil.d(TAG, "getPhotoCaptionByPosition& position = " + position);
         if (position < mAdapter.getItemCount()) {
-            RecyclerView.ViewHolder holder = rvImages.findViewHolderForAdapterPosition(position);
+            RecyclerView.ViewHolder holder = rvImages.findViewHolderForLayoutPosition(position);
             if (holder != null && holder instanceof EditDiaryAdapter.ImageHolder) {
                 return ((EditDiaryAdapter.ImageHolder) holder).wevContent.getRelText();
             } else {
-                LogUtil.e(TAG, "getPhotoCaptionByPosition& IllegalStateException");
+                if (holder == null) {
+                    LogUtil.e(TAG, "getPhotoCaptionByPosition& get holder is null");
+                }
+                LogUtil.e(TAG, "getPhotoCaptionByPosition& Class Cast Exception");
             }
 
         } else {
             LogUtil.e(TAG, "getPhotoCaptionByPosition& position " + position + ", count is " + rvImages.getChildCount());
         }
-        return "";
+        String result = photoEntities.get(position - 1).getPhoto_caption();
+        LogUtil.e(TAG, "getPhotoCaptionByPosition& result: " + result);
+        return result;
     }
 
     /**
@@ -1479,12 +1450,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         Map<String, Object> params = new HashMap<>();
         params.put("content_creator_id", MainActivity.getUser().getUser_id());
         params.put("content_id", contentId);
-        params.put("photo_index", "" + index);
-        if (index < photoEntities.size() - localEntities.size()) {
-            params.put("photo_caption", photoEntities.get(index).getPhoto_caption());
-        } else {
-            params.put("photo_caption", getPhotoCaptionByPosition(index + 1));
-        }
+        params.put("photo_index", String.valueOf(index));
+        params.put("photo_caption", getPhotoCaptionByPosition(index + 1));
         params.put("file", f);
         params.put("multiple", multiple ? "1" : "0");
         LogUtil.d(TAG, "submitPic: params: " + params);
@@ -1575,39 +1542,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         }
     }
 
-    /**
-     * 对字符串按首字母排序按首字母排序，并忽略大小字的排序规则
-     */
-    class SortComparator implements Comparator<String> {
-
-        /**
-         * Compares the two specified objects to determine their relative ordering. The ordering
-         * implied by the return value of this method for all possible pairs of
-         * {@code (lhs, rhs)} should form an <i>equivalence relation</i>.
-         * This means that
-         * <ul>
-         * <li>{@code compare(a,a)} returns zero for all {@code a}</li>
-         * <li>the sign of {@code compare(a,b)} must be the opposite of the sign of {@code
-         * compare(b,a)} for all pairs of (a,b)</li>
-         * <li>From {@code compare(a,b) > 0} and {@code compare(b,c) > 0} it must
-         * follow {@code compare(a,c) > 0} for all possible combinations of {@code
-         * (a,b,c)}</li>
-         * </ul>
-         *
-         * @param lhs an {@code Object}.
-         * @param rhs a second {@code Object} to compare with {@code lhs}.
-         * @return an integer < 0 if {@code lhs} is less than {@code rhs}, 0 if they are
-         * equal, and > 0 if {@code lhs} is greater than {@code rhs}.
-         * @throws ClassCastException if objects are not of the correct type.
-         */
-        @Override
-        public int compare(String lhs, String rhs) {
-            String str1 = lhs.substring(0, 1).toUpperCase();
-            String str2 = rhs.substring(0, 1).toUpperCase();
-            return str1.compareTo(str2);
-        }
-    }
-
     class CompressBitmapTask extends AsyncTask<DiaryPhotoEntity, Void, String> {
 
         String contentId;
@@ -1650,11 +1584,17 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
          * 发送新的日志
          */
         public static final int LINK_TYPE_SUBMIT_WALL = 1;
+        /**
+         * 上传图片
+         */
         public static final int LINK_TYPE_SUBMIT_PICTURE = 2;
         /**
-         * put新的日志
+         * put修改的日志
          */
         public static final int LINK_TYPE_PUT_WALL = 3;
+        /**
+         * 上传视频
+         */
         public static final int LINK_TYPE_UPLOAD_VOID = 4;
 
         /**
@@ -1699,7 +1639,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     mHandler.sendEmptyMessage(ACTION_SUCCEED);
                     break;
                 case LINK_TYPE_SUBMIT_PICTURE:
-                    lastPic ++;
+                    lastPic++;
                     if (lastPic == localEntities.size()) {
                         mHandler.sendEmptyMessage(ACTION_SUCCEED);
                     }

@@ -35,7 +35,7 @@ public class AlertEventAdapter extends RecyclerView.Adapter<AlertEventAdapter.VH
 
     public void add(List<AlertEventEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 

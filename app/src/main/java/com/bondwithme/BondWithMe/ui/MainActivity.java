@@ -31,6 +31,7 @@ import com.bondwithme.BondWithMe.receiver_service.ReportIntentService;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
@@ -108,11 +109,13 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     private static View red_point_5;
     public static String STICKERS_NAME = "stickers";
     public static String IS_FIRST_LOGIN = "isFirstLogin";
-    public static String STICKER_VERSION = "2";
-    public static  Boolean IS_INTERACTIVE_USE;
 
+    public static String STICKER_VERSION = "3";
+
+    public static  Boolean IS_INTERACTIVE_USE;
     public static Map<String,InteractivePopupWindow> interactivePopupWindowMap;
     private static final int GET_DELAY = 0x28;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -412,12 +415,17 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + STICKER_VERSION + App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
         IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START,true);
+        LogUtil.d(TAG,"isFirstLogin========="+isFirstLogin+"======IS_FIRST_LOGIN======"+IS_FIRST_LOGIN);
         if (isFirstLogin) {
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
                     try {
+                        LogUtil.d(TAG,"isFirstLogin");
+                        LocalStickerInfoDao dao = LocalStickerInfoDao.getInstance(MainActivity.this);
+                        dao.deleteSticker(MainActivity.this,"Barry");
+                        dao.deleteSticker(MainActivity.this,"PapaPanda");
                         List<String> pathList = FileUtil.getAllFilePathsFromAssets(MainActivity.this, "stickers");
                         if (null != pathList) {
                             for (String string : pathList) {

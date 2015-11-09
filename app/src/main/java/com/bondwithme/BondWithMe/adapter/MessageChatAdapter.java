@@ -767,22 +767,32 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             return;
         }
         final MsgEntity msgEntity = myList.get(position);
+        boolean isFromMe = msgEntity.getUser_id().equals(MainActivity.getUser().getUser_id());
         boolean showCopy = false;
         if (null != msgEntity.getText_id()) {
             showCopy = true;
+        }
+        if (!isFromMe && !showCopy) {
+            return;
         }
         View selectIntention = LayoutInflater.from(context).inflate(R.layout.dialog_message_delete, null);
         final Dialog showSelectDialog = new MyDialog(context, null, selectIntention);
         TextView copyText = (TextView) selectIntention.findViewById(R.id.tv_add_new_member);
         TextView deleteText = (TextView) selectIntention.findViewById(R.id.tv_create_new_group);
         TextView cancelTv = (TextView) selectIntention.findViewById(R.id.tv_cancel);
-        View copyLinear = selectIntention.findViewById(R.id.message_copy_linear);
+        View copyLinear = selectIntention.findViewById(R.id.message_copy_view);
         copyText.setText(R.string.text_message_copy);
         deleteText.setText(context.getString(R.string.text_delete));
         if (!showCopy) {
+            copyText.setVisibility(View.GONE);
             copyLinear.setVisibility(View.GONE);
         } else {
+            copyText.setVisibility(View.VISIBLE);
             copyLinear.setVisibility(View.VISIBLE);
+        }
+        if (!isFromMe && showCopy) {
+            copyLinear.setVisibility(View.GONE);
+            deleteText.setVisibility(View.GONE);
         }
         copyText.setOnClickListener(new View.OnClickListener() {
             @Override

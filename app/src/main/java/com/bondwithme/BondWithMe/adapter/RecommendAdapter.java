@@ -66,7 +66,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
 
     public void add(List<RecommendEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 

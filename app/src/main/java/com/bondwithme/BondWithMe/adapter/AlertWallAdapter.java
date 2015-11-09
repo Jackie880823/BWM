@@ -19,7 +19,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AlertWallEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
-import com.bondwithme.BondWithMe.ui.wall.WallCommentActivity;
+import com.bondwithme.BondWithMe.ui.wall.DiaryInformationActivity;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
@@ -44,7 +44,7 @@ public class AlertWallAdapter extends RecyclerView.Adapter<AlertWallAdapter.VHIt
 
     public void add(List<AlertWallEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 
@@ -110,7 +110,7 @@ public class AlertWallAdapter extends RecyclerView.Adapter<AlertWallAdapter.VHIt
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, WallCommentActivity.class);
+                    Intent intent = new Intent(mContext, DiaryInformationActivity.class);
                     intent.putExtra("content_group_id", data.get(getAdapterPosition()).getReference_id());
                     intent.putExtra("group_id", data.get(getAdapterPosition()).getModule_id());
                     mContext.startActivity(intent);

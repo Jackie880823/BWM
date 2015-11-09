@@ -448,13 +448,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
     @Override
     public void savePhotoed(WallEntity wallEntity, boolean succeed) {
-        if (succeed) {
-            refresh();
-        } else {
-            if (vProgress != null) {
-                vProgress.setVisibility(View.GONE);
-            }
-            LogUtil.e(TAG, "save photo Fail");
+        if (vProgress != null) {
+            vProgress.setVisibility(View.GONE);
         }
     }
 

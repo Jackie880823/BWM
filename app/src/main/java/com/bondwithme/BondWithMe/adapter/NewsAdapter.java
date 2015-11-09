@@ -32,7 +32,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
 
     public void add(List<NewsEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 

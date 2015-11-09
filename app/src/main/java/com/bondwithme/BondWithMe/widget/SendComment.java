@@ -20,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -50,7 +49,6 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
     private ImageButton ibMore;
     private ImageButton ibSticker;
     private EditText etChat;
-    private TextView tvSend;
     private LinearLayout llMore;
     private LinearLayout llSticker;
     private ImageView ivPhoto;
@@ -116,7 +114,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
         ibSticker = (ImageButton) findViewById(R.id.ib_sticker);
         llSticker = (LinearLayout) findViewById(R.id.ll_sticker);
         etChat = (EditText) findViewById(R.id.et_chat);
-        tvSend = (TextView) findViewById(R.id.tv_send);
+        ImageButton tvSend = (ImageButton) findViewById(R.id.tv_send);
         cvLayout = (CardView) findViewById(R.id.cv_send_comment_images);
         ivPhoto = (ImageView) findViewById(R.id.iv_pic);
 
