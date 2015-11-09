@@ -738,7 +738,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
         //日历dialog
         pickDateTimeDialog = new MyDialog(getParentActivity(), getString(R.string.title_pick_date_time), dateTimePicker);
-        pickDateTimeDialog.setButtonAccept(getString(R.string.accept), new View.OnClickListener() {
+        pickDateTimeDialog.setButtonAccept(getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickDateTimeDialog.dismiss();
