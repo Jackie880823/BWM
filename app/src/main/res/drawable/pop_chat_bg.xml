@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<item android:state_enabled="false" android:drawable="@drawable/gs_btn_from" />
+    <item android:state_pressed="true" android:drawable="@drawable/gs_btn_to" />
+    <item android:state_focused="true"  android:drawable="@drawable/gs_btn_from" />-->
+
+
+    <!--默认-->
+    <item android:state_enabled="false" >
+        <shape
+            android:shape="rectangle">
+            <stroke
+                android:width="2dp"
+                android:color="@color/interactive_Pop"/>
+            <gradient
+                android:endColor="@color/interactive_Pop"
+                android:startColor="@color/interactive_Pop" />
+            <corners
+                android:radius="5dp"  />
+        </shape>
+    </item>
+</selector>

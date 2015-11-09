@@ -2,6 +2,8 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.bondwithme.BondWithMe.ui.more.RewardsActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 
 
 import org.json.JSONException;
@@ -42,6 +45,8 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     private TextView member_alert_num;
     private TextView recommend_alert_num;
     private TextView rewards_num;
+    private static final int GET_DELAY_ADD_PHOTO = 0x30;
+    private InteractivePopupWindow popupWindowAddPhoto;
 
     private static final String TAG = "MoreFragment";
 
@@ -53,6 +58,25 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         super();
         // Required empty public constructor
     }
+
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case GET_DELAY_ADD_PHOTO:
+                    if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+                        popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
+                        popupWindowAddPhoto.showPopupWindowUp();
+                    }
+                    break;
+            }
+
+        }
+    };
+
+
 
 
     @Override
@@ -96,7 +120,23 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
     }
 
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+//            newPopAddPhoto();
+        }
+    }
 
+    private void newPopAddPhoto(){
+        if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+            popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
+            popupWindowAddPhoto.showPopupWindowUp();
+        }else {
+            handler.sendEmptyMessageDelayed(GET_DELAY_ADD_PHOTO, 500);
+        }
+
+    }
 
     private void bondDatas(JSONObject jsonObject) throws JSONException {
         checkDataAndBond2View(news_alert_num,jsonObject.getString("news"));

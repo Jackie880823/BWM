@@ -62,10 +62,12 @@ import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.WallEditView;
 import com.google.gson.Gson;
@@ -124,6 +126,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static final String PREFERENCE_KEY_TEXT_CONTENT = "TEXT_CONTENT";
     private static final String PREFERENCE_KEY_VIDEO_PATH = "VIDEO_PATH";
     private static final String PREFERENCE_KEY_VIDEO_DURATION = "VIDEO_DURATION";
+
+    private static final int GET_DELAY = 0x28;
+    private InteractivePopupWindow popupWindow;
 
     public final static String PATH_PREFIX = "feeling";
     private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
@@ -350,11 +355,59 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         mAdapter.setIsPhoto(false);
                     }
                     break;
+                case GET_DELAY:
+
+//                    private ArrayList<View> tipViews;
+                    ArrayList<String> tipTexts = new ArrayList<String>();
+                    tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_feeling));
+                    tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_tag_member));
+                    tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_allow_me));
+                    tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_location));
+                    tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_tap_post));
+
+                    ArrayList<View> tipViews = new ArrayList<>();
+                    tipViews.add(getViewById(R.id.tv_feeling));
+                    tipViews.add(getViewById(R.id.tv_tag));
+                    tipViews.add(getViewById(R.id.tv_privacy));
+                    tipViews.add(getViewById(R.id.tv_location));
+                    tipViews.add(getParentActivity().rightButton);
+
+//                    popFeeling();
+                    cutPopInteractive(tipTexts,tipViews,0);
+                    break;
             }
         }
     };
 
+    private void cutPopInteractive(final ArrayList<String> strings, final ArrayList<View> views,int j){
 
+//        for (int i = j ; i < strings.size();i++){
+            if(j < strings.size() - 1 ){
+                popupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j),1);
+                final int finalJ = j + 1;
+                popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                    @Override
+                    public void popDismiss() {
+                        LogUtil.i("==============event_save", "onDismiss");
+                        //存储本地
+                        cutPopInteractive(strings,views, finalJ);
+                    }
+                });
+                popupWindow.showPopupWindowUp();
+            }else {
+                popupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j),strings.get(j),0);
+                popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                    @Override
+                    public void popDismiss() {
+                        LogUtil.i("==============event_save", "onDismiss");
+                        PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST,true);
+                        //存储本地
+                    }
+                });
+                popupWindow.showPopupWindow(true);
+            }
+//        }
+    }
     /**
      * 更新日志成功结果处理
      */
@@ -658,6 +711,22 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onResume() {
         super.onResume();
+        if(MainActivity.IS_INTERACTIVE_USE &&
+                !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST,false)){
+            mHandler.sendEmptyMessageDelayed(GET_DELAY, 500);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(App.isInteractiveTipFinish()){
+            LogUtil.i("diary_new====","true");
+            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_START, false);
+        }else {
+            LogUtil.i("diary_new====", "false");
+        }
+
     }
 
     /**

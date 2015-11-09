@@ -44,6 +44,8 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
@@ -92,6 +94,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     //    private ProgressDialog mProgressDialog;
     private static final int GET_DATA = 0x11;
     private static final int GET_OP = 0x19;
+    private static final int GET_DELAY_RIGHT = 0x28;
+    private static final int GET_DELAY_ADD_PHOTO = 0x30;
     private MyFamilyAdapter memberAdapter;
     private FamilyGroupAdapter groupAdapter;
     public static String FAMILY_TREE = "family_treely_tree\";\n" +
@@ -116,6 +120,9 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
     private String GroupSearch;
     private boolean isup;
     private boolean isopen;
+    private boolean firstOpPop;
+    public InteractivePopupWindow popupWindow,popupWindowAddPhoto;
+    private String popTestSt;
 
     List<FamilyMemberEntity> opendate = new LinkedList<>();
 
@@ -222,6 +229,31 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                     groupEntityList = opmap.get("group");
                     groupAdapter.addData(groupEntityList);
                     break;
+                case GET_DELAY_ADD_PHOTO:
+                    if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+                        popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
+                        popupWindowAddPhoto.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                            @Override
+                            public void popDismiss() {
+                                PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,true);
+                            }
+                        });
+                        popupWindowAddPhoto.showPopupWindowUp();
+                    }
+                    break;
+                case GET_DELAY_RIGHT:
+                     popupWindow = new InteractivePopupWindow(getParentActivity(),getParentActivity().rightButton,popTestSt,0);
+                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                         @Override
+                         public void popDismiss() {
+                             LogUtil.i("==============1","onDismiss");
+                             PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_MEMBER, true);
+                             newPopAddPhoto();
+                         }
+                     });
+                    popupWindow.showPopupWindow(true);
+                    break;
+
             }
 
         }
@@ -255,9 +287,12 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         getParentActivity().setFamilyCommandListener(new BaseFragmentActivity.CommandListener() {
             @Override
             public boolean execute(View v) {
-                if(showSelectDialog != null && showSelectDialog.isShowing()){
+
+                if (showSelectDialog != null && showSelectDialog.isShowing()) {
                     return false;
-                }else {
+                } else {
+//                    popupWindow.dismissPopupWindow();
+
                     showSelectDialog();
                     return false;
                 }
@@ -291,9 +326,23 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
             }
         });
+
+        popTestSt  = mContext.getResources().getString(R.string.text_tip_add_member);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
+    private void newPopAddPhoto(){
+        InteractivePopupWindow popupWindowAddPhoto = new InteractivePopupWindow(getParentActivity(),getParentActivity().bottom,getParentActivity().getResources().getString(R.string.text_tip_add_photo),1) ;
+        popupWindowAddPhoto.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+            @Override
+            public void popDismiss() {
+                PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,true);
+
+            }
+        });
+        popupWindowAddPhoto.showPopupWindowUp();
+
+    }
     //搜索
     private void setSearchData(String searchData) {
         String etImport = PinYin4JUtil.getPinyinWithMark(searchData);
@@ -466,10 +515,46 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
         });
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+       if(isVisibleToUser){
+           if(MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,false)){
+               //相当于Fragment的onResume
+               if(MainActivity.IS_INTERACTIVE_USE && InteractivePopupWindow.firstOpPop){
+                   popupWindow = new InteractivePopupWindow(getParentActivity(),getParentActivity().rightButton,popTestSt,0);
+                   popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                       @Override
+                       public void popDismiss() {
+                           LogUtil.i("==============2", "onDismiss");
+                           PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_MEMBER, true);
+                           newPopAddPhoto();
+                       }
+                   });
+                   popupWindow.showPopupWindow(true);
+
+               } else {
+                   handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,500);
+                   InteractivePopupWindow.firstOpPop = true;
+               }
+
+//           newPopAddPhoto();
+           }
+
+       }
+//       else {
+//           //相当于Fragment的onPause
+//           if(popupWindow != null){
+//               popupWindow.dismissPopupWindow();
+//           }
+//       }
+    }
+
     private void showMemberEmptyView() {
         if (memberRefreshLayout.getVisibility() == View.VISIBLE) {
             memberRefreshLayout.setVisibility(View.GONE);
         }
+
         emptyMemberLinear.setVisibility(View.VISIBLE);
         emptyMemberIv.setVisibility(View.VISIBLE);
         emptyMemberTv.setVisibility(View.VISIBLE);
@@ -551,7 +636,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                             return;
                         }
                         showNoFriendDialog(familyMemberEntity);
-                        LogUtil.i("familyMemberEntity",familyMemberEntity.getUser_id());
+                        LogUtil.i("familyMemberEntity", familyMemberEntity.getUser_id());
 
                         return;
                     } else {
@@ -571,9 +656,8 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //                        intent.putExtra("fam_nickname",familyMemberEntity.getFam_nickname());
 //                        intent.putExtra("member_status",familyMemberEntity.getUser_status());
                         intent.putExtra("getDofeel_code", familyMemberEntity.getDofeel_code());
-
 //                        startActivity(intent);
-                        startActivityForResult(intent, 1);
+//                        startActivityForResult(intent, 1);
                     }
                 }
             }
@@ -875,11 +959,14 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                 new HttpTools(getActivity()).get(String.format(Constant.API_GET_EVERYONE, MainActivity.getUser().getUser_id()), null, Tag, new HttpCallback() {
                     @Override
                     public void onStart() {
+
                     }
 
                     @Override
                     public void onFinish() {
+
                         vProgress.setVisibility(View.GONE);
+
                     }
 
                     @Override
@@ -959,6 +1046,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 
     @Override
     public void requestData() {
+
 //        if (!NetworkUtil.isNetworkConnected(getActivity())) {
 //            Toast.makeText(getActivity(), getResources().getString(R.string.text_no_network), Toast.LENGTH_SHORT).show();
 //            finishReFresh();

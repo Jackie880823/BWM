@@ -2,6 +2,8 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MembersGridAdapter;
@@ -32,6 +35,7 @@ import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.widget.DatePicker;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.TimePicker;
 import com.google.gson.Gson;
@@ -86,6 +90,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     public List<EventEntity> prepareData = new ArrayList<EventEntity>();
     private final static String USER_HEAD = "user_head";
     private final static String USER_NAME = "user_name";
+    private static final int GET_DELAY = 0x28;
+    private InteractivePopupWindow popupWindow;
 
     private View progressBar;
     Calendar mCalendar;
@@ -110,6 +116,26 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         // Required empty public constructor
     }
 
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case GET_DELAY:
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_save_event),0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            LogUtil.i("==============event_save", "onDismiss");
+                            //存储本地
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,true);
+                        }
+                    });
+                    popupWindow.showPopupWindow(true);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void setLayoutId() {
@@ -190,6 +216,49 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         });
         bindData2View();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(MainActivity.IS_INTERACTIVE_USE &&
+                !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,false)){
+            handler.sendEmptyMessageDelayed(GET_DELAY, 500);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(App.isInteractiveTipFinish()){
+            LogUtil.i("event_new====","true");
+            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_START, false);
+        }else {
+            LogUtil.i("event_new====","false");
+        }
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (MainActivity.IS_INTERACTIVE_USE && isVisibleToUser) {
+            if(InteractivePopupWindow.firstOpPop){
+                popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_save_event),0);
+                popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                    @Override
+                    public void popDismiss() {
+                        LogUtil.i("==============event_save", "onDismiss");
+                        //存储本地
+                        PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,true);
+                    }
+                });
+                popupWindow.showPopupWindow(true);
+            }else {
+                handler.sendEmptyMessageDelayed(GET_DELAY,1000);
+                InteractivePopupWindow.firstOpPop = true;
+            }
+        }
     }
 
     /**

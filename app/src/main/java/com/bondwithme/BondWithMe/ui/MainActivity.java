@@ -35,12 +35,15 @@ import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.material.widget.SnackBar;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 主页Activity,包含了头部和底部，无需定义中间内容(ViewPaper)
@@ -106,6 +109,10 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     public static String STICKERS_NAME = "stickers";
     public static String IS_FIRST_LOGIN = "isFirstLogin";
     public static String STICKER_VERSION = "2";
+    public static  Boolean IS_INTERACTIVE_USE;
+
+    public static Map<String,InteractivePopupWindow> interactivePopupWindowMap;
+    private static final int GET_DELAY = 0x28;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -326,6 +333,18 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                         setRedPoint((TabEnum) msg.obj, false);
                     }
                     break;
+                case GET_DELAY:
+                    if(!interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+                        InteractivePopupWindow popupWindow = new InteractivePopupWindow(MainActivity.this,bottom,getResources().getString(R.string.text_tip_add_photo),1) ;
+                        popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                            @Override
+                            public void popDismiss() {
+
+                            }
+                        });
+                        interactivePopupWindowMap.put(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO,popupWindow);
+                    }
+                    break;
             }
 
             return false;
@@ -350,6 +369,17 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         }
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        if(MainActivity.IS_INTERACTIVE_USE){
+//            handler.sendEmptyMessageDelayed(GET_DELAY, 500);
+        }
+//            firstOpPop = true;
+//        }
+
+
+    }
 
     public interface TitleEventListenner {
         public void toggleLeftEvent();
@@ -377,9 +407,11 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
     @Override
     public void initView() {
         MyAppsFlyer.doLoginTrack();
+        interactivePopupWindowMap = new HashMap<String,InteractivePopupWindow>();
         STICKERS_NAME = new LocalStickerInfoDao(this).getSavePath();
         IS_FIRST_LOGIN = IS_FIRST_LOGIN + STICKER_VERSION + App.getLoginedUser().getUser_id();
         boolean isFirstLogin = PreferencesUtil.getValue(this, IS_FIRST_LOGIN, true);
+        IS_INTERACTIVE_USE = PreferencesUtil.getValue(this, InteractivePopupWindow.INTERACTIVE_TIP_START,true);
         if (isFirstLogin) {
             new Thread() {
                 @Override
