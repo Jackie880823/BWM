@@ -38,6 +38,8 @@
         <TextView
             android:id="@+id/tv_description"
             style="@style/text_dark_default"
+            android:autoLink="web"
+            android:linksClickable="true"
             />
 
     </LinearLayout>

@@ -32,7 +32,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.VHIt
 
     public void add(List<GroupListEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 

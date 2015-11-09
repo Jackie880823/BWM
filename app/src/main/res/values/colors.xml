@@ -86,4 +86,8 @@
 
     <!-- Recorder Video-->
     <color name="btn_gray_normal">#c0c0c0</color>
+
+    <color name="interactive_Pop">#282a2e</color>
+
+    <color name="comment_agree_gray_background">#f5f6f8</color>
 </resources>

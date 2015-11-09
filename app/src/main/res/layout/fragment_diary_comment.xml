@@ -1,12 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <RelativeLayout
         android:id="@+id/rl_agree"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/translucence_color"
+        android:background="@color/comment_agree_gray_background"
         android:gravity="left|center_vertical"
         android:padding="@dimen/default_content_padding">
 
@@ -31,28 +32,21 @@
             android:src="@drawable/icon_arrow_right" />
     </RelativeLayout>
 
-    <LinearLayout
+    <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/send_comment"
         android:layout_below="@+id/rl_agree"
-        android:orientation="vertical"
         android:paddingLeft="@dimen/default_content_padding"
         android:paddingRight="@dimen/default_content_padding">
 
-
-        <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_wall_comment_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_wall_comment_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
-        </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+    </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
 
     <com.bondwithme.BondWithMe.widget.SendComment
         android:id="@+id/send_comment"

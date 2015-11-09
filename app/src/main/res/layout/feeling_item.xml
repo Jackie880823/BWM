@@ -28,9 +28,9 @@
 
         <ImageView
             android:id="@+id/checked_icon"
-            android:layout_width="@dimen/default_button_width_height"
-            android:layout_height="@dimen/default_button_width_height"
-            android:src="@drawable/ok_press"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_done"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             />

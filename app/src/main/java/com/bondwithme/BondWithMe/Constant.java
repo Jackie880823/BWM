@@ -65,6 +65,7 @@ public class Constant {
      * 请求获取多张图片的意图请求
      */
     public static final int INTENT_REQUEST_HEAD_MULTI_PHOTO = 20;
+    public static final int INTENT_REQUEST_FEELING = 21;
 
     public static final int ACTION_EVENT_CREATE = 20;
     public static final int ACTION_EVENT_UPDATE = 21;
@@ -74,6 +75,14 @@ public class Constant {
     public static final String ACTION_SHOW_NOTIFY_USER = "ACTION_SHOW_NOTIFY_USER";
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
+
+
+    /**
+     * 与心情相关
+     */
+    public final static String PATH_PREFIX = "feeling";
+    public final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
+    public static final String EXTRA_CHECK_ITEM_INDEX = "check_item_index";
 
     /**
      * 临时文件用户裁剪

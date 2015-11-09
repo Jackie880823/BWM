@@ -34,7 +34,7 @@ public class PrivateListAdapter extends RecyclerView.Adapter<PrivateListAdapter.
 
     public void add(List<PrivateListEntity> newData){
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
     @Override
     public void onBindViewHolder(PrivateListAdapter.VHItem holder, int position) {

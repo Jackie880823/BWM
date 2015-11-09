@@ -543,6 +543,22 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 VolleyUtil.initNetworkImageView(context, imWallsImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, wallEntity.getUser_id(), wallEntity.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             }
         }
+
+        if (isDetailed) {
+            // 在详情界面不需要在Holder显更多功能按钮视图
+            btnOption.setVisibility(View.GONE);
+            if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {
+                llWallsImage.setVisibility(View.GONE);
+            }
+        } else if ((!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())))) {
+            // 不是当前用户：没有图片或者有视频都不需要显更多功能按钮
+            btnOption.setVisibility(View.GONE);
+        } else {
+            if (!isDetailed) {
+                btnOption.setVisibility(View.VISIBLE);
+            }
+        }
+
          /*is owner wall*/
         //        if (!TextUtils.isEmpty(wall.getUser_id())&&wall.getUser_id().equals("49")) {
         //            ibDelete.setVisibility(View.VISIBLE);
@@ -585,18 +601,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         } else {
             llComment.setVisibility(View.VISIBLE);
             tvCommentCount.setText(this.wallEntity.getComment_count());
-        }
-
-        if (isDetailed) {
-            // 在详情界面不需要在Holder显更多功能按钮视图
-            btnOption.setVisibility(View.GONE);
-        } else if ((!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())))) {
-            // 不是当前用户：没有图片或者有视频都不显示功能没有图片则不需要显更多功能按钮
-            btnOption.setVisibility(View.GONE);
-        } else {
-            if (!isDetailed) {
-                btnOption.setVisibility(View.VISIBLE);
-            }
         }
 
         if (TextUtils.isEmpty(this.wallEntity.getLove_id())) {
@@ -877,9 +881,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             int max;
             String maxPhoto = wallEntity.getPhoto_max();
             if (TextUtils.isEmpty(maxPhoto)) {
-                max = localPhotos.size();
+                max = localPhotos.size() - 1;
             } else {
-                max = Integer.valueOf(maxPhoto) + localPhotos.size();
+                max = Integer.valueOf(maxPhoto) + localPhotos.size() - 1;
             }
             Map<String, String> params = new HashMap<>();
             params.put(Constant.PARAM_PHOTO_MAX, String.valueOf(max));
@@ -974,7 +978,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         Map<String, Object> params = new HashMap<>();
         params.put("content_creator_id", accountUserId);
         params.put("content_id", contentId);
-        params.put("photo_index", "" + index);
+        int photoMax;
+        String photoMaxStr = wallEntity.getPhoto_max();
+        if (TextUtils.isEmpty(photoMaxStr)) {
+            photoMax = 1;
+        } else {
+            photoMax = Integer.valueOf(photoMaxStr) + 1;
+        }
+        params.put("photo_index", String.valueOf(index + photoMax));
         params.put("photo_caption", "");
         params.put("file", f);
         params.put("multiple", multiple ? "1" : "0");
@@ -1103,6 +1114,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         e.printStackTrace();
                     }
                     /**wing modified*/
+
+                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                 }
 
                 @Override

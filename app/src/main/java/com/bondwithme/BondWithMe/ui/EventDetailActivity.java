@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -10,12 +9,12 @@ import android.view.View;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 
@@ -204,14 +203,16 @@ public class EventDetailActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
-        if(requestCode == 1 ){
-            if(resultCode == 1){
-                setResult(1);
-                setResult(Activity.RESULT_OK);
-                finish();
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+//        Fragment fragment = getFragment();
+//        fragment.onActivityResult(requestCode,resultCode,data);
+//        if(requestCode == 1 ){
+//            if(resultCode == 1){
+//                setResult(1);
+//                setResult(Activity.RESULT_OK);
+//                finish();
+//            }
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public TitleLeftClick titleLeftClick;

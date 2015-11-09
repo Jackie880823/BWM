@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +30,9 @@ import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
@@ -89,6 +93,30 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     private boolean loading;
     LinearLayoutManager llm;
     private String member_id;//根据member查看的wall
+    public InteractivePopupWindow popupWindow,popupWindowAddPhoto;
+    private static final int GET_DELAY = 0x28;
+
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case GET_DELAY:
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_add_diary),0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            //存储本地
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, true);
+
+                        }
+                    });
+                    popupWindow.showPopupWindow(true);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void initView() {
@@ -235,6 +263,31 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
             }
         });
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            if(MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY,false)){
+                if(InteractivePopupWindow.firstOpPop){
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_add_diary),0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY,true);
+                            //存储本地
+                        }
+                    });
+                    popupWindow.showPopupWindow(true);
+                }else {
+                    handler.sendEmptyMessageDelayed(GET_DELAY,1000);
+                    InteractivePopupWindow.firstOpPop = true;
+                }
+            }
+
+        }
 
     }
 
@@ -394,13 +447,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
     @Override
     public void savePhotoed(WallEntity wallEntity, boolean succeed) {
-        if (succeed) {
-            refresh();
-        } else {
-            if (vProgress != null) {
-                vProgress.setVisibility(View.GONE);
-            }
-            LogUtil.e(TAG, "save photo Fail");
+        if (vProgress != null) {
+            vProgress.setVisibility(View.GONE);
         }
     }
 

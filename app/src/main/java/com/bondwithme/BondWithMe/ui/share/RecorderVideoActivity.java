@@ -288,7 +288,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        sendVideo(null);
+                        sendVideo();
 
                     }
                 }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -296,6 +296,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        chronometer.setBase(SystemClock.elapsedRealtime());
                         if(mCamera == null) {
                             initCamera();
                         }
@@ -551,7 +552,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
     MediaScannerConnection msc = null;
     ProgressDialog progressDialog = null;
 
-    public void sendVideo(View view) {
+    public void sendVideo() {
         if(TextUtils.isEmpty(localPath)) {
             LogUtil.e(TAG, "recorder fail please try again!");
             return;
@@ -616,7 +617,6 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
             chronometer.stop();
             btnStart.setVisibility(View.VISIBLE);
             btnStop.setVisibility(View.INVISIBLE);
-            chronometer.stop();
             if(TextUtils.isEmpty(localPath)) {
                 return;
             }
@@ -626,7 +626,7 @@ public class RecorderVideoActivity extends Activity implements OnClickListener, 
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
                     arg0.dismiss();
-                    sendVideo(null);
+                    sendVideo();
 
                 }
             }).setNegativeButton(R.string.cancel, null).setCancelable(false).show();

@@ -1,19 +1,23 @@
 package com.bondwithme.BondWithMe.ui.more.sticker;
 
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
@@ -70,7 +74,8 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     private static final int GET_STICKER_LIST = 12;
     private static final int NOTIFY_AD = 13;
     private StickerGroupAdapter adapter;
-
+    private Context mContext;
+    private static final int SHOW_NEW_STICKER = 14;
 
     @Override
     public int getLayout() {
@@ -110,6 +115,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
     @Override
     public void initView() {
         /**wing modified for 性能 begin*/
+        mContext = this;
         stickerProgressDialog = getViewById(R.id.sticker_progress);
         stickerProgressDialog.setVisibility(View.VISIBLE);
 //        adProgressDialog = getViewById(R.id.ad_progress);
@@ -117,9 +123,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
 
         recyclerViewList = getViewById(R.id.recyclerview_sticker);
 
-        final View sticker_new_update = getViewById(R.id.sticker_new_update);
-        TextView sticker_store_update = getViewById(R.id.sticker_store_update);
-        TextView sticker_store_close = getViewById(R.id.sticker_store_close);
+
 //        llm = new FullyLinearLayoutManager(this);
         llm = new LinearLayoutManager(this);
         recyclerViewList.setLayoutManager(llm);
@@ -132,39 +136,9 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         String filePath = FileUtil.getSaveRootPath(this, false).getAbsolutePath() + File.separator + "Sticker";
         File file = new File(filePath);
         if (file.exists()) {
-            sticker_new_update.setVisibility(View.VISIBLE);
-        } else {
-            sticker_new_update.setVisibility(View.GONE);
+            handler.sendEmptyMessage(SHOW_NEW_STICKER);
         }
-        sticker_store_update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<LocalStickerInfo> list = LocalStickerInfoDao.getInstance(StickerStoreActivity.this).queryAllLocalStickerInfo();
-                if (list == null || list.size() == 0) {
-                    return;
-                }
-                String filePath = FileUtil.getSaveRootPath(StickerStoreActivity.this, false).getAbsolutePath() + File.separator + "Sticker";
-                File file = new File(filePath);
-                deleteFile(file);
-                StickerGroupEntity groupEntity;
-                for (LocalStickerInfo info : list) {
-                    groupEntity = new StickerGroupEntity();
-                    groupEntity.setType(info.getType());
-                    groupEntity.setName(info.getName());
-                    groupEntity.setVersion(info.getVersion());
-                    groupEntity.setFirst_sticker_code(info.getSticker_name());
-                    groupEntity.setPath(info.getPath());
-                    updateSticker(groupEntity);
-                }
-                sticker_new_update.setVisibility(View.GONE);
-            }
-        });
-        sticker_store_close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
         //注册广播接收器，更新progressbar、Download按钮状态
         IntentFilter filter = new IntentFilter();
         filter.addAction(StickerDetailActivity.ACTION_UPDATE);
@@ -411,6 +385,54 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
                         adapter.notifyDataSetChanged();
                     }
                     break;
+                case SHOW_NEW_STICKER:
+                    View selectIntention = LayoutInflater.from(mContext).inflate(R.layout.dialog_shield_sticker, null);
+                    final Dialog showSelectDialog = new Dialog(mContext, R.style.sticker_dialog);
+                    showSelectDialog.setContentView(selectIntention);
+                    showSelectDialog.setCanceledOnTouchOutside(true);
+                    TextView sticker_store_update = (TextView) selectIntention.findViewById(R.id.sticker_store_update);
+                    TextView sticker_store_close = (TextView) selectIntention.findViewById(R.id.sticker_store_close);
+                    sticker_store_update.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showSelectDialog.dismiss();
+                            List<LocalStickerInfo> list = LocalStickerInfoDao.getInstance(StickerStoreActivity.this).queryAllLocalStickerInfo();
+                            String filePath = FileUtil.getSaveRootPath(StickerStoreActivity.this, false).getAbsolutePath() + File.separator + "Sticker";
+                            File file = new File(filePath);
+                            deleteFile(file);
+                            if (list == null || list.size() == 0) {
+                                return;
+                            }
+                            StickerGroupEntity groupEntity;
+                            for (LocalStickerInfo info : list) {
+                                groupEntity = new StickerGroupEntity();
+                                groupEntity.setType(info.getType());
+                                groupEntity.setName(info.getName());
+                                groupEntity.setVersion(info.getVersion());
+                                groupEntity.setFirst_sticker_code(info.getSticker_name());
+                                groupEntity.setPath(info.getPath());
+                                updateSticker(groupEntity);
+                            }
+                        }
+                    });
+                    sticker_store_close.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showSelectDialog.dismiss();
+                            finish();
+                        }
+                    });
+                    showSelectDialog.setCancelable(false);
+                    showSelectDialog.show();
+                    Window win = showSelectDialog.getWindow();
+                    win.getDecorView().setPadding(0, 0, 0, 0);
+                    WindowManager.LayoutParams lp = win.getAttributes();
+                    Rect outRect = new Rect();
+                    getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
+                    lp.width = outRect.width();
+                    lp.height = outRect.height();
+                    win.setAttributes(lp);
+                    break;
             }
             return false;
         }
@@ -523,7 +545,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         if (data != null) {
             count = dataStickerBanner.size();
         }
-        final int finalCount = count-1;
+        final int finalCount = count - 1;
         for (int i = 0; i < count; i++) {
             String url = String.format(Constant.API_STICKER_BANNER_PIC, dataStickerBanner.get(i).getBanner_photo());
             final String target = FileUtil.getBannerFilePath(this) + "/" + String.format("%s", "" + dataStickerBanner.get(i).getBanner_photo());

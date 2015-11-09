@@ -21,12 +21,13 @@ import com.bondwithme.BondWithMe.ui.AlertWallActivity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.EventDetailActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.MemberActivity;
 import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 import com.bondwithme.BondWithMe.ui.MissListActivity;
 import com.bondwithme.BondWithMe.ui.NewsActivity;
 import com.bondwithme.BondWithMe.ui.RecommendActivity;
 import com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity;
-import com.bondwithme.BondWithMe.ui.wall.WallCommentActivity;
+import com.bondwithme.BondWithMe.ui.wall.DiaryInformationActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -282,10 +283,10 @@ public class NotificationUtil {
                 smallIcon = R.drawable.bondalert_member_icon;
                 msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_MEMBER);
                 if (msgs.size() == 0) {
-                    intent = new Intent(context, AlertEventActivity.class);
+                    intent = new Intent(context, MemberActivity.class);
                 } else {
                     //TODO
-                    intent = new Intent(context, AlertEventActivity.class);
+                    intent = new Intent(context, MemberActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_MEMBER);
                 newMsg = NotificationMessageGenerateUtil.getMemberMessage(context, action, action_owner, item_name);
@@ -399,7 +400,7 @@ public class NotificationUtil {
 //    private static List<String> currentMsgs = new ArrayList<>();
 
     private static Intent goWallDetailIntent(Context mContext, String content_group_id, String group_id) {
-        Intent intent = new Intent(mContext, WallCommentActivity.class);
+        Intent intent = new Intent(mContext, DiaryInformationActivity.class);
         intent.putExtra("content_group_id", content_group_id);
         intent.putExtra("group_id", group_id);
         return intent;

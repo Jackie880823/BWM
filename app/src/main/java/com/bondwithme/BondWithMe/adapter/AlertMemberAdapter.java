@@ -32,7 +32,7 @@ public class AlertMemberAdapter extends RecyclerView.Adapter<AlertMemberAdapter.
 
     public void add(List<RecommendEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 

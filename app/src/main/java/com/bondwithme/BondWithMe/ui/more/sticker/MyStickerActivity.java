@@ -63,9 +63,10 @@ public class MyStickerActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        Intent intent = new Intent(this,StickerSortActivity.class);
+        Intent intent = new Intent(this, StickerSortActivity.class);
         startActivity(intent);
     }
+
     @Override
     public void initView() {
 //        TextView textView = getViewById(R.id.tv_download_stickers);
@@ -94,7 +95,7 @@ public class MyStickerActivity extends BaseActivity {
             rvList.post(new Runnable() {
                 @Override
                 public void run() {
-                    ((ScrollView)MyStickerActivity.this.getViewById(R.id.sc_my_sticker)).scrollTo(0, 0);
+                    ((ScrollView) MyStickerActivity.this.getViewById(R.id.sc_my_sticker)).scrollTo(0, 0);
                 }
             });
 
