@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -63,7 +64,7 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class EventDetailFragment extends BaseFragment<EventDetailActivity> implements View.OnClickListener {
-    private static final String Tag = EventDetailFragment.class.getSimpleName();
+    private static final String TAG = EventDetailFragment.class.getSimpleName();
     //    private final static String TAG = EventDetailFragment.class.getSimpleName();
 
 
@@ -327,7 +328,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         //打开编辑页面
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
-                        getActivity().startActivityForResult(intent, 1);
+                        getActivity().startActivityForResult(intent, 3);
                         //                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
                     } else if(v.getId() == getParentActivity().leftButton.getId()) {
                         if(isCommentBim) {
@@ -503,7 +504,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("sticker_name", stickerEntity.getSticker_name());
             params.put("sticker_type", stickerEntity.getSticker_type());
 
-            mHttpTools.post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
+            mHttpTools.post(Constant.API_EVENT_POST_COMMENT, params, TAG, new HttpCallback() {
                 @Override
                 public void onStart() {
                     if(defaultComment != null && defaultComment.getVisibility() == View.VISIBLE){
@@ -608,7 +609,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     params.put("sticker_type", "");
                 }
 
-                mHttpTools.post(Constant.API_EVENT_POST_COMMENT, params, Tag, new HttpCallback() {
+                mHttpTools.post(Constant.API_EVENT_POST_COMMENT, params, TAG, new HttpCallback() {
                     @Override
                     public void onStart() {
                         if(defaultComment != null && defaultComment.getVisibility() == View.VISIBLE){
@@ -705,7 +706,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             params.put("photo_fullsize", "1");
 
 
-            mHttpTools.upload(Constant.API_COMMENT_POST_TEXT, params, Tag, new HttpCallback() {
+            mHttpTools.upload(Constant.API_COMMENT_POST_TEXT, params, TAG, new HttpCallback() {
                 @Override
                 public void onStart() {
 
@@ -765,7 +766,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("condition", jsonParamsString);
         String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-        mHttpTools.get(url, params, Tag, new HttpCallback() {
+        mHttpTools.get(url, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
                 if (vProgress.getVisibility() == View.GONE) {
@@ -868,7 +869,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             String url = UrlUtil.generateUrl(Constant.API_EVENT_COMMENT, params);
 
-            mHttpTools.get(url, null, Tag, new HttpCallback() {
+            mHttpTools.get(url, null, TAG, new HttpCallback() {
                 @Override
                 public void onStart() {
 //                    if(adapter != null && adapter.getItemCount() == 1){
@@ -963,7 +964,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
         RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_EVENT_CANCEL, event.getGroup_id()), null);
 
-        mHttpTools.put(requestInfo, Tag, new HttpCallback() {
+        mHttpTools.put(requestInfo, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1017,7 +1018,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.url = String.format(Constant.API_EVENT_INTENT, event.getGroup_id());
         requestInfo.jsonParam = jsonParamsString;
-        mHttpTools.put(requestInfo, Tag, new HttpCallback() {
+        mHttpTools.put(requestInfo, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1157,7 +1158,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             @Override
             public void onClick(View v) {
                 RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_COMMENT_DELETE, commentId), null);
-                mHttpTools.delete(requestInfo, Tag, new HttpCallback() {
+                mHttpTools.delete(requestInfo, TAG, new HttpCallback() {
                     @Override
                     public void onStart() {
                     }
@@ -1228,7 +1229,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
         params.put("user_id", "" + MainActivity.getUser().getUser_id());
         RequestInfo requestInfo = new RequestInfo(Constant.API_EVENT_COMMENT_LOVE, params);
-        mHttpTools.post(requestInfo, Tag, new HttpCallback() {
+        mHttpTools.post(requestInfo, TAG, new HttpCallback() {
             @Override
             public void onStart() {
 
@@ -1263,8 +1264,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //        Log.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
+//        getParentActivity()
+        Log.i("EventDetailFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         sendCommentView.onActivityResult(requestCode, resultCode, data);
+
     }
 
 
