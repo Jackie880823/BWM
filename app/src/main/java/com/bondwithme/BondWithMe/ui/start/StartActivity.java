@@ -22,8 +22,9 @@ import com.bondwithme.BondWithMe.util.PreferencesUtil;
 
 public class StartActivity extends FragmentActivity implements View.OnClickListener {
 
-    private static final String SHOW_SIGN_UP = "sign up";
-    private static final String SHOW_LOG_IN = "log in";
+    public static final String SHOW_SIGN_UP = "sign up";
+    public static final String SHOW_LOG_IN = "log in";
+    public static final String TYPE = "type";
     private SignUpPhoneFragment signUpPhoneFragment = new SignUpPhoneFragment();
     private LogInPhoneFragment logInPhoneFragment = new LogInPhoneFragment();
 
@@ -132,7 +133,7 @@ public class StartActivity extends FragmentActivity implements View.OnClickListe
 
 
     public void checkForShow() {
-        if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN, null))) {
+        if (TextUtils.isEmpty(PreferencesUtil.getValue(this, Constant.HAS_LOGED_IN, null)) || getIntent().getStringExtra(TYPE).equals(SHOW_SIGN_UP)) {
             showSignUp();
             MyAppsFlyer.appsFlyerGuest();
             MyPiwik.piwikGuest();
