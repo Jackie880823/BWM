@@ -660,4 +660,11 @@
         <item>263,ZW</item>
     </string-array>
 
+    <array name="indicator_colors">
+        <item>@color/indicator_1</item>
+        <item>@color/indicator_2</item>
+        <item>@color/indicator_3</item>
+        <item>@color/indicator_4</item>
+        <item>@color/indicator_5</item>
+    </array>
 </resources>

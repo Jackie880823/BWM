@@ -149,6 +149,9 @@
             </intent-filter>
         </service>
 
+        <activity android:name=".ui.introduction.IntroductionActivity"
+            android:configChanges="keyboardHidden"/>
+
         <activity
             android:name=".ui.start.TransitionActivity"
             android:configChanges="orientation|screenSize"
