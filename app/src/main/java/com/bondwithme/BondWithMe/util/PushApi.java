@@ -32,7 +32,6 @@ public class PushApi {
         mContext = context;
 
         if (isGoogleAvailable) {
-            LogUtil.e("","sssssssssssssss=======1");
 //        if (SystemUtil.checkPlayServices(context)) {
             /**GCM推送*/
             regid = AppInfoUtil.getGCMRegistrationId(mContext);
@@ -42,7 +41,6 @@ public class PushApi {
                 sendRegistrationIdToBackend(regid, "gcm");
             }
         }else {
-            LogUtil.e("","sssssssssssssss=======2");
             //jpush一直启用，防止中国带google service 但是不能用的情况
             JPushInterface.init(mContext);
             regid = AppInfoUtil.getJpushRegistrationId(mContext);

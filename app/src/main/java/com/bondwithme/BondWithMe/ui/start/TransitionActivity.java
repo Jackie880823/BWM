@@ -14,6 +14,7 @@ import com.bondwithme.BondWithMe.Tranck.MyAppsFlyer;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.introduction.IntroductionActivity;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
@@ -26,7 +27,7 @@ public class TransitionActivity extends Activity {
     private final static int HANDLER_CHECK_LOGIN = 1;
 
     private final static int HANDLER_SEND_MESSAGE_DELAYED_TIME = 3000;
-    private  boolean initDone;
+    private boolean initDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +49,12 @@ public class TransitionActivity extends Activity {
                     @Override
                     public void run() {
                         //start activity
-                        if (isLogin()) {
-                            startActivity(new Intent(TransitionActivity.this, MainActivity.class));
-                        } else {
-                            startActivity(new Intent(TransitionActivity.this, StartActivity.class));
-                        }
+//                        if (isLogin()) {
+//                            startActivity(new Intent(TransitionActivity.this, MainActivity.class));
+//                        } else {
+//                            startActivity(new Intent(TransitionActivity.this, StartActivity.class));
+//                        }
+                        startActivity(new Intent(TransitionActivity.this, IntroductionActivity.class));
                         finish();
                     }
                 });
@@ -78,17 +80,15 @@ public class TransitionActivity extends Activity {
         }).start();
     }
 
-    Handler handler = new Handler()
-    {
+    Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what)
-            {
+            switch (msg.what) {
                 case HANDLER_CHECK_LOGIN:
-                    if(isLogin()){
-                        startActivity(new Intent(TransitionActivity.this,MainActivity.class));
-                    }else{
+                    if (isLogin()) {
+                        startActivity(new Intent(TransitionActivity.this, MainActivity.class));
+                    } else {
                         startActivity(new Intent(TransitionActivity.this, StartActivity.class));
                     }
                     finish();
@@ -103,8 +103,7 @@ public class TransitionActivity extends Activity {
      *
      * @return
      */
-    public boolean isLogin()
-    {
+    public boolean isLogin() {
         UserEntity userEntity = App.getLoginedUser();
         if (userEntity != null) {
             String tokenString = PreferencesUtil.getValue(this, Constant.HTTP_TOKEN, null);

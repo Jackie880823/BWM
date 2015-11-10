@@ -28,7 +28,7 @@ public class ArchiveDetailAdapter extends RecyclerView.Adapter<ArchiveDetailAdap
 
     public void addData(List<ArchiveChatEntity> newData){
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
     @Override
     public ArchiveDetailAdapter.VHItem onCreateViewHolder(ViewGroup parent, int viewType) {

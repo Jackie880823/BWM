@@ -132,12 +132,12 @@ public class MyViewProfileActivity extends BaseActivity {
         if (isHeaderChageed()) {
             uploadImage();
         }
-//        else if (isProfileChanged()) {
+        else if (isProfileChanged()) {
             updateProfile();
 
-//        } else {
+        } else {
             finish();
-//        }
+        }
     }
 
     @Override
@@ -439,7 +439,6 @@ public class MyViewProfileActivity extends BaseActivity {
         jsonParams.put("user_location_name", etRegion.getText().toString());
 
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-        LogUtil.e("","jsonParamsStringpp========================="+jsonParamsString);
 
         requestInfo.url = String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id());
         requestInfo.jsonParam = jsonParamsString;

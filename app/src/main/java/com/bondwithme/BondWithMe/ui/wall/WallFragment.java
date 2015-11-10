@@ -2,7 +2,10 @@ package com.bondwithme.BondWithMe.ui.wall;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,13 +22,17 @@ import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.WallAdapter;
+import com.bondwithme.BondWithMe.adapter.WallHolder;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
+import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
@@ -50,7 +57,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
     private static final String GET_WALL = TAG + "_GET_WALL";
     private static final String PUT_REMOVE = TAG + "_PUT_REMOVE";
-
+    private WallHolder holder;
 
     public static WallFragment newInstance(String... params) {
         return createInstance(new WallFragment(), params);
@@ -86,6 +93,30 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     private boolean loading;
     LinearLayoutManager llm;
     private String member_id;//根据member查看的wall
+    public InteractivePopupWindow popupWindow,popupWindowAddPhoto;
+    private static final int GET_DELAY = 0x28;
+
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case GET_DELAY:
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_add_diary),0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            //存储本地
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, true);
+
+                        }
+                    });
+                    popupWindow.showPopupWindow(true);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void initView() {
@@ -138,7 +169,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
      * 初始化Wlla列表适配器
      */
     private void initAdapter() {
-        adapter = new WallAdapter(getParentActivity(), data);
+        adapter = new WallAdapter(this, data);
         adapter.setPicClickListener(this);
         rvList.setAdapter(adapter);
     }
@@ -235,6 +266,31 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            if(MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY,false)){
+                if(InteractivePopupWindow.firstOpPop){
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_add_diary),0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY,true);
+                            //存储本地
+                        }
+                    });
+                    popupWindow.showPopupWindow(true);
+                }else {
+                    handler.sendEmptyMessageDelayed(GET_DELAY,1000);
+                    InteractivePopupWindow.firstOpPop = true;
+                }
+            }
+
+        }
+
+    }
+
     private void reInitDataStatus() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
@@ -254,14 +310,10 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     @Override
     public void showComments(WallEntity wallEntity) {
         Intent intent;
-        if (MainActivity.getUser().getUser_id().equals(wallEntity.getUser_id())) {
-            intent = new Intent(getActivity(), NewDiaryActivity.class);
-        } else {
-            intent = new Intent(getActivity(), WallCommentActivity.class);
-        }
+        intent = new Intent(getActivity(), DiaryInformationActivity.class);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
-        startActivityForResult(intent, Constant.ACTION_COMMENT_WALL);
+        startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
     }
 
     /**
@@ -299,11 +351,14 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     /**
      * 删除Wall
      *
-     * @param content_group_id {@link WallEntity#content_group_id}
+     * @param wallEntity {@link WallEntity}
      */
     @Override
-    public void remove(final String content_group_id) {
+    public void remove(WallEntity wallEntity) {
+        showDeleteDialog(wallEntity.getContent_group_id());
+    }
 
+    private void showDeleteDialog(final String content_group_id) {
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
@@ -354,7 +409,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         if (!removeAlertDialog.isShowing()) {
             removeAlertDialog.show();
         }
-
     }
 
     /**
@@ -375,19 +429,64 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     }
 
     @Override
+    public void showPopClick(WallHolder holder) {
+        this.holder = holder;
+    }
+
+    @Override
+    public void addPhotoed(WallEntity wallEntity, boolean succeed) {
+        if (succeed) {
+            refresh();
+        } else {
+            if (vProgress != null) {
+                vProgress.setVisibility(View.GONE);
+            }
+            LogUtil.e(TAG, "addPhoto Fail");
+        }
+    }
+
+    @Override
+    public void savePhotoed(WallEntity wallEntity, boolean succeed) {
+        if (vProgress != null) {
+            vProgress.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onSavePhoto() {
+        if (vProgress != null) {
+            vProgress.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case Constant.ACTION_CREATE_WALL:
+                case Constant.INTENT_REQUEST_CREATE_WALL:
                     //wait a mement for the pic handle on server
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                case Constant.ACTION_COMMENT_WALL:
+                case Constant.INTENT_REQUEST_COMMENT_WALL: // 更新了评论
+                case Constant.INTENT_REQUEST_UPDATE_WALL: // 更新了日志
+                case Constant.INTENT_REQUEST_UPDATE_PHOTOS: // 更新了图片的日志
                     refresh();
+                    break;
+                case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
+                    if (data != null && holder != null) {
+                        ArrayList<Uri> pickUris;
+                        pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
+                        if (pickUris != null && !pickUris.isEmpty()) {
+                            if (vProgress != null) {
+                                vProgress.setVisibility(View.VISIBLE);
+                            }
+                            holder.setLocalPhotos(pickUris);
+                        }
+                    }
                     break;
             }
         }

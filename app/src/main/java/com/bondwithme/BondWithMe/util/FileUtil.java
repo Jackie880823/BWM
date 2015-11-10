@@ -13,11 +13,13 @@ import android.provider.MediaStore;
 import android.text.format.DateUtils;
 
 import com.bondwithme.BondWithMe.App;
-import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class FileUtil {
      * 获取保存文件位置根路径
      *
      * @param context
-     * @param isOutPath 是否保存在app外(沙盒)
+     * @param isOutPath 网络相关的请不要使用true!!!!!,其它可考虑是否保存在app外(沙盒)
      * @return File()
      */
     public static File getSaveRootPath(Context context, boolean isOutPath) {
@@ -53,7 +55,6 @@ public class FileUtil {
             }
             return appPath;
         }
-
     }
 
     public static String getSaveCrashPath(Context context) {
@@ -172,13 +173,14 @@ public class FileUtil {
      * @param context
      */
     public static void clearCache(Context context) {
-        File fileRoot = new File(getCacheFilePath(context));
-        if (fileRoot != null) {
-            File[] cacheFiles = fileRoot.listFiles();
-            for (File file : cacheFiles) {
-                file.delete();
-            }
-        }
+        /**TODO 暂时取消*/
+//        File fileRoot = new File(getCacheFilePath(context));
+//        if (fileRoot != null) {
+//            File[] cacheFiles = fileRoot.listFiles();
+//            for (File file : cacheFiles) {
+//                file.delete();
+//            }
+//        }
     }
 
     /**
@@ -285,6 +287,15 @@ public class FileUtil {
         }
         return MainActivity.STICKERS_NAME + File.separator + stickerPath + File.separator + "B" + File.separator + stickerName + stickerType;
     }
+
+    /**
+     *
+     * @param mContext
+     * @param stickerPath 表情包名
+     * @param stickerName
+     * @param stickerType
+     * @return
+     */
     public static String getSmallStickerPath(Context mContext, String stickerPath, String stickerName, String stickerType) {
         String filePath = FileUtil.getSaveRootPath(mContext, false).getAbsolutePath() + File.separator + "Sticker";
         File file = new File(filePath);
@@ -293,4 +304,18 @@ public class FileUtil {
         }
         return MainActivity.STICKERS_NAME + File.separator + stickerPath + File.separator + "S" + File.separator + stickerName + stickerType;
     }
+
+    public static void copyFileUsingChannel(File source, File dest) throws IOException {
+        FileChannel sourceChannel = null;
+        FileChannel destChannel = null;
+        try {
+            sourceChannel = new FileInputStream(source).getChannel();
+            destChannel = new FileOutputStream(dest).getChannel();
+            destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+        } finally {
+            sourceChannel.close();
+            destChannel.close();
+        }
+    }
+
 }

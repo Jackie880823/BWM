@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -49,6 +50,7 @@ public class StickerDetailActivity extends BaseActivity {
     private StickerItemAdapter adapter;
     private ProgressBar pbProgress;
     private TextView tvDownload;
+    private NetworkImageView insideSticker;
     private int position;
     public static final String ACTION_UPDATE = "ACTION_UPDATE_FROM_STICKER_DETAIL";
     //    int finished;
@@ -97,7 +99,7 @@ public class StickerDetailActivity extends BaseActivity {
 //        finished = intent.getIntExtra("progress",0);
 //        loadingPosition = intent.getIntExtra("positionFromStickerDetail", 0);
 
-        NetworkImageView insideSticker = getViewById(R.id.iv_inside_sticker);
+        insideSticker = getViewById(R.id.iv_inside_sticker);
         TextView insideStickerName = getViewById(R.id.tv_inside_sticker_name);
         TextView desc = getViewById(R.id.tv_description);
         desc.setText(stickerGroupEntity.getDescription());
@@ -112,9 +114,9 @@ public class StickerDetailActivity extends BaseActivity {
 //        VolleyUtil.initNetworkImageView(this, insideSticker,
 //                String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()),
 //                R.drawable.network_image_default, R.drawable.network_image_default);
-        VolleyUtil.initNetworkImageView(this, insideSticker,
-                String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_1" + stickerGroupEntity.getType()),
-                R.drawable.network_image_default, R.drawable.network_image_default);
+
+
+        setFirstBigSticker();
         insideStickerName.setText(stickerGroupEntity.getName());
         if ("0".equals(stickerGroupEntity.getPrice())) {
             price.setText(getResources().getString(R.string.free));
@@ -147,6 +149,19 @@ public class StickerDetailActivity extends BaseActivity {
         registerReceiver(mReceiver, filter);
 
 
+    }
+
+    private void setFirstBigSticker() {
+//        StickerItemEntity stickerItemEntity = data.get(position);
+        String picPath = FileUtil.getBigStickerPath(this, stickerGroupEntity.getPath(), "1", stickerGroupEntity.getType());
+        File file = new File(picPath);
+        if (file.exists()){
+            insideSticker.setImageBitmap(BitmapFactory.decodeFile(picPath));
+        }else {
+            VolleyUtil.initNetworkImageView(this, insideSticker,
+                    String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_1" + stickerGroupEntity.getType(), stickerGroupEntity.getVersion()),
+                    R.drawable.network_image_default, R.drawable.network_image_default);
+        }
     }
 
     private LocalStickerInfoDao dao;

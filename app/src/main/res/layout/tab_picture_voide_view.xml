@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/default_content_padding">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/default_content_padding">
 
     <ImageView
         android:id="@+id/video_view_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:scaleType="centerCrop"/>
+        android:minHeight="@dimen/_100dp"
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/go_to_preview_video_iv"
@@ -18,15 +19,15 @@
         android:layout_alignBaseline="@+id/video_view_iv"
         android:layout_centerInParent="true"
         android:scaleType="centerInside"
-        android:src="@drawable/btn_video"/>
+        android:src="@drawable/btn_video" />
 
     <TextView
         android:id="@+id/duration_tv"
         style="@style/text_default"
         android:layout_alignBottom="@+id/video_view_iv"
         android:layout_alignRight="@+id/video_view_iv"
-        android:padding="@dimen/_4dp"
-        android:background="@color/translucence_color"/>
+        android:background="@color/translucence_color"
+        android:padding="@dimen/_4dp" />
 
 
     <ImageView
@@ -38,6 +39,6 @@
         android:background="@color/translucence_color"
         android:contentDescription="@string/delete"
         android:scaleType="centerInside"
-        android:src="@drawable/x_delete_icon"/>
+        android:src="@drawable/x_delete_icon" />
 
 </RelativeLayout>

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
@@ -34,7 +35,7 @@ import github.chenupt.springindicator.viewpager.ScrollerViewPager;
  * @author Jackie
  * @version 1.0
  */
-public class IntroductionActivity extends FragmentActivity {
+public class IntroductionActivity extends FragmentActivity implements View.OnClickListener{
     private static final String TAG = IntroductionActivity.class.getSimpleName();
 
     /**
@@ -46,7 +47,7 @@ public class IntroductionActivity extends FragmentActivity {
     private static final String SHARED_PREFERENCES_VERSION = "SHARED_PREFERENCES_VERSION";
     private static final String VERSION_CODE = "version_code";
     private static final String FIRST_START = "first_start";
-    private ScrollerViewPager vpIntroductions;
+    private SharedPreferences sharedPreferences;
 
     /**
      * Called when the activity is starting.  This is where most initialization
@@ -76,30 +77,14 @@ public class IntroductionActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_VERSION, Context.MODE_PRIVATE);
+
+        sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_VERSION, Context.MODE_PRIVATE);
         int versionCode = sharedPreferences.getInt(VERSION_CODE, 0);
         LogUtil.d(TAG, "onCreate& preferences saved version code: " + versionCode);
         boolean firstStart = sharedPreferences.getBoolean(FIRST_START, true);
 
         // 上一次启动的保存的版本号比需要显示介绍页的版本小或者是应用首次安装启动
-        if (SHOW_INTRODUCTION_VERSION > versionCode || firstStart) { //
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-
-            // 保存第一次启动标识为false
-            editor.putBoolean(FIRST_START, false);
-
-            try {
-                PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_PROVIDERS);
-                LogUtil.d(TAG, "onCreate& package version Code: " + packageInfo.versionCode);
-                // 保存当前应用版本的版本号
-                editor.putInt(VERSION_CODE, packageInfo.versionCode);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            } finally {
-                // 提交修改
-                editor.apply();
-            }
-
+        if (firstStart) { //
             initView();
         } else {
             // 不需要显示介绍页，调用用跳转函数
@@ -109,18 +94,20 @@ public class IntroductionActivity extends FragmentActivity {
 
     private void initView() {
         setContentView(R.layout.activity_introduction);
-        vpIntroductions = (ScrollerViewPager) findViewById(R.id.introduction_view_paper);
 
         IntroductionPagerManager manager = new IntroductionPagerManager();
         manager.addCommonFragment(IntroductionPagerItemFragment.class, getBgRes(), getTitles());
-        manager.addCommonFragment(IntroductionPagerItemFragment.class, getBgRes());
         IntroductionPagerAdapter adapter = new IntroductionPagerAdapter(getSupportFragmentManager(), manager);
+        ScrollerViewPager vpIntroductions = (ScrollerViewPager) findViewById(R.id.introduction_view_paper);
         vpIntroductions.setAdapter(adapter);
         vpIntroductions.fixScrollSpeed();
 
         // just set viewPager
         SpringIndicator springIndicator = (SpringIndicator) findViewById(R.id.indicator);
         springIndicator.setViewPager(vpIntroductions);
+
+        findViewById(R.id.btn_sign_up).setOnClickListener(this);
+        findViewById(R.id.btn_login).setOnClickListener(this);
     }
 
     private List<String> getTitles() {
@@ -240,5 +227,46 @@ public class IntroductionActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_login:
+                goStartActivity(StartActivity.SHOW_LOG_IN);
+                break;
+            case R.id.btn_sign_up:
+                goStartActivity(StartActivity.SHOW_SIGN_UP);
+                break;
+        }
+    }
+
+    private void goStartActivity(String type){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // 保存第一次启动标识为false
+        editor.putBoolean(FIRST_START, false);
+
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_PROVIDERS);
+            LogUtil.d(TAG, "onCreate& package version Code: " + packageInfo.versionCode);
+            // 保存当前应用版本的版本号
+            editor.putInt(VERSION_CODE, packageInfo.versionCode);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            // 提交修改
+            editor.apply();
+        }
+
+        Intent intent = new Intent(this, StartActivity.class);
+        intent.putExtra(StartActivity.TYPE, type);
+        startActivity(intent);
+        finish();
     }
 }

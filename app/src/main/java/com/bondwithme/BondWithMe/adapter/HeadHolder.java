@@ -1,15 +1,12 @@
-package com.bondwithme.BondWithMe.ui.wall;
+package com.bondwithme.BondWithMe.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bondwithme.BondWithMe.App;
-import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.WallEditView;
@@ -37,13 +34,15 @@ public class HeadHolder extends RecyclerView.ViewHolder {
      */
     public TextView tvLocationDesc;
 
+    public CircularNetworkImage cniHead;
+    public TextView tvUserName;
+
     public HeadHolder(View itemView) {
         super(itemView);
         //头部分
         UserEntity owner = MainActivity.getUser();
-        CircularNetworkImage cniHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
-        TextView tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
-        VolleyUtil.initNetworkImageView(App.getContextInstance().getApplicationContext(), cniHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, owner.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        cniHead = (CircularNetworkImage) itemView.findViewById(R.id.owner_head);
+        tvUserName = (TextView) itemView.findViewById(R.id.owner_name);
         tvUserName.setText(owner.getUser_given_name());
 
         // 显示的列表

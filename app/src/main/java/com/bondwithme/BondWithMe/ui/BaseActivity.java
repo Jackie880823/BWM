@@ -36,7 +36,7 @@ public abstract class BaseActivity extends BaseFragmentActivity implements IView
     protected ImageButton leftButton;            //头部栏的左边的按钮
     protected TextView tvTitle;                          //头部栏的标题
     protected ImageView title_icon;                          //头部栏的标题
-    protected ImageButton rightButton;             //头部栏的右边按钮
+    public ImageButton rightButton;             //头部栏的右边按钮
     protected LinearLayout bottom;             //底部栏的布局
     protected TextView yearButton;
     //    protected TextView rightTextButton;

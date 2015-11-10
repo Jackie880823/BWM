@@ -47,8 +47,9 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public void addData(List<WallCommentEntity> newData) {
+        int index = data.size();
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyItemRangeInserted(index, newData.size());
     }
 
     public void setData(List<WallCommentEntity> data) {
@@ -64,7 +65,7 @@ public class WallCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             // ViewHolder参数一定要是Item的Root节点.
             return new VHItem(view);
         } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.wall_item, parent, false);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.wall_item, parent, false);
             return new VHHeadItem(view);
         }
     }

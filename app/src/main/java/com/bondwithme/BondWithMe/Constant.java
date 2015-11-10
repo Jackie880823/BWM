@@ -32,11 +32,40 @@ public class Constant {
     public static final String LOGIN_USER = "user";
     public static final String APP_CRASH = "app_crash";
 
-    public static final int ACTION_CREATE_WALL = 10;
-    public static final int ACTION_UPDATE_WALL = 11;
-    public static final int ACTION_COMMENT_WALL = 12;
+    /**
+     * 更新图片的意图请求标识
+     */
+    public static final int INTENT_REQUEST_UPDATE_PHOTOS = 9;
+    /**
+     * 创建日记的意图标识
+     */
+    public static final int INTENT_REQUEST_CREATE_WALL = 10;
+    public static final int INTENT_REQUEST_UPDATE_WALL = 11;
+    public static final int INTENT_REQUEST_COMMENT_WALL = 12;
     public static final int ACTION_COMMENT_MEMBERS = 13;
     public static final int ACTION_COMMENT_GROUPS = 14;
+    /**
+     * 打开相册的意图请求标识
+     */
+    public static final int INTENT_REQUEST_HEAD_PHOTO = 15;
+    /**
+     * 打开相机的意图标识
+     */
+    public static final int INTENT_REQUEST_HEAD_CAMERA = 16;
+    /**
+     *
+     */
+    public static final int INTENT_REQUEST_GET_LOCATION = 17;
+    public static final int INTENT_REQUEST_GET_MEMBERS = 18;
+    /**
+     * 打开GPS请求
+     */
+    public static final int INTENT_REQUEST_OPEN_GPS = 19;
+    /**
+     * 请求获取多张图片的意图请求
+     */
+    public static final int INTENT_REQUEST_HEAD_MULTI_PHOTO = 20;
+    public static final int INTENT_REQUEST_FEELING = 21;
 
     public static final int ACTION_EVENT_CREATE = 20;
     public static final int ACTION_EVENT_UPDATE = 21;
@@ -47,6 +76,18 @@ public class Constant {
     public static final String ACTION_SHOW_NOTIFY_GROUP = "ACTION_SHOW_NOTIFY_GROUP";
     public static final String ACTION_SHOW_LOVED_USER = "ACTION_SHOW_LOVED_USER";
 
+
+    /**
+     * 与心情相关
+     */
+    public final static String PATH_PREFIX = "feeling";
+    public final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
+    public static final String EXTRA_CHECK_ITEM_INDEX = "check_item_index";
+
+    /**
+     * 临时文件用户裁剪
+     */
+    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
 
     /**
      * for api
@@ -322,7 +363,12 @@ public class Constant {
      */
     public static final String CONTENT_GROUP_ID = "content_group_id";
     public static final String GROUP_ID = "group_id";
+    public static final String CONTENT_ID = "content_id";
     public static final String USER_ID = "user_id";
+    public static final String AGREE_COUNT = "agree_count";
+    public static final String REQUEST_URL = "request_url";
+    public static final String CONDITION = "condition";
+    public static final String POSITION = "position";
 
     public static final String COMMENT_OWNER_ID = "comment_owner_id";
     public static final String CONTENT_TYPE = "content_type";
@@ -369,14 +415,15 @@ public class Constant {
     public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance()) + "/Video/";
 
     //删除message消息
-    public static final String API_MESSAGE_DELETE = API_SERVER + "/bondwithme/index.php/api/removeContent/%s";
-
+    public static final String API_MESSAGE_DELETE = API_SERVER +"/bondwithme/index.php/api/removeContent/%s";
+    public static final String API_WALL_UPDATE_CAPTION = API_SERVER +"/bondwithme/index.php/api/editPhoto/%s";
+    public static final String API_WALL_DELETE_PHOTO = API_SERVER +"/bondwithme/index.php/api/deletePhoto/%s";
 
     //新的得到表情包
     public static final String API_STICKER_GROUP_LIST = API_SERVER + "/bondwithme/index.php/api/stickerGroupList";
     //新的下载表情包
     public static final String API_DOWNLOAD_STICKER_ZIP = API_SERVER + "/bondwithme/index.php/api/sticker_zip/%s/format/%s/fpath/%s";
     //新的显示表情图
-    public static final String API_STICKER_ORIGINAL_IMAGE = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fcode/%s";
+    public static final String API_STICKER_ORIGINAL_IMAGE = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fcode/%s/version/%s";
 
 }

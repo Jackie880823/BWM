@@ -20,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -32,10 +31,8 @@ import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.StickerMainFragment;
 import com.bondwithme.BondWithMe.ui.StickerMainNewFragment;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
-import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
@@ -48,18 +45,10 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
 
     private static final String TAG = SendComment.class.getSimpleName();
 
-    /**
-     * 临时文件用户裁剪
-     */
-    public final static String CACHE_PIC_NAME_TEMP = "head_cache_temp";
-
-    public final static int REQUEST_HEAD_PHOTO = 1;
-    public final static int REQUEST_HEAD_CAMERA = 2;
     private int cache_count = 0;
     private ImageButton ibMore;
     private ImageButton ibSticker;
     private EditText etChat;
-    private TextView tvSend;
     private LinearLayout llMore;
     private LinearLayout llSticker;
     private ImageView ivPhoto;
@@ -125,7 +114,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
         ibSticker = (ImageButton) findViewById(R.id.ib_sticker);
         llSticker = (LinearLayout) findViewById(R.id.ll_sticker);
         etChat = (EditText) findViewById(R.id.et_chat);
-        tvSend = (TextView) findViewById(R.id.tv_send);
+        ImageButton tvSend = (ImageButton) findViewById(R.id.tv_send);
         cvLayout = (CardView) findViewById(R.id.cv_send_comment_images);
         ivPhoto = (ImageView) findViewById(R.id.iv_pic);
 
@@ -220,11 +209,11 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     intent2.putExtra("autofocus", true);
 
                     // 下面这句指定调用相机拍照后的照片存储的路径
-                    intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, CACHE_PIC_NAME_TEMP + cache_count)));
+                    intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, Constant.CACHE_PIC_NAME_TEMP + cache_count)));
                     // 图片质量为高
                     intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                     intent2.putExtra("return-data", true);
-                    fragment.startActivityForResult(intent2, REQUEST_HEAD_CAMERA);
+                    fragment.startActivityForResult(intent2, Constant.INTENT_REQUEST_HEAD_CAMERA);
                 }
                 break;
             case R.id.album_tv://打开本地相册
@@ -235,7 +224,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                     intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    fragment.startActivityForResult(intent, SendComment.REQUEST_HEAD_PHOTO);
+                    fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_HEAD_PHOTO);
                 }
                 break;
             case R.id.location_tv://打开地图
@@ -330,11 +319,11 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         LogUtil.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
-        if (mActivity.RESULT_OK == resultCode) {
+        if (Activity.RESULT_OK == resultCode) {
 
             switch (requestCode) {
                 // 如果是直接从相册获取
-                case REQUEST_HEAD_PHOTO:
+                case Constant.INTENT_REQUEST_HEAD_PHOTO:
                     if (data != null) {
                         Uri uri = data.getData();
                         if (commentListener != null) {
@@ -346,8 +335,8 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     }
                     break;
                 // 如果是调用相机拍照时
-                case REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, CACHE_PIC_NAME_TEMP + cache_count));
+                case Constant.INTENT_REQUEST_HEAD_CAMERA:
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, Constant.CACHE_PIC_NAME_TEMP + cache_count));
                     uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
                     LogUtil.i(TAG, "onActivityResult& uri: " + uri.getPath());
                     if (new File(uri.getPath()).exists()) {

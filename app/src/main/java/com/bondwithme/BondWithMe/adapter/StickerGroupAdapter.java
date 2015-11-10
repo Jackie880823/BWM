@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -25,8 +26,10 @@ import com.bondwithme.BondWithMe.entity.StickerGroupEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerDetailActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +83,7 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
         VHItem holder = (VHItem) viewHolder;
         stickerGroupEntity = dataStickerGroup.get(position);
 //        url = String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), "1_S", stickerGroupEntity.getPath(), stickerGroupEntity.getType());
-        url = String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getFirst_sticker_code());
+        url = String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getFirst_sticker_code(),stickerGroupEntity.getVersion());
         //设置new sticker
         if (stickerGroupEntity.getSticker_new().trim().equals("1")) {
             holder.ivNewSticker.setVisibility(View.VISIBLE);
@@ -88,10 +91,8 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
             holder.ivNewSticker.setVisibility(View.INVISIBLE);
         }
         //设置sticker缩略图
-        VolleyUtil.initNetworkImageView(mContext,
-                holder.ivSticker,
-                url,
-                R.drawable.network_image_default, R.drawable.network_image_default);
+        setFirstBigSticker(holder.ivSticker);
+
 
 
         //设置sticker name
@@ -114,6 +115,20 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
                 holder.ivExist.setVisibility(View.INVISIBLE);
                 holder.getPbDownload().setVisibility(View.VISIBLE);
             }
+        }
+
+    }
+
+    private void setFirstBigSticker(ImageView view) {
+        String picPath = FileUtil.getBigStickerPath(mContext, stickerGroupEntity.getPath(), "1", stickerGroupEntity.getType());
+        File file = new File(picPath);
+        if (file.exists()){
+            view.setImageBitmap(BitmapFactory.decodeFile(picPath));
+        }else{
+            VolleyUtil.initNetworkImageView(mContext,
+                    (NetworkImageView)view,
+                    url,
+                    R.drawable.network_image_default, R.drawable.network_image_default);
         }
 
     }

@@ -14,7 +14,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.RewardsEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
-import com.bondwithme.BondWithMe.ui.more.ViewLargePicActivity;
+import com.bondwithme.BondWithMe.ui.more.ViewUrlPicActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 
@@ -42,7 +42,7 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.VHItem> 
 
     public void add(List<RewardsEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 
@@ -59,7 +59,8 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.VHItem> 
             holder.ivPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, ViewLargePicActivity.class);
+//                    Intent intent = new Intent(mContext, ViewLargePicActivity.class);
+                    Intent intent = new Intent(mContext, ViewUrlPicActivity.class);
                     intent.putExtra(NewsHolder.PIC_URL,rewardsEntity.getImage());
                     mContext.startActivity(intent);
                 }

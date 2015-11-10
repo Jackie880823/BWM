@@ -36,7 +36,7 @@ public class ViewPicAdapter extends RecyclerView.Adapter<ViewPicAdapter.VHItem> 
 
     public void add(List<PhotoEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
     @Override

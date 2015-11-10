@@ -5,7 +5,7 @@ def releaseTime() {
 }
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "23"
 
     dexOptions {
@@ -19,7 +19,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 58   //TODO
-        versionName "2.0.3" //TODO
+        versionName "2.1.0" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true

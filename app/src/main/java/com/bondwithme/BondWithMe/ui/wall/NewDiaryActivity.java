@@ -63,7 +63,7 @@ public class NewDiaryActivity extends BaseActivity {
     protected void initTitleBar() {
         super.initTitleBar();
         rightButton.setVisibility(View.VISIBLE);
-        rightButton.setImageResource(R.drawable.send_icon);
+        rightButton.setImageResource(R.drawable.icon_post);
     }
 
     @Override

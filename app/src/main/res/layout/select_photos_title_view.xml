@@ -68,7 +68,7 @@
             android:layout_height="@dimen/default_button_width_height"
             android:layout_gravity="right|center_vertical"
             android:background="@null"
-            android:src="@drawable/btn_add" />
+            android:src="@drawable/add_photo" />
         <ImageButton
 
             android:id="@+id/ib_top_button_right"
@@ -76,7 +76,7 @@
             android:layout_height="@dimen/default_button_width_height"
             android:layout_gravity="right|center_vertical"
             android:background="@null"
-            android:src="@drawable/btn_add" />
+            android:src="@drawable/add_video" />
         <TextView
             android:id="@+id/ib_top_button_right_year"
             android:visibility="gone"

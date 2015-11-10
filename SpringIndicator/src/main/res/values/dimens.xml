@@ -1,5 +1,5 @@
 <resources>
-    <dimen name="si_default_text_size">18sp</dimen>
-    <dimen name="si_default_radius_max">24dp</dimen>
-    <dimen name="si_default_radius_min">8dp</dimen>
+    <dimen name="si_default_text_size">12sp</dimen>
+    <dimen name="si_default_radius_max">12dp</dimen>
+    <dimen name="si_default_radius_min">4dp</dimen>
 </resources>

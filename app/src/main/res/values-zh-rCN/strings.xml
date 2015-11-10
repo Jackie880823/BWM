@@ -228,7 +228,7 @@
 
     <!-- end -->
 
-    <string name="select_too_many">一次只能选择十张照片。</string>
+    <string name="select_too_many">一次只能选择%d张照片。</string>
     <string name="text_nearest">最近</string>
 
 
@@ -511,7 +511,7 @@
     <string name="text_phone">电话</string>
     <string name="text_change_password">更改密码</string>
 
-    <string name="title_member_love">点赞会员</string>
+    <string name="title_member_love">已赞成员</string>
 
     <string name="miss_you">您已发送“想你了”！</string>
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>
@@ -635,4 +635,32 @@
     <string name="text_sticker_update_now">立即更新</string>
     <string name="text_sticker_update_detail">已推出新版本表情商店</string>
     <string name="title_edit_post">修改帖子</string>
+
+    <string name="add_photo_to_this_post">添加照片到帖子</string>
+    <string name="save_all_photos">保存所有照片</string>
+    <string name="edit_this_post">编辑帖子</string>
+    <string name="delete_this_post">删除帖子</string>
+
+    <string name="text_wall_view_pic_save">保存照片</string>
+    <string name="text_wall_view_pic_edit">编辑说明</string>
+    <string name="text_wall_view_pic_delete">删除照片</string>
+    <string name="text_wall_view_pic_delete_warning">确定要删除这张图片？</string>
+    <string name="text_wall_view_pic_edit_no_change">描述没改变</string>
+    <string name="no_photo_2_save">No Photo to Save!</string>
+    <string name="add_photo_before_title">添加照片前需要删除视频</string>
+    <string name="text_add_caption">添加图片描述</string>
+
+    <string name="text_tip_add_member">添加成员到家庭树，在日记中查看他们的最新动态。</string>
+    <string name="text_tip_add_photo">发一个帖子并添加一张照片。</string>
+    <string name="text_tip_add_diary">添加您的首个日记。</string>e
+    <string name="text_tip_feeling">亲，感觉怎么样？</string>
+    <string name="text_tip_tag_member">艾特成员，他们将获得通告。</string>
+    <string name="text_tip_allow_me">仅限我查看或分享至所有成员？</string>
+    <string name="text_tip_location">地点在哪里？</string>
+    <string name="text_tip_tap_post">点击发帖。</string>
+    <string name="text_tip_create_event">开始创建即将到来的活动。</string>
+    <string name="text_tip_save_event">保存您的活动。</string>
+    <string name="text_tip_add_member_chatting">添加成员来开始聊天。</string>
+    <string name="text_tip_select_member_chatting">选择成员来开始聊天。</string>
+    <string name="text_tip_Download_stickie">下载超赞的大表情。</string>
 </resources>

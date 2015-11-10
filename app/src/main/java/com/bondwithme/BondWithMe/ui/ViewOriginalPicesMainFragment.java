@@ -81,7 +81,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
 
     /**
      * 只用于数据实体传入
-     *
+     * 单张图片的时候
      * @param inDatas
      * @return
      */
@@ -103,7 +103,7 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
         llm = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         rvList.setLayoutManager(llm);
         //        got_data_in = getArguments().getBoolean("is_data",false);
-        request_url = getArguments().getString("request_url");
+        request_url = getArguments().getString(Constant.REQUEST_URL);
         memberId = getArguments().getString("memberId");
         if (getArguments() == null || TextUtils.isEmpty(request_url)) {
             got_data_in = true;
@@ -188,15 +188,15 @@ public class ViewOriginalPicesMainFragment extends BaseFragment {
                         //给GsonBuilder方法单独指定Date类型的反序列化方法
                         //gsonb.registerTypeAdapter(Date.class, ds);
                         Gson gson = gsonb.create();
-                        if (response.startsWith("{\"data\":")) {
+//                        if (response.startsWith("{\"data\":")) {
                             JSONObject jsonObject = new JSONObject(response);
                             String dataString = jsonObject.optString("data");
                             data = gson.fromJson(dataString, new TypeToken<ArrayList<PhotoEntity>>() {
                             }.getType());
-                        } else {
-                            data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
-                            }.getType());
-                        }
+//                        } else {
+//                            data = gson.fromJson(response, new TypeToken<ArrayList<PhotoEntity>>() {
+//                            }.getType());
+//                        }
                         //默认第一张
                         initAdapter();
                         initViewPaper(0);

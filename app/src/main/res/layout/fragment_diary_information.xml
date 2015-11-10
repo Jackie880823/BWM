@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding">
+
+        <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/default_view_margin">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_wall_comment_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"/>
+        </com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout>
+    </LinearLayout>
+
+    <include layout="@layout/progress_layout" />
+</RelativeLayout>

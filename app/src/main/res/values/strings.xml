@@ -228,7 +228,7 @@
 
     <!-- end -->
 
-    <string name="select_too_many">You can only select 10 photos at a time.</string>
+    <string name="select_too_many">You can only select %d photos at a time.</string>
     <string name="text_nearest">recent</string>
 
 
@@ -515,7 +515,7 @@
     <string name="text_phone">Phone</string>
     <string name="text_change_password">Change Password</string>
 
-    <string name="title_member_love">Members by Love</string>
+    <string name="title_member_love">Member Who Love This</string>
 
     <string name="miss_you">You successfully sent a Miss!</string>
     <string name="miss_already_you">You have already sent a miss.!</string>
@@ -638,5 +638,33 @@
     <string name="text_sticker_update_now">Update Now!</string>
     <string name="text_sticker_update_detail">Stickers Store Update Available</string>
     <string name="title_edit_post">Edit Post</string>
+
+    <string name="add_photo_to_this_post">Add Photo to this Post</string>
+    <string name="save_all_photos">Save All Photos</string>
+    <string name="edit_this_post">Edit this Post</string>
+    <string name="delete_this_post">Delete this Post</string>
+
+    <string name="text_wall_view_pic_save">Save this Photo</string>
+    <string name="text_wall_view_pic_edit">Edit this caption</string>
+    <string name="text_wall_view_pic_delete">Delete this Photo</string>
+    <string name="text_wall_view_pic_delete_warning">Are you sure you want to delete this photo?</string>
+    <string name="text_wall_view_pic_edit_no_change">Captions are not change</string>
+    <string name="no_photo_2_save">No Photo to Save!</string>
+    <string name="add_photo_before_title">Please remove your video before you can add new photo.</string>
+    <string name="text_add_caption">add caption</string>
+
+    <string name="text_tip_add_member">Add member to build family tree and view their live updates in Diary.</string>
+    <string name="text_tip_add_photo">Write a post and add photos.</string>
+    <string name="text_tip_add_diary">Add your first diary.</string>
+    <string name="text_tip_feeling">How are you feeling?</string>
+    <string name="text_tip_tag_member">Tag members and they will receive alert.</string>
+    <string name="text_tip_allow_me">Allow only me to view or share to all members?</string>
+    <string name="text_tip_location">Where is the location?</string>
+    <string name="text_tip_tap_post">Tap to post.</string>
+    <string name="text_tip_create_event">Start creating upcoming event.</string>
+    <string name="text_tip_save_event">Save your event.</string>
+    <string name="text_tip_add_member_chatting">Add member to start chatting. </string>
+    <string name="text_tip_select_member_chatting">Select member to start chatting.</string>
+    <string name="text_tip_Download_stickie">Download fun stickies.</string>
 
 </resources>

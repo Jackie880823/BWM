@@ -39,7 +39,7 @@ public class BigDayAdapter extends RecyclerView.Adapter<BigDayAdapter.VHItem> {
 
     public void add(List<BigDayEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 
