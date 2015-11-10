@@ -86,7 +86,8 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         boolean firstStart = sharedPreferences.getBoolean(FIRST_START, true);
 
         // 上一次启动的保存的版本号比需要显示介绍页的版本小或者是应用首次安装启动
-        if (versionCode < SHOW_INTRODUCTION_VERSION || firstStart) { //
+//        if (versionCode < SHOW_INTRODUCTION_VERSION || firstStart) { //
+        if (firstStart) { //
             initView();
         } else {
             // 不需要显示介绍页，调用用跳转函数

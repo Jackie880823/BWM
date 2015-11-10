@@ -384,6 +384,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             }
             imageCursor.close();
         }
+
         if (videoCursor == null || videoCursor.isClosed()) {
             getParentActivity().runOnUiThread(adapterRefresh);
         }
@@ -432,10 +433,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                     }
 
                 }
-                imageCursor.close();
+                videoCursor.close();
             }
         }
-        if (videoCursor == null || videoCursor.isClosed()) {
+
+        if (imageCursor == null || imageCursor.isClosed()) {
             getParentActivity().runOnUiThread(adapterRefresh);
         }
         LogUtil.d(TAG, "loadVideos(), buckets size: " + buckets.size());
@@ -586,9 +588,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private synchronized void addToMediaMap(String bucket, MediaData mediaData) {
         ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
-        if (MediaData.TYPE_IMAGE.equals(mediaData.getType())) {
-            nearest.add(mediaData);
-        }
+        nearest.add(mediaData);
+//        if (MediaData.TYPE_IMAGE.equals(mediaData.getType())) {
+//        }
+
         if (mMediaUris.containsKey(bucket)) {
             mMediaUris.get(bucket).add(mediaData);
         } else {
