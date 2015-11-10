@@ -49,7 +49,7 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
-    private TextView tvCountryCode;
+//    private TextView tvCountryCode;
     private TextView tvStartCountryCode;
     private EditText etPhoneNumber;
 
@@ -60,6 +60,8 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
 
     private String strCountryCode;
     private String strPhoneNumber;
+
+    private boolean blnChooseCountryCode;//通过选择获得的国家区号。如果用户手动修改。把国家名称改回原始状态。这是用来判断的
 
     Handler handler = new Handler()
     {
@@ -137,7 +139,7 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
 
         rlCountryCode = getViewById(R.id.rl_country_code);
         tvCountry = getViewById(R.id.tv_country);
-        tvCountryCode = getViewById(R.id.tv_country_code);
+//        tvCountryCode = getViewById(R.id.tv_country_code);
         etPhoneNumber = getViewById(R.id.et_phone_number);
         tvStartCountryCode = getViewById(R.id.tv_start_country_code);
 
@@ -147,10 +149,10 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
         rlCountryCode.setOnClickListener(this);
         brNext.setOnClickListener(this);
 
-        tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
+//        tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
         tvStartCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
 
-        tvCountryCode.addTextChangedListener(new TextWatcher() {
+        tvStartCountryCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -163,7 +165,29 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(tvCountryCode.getText().toString())) {
+                if (blnChooseCountryCode) {
+
+                } else {
+                    tvCountry.setText(getText(R.string.title_country_code));
+                }
+                blnChooseCountryCode = false;
+            }
+        });
+
+        tvStartCountryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(tvStartCountryCode.getText().toString())) {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                 } else {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
@@ -206,7 +230,7 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
             return;
         }
 
-        strCountryCode = tvCountryCode.getText().toString().trim();
+        strCountryCode = tvStartCountryCode.getText().toString().trim();
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
 
         if (!MyTextUtil.isHasEmpty(strCountryCode, strPhoneNumber))
@@ -298,8 +322,9 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
             case GET_COUNTRY_CODE:
                 if (resultCode == RESULT_OK)
                 {
+                    blnChooseCountryCode = true;
                     tvCountry.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
-                    tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
+//                    tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
                     tvStartCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
                 }
                 break;
