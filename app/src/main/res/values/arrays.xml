@@ -667,4 +667,17 @@
         <item>@color/indicator_4</item>
         <item>@color/indicator_5</item>
     </array>
+
+    <string-array name="introduction_descriptions">
+        <item>A private and secure \nfamily social networking platform \nthat enables you to stay connected, \nmake plans and share special moments \nwith your family members, no matter \nwhere they are.
+        </item>
+        <item>Express your \nthoughts and feelings \nwith our fun Stickies!
+        </item>
+        <item>Organise \nfamily gatherings \nand Events easily.\n
+        </item>
+        <item>Share precious moments \nin your Diary, privately with \nyour loved ones.
+        </item>
+        <item>Connect \nwith your family members \nindividually or in a group chat.
+        </item>
+    </string-array>
 </resources>

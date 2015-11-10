@@ -23,8 +23,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.entity.IntroductionEntity;
 
 /**
  * Created 11/9/15.
@@ -34,13 +36,13 @@ import com.bondwithme.BondWithMe.R;
  */
 public class IntroductionPagerItemFragment extends Fragment {
 
-    private int bgRes;
+    private IntroductionEntity introductionEntity;
     private ImageView imageView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bgRes = getArguments().getInt(IntroductionPagerManager.DATA);
+        introductionEntity = (IntroductionEntity) getArguments().getSerializable(IntroductionPagerManager.DATA);
     }
 
     @Override
@@ -52,7 +54,10 @@ public class IntroductionPagerItemFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        TextView textView = (TextView) getView().findViewById(R.id.tv_introduction_description);
+        textView.setText(introductionEntity.getDescription());
+
         imageView = (ImageView) getView().findViewById(R.id.image);
-        imageView.setBackgroundResource(bgRes);
+        imageView.setImageResource(introductionEntity.getImagesResId());
     }
 }

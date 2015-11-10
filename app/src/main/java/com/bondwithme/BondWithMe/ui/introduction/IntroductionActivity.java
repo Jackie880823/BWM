@@ -16,6 +16,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.IntroductionPagerAdapter;
 import com.bondwithme.BondWithMe.entity.AppTokenEntity;
+import com.bondwithme.BondWithMe.entity.IntroductionEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.start.StartActivity;
@@ -24,6 +25,7 @@ import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import github.chenupt.springindicator.SpringIndicator;
@@ -84,7 +86,7 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         boolean firstStart = sharedPreferences.getBoolean(FIRST_START, true);
 
         // 上一次启动的保存的版本号比需要显示介绍页的版本小或者是应用首次安装启动
-        if (firstStart) { //
+        if (versionCode < SHOW_INTRODUCTION_VERSION || firstStart) { //
             initView();
         } else {
             // 不需要显示介绍页，调用用跳转函数
@@ -96,7 +98,7 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         setContentView(R.layout.activity_introduction);
 
         IntroductionPagerManager manager = new IntroductionPagerManager();
-        manager.addCommonFragment(IntroductionPagerItemFragment.class, getBgRes(), getTitles());
+        manager.addCommonFragment(IntroductionPagerItemFragment.class, getIntroductions(), getTitles());
         IntroductionPagerAdapter adapter = new IntroductionPagerAdapter(getSupportFragmentManager(), manager);
         ScrollerViewPager vpIntroductions = (ScrollerViewPager) findViewById(R.id.introduction_view_paper);
         vpIntroductions.setAdapter(adapter);
@@ -114,8 +116,16 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         return Lists.newArrayList("1", "2", "3", "4", "5");
     }
 
-    private List<Integer> getBgRes() {
-        return Lists.newArrayList(R.drawable.splash_page_01, R.drawable.splash_page_02, R.drawable.splash_page_03, R.drawable.splash_page_04, R.drawable.splash_page_05);
+    private List<IntroductionEntity> getIntroductions() {
+        ArrayList<IntroductionEntity> list = new ArrayList<>();
+        String[] introductionStrings = getResources().getStringArray(R.array.introduction_descriptions);
+        for (int i = 0; i < introductionStrings.length; i++) {
+            IntroductionEntity entity = new IntroductionEntity();
+            entity.setDescription(introductionStrings[i]);
+            entity.setImagesResId(R.drawable.splash_page_01 + i);
+            list.add(entity);
+        }
+        return list;
     }
 
     /**

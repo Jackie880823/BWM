@@ -2,60 +2,65 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <!--<FrameLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/_0dp"-->
-        <!--android:layout_weight="8.0">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/_0dp"-->
+    <!--android:layout_weight="8.0">-->
 
-        <github.chenupt.springindicator.viewpager.ScrollerViewPager
-            android:id="@+id/introduction_view_paper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
+    <github.chenupt.springindicator.viewpager.ScrollerViewPager
+        android:id="@+id/introduction_view_paper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
 
-        <github.chenupt.springindicator.SpringIndicator
-            android:id="@+id/indicator"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginRight="24dp"
-            app:siIndicatorColor="@color/color_primary"
-            app:siIndicatorColors="@array/indicator_colors"
-            app:siSelectedTextColor="@android:color/white"
-            app:siTextColor="@color/color_primary_dark"
-            app:siTextSize="@dimen/si_default_text_size" />
+    <github.chenupt.springindicator.SpringIndicator
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        app:siIndicatorColor="@color/color_primary"
+        app:siIndicatorColors="@array/indicator_colors"
+        app:siSelectedTextColor="@android:color/white"
+        app:siTextColor="@color/color_primary_dark"
+        app:siTextSize="@dimen/si_default_text_size" />
     <!--</FrameLayout>-->
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_35dp"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/_12dp"
+        android:layout_marginLeft="@dimen/_12dp"
+        android:layout_marginRight="@dimen/_12dp"
         android:gravity="center"
-        android:padding="@dimen/default_content_padding"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_sign_up"
-            style="@style/text_button_default"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginRight="@dimen/_5dp"
+            android:layout_weight="1.0"
             android:background="@drawable/btn_stroke_bg"
-            android:paddingLeft="@dimen/_50dp"
-            android:paddingRight="@dimen/_50dp"
+            android:gravity="center"
             android:text="@string/text_start_sign_up"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_medium_size" />
 
         <Button
             android:id="@+id/btn_login"
-            style="@style/text_button_default"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/_5dp"
+            android:layout_weight="1.0"
             android:background="@drawable/btn_stroke_bg"
-            android:paddingLeft="@dimen/_50dp"
-            android:paddingRight="@dimen/_50dp"
+            android:gravity="center"
             android:text="@string/login"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_medium_size" />
     </LinearLayout>
 </FrameLayout>
