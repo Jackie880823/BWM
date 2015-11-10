@@ -54,7 +54,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
 //    private TextView tvCountryCode;
-    private TextView tvStartCountryCode;
+    private EditText tvStartCountryCode;
     private EditText etPhoneNumber;
 //    private TextView tvPhoneNumberPrompt;
     private EditText etPassword;

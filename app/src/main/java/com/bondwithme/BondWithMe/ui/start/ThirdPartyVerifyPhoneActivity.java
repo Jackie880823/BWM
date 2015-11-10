@@ -50,7 +50,7 @@ public class ThirdPartyVerifyPhoneActivity extends BaseActivity implements View.
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
 //    private TextView tvCountryCode;
-    private TextView tvStartCountryCode;
+    private EditText tvStartCountryCode;
     private EditText etPhoneNumber;
 
     private PaperButton brNext;
