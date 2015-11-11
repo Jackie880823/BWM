@@ -313,7 +313,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         intent = new Intent(getActivity(), DiaryInformationActivity.class);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
-        intent.putExtra(Constant.POSITION, data.indexOf(wallEntity));
+        int position  = adapter.getData().indexOf(wallEntity);
+        intent.putExtra(Constant.POSITION, position);
         startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
     }
 
@@ -479,10 +480,10 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     if (position >= 0 && position < wallEntities.size()) {
                         WallEntity wallEntity;
                         String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
-                        LogUtil.d(TAG, "onActivityResult& commentCount" + commentCount);
+                        LogUtil.d(TAG, "onActivityResult& commentCount: " + commentCount);
                         if (TextUtils.isEmpty(commentCount)) {
                             wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
-                            this.data.set(position, wallEntity);
+                            wallEntities.set(position, wallEntity);
                         } else {
                             wallEntity = wallEntities.get(position);
                             wallEntity.setComment_count(commentCount);
