@@ -1,4 +1,4 @@
-package github.chenupt.springindicator;
+package com.bondwithme.BondWithMe.widget;
 
 /**
  * Created by chenupt@gmail.com on 2/28/15.

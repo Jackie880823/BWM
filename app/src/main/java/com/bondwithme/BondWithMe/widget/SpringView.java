@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package github.chenupt.springindicator;
+package com.bondwithme.BondWithMe.widget;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -25,6 +25,8 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+
+import com.bondwithme.BondWithMe.entity.Point;
 
 /**
  * Created by chenupt@gmail.com on 2015/1/31.

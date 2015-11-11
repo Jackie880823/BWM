@@ -9,13 +9,13 @@
     <!--android:layout_height="@dimen/_0dp"-->
     <!--android:layout_weight="8.0">-->
 
-    <github.chenupt.springindicator.viewpager.ScrollerViewPager
+    <com.bondwithme.BondWithMe.widget.viewpager.ScrollerViewPager
         android:id="@+id/introduction_view_paper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center" />
 
-    <github.chenupt.springindicator.SpringIndicator
+    <com.bondwithme.BondWithMe.widget.SpringIndicator
         android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="28dp"

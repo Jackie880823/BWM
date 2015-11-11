@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package github.chenupt.springindicator;
+package com.bondwithme.BondWithMe.widget;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
@@ -30,8 +30,11 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bondwithme.BondWithMe.R;
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by chenupt@gmail.com on 2015/1/31.

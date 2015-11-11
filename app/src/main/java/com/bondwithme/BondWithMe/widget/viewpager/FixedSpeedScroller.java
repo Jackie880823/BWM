@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package github.chenupt.springindicator.viewpager;
+package com.bondwithme.BondWithMe.widget.viewpager;
 
 import android.content.Context;
 import android.view.animation.Interpolator;

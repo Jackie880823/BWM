@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package github.chenupt.springindicator;
+package com.bondwithme.BondWithMe.entity;
 
 /**
  * Created by chenupt@gmail.com on 2015/1/31.
