@@ -22,14 +22,13 @@ import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.start.StartActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.widget.SpringIndicator;
+import com.bondwithme.BondWithMe.widget.viewpager.ScrollerViewPager;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import github.chenupt.springindicator.SpringIndicator;
-import github.chenupt.springindicator.viewpager.ScrollerViewPager;
 
 /**
  * Created 11/5/15.
@@ -37,7 +36,7 @@ import github.chenupt.springindicator.viewpager.ScrollerViewPager;
  * @author Jackie
  * @version 1.0
  */
-public class IntroductionActivity extends FragmentActivity implements View.OnClickListener{
+public class IntroductionActivity extends FragmentActivity implements View.OnClickListener {
     private static final String TAG = IntroductionActivity.class.getSimpleName();
 
     /**
@@ -257,7 +256,7 @@ public class IntroductionActivity extends FragmentActivity implements View.OnCli
         }
     }
 
-    private void goStartActivity(String type){
+    private void goStartActivity(String type) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         // 保存第一次启动标识为false

@@ -140,4 +140,9 @@
     <dimen name="_280dp">280dp</dimen>
     <dimen name="_300dp">300dp</dimen>
     <dimen name="_400dp">400dp</dimen>
+
+    <!-- SpringIndicator -->
+    <dimen name="si_default_text_size">12sp</dimen>
+    <dimen name="si_default_radius_max">8dp</dimen>
+    <dimen name="si_default_radius_min">4dp</dimen>
 </resources>
