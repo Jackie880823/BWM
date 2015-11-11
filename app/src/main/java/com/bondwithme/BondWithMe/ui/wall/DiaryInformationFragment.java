@@ -148,16 +148,30 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                         if (pickUris != null && pickUris.isEmpty()) {
                             holder.setLocalPhotos(pickUris);
                         }
-                        getParentActivity().setResult(Activity.RESULT_OK);
+                        setResultOK();
                     }
                     break;
                 case Constant.INTENT_REQUEST_UPDATE_PHOTOS:
                 case Constant.INTENT_REQUEST_UPDATE_WALL:
-                    getParentActivity().setResult(Activity.RESULT_OK);
+                    setResultOK();
                     requestData();
+                    break;
+                case Constant.INTENT_REQUEST_COMMENT_WALL:
+                    String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
+                    if (!wall.getComment_count().equals(commentCount)) {
+                        wall.setComment_count(commentCount);
+                        setWallContext();
+                        setResultOK();
+                    }
                     break;
             }
         }
+    }
+
+    private void setResultOK() {
+        Intent intent = getParentActivity().getIntent();
+        intent.putExtra(Constant.WALL_ENTITY, wall);
+        getParentActivity().setResult(Activity.RESULT_OK, intent);
     }
 
     @Override
@@ -238,7 +252,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
     private void setWallContext() {
         holder.setViewClickListener(this);
-        holder.setContent(wall, getActivity());
+        holder.setContent(wall, getParentActivity().getIntent().getIntExtra(Constant.POSITION, -1), getActivity());
     }
 
     /**
@@ -259,10 +273,10 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
     }
 
     /**
-     * 显示Wall详情包括评论
+     * 显示Wall详情
      */
     @Override
-    public void showComments(WallEntity wallEntity) {
+    public void showDiaryInformation(WallEntity wallEntity) {
     }
 
 
@@ -296,7 +310,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                     @Override
                     public void onResult(String string) {
 //                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                        getParentActivity().setResult(Activity.RESULT_OK);
+                        setResultOK();
                         getParentActivity().finish();
                     }
 
@@ -388,7 +402,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
     @Override
     public void addPhotoed(WallEntity wallEntity, boolean succeed) {
         if (succeed) {
-            getParentActivity().setResult(Activity.RESULT_OK);
+            setResultOK();
             requestData();
         } else {
             if (vProgress != null) {

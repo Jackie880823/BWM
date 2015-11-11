@@ -91,6 +91,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private static final String PUT_PHOTO_MAX = TAG + "_PUT_PHOTO_MAX";
 
     private WallViewClickListener mViewClickListener;
+    private int position = -1;
     private WallEntity wallEntity;
     private HttpTools mHttpTools;
     private Context context;
@@ -334,6 +335,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 intent.putExtra(Constant.CONTENT_ID, wallEntity.getContent_id());
                 intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
                 intent.putExtra(Constant.AGREE_COUNT, wallEntity.getLove_count());
+                intent.putExtra(Constant.POSITION, position);
                 fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
             }
             break;
@@ -351,7 +353,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     }
                 } else {
                     if (mViewClickListener != null) {
-                        mViewClickListener.showComments(wallEntity);
+                        mViewClickListener.showDiaryInformation(wallEntity);
                     }
                 }
                 break;
@@ -476,9 +478,10 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     }
 
-    public void setContent(WallEntity wallEntity, final Context context) {
+    public void setContent(WallEntity wallEntity, int position, final Context context) {
 
         this.wallEntity = wallEntity;
+        this.position = position;
 
         VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 

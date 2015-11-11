@@ -17,9 +17,9 @@ import com.bondwithme.BondWithMe.util.WallUtil;
 public interface WallViewClickListener {
 
     /**
-     * 显示Wall详情包括评论
+     * 显示Wall详情
      */
-    void showComments(WallEntity wallEntity);
+    void showDiaryInformation(WallEntity wallEntity);
 
     /**
      * 显示被@的用户列表

@@ -49,7 +49,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallHolder> {
         holder.setViewClickListener(mViewClickListener);
         holder.setWallEntity(wall);
         holder.setSwitchVisibility(View.GONE);
-        holder.setContent(wall, context);
+        holder.setContent(wall, position, context);
     }
 
     @Override
