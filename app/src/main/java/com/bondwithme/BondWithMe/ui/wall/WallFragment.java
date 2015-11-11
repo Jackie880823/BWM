@@ -475,7 +475,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                 case Constant.INTENT_REQUEST_COMMENT_WALL: // 更新了评论
                     int position = data.getIntExtra(Constant.POSITION, -1);
                     LogUtil.d(TAG, "onActivityResult& position: " + position);
-                    if (position >= 0 && position < this.data.size()) {
+                    List<WallEntity> wallEntities = adapter.getData();
+                    if (position >= 0 && position < wallEntities.size()) {
                         WallEntity wallEntity;
                         String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
                         LogUtil.d(TAG, "onActivityResult& commentCount" + commentCount);
@@ -483,7 +484,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                             wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
                             this.data.set(position, wallEntity);
                         } else {
-                            wallEntity = this.data.get(position);
+                            wallEntity = wallEntities.get(position);
                             wallEntity.setComment_count(commentCount);
                         }
                         adapter.notifyItemChanged(position);
