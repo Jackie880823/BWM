@@ -474,6 +474,10 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         e.printStackTrace();
                     }
                 case Constant.INTENT_REQUEST_COMMENT_WALL: // 更新了评论
+                    if (data == null) {
+                        return;
+                    }
+
                     int position = data.getIntExtra(Constant.POSITION, -1);
                     LogUtil.d(TAG, "onActivityResult& position: " + position);
                     List<WallEntity> wallEntities = adapter.getData();
