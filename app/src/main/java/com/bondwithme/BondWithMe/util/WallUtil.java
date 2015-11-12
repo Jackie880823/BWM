@@ -306,7 +306,7 @@ public class WallUtil {
                                 }
                             }
                         } else {
-                            mViewClickListener.showComments(wallEntity);
+                            mViewClickListener.showDiaryInformation(wallEntity);
                         }
                     }
                 }

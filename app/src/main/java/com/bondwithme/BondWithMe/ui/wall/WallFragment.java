@@ -93,7 +93,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     private boolean loading;
     LinearLayoutManager llm;
     private String member_id;//根据member查看的wall
-    public InteractivePopupWindow popupWindow,popupWindowAddPhoto;
+    public InteractivePopupWindow popupWindow, popupWindowAddPhoto;
     private static final int GET_DELAY = 0x28;
 
 
@@ -101,9 +101,9 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case GET_DELAY:
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_add_diary),0);
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, getParentActivity().getResources().getString(R.string.text_tip_add_diary), 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
@@ -269,20 +269,20 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
-            if(MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY,false)){
-                if(InteractivePopupWindow.firstOpPop){
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_add_diary),0);
+        if (isVisibleToUser) {
+            if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, false)) {
+                if (InteractivePopupWindow.firstOpPop) {
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, getParentActivity().getResources().getString(R.string.text_tip_add_diary), 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
-                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY,true);
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, true);
                             //存储本地
                         }
                     });
                     popupWindow.showPopupWindow(true);
-                }else {
-                    handler.sendEmptyMessageDelayed(GET_DELAY,1000);
+                } else {
+                    handler.sendEmptyMessageDelayed(GET_DELAY, 1000);
                     InteractivePopupWindow.firstOpPop = true;
                 }
             }
@@ -305,14 +305,16 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     }
 
     /**
-     * 显示Wall详情包括评论
+     * 显示Wall详情
      */
     @Override
-    public void showComments(WallEntity wallEntity) {
+    public void showDiaryInformation(WallEntity wallEntity) {
         Intent intent;
         intent = new Intent(getActivity(), DiaryInformationActivity.class);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
+        int position  = adapter.getData().indexOf(wallEntity);
+        intent.putExtra(Constant.POSITION, position);
         startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
     }
 
@@ -472,6 +474,24 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                         e.printStackTrace();
                     }
                 case Constant.INTENT_REQUEST_COMMENT_WALL: // 更新了评论
+                    int position = data.getIntExtra(Constant.POSITION, -1);
+                    LogUtil.d(TAG, "onActivityResult& position: " + position);
+                    List<WallEntity> wallEntities = adapter.getData();
+                    if (position >= 0 && position < wallEntities.size()) {
+                        WallEntity wallEntity;
+                        String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
+                        LogUtil.d(TAG, "onActivityResult& commentCount: " + commentCount);
+                        if (TextUtils.isEmpty(commentCount)) {
+                            wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
+                            wallEntities.set(position, wallEntity);
+                        } else {
+                            wallEntity = wallEntities.get(position);
+                            wallEntity.setComment_count(commentCount);
+                        }
+                        adapter.notifyItemChanged(position);
+                    }
+                    break;
+
                 case Constant.INTENT_REQUEST_UPDATE_WALL: // 更新了日志
                 case Constant.INTENT_REQUEST_UPDATE_PHOTOS: // 更新了图片的日志
                     refresh();

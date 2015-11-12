@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.ui.wall.WallNewFragment;
+import com.bondwithme.BondWithMe.ui.wall.EditDiaryFragment;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class FeelingAdapter extends RecyclerView.Adapter<FeelingAdapter.VHItem> 
                 holder.checked_icon.setVisibility(View.GONE);
             }
             // 获得表情文件名
-            String name = iconPath.substring(WallNewFragment.PATH_PREFIX.length() + 1, iconPath.indexOf(".")).replace("-", " ");
+            String name = iconPath.substring(EditDiaryFragment.PATH_PREFIX.length() + 1, iconPath.indexOf(".")).replace("-", " ");
             // 首字母大写
             name = chgFirst(name);
             holder.tv_feel_desc.setText(name);

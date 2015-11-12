@@ -19,7 +19,7 @@ import com.bondwithme.BondWithMe.util.LogUtil;
  * @version 1.0
  */
 public class NewDiaryActivity extends BaseActivity {
-    private static final String TAG = WallNewActivity.class.getSimpleName();
+    private static final String TAG = NewDiaryActivity.class.getSimpleName();
     private String content_group_id;
 
     @Override

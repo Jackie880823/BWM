@@ -53,8 +53,8 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     private TextView tvUsernamePrompt;
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
-    private TextView tvCountryCode;
-    private TextView tvStartCountryCode;
+//    private TextView tvCountryCode;
+    private EditText tvStartCountryCode;
     private EditText etPhoneNumber;
 //    private TextView tvPhoneNumberPrompt;
     private EditText etPassword;
@@ -66,6 +66,8 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     private String strCountryCode;
     private String strPhoneNumber;
     private String strPassword;
+
+    private boolean blnChooseCountryCode;//通过选择获得的国家区号。如果用户手动修改。把国家名称改回原始状态。这是用来判断的
 
     Handler handler = new Handler()
     {
@@ -143,7 +145,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
         tvUsernamePrompt = getViewById(R.id.tv_username_prompt);
         rlCountryCode = getViewById(R.id.rl_country_code);
         tvCountry = getViewById(R.id.tv_country);
-        tvCountryCode = getViewById(R.id.tv_country_code);
+//        tvCountryCode = getViewById(R.id.tv_country_code);
         tvStartCountryCode = getViewById(R.id.tv_start_country_code);
         etPhoneNumber = getViewById(R.id.et_phone_number);
 //        tvPhoneNumberPrompt = getViewById(R.id.tv_phone_number_prompt);
@@ -157,8 +159,30 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
         etPassword.setOnEditorActionListener(this);
 
-        tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
+//        tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
         tvStartCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
+
+        tvStartCountryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (blnChooseCountryCode) {
+
+                } else {
+                    tvCountry.setText(getText(R.string.title_country_code));
+                }
+                blnChooseCountryCode = false;
+            }
+        });
 
         //怎么把以下合并起来。过于臃肿。
         etUsername.addTextChangedListener(new TextWatcher() {
@@ -186,7 +210,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
             }
         });
 
-        tvCountryCode.addTextChangedListener(new TextWatcher() {
+        tvStartCountryCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -199,7 +223,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(tvCountryCode.getText().toString()))
+                if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
                 {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                 }
@@ -300,8 +324,9 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
             case GET_COUNTRY_CODE:
                 if (resultCode == RESULT_OK)
                 {
+                    blnChooseCountryCode = true;
                     tvCountry.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
-                    tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
+//                    tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
                     tvStartCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
                 }
                 break;
@@ -322,7 +347,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
         }
 
         strUsername = etUsername.getText().toString();
-        strCountryCode = tvCountryCode.getText().toString().trim();
+        strCountryCode = tvStartCountryCode.getText().toString().trim();
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
 
@@ -408,7 +433,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
             }
 
             //code
-            if (TextUtils.isEmpty(tvCountryCode.getText().toString()))
+            if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
             {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
             }
@@ -444,7 +469,7 @@ public class SignUpUsernameActivity extends BaseActivity implements View.OnClick
     }
 
     private boolean checkAll() {
-        return ( (etUsername.getText().toString().length() > 4) && (!TextUtils.isEmpty(tvCountryCode.getText().toString())) && (!TextUtils.isEmpty(etPhoneNumber.getText().toString())) && (etPassword.getText().toString().length() > 4) );
+        return ( (etUsername.getText().toString().length() > 4) && (!TextUtils.isEmpty(tvStartCountryCode.getText().toString())) && (!TextUtils.isEmpty(etPhoneNumber.getText().toString())) && (etPassword.getText().toString().length() > 4) );
     }
 
     private void doingSignUpChangeUI() {

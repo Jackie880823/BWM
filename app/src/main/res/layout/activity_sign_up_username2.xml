@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_content_padding"
                 android:orientation="horizontal">
-                    <TextView
+                    <EditText
                         style="@style/tv_start_country_code"
                         android:id="@+id/tv_start_country_code"
                         android:layout_marginLeft="@dimen/default_content_padding"

@@ -37,9 +37,12 @@ public class WallAdapter extends RecyclerView.Adapter<WallHolder> {
     }
 
     public void add(List<WallEntity> newData) {
-        int index = data.size();
         data.addAll(newData);
         notifyDataSetChanged();
+    }
+
+    public List<WallEntity> getData(){
+        return data;
     }
 
 
@@ -49,7 +52,7 @@ public class WallAdapter extends RecyclerView.Adapter<WallHolder> {
         holder.setViewClickListener(mViewClickListener);
         holder.setWallEntity(wall);
         holder.setSwitchVisibility(View.GONE);
-        holder.setContent(wall, context);
+        holder.setContent(wall, position, context);
     }
 
     @Override

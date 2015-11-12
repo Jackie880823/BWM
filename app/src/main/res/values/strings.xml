@@ -666,5 +666,9 @@
     <string name="text_tip_add_member_chatting">Add member to start chatting. </string>
     <string name="text_tip_select_member_chatting">Select member to start chatting.</string>
     <string name="text_tip_Download_stickie">Download fun stickies.</string>
-
+    <string name="introduction_description_1">A private and secure \nfamily social networking platform \nthat enables you to stay connected, \nmake plans and share special moments \nwith your family members, no matter \nwhere they are.</string>
+    <string name="introduction_description_2">Express your \nthoughts and feelings \nwith our fun Stickies!</string>
+    <string name="introduction_description_3">Organise \nfamily gatherings \nand Events easily.\n</string>
+    <string name="introduction_description_4">Share precious moments \nin your Diary, privately with \nyour loved ones.</string>
+    <string name="introduction_description_5">Connect \nwith your family members \nindividually or in a group chat.</string>
 </resources>
