@@ -329,6 +329,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
                         getActivity().startActivityForResult(intent, 3);
+                        getActivity().finish();
                         //                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
                     } else if(v.getId() == getParentActivity().leftButton.getId()) {
                         if(isCommentBim) {

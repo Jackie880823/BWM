@@ -1,11 +1,18 @@
 package com.bondwithme.BondWithMe.entity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
+import android.util.Log;
 
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosFragment;
 import com.nostra13.universalimageloader.core.download.ImageDownloader;
+
+import java.io.File;
 
 /**
  * <br>多媒体数据封装类，用于封装{@link SelectPhotosFragment}中从手机中获取的多媒体数据。
@@ -16,6 +23,8 @@ import com.nostra13.universalimageloader.core.download.ImageDownloader;
  * @version 2.0
  */
 public class MediaData {
+
+    private static final String TAG = MediaData.class.getSimpleName();
 
     /**
      * 隐式启动录制视频的Activity
@@ -49,6 +58,9 @@ public class MediaData {
      */
     public final static String TYPE_VIDEO = "URI_TYPE_VIDEO";
 
+    /**
+     * 限制定显示的视频大小的最大数为20M
+     */
     public final static long MAX_SIZE = 20 * 1024 * 1024;
 
     /**
@@ -71,7 +83,7 @@ public class MediaData {
      */
     private long duration;
 
-    private Uri thumbnailUri = null;
+    private long id;
 
     /**
      * 封装{@link SelectPhotosActivity}显示的多媒体数据
@@ -123,11 +135,82 @@ public class MediaData {
     }
 
     public Uri getThumbnailUri() {
-        return thumbnailUri;
+        if (TYPE_VIDEO.equals(type)) {
+            return getVideoThumbnailUri(id);
+        } else if (TYPE_IMAGE.equals(type)) {
+            return getImageThumbnailUri(id);
+        }
+        return null;
     }
 
-    public void setThumbnailUri(Uri thumbnailUri) {
-        this.thumbnailUri = thumbnailUri;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+
+    /**
+     * 获取小图的{@link Uri}
+     *
+     * @param origId 视频{@value android.provider.MediaStore.Video.Media#_ID}
+     * @return 返回小图的Uri
+     */
+    private Uri getVideoThumbnailUri(long origId) {
+        Uri result = null;
+
+        Log.i(TAG, "getVideoThumbnailUri& origId: " + origId);
+        String[] columns = {MediaStore.Images.Thumbnails.DATA};
+        String select = MediaStore.Video.Thumbnails.VIDEO_ID + " = " + origId;
+        Cursor cursor = new CursorLoader(App.getContextInstance(), MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI, columns, select, null, null).loadInBackground();
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Thumbnails.DATA));
+            File file = new File(path);
+            if (file.exists() && !file.isDirectory() && file.canRead()) {
+                result = Uri.parse(ImageDownloader.Scheme.FILE.wrap(path));
+            }
+        }
+
+        try {
+            if (cursor != null) {
+                // 关闭游标
+                cursor.close();
+            }
+        } finally {
+            Log.i(TAG, "getVideoThumbnailUri& result: " + result);
+            return result;
+        }
+    }
+    /**
+     * 获取小图的{@link Uri}
+     *
+     * @param origId 原图{@value android.provider.MediaStore.Images.Media#_ID}
+     * @return 返回小图的Uri
+     */
+    private Uri getImageThumbnailUri(long origId) {
+        Uri result = null;
+
+        Log.i(TAG, "getImageThumbnailUri& origId: " + origId);
+        Cursor cursor = MediaStore.Images.Thumbnails.queryMiniThumbnail(App.getContextInstance().getContentResolver(), origId, MediaStore.Images.Thumbnails.MINI_KIND, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+
+            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
+            File file = new File(path);
+            if (file.exists() && !file.isDirectory() && file.canRead()) {
+                result = Uri.parse(ImageDownloader.Scheme.FILE.wrap(path));
+            }
+        }
+
+        try {
+            if (cursor != null) {
+                // 关闭游标
+                cursor.close();
+            }
+        } finally {
+            Log.i(TAG, "getImageThumbnailUri& result: " + result);
+            return result;
+        }
     }
 
     /**

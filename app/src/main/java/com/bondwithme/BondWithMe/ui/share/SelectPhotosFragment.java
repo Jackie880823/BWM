@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,7 +33,6 @@ import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
 import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
 import com.bondwithme.BondWithMe.widget.NewtonCradleLoading;
-import com.nostra13.universalimageloader.core.download.ImageDownloader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -77,11 +75,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      * <p>false: 只允许选择一张图片</p>
      */
     private boolean multi;
-
-    /**
-     * 请求数据是否可以包含视频
-     */
-    private boolean useVideo;
 
     /**
      * 已经选择的图Ur列表
@@ -177,7 +170,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
         multi = getParentActivity().getIntent().getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
 
-        useVideo = getParentActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
+        /*
+      请求数据是否可以包含视频
+     */
+        boolean useVideo = getParentActivity().getIntent().getBooleanExtra(MediaData.USE_VIDEO_AVAILABLE, false);
 
         // 获取数据库中的图片资源游标
 //        String[] imageColumns = {MediaStore.Images.Thumbnails.DATA, MediaStore.Images.Thumbnails._ID};
@@ -352,29 +348,15 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 return;
             }
 
-            /**wing modified for 性能 2015.1.13 begin*/
-//            int cursorCount = imageCursor.getCount();
-//            LogUtil.i(TAG, "loadImages& cursorCount: " + cursorCount);
-
-
             int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
             int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
             int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
 
-//            for (int i = 0; i < cursorCount; i++) {
             while (imageCursor.moveToNext()) {
-                /**wing modified for 性能 2015.1.13 end*/
                 String path;
                 String bucket;
                 long id;
                 Uri contentUri;
-                /**wing modified for 性能 2015.1.13 begin*/
-//                imageCursor.moveToPosition(i);
-
-//                int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
-//                int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-//                int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
-                /**wing modified for 性能 2015.1.13 end*/
                 path = imageCursor.getString(pathColumnIndex);
                 bucket = imageCursor.getString(bucketColumnIndex);
                 id = imageCursor.getLong(uriColumnIndex);
@@ -382,8 +364,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
                 if (!TextUtils.isEmpty(path) && !path.contains(FileUtil.getCacheFilePath(getActivity()))) {
                     MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
-                    //TODO 这个可以改在adapter getview的时候获取
-                    mediaData.setThumbnailUri(getImageThumbnailUri(id));
+                    mediaData.setId(id);
                     addToMediaMap(bucket, mediaData);
                 }
             }
@@ -413,31 +394,16 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
                 mMediaUris.put(bucket, new ArrayList<MediaData>());
 
-                /**wing modified for 性能 2015.1.13 begin*/
-//                int cursorCount = videoCursor.getCount();
-
                 int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
                 int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
                 int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
 
-
-                // 限制定显示的视频大小的最大数为50M
-//                for (int i = 0; i < cursorCount; i++) {
                 while (videoCursor.moveToNext()) {
-                    /**wing modified for 性能 2015.1.13 end*/
                     String path;
                     Uri contentUri;
                     long duration;
                     long id;
 
-                    /**wing modified for 性能 2015.1.13 begin*/
-
-//                    videoCursor.moveToPosition(i);
-//
-//                    int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
-//                    int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
-//                    int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
-                    /**wing modified for 性能 2015.1.13 end*/
                     duration = videoCursor.getLong(durationColumnIndex);
                     path = videoCursor.getString(pathColumnIndex);
                     id = videoCursor.getLong(uriColumnIndex);
@@ -445,8 +411,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
                     if (!TextUtils.isEmpty(path)) {
                         MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
-                        //TODO 这个可以改在adapter getview的时候获取
-                        mediaData.setThumbnailUri(getVideoThumbnailUri(id));
+                        mediaData.setId(id);
                         addToMediaMap(bucket, mediaData);
                     }
 
@@ -459,72 +424,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             getParentActivity().runOnUiThread(adapterRefresh);
         }
         LogUtil.d(TAG, "loadVideos(), buckets size: " + buckets.size());
-    }
-
-    /**
-     * 获取小图的{@link Uri}
-     *
-     * @param origId 原图{@value android.provider.MediaStore.Images.Media#_ID}
-     * @return 返回小图的Uri
-     */
-    private Uri getImageThumbnailUri(long origId) {
-        Uri result = null;
-
-        Log.i(TAG, "getImageThumbnailUri& origId: " + origId);
-        Cursor cursor = MediaStore.Images.Thumbnails.queryMiniThumbnail(getParentActivity().getContentResolver(), origId, MediaStore.Images.Thumbnails.MINI_KIND, null);
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-
-            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA));
-            File file = new File(path);
-            if (file.exists() && !file.isDirectory() && file.canRead()) {
-                result = Uri.parse(ImageDownloader.Scheme.FILE.wrap(path));
-            }
-        }
-
-        try {
-            if (cursor != null) {
-                // 关闭游标
-                cursor.close();
-            }
-        } finally {
-            Log.i(TAG, "getImageThumbnailUri& result: " + result);
-            return result;
-        }
-    }
-
-    /**
-     * 获取小图的{@link Uri}
-     *
-     * @param origId 视频{@value android.provider.MediaStore.Video.Media#_ID}
-     * @return 返回小图的Uri
-     */
-    private Uri getVideoThumbnailUri(long origId) {
-        Uri result = null;
-
-        Log.i(TAG, "getVideoThumbnailUri& origId: " + origId);
-        String[] columns = {MediaStore.Images.Thumbnails.DATA};
-        String select = MediaStore.Video.Thumbnails.VIDEO_ID + " = " + origId;
-        Cursor cursor = new CursorLoader(getParentActivity(), MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI, columns, select, null, null).loadInBackground();
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-
-            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Thumbnails.DATA));
-            File file = new File(path);
-            if (file.exists() && !file.isDirectory() && file.canRead()) {
-                result = Uri.parse(ImageDownloader.Scheme.FILE.wrap(path));
-            }
-        }
-
-        try {
-            if (cursor != null) {
-                // 关闭游标
-                cursor.close();
-            }
-        } finally {
-            Log.i(TAG, "getVideoThumbnailUri& result: " + result);
-            return result;
-        }
     }
 
     public boolean changeDrawer() {
@@ -607,8 +506,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     private synchronized void addToMediaMap(String bucket, MediaData mediaData) {
         ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
         nearest.add(mediaData);
-//        if (MediaData.TYPE_IMAGE.equals(mediaData.getType())) {
-//        }
 
         if (mMediaUris.containsKey(bucket)) {
             mMediaUris.get(bucket).add(mediaData);
@@ -656,6 +553,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             }
 
             mImageUriList = mMediaUris.get(bucket);
+            if (mImageUriList.size() <=0) {
+                loadLocalMediaOrder(index -1);
+                return;
+            }
+
             LogUtil.i(TAG, "mImageUriList size = " + mImageUriList.size() + "; bucket " + bucket);
             if (localMediaAdapter == null) {
                 localMediaAdapter = new LocalMediaAdapter(getActivity(), mImageUriList);
@@ -667,7 +569,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 localMediaAdapter.setData(mImageUriList);
                 localMediaAdapter.notifyDataSetChanged();
             }
-
+            mGvShowPhotos.setSelection(0);
             mDrawerList.setSelection(index);
         } else {
             LogUtil.i(TAG, "index out of buckets");
