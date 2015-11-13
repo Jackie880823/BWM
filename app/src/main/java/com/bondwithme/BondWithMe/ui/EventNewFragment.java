@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -223,6 +224,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         super.onResume();
         if(MainActivity.IS_INTERACTIVE_USE &&
                 !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,false)){
+            getParentActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN |
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
             handler.sendEmptyMessageDelayed(GET_DELAY, 500);
         }
     }
