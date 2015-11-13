@@ -44,6 +44,8 @@ public class Constant {
     public static final int INTENT_REQUEST_COMMENT_WALL = 12;
     public static final int ACTION_COMMENT_MEMBERS = 13;
     public static final int ACTION_COMMENT_GROUPS = 14;
+
+    public static final String WALL_ENTITY = "wall_entity";
     /**
      * 打开相册的意图请求标识
      */
@@ -373,6 +375,7 @@ public class Constant {
     public static final String COMMENT_OWNER_ID = "comment_owner_id";
     public static final String CONTENT_TYPE = "content_type";
     public static final String COMMENT_CONTENT = "comment_content";
+    public static final String COMMENT_COUNT = "comment_count";
     public static final String STICKER_GROUP_PATH = "sticker_group_path";
     public static final String STICKER_NAME = "sticker_name";
     public static final String STICKER_TYPE = "sticker_type";

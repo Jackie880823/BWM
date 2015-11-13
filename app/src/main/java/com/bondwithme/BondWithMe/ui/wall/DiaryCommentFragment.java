@@ -337,6 +337,12 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
 
     }
 
+    private void setResultOK(int commentCount) {
+        Intent intent = getParentActivity().getIntent();
+        intent.putExtra(Constant.COMMENT_COUNT, String.valueOf(commentCount));
+        getParentActivity().setResult(Activity.RESULT_OK, intent);
+    }
+
     private void initAdapter() {
         if (adapter == null) {
             adapter = new DiaryCommentAdapter(getParentActivity(), data);
@@ -407,7 +413,7 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
                 stickerType = "";
                 stickerGroupPath = "";
 
-                getParentActivity().setResult(Activity.RESULT_OK);
+                setResultOK(data.size() + 1);
                 if (getActivity() != null && !getActivity().isFinishing()) {
                     UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
                 }
@@ -481,7 +487,7 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
                     swipeRefreshLayout.setRefreshing(true);
 
                     getComments();
-                    getParentActivity().setResult(Activity.RESULT_OK);
+                    setResultOK(data.size() + 1);
                 }
 
                 @Override
@@ -557,13 +563,13 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
 
                     @Override
                     public void onResult(String string) {
-                        getParentActivity().setResult(Activity.RESULT_OK);
 
                         startIndex = 0;
                         isRefresh = true;
                         swipeRefreshLayout.setRefreshing(true);
 
                         getComments();
+                        setResultOK(data.size() - 1);
                     }
 
                     @Override

@@ -70,8 +70,8 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
-    private TextView tvCountryCode;
-    private TextView tvStartCountryCode;
+//    private TextView tvCountryCode;
+    private EditText tvStartCountryCode;
     private EditText etPhoneNumber;
     private EditText etPassword;
     private TextView tvLogIn;
@@ -88,6 +88,8 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     private List<UserEntity> userEntities;
     private UserEntity userEntity;
     private AppTokenEntity tokenEntity;
+
+    private boolean blnChooseCountryCode;//通过选择获得的国家区号。如果用户手动修改。把国家名称改回原始状态。这是用来判断的
 
     Handler handler = new Handler()
     {
@@ -183,8 +185,9 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
                 case GET_COUNTRY_CODE:
                     if (resultCode == getActivity().RESULT_OK)
                     {
+                        blnChooseCountryCode = true;
                         tvCountry.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
-                        tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
+//                        tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
                         tvStartCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
                     }
                     break;
@@ -205,8 +208,8 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
     {
         rlCountryCode = (RelativeLayout)view.findViewById(R.id.rl_country_code);
         tvCountry = (TextView)view.findViewById(R.id.tv_country);
-        tvCountryCode = (TextView)view.findViewById(R.id.tv_country_code);
-        tvStartCountryCode = (TextView)view.findViewById(R.id.tv_start_country_code);
+//        tvCountryCode = (TextView)view.findViewById(R.id.tv_country_code);
+        tvStartCountryCode = (EditText)view.findViewById(R.id.tv_start_country_code);
         etPhoneNumber = (EditText)view.findViewById(R.id.et_phone_number);
         etPassword = (EditText)view.findViewById(R.id.et_password);
 //        tvLogIn = (TextView)view.findViewById(R.id.tv_btn_log_in);
@@ -224,8 +227,33 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         tvForgetPassword.setOnClickListener(this);
         etPassword.setOnEditorActionListener(this);
 
-        tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(getActivity()));
+//        tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(getActivity()));
         tvStartCountryCode.setText(CountryCodeUtil.GetCountryZipCode(getActivity()));
+
+        tvStartCountryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (blnChooseCountryCode)
+                {
+
+                }
+                else
+                {
+                    tvCountry.setText(getText(R.string.title_country_code));
+                }
+                blnChooseCountryCode = false;
+            }
+        });
 
         etPhoneNumber.addTextChangedListener(new TextWatcher() {
             @Override
@@ -263,7 +291,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        tvCountryCode.addTextChangedListener(new TextWatcher() {
+        tvStartCountryCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -276,7 +304,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(tvCountryCode.getText().toString()))
+                if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
                 {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                 }
@@ -295,7 +323,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
             return;
         }
 
-        strCountryCode = tvCountryCode.getText().toString().trim();
+        strCountryCode = tvStartCountryCode.getText().toString().trim();
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
         strPassword = etPassword.getText().toString().trim();
 
@@ -381,7 +409,7 @@ public class LogInPhoneFragment extends Fragment implements View.OnClickListener
         }
         else
         {
-            if (TextUtils.isEmpty(tvCountryCode.getText().toString()))
+            if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
             {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
             }
