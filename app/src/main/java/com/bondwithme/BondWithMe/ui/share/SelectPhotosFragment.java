@@ -352,18 +352,29 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 return;
             }
 
-            int cursorCount = imageCursor.getCount();
-            LogUtil.i(TAG, "loadImages& cursorCount: " + cursorCount);
-            for (int i = 0; i < cursorCount; i++) {
+            /**wing modified for 性能 2015.1.13 begin*/
+//            int cursorCount = imageCursor.getCount();
+//            LogUtil.i(TAG, "loadImages& cursorCount: " + cursorCount);
+
+
+            int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+            int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+            int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+
+//            for (int i = 0; i < cursorCount; i++) {
+            while (imageCursor.moveToNext()) {
+                /**wing modified for 性能 2015.1.13 end*/
                 String path;
                 String bucket;
                 long id;
                 Uri contentUri;
+                /**wing modified for 性能 2015.1.13 begin*/
+//                imageCursor.moveToPosition(i);
 
-                imageCursor.moveToPosition(i);
-                int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
-                int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-                int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+//                int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
+//                int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+//                int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+                /**wing modified for 性能 2015.1.13 end*/
                 path = imageCursor.getString(pathColumnIndex);
                 bucket = imageCursor.getString(bucketColumnIndex);
                 id = imageCursor.getLong(uriColumnIndex);
@@ -371,15 +382,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
                 if (!TextUtils.isEmpty(path) && !path.contains(FileUtil.getCacheFilePath(getActivity()))) {
                     MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
+                    //TODO 这个可以改在adapter getview的时候获取
                     mediaData.setThumbnailUri(getImageThumbnailUri(id));
                     addToMediaMap(bucket, mediaData);
-                    //wing
-//                            int id = imageCursor.getInt(uriColumnIndex);
-//                            BitmapFactory.Options options = new BitmapFactory.Options();
-//                            options.inDither = false;
-//                            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//                            imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
-//                            info.b = MediaStore.Video.Thumbnails.getContentUri()getThumbnail(getActivity().getContentResolver(), id,  MediaStore.Images.Thumbnails.MICRO_KIND, options);
                 }
             }
             imageCursor.close();
@@ -407,20 +412,32 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 }
 
                 mMediaUris.put(bucket, new ArrayList<MediaData>());
-                int cursorCount = videoCursor.getCount();
+
+                /**wing modified for 性能 2015.1.13 begin*/
+//                int cursorCount = videoCursor.getCount();
+
+                int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
+                int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
+                int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
+
 
                 // 限制定显示的视频大小的最大数为50M
-                for (int i = 0; i < cursorCount; i++) {
+//                for (int i = 0; i < cursorCount; i++) {
+                while (videoCursor.moveToNext()) {
+                    /**wing modified for 性能 2015.1.13 end*/
                     String path;
                     Uri contentUri;
                     long duration;
                     long id;
 
-                    videoCursor.moveToPosition(i);
+                    /**wing modified for 性能 2015.1.13 begin*/
 
-                    int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
-                    int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
-                    int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
+//                    videoCursor.moveToPosition(i);
+//
+//                    int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
+//                    int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
+//                    int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
+                    /**wing modified for 性能 2015.1.13 end*/
                     duration = videoCursor.getLong(durationColumnIndex);
                     path = videoCursor.getString(pathColumnIndex);
                     id = videoCursor.getLong(uriColumnIndex);
@@ -428,6 +445,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
                     if (!TextUtils.isEmpty(path)) {
                         MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
+                        //TODO 这个可以改在adapter getview的时候获取
                         mediaData.setThumbnailUri(getVideoThumbnailUri(id));
                         addToMediaMap(bucket, mediaData);
                     }
