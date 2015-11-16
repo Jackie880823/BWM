@@ -212,17 +212,16 @@ public class EventEditFragment extends BaseFragment<EventEditActivity> implement
                 @Override
                 public void onResult(String response) {
                     isFinish = false;
-//                    Intent intent = new Intent();
-//                    intent.putExtra("event", mEevent);
-//                    getParentActivity().setResult(Activity.RESULT_OK, intent);
-//                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-////                    getActivity().setResult(1);
-//                    getActivity().finish();
+                    Intent intent = new Intent();
+                    intent.putExtra("event", mEevent);
+                    getParentActivity().setResult(Activity.RESULT_OK, intent);
+                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
+                    getActivity().finish();
 
-                    Intent intent = new Intent(getActivity(), EventDetailActivity.class);
-                    intent.putExtra("group_id",mEevent.getGroup_id());
-                    startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
-                    getParentActivity().finish();
+//                    Intent intent = new Intent(getActivity(), EventDetailActivity.class);
+//                    intent.putExtra("group_id",mEevent.getGroup_id());
+//                    startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
+//                    getParentActivity().finish();
 
                 }
 

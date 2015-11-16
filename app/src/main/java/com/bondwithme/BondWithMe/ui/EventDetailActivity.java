@@ -1,5 +1,6 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,8 @@ public class EventDetailActivity extends BaseActivity {
     private static final String Tag = EventDetailActivity.class.getSimpleName();
     private String group_id;
     private String Content_group_id;
+    public EventEntity mEvent;
+
 
     @Override
     protected void initBottomBar() {
@@ -58,7 +61,7 @@ public class EventDetailActivity extends BaseActivity {
 
     }
 
-    private EventEntity event;
+    public EventEntity event;
 
     public EventEntity getEventEntity() {
         return event;
@@ -205,14 +208,18 @@ public class EventDetailActivity extends BaseActivity {
         // TODO Auto-generated method stub
 //        Fragment fragment = getFragment();
 //        fragment.onActivityResult(requestCode,resultCode,data);
-//        if(requestCode == 1 ){
-//            if(resultCode == 1){
-//                setResult(1);
-//                setResult(Activity.RESULT_OK);
-//                finish();
-//            }
-//        }
-//        super.onActivityResult(requestCode, resultCode, data);
+       if(resultCode == Activity.RESULT_OK){
+           switch (requestCode){
+               case 3:
+                   if(data != null){
+                       mEvent = (EventEntity) data.getSerializableExtra("event");
+                   }
+                   EventDetailFragment.newInstance();
+                   break;
+           }
+       }
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public TitleLeftClick titleLeftClick;

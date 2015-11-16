@@ -46,6 +46,7 @@ public class Constant {
     public static final int ACTION_COMMENT_GROUPS = 14;
 
     public static final String WALL_ENTITY = "wall_entity";
+    public static final String IS_DELETE = "is_delete";
     /**
      * 打开相册的意图请求标识
      */
