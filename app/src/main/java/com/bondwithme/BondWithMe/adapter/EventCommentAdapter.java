@@ -78,6 +78,11 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
+    public void alterHeader(EventEntity detailData){
+        this.detailData = detailData;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemViewType(int position) {
 //        Log.i("getItemViewType=====",position+"");
