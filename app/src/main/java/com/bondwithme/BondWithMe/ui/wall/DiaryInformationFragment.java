@@ -51,10 +51,13 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
     private View vProgress;
 
+    /**
+     * 更新标识，如果当前日志有更新设置为true用于获取到最新数据后返回数据给上一层Activity
+     */
+    private boolean isUpdate;
+
     private SwipeRefreshLayout swipeRefreshLayout;
     private String content_group_id;
-    private LinearLayoutManager llm;
-    private RecyclerView rvList;
 
     private DiaryInformationAdapter mAdapter;
 
@@ -92,8 +95,8 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
         // initView
         vProgress = getViewById(R.id.rl_progress);
-        rvList = getViewById(R.id.rv_wall_comment_list);
-        llm = new LinearLayoutManager(getParentActivity());
+        RecyclerView rvList = getViewById(R.id.rv_wall_comment_list);
+        LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
         rvList.setLayoutManager(llm);
         rvList.setHasFixedSize(true);
 
@@ -145,15 +148,15 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                     if (data != null) {
                         ArrayList<Uri> pickUris;
                         pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
-                        if (pickUris != null && pickUris.isEmpty()) {
+                        if (pickUris != null && !pickUris.isEmpty()) {
+                            vProgress.setVisibility(View.VISIBLE);
                             holder.setLocalPhotos(pickUris);
                         }
-                        setResultOK();
                     }
                     break;
                 case Constant.INTENT_REQUEST_UPDATE_PHOTOS:
                 case Constant.INTENT_REQUEST_UPDATE_WALL:
-                    setResultOK();
+                    isUpdate = true;
                     requestData();
                     break;
                 case Constant.INTENT_REQUEST_COMMENT_WALL:
@@ -161,16 +164,17 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                     if (!wall.getComment_count().equals(commentCount)) {
                         wall.setComment_count(commentCount);
                         setWallContext();
-                        setResultOK();
+                        setResultOK(false);
                     }
                     break;
             }
         }
     }
 
-    private void setResultOK() {
+    private void setResultOK(boolean isDelete) {
         Intent intent = getParentActivity().getIntent();
         intent.putExtra(Constant.WALL_ENTITY, wall);
+        intent.putExtra(Constant.IS_DELETE, isDelete);
         getParentActivity().setResult(Activity.RESULT_OK, intent);
     }
 
@@ -204,6 +208,9 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
             public void onResult(String response) {
                 LogUtil.i(TAG, "request& onResult# response: " + response);
                 wall = new Gson().fromJson(response, WallEntity.class);
+                if (isUpdate) {
+                    setResultOK(false);
+                }
             }
 
             @Override
@@ -310,7 +317,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                     @Override
                     public void onResult(String string) {
 //                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                        setResultOK();
+                        setResultOK(true);
                         getParentActivity().finish();
                     }
 
@@ -402,7 +409,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
     @Override
     public void addPhotoed(WallEntity wallEntity, boolean succeed) {
         if (succeed) {
-            setResultOK();
+            isUpdate = true;
             requestData();
         } else {
             if (vProgress != null) {
