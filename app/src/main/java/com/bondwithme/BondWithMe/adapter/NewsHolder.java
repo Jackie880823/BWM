@@ -145,6 +145,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
                     int lineCount = tvContent.getLineCount();
                     if (lineCount > defaultLineCount){
+                        newsEntity.setVisibleOfTvMore(true);
                         int maxLineEndIndex = tvContent.getLayout().getLineEnd(4);
                         CharSequence sourceText = tvContent.getText();
                         SpannableStringBuilder ssb = new SpannableStringBuilder(sourceText);
