@@ -90,7 +90,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
         /**异常处理*/
 //        CrashHandler crashHandler = CrashHandler.getInstance();
 //        crashHandler.init(this);
-//        CrashHandler.init(this);
+        CrashHandler.init(this);
         /**网络工具初始*/
         HttpTools.init(this);
 
