@@ -141,11 +141,11 @@ public class InteractivePopupWindow extends PopupWindow {
         LinearLayout layout = new LinearLayout(mContext);
         TextView textView = new TextView(mContext);
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        textView.setText(text);
+        textView.setText(ToDBC(text));
 //        textView.setBackgroundColor(mContext.getResources().getDimension(R.drawable.btn_chat_send_bg)));
 //        textView.setBackground(mContext.getDrawable(R.drawable.btn_chat_send_bg));
         textView.setBackground(mContext.getResources().getDrawable(R.drawable.pop_chat_bg));
-        textView.setTextSize(15);
+        textView.setTextSize(14);
         textView.setTextColor(Color.WHITE);
         layout.addView(textView);
 
@@ -153,7 +153,7 @@ public class InteractivePopupWindow extends PopupWindow {
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT );
         para.setMargins(10, 10, 10, 10);
         para.gravity = Gravity.RIGHT;
-        textView.setPadding(15, 15, 15, 15);
+        textView.setPadding(13, 13, 13, 13);
         textView.setLayoutParams(para);
         layout.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);//强制绘出view
         positionTest_x = anchor_rect.centerX() - (layout.getMeasuredWidth()/2);
@@ -172,7 +172,7 @@ public class InteractivePopupWindow extends PopupWindow {
     public void showPopupWindowUp(){
         LogUtil.i("textView.getWidth_2", ": " + popText.getContentView().getMeasuredWidth());
         this.showAtLocation(mParent, Gravity.NO_GRAVITY, position_x, screen_pos[1] - this.getHeight() - DensityUtil.dip2px(App.getContextInstance(), 10));
-        popText.showAtLocation(mParent, Gravity.NO_GRAVITY, positionTest_x, screen_pos[1] - this.getHeight() - DensityUtil.dip2px(App.getContextInstance(), 36));//显示文字
+        popText.showAtLocation(mParent, Gravity.NO_GRAVITY, positionTest_x, screen_pos[1] - this.getHeight() - DensityUtil.dip2px(App.getContextInstance(), 34));//显示文字
 //        this.showAtLocation(mParent, Gravity.NO_GRAVITY, position_x, screen_pos[1] - this.getHeight() - 70);
 //        popText.showAtLocation(mParent, Gravity.NO_GRAVITY, positionTest_x, screen_pos[1] - this.getHeight() - 100);//显示文字
 
@@ -203,7 +203,7 @@ public class InteractivePopupWindow extends PopupWindow {
      * 存储已经显示Pop的状态
      */
     public void getSavePopFinish(String key){
-        PreferencesUtil.saveValue(mContext,key,true);
+        PreferencesUtil.saveValue(mContext, key, true);
     }
 
     /**
@@ -226,6 +226,24 @@ public class InteractivePopupWindow extends PopupWindow {
         return map;
     }
 
+    /**
+     * 半角转换为全角
+     *
+     * @param input
+     * @return
+     */
+    public static String ToDBC(String input) {
+        char[] c = input.toCharArray();
+        for (int i = 0; i < c.length; i++) {
+            if (c[i] == 12288) {
+                c[i] = (char) 32;
+                continue;
+            }
+            if (c[i] > 65280 && c[i] < 65375)
+                c[i] = (char) (c[i] - 65248);
+        }
+        return new String(c);
+    }
 
     public PopDismissListener mPopDismissListener;
 

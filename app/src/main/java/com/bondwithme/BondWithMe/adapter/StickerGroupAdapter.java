@@ -2,7 +2,6 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -26,10 +25,8 @@ import com.bondwithme.BondWithMe.entity.StickerGroupEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerDetailActivity;
-import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -120,16 +117,16 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
     }
 
     private void setFirstBigSticker(ImageView view) {
-        String picPath = FileUtil.getBigStickerPath(mContext, stickerGroupEntity.getPath(), "1", stickerGroupEntity.getType());
-        File file = new File(picPath);
-        if (file.exists()){
-            view.setImageBitmap(BitmapFactory.decodeFile(picPath));
-        }else{
+//        String picPath = FileUtil.getBigStickerPath(mContext, stickerGroupEntity.getPath(), "1", stickerGroupEntity.getType());
+//        File file = new File(picPath);
+//        if (file.exists()){
+//            view.setImageBitmap(BitmapFactory.decodeFile(picPath));
+//        }else{
             VolleyUtil.initNetworkImageView(mContext,
                     (NetworkImageView)view,
                     url,
                     R.drawable.network_image_default, R.drawable.network_image_default);
-        }
+//        }
 
     }
 
