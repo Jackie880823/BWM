@@ -466,6 +466,36 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
+                case Constant.INTENT_REQUEST_COMMENT_WALL: // 更新了评论
+                    if (data == null) {
+                        return;
+                    }
+                    List<WallEntity> wallEntities = adapter.getData();
+
+                    int position = data.getIntExtra(Constant.POSITION, -1);
+                    LogUtil.d(TAG, "onActivityResult& position: " + position);
+
+                    if (data.getBooleanExtra(Constant.IS_DELETE, false)) {
+                        wallEntities.remove(position);
+                        adapter.notifyItemRemoved(position);
+                    } else {
+
+                        if (position >= 0 && position < wallEntities.size()) {
+                            WallEntity wallEntity;
+                            String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
+                            LogUtil.d(TAG, "onActivityResult& commentCount: " + commentCount);
+                            if (TextUtils.isEmpty(commentCount)) {
+                                wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
+                                wallEntities.set(position, wallEntity);
+                            } else {
+                                wallEntity = wallEntities.get(position);
+                                wallEntity.setComment_count(commentCount);
+                            }
+                            adapter.notifyItemChanged(position);
+                        }
+                    }
+                    break;
+
                 case Constant.INTENT_REQUEST_CREATE_WALL:
                     //wait a mement for the pic handle on server
                     try {
@@ -473,29 +503,6 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                case Constant.INTENT_REQUEST_COMMENT_WALL: // 更新了评论
-                    if (data == null) {
-                        return;
-                    }
-
-                    int position = data.getIntExtra(Constant.POSITION, -1);
-                    LogUtil.d(TAG, "onActivityResult& position: " + position);
-                    List<WallEntity> wallEntities = adapter.getData();
-                    if (position >= 0 && position < wallEntities.size()) {
-                        WallEntity wallEntity;
-                        String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
-                        LogUtil.d(TAG, "onActivityResult& commentCount: " + commentCount);
-                        if (TextUtils.isEmpty(commentCount)) {
-                            wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
-                            wallEntities.set(position, wallEntity);
-                        } else {
-                            wallEntity = wallEntities.get(position);
-                            wallEntity.setComment_count(commentCount);
-                        }
-                        adapter.notifyItemChanged(position);
-                    }
-                    break;
-
                 case Constant.INTENT_REQUEST_UPDATE_WALL: // 更新了日志
                 case Constant.INTENT_REQUEST_UPDATE_PHOTOS: // 更新了图片的日志
                     refresh();

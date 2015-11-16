@@ -138,6 +138,13 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
         if(sendCommentView != null) {
             sendCommentView.commitAllowingStateLoss();
         }
+        if(getParentActivity().mEvent != null){
+            if (adapter != null){
+                event = getParentActivity().mEvent;
+                adapter.alterHeader(event);
+            }
+
+        }
     }
 
     @Override
@@ -329,7 +336,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         intent = new Intent(getParentActivity(), EventEditActivity.class);
                         intent.putExtra("event", event);
                         getActivity().startActivityForResult(intent, 3);
-                        getActivity().finish();
+//                        getActivity().finish();
                         //                        startActivityForResult(intent, Constant.ACTION_EVENT_UPDATE);
                     } else if(v.getId() == getParentActivity().leftButton.getId()) {
                         if(isCommentBim) {
@@ -757,93 +764,94 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
     @Override
     public void requestData() {
-        //请求detail数据
-        HashMap<String, String> jsonParams = new HashMap<String, String>();
-        jsonParams.put("user_id", MainActivity.getUser().getUser_id());
-        jsonParams.put("group_id", group_id);
-        String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
+            //请求detail数据
+            HashMap<String, String> jsonParams = new HashMap<String, String>();
+            jsonParams.put("user_id", MainActivity.getUser().getUser_id());
+            jsonParams.put("group_id", group_id);
+            String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
 
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("condition", jsonParamsString);
-        String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
-        mHttpTools.get(url, params, TAG, new HttpCallback() {
-            @Override
-            public void onStart() {
-                if (vProgress.getVisibility() == View.GONE) {
-                    vProgress.setVisibility(View.VISIBLE);
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("condition", jsonParamsString);
+            String url = UrlUtil.generateUrl(Constant.API_GET_EVENT_DETAIL, params);
+            mHttpTools.get(url, params, TAG, new HttpCallback() {
+                @Override
+                public void onStart() {
+                    if (vProgress.getVisibility() == View.GONE) {
+                        vProgress.setVisibility(View.VISIBLE);
+                    }
                 }
-            }
 
-            @Override
-            public void onFinish() {
+                @Override
+                public void onFinish() {
 //                //如果只是Activity回调就不用在刷新评论
 //                if(data.size() < 1 ){
 //                    requestComment();
 //                }
 
-            }
+                }
 
-            @Override
-            public void onResult(String response) {
-                event = new Gson().fromJson(response, EventEntity.class);
-                vProgress.setVisibility(View.GONE);
-                try {
-                    isRefresh = false;
-                    currentPage = 1;//还原为第一页
-                    initAdapter();
-                    ResponseStatus[] statuses = ResponseStatus.values();
-                    for (ResponseStatus status : statuses) {
-                        if (status.getServerCode().equals(event.getGroup_member_response())) {
-                            currentStatus = status;
-                            break;
+                @Override
+                public void onResult(String response) {
+                    event = new Gson().fromJson(response, EventEntity.class);
+                    vProgress.setVisibility(View.GONE);
+                    try {
+                        isRefresh = false;
+                        currentPage = 1;//还原为第一页
+                        initAdapter();
+                        ResponseStatus[] statuses = ResponseStatus.values();
+                        for (ResponseStatus status : statuses) {
+                            if (status.getServerCode().equals(event.getGroup_member_response())) {
+                                currentStatus = status;
+                                break;
+                            }
+
                         }
+                        changeIntentUI(currentStatus);
+                        swipeRefreshLayout.setRefreshing(false);
+                        loading = false;
+                        if (data.size() < 1) {
+                            requestComment();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        reInitDataStatus();
+                    }
 
+                    if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
+                        getParentActivity().rightButton.setImageResource(R.drawable.btn_edit);
+
+                        getParentActivity().rightButton.setVisibility(View.VISIBLE);
+                        if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date()).getTime()))) {
+                            getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
+                            getParentActivity().rightButton.setEnabled(false);
+                        }
+                        if ("2".equals(event.getGroup_event_status())) {
+                            getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
+                            getParentActivity().title_icon.setVisibility(View.GONE);
+                            getParentActivity().rightButton.setEnabled(false);
+                        }
+                    } else {
+                        getParentActivity().rightButton.setVisibility(View.INVISIBLE);
                     }
-                    changeIntentUI(currentStatus);
-                    swipeRefreshLayout.setRefreshing(false);
-                    loading = false;
-                    if (data.size() < 1) {
-                        requestComment();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    reInitDataStatus();
+
                 }
 
-                if (MainActivity.getUser().getUser_id().equals(event.getGroup_owner_id())) {
-                    getParentActivity().rightButton.setImageResource(R.drawable.btn_edit);
+                @Override
+                public void onError(Exception e) {
 
-                    getParentActivity().rightButton.setVisibility(View.VISIBLE);
-                    if (MyDateUtils.isBeforeDate(MyDateUtils.formatTimestamp2Local(MyDateUtils.dateString2Timestamp(event.getGroup_event_date()).getTime()))) {
-                        getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
-                        getParentActivity().rightButton.setEnabled(false);
-                    }
-                    if ("2".equals(event.getGroup_event_status())) {
-                        getParentActivity().rightButton.setImageResource(R.drawable.icon_edit_press);
-                        getParentActivity().title_icon.setVisibility(View.GONE);
-                        getParentActivity().rightButton.setEnabled(false);
-                    }
-                } else {
-                    getParentActivity().rightButton.setVisibility(View.INVISIBLE);
                 }
 
-            }
+                @Override
+                public void onCancelled() {
 
-            @Override
-            public void onError(Exception e) {
+                }
 
-            }
+                @Override
+                public void onLoading(long count, long current) {
 
-            @Override
-            public void onCancelled() {
+                }
+            });
 
-            }
-
-            @Override
-            public void onLoading(long count, long current) {
-
-            }
-        });
 
     }
 
@@ -1265,7 +1273,7 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 //        getParentActivity()
-        Log.i("EventDetailFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
+        Log.i(TAG, "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         sendCommentView.onActivityResult(requestCode, resultCode, data);
 
     }

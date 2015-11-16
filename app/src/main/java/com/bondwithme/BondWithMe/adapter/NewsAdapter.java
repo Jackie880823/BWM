@@ -41,10 +41,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
 
     @Override
     public void onBindViewHolder(final NewsHolder holder, int position) {
-        LogUtil.d(TAG,"onBindViewHolder");
         final NewsEntity news = data.get(position);
+        LogUtil.d(TAG, "onBindViewHolder" + "isVisibleOfTvMore=======" + news.isVisibleOfTvMore());
         holder.setNewsEntity(news);
-        holder.setSwitchVisibility(View.INVISIBLE);
+        if(!news.isVisibleOfTvMore()){
+            holder.setSwitchVisibility(View.GONE);
+        }
         holder.setContent(news,mContext);
     }
 
