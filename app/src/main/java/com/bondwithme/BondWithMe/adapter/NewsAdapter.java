@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.NewsEntity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
     private List<NewsEntity> data;
     private int contentDisplayStatus = 0;//默认未展开
     private final int defaultMaxLineCount = 5;
+    private String TAG = "NewsAdapter";
 
 
     public NewsAdapter(Context context, List<NewsEntity> data) {
@@ -25,6 +27,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
 
     @Override
     public NewsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LogUtil.d(TAG,"onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_item, parent, false);
         // ViewHolder参数一定要是Item的Root节点.
         return new NewsHolder(view,mContext);
@@ -38,9 +41,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsHolder> {
 
     @Override
     public void onBindViewHolder(final NewsHolder holder, int position) {
+        LogUtil.d(TAG,"onBindViewHolder");
         final NewsEntity news = data.get(position);
         holder.setNewsEntity(news);
-        holder.setSwitchVisibility(View.GONE);
+        holder.setSwitchVisibility(View.INVISIBLE);
         holder.setContent(news,mContext);
     }
 
