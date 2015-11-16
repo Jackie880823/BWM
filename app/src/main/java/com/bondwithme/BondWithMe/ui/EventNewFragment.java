@@ -529,7 +529,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 public void onResult(String response) {
                     getParentActivity().setResult(Activity.RESULT_OK);
                     //                    Log.i("new_button_rt====================", "");
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
 //                    getParentActivity().finish();
 
                     try {
