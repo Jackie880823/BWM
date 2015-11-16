@@ -690,7 +690,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 break;
         }
         tvTitle.setSelected(true);
-        tvTitle.requestFocus();
+        tvTitle.requestFocus();//让title获取焦点以便文字可以滚动
         currentTabEnum = tabEnum;
     }
 
@@ -721,7 +721,7 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
         if (tab == null || isCurrentTab(tab)) {
             return;
         }
-        mViewPager.setCurrentItem(tab.ordinal());
+        mViewPager.setCurrentItem(tab.ordinal(),false);
 
     }
 
