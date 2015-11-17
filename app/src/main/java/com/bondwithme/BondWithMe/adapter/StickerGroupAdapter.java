@@ -18,11 +18,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.StickerGroupEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerDetailActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -122,8 +122,8 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
 //        if (file.exists()){
 //            view.setImageBitmap(BitmapFactory.decodeFile(picPath));
 //        }else{
-            VolleyUtil.initNetworkImageView(mContext,
-                    (NetworkImageView)view,
+            BitmapTools.getInstance(mContext).display(
+                    (NetworkImageView) view,
                     url,
                     R.drawable.network_image_default, R.drawable.network_image_default);
 //        }

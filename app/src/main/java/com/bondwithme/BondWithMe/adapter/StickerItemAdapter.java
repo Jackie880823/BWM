@@ -15,12 +15,12 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.StickerGroupEntity;
 import com.bondwithme.BondWithMe.entity.StickerItemEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -99,7 +99,7 @@ public class StickerItemAdapter extends BaseAdapter {
 //            LogUtil.d(TAG,"file.exists()");
 //        }else{
 //            LogUtil.d(TAG,"initNetworkImageView()");
-//            VolleyUtil.initNetworkImageView(mContext, viewHolder.ivStickerItem,
+//            BitmapTools.getInstance(mContext).display( viewHolder.ivStickerItem,
 //                    String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_S_" + stickerItemEntity.getSticker_name() + stickerGroupEntity.getType(),stickerGroupEntity.getVersion()),
 //                    R.drawable.network_image_default, R.drawable.network_image_default);
 //        }
@@ -240,7 +240,7 @@ public class StickerItemAdapter extends BaseAdapter {
                 bigSticker.setScaleType(ImageView.ScaleType.FIT_XY);
                 bigSticker.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 //                    bigSticker.setPadding(5,5,5,5);
-//                VolleyUtil.initNetworkImageView(mContext, bigSticker,
+//                BitmapTools.getInstance(mContext).display( bigSticker,
 //                        String.format(Constant.API_STICKERSTORE_FIRST_STICKER, MainActivity.getUser().getUser_id(), data.get(position).getSticker_name() + "_B", stickerGroupEntity.getPath(), stickerGroupEntity.getType()));
 
                 setStickerItem(bigSticker,position,false);
@@ -290,7 +290,7 @@ public class StickerItemAdapter extends BaseAdapter {
             if (isGif){
                 downloadAsyncTask((GifImageView) item, String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(), stickerGroupEntity.getVersion()));
             }else {
-                VolleyUtil.initNetworkImageView(mContext, (NetworkImageView)item,
+                BitmapTools.getInstance(mContext).display((NetworkImageView) item,
                         String.format(Constant.API_STICKER_ORIGINAL_IMAGE, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath() + "_B_" + data.get(position).getSticker_name() + stickerGroupEntity.getType(), stickerGroupEntity.getVersion()),
                         R.drawable.network_image_default, R.drawable.network_image_default);
             }

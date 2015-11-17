@@ -22,12 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
@@ -330,7 +330,7 @@ public class CreateGroupActivity extends BaseActivity {
             }
             UserEntity userEntity = mUserList.get(position);
             viewHolder.textName.setText(userEntity.getUser_given_name());
-            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain,
+            BitmapTools.getInstance(mContext).display(viewHolder.imageMain,
                     String.format(Constant.API_GET_PIC, Constant.Module_profile, userEntity.getUser_id(), "profile"),
                     R.drawable.network_image_default, R.drawable.network_image_default);
             if ("0".equals(userEntity.getFam_accept_flag())) {

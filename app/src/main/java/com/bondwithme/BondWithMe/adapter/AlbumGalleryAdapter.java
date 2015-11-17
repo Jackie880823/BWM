@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 
 import java.util.List;
 
@@ -63,13 +63,13 @@ public class AlbumGalleryAdapter extends ArrayAdapter {
         if(mData.size() > 7)
         {
             for (int i = 0; i < 6; i++) {
-                VolleyUtil.initNetworkImageView(mContext, viewHolder.image[i], String.format(Constant.API_GET_PIC, Constant.Module_preview_m, mMemberId, mData.get(i).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                BitmapTools.getInstance(mContext).display(viewHolder.image[i], String.format(Constant.API_GET_PIC, Constant.Module_preview_m, mMemberId, mData.get(i).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             }
         }
         else
         {
             for (int i = 0; i < mData.size(); i++) {
-                VolleyUtil.initNetworkImageView(mContext, viewHolder.image[i], String.format(Constant.API_GET_PIC, Constant.Module_preview_m, mMemberId, mData.get(i).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                BitmapTools.getInstance(mContext).display(viewHolder.image[i], String.format(Constant.API_GET_PIC, Constant.Module_preview_m, mMemberId, mData.get(i).getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             }
         }
 

@@ -284,6 +284,7 @@ public class BitmapTools {
                 if (listener != null) {
                     listener.onErrorResponse(new VolleyError("url can not be empty!"));
                 }
+
                 return null;
             }
             if (tagContainer != null && tagContainer.getRequestUrl() != null) {

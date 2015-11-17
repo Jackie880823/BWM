@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
@@ -20,7 +21,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.AlbumDetailAdapter;
 import com.bondwithme.BondWithMe.entity.AlbumPhotoEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -191,7 +191,7 @@ public class AlbumDetailActivity extends BaseActivity {
     private void setImageData(String albumFileId) {
         nowSelectIndex = albumDetailAdapter.getSelectPosition();
         pic_num.setText(String.format("<%s/%s>", albumDetailAdapter.getSelectPosition() + 1 + "", total));
-        VolleyUtil.initNetworkImageView(mContext, imageView, String.format(Constant.API_GET_PIC, Constant.Module_preview, memberId, albumFileId),
+        BitmapTools.getInstance(mContext).display( imageView, String.format(Constant.API_GET_PIC, Constant.Module_preview, memberId, albumFileId),
                 R.drawable.network_image_default, R.drawable.network_image_default);
     }
 

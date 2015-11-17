@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.BigDayEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.FamilyProfileActivity;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
@@ -83,7 +83,7 @@ public class BondAlertBigDayAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 item.llTop.setVisibility(View.VISIBLE);
             }
 
-            VolleyUtil.initNetworkImageView(mContext, item.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(item.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             item.tvName.setText(mData.get(position).getUser_given_name() + mContext.getResources().getString(R.string.text_today_birthday_on));
             item.tvTime.setText(mData.get(position).getDay() + ", " + mData.get(position).getBirthday_date());
         }
@@ -105,7 +105,7 @@ public class BondAlertBigDayAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
 
 
-            VolleyUtil.initNetworkImageView(mContext, item.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(item.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             item.tvName.setText(mData.get(position).getUser_given_name() + mContext.getResources().getString(R.string.text_upcoming_birthdays_on));
             item.tvTime.setText(mData.get(position).getDay() + ", " + mData.get(position).getBirthday_date());
             item.tvLeft.setText(mData.get(position).getDay_left() + mContext.getResources().getString(R.string.text_d) + mContext.getResources().getString(R.string.text_left));
