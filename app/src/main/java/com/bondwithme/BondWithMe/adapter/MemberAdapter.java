@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.MemberEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         moduleAction = memberEntity.getModule_action();
         tag = tag(moduleAction);
         memberId = memberEntity.getAction_user_id();
-        VolleyUtil.initNetworkImageView(mContext, holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         holder.owner_name.setText(memberEntity.getAction_username());
 //        holder.owner_content.setText(action[tag]);
 
