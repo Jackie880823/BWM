@@ -306,7 +306,9 @@ public class LocalMediaAdapter extends BaseAdapter {
                             String contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + imageId;
                             ImageLoader.getInstance().displayImage(contentUri, (ImageView) view, UniversalImageLoaderUtil.options);
                         }
-                    } finally {
+                    } catch (Exception e){
+
+                    }finally {
                         if (cursor != null && !cursor.isClosed()) {
                             cursor.close();
                         }
@@ -353,7 +355,11 @@ public class LocalMediaAdapter extends BaseAdapter {
                     loadLocalBitmap((ImageView) msg.obj, msg.arg1);
                     break;
                 case MSG_NOTIFY:
-                    notifyDataSetChanged();
+                    if (deleteMediaListListener != null && mDatas.isEmpty()){
+                        deleteMediaListListener.deleteList(mDatas);
+                    } else {
+                        notifyDataSetChanged();
+                    }
                     break;
             }
         }
@@ -374,4 +380,14 @@ public class LocalMediaAdapter extends BaseAdapter {
         TextView tvDuration;
     }
 
+
+    private DeleteMediaListListener deleteMediaListListener;
+
+    public void setDeleteMediaListListener(DeleteMediaListListener deleteMediaListListener) {
+        this.deleteMediaListListener = deleteMediaListListener;
+    }
+
+    public interface DeleteMediaListListener{
+        void deleteList(List<MediaData> list);
+    }
 }
