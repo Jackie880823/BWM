@@ -203,7 +203,7 @@ public class StickerDetailActivity extends BaseActivity {
     private void downloadZip(final StickerGroupEntity stickerGroupEntity, final int position) {
 //        String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
         String urlString = String.format(Constant.API_DOWNLOAD_STICKER_ZIP, MainActivity.getUser().getUser_id(), "1", stickerGroupEntity.getPath());
-        final String target = FileUtil.getCacheFilePath(this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
+        final String target = FileUtil.getCacheFilePath(this,false) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
         new HttpTools(this).download(App.getContextInstance(), urlString, target, true, new HttpCallback() {
             @Override
             public void onStart() {

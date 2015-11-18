@@ -65,7 +65,7 @@ public class ViewUrlPicActivity extends BaseActivity{
 
     @Override
     public void requestData() {
-        new HttpTools(this).download(this, picUrl, PicturesCacheUtil.getCachePicPath(this), true, new HttpCallback() {
+        new HttpTools(this).download(this, picUrl, PicturesCacheUtil.getCachePicPath(this,false), true, new HttpCallback() {
             @Override
             public void onStart() {
                 vProgress.setVisibility(View.VISIBLE);

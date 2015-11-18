@@ -256,7 +256,7 @@ public class ViewPicFragment extends BaseLazyLoadFragment {
 //                }
 //            });
 
-            downloadRequest = new HttpTools(getContext()).download(App.getContextInstance(),pic_url, PicturesCacheUtil.getCachePicPath(getActivity()), true, new HttpCallback() {
+            downloadRequest = new HttpTools(getContext()).download(App.getContextInstance(),pic_url, PicturesCacheUtil.getCachePicPath(getActivity(),false), true, new HttpCallback() {
                 @Override
                 public void onStart() {
                     if (iv_pic != null) {

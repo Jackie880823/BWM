@@ -1092,7 +1092,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, accountUserId, photoEntity.getFile_id());
             String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, photoEntity.getUser_id(), photoEntity.getFile_id());
             /**wing modified*/
-            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context), true, new HttpCallback() {
+            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context,false), true, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
