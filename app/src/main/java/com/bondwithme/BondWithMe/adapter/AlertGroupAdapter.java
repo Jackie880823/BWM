@@ -4,17 +4,16 @@ package com.bondwithme.BondWithMe.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AlertGroupEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
@@ -65,7 +64,7 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
         String rejectTextGroup = mContext.getResources().getString(R.string.text_reject_group);
         tag = tag(moduleAction);
         //设置头像
-        VolleyUtil.initNetworkImageView(mContext,
+        BitmapTools.getInstance(mContext).display(
                 holder.ownerHead,
                 String.format(Constant.API_GET_PHOTO, Constant.Module_profile, alertGroupEntity.getAction_user_id()),
                 R.drawable.network_image_default, R.drawable.network_image_default);

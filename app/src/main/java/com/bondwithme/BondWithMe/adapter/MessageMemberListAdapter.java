@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.entity.PrivateMessageEntity;
+import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
@@ -19,19 +19,19 @@ import java.util.List;
 /**
  * Created by quankun on 15/5/6.
  */
-public class MessagePrivateListAdapter extends BaseAdapter {
+public class MessageMemberListAdapter extends BaseAdapter {
 
     private Context mContext;
-    private List<PrivateMessageEntity> mUserEntityList;
+    private List<UserEntity> mUserEntityList;
 
-    public MessagePrivateListAdapter(Context mContext, List<PrivateMessageEntity> userEntityList) {
+    public MessageMemberListAdapter(Context mContext, List<UserEntity> userEntityList) {
         this.mContext = mContext;
         mUserEntityList = userEntityList;
     }
 
-    public void AddUserEntityData(List<PrivateMessageEntity> userEntityList) {
+    public void AddUserEntityData(List<UserEntity> userEntityList) {
         if (null != userEntityList && userEntityList.size() > 0) {
-            for (PrivateMessageEntity userEntity : userEntityList) {
+            for (UserEntity userEntity : userEntityList) {
                 if (!mUserEntityList.contains(userEntity)) {
                     mUserEntityList.add(userEntity);
                 }
@@ -40,7 +40,7 @@ public class MessagePrivateListAdapter extends BaseAdapter {
         }
     }
 
-    public void NewUserEntityData(List<PrivateMessageEntity> userEntityList) {
+    public void NewUserEntityData(List<UserEntity> userEntityList) {
         if (null != userEntityList && userEntityList.size() > 0) {
             mUserEntityList.clear();
             mUserEntityList.addAll(userEntityList);
@@ -48,11 +48,11 @@ public class MessagePrivateListAdapter extends BaseAdapter {
         }
     }
 
-    public List<PrivateMessageEntity> getmUserEntityList() {
+    public List<UserEntity> getmUserEntityList() {
         return mUserEntityList;
     }
 
-    public void setmUserEntityList(List<PrivateMessageEntity> mUserEntityList) {
+    public void setmUserEntityList(List<UserEntity> mUserEntityList) {
         this.mUserEntityList = mUserEntityList;
     }
 
@@ -89,7 +89,7 @@ public class MessagePrivateListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        PrivateMessageEntity userEntity = mUserEntityList.get(position);
+        UserEntity userEntity = mUserEntityList.get(position);
 
         BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         viewHolder.memberName.setText(userEntity.getUser_given_name());
@@ -108,22 +108,7 @@ public class MessagePrivateListAdapter extends BaseAdapter {
         } else {
             viewHolder.tvNum.setVisibility(View.GONE);
         }
-        String type=userEntity.getType();
-        if(PrivateMessageEntity.POST_TEXT.equals(type)){
-            viewHolder.lastMessage.setText(userEntity.getMessage());
-        }else if(PrivateMessageEntity.POST_STICKER.equals(type)){
-            viewHolder.lastMessage.setText(mContext.getString(R.string.text_message_chat_post_text));
-        }else if(PrivateMessageEntity.POST_PHOTO.equals(type)){
-            viewHolder.lastMessage.setText(mContext.getString(R.string.text_message_chat_post_photo));
-        }else if(PrivateMessageEntity.POST_LOCATION.equals(type)){
-            viewHolder.lastMessage.setText(mContext.getString(R.string.text_message_chat_post_location));
-        }else if(PrivateMessageEntity.POST_AUDIO.equals(type)){
-            viewHolder.lastMessage.setText(R.string.text_message_chat_post_audio);
-        }else if(PrivateMessageEntity.POST_VIDEO.equals(type)){
-            viewHolder.lastMessage.setText(R.string.text_message_chat_post_video);
-        }else{
-            viewHolder.lastMessage.setText("");
-        }
+        viewHolder.lastMessage.setText(userEntity.getUser_given_name());
         viewHolder.lastData.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, userEntity.getGroup_active_date()));
         return convertView;
     }

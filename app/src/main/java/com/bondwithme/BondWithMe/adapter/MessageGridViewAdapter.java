@@ -13,50 +13,32 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by quankun on 15/5/6.
+ * Created by quankun on 15/4/17.
  */
-public class PrivateMessageListAdapter extends BaseAdapter {
+public class MessageGridViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<UserEntity> mUserEntityList;
+    public static final int PAGE_SIZE = 8; // 每一屏幕显示28 Button
 
-    public PrivateMessageListAdapter(Context mContext, List<UserEntity> userEntityList) {
+    public MessageGridViewAdapter(Context mContext, List<UserEntity> userEntityList, int page) {
         this.mContext = mContext;
-        mUserEntityList = userEntityList;
-    }
-
-    public void AddUserEntityData(List<UserEntity> userEntityList) {
-        if (null != userEntityList && userEntityList.size() > 0) {
-            for (UserEntity userEntity : userEntityList) {
-                if (!mUserEntityList.contains(userEntity)) {
-                    mUserEntityList.add(userEntity);
-                }
-            }
-            notifyDataSetChanged();
+        mUserEntityList = new ArrayList<UserEntity>();
+        int i = page * PAGE_SIZE;
+        int end = i + PAGE_SIZE;
+        while ((i < userEntityList.size()) && (i < end)) {
+            mUserEntityList.add(userEntityList.get(i));
+            i++;
         }
-    }
-
-    public void NewUserEntityData(List<UserEntity> userEntityList) {
-        if (null != userEntityList && userEntityList.size() > 0) {
-            mUserEntityList.clear();
-            mUserEntityList.addAll(userEntityList);
-            notifyDataSetChanged();
-        }
-    }
-
-    public List<UserEntity> getmUserEntityList() {
-        return mUserEntityList;
-    }
-
-    public void setmUserEntityList(List<UserEntity> mUserEntityList) {
-        this.mUserEntityList = mUserEntityList;
     }
 
     @Override
     public int getCount() {
+
         return mUserEntityList.size();
     }
 
@@ -93,20 +75,12 @@ public class PrivateMessageListAdapter extends BaseAdapter {
 
         BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         viewHolder.memberName.setText(userEntity.getUser_given_name());
-        int messageNum = 0;
-        try {
-            messageNum = Integer.parseInt(userEntity.getUnread().toString());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        if (messageNum > 0 && messageNum < 100) {
+        if ((Integer.parseInt(userEntity.getUnread().toString()) > 0) && (Integer.parseInt(userEntity.getUnread().toString())) < 100) {
             viewHolder.tvNum.setVisibility(View.VISIBLE);
             viewHolder.tvNum.setText(userEntity.getUnread().toString());
-        } else if (messageNum > 99) {
+        } else if (Integer.parseInt(userEntity.getUnread().toString()) > 99) {
             viewHolder.tvNum.setVisibility(View.VISIBLE);
             viewHolder.tvNum.setText("99+");
-        } else {
-            viewHolder.tvNum.setVisibility(View.GONE);
         }
 
         return convertView;
@@ -115,7 +89,10 @@ public class PrivateMessageListAdapter extends BaseAdapter {
 
     class ViewHolder {
         CircularNetworkImage imageMain;
+
+
         TextView memberName;
+
         TextView tvNum;
     }
 }

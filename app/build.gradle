@@ -58,9 +58,9 @@ android {
         }
         release {
             // 不显示Log
-            minifyEnabled true
+            minifyEnabled false //TODO
             buildConfigField "boolean", "LOG_DEBUG", "false"
-            zipAlignEnabled true
+            zipAlignEnabled false //TODO
             // 移除无用的resource文件
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

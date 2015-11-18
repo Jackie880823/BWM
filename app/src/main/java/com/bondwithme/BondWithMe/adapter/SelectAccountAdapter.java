@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.start.ResetPasswordActivity;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -47,7 +47,7 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<RecyclerView.View
         MemberViewHolder item = (MemberViewHolder)holder;
 
         item.tvAccount.setText(mData.get(position).getUser_login_id());
-        VolleyUtil.initNetworkImageView(mContext, item.cnivMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(item.cnivMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
     }
 

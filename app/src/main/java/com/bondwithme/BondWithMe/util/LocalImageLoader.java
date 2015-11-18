@@ -467,7 +467,7 @@ public class LocalImageLoader {
      */
     private static String getPath(Context context, String srcPath, boolean isDelSrc, Bitmap bitmap) {
         File srcFile = new File(srcPath);
-        String desPath = PicturesCacheUtil.getCachePicPath(context);
+        String desPath = PicturesCacheUtil.getCachePicPath(context,true);
         int degree = readPictureDegree(srcPath);
         try {
             if (degree != 0)

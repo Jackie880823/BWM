@@ -1267,7 +1267,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP));
+                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP,true));
                     handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
                     break;
 
@@ -1336,7 +1336,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         // 下面这句指定调用相机拍照后的照片存储的路径
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
                 .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
-                        CACHE_PIC_NAME_TEMP)));
+                        CACHE_PIC_NAME_TEMP,true)));
         // 图片质量为高
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         intent.putExtra("return-data", false);
