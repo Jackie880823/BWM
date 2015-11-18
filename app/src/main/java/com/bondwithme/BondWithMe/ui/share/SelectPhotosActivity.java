@@ -257,7 +257,7 @@ public class SelectPhotosActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                File file = PicturesCacheUtil.getCachePicFileByName(SelectPhotosActivity.this, CACHE_PIC_NAME_TEMP + SystemClock.currentThreadTimeMillis());
+                File file = PicturesCacheUtil.getCachePicFileByName(SelectPhotosActivity.this, CACHE_PIC_NAME_TEMP + SystemClock.currentThreadTimeMillis(),true);
                 if (file != null) {
                     imagePaht = file.getAbsolutePath();
                 }

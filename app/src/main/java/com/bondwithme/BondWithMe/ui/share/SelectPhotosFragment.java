@@ -363,7 +363,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 id = imageCursor.getLong(uriColumnIndex);
                 contentUri = Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + id);
 
-                if (!TextUtils.isEmpty(path) && !path.contains(FileUtil.getCacheFilePath(getActivity()))) {
+                if (!TextUtils.isEmpty(path) && !path.contains(FileUtil.getCacheFilePath(getActivity(),true))) {
                     MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
                     mediaData.setId(id);
                     addToMediaMap(bucket, mediaData);

@@ -169,7 +169,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
             public void run() {
                 super.run();
                 String urlString = String.format(Constant.API_DOWNLOAD_STICKER_ZIP, MainActivity.getUser().getUser_id(), "1", stickerGroupEntity.getPath());
-                final String target = FileUtil.getCacheFilePath(StickerStoreActivity.this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
+                final String target = FileUtil.getCacheFilePath(StickerStoreActivity.this,false) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
                 new HttpTools(StickerStoreActivity.this).download(App.getContextInstance(), urlString, target, true, new HttpCallback() {
                     @Override
                     public void onStart() {
@@ -274,7 +274,7 @@ public class StickerStoreActivity extends BaseActivity implements View.OnTouchLi
         final StickerGroupEntity stickerGroupEntity = dataStickerGroup.get(position);
 //        String urlString = String.format(Constant.API_STICKER_ZIP, MainActivity.getUser().getUser_id(), stickerGroupEntity.getPath());
         String urlString = String.format(Constant.API_DOWNLOAD_STICKER_ZIP, MainActivity.getUser().getUser_id(), "1", stickerGroupEntity.getPath());
-        final String target = FileUtil.getCacheFilePath(this) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
+        final String target = FileUtil.getCacheFilePath(this,false) + String.format("/%s.zip", "" + stickerGroupEntity.getName());
         DownloadRequest download = new HttpTools(this).download(App.getContextInstance(), urlString, target, true, new HttpCallback() {
             @Override
             public void onStart() {

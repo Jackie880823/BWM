@@ -209,7 +209,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     intent2.putExtra("autofocus", true);
 
                     // 下面这句指定调用相机拍照后的照片存储的路径
-                    intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, Constant.CACHE_PIC_NAME_TEMP + cache_count)));
+                    intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, Constant.CACHE_PIC_NAME_TEMP + cache_count,true)));
                     // 图片质量为高
                     intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                     intent2.putExtra("return-data", true);
@@ -336,7 +336,7 @@ public class SendComment extends FrameLayout implements View.OnClickListener, St
                     break;
                 // 如果是调用相机拍照时
                 case Constant.INTENT_REQUEST_HEAD_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, Constant.CACHE_PIC_NAME_TEMP + cache_count));
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mActivity, Constant.CACHE_PIC_NAME_TEMP + cache_count,true));
                     uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
                     LogUtil.i(TAG, "onActivityResult& uri: " + uri.getPath());
                     if (new File(uri.getPath()).exists()) {
