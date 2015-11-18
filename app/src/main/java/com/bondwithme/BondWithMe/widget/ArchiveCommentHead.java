@@ -204,7 +204,7 @@ public class ArchiveCommentHead<T extends RecyclerView.Adapter> extends Recycler
 ////					holder.tvPhotoCount.setVisibility(View.GONE);
 ////				}
 ////				//加载照片
-////				VolleyUtil.initNetworkImageView(mContext, holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+////				BitmapTools.getInstance(mContext).display( holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 ////			}
 //			holder.tvUserName.setText(archive.getGroup_name());
 ////

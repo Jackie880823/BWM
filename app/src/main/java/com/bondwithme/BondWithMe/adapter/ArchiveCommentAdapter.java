@@ -14,12 +14,12 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
 import com.bondwithme.BondWithMe.entity.ArchiveCommentEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.interfaces.ArchiveChatViewClickListener;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
@@ -115,7 +115,7 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     item.tvPhotoCount.setVisibility(View.GONE);
                 }
                 //加载照片
-                VolleyUtil.initNetworkImageView(mContext, item.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                BitmapTools.getInstance(mContext).display( item.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
             }
             item.tvUserName.setText(archive.getGroup_name());
 
@@ -186,7 +186,7 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 holder.tvPhotoCount.setVisibility(View.GONE);
             }
             //加载照片
-            VolleyUtil.initNetworkImageView(mContext, holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
         } else if (!TextUtils.isEmpty(archive.getSticker_group_path())) {
             //如果有大表情

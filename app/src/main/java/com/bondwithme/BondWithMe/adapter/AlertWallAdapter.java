@@ -15,10 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AlertWallEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.wall.DiaryInformationActivity;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -82,7 +82,7 @@ public class AlertWallAdapter extends RecyclerView.Adapter<AlertWallAdapter.VHIt
             holder.content_action.setText(msp);
         }
         holder.push_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, alertWallEntity.getCreation_date()));
-        VolleyUtil.initNetworkImageView(mContext, holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, alertWallEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, alertWallEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
     }
 
 

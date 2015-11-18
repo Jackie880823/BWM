@@ -1197,7 +1197,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
 //            }
 //            FamilyGroupEntity familyGroupEntity = groupList.get(position);
 //            viewHolder.textName.setText(familyGroupEntity.getGroup_name());
-//            VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
+//            BitmapTools.getInstance(mContext).display( viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
 //                    familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 //            return convertView;
 //        }
