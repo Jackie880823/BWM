@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.GroupMessageEntity;
 import com.bondwithme.BondWithMe.entity.PrivateMessageEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
@@ -96,7 +96,7 @@ public class MessageGroupFragmentAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         GroupMessageEntity groupEntity = mGroupList.get(position);
-        VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         viewHolder.groupName.setText(groupEntity.getGroup_name());
         viewHolder.lastMessageTime.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, groupEntity.getGroup_active_date()));
         String type = groupEntity.getType();

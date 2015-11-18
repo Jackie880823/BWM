@@ -10,10 +10,10 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.NewsEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.more.ViewUrlPicActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -79,11 +79,11 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
         if (!TextUtils.isEmpty(imageUrl)){
             //display pic
             ivPic.setVisibility(View.VISIBLE);
-            VolleyUtil.initNetworkImageView(mContext,ivPic,newsEntity.getImage());
+            BitmapTools.getInstance(mContext).display(ivPic, newsEntity.getImage());
             ibtnVideo.setVisibility(View.INVISIBLE);
         }else if(!TextUtils.isEmpty(videoUrl)){
             ivPic.setVisibility(View.VISIBLE);
-            VolleyUtil.initNetworkImageView(mContext,ivPic,newsEntity.getVideo_thumbnail());
+            BitmapTools.getInstance(mContext).display(ivPic, newsEntity.getVideo_thumbnail());
             ibtnVideo.setVisibility(View.VISIBLE);
         }else if(TextUtils.isEmpty(imageUrl) && TextUtils.isEmpty(videoUrl)){
             ivPic.setVisibility(View.GONE);

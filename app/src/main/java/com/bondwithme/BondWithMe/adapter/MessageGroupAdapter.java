@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
@@ -106,7 +106,7 @@ public class MessageGroupAdapter extends BaseAdapter {
         GroupEntity groupEntity = mGroupList.get(position);
         List<UserEntity> mMemberList = mGroupList.get(position).getMember();
 
-        VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         viewHolder.groupName.setText(groupEntity.getGroup_name());
         viewHolder.time.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, groupEntity.getGroup_active_date()));
         viewHolder.msg.setText(groupEntity.getUser_given_name());
@@ -122,7 +122,7 @@ public class MessageGroupAdapter extends BaseAdapter {
 
         for (int i = 0; i < count; i++) {
             viewHolder.image[i].setVisibility(View.VISIBLE);
-            VolleyUtil.initNetworkImageView(mContext, viewHolder.image[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile_s, mMemberList.get(i).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(viewHolder.image[i], String.format(Constant.API_GET_PHOTO, Constant.Module_profile_s, mMemberList.get(i).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         }
         int noReadNews = 0;
         try {
