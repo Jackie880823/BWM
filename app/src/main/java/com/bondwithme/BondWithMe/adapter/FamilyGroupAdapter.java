@@ -93,8 +93,8 @@ public class FamilyGroupAdapter extends BaseAdapter implements Filterable {
 
         mBitmapTools = BitmapTools.getInstance(mContext);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, familyGroupEntity.getGroup_id());
-        mBitmapTools.display(viewHolder.imageMain,headUrl,R.drawable.default_head_icon, R.drawable.default_head_icon);
-//        BitmapTools.getInstance(mContext).display( viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
+        mBitmapTools.display(viewHolder.imageMain,headUrl,R.drawable.default_group_head_icon, R.drawable.default_group_head_icon);
+//        VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
 //                familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         return convertView;
     }
