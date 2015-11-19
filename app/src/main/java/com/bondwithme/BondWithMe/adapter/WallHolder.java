@@ -1100,14 +1100,16 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 @Override
                 public void onFinish() {
                     downloadCount++;
+                    LogUtil.d(TAG, "debug onFinish& downloadCount = " + downloadCount + "; size = " + data.size());
                     if (downloadCount == data.size()) {
+                        downloadCount = 0;
                         mViewClickListener.savePhotoed(wallEntity, true);
                     }
                 }
 
                 @Override
                 public void onResult(String string) {
-
+                    LogUtil.d(TAG, "debug onResult& response: " + string);
                     /**wing modified*/
                     String path = null;
                     try {
@@ -1117,8 +1119,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         e.printStackTrace();
                     }
                     /**wing modified*/
-
-                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                 }
 
                 @Override
