@@ -18,13 +18,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/introduction_background"
+    android:gravity="center"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_introduction_description"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_35dp"
         android:scaleType="centerInside"
@@ -33,10 +34,10 @@
     <TextView
         android:id="@+id/tv_introduction_description"
         style="@style/text_default"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/image"
-        android:layout_marginBottom="@dimen/_90dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/default_view_margin"
         android:gravity="center"
         android:textSize="@dimen/text_medium_size"
