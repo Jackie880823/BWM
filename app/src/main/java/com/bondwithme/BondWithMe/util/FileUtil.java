@@ -95,8 +95,8 @@ public class FileUtil {
      * @param context
      * @return
      */
-    public static String getCacheFilePath(Context context) {
-        File f = getSaveRootPath(context, true);
+    public static String getCacheFilePath(Context context,boolean isOut) {
+        File f = getSaveRootPath(context, isOut);
 
         f = new File(f.getAbsolutePath() + CACHE_DIR_NAME);
         if (!f.exists()) {

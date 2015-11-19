@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/introduction_background">
 
     <!--<FrameLayout-->
     <!--android:layout_width="match_parent"-->
@@ -12,15 +13,16 @@
     <com.bondwithme.BondWithMe.widget.viewpager.ScrollerViewPager
         android:id="@+id/introduction_view_paper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/indicator" />
 
     <com.bondwithme.BondWithMe.widget.SpringIndicator
         android:id="@+id/indicator"
         android:layout_width="146dp"
         android:layout_height="28dp"
         android:layout_above="@+id/ll_btn"
-        android:layout_margin="@dimen/_12dp"
         android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/default_view_margin"
         app:siIndicatorColor="@color/btn_gray_normal"
         app:siIndicatorColors="@array/indicator_colors"
         app:siSelectedTextColor="@android:color/white"

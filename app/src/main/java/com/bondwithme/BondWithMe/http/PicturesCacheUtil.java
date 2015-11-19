@@ -41,8 +41,8 @@ public class PicturesCacheUtil extends FileUtil {
     /**
      * @param context
      */
-    private static void makeCacheDir(Context context) {
-        pictureCachePath = FileUtil.getCacheFilePath(context);
+    private static void makeCacheDir(Context context,boolean isOut) {
+        pictureCachePath = FileUtil.getCacheFilePath(context,isOut);
     }
 
 
@@ -52,12 +52,8 @@ public class PicturesCacheUtil extends FileUtil {
      * @param context
      * @return
      */
-    public static String getCachePicPath(Context context) {
-        return getCacheFilePath(context) + String.format(CACHE_PIC_NAME, "" + System.currentTimeMillis());
-    }
-
-    public static void saveToCachePic(Context context, Bitmap bmp) {
-        saveToFile(getCachePicPath(context), bmp);
+    public static String getCachePicPath(Context context,boolean isOut) {
+        return getCacheFilePath(context,isOut) + String.format(CACHE_PIC_NAME, "" + System.currentTimeMillis());
     }
 
     /**
@@ -94,8 +90,8 @@ public class PicturesCacheUtil extends FileUtil {
      * @param name
      * @return
      */
-    public static File getCachePicFileByName(Context context, String name) {
-        makeCacheDir(context);
+    public static File getCachePicFileByName(Context context, String name,boolean isOut) {
+        makeCacheDir(context,isOut);
         if (name != null && !"".equals(name)) {
             File f = new File(pictureCachePath, name);
 

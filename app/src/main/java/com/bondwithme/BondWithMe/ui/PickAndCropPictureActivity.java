@@ -85,7 +85,7 @@ public class PickAndCropPictureActivity extends Activity {
 
                 CACHE_PIC_NAME_TEMP = System.currentTimeMillis() + "_head_cache_temp.png";
                 // 下面这句指定调用相机拍照后的照片存储的路径
-                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP)));
+                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP,true)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 intent2.putExtra("return-data", false);
@@ -119,7 +119,7 @@ public class PickAndCropPictureActivity extends Activity {
 
                 // 如果是调用相机拍照时
                 case REQUEST_FROM_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP));
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP,true));
                     if(needCrop) {
                         try {
                             startPhotoZoom(uri, false);
@@ -212,7 +212,7 @@ public class PickAndCropPictureActivity extends Activity {
             intent.putExtra("return-data", false);
             intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
             intent.putExtra("noFaceDetection", true);
-            File f = PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME + System.currentTimeMillis() + ".png");
+            File f = PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME + System.currentTimeMillis() + ".png",true);
             mCropImagedUri = Uri.fromFile(f);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
             startActivityForResult(intent, REQUEST_PIC_FINAL);
