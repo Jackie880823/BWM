@@ -67,7 +67,7 @@ public class AlertGroupAdapter extends RecyclerView.Adapter<AlertGroupAdapter.VH
         BitmapTools.getInstance(mContext).display(
                 holder.ownerHead,
                 String.format(Constant.API_GET_PHOTO, Constant.Module_profile, alertGroupEntity.getAction_user_id()),
-                R.drawable.network_image_default, R.drawable.network_image_default);
+                R.drawable.default_head_icon, R.drawable.default_head_icon);
 
         //设置AlertGroupContent、option
         switch (tag){

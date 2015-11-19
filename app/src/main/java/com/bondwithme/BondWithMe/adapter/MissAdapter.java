@@ -47,7 +47,7 @@ public class MissAdapter extends RecyclerView.Adapter<MissAdapter.VHItem> {
         MissEntity missEntity = data.get(position);
         holder.owner_name.setText(missEntity.getMessage_variable());
         holder.push_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, missEntity.getCreation_date()));
-        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, missEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, missEntity.getAction_user_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
     }
 
 
