@@ -91,7 +91,7 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
     @Override
     public void onBindViewHolder(MGItem holder, int position) {
         UserEntity entity = mData.get(position);
-        BitmapTools.getInstance(mContext).display(holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         holder.name.setText(entity.getUser_given_name());
     }
 

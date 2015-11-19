@@ -128,7 +128,7 @@ public class WallViewPicPagerAdapter extends PagerAdapter
 
         String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, mData.get(position).getUser_id(), mData.get(position).getFile_id());
 
-        new HttpTools(mContext).download(mContext, picUrl, PicturesCacheUtil.getCachePicPath(mContext), true, new HttpCallback() {
+        new HttpTools(mContext).download(mContext, picUrl, PicturesCacheUtil.getCachePicPath(mContext,false), true, new HttpCallback() {
             @Override
             public void onStart() {
                 vProgress.setVisibility(View.VISIBLE);

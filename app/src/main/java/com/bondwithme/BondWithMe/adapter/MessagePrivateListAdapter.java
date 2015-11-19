@@ -91,7 +91,7 @@ public class MessagePrivateListAdapter extends BaseAdapter {
 
         PrivateMessageEntity userEntity = mUserEntityList.get(position);
 
-        BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         viewHolder.memberName.setText(userEntity.getUser_given_name());
         int messageNum = 0;
         try {

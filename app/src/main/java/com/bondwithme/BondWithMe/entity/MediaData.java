@@ -85,6 +85,8 @@ public class MediaData {
 
     private long id;
 
+    private Uri thumbnailUri = Uri.EMPTY;
+
     /**
      * 封装{@link SelectPhotosActivity}显示的多媒体数据
      *  @param contentUri 储存在系统多媒体数据库的{@link Uri}
@@ -135,12 +137,14 @@ public class MediaData {
     }
 
     public Uri getThumbnailUri() {
-        if (TYPE_VIDEO.equals(type)) {
-            return getVideoThumbnailUri(id);
-        } else if (TYPE_IMAGE.equals(type)) {
-            return getImageThumbnailUri(id);
+        if (Uri.EMPTY.equals(thumbnailUri)) {
+            if (TYPE_VIDEO.equals(type)) {
+                thumbnailUri = getVideoThumbnailUri(id);
+            } else if (TYPE_IMAGE.equals(type)) {
+                thumbnailUri = getImageThumbnailUri(id);
+            }
         }
-        return null;
+        return thumbnailUri;
     }
 
     public void setId(long id) {

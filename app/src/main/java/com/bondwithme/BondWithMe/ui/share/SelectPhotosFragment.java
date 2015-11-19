@@ -37,6 +37,7 @@ import com.bondwithme.BondWithMe.widget.NewtonCradleLoading;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Jackie Zhu
@@ -362,7 +363,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 id = imageCursor.getLong(uriColumnIndex);
                 contentUri = Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + id);
 
-                if (!TextUtils.isEmpty(path) && !path.contains(FileUtil.getCacheFilePath(getActivity()))) {
+                if (!TextUtils.isEmpty(path) && !path.contains(FileUtil.getCacheFilePath(getActivity(),true))) {
                     MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
                     mediaData.setId(id);
                     addToMediaMap(bucket, mediaData);
@@ -545,16 +546,19 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private void loadLocalMediaOrder(int index) {
         LogUtil.i(TAG, "index = " + index + "; buckets length " + buckets.size());
+        curLoaderPosition = index;
         if (index < buckets.size() && index >= 0) {
             String bucket = buckets.get(index);
-
             if (index == 1 && bucket.equals(getString(R.string.text_video))) {
                 MessageUtil.showMessage(getActivity(), getActivity().getString(R.string.show_video_limit));
             }
 
             mImageUriList = mMediaUris.get(bucket);
             if (mImageUriList.size() <=0) {
-                loadLocalMediaOrder(index -1);
+                mMediaUris.remove(bucket);
+                buckets.remove(index);
+                bucketsAdapter.remove(bucket);
+                loadLocalMediaOrder(index - 1);
                 return;
             }
 
@@ -564,6 +568,13 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 localMediaAdapter.setCheckBoxVisible(multi);
                 localMediaAdapter.setSelectedImages(mSelectedImageUris);
                 localMediaAdapter.setListener(selectImageUirListener);
+                localMediaAdapter.setDeleteMediaListListener(new LocalMediaAdapter.DeleteMediaListListener() {
+                    @Override
+                    public void deleteList(List<MediaData> list) {
+                        LogUtil.d(TAG, "deleteList: curLoaderPosition = " + curLoaderPosition);
+                        loadLocalMediaOrder(curLoaderPosition);
+                    }
+                });
                 mGvShowPhotos.setAdapter(localMediaAdapter);
             } else {
                 localMediaAdapter.setData(mImageUriList);

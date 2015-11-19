@@ -318,7 +318,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                 // 下面这句指定调用相机拍照后的照片存储的路径
                 intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri
                         .fromFile(PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this,
-                                CACHE_PIC_NAME_TEMP)));
+                                CACHE_PIC_NAME_TEMP,true)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 intent2.putExtra("return-data", false);
@@ -359,7 +359,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
         Log.i(TAG, "startPhotoZoom& uri: " + uri);
         String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
         Uri source = Uri.fromFile(new File(path));
-        File f = PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this, CACHE_PIC_NAME);
+        File f = PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this, CACHE_PIC_NAME,true);
         mCropImagedUri = Uri.fromFile(f);
         Log.i(TAG, "startPhotoZoom& cropImageUri: " + mCropImagedUri);
         Crop.of(source, mCropImagedUri).asSquare().start(this, REQUEST_HEAD_FINAL);
@@ -400,7 +400,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
                     Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(DetailsActivity.this,
-                            CACHE_PIC_NAME_TEMP));
+                            CACHE_PIC_NAME_TEMP,true));
                     uri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(uri.getPath()));
                     if (new File(uri.getPath()).exists()) {
                         try {

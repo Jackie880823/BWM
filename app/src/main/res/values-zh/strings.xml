@@ -663,4 +663,9 @@
     <string name="text_tip_add_member_chatting">添加成员来开始聊天。</string>
     <string name="text_tip_select_member_chatting">选择成员来开始聊天。</string>
     <string name="text_tip_Download_stickie">下载超赞的大表情。</string>
+    <string name="introduction_description_1">无论何时何地与家人保持紧密联系一\n个私人和安全的家庭社交平台，\n让您与家人无论身在何处都\n能保持联系，制定计划和分\n享动态。</string>
+    <string name="introduction_description_2">使用我们萌萌哒的趣味表情\n表达自己的想法和感受！</string>
+    <string name="introduction_description_3">轻松组织家庭聚会和活动。</string>
+    <string name="introduction_description_4">在日记中与您的家人分享珍贵的时刻。</string>
+    <string name="introduction_description_5">与家人通过单独或群聊保持联系。</string>
 </resources>

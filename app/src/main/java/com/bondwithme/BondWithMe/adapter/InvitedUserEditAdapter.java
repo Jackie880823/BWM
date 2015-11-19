@@ -46,7 +46,7 @@ public class InvitedUserEditAdapter extends RecyclerView.Adapter<InvitedUserEdit
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
 
         UserEntity user = data.get(i);
-        BitmapTools.getInstance(mContext).display(viewHolder.user_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, user.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(viewHolder.user_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, user.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         viewHolder.user_name.setText(user.getUser_given_name());
         String status = user.getGroup_member_response();
 //        LogUtil.i("status====",status+"_"+i);
