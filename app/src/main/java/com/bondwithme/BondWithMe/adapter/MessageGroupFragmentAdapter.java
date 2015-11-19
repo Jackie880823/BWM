@@ -96,7 +96,7 @@ public class MessageGroupFragmentAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         GroupMessageEntity groupEntity = mGroupList.get(position);
-        BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, groupEntity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO, groupEntity.getGroup_id()), R.drawable.default_group_head_icon, R.drawable.default_group_head_icon);
         viewHolder.groupName.setText(groupEntity.getGroup_name());
         viewHolder.lastMessageTime.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, groupEntity.getGroup_active_date()));
         String type = groupEntity.getType();

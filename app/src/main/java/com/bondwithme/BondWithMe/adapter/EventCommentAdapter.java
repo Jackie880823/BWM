@@ -164,7 +164,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             setDetail(header, detail);
 //            Log.i("getGroup_owner_id()", detail.getGroup_owner_id()+"");
-            BitmapTools.getInstance(mContext).display(((VHHeader) holder).ownerHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, detail.getGroup_owner_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(((VHHeader) holder).ownerHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, detail.getGroup_owner_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             header.pushDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext, detail.getGroup_creation_date()));
             header.eventTitle.setText(detail.getGroup_name());
             header.tvUserName.setText(detail.getUser_given_name());
@@ -218,7 +218,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.VISIBLE);
             }
-            BitmapTools.getInstance(mContext).display(((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             second.tv_comment_owner_name.setText(entity.getUser_given_name());
             second.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, entity.getComment_creation_date()));
             if(!TextUtils.isEmpty(entity.getComment_content().trim())){//如果文字不为空
@@ -241,7 +241,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
             layoutParam.setMargins(itemDistance,0,itemDistance,DensityUtil.dip2px(mContext, 0));
             vhItem.itemView.setLayoutParams(layoutParam);
-            BitmapTools.getInstance(mContext).display(((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             vhItem.tv_comment_owner_name.setText(entity.getUser_given_name());
             vhItem.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, entity.getComment_creation_date()));
             if(!TextUtils.isEmpty(entity.getComment_content().trim())){//如果文字不为空
@@ -265,7 +265,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             layoutParam.setMargins(itemDistance,0,itemDistance,DensityUtil.dip2px(mContext,60));
             footer.itemView.setLayoutParams(layoutParam);
             footer.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_footer_shape));
-            BitmapTools.getInstance(mContext).display(((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             footer.line.setVisibility(View.INVISIBLE);
             footer.tv_comment_owner_name.setText(entity.getUser_given_name());
             footer.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, entity.getComment_creation_date()));

@@ -175,7 +175,7 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
             headHolder.wevContent.requestFocus();
             //头部分
             UserEntity owner = MainActivity.getUser();
-            VolleyUtil.initNetworkImageView(context, headHolder.cniHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, owner.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            VolleyUtil.initNetworkImageView(context, headHolder.cniHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, owner.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             headHolder.tvUserName.setText(owner.getUser_given_name());
         }
         if (position == getItemCount() - 1) {
