@@ -73,7 +73,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.VHIt
     @Override
     public void onBindViewHolder(RecommendAdapter.VHItem holder, int position) {
         RecommendEntity recommendEntity = data.get(position);
-        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, recommendEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, recommendEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         holder.user_name.setText(recommendEntity.getUser_given_name());
 
         getDataEn();
