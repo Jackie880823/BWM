@@ -49,6 +49,7 @@
                         android:id="@+id/iv_mood"
                         android:layout_width="@dimen/default_small_button_width_height"
                         android:layout_height="@dimen/default_small_button_width_height"
+                        android:visibility="visible"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
                         android:scaleType="fitCenter" />
