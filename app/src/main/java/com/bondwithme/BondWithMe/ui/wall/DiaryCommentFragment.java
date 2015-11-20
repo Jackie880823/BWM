@@ -517,7 +517,7 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
             @Override
             public void onStart() {
                 vProgress.setVisibility(View.VISIBLE);
-                getParentActivity().setResult(Activity.RESULT_OK);
+                setResultOK(data.size());
             }
 
             @Override

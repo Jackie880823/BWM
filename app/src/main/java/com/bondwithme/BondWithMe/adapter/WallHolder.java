@@ -834,6 +834,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private void editDiaryAction() {
         Intent intent;
         intent = new Intent(context, NewDiaryActivity.class);
+        intent.putExtra(Constant.WALL_ENTITY, wallEntity);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_WALL);

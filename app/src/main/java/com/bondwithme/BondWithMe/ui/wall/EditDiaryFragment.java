@@ -273,9 +273,9 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         editor.clear().apply();
                     }
 
-                    getActivity().setResult(Activity.RESULT_OK);
 //                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
-                    if (getActivity() != null) {
+                    if (getActivity() != null && !getActivity().isFinishing()) {
+                        getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     }
                     sendEmptyMessage(HIDE_PROGRESS);
@@ -287,6 +287,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     rlProgress.setVisibility(View.GONE);
                     break;
                 case GET_WALL_SUCCEED:
+                    rlProgress.setVisibility(View.GONE);
                     // 得到纬度
                     String strLatitude = wall.getLoc_latitude();
                     if (!TextUtils.isEmpty(strLatitude)) {
@@ -382,41 +383,42 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     tipViews.add(getParentActivity().rightButton);
 
 //                    popFeeling();
-                    cutPopInteractive(tipTexts,tipViews,0);
+                    cutPopInteractive(tipTexts, tipViews, 0);
                     break;
             }
         }
     };
 
-    private void cutPopInteractive(final ArrayList<String> strings, final ArrayList<View> views,int j){
+    private void cutPopInteractive(final ArrayList<String> strings, final ArrayList<View> views, int j) {
 
 //        for (int i = j ; i < strings.size();i++){
-            if(j < strings.size() - 1 ){
-                interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j),1);
-                final int finalJ = j + 1;
-                interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                    @Override
-                    public void popDismiss() {
-                        LogUtil.i("==============event_save", "onDismiss");
-                        //存储本地
-                        cutPopInteractive(strings, views, finalJ);
-                    }
-                });
-                interactivePopupWindow.showPopupWindowUp();
-            }else {
-                interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j),strings.get(j),0);
-                interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                    @Override
-                    public void popDismiss() {
-                        LogUtil.i("==============event_save", "onDismiss");
-                        PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, true);
-                        //存储本地
-                    }
-                });
-                interactivePopupWindow.showPopupWindow(true);
-            }
+        if (j < strings.size() - 1) {
+            interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j), 1);
+            final int finalJ = j + 1;
+            interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                @Override
+                public void popDismiss() {
+                    LogUtil.i("==============event_save", "onDismiss");
+                    //存储本地
+                    cutPopInteractive(strings, views, finalJ);
+                }
+            });
+            interactivePopupWindow.showPopupWindowUp();
+        } else {
+            interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j), 0);
+            interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                @Override
+                public void popDismiss() {
+                    LogUtil.i("==============event_save", "onDismiss");
+                    PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, true);
+                    //存储本地
+                }
+            });
+            interactivePopupWindow.showPopupWindow(true);
+        }
 //        }
     }
+
     /**
      * 更新日志成功结果处理
      */
@@ -514,6 +516,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         gson = new Gson();
 
         rlProgress = getViewById(R.id.rl_progress);
+        rlProgress.setVisibility(View.VISIBLE);
 
 
         rvImages = getViewById(R.id.rcv_post_photos);
@@ -581,6 +584,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         lastChange = change;
                     }
                 });
+
+                if (wall == null) {
+                    wall = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
+                    if (wall != null) {
+                        mHandler.sendEmptyMessage(GET_WALL_SUCCEED);
+                    }
+                }
             }
 
             @Override
@@ -721,8 +731,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onResume() {
         super.onResume();
-        if(MainActivity.IS_INTERACTIVE_USE &&
-                !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST,false)){
+        if (MainActivity.IS_INTERACTIVE_USE &&
+                !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
             getParentActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN |
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
             mHandler.sendEmptyMessageDelayed(GET_DELAY, 500);
@@ -732,10 +742,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onPause() {
         super.onPause();
-        if(App.isInteractiveTipFinish()){
-            LogUtil.i("diary_new====","true");
+        if (App.isInteractiveTipFinish()) {
+            LogUtil.i("diary_new====", "true");
             PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_START, false);
-        }else {
+        } else {
             LogUtil.i("diary_new====", "false");
         }
 
@@ -849,6 +859,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void requestData() {
         if (isEdit) {
+            if (wall == null) {
+                WallEntity wallEntity = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
+                if (wallEntity != null) {
+                    return;
+                }
+            }
+
             HashMap<String, String> params = new HashMap<>();
             params.put(Constant.CONTENT_GROUP_ID, contentGroupId);
             params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
@@ -1018,6 +1035,21 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (requestCode == Constant.INTENT_REQUEST_OPEN_GPS && LocationUtil.isOPen(getActivity())) {
             openMap();
         }
+    }
+
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler.removeMessages(SHOW_PROGRESS);
+        mHandler.removeMessages(HIDE_PROGRESS);
+        mHandler.removeMessages(ACTION_FAILED);
+        mHandler.removeMessages(ACTION_SUCCEED);
+        mHandler.removeMessages(GET_WALL_SUCCEED);
+
     }
 
     private void addDataAndNotify(ArrayList<Uri> pickUris) {
@@ -1250,6 +1282,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 上传日记
      */
     public void submitWall() {
+        if (rlProgress.getVisibility() == View.VISIBLE) {
+            return;
+        }
+
         Log.i(TAG, "submitWall&");
         // 隐藏键盘
         UIUtil.hideKeyboard(getContext(), getActivity().getCurrentFocus());
