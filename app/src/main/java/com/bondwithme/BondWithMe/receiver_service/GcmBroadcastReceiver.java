@@ -6,8 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.util.LocationUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
 
 /**
  * GCM推送接收器
@@ -17,9 +17,7 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        LogUtil.e("", "sssssssssssssss=======111");
-        if (LocationUtil.isGoogleAvailable()) {
-            LogUtil.e("", "sssssssssssssss=======11");
+        if (App.getLoginedUser()!=null&&LocationUtil.isGoogleAvailable()) {
             // Explicitly specify that GcmIntentService will handle the intent.
             ComponentName comp = new ComponentName(context.getPackageName(),
                     GcmIntentService.class.getName());
