@@ -146,6 +146,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     private CallBack callBack = new CallBack();
     private boolean isEdit = false;
+    private boolean isUpate = false;
 
     private String contentGroupId;
 
@@ -937,6 +938,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).apply();
         }
 
+        if (isEdit) {
+            // 进入编辑确定Wall是更新了
+            isUpate = true;
+        }
+
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Constant.INTENT_REQUEST_GET_LOCATION:
@@ -1121,11 +1127,15 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 checkGPS();
                 break;
             case R.id.tv_privacy:
+                if (isEdit) {
+                    isUpate = true;
+                }
                 allRange = !allRange;
                 switchPrivacy(allRange);
                 break;
 
             case R.id.delete_video_view:
+                isUpate = isEdit;
                 clearVideo();
                 mAdapter.notifyItemRemoved(1);
                 break;
@@ -1338,7 +1348,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void putWall() {
         String text_content = wevContent.getRelText();
 
-        if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)) {
+        if (!isUpate && (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri))) {
             // 没文字、没图片、没视频不能上传日记
             MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
             return;
@@ -1412,7 +1422,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         LogUtil.d(TAG, "params: " + requestInfo.jsonParam);
         callBack.setLinkType(CallBack.LINK_TYPE_PUT_WALL);
         mHttpTools.put(requestInfo, PUT_WALL, callBack);
-
     }
 
     private String getPhotoCaptionByPosition(int position) {
@@ -1629,7 +1638,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         @Override
         public void onResult(String string) {
-            LogUtil.i(TAG, "onResult# typy: " + linkType + " response: " + string);
+            LogUtil.d(TAG, "onResult# typy: " + linkType + " response: " + string);
             switch (linkType) {
                 case LINK_TYPE_GET_WALL:
                     wall = new Gson().fromJson(string, WallEntity.class);
