@@ -35,6 +35,7 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.widget.DatePicker;
 import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
@@ -205,12 +206,12 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     if(isEventDate()) {
                         showSaveAlert();
                     } else {
+                        UIUtil.hideKeyboard(getActivity(), event_title);
                         getParentActivity().finish();
                     }
                 } else if(v.getId() == getParentActivity().rightButton.getId()) {
                     reomveSP();
                     submit();
-                    //                    changeData();
                 }
                 return false;
             }
@@ -357,19 +358,15 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private boolean isEventDate() {
         if(!TextUtils.isEmpty(event_title.getText().toString().trim())) {
-            //             Log.i("event_title=====================",event_title.getText().toString().trim());
             return true;
         }
         if(!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
-            //             Log.i("Spmemeber_date=====================",event_desc.getText().toString().trim());
             return true;
         }
         if(!TextUtils.isEmpty(position_name.getText().toString().trim())) {
-            //             Log.i("Spmemeber_date=====================",position_name.getText().toString().trim());
             return true;
         }
         if(!TextUtils.isEmpty(date_desc.getText().toString().trim())) {
-            //             Log.i("Spmemeber_date=====================",date_desc.getText().toString().trim());
             return true;
         }
         if(users_date != null) {
@@ -422,7 +419,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         for(int i = 0; i < userList.size() - 1; i++) {
             for(int j = userList.size() - 1; j > i; j--) {
                 if(userList.get(j).getUser_id().equals(userList.get(i).getUser_id()) || userList.get(j).getUser_id().equals(MainActivity.getUser().getUser_id())) {
-                    //                    Log.i("remove===",j+"");
                     userList.remove(j);
                 }
 
@@ -464,7 +460,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
             @Override
             public void onError(Exception e) {
-                //                Log.i("onError===",e.getMessage());
                 Toast.makeText(getActivity(), getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
 
@@ -602,11 +597,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
      * 删除草稿
      */
     private void reomveSP() {
-        //        File file = new File("/data/data/"+getParentActivity().getPackageName().toString()+"/shared_prefs","EventNew_date.xml");
-        //        if (file.exists()){
-        //            file.delete();
-        ////            Toast.makeText(getParentActivity(), "删除成功", Toast.LENGTH_LONG).show();
-        //        }
         PreferencesUtil.saveValue(getParentActivity(), "title", "");
         PreferencesUtil.saveValue(getParentActivity(), "content", "");
         PreferencesUtil.saveValue(getParentActivity(), "location", "");
@@ -680,22 +670,18 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     PreferencesUtil.saveValue(getParentActivity(), "longitude", Double.toString(longitude));
                     if(!TextUtils.isEmpty(event_title.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "title", event_title.getText().toString());
-                        //                        Log.i("title=============",event_title.getText().toString());
                     }
                     if(!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "content", event_desc.getText().toString());
 
-                        //                        Log.i("content=============",event_desc.getText().toString());
                     }
                     if(!TextUtils.isEmpty(position_name.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "location", position_name.getText().toString());
 
-                        //                        Log.i("location=============",position_name.getText().toString());
                     }
                     if(userList.size() > 0) {
                         Gson gson = new Gson();
                         PreferencesUtil.saveValue(getParentActivity(), "users_date", gson.toJson(userList));
-                        //                        Log.i("Set_users_date===", users_date);
                     }
                     getParentActivity().finish();
                 }
@@ -902,6 +888,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
         return true;
     }
+
+
 
     //刷新数据
     private void changeData() {
