@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.RewardsEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.more.ViewUrlPicActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -54,7 +54,7 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.VHItem> 
         videoUrl = rewardsEntity.getVideo();
         if (!TextUtils.isEmpty(imageUrl)){
             //display pic/Video_thumbnail
-            VolleyUtil.initNetworkImageView(mContext, holder.ivPic, rewardsEntity.getImage());
+            BitmapTools.getInstance(mContext).display(holder.ivPic, rewardsEntity.getImage());
             holder.ibtnVideo.setVisibility(View.INVISIBLE);
             holder.ivPic.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -66,7 +66,7 @@ public class RewardsAdapter extends RecyclerView.Adapter<RewardsAdapter.VHItem> 
                 }
             });
         }else if(!TextUtils.isEmpty(videoUrl)){
-            VolleyUtil.initNetworkImageView(mContext,holder.ivPic,rewardsEntity.getVideo_thumbnail());
+            BitmapTools.getInstance(mContext).display(holder.ivPic, rewardsEntity.getVideo_thumbnail());
             holder.ibtnVideo.setVisibility(View.VISIBLE);
         }
 

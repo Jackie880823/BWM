@@ -10,10 +10,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -99,7 +99,7 @@ public class InviteGroupAdapter extends BaseAdapter implements Filterable {
             viewHolder.imageRight.setChecked(false);
         }
         viewHolder.textName.setText(familyGroupEntity.getGroup_name());
-        VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
+        BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_GROUP_PHOTO,
                 familyGroupEntity.getGroup_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         return convertView;
     }

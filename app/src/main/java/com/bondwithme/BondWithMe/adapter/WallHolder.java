@@ -305,9 +305,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
             case R.id.tv_wall_agree_count:
             case R.id.tv_love_list:
-                if (Integer.valueOf(wallEntity.getLove_count()) > 0) {
-                    if (mViewClickListener != null) {
-                        mViewClickListener.showLovedMember(accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+                if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
+                    LogUtil.i(TAG, "is ADS can't show member");
+                } else {
+
+                    if (Integer.valueOf(wallEntity.getLove_count()) > 0) {
+                        if (mViewClickListener != null) {
+                            mViewClickListener.showLovedMember(accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+                        }
                     }
                 }
                 break;
@@ -483,7 +488,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.wallEntity = wallEntity;
         this.position = position;
 
-        VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
         String atDescription = wallEntity.getText_description();
         if (TextUtils.isEmpty(atDescription)) {
@@ -569,11 +574,16 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //            ibDelete.setVisibility(View.GONE);
         //        }
 
+        String feelCode = wallEntity.getDofeel_code();
+        LogUtil.i(TAG, "setContent& feelCode: " + feelCode);
         try {
-            if (this.wallEntity.getDofeel_code() != null) {
-                StringBuilder b = new StringBuilder(this.wallEntity.getDofeel_code());
+            if (!TextUtils.isEmpty(feelCode)) {
+                iv_mood.setVisibility(View.VISIBLE);
+                StringBuilder b = new StringBuilder(feelCode);
                 int charIndex = this.wallEntity.getDofeel_code().lastIndexOf("_");
-                b.replace(charIndex, charIndex + 1, "/");
+                if (charIndex > 0 && b.length() > charIndex) {
+                    b.replace(charIndex, charIndex + 1, "/");
+                }
 
                 InputStream is = context.getAssets().open(b.toString());
                 iv_mood.setImageBitmap(BitmapFactory.decodeStream(is));
@@ -581,7 +591,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 iv_mood.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            iv_mood.setVisibility(View.GONE);
+            e.printStackTrace();
+//            iv_mood.setVisibility(View.GONE);
         }
 
         /*location*/
@@ -1092,7 +1103,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, accountUserId, photoEntity.getFile_id());
             String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, photoEntity.getUser_id(), photoEntity.getFile_id());
             /**wing modified*/
-            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context), true, new HttpCallback() {
+            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context,false), true, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
@@ -1100,14 +1111,16 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 @Override
                 public void onFinish() {
                     downloadCount++;
+                    LogUtil.d(TAG, "debug onFinish& downloadCount = " + downloadCount + "; size = " + data.size());
                     if (downloadCount == data.size()) {
+                        downloadCount = 0;
                         mViewClickListener.savePhotoed(wallEntity, true);
                     }
                 }
 
                 @Override
                 public void onResult(String string) {
-
+                    LogUtil.d(TAG, "debug onResult& response: " + string);
                     /**wing modified*/
                     String path = null;
                     try {
@@ -1117,8 +1130,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         e.printStackTrace();
                     }
                     /**wing modified*/
-
-                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                 }
 
                 @Override

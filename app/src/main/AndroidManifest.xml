@@ -61,7 +61,7 @@
 
     <uses-permission android:name="com.bondwithme.BondWithMe.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <!-- <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" /> -->
     <!-- <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/> -->
 
@@ -148,19 +148,20 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.introduction.IntroductionActivity"
-            android:configChanges="keyboardHidden"/>
-
         <activity
             android:name=".ui.start.TransitionActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.introduction.IntroductionActivity"
+            android:configChanges="keyboardHidden"/>
+
         <activity
             android:name=".ui.start.StartActivity"
             android:configChanges="orientation|screenSize"

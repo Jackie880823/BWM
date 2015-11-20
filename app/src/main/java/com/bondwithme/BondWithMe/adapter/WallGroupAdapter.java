@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -88,7 +88,7 @@ public class WallGroupAdapter extends RecyclerView.Adapter<WallGroupAdapter.MGIt
     @Override
     public void onBindViewHolder(MGItem holder, int position) {
         GroupEntity entity = mData.get(position);
-        VolleyUtil.initNetworkImageView(mContext, holder.nivHead, String.format(Constant.API_GET_GROUP_PHOTO, entity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.nivHead, String.format(Constant.API_GET_GROUP_PHOTO, entity.getGroup_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         holder.name.setText(entity.getGroup_name());
     }
 

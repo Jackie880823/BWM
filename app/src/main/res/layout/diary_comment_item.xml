@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="left"
     android:orientation="vertical">
 
     <LinearLayout
@@ -13,6 +13,7 @@
         android:layout_marginLeft="@dimen/default_content_padding"
         android:layout_marginRight="@dimen/default_content_padding"
         android:layout_marginTop="@dimen/default_content_padding"
+        android:gravity="left"
         android:orientation="horizontal">
 
         <com.bondwithme.BondWithMe.widget.CircularNetworkImage
@@ -48,84 +49,78 @@
 
             </RelativeLayout>
 
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/niv_comment_pic"
-                style="@style/ListImageDefault"
-                android:layout_width="@dimen/_80dp"
-                android:layout_height="@dimen/_80dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="@dimen/default_view_margin"
-                android:scaleType="fitXY"
-                android:visibility="gone" />
 
-            <pl.droidsonroids.gif.GifImageView
-                android:id="@+id/iv_comment_pic"
-                style="@style/ListImageDefault"
-                android:layout_width="@dimen/_80dp"
-                android:layout_height="@dimen/_80dp"
-                android:layout_gravity="center_vertical"
-                android:visibility="gone" />
+            <TextView
+                android:id="@+id/comment_date"
+                style="@style/text_light_default" />
 
-            <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
-                android:id="@+id/tv_comment_content"
-                style="@style/text_dark_default"
-                android:autoLink="web"
-                android:linksClickable="true"
-                android:textIsSelectable="true" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_view_margin">
-
-                <TextView
-                    android:id="@+id/comment_date"
-                    style="@style/text_light_default"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true" />
-
-                <RelativeLayout
-                    android:id="@+id/rl_agree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/tv_agree"
-                        android:layout_width="@dimen/_100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/default_view_margin"
-                        android:layout_marginRight="@dimen/default_view_margin"
-                        android:layout_toLeftOf="@+id/iv_agree"
-                        android:ellipsize="end"
-                        android:gravity="right|center_vertical"
-                        android:singleLine="true"
-                        android:textColor="@color/default_text_color_blue"
-                        android:textSize="@dimen/text_small_size"
-                        android:visibility="gone" />
-
-
-                    <TextView
-                        android:id="@+id/tv_agree_count"
-                        style="@style/text_dark_default"
-                        android:layout_alignParentRight="true"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/iv_agree"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toLeftOf="@+id/tv_agree_count"
-                        android:background="@null"
-                        android:paddingRight="@dimen/_15dp" />
-                </RelativeLayout>
-
-
-            </RelativeLayout>
 
         </LinearLayout>
+
+
+    </LinearLayout>
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/niv_comment_pic"
+        style="@style/ListImageDefault"
+        android:layout_width="@dimen/_80dp"
+        android:layout_height="@dimen/_80dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/default_content_padding"
+        android:layout_marginTop="@dimen/default_view_margin"
+        android:scaleType="fitXY"
+        android:visibility="gone" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/iv_comment_pic"
+        style="@style/ListImageDefault"
+        android:layout_width="@dimen/_80dp"
+        android:layout_height="@dimen/_80dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/default_content_padding"
+        android:visibility="gone" />
+
+    <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+        android:id="@+id/tv_comment_content"
+        style="@style/text_dark_default"
+        android:layout_marginLeft="@dimen/default_content_padding"
+        android:autoLink="web"
+        android:linksClickable="true"
+        android:textIsSelectable="true" />
+
+    <LinearLayout
+        android:id="@+id/rl_agree"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_content_padding"
+        android:layout_marginTop="@dimen/default_view_margin"
+        android:gravity="left|center_vertical">
+
+
+        <ImageButton
+            android:id="@+id/iv_agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:paddingRight="@dimen/default_view_margin" />
+
+        <TextView
+            android:id="@+id/tv_agree_count"
+            style="@style/text_dark_default"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_agree"
+            android:layout_width="@dimen/_100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_view_margin"
+            android:layout_marginRight="@dimen/default_view_margin"
+            android:ellipsize="end"
+            android:gravity="right|center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/default_text_color_blue"
+            android:textSize="@dimen/text_small_size"
+            android:visibility="gone" />
 
 
     </LinearLayout>

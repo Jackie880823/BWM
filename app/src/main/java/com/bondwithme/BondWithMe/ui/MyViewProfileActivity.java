@@ -656,6 +656,7 @@ public class MyViewProfileActivity extends BaseActivity {
                         //清除缓存
                         mBitmapTools.clearMemoryCache();
                         mBitmapTools.clearDiskCache(null);
+//                        mBitmapTools.clearMemoryCache(headUrl);
                         /**wing modify 20150625 end*/
 
 //                        progressDialog.dismiss();

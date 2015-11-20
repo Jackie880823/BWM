@@ -24,6 +24,21 @@ import java.util.zip.ZipInputStream;
  */
 public class ZipUtils {
 
+
+    private static String PATH_DEFAULT_STICKER_1 = "PapaPanda2";
+    private static String PATH_DEFAULT_STICKER_2 = "Barry2";
+    private static String PATH_DEFAULT_STICKER_3 = "MamaHippo";
+    private static String PATH_DEFAULT_STICKER_4 = "GranpaTurtle";
+    private static String PATH_DEFAULT_STICKER_5 = "GranmaGoose";
+    private static String PATH_DEFAULT_STICKER_6 = "Bunny";
+
+    private static String NAME_DEFAULT_STICKER_1 = "Papa Panda";
+    private static String NAME_DEFAULT_STICKER_2 = "Barry";
+    private static String NAME_DEFAULT_STICKER_3 = "Mama Hippo";
+    private static String NAME_DEFAULT_STICKER_4 = "Grandpa Turtle";
+    private static String NAME_DEFAULT_STICKER_5 = "Grandma Goose";
+    private static String NAME_DEFAULT_STICKER_6 = "Bunny";
+
     /**
      * 解压缩功能.
      * 将zipFile文件解压到folderPath目录下.
@@ -143,7 +158,21 @@ public class ZipUtils {
         if (zipFileName.contains(File.separator)) {
             zipFileName = zipFileName.substring(0, zipFileName.indexOf(File.separator));
         }
-        stickerInfo.setName(zipFileName);
+
+        if (PATH_DEFAULT_STICKER_1.equals(zipFileName)){
+            stickerInfo.setName(NAME_DEFAULT_STICKER_1);
+        }else if (PATH_DEFAULT_STICKER_2.equals(zipFileName)){
+            stickerInfo.setName(NAME_DEFAULT_STICKER_2);
+        }else if (PATH_DEFAULT_STICKER_3.equals(zipFileName)){
+            stickerInfo.setName(NAME_DEFAULT_STICKER_3);
+        }else if (PATH_DEFAULT_STICKER_4.equals(zipFileName)){
+            stickerInfo.setName(NAME_DEFAULT_STICKER_4);
+        }else if (PATH_DEFAULT_STICKER_5.equals(zipFileName)){
+            stickerInfo.setName(NAME_DEFAULT_STICKER_5);
+        }else if (PATH_DEFAULT_STICKER_6.equals(zipFileName)){
+            stickerInfo.setName(NAME_DEFAULT_STICKER_6);
+        }
+
         stickerInfo.setPath(zipFileName);
         stickerInfo.setSticker_name("1");
         stickerInfo.setVersion("1");

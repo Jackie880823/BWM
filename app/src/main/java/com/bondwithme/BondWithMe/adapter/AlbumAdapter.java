@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.AlbumEntity;
 import com.bondwithme.BondWithMe.entity.AlbumPhotoEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 
@@ -169,7 +169,7 @@ public class AlbumAdapter extends BaseAdapter {
     }
 
     private void setNetworkImage(NetworkImageView imageView, String fileId) {
-        VolleyUtil.initNetworkImageView(mContext, imageView, String.format(Constant.API_GET_PIC,
+        BitmapTools.getInstance(mContext).display(imageView, String.format(Constant.API_GET_PIC,
                         Constant.Module_preview_m, memberId, fileId),
                 R.drawable.network_image_default, R.drawable.network_image_default);
     }

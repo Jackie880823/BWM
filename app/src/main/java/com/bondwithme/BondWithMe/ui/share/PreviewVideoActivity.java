@@ -66,7 +66,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
     /**
      * 视频存放路径
      */
-    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance()) + "/Video/";
+    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance(),false) + "/Video/";
 
     /**
      * 播放视频控件，用于播放传入的{@link #CONTENT_CREATOR_ID}和{@link #VIDEO_FILENAME}的值对应在远程服务器中的视频
@@ -173,7 +173,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
             File file = new File(targetParent);
             boolean canWrite = file.exists() || file.mkdir();
             //.....
-            target = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(this) + String.format("/%s", fileName);
+            target = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(this,false) + String.format("/%s", fileName);
 
             downloadVideo(url, target);
         } else {

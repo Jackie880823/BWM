@@ -39,6 +39,7 @@ import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 import com.bondwithme.BondWithMe.ui.ViewOriginalPicesActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.AudioPlayUtils;
+import com.bondwithme.BondWithMe.util.AudioPlayUtils.StopCallback;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
@@ -98,14 +99,16 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
     private String audioName;
     private int playPros;
     private int clickPosition;
+    private AudioPlayUtils playerManager;
 
-    public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView, MessageChatActivity messageChatActivity, LinearLayoutManager llm, boolean isGroupChat) {
+    public MessageChatAdapter(Context context, List<MsgEntity> myList, RecyclerView recyclerView, MessageChatActivity messageChatActivity, LinearLayoutManager llm, boolean isGroupChat, AudioPlayUtils playerManager) {
         this.context = context;
         this.myList = myList;
         this.recyclerView = recyclerView;
         this.messageChatActivity = messageChatActivity;
         this.llm = llm;
         this.isGroupChat = isGroupChat;
+        this.playerManager = playerManager;
     }
 
     public void addHistoryData(List<MsgEntity> list) {
@@ -613,12 +616,17 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
+            if (position > myList.size()) {
+                return;
+            }
             final MsgEntity msgEntity = myList.get(position);
             boolean isFromMe = msgEntity.getUser_id().equals(MainActivity.getUser().getUser_id());
             Intent intent;
             switch (v.getId()) {
                 case R.id.message_icon_image://点击头像跳转个人资料
-                    AudioPlayUtils.stopAudio();
+                    if (playerManager != null) {
+                        playerManager.stop();
+                    }
                     if (!isIconOnClick) {
                         return;
                     }
@@ -685,7 +693,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     }
                     break;
                 case R.id.message_pic_iv://点击图片跳转大图
-                    AudioPlayUtils.stopAudio();
+                    if (playerManager != null) {
+                        playerManager.stop();
+                    }
                     if (msgEntity.getLoc_id() != null) {//地图大图片
                         //图片路径
                         String uri = String.format(Locale.ENGLISH, "geo:%f,%f?z=14&q=%f,%f", Double.valueOf(msgEntity.getLoc_latitude()), Double.valueOf(msgEntity.getLoc_longitude()), Double.valueOf(msgEntity.getLoc_latitude()), Double.valueOf(msgEntity.getLoc_longitude()));
@@ -707,17 +717,17 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     }
                     break;
                 case R.id.audio_play:
-                    mHandler.removeMessages(PLAY_AUDIO_HANDLER);
-                    VHItem holder = (VHItem) recyclerView.findViewHolderForAdapterPosition(clickPosition);
-                    if (holder != null) {
-                        HorizontalProgressBarWithNumber mProgressBar = (HorizontalProgressBarWithNumber) holder.itemView.findViewById(R.id.id_progressbar);
-                        if (mProgressBar != null) {
-                            mProgressBar.setProgress(0);
-                        }
-                    }
+                    resumePlayAudioStatus();
                     clickPosition = position;
                     String path = FileUtil.getAudioRootPath(context) + File.separator + msgEntity.getAudio_filename();
-                    AudioPlayUtils.getInstance(path, llm, MessageChatAdapter.this).playAudio();
+//                    AudioPlayUtils.getInstance(path, llm, MessageChatAdapter.this).playAudio();
+                    if (playerManager != null) {
+                        playerManager.stop();
+                    }
+                    if (null == playerManager) {
+                        playerManager = AudioPlayUtils.getManager();
+                    }
+                    playerManager.play(path, stopCallback);
                     Map<String, Object> map = new HashMap<>();
                     String audioDuration = msgEntity.getAudio_duration();
                     audioDuration = formatTime(audioDuration);
@@ -729,7 +739,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     mHandler.sendMessageDelayed(mHandler.obtainMessage(PLAY_AUDIO_HANDLER, map), 500);
                     break;
                 case R.id.pic_linear_re:
-                    AudioPlayUtils.stopAudio();
+                    if (playerManager != null) {
+                        playerManager.stop();
+                    }
                     String video_format = msgEntity.getVideo_format1();
                     intent = new Intent(PreviewVideoActivity.ACTION_PREVIEW_VIDEO_ACTIVITY);
                     if (video_format != null) {
@@ -741,7 +753,10 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
                     context.startActivity(intent);
                     break;
                 case R.id.msg_send_fail_iv:
-                    AudioPlayUtils.stopAudio();
+//                    AudioPlayUtils.stopAudio();
+                    if (playerManager != null) {
+                        playerManager.stop();
+                    }
                     VHItem holder1 = (VHItem) recyclerView.findViewHolderForAdapterPosition(position);
                     if (holder1 == null) {
                         return;
@@ -757,6 +772,24 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
             }
         }
     }
+
+    private void resumePlayAudioStatus() {
+        mHandler.removeMessages(PLAY_AUDIO_HANDLER);
+        VHItem holder = (VHItem) recyclerView.findViewHolderForAdapterPosition(clickPosition);
+        if (holder != null) {
+            HorizontalProgressBarWithNumber mProgressBar = (HorizontalProgressBarWithNumber) holder.itemView.findViewById(R.id.id_progressbar);
+            if (mProgressBar != null) {
+                mProgressBar.setProgress(0);
+            }
+        }
+    }
+
+    StopCallback stopCallback = new StopCallback() {
+        @Override
+        public void stopPlayAudio() {
+            resumePlayAudioStatus();
+        }
+    };
 
     public void setOnLongClickListener(final int position) {
         VHItem holder = (VHItem) recyclerView.findViewHolderForAdapterPosition(position);
