@@ -1,5 +1,7 @@
 package com.bondwithme.BondWithMe.Tranck;
 
+import android.text.TextUtils;
+
 import com.appsflyer.AFInAppEventParameterName;
 import com.appsflyer.AFInAppEventType;
 import com.appsflyer.AppsFlyerLib;
@@ -130,19 +132,20 @@ public class MyAppsFlyer {
 
     public static void doLoginTrack()
     {
-        switch (App.getLoginedUser().getUser_login_type())
-        {
-            case Constant.TYPE_USERNAME:
-                appsFlyerLoginUsername();
-                break;
+        if(!TextUtils.isEmpty(App.getLoginedUser().getUser_login_type())) {
+            switch (App.getLoginedUser().getUser_login_type()) {
+                case Constant.TYPE_USERNAME:
+                    appsFlyerLoginUsername();
+                    break;
 
-            case Constant.TYPE_PHONE:
-                appsFlyerLoginPhone();
-                break;
+                case Constant.TYPE_PHONE:
+                    appsFlyerLoginPhone();
+                    break;
 
-            case Constant.TYPE_FACEBOOK:
-                appsFlyerLoginFacebook();
-                break;
+                case Constant.TYPE_FACEBOOK:
+                    appsFlyerLoginFacebook();
+                    break;
+            }
         }
     }
 }
