@@ -305,9 +305,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
             case R.id.tv_wall_agree_count:
             case R.id.tv_love_list:
-                if (Integer.valueOf(wallEntity.getLove_count()) > 0) {
-                    if (mViewClickListener != null) {
-                        mViewClickListener.showLovedMember(accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+                if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
+                    LogUtil.i(TAG, "is ADS can't show member");
+                } else {
+
+                    if (Integer.valueOf(wallEntity.getLove_count()) > 0) {
+                        if (mViewClickListener != null) {
+                            mViewClickListener.showLovedMember(accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+                        }
                     }
                 }
                 break;
@@ -569,11 +574,16 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //            ibDelete.setVisibility(View.GONE);
         //        }
 
+        String feelCode = wallEntity.getDofeel_code();
+        LogUtil.i(TAG, "setContent& feelCode: " + feelCode);
         try {
-            if (this.wallEntity.getDofeel_code() != null) {
-                StringBuilder b = new StringBuilder(this.wallEntity.getDofeel_code());
+            if (!TextUtils.isEmpty(feelCode)) {
+                iv_mood.setVisibility(View.VISIBLE);
+                StringBuilder b = new StringBuilder(feelCode);
                 int charIndex = this.wallEntity.getDofeel_code().lastIndexOf("_");
-                b.replace(charIndex, charIndex + 1, "/");
+                if (charIndex > 0 && b.length() > charIndex) {
+                    b.replace(charIndex, charIndex + 1, "/");
+                }
 
                 InputStream is = context.getAssets().open(b.toString());
                 iv_mood.setImageBitmap(BitmapFactory.decodeStream(is));
@@ -581,7 +591,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 iv_mood.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            iv_mood.setVisibility(View.GONE);
+            e.printStackTrace();
+//            iv_mood.setVisibility(View.GONE);
         }
 
         /*location*/
