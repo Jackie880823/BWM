@@ -21,7 +21,7 @@
     <color name="default_text_color_while">@android:color/white</color>
 
     <color name="default_content_bg">#e0e0e0</color>
-    <color name="default_split_line">#c8c8c8</color>
+    <color name="default_split_line">#e8e9ea</color>
 
     <color name="default_editor_panel_bg">#f7f7f7</color>
     <color name="default_unenable_item_bg">#a6C7C7C7</color><!--  65% -->
@@ -103,4 +103,9 @@
     <color name="si_default_text_color">#FF0000</color>
     <color name="si_default_text_color_selected">#FF00FF</color>
     <color name="si_default_indicator_bg">#ee9999</color>
+
+
+
+    <color name="edit_text_bg_color">#f1f2f2</color>
+    <color name="message_comment">#a7a9ac</color>
 </resources>

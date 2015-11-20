@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -40,6 +41,7 @@
             android:layout_marginRight="@dimen/_5dp"
             android:singleLine="true"
             android:textSize="@dimen/_18dp"
+            tools:text="skldfjal"
             android:textColor="#333" />
 
         <TextView
@@ -48,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textSize="@dimen/_10dp"
+            tools:text="skldfjal"
             android:textColor="#999"
             android:gravity="center_vertical"
             android:layout_alignBaseline="@+id/private_last_message_name" />
@@ -57,9 +60,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            tools:text="skldfjal"
             android:layout_marginTop="@dimen/_2dp"
             android:textSize="@dimen/_15dp"
-            android:textColor="#999"
+            android:textColor="@color/message_comment"
             android:layout_toLeftOf="@+id/tv_num"
             android:layout_alignParentLeft="true"
             android:layout_marginRight="@dimen/_10dp"
