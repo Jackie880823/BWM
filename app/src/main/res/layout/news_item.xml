@@ -11,6 +11,14 @@
         android:padding="@dimen/_5dp"
         >
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/text_title_default"
+            android:text="@string/app_name"
+            android:textColor="@color/default_text_color_dark"
+            android:textStyle="bold"
+            />
 
         <TextView
             android:id="@+id/news_title"

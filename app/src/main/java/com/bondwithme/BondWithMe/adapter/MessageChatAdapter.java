@@ -616,6 +616,9 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
+            if (position > myList.size()) {
+                return;
+            }
             final MsgEntity msgEntity = myList.get(position);
             boolean isFromMe = msgEntity.getUser_id().equals(MainActivity.getUser().getUser_id());
             Intent intent;
