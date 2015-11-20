@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.ProgressDialog;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -156,6 +155,9 @@ public class ContactUsActivity extends BaseActivity {
                 @Override
                 public void onResult(String string) {
                     MessageUtil.showMessage(ContactUsActivity.this,R.string.msg_action_successed);
+                    if (!isFinishing()){
+                        finish();
+                    }
                 }
 
                 @Override
