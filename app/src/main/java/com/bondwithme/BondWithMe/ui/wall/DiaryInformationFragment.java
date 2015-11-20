@@ -105,7 +105,13 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
             @Override
             public void loadHeadView(WallHolder wallHolder) {
                 holder = wallHolder;
-                if (wall != null) {
+                if (wall == null) {
+                    wall = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
+                    if (wall != null) {
+                        setWallContext();
+                        updatePhotoList();
+                    }
+                } else {
                     setWallContext();
                 }
             }
@@ -180,19 +186,15 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
     @Override
     public void requestData() {
+
         if (wall == null) {
-            wall = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
-            if (wall != null) {
-                vProgress.setVisibility(View.GONE);
-                if (holder != null) {
-                    setWallContext();
-                    updatePhotoList();
-                }
-                swipeRefreshLayout.setRefreshing(false);
+            LogUtil.i(TAG, "request holder null null========1");
+            WallEntity wallEntity = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
+            if (wallEntity != null) {
                 return;
             }
         }
-
+        LogUtil.i(TAG, "request holder null null========5");
         HashMap<String, String> params = new HashMap<>();
         params.put(Constant.CONTENT_GROUP_ID, content_group_id);
         params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
@@ -250,7 +252,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
      */
     private void updatePhotoList() {
         if (holder != null) {
-
+            LogUtil.i(TAG, "request holder null null========7");
             String videoName = wall.getVideo_filename();
             if (TextUtils.isEmpty(videoName) && !TextUtils.isEmpty(wall.getPhoto_count())) {
                 // 检测网络上的图片
@@ -288,7 +290,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
     @Override
     public void onDestroy() {
-        if (mHttpTools != null){
+        if (mHttpTools != null) {
             mHttpTools.cancelRequestByTag(GET_DETAIL);
         }
         vProgress.setVisibility(View.GONE);

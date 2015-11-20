@@ -274,7 +274,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     }
 
 //                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
-                    if (getActivity() != null&& !getActivity().isFinishing()) {
+                    if (getActivity() != null && !getActivity().isFinishing()) {
                         getActivity().setResult(Activity.RESULT_OK);
                         getActivity().finish();
                     }
@@ -287,6 +287,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     rlProgress.setVisibility(View.GONE);
                     break;
                 case GET_WALL_SUCCEED:
+                    rlProgress.setVisibility(View.GONE);
                     // 得到纬度
                     String strLatitude = wall.getLoc_latitude();
                     if (!TextUtils.isEmpty(strLatitude)) {
@@ -298,9 +299,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         longitude = Double.valueOf(strLatitude);
                     }
                     loc_type = wall.getLoc_type();
-                    if (llLocation == null) {
-                        return;
-                    }
                     // 地名
                     String locName = wall.getLoc_name();
                     if (!TextUtils.isEmpty(locName)) {
@@ -585,12 +583,14 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         }
                         lastChange = change;
                     }
-
-
                 });
-//                if (wall != null) {
-//                    mHandler.sendEmptyMessage(GET_WALL_SUCCEED);
-//                }
+
+                if (wall == null) {
+                    wall = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
+                    if (wall != null) {
+                        mHandler.sendEmptyMessage(GET_WALL_SUCCEED);
+                    }
+                }
             }
 
             @Override
@@ -859,19 +859,18 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void requestData() {
         if (isEdit) {
-            wall = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
             if (wall == null) {
-                HashMap<String, String> params = new HashMap<>();
-                params.put(Constant.CONTENT_GROUP_ID, contentGroupId);
-                params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
-                callBack.setLinkType(CallBack.LINK_TYPE_GET_WALL);
-                mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, callBack);
-            } else {
-                rlProgress.setVisibility(View.GONE);
-                if (llLocation != null) {
-                    mHandler.sendEmptyMessageDelayed(GET_WALL_SUCCEED, 200);
+                WallEntity wallEntity = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
+                if (wallEntity != null) {
+                    return;
                 }
             }
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constant.CONTENT_GROUP_ID, contentGroupId);
+            params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
+            callBack.setLinkType(CallBack.LINK_TYPE_GET_WALL);
+            mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, callBack);
         }
     }
 
@@ -1283,6 +1282,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 上传日记
      */
     public void submitWall() {
+        if (rlProgress.getVisibility() == View.VISIBLE) {
+            return;
+        }
+
         Log.i(TAG, "submitWall&");
         // 隐藏键盘
         UIUtil.hideKeyboard(getContext(), getActivity().getCurrentFocus());
