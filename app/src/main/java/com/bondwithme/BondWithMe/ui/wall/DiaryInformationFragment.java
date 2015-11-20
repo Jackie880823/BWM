@@ -180,6 +180,19 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
     @Override
     public void requestData() {
+        if (wall == null) {
+            wall = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
+            if (wall != null) {
+                vProgress.setVisibility(View.GONE);
+                if (holder != null) {
+                    setWallContext();
+                    updatePhotoList();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+                return;
+            }
+        }
+
         HashMap<String, String> params = new HashMap<>();
         params.put(Constant.CONTENT_GROUP_ID, content_group_id);
         params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
@@ -275,6 +288,9 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
     @Override
     public void onDestroy() {
+        if (mHttpTools != null){
+            mHttpTools.cancelRequestByTag(GET_DETAIL);
+        }
         vProgress.setVisibility(View.GONE);
         super.onDestroy();
     }
