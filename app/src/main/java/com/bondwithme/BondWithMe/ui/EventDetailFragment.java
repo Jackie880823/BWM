@@ -547,7 +547,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     data.clear();
                     adapter.removeCommentData();
                     requestComment();
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
 //                    progressBar.setVisibility(View.GONE);
                     //                    vProgress.setVisibility(View.GONE);
@@ -556,7 +555,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                 @Override
                 public void onError(Exception e) {
                     //                    UIUtil.hideKeyboard(getActivity(), et_comment);
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
 //                    progressBar.setVisibility(View.GONE);
                     //                    vProgress.setVisibility(View.GONE);
                 }
@@ -662,7 +660,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     @Override
                     public void onError(Exception e) {
                         //                    UIUtil.hideKeyboard(getActivity(), et_comment);
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
 //                        progressBar.setVisibility(View.GONE);
                     }
 
@@ -739,7 +736,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     data.clear();
                     adapter.removeCommentData();
                     requestComment();
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
                     getParentActivity().setResult(Activity.RESULT_OK);
                 }
@@ -985,12 +981,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             @Override
             public void onResult(String response) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
 
             @Override
@@ -1045,7 +1039,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 //                    maybe_count.setText(result.getString("total_maybe"));
 //                    not_going_count.setText(result.getString("total_no"));
                     getParentActivity().setResult(Activity.RESULT_OK);
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1053,7 +1046,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
 
             @Override
@@ -1189,7 +1181,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                         data.clear();
                         adapter.removeCommentData();
                         requestComment();
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                         UIUtil.hideKeyboard(getActivity(), etChat);
                     }
 

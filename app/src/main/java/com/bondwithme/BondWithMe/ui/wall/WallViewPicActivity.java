@@ -379,6 +379,7 @@ public class WallViewPicActivity extends BaseActivity {
                 if (data.size() != 0) {
                     data.remove(viewPager.getCurrentItem());
                     wallViewPicPagerAdapter.notifyDataSetChanged();
+                    setResult(RESULT_OK);
                 }
             }
 
