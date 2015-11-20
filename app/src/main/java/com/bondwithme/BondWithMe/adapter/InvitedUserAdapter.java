@@ -42,7 +42,7 @@ public class InvitedUserAdapter extends RecyclerView.Adapter<InvitedUserAdapter.
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
 
         UserEntity user = data.get(i);
-        BitmapTools.getInstance(mContext).display(viewHolder.user_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, user.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(viewHolder.user_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, user.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         viewHolder.user_name.setText(user.getUser_given_name());
         if (!loginedUserId.equals(user.getUser_id())) {
             if ("1".equals(user.getFriend())) {

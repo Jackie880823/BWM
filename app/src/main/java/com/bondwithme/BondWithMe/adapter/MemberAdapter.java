@@ -58,7 +58,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.VHItem> {
         moduleAction = memberEntity.getModule_action();
         tag = tag(moduleAction);
         memberId = memberEntity.getAction_user_id();
-        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberEntity.getAction_user_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         holder.owner_name.setText(memberEntity.getAction_username());
 //        holder.owner_content.setText(action[tag]);
 

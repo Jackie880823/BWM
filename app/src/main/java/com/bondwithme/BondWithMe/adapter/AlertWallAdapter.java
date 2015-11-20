@@ -82,7 +82,7 @@ public class AlertWallAdapter extends RecyclerView.Adapter<AlertWallAdapter.VHIt
             holder.content_action.setText(msp);
         }
         holder.push_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, alertWallEntity.getCreation_date()));
-        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, alertWallEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, alertWallEntity.getAction_user_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
     }
 
 

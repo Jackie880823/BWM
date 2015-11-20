@@ -483,7 +483,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.wallEntity = wallEntity;
         this.position = position;
 
-        VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
         String atDescription = wallEntity.getText_description();
         if (TextUtils.isEmpty(atDescription)) {
@@ -1100,14 +1100,16 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 @Override
                 public void onFinish() {
                     downloadCount++;
+                    LogUtil.d(TAG, "debug onFinish& downloadCount = " + downloadCount + "; size = " + data.size());
                     if (downloadCount == data.size()) {
+                        downloadCount = 0;
                         mViewClickListener.savePhotoed(wallEntity, true);
                     }
                 }
 
                 @Override
                 public void onResult(String string) {
-
+                    LogUtil.d(TAG, "debug onResult& response: " + string);
                     /**wing modified*/
                     String path = null;
                     try {
@@ -1117,8 +1119,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         e.printStackTrace();
                     }
                     /**wing modified*/
-
-                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                 }
 
                 @Override

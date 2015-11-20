@@ -56,7 +56,7 @@ public class MembersGridAdapter extends BaseAdapter {
         }
         UserEntity user = mUserList.get(position);
         viewHolder.tv_friend_name.setText(user.getUser_given_name());
-        BitmapTools.getInstance(mContext).display(viewHolder.iv_friend_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, user.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(viewHolder.iv_friend_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, user.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
         return convertView;
     }

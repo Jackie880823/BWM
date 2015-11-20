@@ -105,7 +105,7 @@ public class BondAlertBigDayAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
 
 
-            BitmapTools.getInstance(mContext).display(item.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(item.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             item.tvName.setText(mData.get(position).getUser_given_name() + mContext.getResources().getString(R.string.text_upcoming_birthdays_on));
             item.tvTime.setText(mData.get(position).getDay() + ", " + mData.get(position).getBirthday_date());
             item.tvLeft.setText(mData.get(position).getDay_left() + mContext.getResources().getString(R.string.text_d) + mContext.getResources().getString(R.string.text_left));
