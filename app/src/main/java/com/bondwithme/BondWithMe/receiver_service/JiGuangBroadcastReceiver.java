@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.ui.MissListActivity;
 import com.bondwithme.BondWithMe.util.LocationUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 
 import org.json.JSONException;
@@ -28,9 +28,7 @@ public class JiGuangBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        LogUtil.e("", "sssssssssssssss=======222");
-        if (!LocationUtil.isGoogleAvailable()) {
-            LogUtil.e("", "sssssssssssssss=======22");
+        if (App.getLoginedUser()!=null&&!LocationUtil.isGoogleAvailable()) {
             Bundle bundle = intent.getExtras();
             Log.d(TAG, "[MyReceiver] onReceive - " + intent.getAction() + ", extras: " + printBundle(bundle));
             if (JPushInterface.ACTION_REGISTRATION_ID.equals(intent.getAction())) {

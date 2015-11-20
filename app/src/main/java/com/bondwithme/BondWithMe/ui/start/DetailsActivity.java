@@ -30,7 +30,6 @@ import com.bondwithme.BondWithMe.entity.AppTokenEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
-import com.bondwithme.BondWithMe.ui.PersonalPictureActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
@@ -380,7 +379,7 @@ public class DetailsActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (PersonalPictureActivity.RESULT_OK == resultCode) {
+        if (RESULT_OK == resultCode) {
 
             switch (requestCode) {
                 // 如果是直接从相册获取

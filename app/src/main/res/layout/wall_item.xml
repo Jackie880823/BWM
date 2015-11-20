@@ -42,7 +42,7 @@
                     <TextView
                         android:id="@+id/owner_name"
                         style="@style/text_user_name"
-                        android:textColor="@color/tab_color_press4"
+                        android:textColor="@color/default_text_color_dark"
                         android:textSize="@dimen/text_medium_size" />
 
                     <ImageView
