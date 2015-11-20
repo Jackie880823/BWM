@@ -27,6 +27,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_small_size"
                 android:text=""
+                android:inputType="textCapWords"
                 />
     </ScrollView>
 
