@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content">
 
     <RelativeLayout
@@ -41,6 +42,7 @@
             android:layout_marginRight="@dimen/_5dp"
             android:singleLine="true"
             android:textSize="@dimen/_18dp"
+            tools:text="skldfjal"
             android:textColor="#333" />
 
         <TextView
@@ -49,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textSize="@dimen/_10dp"
+            tools:text="skldfjal"
             android:gravity="center_vertical"
             android:textColor="#999"
             android:layout_alignBaseline="@+id/group_message_name" />
@@ -59,7 +62,8 @@
             android:singleLine="true"
             android:layout_marginTop="@dimen/_2dp"
             android:textSize="@dimen/_16dp"
-            android:textColor="#999"
+            android:textColor="@color/message_comment"
+            tools:text="skldfjal"
             android:textStyle="bold"
             android:layout_toLeftOf="@+id/tv_num"
             android:layout_alignParentLeft="true"
@@ -75,6 +79,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/_2dp"
             android:layout_marginTop="@dimen/_2dp"
+            tools:text="skldfjal"
             android:gravity="center"
             android:background="@drawable/bg_num_red_message"
             android:textSize="@dimen/_10dp"
@@ -86,8 +91,9 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:layout_marginTop="@dimen/_2dp"
+            tools:text="skldfjal"
             android:textSize="@dimen/_14dp"
-            android:textColor="#999"
+            android:textColor="@color/message_comment"
             android:layout_below="@+id/last_message_send_name" />
 
     </RelativeLayout>
