@@ -547,7 +547,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     data.clear();
                     adapter.removeCommentData();
                     requestComment();
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
 //                    progressBar.setVisibility(View.GONE);
                     //                    vProgress.setVisibility(View.GONE);
@@ -739,7 +738,6 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
                     data.clear();
                     adapter.removeCommentData();
                     requestComment();
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
                     UIUtil.hideKeyboard(getActivity(), etChat);
                     getParentActivity().setResult(Activity.RESULT_OK);
                 }
