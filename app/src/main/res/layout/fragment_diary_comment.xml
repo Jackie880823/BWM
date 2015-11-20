@@ -37,9 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/send_comment"
-        android:layout_below="@+id/rl_agree"
-        android:paddingLeft="@dimen/default_content_padding"
-        android:paddingRight="@dimen/default_content_padding">
+        android:layout_below="@+id/rl_agree">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_wall_comment_list"
