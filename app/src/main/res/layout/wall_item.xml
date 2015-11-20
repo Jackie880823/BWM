@@ -1,255 +1,267 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
 
     <LinearLayout
         android:id="@+id/top_event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/default_content_padding"
-        android:layout_marginRight="@dimen/default_content_padding"
-        android:layout_marginTop="@dimen/default_content_padding"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/default_content_padding"
+        android:paddingRight="@dimen/default_content_padding">
 
-        <RelativeLayout
-            android:id="@+id/rl_event_head"
+
+        <LinearLayout
+
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_content_padding"
+            android:layout_marginRight="@dimen/default_content_padding"
+            android:layout_marginTop="@dimen/default_content_padding"
+            android:orientation="vertical">
 
-            <com.bondwithme.BondWithMe.widget.CircularNetworkImage
-                android:id="@+id/owner_head"
-                android:layout_width="@dimen/default_user_head_width_height"
-                android:layout_height="@dimen/default_user_head_width_height" />
+            <RelativeLayout
+                android:id="@+id/rl_event_head"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+                    android:id="@+id/owner_head"
+                    android:layout_width="@dimen/default_user_head_width_height"
+                    android:layout_height="@dimen/default_user_head_width_height" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/btn_option"
+                    android:layout_toRightOf="@+id/owner_head"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/default_content_padding"
+                    android:paddingTop="@dimen/default_text_padding">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/owner_name"
+                            style="@style/text_user_name"
+                            android:text="fjlfsjldfsj"
+                            android:textColor="@color/default_text_color_dark"
+                            android:textSize="@dimen/text_medium_size" />
+
+                        <ImageView
+                            android:id="@+id/iv_mood"
+                            android:layout_width="@dimen/default_small_button_width_height"
+                            android:layout_height="@dimen/default_small_button_width_height"
+                            android:layout_centerVertical="true"
+                            android:visibility="visible"
+                            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                            android:scaleType="fitCenter" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/push_date"
+                            style="@style/text_light_default" />
+
+                        <ImageView
+                            android:id="@+id/lock_post_iv"
+                            android:layout_width="@dimen/_20dp"
+                            android:layout_height="@dimen/_20dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/lock_post" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btn_option"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@null"
+                    android:contentDescription="@string/delete"
+                    android:src="@drawable/wall_option_dots"
+                    tools:visibility="visible"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/btn_option"
-                android:layout_toRightOf="@+id/owner_head"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/default_content_padding"
-                android:paddingTop="@dimen/default_text_padding">
+                android:layout_marginTop="@dimen/default_view_margin"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
+                    android:id="@+id/tv_wall_content"
+                    style="@style/text_dark_default"
+                    android:autoLink="web"
+                    android:linksClickable="true"
+                    android:textIsSelectable="true" />
 
-                    <TextView
-                        android:id="@+id/owner_name"
-                        style="@style/text_user_name"
-                        android:textColor="@color/default_text_color_dark"
-                        android:textSize="@dimen/text_medium_size" />
-
-                    <ImageView
-                        android:id="@+id/iv_mood"
-                        android:layout_width="@dimen/default_small_button_width_height"
-                        android:layout_height="@dimen/default_small_button_width_height"
-                        android:visibility="visible"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:scaleType="fitCenter" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/push_date"
-                        style="@style/text_light_default" />
-
-                    <ImageView
-                        android:id="@+id/lock_post_iv"
-                        android:layout_width="@dimen/_20dp"
-                        android:layout_height="@dimen/_20dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/lock_post" />
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/switch_text_show"
+                    style="@style/text_default"
+                    android:text="@string/more"
+                    android:textColor="@android:color/holo_blue_bright"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btn_option"
-                android:layout_width="@dimen/default_small_button_width_height"
-                android:layout_height="@dimen/default_small_button_width_height"
-                android:layout_alignParentRight="true"
-                android:background="@null"
-                android:contentDescription="@string/delete"
-                android:src="@drawable/option_dots"
-                android:visibility="gone" />
-        </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/ll_walls_image"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_200dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/default_view_margin"
+                android:visibility="gone">
+
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/iv_walls_images"
+                    style="@style/ListImageDefault"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/iv_video_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignBaseline="@+id/iv_walls_images"
+                    android:layout_alignBottom="@+id/iv_walls_images"
+                    android:layout_alignEnd="@+id/iv_walls_images"
+                    android:layout_alignLeft="@+id/iv_walls_images"
+                    android:layout_alignRight="@+id/iv_walls_images"
+                    android:layout_alignStart="@+id/iv_walls_images"
+                    android:layout_alignTop="@+id/iv_walls_images"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/btn_video"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tv_wall_photo_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/_1dp"
+                    android:background="@android:drawable/screen_background_dark_transparent"
+                    android:padding="@dimen/_4dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_12sp" />
+            </RelativeLayout>
+
+        </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_view_margin"
-            android:orientation="vertical">
+            android:background="@drawable/btn_default_selector_bg"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_5dp"
+            android:visibility="gone">
 
-            <com.bondwithme.BondWithMe.widget.FreedomSelectionTextView
-                android:id="@+id/tv_wall_content"
-                style="@style/text_dark_default"
-                android:autoLink="web"
-                android:linksClickable="true"
-                android:textIsSelectable="true" />
+            <ImageView
+                android:id="@+id/iv_location"
+                android:layout_width="@dimen/_20dp"
+                android:layout_height="@dimen/_20dp"
+                android:background="@drawable/btn_default_selector_bg"
+                android:scaleType="centerInside"
+                android:src="@drawable/location" />
 
             <TextView
-                android:id="@+id/switch_text_show"
-                style="@style/text_default"
-                android:text="@string/more"
-                android:textColor="@android:color/holo_blue_bright"
-                android:textStyle="bold"
-                android:visibility="gone" />
+                android:id="@+id/tv_location"
+                style="@style/text_dark_default"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_default_selector_bg"
+                android:text="@string/text_location"
+                android:textSize="@dimen/text_small_size" />
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/ll_walls_image"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_200dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/default_view_margin"
-            android:visibility="gone">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/default_content_padding"
+            android:layout_marginRight="@dimen/default_content_padding"
+            android:paddingBottom="@dimen/default_content_padding"
+            android:paddingTop="@dimen/default_content_padding">
 
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/iv_walls_images"
-                style="@style/ListImageDefault"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <ImageView
-                android:id="@+id/iv_video_top"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignBaseline="@+id/iv_walls_images"
-                android:layout_alignBottom="@+id/iv_walls_images"
-                android:layout_alignEnd="@+id/iv_walls_images"
-                android:layout_alignLeft="@+id/iv_walls_images"
-                android:layout_alignRight="@+id/iv_walls_images"
-                android:layout_alignStart="@+id/iv_walls_images"
-                android:layout_alignTop="@+id/iv_walls_images"
-                android:scaleType="centerInside"
-                android:src="@drawable/btn_video"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/tv_wall_photo_count"
+            <LinearLayout
+                android:id="@+id/ll_love"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true">
+
+                <ImageButton
+                    android:id="@+id/iv_love"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@null" />
+
+                <TextView
+                    android:id="@+id/tv_wall_agree_count"
+                    style="@style/text_light_default"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/_15dp" />
+
+                <TextView
+                    android:id="@+id/tv_love_list"
+                    android:layout_width="@dimen/_100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:layout_marginRight="@dimen/_10dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/default_text_color_blue"
+                    android:textSize="@dimen/text_small_size"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ll_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/_1dp"
-                android:background="@android:drawable/screen_background_dark_transparent"
-                android:padding="@dimen/_4dp"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/text_size_12sp" />
+                android:layout_centerVertical="true">
+
+                <ImageButton
+                    android:id="@+id/iv_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@null"
+                    android:src="@drawable/btn_comment" />
+
+                <TextView
+                    android:id="@+id/tv_wall_relay_count"
+                    style="@style/text_light_default"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/default_view_margin" />
+
+                <TextView
+                    style="@style/text_light_default"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/default_view_margin"
+                    android:text="@string/diary_comments" />
+
+            </LinearLayout>
+
         </RelativeLayout>
-
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_default_selector_bg"
-        android:gravity="center_vertical"
-        android:padding="@dimen/_5dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/iv_location"
-            android:layout_width="@dimen/_20dp"
-            android:layout_height="@dimen/_20dp"
-            android:background="@drawable/btn_default_selector_bg"
-            android:scaleType="centerInside"
-            android:src="@drawable/location" />
-
-        <TextView
-            android:id="@+id/tv_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_default_selector_bg"
-            android:text="@string/text_location"
-            android:textColor="@color/default_text_color_blue"
-            android:textSize="@dimen/text_small_size" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/default_content_padding"
-        android:layout_marginRight="@dimen/default_content_padding"
-        android:paddingBottom="@dimen/default_content_padding"
-        android:paddingTop="@dimen/default_content_padding">
-
-        <LinearLayout
-            android:id="@+id/ll_love"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true">
-
-            <ImageButton
-                android:id="@+id/iv_love"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@null" />
-
-            <TextView
-                android:id="@+id/tv_wall_agree_count"
-                style="@style/text_light_default"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/_15dp" />
-
-            <TextView
-                android:id="@+id/tv_love_list"
-                android:layout_width="@dimen/_100dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/default_view_margin"
-                android:layout_marginRight="@dimen/_10dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:textColor="@color/default_text_color_blue"
-                android:textSize="@dimen/text_small_size"
-                android:visibility="gone" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/ll_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true">
-
-            <ImageButton
-                android:id="@+id/iv_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@null"
-                android:src="@drawable/btn_comment" />
-
-            <TextView
-                android:id="@+id/tv_wall_relay_count"
-                style="@style/text_light_default"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/default_view_margin" />
-
-            <TextView
-                style="@style/text_light_default"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/default_view_margin"
-                android:text="@string/diary_comments" />
-
-        </LinearLayout>
-
-    </RelativeLayout>
 
     <View style="@style/split_line_default" />
 </LinearLayout>
