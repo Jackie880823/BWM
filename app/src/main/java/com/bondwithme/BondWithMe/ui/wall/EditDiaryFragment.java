@@ -871,6 +871,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
             params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
             callBack.setLinkType(CallBack.LINK_TYPE_GET_WALL);
             mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, callBack);
+        } else {
+            rlProgress.setVisibility(View.GONE);
         }
     }
 
