@@ -198,9 +198,9 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 //            T second = (T) holder;
             EventCommentEntity entity =  data.get(0);
             if( Build.VERSION.SDK_INT < 21){
-                itemDistance = DensityUtil.dip2px(mContext, 12);
+                itemDistance = DensityUtil.dip2px(mContext, 10);
             }else {
-                itemDistance = DensityUtil.dip2px(mContext, 14);
+                itemDistance = DensityUtil.dip2px(mContext, 12);
             }
 
             if(data.size() == 1){

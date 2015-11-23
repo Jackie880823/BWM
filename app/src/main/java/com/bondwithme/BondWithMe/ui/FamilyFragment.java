@@ -246,7 +246,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                      popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                          @Override
                          public void popDismiss() {
-                             LogUtil.i("==============1","onDismiss");
                              PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_MEMBER, true);
                              newPopAddPhoto();
                          }
@@ -526,7 +525,6 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                        @Override
                        public void popDismiss() {
-                           LogUtil.i("==============2", "onDismiss");
                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_MEMBER, true);
                            newPopAddPhoto();
                        }
@@ -534,7 +532,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
                    popupWindow.showPopupWindow(true);
 
                } else {
-                   handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,500);
+                   handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,1000);
                    InteractivePopupWindow.firstOpPop = true;
                }
 

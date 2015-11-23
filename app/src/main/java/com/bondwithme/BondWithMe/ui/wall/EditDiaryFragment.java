@@ -367,7 +367,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     break;
                 case GET_DELAY:
 
-//                    private ArrayList<View> tipViews;
                     ArrayList<String> tipTexts = new ArrayList<String>();
                     tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_feeling));
                     tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_tag_member));
@@ -382,8 +381,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     tipViews.add(getViewById(R.id.tv_location));
                     tipViews.add(getParentActivity().rightButton);
 
-//                    popFeeling();
-                    cutPopInteractive(tipTexts, tipViews, 0);
+                    cutPopInteractive(tipTexts,tipViews,0);
                     break;
             }
         }
@@ -391,32 +389,30 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     private void cutPopInteractive(final ArrayList<String> strings, final ArrayList<View> views, int j) {
 
-//        for (int i = j ; i < strings.size();i++){
-        if (j < strings.size() - 1) {
-            interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j), 1);
-            final int finalJ = j + 1;
-            interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                @Override
-                public void popDismiss() {
-                    LogUtil.i("==============event_save", "onDismiss");
-                    //存储本地
-                    cutPopInteractive(strings, views, finalJ);
-                }
-            });
-            interactivePopupWindow.showPopupWindowUp();
-        } else {
-            interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j), 0);
-            interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
-                @Override
-                public void popDismiss() {
-                    LogUtil.i("==============event_save", "onDismiss");
-                    PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, true);
-                    //存储本地
-                }
-            });
-            interactivePopupWindow.showPopupWindow(true);
-        }
-//        }
+        if (TextUtils.isEmpty(strings.get(j)))return;
+
+            if(j < strings.size() - 1 ){
+                interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j),1);
+                final int finalJ = j + 1;
+                interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                    @Override
+                    public void popDismiss() {
+                        //存储本地
+                        cutPopInteractive(strings, views, finalJ);
+                    }
+                });
+                interactivePopupWindow.showPopupWindowUp();
+            }else {
+                interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j),strings.get(j),0);
+                interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                    @Override
+                    public void popDismiss() {
+                        //存储本地
+                        PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, true);
+                    }
+                });
+                interactivePopupWindow.showPopupWindow(true);
+            }
     }
 
     /**
