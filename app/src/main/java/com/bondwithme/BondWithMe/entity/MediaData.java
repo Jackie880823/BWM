@@ -85,6 +85,8 @@ public class MediaData {
 
     private long id;
 
+    private long addedDate;
+
     private Uri thumbnailUri = Uri.EMPTY;
 
     /**
@@ -215,6 +217,14 @@ public class MediaData {
             Log.i(TAG, "getImageThumbnailUri& result: " + result);
             return result;
         }
+    }
+
+    public long getAddedDate() {
+        return addedDate;
+    }
+
+    public void setAddedDate(long addedDate) {
+        this.addedDate = addedDate;
     }
 
     /**

@@ -30,12 +30,14 @@ import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.SortMediaComparator;
 import com.bondwithme.BondWithMe.widget.CustomGridView;
 import com.bondwithme.BondWithMe.widget.DrawerArrowDrawable;
 import com.bondwithme.BondWithMe.widget.NewtonCradleLoading;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -130,6 +132,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 bucketsAdapter.clear();
                 bucketsAdapter.addAll(buckets);
             }
+
+            ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
+            SortMediaComparator comparator = new SortMediaComparator();
+            Collections.sort(nearest, comparator);
+
             loading.stop();
             loading.setVisibility(View.GONE);
         }
@@ -181,14 +188,14 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 //        String imageOrderBy = MediaStore.Images.Thumbnails.DEFAULT_SORT_ORDER ;
 //        imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy).loadInBackground();
 
-        String[] imageColumns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID};
+        String[] imageColumns = {MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media.DATA, MediaStore.Images.Media._ID, MediaStore.Images.Media.DATE_ADDED};
         String imageOrderBy = MediaStore.Images.Media.DATE_ADDED + " DESC";
         String imageSelect = MediaStore.Images.Media.SIZE + ">0";
         imageCursor = new CursorLoader(getActivity(), MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, imageSelect, null, imageOrderBy).loadInBackground();
 
         if (useVideo) {
             // 获取数据库中的视频资源游标
-            String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA, MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION};
+            String[] videoColumns = {MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATA, MediaStore.Video.VideoColumns._ID, MediaStore.Video.Media.SIZE, MediaStore.Video.VideoColumns.DURATION, MediaStore.Video.Media.DATE_ADDED};
             String videoOrderBy = MediaStore.Video.Media.DATE_ADDED + " DESC";
             String select = String.format("%s <= %d and %s >= %d", MediaStore.Video.VideoColumns.SIZE, MediaData.MAX_SIZE, MediaStore.Video.VideoColumns.DURATION, 1000);
             videoCursor = new CursorLoader(getActivity(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, select, null, videoOrderBy).loadInBackground();
@@ -352,20 +359,24 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             int uriColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.ImageColumns._ID);
             int bucketColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
             int pathColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATA);
+            int addedDateColumnIndex = imageCursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED);
 
             while (imageCursor.moveToNext()) {
                 String path;
                 String bucket;
                 long id;
+                long addedDate;
                 Uri contentUri;
                 path = imageCursor.getString(pathColumnIndex);
                 bucket = imageCursor.getString(bucketColumnIndex);
                 id = imageCursor.getLong(uriColumnIndex);
+                addedDate = imageCursor.getLong(addedDateColumnIndex);
                 contentUri = Uri.parse(MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + id);
 
-                if (!TextUtils.isEmpty(path) && !path.contains(FileUtil.getCacheFilePath(getActivity(),true))) {
+                if (!TextUtils.isEmpty(path) && !path.contains(FileUtil.getCacheFilePath(getActivity(), true))) {
                     MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_IMAGE, 0);
                     mediaData.setId(id);
+                    mediaData.setAddedDate(addedDate);
                     addToMediaMap(bucket, mediaData);
                 }
             }
@@ -398,20 +409,24 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
                 int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
                 int durationColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION);
+                int addedDateColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATE_ADDED);
 
                 while (videoCursor.moveToNext()) {
                     String path;
                     Uri contentUri;
                     long duration;
                     long id;
+                    long addedDate;
 
                     duration = videoCursor.getLong(durationColumnIndex);
                     path = videoCursor.getString(pathColumnIndex);
                     id = videoCursor.getLong(uriColumnIndex);
+                    addedDate = videoCursor.getLong(addedDateColumnIndex);
                     contentUri = Uri.parse(MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + id);
 
                     if (!TextUtils.isEmpty(path)) {
                         MediaData mediaData = new MediaData(contentUri, path, MediaData.TYPE_VIDEO, duration);
+                        mediaData.setAddedDate(addedDate);
                         mediaData.setId(id);
                         addToMediaMap(bucket, mediaData);
                     }
@@ -507,6 +522,10 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     private synchronized void addToMediaMap(String bucket, MediaData mediaData) {
         ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
         nearest.add(mediaData);
+        if (nearest.size() == 50) {
+            SortMediaComparator comparator = new SortMediaComparator();
+            Collections.sort(nearest, comparator);
+        }
 
         if (mMediaUris.containsKey(bucket)) {
             mMediaUris.get(bucket).add(mediaData);
@@ -554,7 +573,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             }
 
             mImageUriList = mMediaUris.get(bucket);
-            if (mImageUriList.size() <=0) {
+            if (mImageUriList.size() <= 0) {
                 mMediaUris.remove(bucket);
                 buckets.remove(index);
                 bucketsAdapter.remove(bucket);
