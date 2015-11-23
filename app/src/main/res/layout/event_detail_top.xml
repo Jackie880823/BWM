@@ -84,6 +84,7 @@
                     android:id="@+id/event_desc"
                     style="@style/text_dark_default"
                     android:layout_gravity="center_vertical"
+                    android:autoLink="web"
                     android:layout_marginLeft="@dimen/default_view_margin" />
 
             </LinearLayout>

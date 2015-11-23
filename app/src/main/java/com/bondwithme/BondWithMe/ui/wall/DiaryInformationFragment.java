@@ -155,7 +155,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                         ArrayList<Uri> pickUris;
                         pickUris = data.getParcelableArrayListExtra(SelectPhotosActivity.EXTRA_IMAGES_STR);
                         if (pickUris != null && !pickUris.isEmpty()) {
-                            vProgress.setVisibility(View.VISIBLE);
+                            setProgressVisibility(View.VISIBLE);
                             holder.setLocalPhotos(pickUris);
                         }
                     }
@@ -177,11 +177,18 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
         }
     }
 
-    private void setResultOK(boolean isDelete) {
+    public void setResultOK(boolean isDelete) {
         Intent intent = getParentActivity().getIntent();
         intent.putExtra(Constant.WALL_ENTITY, wall);
         intent.putExtra(Constant.IS_DELETE, isDelete);
         getParentActivity().setResult(Activity.RESULT_OK, intent);
+    }
+
+    public void setProgressVisibility(int visibility) {
+        if (vProgress != null) {
+            vProgress = getViewById(R.id.rl_progress);
+        }
+        vProgress.setVisibility(visibility);
     }
 
     @Override
@@ -202,7 +209,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
         mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, new HttpCallback() {
             @Override
             public void onStart() {
-                vProgress.setVisibility(View.VISIBLE);
+                setProgressVisibility(View.VISIBLE);
             }
 
             @Override
@@ -210,7 +217,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                 if (wall == null) {
                     getParentActivity().finish();
                 } else {
-                    vProgress.setVisibility(View.GONE);
+                    setProgressVisibility(View.GONE);
                     if (holder != null) {
                         setWallContext();
                         updatePhotoList();
@@ -293,7 +300,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
         if (mHttpTools != null) {
             mHttpTools.cancelRequestByTag(GET_DETAIL);
         }
-        vProgress.setVisibility(View.GONE);
+        setProgressVisibility(View.GONE);
         super.onDestroy();
     }
 
@@ -324,12 +331,12 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                 mHttpTools.put(requestInfo, POST_DELETE, new HttpCallback() {
                     @Override
                     public void onStart() {
-                        vProgress.setVisibility(View.VISIBLE);
+                        setProgressVisibility(View.VISIBLE);
                     }
 
                     @Override
                     public void onFinish() {
-                        vProgress.setVisibility(View.GONE);
+                        setProgressVisibility(View.GONE);
                     }
 
                     @Override
@@ -430,9 +437,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
             isUpdate = true;
             requestData();
         } else {
-            if (vProgress != null) {
-                vProgress.setVisibility(View.GONE);
-            }
+            setProgressVisibility(View.GONE);
             LogUtil.e(TAG, "add Photo Fail");
             getParentActivity().finish();
         }
@@ -440,9 +445,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
     @Override
     public void savePhotoed(WallEntity wallEntity, boolean succeed) {
-        if (vProgress != null) {
-            vProgress.setVisibility(View.GONE);
-        }
+        setProgressVisibility(View.GONE);
         if (!succeed) {
             LogUtil.e(TAG, "save Photo Fail");
         }
@@ -450,9 +453,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
     @Override
     public void onSavePhoto() {
-        if (vProgress != null) {
-            vProgress.setVisibility(View.VISIBLE);
-        }
+        setProgressVisibility(View.VISIBLE);
     }
 
 }

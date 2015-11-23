@@ -53,8 +53,8 @@
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_content_padding"
-        android:paddingRight="@dimen/default_content_padding"
+        android:paddingLeft="@dimen/_10dp"
+        android:paddingRight="@dimen/_10dp"
         android:paddingTop="@dimen/default_view_margin"
         android:visibility="visible">
 

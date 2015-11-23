@@ -12,16 +12,15 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.InvitedUserEditAdapter;
 import com.bondwithme.BondWithMe.entity.GroupEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -354,7 +353,6 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                     JSONObject jsonObject = new JSONObject(response);
 
                     if (("200").equals(jsonObject.getString("response_status_code"))) {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
 //                        getMembersList();
                         for (UserEntity user : userList) {
                             if (user.getUser_id().equals(userId)) {
@@ -363,9 +361,6 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
                             }
                         }
                         adapter.notifyDataSetChanged();
-
-                    } else {
-                        MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
 
                     }
                 } catch (JSONException e) {
@@ -380,7 +375,6 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
 
             @Override
             public void onCancelled() {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
 
             @Override
@@ -420,7 +414,6 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
 
             @Override
             public void onResult(String response) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
 //                Log.i("AddMembe_userList===1", userList.size() + "");
                 userList.addAll(new_members_data);
 //                Log.i("AddMembe_userList===2", userList.size() + "");
@@ -435,7 +428,6 @@ public class InvitedEditFragment extends BaseFragment<InvitedEditActivity> {
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
             }
 
             @Override
