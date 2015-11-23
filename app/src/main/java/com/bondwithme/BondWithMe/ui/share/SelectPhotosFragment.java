@@ -133,10 +133,6 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
                 bucketsAdapter.addAll(buckets);
             }
 
-            ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
-            SortMediaComparator comparator = new SortMediaComparator();
-            Collections.sort(nearest, comparator);
-
             loading.stop();
             loading.setVisibility(View.GONE);
         }
@@ -384,6 +380,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         }
 
         if (videoCursor == null || videoCursor.isClosed()) {
+
+            ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
+            SortMediaComparator comparator = new SortMediaComparator();
+            Collections.sort(nearest, comparator);
+
             getParentActivity().runOnUiThread(adapterRefresh);
         }
         LogUtil.d(TAG, "loadImages(), buckets size: " + buckets.size());
@@ -437,6 +438,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
         }
 
         if (imageCursor == null || imageCursor.isClosed()) {
+
+            ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
+            SortMediaComparator comparator = new SortMediaComparator();
+            Collections.sort(nearest, comparator);
+
             getParentActivity().runOnUiThread(adapterRefresh);
         }
         LogUtil.d(TAG, "loadVideos(), buckets size: " + buckets.size());

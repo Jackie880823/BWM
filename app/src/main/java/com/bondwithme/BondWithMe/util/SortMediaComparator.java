@@ -33,6 +33,6 @@ public class SortMediaComparator implements Comparator<MediaData> {
      */
     @Override
     public int compare(MediaData lhs, MediaData rhs) {
-        return (int) (lhs.getAddedDate() - rhs.getAddedDate());
+        return (int) (rhs.getAddedDate() - lhs.getAddedDate());
     }
 }
