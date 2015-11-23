@@ -105,7 +105,6 @@
                 android:inputType="textCapWords"
                 android:textColor="@color/default_text_color_dark"
                 android:textColorHint="#999"
-                android:inputType="textCapWords"
                 android:visibility="visible" />
 
             <LinearLayout
