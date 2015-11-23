@@ -317,6 +317,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     public void showDiaryInformation(WallEntity wallEntity) {
         Intent intent;
         intent = new Intent(getActivity(), DiaryInformationActivity.class);
+        intent.putExtra(Constant.WALL_ENTITY, wallEntity);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
         int position  = adapter.getData().indexOf(wallEntity);

@@ -43,6 +43,7 @@ import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.ui.wall.DiaryCommentActivity;
+import com.bondwithme.BondWithMe.ui.wall.DiaryInformationFragment;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallViewPicActivity;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
@@ -431,52 +432,28 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     private void updateLovedView() {
         int count = Integer.valueOf(wallEntity.getLove_count());
-        //        String text = tvLoveList.getText().toString();
-        //        String name = MainActivity.getUser().getUser_given_name();
         int resId;
 
         if (TextUtils.isEmpty(wallEntity.getLove_id())) {
             count += 1;
             resId = R.drawable.love_press;
             wallEntity.setLove_id(accountUserId);
-
-            //            if(count > 1) {
-            //                text += (name + " ");
-            //            } else {
-            //                text = name;
-            //            }
         } else {
             count -= 1;
             resId = R.drawable.love_normal;
             wallEntity.setLove_id(null);
-
-            //            if(count > 0) {
-            //                StringBuilder temp = new StringBuilder();
-            //                String split;
-            //                split = name + " ";
-            //
-            //                for(String str : text.split(split)) {
-            //                    temp.append(str);
-            //                }
-            //                text = temp.toString();
-            //            } else {
-            //                text = "";
-            //            }
         }
 
         wallEntity.setLove_count(String.valueOf(count));
         ibAgree.setImageResource(resId);
         tvAgreeCount.setText(String.format(tvAgreeCount.getContext().getString(R.string.loves_count), count));
-        //        tvLoveList.setText(text);
     }
 
-    private void doLove(final WallEntity wallEntity, final boolean love) {
-
+    private void doLove(WallEntity wallEntity, boolean love) {
         HashMap<String, String> params = new HashMap<>();
         params.put("content_id", wallEntity.getContent_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
         params.put("user_id", "" + accountUserId);
-
         RequestInfo requestInfo = new RequestInfo(Constant.API_WALL_LOVE, params);
         callBack.setLinkType(CallBack.LINK_TYPE_POST_LOVE);
         mHttpTools.post(requestInfo, POST_LOVE, callBack);
@@ -834,6 +811,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private void editDiaryAction() {
         Intent intent;
         intent = new Intent(context, NewDiaryActivity.class);
+        intent.putExtra(Constant.WALL_ENTITY, wallEntity);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_WALL);
@@ -1026,7 +1004,13 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         @Override
         public void onStart() {
-
+            switch (linkType){
+                case LINK_TYPE_POST_LOVE:
+                    if (fragment instanceof DiaryInformationFragment) {
+                        ((DiaryInformationFragment) fragment).setProgressVisibility(View.VISIBLE);
+                    }
+                    break;
+            }
         }
 
         @Override
@@ -1070,6 +1054,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 case LINK_TYPE_PUT_PHOTO_MAX:
                     submitLocalPhotos(wallEntity.getContent_id());
                     break;
+                case LINK_TYPE_POST_LOVE:
+                    LogUtil.d(TAG, "onResult& LINK_TYPE_POST_LOVE");
+                    if (fragment instanceof DiaryInformationFragment) {
+                        ((DiaryInformationFragment) fragment).setResultOK(false);
+                        ((DiaryInformationFragment) fragment).setProgressVisibility(View.GONE);
+                    }
+                    break;
+
             }
         }
 
@@ -1079,6 +1071,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 case LINK_TYPE_PUT_PHOTO_MAX:
                 case LINK_TYPE_SUBMIT_PICTURE:
                     mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_FAIL);
+                    break;
+                case LINK_TYPE_POST_LOVE:
+                    if (fragment instanceof DiaryInformationFragment) {
+                        ((DiaryInformationFragment) fragment).setProgressVisibility(View.GONE);
+                    }
                     break;
             }
             e.printStackTrace();
