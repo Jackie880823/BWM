@@ -484,11 +484,15 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     int position = data.getIntExtra(Constant.POSITION, -1);
                     LogUtil.d(TAG, "onActivityResult& position: " + position);
 
-                    if (data.getBooleanExtra(Constant.IS_DELETE, false)) {
-                        wallEntities.remove(position);
-                        adapter.notifyItemRemoved(position);
+                    String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
+                    if (!TextUtils.isEmpty(commentCount)) {
+                        WallEntity wallEntity;
+                        wallEntity = wallEntities.get(position);
+                        if (!wallEntity.getComment_count().equals(commentCount)) {
+                            wallEntity.setComment_count(commentCount);
+                            adapter.notifyItemChanged(position);
+                        }
                     } else {
-
                         if (position >= 0 && position < wallEntities.size()) {
                             WallEntity wallEntity;
                             wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);

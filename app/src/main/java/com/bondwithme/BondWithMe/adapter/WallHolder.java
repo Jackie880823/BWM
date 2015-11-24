@@ -341,6 +341,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 intent.putExtra(Constant.CONTENT_ID, wallEntity.getContent_id());
                 intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
                 intent.putExtra(Constant.AGREE_COUNT, wallEntity.getLove_count());
+                intent.putExtra(Constant.WALL_ENTITY, wallEntity);
                 intent.putExtra(Constant.POSITION, position);
                 fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
             }
