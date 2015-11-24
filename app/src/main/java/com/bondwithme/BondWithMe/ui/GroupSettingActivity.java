@@ -30,6 +30,7 @@ import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.google.gson.Gson;
@@ -164,7 +165,7 @@ public class GroupSettingActivity extends BaseActivity {
 
         mBitmapTools = BitmapTools.getInstance(mContext);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
-        mBitmapTools.display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(this, cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
 //        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName.setText(groupName);
 
