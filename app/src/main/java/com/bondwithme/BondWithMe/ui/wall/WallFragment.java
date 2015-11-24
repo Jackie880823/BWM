@@ -93,7 +93,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     private boolean loading;
     LinearLayoutManager llm;
     private String member_id;//根据member查看的wall
-    public InteractivePopupWindow popupWindow, popupWindowAddPhoto;
+    public InteractivePopupWindow popupWindow;
     private static final int GET_DELAY = 0x28;
 
 
@@ -103,7 +103,10 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
             super.handleMessage(msg);
             switch (msg.what) {
                 case GET_DELAY:
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, getParentActivity().getResources().getString(R.string.text_tip_add_diary), 0);
+                    String popText = getParentActivity().getResources().getString(R.string.text_tip_add_diary);
+                    if(TextUtils.isEmpty(popText))return;
+
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popText, 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
@@ -272,7 +275,10 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         if (isVisibleToUser) {
             if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, false)) {
                 if (InteractivePopupWindow.firstOpPop) {
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, getParentActivity().getResources().getString(R.string.text_tip_add_diary), 0);
+                    String popText = getParentActivity().getResources().getString(R.string.text_tip_add_diary);
+                    if(TextUtils.isEmpty(popText))return;
+
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popText, 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {

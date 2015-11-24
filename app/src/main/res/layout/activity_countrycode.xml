@@ -26,6 +26,7 @@
         android:drawableLeft="@drawable/search"
         android:layout_below="@+id/fragment_main_top"
         android:background="@drawable/et_round_white"
+        android:inputType="textCapWords"
         />
 
     <com.bondwithme.BondWithMe.widget.LetterListView

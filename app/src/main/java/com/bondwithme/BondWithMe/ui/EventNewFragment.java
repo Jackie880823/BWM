@@ -124,7 +124,10 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
             super.handleMessage(msg);
             switch (msg.what){
                 case GET_DELAY:
-                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_save_event),0);
+                    String popText = getParentActivity().getResources().getString(R.string.text_tip_save_event);
+                    if(TextUtils.isEmpty(popText))return;
+
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,popText,0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                         @Override
                         public void popDismiss() {
@@ -227,7 +230,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,false)){
             getParentActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN |
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
-            handler.sendEmptyMessageDelayed(GET_DELAY, 500);
+            handler.sendEmptyMessageDelayed(GET_DELAY, 1000);
         }
     }
 
@@ -248,11 +251,13 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         super.setUserVisibleHint(isVisibleToUser);
         if (MainActivity.IS_INTERACTIVE_USE && isVisibleToUser) {
             if(InteractivePopupWindow.firstOpPop){
-                popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_save_event),0);
+                String popText = getParentActivity().getResources().getString(R.string.text_tip_save_event);
+                if(TextUtils.isEmpty(popText))return;
+
+                popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,popText,0);
                 popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
                     @Override
                     public void popDismiss() {
-                        LogUtil.i("==============event_save", "onDismiss");
                         //存储本地
                         PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,true);
                     }

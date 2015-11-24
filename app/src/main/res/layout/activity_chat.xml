@@ -67,6 +67,7 @@
                         android:background="@drawable/et_chat_bg"
                         android:maxLines="3"
                         android:padding="@dimen/default_content_padding"
+                        android:inputType="textCapWords"
                         android:textColor="@color/default_text_color_dark" />
                     <TextView
                         android:id="@+id/btn_send"
