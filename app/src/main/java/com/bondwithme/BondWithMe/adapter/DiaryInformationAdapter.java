@@ -57,9 +57,8 @@ public class DiaryInformationAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public void clearData(){
         if (!data.isEmpty()) {
-            int end = data.size();
             data.clear();
-            notifyItemRangeRemoved(1, end);
+            notifyItemRangeRemoved(1, getItemCount());
         }
     }
 
