@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
-import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.App;
@@ -425,6 +424,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
         intent.putExtra(Constant.REQUEST_URL, url);
         intent.putExtra(Constant.USER_ID, wallEntity.getUser_id());
+        intent.putExtra(Constant.POSITION, position);
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_PHOTOS);
     }
 
@@ -466,11 +466,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.wallEntity = wallEntity;
         this.position = position;
 
-        if (MainActivity.getUser().getUser_id().equals(wallEntity.getUser_id())) {
-            BitmapTools.getInstance(context).display(nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
-        } else {
-            VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
-        }
+        VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
         String atDescription = wallEntity.getText_description();
         if (TextUtils.isEmpty(atDescription)) {
@@ -1013,7 +1009,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         @Override
         public void onStart() {
-            switch (linkType){
+            switch (linkType) {
                 case LINK_TYPE_POST_LOVE:
                     if (fragment instanceof DiaryInformationFragment) {
                         ((DiaryInformationFragment) fragment).setProgressVisibility(View.VISIBLE);
@@ -1109,7 +1105,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, accountUserId, photoEntity.getFile_id());
             String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, photoEntity.getUser_id(), photoEntity.getFile_id());
             /**wing modified*/
-            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context,false), true, new HttpCallback() {
+            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context, false), true, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
