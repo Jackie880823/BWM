@@ -275,7 +275,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
 //                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                     if (getActivity() != null && !getActivity().isFinishing()) {
-                        getActivity().setResult(Activity.RESULT_OK);
+                        Intent intent = getParentActivity().getIntent();
+                        intent.putExtra(Constant.WALL_ENTITY, wall);
+                        intent.putExtra(Constant.IS_DELETE, false);
+                        getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     }
                     sendEmptyMessage(HIDE_PROGRESS);

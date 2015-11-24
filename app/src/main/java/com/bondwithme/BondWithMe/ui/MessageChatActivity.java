@@ -102,7 +102,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private TextView locationTextView;//地图
     private TextView videoTextView;//视频
     private TextView contactTextView;//名片
-    private TextView sendTextView;//发送按钮
+    private ImageView sendTextView;//发送按钮
     private LinearLayout expandFunctionLinear;//加号
     private LinearLayout stickerLinear;//表情库
 

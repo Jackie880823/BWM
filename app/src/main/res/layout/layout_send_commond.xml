@@ -66,8 +66,8 @@
 
         <ImageButton
             android:id="@+id/tv_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_34dp"
+            android:layout_height="@dimen/_34dp"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/default_view_margin"
             android:background="@drawable/btn_chat_send_bg_for_comment" />
