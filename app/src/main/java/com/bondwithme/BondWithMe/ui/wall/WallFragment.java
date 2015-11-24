@@ -30,6 +30,7 @@ import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
@@ -104,7 +105,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
             switch (msg.what) {
                 case GET_DELAY:
                     String popText = getParentActivity().getResources().getString(R.string.text_tip_add_diary);
-                    if(TextUtils.isEmpty(popText))return;
+                    if (TextUtils.isEmpty(popText)) return;
 
                     popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popText, 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
@@ -276,7 +277,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
             if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, false)) {
                 if (InteractivePopupWindow.firstOpPop) {
                     String popText = getParentActivity().getResources().getString(R.string.text_tip_add_diary);
-                    if(TextUtils.isEmpty(popText))return;
+                    if (TextUtils.isEmpty(popText)) return;
 
                     popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popText, 0);
                     popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
@@ -320,7 +321,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         intent.putExtra(Constant.WALL_ENTITY, wallEntity);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
-        int position  = adapter.getData().indexOf(wallEntity);
+        int position = adapter.getData().indexOf(wallEntity);
         intent.putExtra(Constant.POSITION, position);
         startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
     }
@@ -364,16 +365,16 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
      */
     @Override
     public void remove(WallEntity wallEntity) {
-        showDeleteDialog(wallEntity.getContent_group_id());
+        showDeleteDialog(wallEntity);
     }
 
-    private void showDeleteDialog(final String content_group_id) {
+    private void showDeleteDialog(final WallEntity wallEntity) {
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, content_group_id), null);
+                RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, wallEntity.getContent_group_id()), null);
                 new HttpTools(getActivity()).put(requestInfo, PUT_REMOVE, new HttpCallback() {
                     @Override
                     public void onStart() {
@@ -388,7 +389,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     @Override
                     public void onResult(String string) {
 //                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                        refresh();
+                        int index = adapter.getData().indexOf(wallEntity);
+                        adapter.notifyItemRemoved(index);
                     }
 
                     @Override
@@ -445,7 +447,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     @Override
     public void addPhotoed(WallEntity wallEntity, boolean succeed) {
         if (succeed) {
-            refresh();
+            refresh(adapter.getData().indexOf(wallEntity));
         } else {
             if (vProgress != null) {
                 vProgress.setVisibility(View.GONE);
@@ -473,7 +475,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case Constant.INTENT_REQUEST_COMMENT_WALL: // 更新了评论
+                case Constant.INTENT_REQUEST_COMMENT_WALL: { // 更新了评论
                     if (data == null) {
                         return;
                     }
@@ -489,19 +491,13 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
                         if (position >= 0 && position < wallEntities.size()) {
                             WallEntity wallEntity;
-                            String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
-                            LogUtil.d(TAG, "onActivityResult& commentCount: " + commentCount);
-                            if (TextUtils.isEmpty(commentCount)) {
-                                wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
-                                wallEntities.set(position, wallEntity);
-                            } else {
-                                wallEntity = wallEntities.get(position);
-                                wallEntity.setComment_count(commentCount);
-                            }
+                            wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
+                            wallEntities.set(position, wallEntity);
                             adapter.notifyItemChanged(position);
                         }
                     }
-                    break;
+                }
+                break;
 
                 case Constant.INTENT_REQUEST_CREATE_WALL:
                     //wait a mement for the pic handle on server
@@ -510,10 +506,21 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                case Constant.INTENT_REQUEST_UPDATE_WALL: // 更新了日志
-                case Constant.INTENT_REQUEST_UPDATE_PHOTOS: // 更新了图片的日志
                     refresh();
                     break;
+                case Constant.INTENT_REQUEST_UPDATE_WALL: // 更新了日志
+                case Constant.INTENT_REQUEST_UPDATE_PHOTOS:// 更新了图片的日志
+                {
+                    if (data == null) {
+                        LogUtil.w(TAG, "onActivityResult& result data is null");
+                        return;
+                    }
+
+                    int position = data.getIntExtra(Constant.POSITION, -1);
+                    refresh(position);
+                }
+                break;
+
                 case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
                     if (data != null && holder != null) {
                         ArrayList<Uri> pickUris;
@@ -539,5 +546,65 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         isRefresh = true;
         startIndex = 0;
         requestData();
+    }
+
+    /**
+     * 刷新，重新获取指定项数据
+     */
+    private void refresh(final int position) {
+
+        final List<WallEntity> wallEntities = adapter.getData();
+        if (position < 0 || position >= wallEntities.size()) {
+            return;
+        }
+
+        WallEntity wallEntity = wallEntities.get(position);
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
+        params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
+
+        String GET_DETAIL = "GET_DELAY";
+        new HttpTools(getContext()).get(Constant.API_WALL_DETAIL, params, GET_DETAIL, new HttpCallback() {
+            WallEntity wall;
+
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                if (wall == null) {
+                    getParentActivity().finish();
+                } else {
+                    wallEntities.set(position, wall);
+                    adapter.notifyItemChanged(position);
+                    vProgress.setVisibility(View.GONE);
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onResult(String response) {
+                LogUtil.i(TAG, "request& onResult# response: " + response);
+                wall = new Gson().fromJson(response, WallEntity.class);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                getParentActivity().finish();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 }

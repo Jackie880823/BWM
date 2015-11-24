@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.App;
@@ -465,7 +466,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         this.wallEntity = wallEntity;
         this.position = position;
 
-        VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+        if (MainActivity.getUser().getUser_id().equals(wallEntity.getUser_id())) {
+            BitmapTools.getInstance(context).display(nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+        } else {
+            VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+        }
 
         String atDescription = wallEntity.getText_description();
         if (TextUtils.isEmpty(atDescription)) {
@@ -817,6 +822,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         intent.putExtra(Constant.WALL_ENTITY, wallEntity);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
+        intent.putExtra(Constant.POSITION, position);
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_WALL);
     }
 
