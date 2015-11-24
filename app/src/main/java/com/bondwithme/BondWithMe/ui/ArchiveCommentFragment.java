@@ -16,6 +16,7 @@ import com.bondwithme.BondWithMe.adapter.ArchiveCommentAdapter;
 import com.bondwithme.BondWithMe.adapter.ArchiveDetailAdapter;
 import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
 import com.bondwithme.BondWithMe.entity.ArchiveCommentEntity;
+import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.ArchiveChatViewClickListener;
 import com.bondwithme.BondWithMe.widget.ArchiveCommentHead;
@@ -52,6 +53,7 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
     private List<ArchiveChatEntity> detailDate = new ArrayList<>();
     private ArchiveCommentAdapter adapter;
     private ArchiveDetailAdapter detailAdapter;
+    public static final String PIC_URL = "pic_url";
 
     private HttpTools mHttpTools;
 
@@ -76,7 +78,6 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
         }
 
         LayoutInflater inflater = LayoutInflater.from(getParentActivity());
-//        heah = inflater.inflate(R.layout.fragment_archive_comment_head, rvList, false);
 
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.VISIBLE);
@@ -87,10 +88,6 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
         rvList.setHasFixedSize(true);
         initAdapter();
 
-//        LayoutInflater inflater = LayoutInflater.from(getParentActivity());
-//        heah = inflater.inflate(R.layout.fragment_archive_comment_head, rvList, false);
-//        abookends = new ArchiveCommentHead<>(adapter);
-//        abookends.addHeader(heah);
         rvList.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -132,10 +129,6 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
         adapter.setPicClickListener(this);
         rvList.setAdapter(adapter);
 
-//        abookends = new ArchiveCommentHead<>(adapter,getParentActivity(),detailDate);
-//        abookends.addHeader(heah);
-////        abookends.notifyDataSetChanged();
-//        rvList.setAdapter(abookends);
     }
 
     private void finishReFresh() {
@@ -301,15 +294,20 @@ public class ArchiveCommentFragment extends BaseFragment<Activity>  implements A
     }
 
     @Override
-    public void showOriginalPic(String content_id) {
+    public void showOriginalPic(ArchiveChatEntity entity) {
         Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
-        Map<String, String> condition = new HashMap<>();
-        condition.put("content_id", content_id);
-        Map<String, String> params = new HashMap<>();
-        params.put("condition", UrlUtil.mapToJsonstring(condition));
-        String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
-        intent.putExtra("request_url", url);
+        ArrayList<PhotoEntity> dataList = new ArrayList<>();
+        PhotoEntity peData = new PhotoEntity();
+        peData.setUser_id(entity.getUser_id());
+        peData.setFile_id(entity.getFile_id());
+        peData.setPhoto_caption(Constant.Module_Original);
+        peData.setPhoto_multipe("false");
+        dataList.add(peData);
+
+        intent.putExtra("is_data", true);
+        intent.putExtra("datas", dataList);
         startActivity(intent);
+
     }
 
     @Override

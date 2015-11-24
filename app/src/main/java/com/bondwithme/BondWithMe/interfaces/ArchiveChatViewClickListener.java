@@ -1,5 +1,7 @@
 package com.bondwithme.BondWithMe.interfaces;
 
+import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
+
 /**
  * Created by zhuweiping on 4/28/15.
  */
@@ -7,9 +9,9 @@ public interface ArchiveChatViewClickListener {
     /**
      * 显示图片
      *
-     * @param content_id
+     * @param entity
      */
-    void showOriginalPic(final String content_id);
+    void showOriginalPic(final ArchiveChatEntity entity);
 
     /**
      * @param content_group_id
@@ -17,19 +19,4 @@ public interface ArchiveChatViewClickListener {
      */
     void showComments(final String content_group_id, final String group_id);
 
-//    /**
-//     * 显示被@的用户列表
-//     * @param content_group_id
-//     * @param group_id
-//     */
-//    void showMembers(final String content_group_id, final String group_id);
-//
-//    /**
-//     * 显示被@的群组列表
-//     * @param content_group_id
-//     * @param group_id
-//     */
-//    void showGroups(final String content_group_id, final String group_id);
-
-//    void remove(final String content_group_id);
 }
