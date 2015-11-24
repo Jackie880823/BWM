@@ -387,7 +387,7 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      * 刷新Adapter
      */
     private void refreshAdapter() {
-        if (videoCursor == null || videoCursor.isClosed()) {
+        if ((videoCursor == null || videoCursor.isClosed()) && (imageCursor == null || imageCursor.isClosed())) {
 
             ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
             SortMediaComparator comparator = new SortMediaComparator();
