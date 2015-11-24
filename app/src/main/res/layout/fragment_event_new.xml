@@ -47,6 +47,7 @@
                         android:background="@null"
                         android:hint="@string/text_hint_event_title"
                         android:singleLine="true"
+                        android:inputType="textCapWords"
                         android:maxLength="30" />
 
                 </LinearLayout>
@@ -91,6 +92,7 @@
                             android:layout_toRightOf="@+id/iv_desc_icon"
                             android:background="@null"
                             android:gravity="top"
+                            android:inputType="textCapWords"
                             android:hint="@string/text_hint_event_content"
                             android:lines="6"
                             android:maxLines="22"
@@ -144,6 +146,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:hint="@string/text_hint_event_position"
+                        android:inputType="textCapWords"
                         android:maxLength="30" />
 
                     <ImageButton

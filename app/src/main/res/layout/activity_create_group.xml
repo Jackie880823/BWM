@@ -40,6 +40,7 @@
                                         android:singleLine="true"
                                         android:background="@drawable/et_oval_white"
                                         android:drawablePadding="@dimen/default_view_margin"
+                                        android:inputType="textCapWords"
                                         android:drawableLeft="@drawable/search"/>
                                     <!--<ImageButton-->
                                         <!--android:layout_width="0dp"-->
