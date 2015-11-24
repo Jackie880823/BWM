@@ -162,6 +162,5 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     compile project(':piwik_sdk')
-    compile 'com.github.chenupt.android:multiplemodel:1.1.0'
     compile 'com.google.guava:guava:18.0'
 }
