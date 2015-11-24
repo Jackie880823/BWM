@@ -113,9 +113,6 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                     }
                 } else {
                     setWallContext();
-                    if (isUpdate) {
-                        updatePhotoList();
-                    }
                 }
             }
         });
@@ -275,6 +272,8 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                     params.put("condition", UrlUtil.mapToJsonstring(condition));
                     String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
                     mAdapter.setRequest_url(url, wall.getUser_id());
+                } else {
+                    mAdapter.clearData();
                 }
             } else {
                 mAdapter.clearData();
