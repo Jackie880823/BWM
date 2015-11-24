@@ -29,7 +29,7 @@ android {
 
     //代码检查
     lintOptions {
-        checkReleaseBuilds false //TODO release change to true
+        checkReleaseBuilds true //TODO release change to true
         abortOnError false
     }
     signingConfigs {
@@ -56,11 +56,23 @@ android {
             shrinkResources false
             signingConfig signingConfigs.debug
         }
+
+//        test {
+//            minifyEnabled false //TODO
+//            // 不显示Log
+//            buildConfigField "boolean", "LOG_DEBUG", "true"
+//            zipAlignEnabled false //TODO
+//            // 移除无用的resource文件
+//            shrinkResources false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.release
+//        }
+
         release {
+            minifyEnabled true //TODO
             // 不显示Log
-            minifyEnabled false //TODO
             buildConfigField "boolean", "LOG_DEBUG", "false"
-            zipAlignEnabled false //TODO
+            zipAlignEnabled true //TODO
             // 移除无用的resource文件
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
