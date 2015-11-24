@@ -25,6 +25,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.ArchiveChatAdapter;
 import com.bondwithme.BondWithMe.entity.ArchiveChatEntity;
+import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.interfaces.ArchiveChatViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.Archive.ArchiveGroupCommentActivity;
@@ -338,28 +339,14 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
     }
 
     private void searchData(String searchText) {
-//        Log.i("searchText====",searchText+"");
-//        Map<String,String> params = new HashMap<>();
-//        params.put("start",startIndex + "");
-//        params.put("limit",offset + "");
-//        params.put("group_id",group_id);
-//        params.put("view_user",MainActivity.getUser().getUser_id());
-////        params.put("search_key",searchText);
-//        params.put("search_key","");
-//        String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
         Map<String, String> params = new HashMap<>();
         params.put("start", startIndexSearch + "");
         params.put("limit", offset + "");
         params.put("group_id", group_id);
         params.put("view_user", MainActivity.getUser().getUser_id());
-//        Log.i("group_id","");
-//        params.put("search_key","");
         params.put("search_key", searchText);
 
-
         Log.i("searchText====", UrlUtil.mapToJsonstring(params));
-
-//        String url = UrlUtil.generateUrl(Constant.API_MORE_ARCHIVE_POSTING_LIST, params);
 
         new HttpTools(getActivity()).get(Constant.API_MORE_ARCHIVE_POSTING_LIST, params, TAG, new HttpCallback() {
             @Override
@@ -442,15 +429,18 @@ public class ArchiveChatFragment extends BaseFragment<BaseActivity> implements A
     }
 
     @Override
-    public void showOriginalPic(String content_id) {
-        Log.i("content_id====2", content_id + " ");
+    public void showOriginalPic(ArchiveChatEntity entity) {
         Intent intent = new Intent(getActivity(), ViewOriginalPicesActivity.class);
-        Map<String, String> condition = new HashMap<>();
-        condition.put("content_id", content_id);
-        Map<String, String> params = new HashMap<>();
-        params.put("condition", UrlUtil.mapToJsonstring(condition));
-        String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
-        intent.putExtra("request_url", url);
+        ArrayList<PhotoEntity> dataList = new ArrayList<>();
+        PhotoEntity peData = new PhotoEntity();
+        peData.setUser_id(entity.getUser_id());
+        peData.setFile_id(entity.getFile_id());
+        peData.setPhoto_caption(Constant.Module_Original);
+        peData.setPhoto_multipe("false");
+        dataList.add(peData);
+
+        intent.putExtra("is_data", true);
+        intent.putExtra("datas", dataList);
         startActivity(intent);
     }
 

@@ -332,7 +332,7 @@ public class ArchiveChatAdapter extends RecyclerView.Adapter<ArchiveChatAdapter.
             switch (v.getId()){
                 case R.id.iv_chats_images:
                     if(marchiveChatViewClickListener != null){
-                        marchiveChatViewClickListener.showOriginalPic(entity.getContent_id());
+                        marchiveChatViewClickListener.showOriginalPic(entity);
                     }
                     break;
                 case R.id.top_archive:

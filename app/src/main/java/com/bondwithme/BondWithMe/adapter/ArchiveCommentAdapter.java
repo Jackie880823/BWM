@@ -356,7 +356,7 @@ public class ArchiveCommentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             switch (v.getId()) {
                 case R.id.iv_chats_images:
                     if (marchiveChatViewClickListener != null) {
-                        marchiveChatViewClickListener.showOriginalPic(archive.getContent_id());
+                        marchiveChatViewClickListener.showOriginalPic(archive);
                     }
             }
         }
