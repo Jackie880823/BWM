@@ -57,9 +57,8 @@ public class DiaryInformationAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public void clearData(){
         if (!data.isEmpty()) {
-            int end = data.size();
             data.clear();
-            notifyItemRangeRemoved(1, end);
+            notifyItemRangeRemoved(1, getItemCount());
         }
     }
 
@@ -146,7 +145,7 @@ public class DiaryInformationAdapter extends RecyclerView.Adapter<ViewHolder> {
                     Intent intent = new Intent(context, WallViewPicActivity.class);
                     intent.putExtra(Constant.REQUEST_URL, request_url);
                     intent.putExtra(Constant.USER_ID, userId);
-                    intent.putExtra(Constant.POSITION, position - 1);
+                    intent.putExtra(Constant.PHOTO_POSITION, position - 1);
                     fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_PHOTOS);
                 }
             });

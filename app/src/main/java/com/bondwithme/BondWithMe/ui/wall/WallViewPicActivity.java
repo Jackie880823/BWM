@@ -125,7 +125,7 @@ public class WallViewPicActivity extends BaseActivity {
         user_id = bundle.getString(Constant.USER_ID);
 
         /**add by Jackie*/
-        position = bundle.getInt(Constant.POSITION, -1);
+        position = bundle.getInt(Constant.PHOTO_POSITION, -1);
         /**add by Jackie*/
 
         if (TextUtils.isEmpty(request_url))

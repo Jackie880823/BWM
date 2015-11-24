@@ -113,6 +113,9 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                     }
                 } else {
                     setWallContext();
+                    if (isUpdate) {
+                        updatePhotoList();
+                    }
                 }
             }
         });
