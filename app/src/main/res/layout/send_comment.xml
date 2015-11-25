@@ -43,7 +43,7 @@
             android:maxLines="3"
             android:hint="@string/hint_comment_input"
             android:padding="@dimen/default_content_padding"
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             android:textColor="@color/default_text_color_dark" />
         <TextView
             android:id="@+id/btn_send"

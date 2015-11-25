@@ -30,6 +30,7 @@
                 android:padding="@dimen/default_content_padding"
                 android:singleLine="true"
                 android:hint="@string/family_search"
+                android:inputType="textCapSentences"
                 android:textColorHint="#ccc"
                 android:background="@drawable/et_oval_white"
                 android:drawablePadding="@dimen/default_view_margin" />
