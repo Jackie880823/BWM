@@ -323,7 +323,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
         int position = adapter.getData().indexOf(wallEntity);
         intent.putExtra(Constant.POSITION, position);
-        startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
+        startActivityForResult(intent, Constant.INTENT_UPDATE_DIARY);
     }
 
     /**
@@ -475,7 +475,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case Constant.INTENT_REQUEST_COMMENT_WALL: { // 更新了评论
+                case Constant.INTENT_UPDATE_DIARY: { // 更新了评论
                     if (data == null) {
                         return;
                     }
@@ -484,20 +484,21 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     int position = data.getIntExtra(Constant.POSITION, -1);
                     LogUtil.d(TAG, "onActivityResult& position: " + position);
 
-                    String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
-                    if (!TextUtils.isEmpty(commentCount)) {
+                    if (position >= 0 && position < wallEntities.size()) {
                         WallEntity wallEntity;
-                        wallEntity = wallEntities.get(position);
-                        if (!wallEntity.getComment_count().equals(commentCount)) {
-                            wallEntity.setComment_count(commentCount);
-                            adapter.notifyItemChanged(position);
-                        }
-                    } else {
-                        if (position >= 0 && position < wallEntities.size()) {
-                            WallEntity wallEntity;
-                            wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
+                        wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
+                        if (wallEntity != null) {
                             wallEntities.set(position, wallEntity);
                             adapter.notifyItemChanged(position);
+                        }
+
+                        String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
+                        if (!TextUtils.isEmpty(commentCount)) {
+                            wallEntity = wallEntities.get(position);
+                            if (!wallEntity.getComment_count().equals(commentCount)) {
+                                wallEntity.setComment_count(commentCount);
+                                adapter.notifyItemChanged(position);
+                            }
                         }
                     }
                 }
