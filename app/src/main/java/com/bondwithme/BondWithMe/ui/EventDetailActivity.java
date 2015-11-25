@@ -214,6 +214,7 @@ public class EventDetailActivity extends BaseActivity {
                    if(data != null){
                        mEvent = (EventEntity) data.getSerializableExtra("event");
                    }
+                   setResult(Activity.RESULT_OK);
                    EventDetailFragment.newInstance();
                    break;
            }
