@@ -41,7 +41,7 @@ public class Constant {
      */
     public static final int INTENT_REQUEST_CREATE_WALL = 10;
     public static final int INTENT_REQUEST_UPDATE_WALL = 11;
-    public static final int INTENT_REQUEST_COMMENT_WALL = 12;
+    public static final int INTENT_UPDATE_DIARY = 12;
     public static final int ACTION_COMMENT_MEMBERS = 13;
     public static final int ACTION_COMMENT_GROUPS = 14;
 
