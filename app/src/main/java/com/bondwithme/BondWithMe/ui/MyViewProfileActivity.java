@@ -25,7 +25,6 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -277,7 +276,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
         mBitmapTools = BitmapTools.getInstance(this);
 //        VolleyUtil.initNetworkImageView(MyViewProfileActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-        VolleyUtil.initNetworkImageView(this,cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
+        mBitmapTools.display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
         etFirstName.setText(MainActivity.getUser().getUser_given_name());
         etLastName.setText(MainActivity.getUser().getUser_surname());
