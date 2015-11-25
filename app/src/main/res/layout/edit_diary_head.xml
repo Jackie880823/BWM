@@ -82,7 +82,7 @@
             android:background="@color/default_text_color_while"
             android:fitsSystemWindows="true"
             android:gravity="top"
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences|textMultiLine"
             android:maxLines="5"
             android:minLines="5"
             android:textColor="@color/default_text_color_dark"
