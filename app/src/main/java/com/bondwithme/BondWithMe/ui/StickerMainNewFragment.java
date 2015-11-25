@@ -109,7 +109,7 @@ public class StickerMainNewFragment extends BaseFragment<MainActivity> {
         @Override
         public void run() {
             super.run();
-            List<String> stickerList = LocalStickerInfoDao.getInstance(mContext).queryAllSticker();
+            List<String> stickerList = LocalStickerInfoDao.getInstance(mContext).queryAllSticker(true);
             for (String string : stickerList) {
                 if ("stickers".equals(MainActivity.STICKERS_NAME)) {
                     MainActivity.STICKERS_NAME = new LocalStickerInfoDao(mContext).getSavePath();
@@ -117,7 +117,7 @@ public class StickerMainNewFragment extends BaseFragment<MainActivity> {
                 String path = MainActivity.STICKERS_NAME + File.separator + string + File.separator + "S";
                 File file = new File(path);
                 if (!file.exists()) {
-                    break;
+                    continue;
                 }
                 File[] files = file.listFiles();
                 if (null != files && files.length > 0) {
