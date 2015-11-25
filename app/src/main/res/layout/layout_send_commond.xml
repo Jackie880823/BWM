@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:background="@drawable/et_chat_bg"
             android:hint="@string/hint_comment_input"
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             android:maxLength="200"
             android:maxLines="5"
             android:padding="@dimen/default_content_padding"

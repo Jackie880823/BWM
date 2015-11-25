@@ -43,7 +43,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/default_view_margin"
                         android:background="@null"
-                        android:inputType="textCapWords"
+                        android:inputType="textCapSentences"
                         android:hint="@string/text_hint_event_title"
                         android:maxLength="30"/>
 
@@ -93,7 +93,7 @@
                             android:layout_toRightOf="@+id/iv_desc_icon"
                             android:background="@null"
                             android:gravity="top"
-                            android:inputType="textCapWords"
+                            android:inputType="textCapSentences"
                             android:hint="@string/text_hint_event_content"
                             android:lines="6"
                             android:maxLines="22"/>
@@ -146,7 +146,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:hint="@string/text_hint_event_position"
-                        android:inputType="textCapWords"
+                        android:inputType="textCapSentences"
                         android:maxLength="30"/>
 
                     <ImageButton
