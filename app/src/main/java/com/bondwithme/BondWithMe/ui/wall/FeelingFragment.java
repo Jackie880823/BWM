@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui.wall;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +22,6 @@ import java.util.List;
  * @author Jackie
  * @version 1.0
  */
-@SuppressLint("ValidFragment")
 public class FeelingFragment extends BaseFragment<FeelingActivity> implements FeelingAdapter.ItemCheckListener {
 
     /**

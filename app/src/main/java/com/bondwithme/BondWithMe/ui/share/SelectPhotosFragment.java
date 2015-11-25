@@ -45,7 +45,6 @@ import java.util.List;
  * @author Jackie Zhu
  * @version 1.0
  */
-@SuppressLint("ValidFragment")
 public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
 
     private static final String TAG = SelectPhotosFragment.class.getSimpleName();
