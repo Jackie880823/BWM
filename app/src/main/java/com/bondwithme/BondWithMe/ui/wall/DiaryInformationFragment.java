@@ -165,7 +165,7 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                     isUpdate = true;
                     requestData();
                     break;
-                case Constant.INTENT_REQUEST_COMMENT_WALL:
+                case Constant.INTENT_UPDATE_DIARY:
                     String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
                     if (!wall.getComment_count().equals(commentCount)) {
                         wall.setComment_count(commentCount);
