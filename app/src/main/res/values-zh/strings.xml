@@ -668,4 +668,5 @@
     <string name="introduction_description_3">轻松组织家庭聚会和活动。</string>
     <string name="introduction_description_4">在日记中与您的家人分享珍贵的时刻。</string>
     <string name="introduction_description_5">与家人通过单独或群聊保持联系。</string>
+    <string name="diary_hint">在此分享你的时刻</string>
 </resources>

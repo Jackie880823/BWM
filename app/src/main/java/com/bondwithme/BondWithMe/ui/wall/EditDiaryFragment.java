@@ -1211,6 +1211,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
          */
         intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
         intent.putExtra(MediaData.USE_VIDEO_AVAILABLE, true);
+        String photoCount = wall == null ? null : wall.getPhoto_count();
+        boolean hadPhotos = !imageUris.isEmpty() || (!TextUtils.isEmpty(photoCount) && Integer.valueOf(photoCount) > 0);
+        LogUtil.d(TAG, "openPhotos& hadPhotos: " + hadPhotos);
+        intent.putExtra(SelectPhotosActivity.EXTRA_HAD_PHOTOS, hadPhotos);
         intent.putParcelableArrayListExtra(SelectPhotosActivity.EXTRA_SELECTED_PHOTOS, (ArrayList<? extends Parcelable>) imageUris);
         int residue = SelectPhotosActivity.MAX_SELECT - photoEntities.size();
         intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
