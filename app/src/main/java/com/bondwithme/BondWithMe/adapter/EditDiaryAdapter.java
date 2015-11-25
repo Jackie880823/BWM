@@ -154,7 +154,7 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
                 if (entity instanceof DiaryPhotoEntity) {
                     uri = ((DiaryPhotoEntity) entity).getUri();
                 } else if (entity instanceof PhotoEntity) {
-                    String url = String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, ((PhotoEntity) entity).getFile_id());
+                    String url = String.format(Constant.API_GET_PIC, Constant.Module_preview, userId, ((PhotoEntity) entity).getFile_id());
                     uri = Uri.parse(url);
                 }
                 LogUtil.d(TAG, "onBindViewHolder& DiaryPhotoEntity uri: " + uri.toString());
@@ -322,6 +322,7 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         public void setImage(Uri uri) {
             ivDisplay.setVisibility(View.VISIBLE);
+
             ImageLoader.getInstance().displayImage(uri.toString(), ivDisplay, UniversalImageLoaderUtil.options);
         }
     }
