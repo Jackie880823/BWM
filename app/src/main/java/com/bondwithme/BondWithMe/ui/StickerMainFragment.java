@@ -109,7 +109,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
         @Override
         public void run() {
             super.run();
-            List<String> stickerList = LocalStickerInfoDao.getInstance(mContext).queryAllSticker();
+            List<String> stickerList = LocalStickerInfoDao.getInstance(mContext).queryAllSticker(false);
             for (String string : stickerList) {
                 String path = FileUtil.getSaveRootPath(mContext, false).getAbsolutePath() + File.separator + "Sticker" + File.separator + string;
                 File file = new File(path);
@@ -118,7 +118,7 @@ public class StickerMainFragment extends BaseFragment<MainActivity> {
                     List<String> list = new ArrayList<>();
                     for (File file1 : files) {
                         if (file1.isDirectory()) {
-                            return;
+                            continue;
                         }
                         String filePath = file1.getAbsolutePath();
                         if ((filePath.substring(0, filePath.lastIndexOf("."))).endsWith("S")) {
