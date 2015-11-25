@@ -29,8 +29,8 @@
         android:background="#ffffff"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/_15dp"
-        android:paddingTop="@dimen/_15dp">
+        android:paddingBottom="@dimen/_5dp"
+        android:paddingTop="@dimen/_5dp">
 
         <ImageButton
             android:id="@+id/ib_more"

@@ -93,7 +93,7 @@
                             android:layout_toRightOf="@+id/iv_desc_icon"
                             android:background="@null"
                             android:gravity="top"
-                            android:inputType="textCapSentences"
+                            android:inputType="textCapSentences|textMultiLine"
                             android:hint="@string/text_hint_event_content"
                             android:lines="6"
                             android:maxLines="22"/>
