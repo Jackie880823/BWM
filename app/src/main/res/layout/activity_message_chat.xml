@@ -72,8 +72,8 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/_5dp"
-            android:paddingTop="@dimen/_5dp"
-            android:paddingRight="@dimen/_8dp">
+            android:paddingRight="@dimen/_8dp"
+            android:paddingTop="@dimen/_5dp">
 
             <ImageButton
                 android:id="@+id/cb_1"
@@ -101,9 +101,9 @@
                 android:layout_weight="1"
                 android:background="@drawable/et_chat_bg"
                 android:hint="@string/text_message_type_here"
+                android:inputType="textCapSentences|textMultiLine"
                 android:maxLines="5"
                 android:padding="@dimen/default_content_padding"
-                android:inputType="textCapSentences"
                 android:textColor="@color/default_text_color_dark"
                 android:textColorHint="#999"
                 android:visibility="visible" />
@@ -125,21 +125,21 @@
             </LinearLayout>
 
             <!--<TextView-->
-                <!--android:id="@+id/btn_send"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_vertical"-->
-                <!--android:layout_marginRight="@dimen/default_view_margin"-->
-                <!--android:background="@drawable/btn_chat_send_bg"-->
-                <!--android:gravity="center"-->
-                <!--android:paddingBottom="@dimen/default_content_padding"-->
-                <!--android:paddingLeft="@dimen/default_view_margin"-->
-                <!--android:paddingRight="@dimen/default_view_margin"-->
-                <!--android:paddingTop="@dimen/default_content_padding"-->
-                <!--android:text="@string/text_send"-->
-                <!--android:textColor="#ffffff"-->
-                <!--android:textSize="@dimen/text_medium_size"-->
-                <!--android:visibility="gone" />-->
+            <!--android:id="@+id/btn_send"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_marginRight="@dimen/default_view_margin"-->
+            <!--android:background="@drawable/btn_chat_send_bg"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="@dimen/default_content_padding"-->
+            <!--android:paddingLeft="@dimen/default_view_margin"-->
+            <!--android:paddingRight="@dimen/default_view_margin"-->
+            <!--android:paddingTop="@dimen/default_content_padding"-->
+            <!--android:text="@string/text_send"-->
+            <!--android:textColor="#ffffff"-->
+            <!--android:textSize="@dimen/text_medium_size"-->
+            <!--android:visibility="gone" />-->
             <ImageView
                 android:id="@+id/btn_send"
                 android:layout_width="@dimen/_34dp"
