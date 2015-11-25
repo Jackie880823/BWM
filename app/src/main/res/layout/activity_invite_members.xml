@@ -29,7 +29,7 @@
             android:textColorHint="#ccc"
             android:background="@drawable/et_oval_white"
             android:drawablePadding="@dimen/default_view_margin"
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             android:drawableRight="@drawable/search" />
     </LinearLayout>
 

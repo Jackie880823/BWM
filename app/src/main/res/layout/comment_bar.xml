@@ -33,7 +33,7 @@
             android:background="@drawable/et_chat_bg"
             android:padding="@dimen/default_content_padding"
             android:textColor="@color/default_text_color_dark"
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             android:maxLines="3"
              />
 

@@ -18,7 +18,7 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 58   //TODO
+        versionCode 59   //TODO
         versionName "2.1.0" //TODO
 
         // dex突破65535的限制
@@ -29,7 +29,7 @@ android {
 
     //代码检查
     lintOptions {
-        checkReleaseBuilds false //TODO release change to true
+        checkReleaseBuilds true //TODO release change to true
         abortOnError false
     }
     signingConfigs {
@@ -56,11 +56,23 @@ android {
             shrinkResources false
             signingConfig signingConfigs.debug
         }
+
+//        test {
+//            minifyEnabled false //TODO
+//            // 不显示Log
+//            buildConfigField "boolean", "LOG_DEBUG", "true"
+//            zipAlignEnabled false //TODO
+//            // 移除无用的resource文件
+//            shrinkResources false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.release
+//        }
+
         release {
+            minifyEnabled true //TODO
             // 不显示Log
-            minifyEnabled false //TODO
             buildConfigField "boolean", "LOG_DEBUG", "false"
-            zipAlignEnabled false //TODO
+            zipAlignEnabled true //TODO
             // 移除无用的resource文件
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -162,6 +174,5 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     compile project(':piwik_sdk')
-    compile 'com.github.chenupt.android:multiplemodel:1.1.0'
     compile 'com.google.guava:guava:18.0'
 }

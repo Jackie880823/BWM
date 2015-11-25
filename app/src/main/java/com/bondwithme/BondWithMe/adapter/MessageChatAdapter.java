@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
@@ -270,7 +271,12 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         holder.dateTime.setText(MyDateUtils.getLocalDateStringFromUTC(context, msgEntity.getContent_creation_date()));
         String iconUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, msgEntity.getUser_id());
         //网络获取头像图片
-        VolleyUtil.initNetworkImageView(context, holder.iconImage, iconUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
+        if (MainActivity.getUser().getUser_id().equals(msgEntity.getUser_id())) {
+            BitmapTools.getInstance(context).display(holder.iconImage, iconUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
+        } else {
+            VolleyUtil.initNetworkImageView(context, holder.iconImage, iconUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
+        }
+//        VolleyUtil.initNetworkImageView(context, holder.iconImage, iconUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
         if (!isSendMe) {
             if (isGroupChat) {
                 holder.leftName.setVisibility(View.VISIBLE);

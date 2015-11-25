@@ -341,6 +341,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 intent.putExtra(Constant.CONTENT_ID, wallEntity.getContent_id());
                 intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
                 intent.putExtra(Constant.AGREE_COUNT, wallEntity.getLove_count());
+                intent.putExtra(Constant.WALL_ENTITY, wallEntity);
                 intent.putExtra(Constant.POSITION, position);
                 fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
             }
@@ -424,6 +425,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
         intent.putExtra(Constant.REQUEST_URL, url);
         intent.putExtra(Constant.USER_ID, wallEntity.getUser_id());
+        intent.putExtra(Constant.POSITION, position);
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_PHOTOS);
     }
 
@@ -817,6 +819,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         intent.putExtra(Constant.WALL_ENTITY, wallEntity);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
+        intent.putExtra(Constant.POSITION, position);
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_WALL);
     }
 
@@ -1007,7 +1010,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         @Override
         public void onStart() {
-            switch (linkType){
+            switch (linkType) {
                 case LINK_TYPE_POST_LOVE:
                     if (fragment instanceof DiaryInformationFragment) {
                         ((DiaryInformationFragment) fragment).setProgressVisibility(View.VISIBLE);
@@ -1103,7 +1106,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, accountUserId, photoEntity.getFile_id());
             String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, photoEntity.getUser_id(), photoEntity.getFile_id());
             /**wing modified*/
-            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context,false), true, new HttpCallback() {
+            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context, false), true, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }

@@ -150,7 +150,6 @@
     <string name="text_message_user">发送信息</string>
     <string name="text_add_new_member">添加新成员</string>
     <string name="text_create_new_group">新建群组</string>
-    <string name="text_view_profile_family">查看成员资料</string>
     <string name="text_i_miss_you">想你了!</string>
     <string name="text_path_relationship">途径&amp;关系</string>
     <string name="text_send_message">聊天</string>
@@ -278,6 +277,7 @@
     <string name="text_create_group_not_save">确定要取消吗？作出的改变将不会被保存。</string>
     <string name="text_create_group_members_least_two">至少需要2名成员方可创建群组。</string>
 
+    <string name="text_setting_1_title">Birthday Alert Reminder</string>
     <string name="text_setting_1_1">1天前</string>
     <string name="text_setting_1_2">3天前</string>
     <string name="text_setting_1_3">1个星期前</string>

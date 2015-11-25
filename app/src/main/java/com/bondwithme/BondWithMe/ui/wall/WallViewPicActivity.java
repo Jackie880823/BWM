@@ -125,7 +125,7 @@ public class WallViewPicActivity extends BaseActivity {
         user_id = bundle.getString(Constant.USER_ID);
 
         /**add by Jackie*/
-        position = bundle.getInt(Constant.POSITION, -1);
+        position = bundle.getInt(Constant.PHOTO_POSITION, -1);
         /**add by Jackie*/
 
         if (TextUtils.isEmpty(request_url))
@@ -379,7 +379,8 @@ public class WallViewPicActivity extends BaseActivity {
                 if (data.size() != 0) {
                     data.remove(viewPager.getCurrentItem());
                     wallViewPicPagerAdapter.notifyDataSetChanged();
-                    setResult(RESULT_OK);
+                    /** setResult务必添加getIntent()的参数，这里封装了返回上一Activity的必要数据 */
+                    setResult(RESULT_OK, getIntent());
                 }
             }
 

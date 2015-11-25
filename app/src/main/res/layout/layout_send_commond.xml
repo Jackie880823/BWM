@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:background="@drawable/et_chat_bg"
             android:hint="@string/hint_comment_input"
-            android:inputType="textCapWords"
+            android:inputType="textCapSentences"
             android:maxLength="200"
             android:maxLines="5"
             android:padding="@dimen/default_content_padding"
@@ -66,8 +66,8 @@
 
         <ImageButton
             android:id="@+id/tv_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_34dp"
+            android:layout_height="@dimen/_34dp"
             android:layout_gravity="center"
             android:layout_marginRight="@dimen/default_view_margin"
             android:background="@drawable/btn_chat_send_bg_for_comment" />

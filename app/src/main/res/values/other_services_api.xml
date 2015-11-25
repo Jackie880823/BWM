@@ -18,4 +18,6 @@
 
     <!-- push -->
     <string name="jiguang_api_key" templateMergeStrategy="preserve" translatable="false">da06bcbcd8d9b31f7af4061a</string>
+
+    <string name="facebook_app_id" translatable="false">1655238261362116</string>
 </resources>
