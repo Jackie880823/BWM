@@ -45,6 +45,7 @@ public class SelectPhotosActivity extends BaseActivity {
 
     public static final String EXTRA_IMAGES_STR = "images";
     public static final String EXTRA_SELECTED_PHOTOS = "selected_photos";
+    public static final String EXTRA_HAD_PHOTOS = "had_photos";
 
     /**
      * 临时文件用户裁剪
@@ -53,8 +54,8 @@ public class SelectPhotosActivity extends BaseActivity {
 
     public final static String EXTRA_RESIDUE = "residue";
     public static final String MP4 = ".mp4";
-    private String videoPaht;
-    private String imagePaht;
+    private String videoPath;
+    private String imagePath;
 
 
     //    public static final String EXTRA_SELECTED_PHOTOS = "selected_photos";
@@ -68,6 +69,7 @@ public class SelectPhotosActivity extends BaseActivity {
     private int residue = MAX_SELECT;
     private SelectPhotosFragment fragment;
     private ArrayList<MediaData> mSelectedImages = new ArrayList<>();
+    private boolean hadPhotos = false;
 
     /**
      * 选择多张图片标识{@value true}可以多张选择图片，{@value false}只允许选择一张图
@@ -259,7 +261,7 @@ public class SelectPhotosActivity extends BaseActivity {
             public void onClick(View v) {
                 File file = PicturesCacheUtil.getCachePicFileByName(SelectPhotosActivity.this, CACHE_PIC_NAME_TEMP + SystemClock.currentThreadTimeMillis(),true);
                 if (file != null) {
-                    imagePaht = file.getAbsolutePath();
+                    imagePath = file.getAbsolutePath();
                 }
                 Uri out = Uri.fromFile(file);
                 openCamera(MediaStore.ACTION_IMAGE_CAPTURE, out, REQUEST_HEAD_IMAGE);
@@ -340,8 +342,8 @@ public class SelectPhotosActivity extends BaseActivity {
 //        boolean exists = file.exists() || file.mkdir();
 //        File video;
 //        video = exists ? new File(Constant.VIDEO_PATH + System.currentTimeMillis() + MP4) : new File(Environment.getDataDirectory().getAbsolutePath() + "/" + System.currentTimeMillis() + MP4);
-        videoPaht = file + "/" + System.currentTimeMillis() + MP4;
-        return Uri.fromFile(new File(videoPaht));
+        videoPath = file + "/" + System.currentTimeMillis() + MP4;
+        return Uri.fromFile(new File(videoPath));
     }
 
     /**
@@ -403,12 +405,16 @@ public class SelectPhotosActivity extends BaseActivity {
         // 总共需要添加的图片数量
         //        residue = intent.getIntExtra(EXTRA_RESIDUE, 10);
         fragment.setSelectImageUirListener(listener);
-        ArrayList<Uri> uris = intent.getParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS);
-        mSelectedImages.clear();
-        if (uris != null) {
-            for (Uri uri : uris) {
-                MediaData mediaData = new MediaData(uri, uri.toString(), MediaData.TYPE_IMAGE, 0);
-                mSelectedImages.add(mediaData);
+        hadPhotos = intent.getBooleanExtra(EXTRA_HAD_PHOTOS, false);
+        LogUtil.d(TAG, "openPhotos& hadPhotos: " + hadPhotos);
+        if (hadPhotos) {
+            ArrayList<Uri> uris = intent.getParcelableArrayListExtra(EXTRA_SELECTED_PHOTOS);
+            mSelectedImages.clear();
+            if (uris != null) {
+                for (Uri uri : uris) {
+                    MediaData mediaData = new MediaData(uri, uri.toString(), MediaData.TYPE_IMAGE, 0);
+                    mSelectedImages.add(mediaData);
+                }
             }
         }
     }
@@ -466,7 +472,7 @@ public class SelectPhotosActivity extends BaseActivity {
      */
     public void alertAddVideo(final MediaData mediaData) {
         //        if(!mSelectedImages.isEmpty() || residue < MAX_SELECT) {
-        if (!mSelectedImages.isEmpty()) {
+        if (!mSelectedImages.isEmpty() || hadPhotos) {
 
             if (selectVideoDialog == null) {
                 selectVideoDialog = new MyDialog(this, "", getString(R.string.will_remove_photos));
@@ -528,12 +534,12 @@ public class SelectPhotosActivity extends BaseActivity {
                     String duration = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
                     ;
                     metadataRetriever.release();
-                    MediaData video = new MediaData(data.getData(), videoPaht, MediaData.TYPE_VIDEO, Long.valueOf(duration));
+                    MediaData video = new MediaData(data.getData(), videoPath, MediaData.TYPE_VIDEO, Long.valueOf(duration));
                     listener.addUri(video);
                     break;
                 case REQUEST_HEAD_IMAGE:
-                    Uri imageUri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(imagePaht));
-                    MediaData image = new MediaData(imageUri, imagePaht, MediaData.TYPE_IMAGE, 0);
+                    Uri imageUri = Uri.parse(ImageDownloader.Scheme.FILE.wrap(imagePath));
+                    MediaData image = new MediaData(imageUri, imagePath, MediaData.TYPE_IMAGE, 0);
                     listener.addUri(image);
                     break;
             }

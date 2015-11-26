@@ -668,4 +668,5 @@
     <string name="introduction_description_3">Organise \nfamily gatherings \nand Events easily.</string>
     <string name="introduction_description_4">Share precious moments \nin your Diary, privately with \nyour loved ones.</string>
     <string name="introduction_description_5">Connect \nwith your family members \nindividually or in a group chat.</string>
+    <string name="diary_hint">Share your moment here</string>
 </resources>
