@@ -25,8 +25,8 @@ import java.util.zip.ZipInputStream;
 public class ZipUtils {
 
 
-    private static String PATH_DEFAULT_STICKER_1 = "PapaPanda2";
-    private static String PATH_DEFAULT_STICKER_2 = "Barry2";
+    public static String PATH_DEFAULT_STICKER_1 = "PapaPanda2";
+    public static String PATH_DEFAULT_STICKER_2 = "Barry2";
     private static String PATH_DEFAULT_STICKER_3 = "MamaHippo";
     private static String PATH_DEFAULT_STICKER_4 = "GranpaTurtle";
     private static String PATH_DEFAULT_STICKER_5 = "GranmaGoose";
@@ -159,17 +159,17 @@ public class ZipUtils {
             zipFileName = zipFileName.substring(0, zipFileName.indexOf(File.separator));
         }
 
-        if (PATH_DEFAULT_STICKER_1.equals(zipFileName)){
+        if (PATH_DEFAULT_STICKER_1.equals(zipFileName)) {
             stickerInfo.setName(NAME_DEFAULT_STICKER_1);
-        }else if (PATH_DEFAULT_STICKER_2.equals(zipFileName)){
+        } else if (PATH_DEFAULT_STICKER_2.equals(zipFileName)) {
             stickerInfo.setName(NAME_DEFAULT_STICKER_2);
-        }else if (PATH_DEFAULT_STICKER_3.equals(zipFileName)){
+        } else if (PATH_DEFAULT_STICKER_3.equals(zipFileName)) {
             stickerInfo.setName(NAME_DEFAULT_STICKER_3);
-        }else if (PATH_DEFAULT_STICKER_4.equals(zipFileName)){
+        } else if (PATH_DEFAULT_STICKER_4.equals(zipFileName)) {
             stickerInfo.setName(NAME_DEFAULT_STICKER_4);
-        }else if (PATH_DEFAULT_STICKER_5.equals(zipFileName)){
+        } else if (PATH_DEFAULT_STICKER_5.equals(zipFileName)) {
             stickerInfo.setName(NAME_DEFAULT_STICKER_5);
-        }else if (PATH_DEFAULT_STICKER_6.equals(zipFileName)){
+        } else if (PATH_DEFAULT_STICKER_6.equals(zipFileName)) {
             stickerInfo.setName(NAME_DEFAULT_STICKER_6);
         }
 
