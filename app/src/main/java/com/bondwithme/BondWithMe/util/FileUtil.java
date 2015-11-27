@@ -6,7 +6,6 @@ package com.bondwithme.BondWithMe.util;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -104,24 +103,6 @@ public class FileUtil {
         }
 
         return f.getAbsolutePath();
-    }
-
-    /**
-     * 保存bitmap到文件
-     *
-     * @param filePath 保存的路径
-     * @param bmp
-     */
-    public static void saveToFile(String filePath, Bitmap bmp) {
-
-        try {
-            FileOutputStream out = new FileOutputStream(filePath);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-        }
-
     }
 
     /**
