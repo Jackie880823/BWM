@@ -30,6 +30,7 @@ import com.bondwithme.BondWithMe.adapter.EventCommentAdapter;
 import com.bondwithme.BondWithMe.entity.EventCommentEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
+import com.bondwithme.BondWithMe.entity.UpdateEvent;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
@@ -55,6 +56,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -66,7 +69,7 @@ import java.util.Map;
 public class EventDetailFragment extends BaseFragment<EventDetailActivity> implements View.OnClickListener {
     private static final String TAG = EventDetailFragment.class.getSimpleName();
     //    private final static String TAG = EventDetailFragment.class.getSimpleName();
-
+    public static final String UPDATE_SUCCESS = "success";
 
     private List<EventCommentEntity> data = new ArrayList<EventCommentEntity>();
     private String group_id;
@@ -1035,9 +1038,10 @@ public class EventDetailFragment extends BaseFragment<EventDetailActivity> imple
             public void onResult(String response) {
                 try {
                     JSONObject result = new JSONObject(response);
-//                    going_count.setText(result.getString("total_yes"));
-//                    maybe_count.setText(result.getString("total_maybe"));
-//                    not_going_count.setText(result.getString("total_no"));
+                    if(!getParentActivity().getClass().getSimpleName().equals(TAG)){
+                        EventBus.getDefault().postSticky(new  UpdateEvent(Constant.ACTION_EVENT_UPDATE_BIRTHDAY));
+                    }
+
                     getParentActivity().setResult(Activity.RESULT_OK);
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -175,4 +175,5 @@ dependencies {
     }
     compile project(':piwik_sdk')
     compile 'com.google.guava:guava:18.0'
+    compile 'de.greenrobot:eventbus:2.4.0'
 }
