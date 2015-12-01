@@ -2,6 +2,8 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
@@ -10,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.HttpTools;
+import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.MembersGridAdapter;
@@ -31,7 +35,9 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.widget.DatePicker;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.TimePicker;
 import com.google.gson.Gson;
@@ -86,6 +92,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
     public List<EventEntity> prepareData = new ArrayList<EventEntity>();
     private final static String USER_HEAD = "user_head";
     private final static String USER_NAME = "user_name";
+    private static final int GET_DELAY = 0x28;
+    private InteractivePopupWindow popupWindow;
 
     private View progressBar;
     Calendar mCalendar;
@@ -110,6 +118,29 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         // Required empty public constructor
     }
 
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case GET_DELAY:
+                    String popText = getParentActivity().getResources().getString(R.string.text_tip_save_event);
+                    if(TextUtils.isEmpty(popText))return;
+
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,popText,0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            LogUtil.i("==============event_save", "onDismiss");
+                            //存储本地
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,true);
+                        }
+                    });
+                    popupWindow.showPopupWindow(true);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void setLayoutId() {
@@ -178,18 +209,65 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     if(isEventDate()) {
                         showSaveAlert();
                     } else {
+                        UIUtil.hideKeyboard(getActivity(), event_title);
                         getParentActivity().finish();
                     }
                 } else if(v.getId() == getParentActivity().rightButton.getId()) {
                     reomveSP();
                     submit();
-                    //                    changeData();
                 }
                 return false;
             }
         });
         bindData2View();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(MainActivity.IS_INTERACTIVE_USE &&
+                !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,false)){
+            getParentActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN |
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
+            handler.sendEmptyMessageDelayed(GET_DELAY, 1000);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(App.isInteractiveTipFinish()){
+            LogUtil.i("event_new====","true");
+            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_START, false);
+        }else {
+            LogUtil.i("event_new====","false");
+        }
+
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (MainActivity.IS_INTERACTIVE_USE && isVisibleToUser) {
+            if(InteractivePopupWindow.firstOpPop){
+                String popText = getParentActivity().getResources().getString(R.string.text_tip_save_event);
+                if(TextUtils.isEmpty(popText))return;
+
+                popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,popText,0);
+                popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                    @Override
+                    public void popDismiss() {
+                        //存储本地
+                        PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,true);
+                    }
+                });
+                popupWindow.showPopupWindow(true);
+            }else {
+                handler.sendEmptyMessageDelayed(GET_DELAY,1000);
+                InteractivePopupWindow.firstOpPop = true;
+            }
+        }
     }
 
     /**
@@ -285,19 +363,15 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
     private boolean isEventDate() {
         if(!TextUtils.isEmpty(event_title.getText().toString().trim())) {
-            //             Log.i("event_title=====================",event_title.getText().toString().trim());
             return true;
         }
         if(!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
-            //             Log.i("Spmemeber_date=====================",event_desc.getText().toString().trim());
             return true;
         }
         if(!TextUtils.isEmpty(position_name.getText().toString().trim())) {
-            //             Log.i("Spmemeber_date=====================",position_name.getText().toString().trim());
             return true;
         }
         if(!TextUtils.isEmpty(date_desc.getText().toString().trim())) {
-            //             Log.i("Spmemeber_date=====================",date_desc.getText().toString().trim());
             return true;
         }
         if(users_date != null) {
@@ -350,7 +424,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         for(int i = 0; i < userList.size() - 1; i++) {
             for(int j = userList.size() - 1; j > i; j--) {
                 if(userList.get(j).getUser_id().equals(userList.get(i).getUser_id()) || userList.get(j).getUser_id().equals(MainActivity.getUser().getUser_id())) {
-                    //                    Log.i("remove===",j+"");
                     userList.remove(j);
                 }
 
@@ -392,7 +465,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
             @Override
             public void onError(Exception e) {
-                //                Log.i("onError===",e.getMessage());
                 Toast.makeText(getActivity(), getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
 
@@ -457,7 +529,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                 public void onResult(String response) {
                     getParentActivity().setResult(Activity.RESULT_OK);
                     //                    Log.i("new_button_rt====================", "");
-                    MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
 //                    getParentActivity().finish();
 
                     try {
@@ -531,11 +602,6 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
      * 删除草稿
      */
     private void reomveSP() {
-        //        File file = new File("/data/data/"+getParentActivity().getPackageName().toString()+"/shared_prefs","EventNew_date.xml");
-        //        if (file.exists()){
-        //            file.delete();
-        ////            Toast.makeText(getParentActivity(), "删除成功", Toast.LENGTH_LONG).show();
-        //        }
         PreferencesUtil.saveValue(getParentActivity(), "title", "");
         PreferencesUtil.saveValue(getParentActivity(), "content", "");
         PreferencesUtil.saveValue(getParentActivity(), "location", "");
@@ -609,22 +675,18 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
                     PreferencesUtil.saveValue(getParentActivity(), "longitude", Double.toString(longitude));
                     if(!TextUtils.isEmpty(event_title.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "title", event_title.getText().toString());
-                        //                        Log.i("title=============",event_title.getText().toString());
                     }
                     if(!TextUtils.isEmpty(event_desc.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "content", event_desc.getText().toString());
 
-                        //                        Log.i("content=============",event_desc.getText().toString());
                     }
                     if(!TextUtils.isEmpty(position_name.getText().toString().trim())) {
                         PreferencesUtil.saveValue(getParentActivity(), "location", position_name.getText().toString());
 
-                        //                        Log.i("location=============",position_name.getText().toString());
                     }
                     if(userList.size() > 0) {
                         Gson gson = new Gson();
                         PreferencesUtil.saveValue(getParentActivity(), "users_date", gson.toJson(userList));
-                        //                        Log.i("Set_users_date===", users_date);
                     }
                     getParentActivity().finish();
                 }
@@ -669,7 +731,7 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
         }
         //日历dialog
         pickDateTimeDialog = new MyDialog(getParentActivity(), getString(R.string.title_pick_date_time), dateTimePicker);
-        pickDateTimeDialog.setButtonAccept(getString(R.string.accept), new View.OnClickListener() {
+        pickDateTimeDialog.setButtonAccept(getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickDateTimeDialog.dismiss();
@@ -831,6 +893,8 @@ public class EventNewFragment extends BaseFragment<EventNewActivity> implements 
 
         return true;
     }
+
+
 
     //刷新数据
     private void changeData() {

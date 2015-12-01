@@ -18,11 +18,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.StickerGroupEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerDetailActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -88,10 +88,8 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
             holder.ivNewSticker.setVisibility(View.INVISIBLE);
         }
         //设置sticker缩略图
-        VolleyUtil.initNetworkImageView(mContext,
-                holder.ivSticker,
-                url,
-                R.drawable.network_image_default, R.drawable.network_image_default);
+        setFirstBigSticker(holder.ivSticker);
+
 
 
         //设置sticker name
@@ -115,6 +113,20 @@ public class StickerGroupAdapter extends HeaderListRecyclerAdapter implements Vi
                 holder.getPbDownload().setVisibility(View.VISIBLE);
             }
         }
+
+    }
+
+    private void setFirstBigSticker(ImageView view) {
+//        String picPath = FileUtil.getBigStickerPath(mContext, stickerGroupEntity.getPath(), "1", stickerGroupEntity.getType());
+//        File file = new File(picPath);
+//        if (file.exists()){
+//            view.setImageBitmap(BitmapFactory.decodeFile(picPath));
+//        }else{
+            BitmapTools.getInstance(mContext).display(
+                    (NetworkImageView) view,
+                    url,
+                    R.drawable.network_image_default, R.drawable.network_image_default);
+//        }
 
     }
 

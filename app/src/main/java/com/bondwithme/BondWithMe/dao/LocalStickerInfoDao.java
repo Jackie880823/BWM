@@ -7,6 +7,7 @@ import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.db.SQLiteHelperOrm;
 import com.bondwithme.BondWithMe.entity.LocalStickerInfo;
 import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.ZipUtils;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -67,10 +68,29 @@ public class LocalStickerInfoDao {
             queryBuilder.where().eq("loginUserId", App.getLoginedUser().getUser_id()).and().eq("path", stickerInfo.getPath());
             List<LocalStickerInfo> localList = queryBuilder.query();
             if ((localList != null) && (localList.size() > 0)) {
-                stickerInfoDao.update(stickerInfo);
-                return;
+                LocalStickerInfo info = localList.get(0);
+                if (!TextUtils.isEmpty(stickerInfo.getName())) {
+                    info.setName(stickerInfo.getName());
+                }
+                if (stickerInfo.getOrder() != 0) {
+                    info.setOrder(stickerInfo.getOrder());
+                }
+                if (!TextUtils.isEmpty(stickerInfo.getSticker_name())) {
+                    info.setSticker_name(stickerInfo.getSticker_name());
+                }
+                if (!TextUtils.isEmpty(stickerInfo.getType())) {
+                    info.setType(stickerInfo.getType());
+                }
+                if (!TextUtils.isEmpty(stickerInfo.getVersion())) {
+                    info.setVersion(stickerInfo.getVersion());
+                }
+                if (!TextUtils.isEmpty(stickerInfo.getDefaultSticker())) {
+                    info.setDefaultSticker(stickerInfo.getDefaultSticker());
+                }
+                stickerInfoDao.update(info);
+            } else {
+                stickerInfoDao.createIfNotExists(stickerInfo);
             }
-            stickerInfoDao.createIfNotExists(stickerInfo);
         } catch (SQLException localSQLException) {
             localSQLException.printStackTrace();
         }
@@ -94,11 +114,11 @@ public class LocalStickerInfoDao {
         return false;
     }
 
-    public LocalStickerInfo queryStickerByPath(Context mContext ,String path){
+    public LocalStickerInfo queryStickerByPath(Context mContext, String path) {
         try {
             Dao<LocalStickerInfo, String> stickerInfoDao = SQLiteHelperOrm.getHelper(mContext).getDao(LocalStickerInfo.class);
             QueryBuilder qb = stickerInfoDao.queryBuilder();
-            qb.where().eq("path",path);
+            qb.where().eq("path", path);
             List<LocalStickerInfo> stickerInfoList = qb.query();
             LocalStickerInfo stickerInfo = stickerInfoList.get(0);
             return stickerInfo;
@@ -108,11 +128,11 @@ public class LocalStickerInfoDao {
         }
     }
 
-    public void deleteSticker(Context mContext,String path){
-        if (hasDownloadSticker(path)){
+    public void deleteSticker(Context mContext, String path) {
+        if (hasDownloadSticker(path)) {
             LocalStickerInfo stickerInfo = queryStickerByPath(mContext, path);
             try {
-                stickerInfoDao =  App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
+                stickerInfoDao = App.getContextInstance().getDBHelper().getDao(LocalStickerInfo.class);
                 stickerInfoDao.delete(stickerInfo);
 
             } catch (SQLException e) {
@@ -122,7 +142,7 @@ public class LocalStickerInfoDao {
     }
 
 
-    public List<String> queryAllSticker() {
+    public List<String> queryAllSticker(boolean isNewSticker) {
         if (stickerInfoDao == null) {
             return null;
         }
@@ -137,12 +157,17 @@ public class LocalStickerInfoDao {
 //                list.add(DEF_FIRST_STICKER);
 //                list.add(DEF_SECOND_STICKER);
 //                list.add(DEF_THREAD_STICKER);
+                String path;
                 for (LocalStickerInfo stickerInfo : localList) {
 //                    String name = stickerInfo.getPath();
 //                    if (DEF_FIRST_STICKER.equalsIgnoreCase(name) || DEF_SECOND_STICKER.equalsIgnoreCase(name) || DEF_THREAD_STICKER.equalsIgnoreCase(name)) {
 //                        continue;
 //                    } else {
-                    list.add(stickerInfo.getPath());
+                    path = stickerInfo.getPath();
+                    if (!isNewSticker && (ZipUtils.PATH_DEFAULT_STICKER_1.equals(path) || ZipUtils.PATH_DEFAULT_STICKER_2.equals(path))) {
+                        path = path.substring(0, path.length() - 1);
+                    }
+                    list.add(path);
 //                    }
                 }
             }

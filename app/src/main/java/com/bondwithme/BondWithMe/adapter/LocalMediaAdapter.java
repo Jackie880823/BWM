@@ -259,7 +259,7 @@ public class LocalMediaAdapter extends BaseAdapter {
             Uri thumbnailUri;
             thumbnailUri = mediaData.getThumbnailUri();
 
-            if (thumbnailUri != null) {
+            if (thumbnailUri != null && !thumbnailUri.equals(Uri.EMPTY)) {
                 LogUtil.i(TAG, "loadLocalBitmap& load thumbnail: " + thumbnailUri);
                 ImageLoader.getInstance().displayImage(thumbnailUri.toString(), imageView, UniversalImageLoaderUtil.options, imageLoadingListener);
             } else {
@@ -288,20 +288,30 @@ public class LocalMediaAdapter extends BaseAdapter {
                 mHandler.removeMessages(MSG_NOTIFY);
                 mHandler.sendEmptyMessageDelayed(MSG_NOTIFY, 500);
             } else {
-                // 删除不成功有可能是略缩图无法使用加载原图
-                Cursor cursor = null;
-                try {
-                    String select = MediaStore.Images.Thumbnails.DATA + " = " + ImageDownloader.Scheme.FILE.crop(imageUri);
-                    cursor = new CursorLoader(mContext, MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, null, select, null, null).loadInBackground();
-                    if (cursor != null && cursor.getCount() > 0) {
-                        int columnImageId = cursor.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID);
-                        long imageId = cursor.getLong(columnImageId);
-                        String contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + imageId;
-                        ImageLoader.getInstance().displayImage(contentUri, (ImageView) view, UniversalImageLoaderUtil.options);
-                    }
-                } finally {
-                    if (cursor != null && !cursor.isClosed()) {
-                        cursor.close();
+
+                success = mDatas.remove(new MediaData(Uri.parse(imageUri), imageUri, MediaData.TYPE_VIDEO, 0));
+                if (success) {
+                    mHandler.removeMessages(MSG_NOTIFY);
+                    mHandler.sendEmptyMessageDelayed(MSG_NOTIFY, 500);
+                } else {
+
+                    // 删除不成功有可能是略缩图无法使用加载原图
+                    Cursor cursor = null;
+                    try {
+                        String select = MediaStore.Images.Thumbnails.DATA + " = " + ImageDownloader.Scheme.FILE.crop(imageUri);
+                        cursor = new CursorLoader(mContext, MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, null, select, null, null).loadInBackground();
+                        if (cursor != null && cursor.getCount() > 0) {
+                            int columnImageId = cursor.getColumnIndex(MediaStore.Images.Thumbnails.IMAGE_ID);
+                            long imageId = cursor.getLong(columnImageId);
+                            String contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.toString() + File.separator + imageId;
+                            ImageLoader.getInstance().displayImage(contentUri, (ImageView) view, UniversalImageLoaderUtil.options);
+                        }
+                    } catch (Exception e){
+
+                    }finally {
+                        if (cursor != null && !cursor.isClosed()) {
+                            cursor.close();
+                        }
                     }
                 }
             }
@@ -345,7 +355,11 @@ public class LocalMediaAdapter extends BaseAdapter {
                     loadLocalBitmap((ImageView) msg.obj, msg.arg1);
                     break;
                 case MSG_NOTIFY:
-                    notifyDataSetChanged();
+                    if (deleteMediaListListener != null && mDatas.isEmpty()){
+                        deleteMediaListListener.deleteList(mDatas);
+                    } else {
+                        notifyDataSetChanged();
+                    }
                     break;
             }
         }
@@ -366,4 +380,14 @@ public class LocalMediaAdapter extends BaseAdapter {
         TextView tvDuration;
     }
 
+
+    private DeleteMediaListListener deleteMediaListListener;
+
+    public void setDeleteMediaListListener(DeleteMediaListListener deleteMediaListListener) {
+        this.deleteMediaListListener = deleteMediaListListener;
+    }
+
+    public interface DeleteMediaListListener{
+        void deleteList(List<MediaData> list);
+    }
 }

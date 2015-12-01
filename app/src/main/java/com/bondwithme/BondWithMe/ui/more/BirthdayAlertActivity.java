@@ -3,6 +3,7 @@ package com.bondwithme.BondWithMe.ui.more;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.android.volley.ext.HttpCallback;
@@ -13,8 +14,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.util.MessageUtil;
-import android.widget.CheckBox;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -111,12 +110,12 @@ public class BirthdayAlertActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                MessageUtil.showMessage(BirthdayAlertActivity.this,R.string.msg_load_config_successed);
+//                MessageUtil.showMessage(BirthdayAlertActivity.this,R.string.msg_load_config_successed);
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(BirthdayAlertActivity.this,R.string.msg_load_config_failed);
+//                MessageUtil.showMessage(BirthdayAlertActivity.this,R.string.msg_load_config_failed);
             }
 
             @Override
@@ -182,13 +181,13 @@ public class BirthdayAlertActivity extends BaseActivity {
 
             @Override
             public void onResult(String string) {
-                MessageUtil.showMessage(BirthdayAlertActivity.this, R.string.msg_action_successed);
+//                MessageUtil.showMessage(BirthdayAlertActivity.this, R.string.msg_action_successed);
                 BirthdayAlertActivity.this.finish();
             }
 
             @Override
             public void onError(Exception e) {
-                MessageUtil.showMessage(BirthdayAlertActivity.this,R.string.msg_action_failed);
+//                MessageUtil.showMessage(BirthdayAlertActivity.this,R.string.msg_action_failed);
             }
 
             @Override

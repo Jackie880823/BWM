@@ -6,7 +6,6 @@ package com.bondwithme.BondWithMe.util;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -34,7 +33,7 @@ public class FileUtil {
      * 获取保存文件位置根路径
      *
      * @param context
-     * @param isOutPath 是否保存在app外(沙盒)
+     * @param isOutPath 网络相关的请不要使用true!!!!!,其它可考虑是否保存在app外(沙盒)
      * @return File()
      */
     public static File getSaveRootPath(Context context, boolean isOutPath) {
@@ -55,7 +54,6 @@ public class FileUtil {
             }
             return appPath;
         }
-
     }
 
     public static String getSaveCrashPath(Context context) {
@@ -96,8 +94,8 @@ public class FileUtil {
      * @param context
      * @return
      */
-    public static String getCacheFilePath(Context context) {
-        File f = getSaveRootPath(context, true);
+    public static String getCacheFilePath(Context context,boolean isOut) {
+        File f = getSaveRootPath(context, isOut);
 
         f = new File(f.getAbsolutePath() + CACHE_DIR_NAME);
         if (!f.exists()) {
@@ -105,24 +103,6 @@ public class FileUtil {
         }
 
         return f.getAbsolutePath();
-    }
-
-    /**
-     * 保存bitmap到文件
-     *
-     * @param filePath 保存的路径
-     * @param bmp
-     */
-    public static void saveToFile(String filePath, Bitmap bmp) {
-
-        try {
-            FileOutputStream out = new FileOutputStream(filePath);
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-        }
-
     }
 
     /**
@@ -174,13 +154,14 @@ public class FileUtil {
      * @param context
      */
     public static void clearCache(Context context) {
-        File fileRoot = new File(getCacheFilePath(context));
-        if (fileRoot != null) {
-            File[] cacheFiles = fileRoot.listFiles();
-            for (File file : cacheFiles) {
-                file.delete();
-            }
-        }
+        /**TODO 暂时取消*/
+//        File fileRoot = new File(getCacheFilePath(context));
+//        if (fileRoot != null) {
+//            File[] cacheFiles = fileRoot.listFiles();
+//            for (File file : cacheFiles) {
+//                file.delete();
+//            }
+//        }
     }
 
     /**
@@ -288,6 +269,14 @@ public class FileUtil {
         return MainActivity.STICKERS_NAME + File.separator + stickerPath + File.separator + "B" + File.separator + stickerName + stickerType;
     }
 
+    /**
+     *
+     * @param mContext
+     * @param stickerPath 表情包名
+     * @param stickerName
+     * @param stickerType
+     * @return
+     */
     public static String getSmallStickerPath(Context mContext, String stickerPath, String stickerName, String stickerType) {
         String filePath = FileUtil.getSaveRootPath(mContext, false).getAbsolutePath() + File.separator + "Sticker";
         File file = new File(filePath);

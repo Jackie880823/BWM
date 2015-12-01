@@ -78,6 +78,7 @@
         android:background="@drawable/et_round_white"
         android:textColorHint="#ccc"
         android:layout_below="@+id/view1"
+        android:inputType="textCapSentences"
         android:paddingRight="@dimen/_16dp" />
 
     <View

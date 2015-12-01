@@ -11,10 +11,10 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
 import com.bondwithme.BondWithMe.util.PinYin4JUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -97,7 +97,7 @@ public class InviteMemberAdapter extends BaseAdapter implements Filterable {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         FamilyMemberEntity memberEntity = list.get(position);
-        VolleyUtil.initNetworkImageView(mContext, viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile,
+        BitmapTools.getInstance(mContext).display(viewHolder.imageMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile,
                 memberEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         String userId = memberEntity.getUser_id();
         viewHolder.textName.setText(memberEntity.getUser_given_name());

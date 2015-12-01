@@ -41,8 +41,8 @@ public class PicturesCacheUtil extends FileUtil {
     /**
      * @param context
      */
-    private static void makeCacheDir(Context context) {
-        pictureCachePath = FileUtil.getCacheFilePath(context);
+    private static void makeCacheDir(Context context,boolean isOut) {
+        pictureCachePath = FileUtil.getCacheFilePath(context,isOut);
     }
 
 
@@ -52,12 +52,8 @@ public class PicturesCacheUtil extends FileUtil {
      * @param context
      * @return
      */
-    public static String getCachePicPath(Context context) {
-        return getCacheFilePath(context) + String.format(CACHE_PIC_NAME, "" + System.currentTimeMillis());
-    }
-
-    public static void saveToCachePic(Context context, Bitmap bmp) {
-        saveToFile(getCachePicPath(context), bmp);
+    public static String getCachePicPath(Context context,boolean isOut) {
+        return getCacheFilePath(context,isOut) + String.format(CACHE_PIC_NAME, "" + System.currentTimeMillis());
     }
 
     /**
@@ -68,6 +64,25 @@ public class PicturesCacheUtil extends FileUtil {
      */
     public static String getPicPath(Context context, String prefix) {
         return getSavePicPath(context) + String.format(SAVE_PIC_NAME, prefix, "" + System.currentTimeMillis());
+    }
+
+    /**
+     * 保存bitmap到文件
+     *
+     * @param filePath 保存的路径
+     * @param bmp
+     */
+    public static void saveToFile(String filePath, Bitmap bmp) {
+
+        try {
+            FileOutputStream out = new FileOutputStream(filePath);
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+        }
+
+
     }
 
     /**
@@ -94,8 +109,8 @@ public class PicturesCacheUtil extends FileUtil {
      * @param name
      * @return
      */
-    public static File getCachePicFileByName(Context context, String name) {
-        makeCacheDir(context);
+    public static File getCachePicFileByName(Context context, String name,boolean isOut) {
+        makeCacheDir(context,isOut);
         if (name != null && !"".equals(name)) {
             File f = new File(pictureCachePath, name);
 
@@ -103,6 +118,20 @@ public class PicturesCacheUtil extends FileUtil {
         }
         return null;
 
+    }
+
+    public static String saveImageToGallery(Context context, String path,String prefix) throws IOException {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, prefix);
+        values.put(MediaStore.Images.Media.DESCRIPTION, prefix);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        values.put(MediaStore.MediaColumns.DATA, path);
+
+        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+//        // 最后通知图库更新
+        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(path)));
+        return path;
     }
 
     /**
@@ -117,29 +146,29 @@ public class PicturesCacheUtil extends FileUtil {
         File newFile = new File(newPath);
 //        oldFile.renameTo(newFile);//移动文件
         copyFileUsingChannel(oldFile,newFile);
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, prefix);
-        values.put(MediaStore.Images.Media.DESCRIPTION, prefix);
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
-        values.put(MediaStore.MediaColumns.DATA, newPath);
-
-        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-//        // 最后通知图库更新
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(newPath)));
-        return newPath;
+//        ContentValues values = new ContentValues();
+//        values.put(MediaStore.Images.Media.TITLE, prefix);
+//        values.put(MediaStore.Images.Media.DESCRIPTION, prefix);
+//        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+//        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+//        values.put(MediaStore.MediaColumns.DATA, newPath);
+//
+//        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+////        // 最后通知图库更新
+//        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(newPath)));
+        return saveImageToGallery(context,newPath,prefix);
     }
 
-    public static String saveImageToGallery(Context context, Bitmap bmp, String prefix) throws IOException {
-        String fileName = getPicPath(context, prefix);
-        File file = new File(fileName);
-        FileOutputStream fos = new FileOutputStream(file);
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-        fos.flush();
-        fos.close();
-        return saveImageToGallery(context,file,prefix);
-
-    }
+//    public static String saveImageToGallery(Context context, Bitmap bmp, String prefix) throws IOException {
+//        String fileName = getPicPath(context, prefix);
+//        File file = new File(fileName);
+//        FileOutputStream fos = new FileOutputStream(file);
+//        bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+//        fos.flush();
+//        fos.close();
+//        return saveImageToGallery(context,file,prefix);
+//
+//    }
 
     public static final String insertImage(ContentResolver cr, Bitmap source,
                                            String title, String description) {

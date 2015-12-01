@@ -2,6 +2,8 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +17,11 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.EventAdapter;
 import com.bondwithme.BondWithMe.entity.BirthdayEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
+import com.bondwithme.BondWithMe.entity.UpdateEvent;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,6 +34,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -40,6 +47,9 @@ import java.util.List;
 public class EventFragment extends BaseFragment<MainActivity> {
 
     private static final String Tag = EventFragment.class.getSimpleName();
+    public InteractivePopupWindow popupWindow,popupWindowAddPhoto;
+    private static final int GET_DELAY_RIGHT = 0x28;
+    private static final int GET_DELAY_ADD_PHOTO = 0x30;
 //    private ProgressDialog mProgressDialog;
 
     public static EventFragment newInstance(String... params) {
@@ -81,6 +91,40 @@ public class EventFragment extends BaseFragment<MainActivity> {
 
     LinearLayoutManager llm;
     private View vProgress;
+
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case GET_DELAY_RIGHT:
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_create_event),0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT, true);
+                        }
+                    });
+                    popupWindow.showPopupWindow(true);
+                    break;
+                case GET_DELAY_ADD_PHOTO:
+                    if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+                        popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
+                        popupWindowAddPhoto.showPopupWindowUp();
+                    }
+                    break;
+                case Constant.ACTION_EVENT_UPDATE_BIRTHDAY:
+                    swipeRefreshLayout.setRefreshing(true);
+                    isRefresh = true;
+                    startIndex = 0;
+                    eventStart.setVisibility(View.GONE);
+                    requestData();
+                    break;
+
+            }
+        }
+    };
 
     @Override
     public void initView() {
@@ -135,21 +179,56 @@ public class EventFragment extends BaseFragment<MainActivity> {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if(MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT,false)){
+                if(InteractivePopupWindow.firstOpPop){
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton,getParentActivity().getResources().getString(R.string.text_tip_create_event),0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_CREATE_EVENT,true);
+                        }
+                    });
+                    popupWindow.showPopupWindow(true);
+                }else {
+                    handler.sendEmptyMessageDelayed(GET_DELAY_RIGHT,1000);
+                    InteractivePopupWindow.firstOpPop = true;
+                }
+            }
+            EventBus.getDefault().registerSticky(this);
+
+        }else {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    public void onEventMainThread(UpdateEvent event) {
+        if(event.getCount() == Constant.ACTION_EVENT_UPDATE_BIRTHDAY){
+            EventBus.getDefault().removeStickyEvent(event);
+            handler.sendEmptyMessage(Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
+        }
+    }
+
+    private void newPopAddPhoto(){
+        if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+            popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
+            popupWindowAddPhoto.showPopupWindowUp();
+        }else {
+            handler.sendEmptyMessageDelayed(GET_DELAY_ADD_PHOTO, 500);
+        }
+
+    }
+            @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case Constant.ACTION_EVENT_CREATE:
                 case Constant.ACTION_EVENT_UPDATE:
                 case Constant.ACTION_EVENT_UPDATE_BIRTHDAY:
-                    swipeRefreshLayout.setRefreshing(true);
-                    isRefresh = true;
-                    startIndex = 0;
-                    eventStart.setVisibility(View.GONE);
-                    requestData();
+                    handler.sendEmptyMessage(Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
                     break;
-//                case 3:
-//                    requestData();
-//                    break;
 
             }
         }

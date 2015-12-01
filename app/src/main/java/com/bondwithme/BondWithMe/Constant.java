@@ -41,9 +41,12 @@ public class Constant {
      */
     public static final int INTENT_REQUEST_CREATE_WALL = 10;
     public static final int INTENT_REQUEST_UPDATE_WALL = 11;
-    public static final int INTENT_REQUEST_COMMENT_WALL = 12;
+    public static final int INTENT_UPDATE_DIARY = 12;
     public static final int ACTION_COMMENT_MEMBERS = 13;
     public static final int ACTION_COMMENT_GROUPS = 14;
+
+    public static final String WALL_ENTITY = "wall_entity";
+    public static final String IS_DELETE = "is_delete";
     /**
      * 打开相册的意图请求标识
      */
@@ -92,16 +95,16 @@ public class Constant {
     /**
      * for api
      */
-    public static final String API_SERVER = "http://dev.bondwith.me";
-    public static final int TRACKER_SITE_ID = 3;//dev
+//    public static final String API_SERVER = "http://dev.bondwith.me";
+//    public static final int TRACKER_SITE_ID = 3;//dev
 
 
 //    public static final String API_SERVER = "http://pt.bondwith.me";
 //    public static final int TRACKER_SITE_ID = 4;//pt
 
 
-//    public static final int TRACKER_SITE_ID = 5;//m
-//    public static final String API_SERVER = "http://m.bondwith.me";
+    public static final int TRACKER_SITE_ID = 5;//m
+    public static final String API_SERVER = "http://m.bondwith.me";
 
 
     public static final String API_CHECK_VERSION = API_SERVER + "/bondwithme/index.php/api/appVersion";
@@ -369,10 +372,12 @@ public class Constant {
     public static final String REQUEST_URL = "request_url";
     public static final String CONDITION = "condition";
     public static final String POSITION = "position";
+    public static final String PHOTO_POSITION = "photo_position";
 
     public static final String COMMENT_OWNER_ID = "comment_owner_id";
     public static final String CONTENT_TYPE = "content_type";
     public static final String COMMENT_CONTENT = "comment_content";
+    public static final String COMMENT_COUNT = "comment_count";
     public static final String STICKER_GROUP_PATH = "sticker_group_path";
     public static final String STICKER_NAME = "sticker_name";
     public static final String STICKER_TYPE = "sticker_type";
@@ -412,7 +417,7 @@ public class Constant {
     /**
      * 视频存放路径
      */
-    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance()) + "/Video/";
+    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance(),true) + "/Video/";
 
     //删除message消息
     public static final String API_MESSAGE_DELETE = API_SERVER +"/bondwithme/index.php/api/removeContent/%s";

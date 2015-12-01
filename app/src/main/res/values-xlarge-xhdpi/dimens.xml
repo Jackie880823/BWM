@@ -1,0 +1,162 @@
+<resources>
+    <!--res/values/dimens.xml(default)-->
+    <!--res/values-ldpi/dimens.xml   (240x320 and nearer resolution)-->
+    <!--res/values-mdpi/dimens.xml   (320x480 and nearer resolution)-->
+    <!--res/values-hdpi/dimens.xml   (480x800, 540x960 and nearer resolution)-->
+    <!--res/values-xhdpi/dimens.xml  (720x1280 - Samsung S3, Micromax Canvas HD, etc)-->
+    <!--res/values-xxhdpi/dimens.xml (1080x1920 - Samsung S4, HTC one, etc)-->
+    <!--res/values-large/dimens.xml  (480x800)-->
+
+    <!--res/values-large-mdpi/dimens.xml (600x1024)-->
+    <!--res/values-sw600dp/dimens.xml  (600x1024)-->
+    <!--res/values-sw720dp/dimens.xml  (800x1280)-->
+    <!--res/values-xlarge-xhdpi/dimens.xml (2560x1600 - Nexus 10")-->
+    <!--res/values-large-xhdpi/dimens.xml  (1200x1920 - Nexus 7"(latest))-->
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="default_view_margin">8dp</dimen>
+    <dimen name="default_content_padding">8dp</dimen>
+
+    <dimen name="default_text_padding">5dp</dimen>
+    <dimen name="default_button_width_height">48dp</dimen>
+    <dimen name="default_small_button_width_height">32dp</dimen>
+    <dimen name="default_icon_width_height">25dp</dimen>
+    <dimen name="default_user_head_width_height">60dp</dimen>
+    <dimen name="default_button_radius">5dp</dimen>
+    <dimen name="default_line_height">0.8dp</dimen>
+
+    <dimen name="default_border_width">1dp</dimen>
+
+    <!--标准-->
+    <dimen name="text_mirco_size">12sp</dimen>
+    <dimen name="text_small_size">14sp</dimen>
+    <dimen name="text_medium_size">18sp</dimen>
+    <dimen name="text_large_size">22sp</dimen>
+    <!--设计-->
+    <dimen name="text_size_10sp">10sp</dimen>
+    <dimen name="text_size_12sp">12sp</dimen>
+    <dimen name="text_size_13sp">13sp</dimen>
+    <dimen name="text_size_14sp">14sp</dimen>
+    <dimen name="text_size_16sp">16sp</dimen>
+    <dimen name="text_size_19sp">19sp</dimen>
+    <dimen name="text_size_22sp">22sp</dimen>
+
+    <dimen name="_0dp">0dp</dimen>
+    <dimen name="_1dp">2dp</dimen>
+    <dimen name="_2dp">3dp</dimen>
+    <dimen name="_3dp">6dp</dimen>
+    <dimen name="_4dp">8dp</dimen>
+    <dimen name="_5dp">10dp</dimen>
+    <dimen name="_6dp">12dp</dimen>
+    <dimen name="_7dp">14dp</dimen>
+    <dimen name="_8dp">16dp</dimen>
+    <dimen name="_9dp">18dp</dimen>
+    <dimen name="_10dp">20dp</dimen>
+    <dimen name="_11dp">22dp</dimen>
+    <dimen name="_12dp">24dp</dimen>
+    <dimen name="_13dp">26dp</dimen>
+    <dimen name="_14dp">28dp</dimen>
+    <dimen name="_15dp">30dp</dimen>
+    <dimen name="_16dp">32dp</dimen>
+    <dimen name="_17dp">34dp</dimen>
+    <dimen name="_18dp">36dp</dimen>
+    <dimen name="_19dp">38dp</dimen>
+    <dimen name="_20dp">40dp</dimen>
+    <dimen name="_21dp">42dp</dimen>
+    <dimen name="_22dp">44dp</dimen>
+    <dimen name="_23dp">46dp</dimen>
+    <dimen name="_24dp">48dp</dimen>
+    <dimen name="_25dp">50dp</dimen>
+    <dimen name="_26dp">52dp</dimen>
+    <dimen name="_27dp">54dp</dimen>
+    <dimen name="_28dp">56dp</dimen>
+    <dimen name="_29dp">58dp</dimen>
+    <dimen name="_30dp">60dp</dimen>
+    <dimen name="_31dp">62dp</dimen>
+    <dimen name="_32dp">64dp</dimen>
+    <dimen name="_33dp">66dp</dimen>
+    <dimen name="_34dp">68dp</dimen>
+    <dimen name="_35dp">70dp</dimen>
+    <dimen name="_36dp">72dp</dimen>
+    <dimen name="_37dp">74dp</dimen>
+    <dimen name="_38dp">76dp</dimen>
+    <dimen name="_39dp">78dp</dimen>
+    <dimen name="_40dp">80dp</dimen>
+    <dimen name="_41dp">82dp</dimen>
+    <dimen name="_42dp">84dp</dimen>
+    <dimen name="_43dp">86dp</dimen>
+    <dimen name="_44dp">88dp</dimen>
+    <dimen name="_45dp">90dp</dimen>
+    <dimen name="_46dp">92dp</dimen>
+    <dimen name="_47dp">94dp</dimen>
+    <dimen name="_48dp">96dp</dimen>
+    <dimen name="_49dp">98dp</dimen>
+    <dimen name="_50dp">100dp</dimen>
+    <dimen name="_51dp">102dp</dimen>
+    <dimen name="_52dp">104dp</dimen>
+    <dimen name="_53dp">106dp</dimen>
+    <dimen name="_54dp">108dp</dimen>
+    <dimen name="_55dp">110dp</dimen>
+    <dimen name="_56dp">112dp</dimen>
+    <dimen name="_57dp">114dp</dimen>
+    <dimen name="_58dp">116dp</dimen>
+    <dimen name="_59dp">118dp</dimen>
+    <dimen name="_60dp">120dp</dimen>
+    <dimen name="_61dp">122dp</dimen>
+    <dimen name="_62dp">124dp</dimen>
+    <dimen name="_63dp">126dp</dimen>
+    <dimen name="_64dp">128dp</dimen>
+    <dimen name="_65dp">130dp</dimen>
+    <dimen name="_66dp">132dp</dimen>
+    <dimen name="_67dp">134dp</dimen>
+    <dimen name="_68dp">136dp</dimen>
+    <dimen name="_69dp">138dp</dimen>
+    <dimen name="_70dp">140dp</dimen>
+    <dimen name="_71dp">142dp</dimen>
+    <dimen name="_72dp">144dp</dimen>
+    <dimen name="_73dp">146dp</dimen>
+    <dimen name="_74dp">148dp</dimen>
+    <dimen name="_75dp">150dp</dimen>
+    <dimen name="_76dp">152dp</dimen>
+    <dimen name="_77dp">154dp</dimen>
+    <dimen name="_78dp">156dp</dimen>
+    <dimen name="_79dp">158dp</dimen>
+    <dimen name="_80dp">160dp</dimen>
+    <dimen name="_81dp">162dp</dimen>
+    <dimen name="_82dp">164dp</dimen>
+    <dimen name="_83dp">166dp</dimen>
+    <dimen name="_84dp">168dp</dimen>
+    <dimen name="_85dp">170dp</dimen>
+    <dimen name="_86dp">172dp</dimen>
+    <dimen name="_87dp">174dp</dimen>
+    <dimen name="_88dp">176dp</dimen>
+    <dimen name="_89dp">178dp</dimen>
+    <dimen name="_90dp">180dp</dimen>
+    <dimen name="_91dp">182dp</dimen>
+    <dimen name="_92dp">184dp</dimen>
+    <dimen name="_93dp">186dp</dimen>
+    <dimen name="_94dp">188dp</dimen>
+    <dimen name="_95dp">190dp</dimen>
+    <dimen name="_96dp">192dp</dimen>
+    <dimen name="_97dp">194dp</dimen>
+    <dimen name="_98dp">196dp</dimen>
+    <dimen name="_99dp">198dp</dimen>
+    <dimen name="_100dp">200dp</dimen>
+    <dimen name="_120dp">240dp</dimen>
+    <dimen name="_150dp">300dp</dimen>
+    <dimen name="_160dp">320dp</dimen>
+    <dimen name="_200dp">400dp</dimen>
+    <dimen name="_240dp">480dp</dimen>
+    <dimen name="_250dp">500dp</dimen>
+    <dimen name="_280dp">280dp</dimen>
+    <dimen name="_300dp">600dp</dimen>
+    <dimen name="_400dp">800dp</dimen>
+
+    <!-- SpringIndicator -->
+    <dimen name="si_default_text_size">8sp</dimen>
+    <dimen name="si_default_radius_max">4dp</dimen>
+    <dimen name="si_default_radius_min">2dp</dimen>
+</resources>

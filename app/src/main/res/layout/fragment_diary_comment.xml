@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@android:color/white">
 
     <RelativeLayout
@@ -8,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/comment_agree_gray_background"
-        android:gravity="left|center_vertical"
         android:padding="@dimen/default_content_padding">
 
         <ImageButton
@@ -17,19 +17,22 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:paddingRight="@dimen/_15dp"
+            android:layout_centerVertical="true"
             android:src="@drawable/love_press" />
 
         <TextView
             android:id="@+id/tv_agree_count"
             style="@style/text_dark_default"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/iv_agree"
+            tools:text="skldjflaskjdf"
             android:textStyle="bold" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="10dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
-            android:src="@drawable/icon_arrow_right" />
+            android:src="@drawable/wall_right" />
     </RelativeLayout>
 
     <com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout
@@ -37,9 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/send_comment"
-        android:layout_below="@+id/rl_agree"
-        android:paddingLeft="@dimen/default_content_padding"
-        android:paddingRight="@dimen/default_content_padding">
+        android:layout_below="@+id/rl_agree">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_wall_comment_list"

@@ -32,14 +32,14 @@ public class AlertMemberAdapter extends RecyclerView.Adapter<AlertMemberAdapter.
 
     public void add(List<RecommendEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 
     @Override
     public void onBindViewHolder(AlertMemberAdapter.VHItem holder, int position) {
 //        RecommendEntity recommendEntity = data.get(position);
-//        VolleyUtil.initNetworkImageView(mContext, holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, RecommendEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+//        BitmapTools.getInstance(mContext).display( holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, RecommendEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 //        holder.user_name.setText(recommendEntity.getUser_given_name());
 //        holder.create_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, recommendEntity.getUser_active_date()));
 

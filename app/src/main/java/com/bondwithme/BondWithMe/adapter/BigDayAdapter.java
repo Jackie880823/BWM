@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.BigDayEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.util.List;
@@ -39,14 +39,14 @@ public class BigDayAdapter extends RecyclerView.Adapter<BigDayAdapter.VHItem> {
 
     public void add(List<BigDayEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
 
     @Override
     public void onBindViewHolder(VHItem holder, int position) {
         BigDayEntity bigDayEntity = data.get(position);
-        VolleyUtil.initNetworkImageView(mContext, holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, bigDayEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, bigDayEntity.getAction_user_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         holder.user_name.setText(bigDayEntity.getAction_username());
         holder.day_time.setText(bigDayEntity.getMessage());
 

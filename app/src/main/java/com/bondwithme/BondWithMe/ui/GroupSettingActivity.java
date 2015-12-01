@@ -165,7 +165,7 @@ public class GroupSettingActivity extends BaseActivity {
 
         mBitmapTools = BitmapTools.getInstance(mContext);
         headUrl = String.format(Constant.API_GET_GROUP_PHOTO, groupId);
-        mBitmapTools.display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(this, cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
 //        VolleyUtil.initNetworkImageView(this, cniMain, String.format(Constant.API_GET_GROUP_PHOTO, groupId), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName.setText(groupName);
 
@@ -430,7 +430,7 @@ public class GroupSettingActivity extends BaseActivity {
 //            mBitmapTools = new BitmapTools(mContext);
 //            headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id());
 //            mBitmapTools.display(viewHolder.cniMain,headUrl,R.drawable.network_image_default, R.drawable.network_image_default);
-            VolleyUtil.initNetworkImageView(mContext, viewHolder.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display( viewHolder.cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
             if (userEntity.getUser_id().equals(userEntity.getGroup_owner_id())) {
                 viewHolder.tvName.setText(userEntity.getUser_given_name());

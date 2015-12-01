@@ -57,6 +57,7 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
     private List<UserEntity> userEntities;
     private List<GroupEntity> groupEntities;
 
+    private View vProgress;
 
     public static WallMembersOrGroupsFragment newInstance(String... params) {
         LogUtil.i(TAG, "createInstance");
@@ -84,6 +85,9 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        vProgress = getViewById(R.id.rl_progress);
+        vProgress.setVisibility(View.VISIBLE);
 
         rvList = getViewById(R.id.rv_wall_member_or_group_list);
         final LinearLayoutManager llm = new LinearLayoutManager(getParentActivity());
@@ -114,11 +118,15 @@ public class WallMembersOrGroupsFragment extends BaseFragment<WallMembersOrGroup
 
             @Override
             public void onFinish() {
-
             }
 
             @Override
             public void onResult(String response) {
+
+                if (vProgress != null) {
+                    vProgress.setVisibility(View.GONE);
+                }
+
                 if(Constant.ACTION_SHOW_LOVED_USER.equals(getActivity().getIntent().getAction())){
                     userEntities = new Gson().fromJson(response, new TypeToken<ArrayList<UserEntity>>() {}.getType());
                     adapter = new WallMemberAdapter(getActivity(), userEntities, WallMembersOrGroupsFragment.this);

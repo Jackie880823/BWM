@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.AddMemberWorkFlow;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.FamilyProfileActivity;
@@ -91,7 +91,7 @@ public class WallMemberAdapter extends RecyclerView.Adapter<WallMemberAdapter.MG
     @Override
     public void onBindViewHolder(MGItem holder, int position) {
         UserEntity entity = mData.get(position);
-        VolleyUtil.initNetworkImageView(mContext, holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         holder.name.setText(entity.getUser_given_name());
     }
 

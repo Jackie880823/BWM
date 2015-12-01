@@ -15,13 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.EventCommentEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
 import com.bondwithme.BondWithMe.exception.StickerTypeException;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallMembersOrGroupsActivity;
 import com.bondwithme.BondWithMe.util.DensityUtil;
@@ -75,6 +75,11 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
     public void removeCommentData(){
         data.clear();
+        notifyDataSetChanged();
+    }
+
+    public void alterHeader(EventEntity detailData){
+        this.detailData = detailData;
         notifyDataSetChanged();
     }
 
@@ -159,7 +164,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             setDetail(header, detail);
 //            Log.i("getGroup_owner_id()", detail.getGroup_owner_id()+"");
-            VolleyUtil.initNetworkImageView(mContext, ((VHHeader) holder).ownerHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, detail.getGroup_owner_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(((VHHeader) holder).ownerHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, detail.getGroup_owner_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             header.pushDate.setText(MyDateUtils.getEventLocalDateStringFromUTC(mContext, detail.getGroup_creation_date()));
             header.eventTitle.setText(detail.getGroup_name());
             header.tvUserName.setText(detail.getUser_given_name());
@@ -179,7 +184,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             if(!TextUtils.isEmpty(detail.getLoc_latitude()) && !TextUtils.isEmpty(detail.getLoc_longitude())){
                 header.eventMapCation.setVisibility(View.VISIBLE);
-                VolleyUtil.initNetworkImageView(mContext, header.eventMapCation, LocationUtil.getLocationPicUrl(mContext, detail.getLoc_latitude(), detail.getLoc_longitude(), detail.getLoc_type()), R.drawable.network_image_default, R.drawable.network_image_default);
+                BitmapTools.getInstance(mContext).display(header.eventMapCation, LocationUtil.getLocationPicUrl(mContext, detail.getLoc_latitude(), detail.getLoc_longitude(), detail.getLoc_type()), R.drawable.network_image_default, R.drawable.network_image_default);
 
 
             }else {
@@ -193,15 +198,15 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 //            T second = (T) holder;
             EventCommentEntity entity =  data.get(0);
             if( Build.VERSION.SDK_INT < 21){
-                itemDistance = DensityUtil.dip2px(mContext, 12);
+                itemDistance = DensityUtil.dip2px(mContext, 10);
             }else {
-                itemDistance = DensityUtil.dip2px(mContext, 14);
+                itemDistance = DensityUtil.dip2px(mContext, 12);
             }
 
             if(data.size() == 1){
                 second.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_one_shape));
                 layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-                layoutParam.setMargins(itemDistance,14,itemDistance,DensityUtil.dip2px(mContext, 60));
+                layoutParam.setMargins(itemDistance,14,itemDistance,DensityUtil.dip2px(mContext, 80));
 //              layoutParam.setMarginEnd(500);
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.INVISIBLE);
@@ -213,7 +218,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 second.itemView.setLayoutParams(layoutParam);
                 second.line.setVisibility(View.VISIBLE);
             }
-            VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             second.tv_comment_owner_name.setText(entity.getUser_given_name());
             second.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, entity.getComment_creation_date()));
             if(!TextUtils.isEmpty(entity.getComment_content().trim())){//如果文字不为空
@@ -236,7 +241,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
             layoutParam.setMargins(itemDistance,0,itemDistance,DensityUtil.dip2px(mContext, 0));
             vhItem.itemView.setLayoutParams(layoutParam);
-            VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             vhItem.tv_comment_owner_name.setText(entity.getUser_given_name());
             vhItem.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, entity.getComment_creation_date()));
             if(!TextUtils.isEmpty(entity.getComment_content().trim())){//如果文字不为空
@@ -257,10 +262,10 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mViewHolder footer = (mViewHolder) holder;
             EventCommentEntity entity =  data.get(position - detailItemCount);
             layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-            layoutParam.setMargins(itemDistance,0,itemDistance,DensityUtil.dip2px(mContext,60));
+            layoutParam.setMargins(itemDistance,0,itemDistance,DensityUtil.dip2px(mContext,80));
             footer.itemView.setLayoutParams(layoutParam);
             footer.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.event_detail_footer_shape));
-            VolleyUtil.initNetworkImageView(mContext, ((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(((mViewHolder) holder).civ_comment_owner_head, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, entity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             footer.line.setVisibility(View.INVISIBLE);
             footer.tv_comment_owner_name.setText(entity.getUser_given_name());
             footer.comment_date.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, entity.getComment_creation_date()));
@@ -310,7 +315,7 @@ public class EventCommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             chatsImage.setVisibility(View.VISIBLE);
             networkImageView.setVisibility(View.VISIBLE);
             gifImageView.setVisibility(View.GONE);
-            VolleyUtil.initNetworkImageView(mContext, networkImageView, String.format(Constant.API_GET_COMMENT_PIC, Constant.Module_preview_m, comment.getUser_id(), comment.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            BitmapTools.getInstance(mContext).display(networkImageView, String.format(Constant.API_GET_COMMENT_PIC, Constant.Module_preview_m, comment.getUser_id(), comment.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         } else if(!TextUtils.isEmpty(comment.getSticker_group_path())) {
             chatsImage.setVisibility(View.VISIBLE);
             gifImageView.setVisibility(View.VISIBLE);

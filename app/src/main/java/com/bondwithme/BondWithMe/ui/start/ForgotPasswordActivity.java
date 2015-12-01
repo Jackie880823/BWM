@@ -53,14 +53,16 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
 
     private RelativeLayout rlCountryCode;
     private TextView tvCountry;
-    private TextView tvCountryCode;
-    private TextView tvStartCountryCode;
+//    private TextView tvCountryCode;
+    private EditText tvStartCountryCode;
     private EditText etPhoneNumber;
     private PaperButton brNext;
     private RelativeLayout rlProgress;
 
     private String strCountryCode;
     private String strPhoneNumber;
+
+    private boolean blnChooseCountryCode;//通过选择获得的国家区号。如果用户手动修改。把国家名称改回原始状态。这是用来判断的
 
     Handler handler = new Handler()
     {
@@ -132,7 +134,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
     public void initView() {
         rlCountryCode = getViewById(R.id.rl_country_code);
         tvCountry = getViewById(R.id.tv_country);
-        tvCountryCode = getViewById(R.id.tv_country_code);
+//        tvCountryCode = getViewById(R.id.tv_country_code);
         tvStartCountryCode = getViewById(R.id.tv_start_country_code);
         etPhoneNumber = getViewById(R.id.et_phone_number);
         brNext = getViewById(R.id.br_next);
@@ -143,10 +145,10 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
         rlCountryCode.setOnClickListener(this);
         brNext.setOnClickListener(this);
 
-        tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
+//        tvCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
         tvStartCountryCode.setText(CountryCodeUtil.GetCountryZipCode(this));
 
-        tvCountryCode.addTextChangedListener(new TextWatcher() {
+        tvStartCountryCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -159,7 +161,29 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (TextUtils.isEmpty(tvCountryCode.getText().toString())) {
+                if (blnChooseCountryCode) {
+
+                } else {
+                    tvCountry.setText(getText(R.string.title_country_code));
+                }
+                blnChooseCountryCode = false;
+            }
+        });
+
+        tvStartCountryCode.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(tvStartCountryCode.getText().toString())) {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
                 } else {
                     rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_gray);
@@ -193,8 +217,9 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
             case GET_COUNTRY_CODE:
                 if (resultCode == RESULT_OK)
                 {
+                    blnChooseCountryCode = true;
                     tvCountry.setText(data.getStringExtra(CountryCodeActivity.COUNTRY));
-                    tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
+//                    tvCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
                     tvStartCountryCode.setText(data.getStringExtra(CountryCodeActivity.CODE));
                 }
                 break;
@@ -249,7 +274,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
             return;
         }
 
-        strCountryCode = tvCountryCode.getText().toString();
+        strCountryCode = tvStartCountryCode.getText().toString();
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
 
         if (checkAll())
@@ -326,7 +351,7 @@ public class ForgotPasswordActivity extends BaseActivity implements View.OnClick
         }
         else
         {
-            if (TextUtils.isEmpty(tvCountryCode.getText().toString()))
+            if (TextUtils.isEmpty(tvStartCountryCode.getText().toString()))
             {
                 rlCountryCode.setBackgroundResource(R.drawable.bg_stroke_corners_red);
             }

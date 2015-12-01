@@ -10,14 +10,13 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.NewsEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.more.ViewUrlPicActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.MyDateUtils;
 
 /**
  * 用于显示news item，便于动态显示文本内容：展开（More）、收起（collapse），兼有播放视频的功能
@@ -72,18 +71,20 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
     //news content包括title，date，image，video_thumbnail，content_text
     public void setContent(NewsEntity newsEntity,Context mContext){
         tvTitle.setText(newsEntity.getTitle());
-        tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, newsEntity.getRelease_date()));
+        LogUtil.d(TAG, "date======" + newsEntity.getRelease_date());
+//        tvDate.setText(MyDateUtils.getLocalDateStringFromUTC(mContext, newsEntity.getRelease_date()));
+        tvDate.setText(newsEntity.getRelease_date());
         tvContent.setText(newsEntity.getContent_text());
         imageUrl = newsEntity.getImage();
         videoUrl = newsEntity.getVideo();
         if (!TextUtils.isEmpty(imageUrl)){
             //display pic
             ivPic.setVisibility(View.VISIBLE);
-            VolleyUtil.initNetworkImageView(mContext,ivPic,newsEntity.getImage());
+            BitmapTools.getInstance(mContext).display(ivPic, newsEntity.getImage());
             ibtnVideo.setVisibility(View.INVISIBLE);
         }else if(!TextUtils.isEmpty(videoUrl)){
             ivPic.setVisibility(View.VISIBLE);
-            VolleyUtil.initNetworkImageView(mContext,ivPic,newsEntity.getVideo_thumbnail());
+            BitmapTools.getInstance(mContext).display(ivPic, newsEntity.getVideo_thumbnail());
             ibtnVideo.setVisibility(View.VISIBLE);
         }else if(TextUtils.isEmpty(imageUrl) && TextUtils.isEmpty(videoUrl)){
             ivPic.setVisibility(View.GONE);
@@ -145,6 +146,7 @@ public class NewsHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
                     int lineCount = tvContent.getLineCount();
                     if (lineCount > defaultLineCount){
+                        newsEntity.setVisibleOfTvMore(true);
                         int maxLineEndIndex = tvContent.getLayout().getLineEnd(4);
                         CharSequence sourceText = tvContent.getText();
                         SpannableStringBuilder ssb = new SpannableStringBuilder(sourceText);

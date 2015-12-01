@@ -31,6 +31,7 @@ import com.bondwithme.BondWithMe.entity.GroupMessageEntity;
 import com.bondwithme.BondWithMe.entity.PrivateMessageEntity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
@@ -53,6 +54,8 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
     private TextView message_member_tv;
     private TextView message_group_tv;
     private Dialog showSelectDialog;
+    private static final int GET_DELAY_ADD_PHOTO = 0x30;
+    private InteractivePopupWindow popupWindowAddPhoto;
 
     public static MessageMainFragment newInstance(String... params) {
 
@@ -481,10 +484,34 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
                     List<GroupMessageEntity> userEntityListPull = (List<GroupMessageEntity>) msg.obj;
                     messageGroupAdapter.AddGroupEntityData(userEntityListPull);
                     break;
+                case GET_DELAY_ADD_PHOTO:
+                    if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+                        popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
+                        popupWindowAddPhoto.showPopupWindowUp();
+                    }
+                    break;
             }
             return false;
         }
     });
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+//            newPopAddPhoto();
+        }
+    }
+
+    private void newPopAddPhoto(){
+        if(MainActivity.interactivePopupWindowMap.containsKey(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO)){
+            popupWindowAddPhoto = MainActivity.interactivePopupWindowMap.get(InteractivePopupWindow.INTERACTIVE_TIP_ADD_PHOTO);
+            popupWindowAddPhoto.showPopupWindowUp();
+        }else {
+            handler.sendEmptyMessageDelayed(GET_DELAY_ADD_PHOTO, 500);
+        }
+
+    }
 
     private void groupFinishReFresh() {
         if (isGroupRefresh) {

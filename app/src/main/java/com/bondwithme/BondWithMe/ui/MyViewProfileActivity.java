@@ -132,12 +132,12 @@ public class MyViewProfileActivity extends BaseActivity {
         if (isHeaderChageed()) {
             uploadImage();
         }
-//        else if (isProfileChanged()) {
+        else if (isProfileChanged()) {
             updateProfile();
 
-//        } else {
+        } else {
             finish();
-//        }
+        }
     }
 
     @Override
@@ -275,6 +275,7 @@ public class MyViewProfileActivity extends BaseActivity {
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
 
         mBitmapTools = BitmapTools.getInstance(this);
+//        VolleyUtil.initNetworkImageView(MyViewProfileActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         mBitmapTools.display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
         etFirstName.setText(MainActivity.getUser().getUser_given_name());
@@ -439,7 +440,6 @@ public class MyViewProfileActivity extends BaseActivity {
         jsonParams.put("user_location_name", etRegion.getText().toString());
 
         final String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
-        LogUtil.e("","jsonParamsStringpp========================="+jsonParamsString);
 
         requestInfo.url = String.format(Constant.API_UPDATE_MY_PROFILE, MainActivity.getUser().getUser_id());
         requestInfo.jsonParam = jsonParamsString;
@@ -657,6 +657,7 @@ public class MyViewProfileActivity extends BaseActivity {
                         //清除缓存
                         mBitmapTools.clearMemoryCache();
                         mBitmapTools.clearDiskCache(null);
+//                        mBitmapTools.clearMemoryCache(headUrl);
                         /**wing modify 20150625 end*/
 
 //                        progressDialog.dismiss();

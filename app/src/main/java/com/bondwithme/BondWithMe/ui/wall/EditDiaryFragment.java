@@ -23,6 +23,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,11 +60,13 @@ import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.SDKUtil;
 import com.bondwithme.BondWithMe.util.SortComparator;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.WallEditView;
 import com.google.gson.Gson;
@@ -122,6 +125,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     private static final String PREFERENCE_KEY_VIDEO_PATH = "VIDEO_PATH";
     private static final String PREFERENCE_KEY_VIDEO_DURATION = "VIDEO_DURATION";
 
+    private static final int GET_DELAY = 0x28;
+    private InteractivePopupWindow interactivePopupWindow;
+
+    public final static String PATH_PREFIX = "feeling";
+    private final static String FEEL_ICON_NAME = PATH_PREFIX + "/%s";
+
     /**
      * 保存草稿的首选项
      */
@@ -137,6 +146,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
     private CallBack callBack = new CallBack();
     private boolean isEdit = false;
+    private boolean isUpate = false;
 
     private String contentGroupId;
 
@@ -263,9 +273,12 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         editor.clear().apply();
                     }
 
-                    getActivity().setResult(Activity.RESULT_OK);
 //                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
-                    if (getActivity() != null) {
+                    if (getActivity() != null && !getActivity().isFinishing()) {
+                        Intent intent = getParentActivity().getIntent();
+                        intent.putExtra(Constant.WALL_ENTITY, wall);
+                        intent.putExtra(Constant.IS_DELETE, false);
+                        getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
                     }
                     sendEmptyMessage(HIDE_PROGRESS);
@@ -277,6 +290,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                     rlProgress.setVisibility(View.GONE);
                     break;
                 case GET_WALL_SUCCEED:
+                    rlProgress.setVisibility(View.GONE);
                     // 得到纬度
                     String strLatitude = wall.getLoc_latitude();
                     if (!TextUtils.isEmpty(strLatitude)) {
@@ -354,10 +368,55 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         mAdapter.setIsPhoto(false);
                     }
                     break;
+                case GET_DELAY:
+
+                    ArrayList<String> tipTexts = new ArrayList<String>();
+                    tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_feeling));
+                    tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_tag_member));
+                    tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_allow_me));
+                    tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_location));
+                    tipTexts.add(getParentActivity().getResources().getString(R.string.text_tip_tap_post));
+
+                    ArrayList<View> tipViews = new ArrayList<>();
+                    tipViews.add(getViewById(R.id.tv_feeling));
+                    tipViews.add(getViewById(R.id.tv_tag));
+                    tipViews.add(getViewById(R.id.tv_privacy));
+                    tipViews.add(getViewById(R.id.tv_location));
+                    tipViews.add(getParentActivity().rightButton);
+
+                    cutPopInteractive(tipTexts,tipViews,0);
+                    break;
             }
         }
     };
 
+    private void cutPopInteractive(final ArrayList<String> strings, final ArrayList<View> views, int j) {
+
+        if (TextUtils.isEmpty(strings.get(j)))return;
+
+            if(j < strings.size() - 1 ){
+                interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j), strings.get(j),1);
+                final int finalJ = j + 1;
+                interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                    @Override
+                    public void popDismiss() {
+                        //存储本地
+                        cutPopInteractive(strings, views, finalJ);
+                    }
+                });
+                interactivePopupWindow.showPopupWindowUp();
+            }else {
+                interactivePopupWindow = new InteractivePopupWindow(getParentActivity(), views.get(j),strings.get(j),0);
+                interactivePopupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                    @Override
+                    public void popDismiss() {
+                        //存储本地
+                        PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, true);
+                    }
+                });
+                interactivePopupWindow.showPopupWindow(true);
+            }
+    }
 
     /**
      * 更新日志成功结果处理
@@ -456,6 +515,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         gson = new Gson();
 
         rlProgress = getViewById(R.id.rl_progress);
+        rlProgress.setVisibility(View.VISIBLE);
 
 
         rvImages = getViewById(R.id.rcv_post_photos);
@@ -523,6 +583,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                         lastChange = change;
                     }
                 });
+
+                if (wall == null) {
+                    wall = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
+                    if (wall != null) {
+                        mHandler.sendEmptyMessage(GET_WALL_SUCCEED);
+                    }
+                }
             }
 
             @Override
@@ -663,6 +730,24 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onResume() {
         super.onResume();
+        if (MainActivity.IS_INTERACTIVE_USE &&
+                !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST, false)) {
+            getParentActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN |
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_UNSPECIFIED);
+            mHandler.sendEmptyMessageDelayed(GET_DELAY, 500);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (App.isInteractiveTipFinish()) {
+            LogUtil.i("diary_new====", "true");
+            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_START, false);
+        } else {
+            LogUtil.i("diary_new====", "false");
+        }
+
     }
 
     /**
@@ -773,11 +858,20 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void requestData() {
         if (isEdit) {
+            if (wall == null) {
+                WallEntity wallEntity = (WallEntity) getActivity().getIntent().getSerializableExtra(Constant.WALL_ENTITY);
+                if (wallEntity != null) {
+                    return;
+                }
+            }
+
             HashMap<String, String> params = new HashMap<>();
             params.put(Constant.CONTENT_GROUP_ID, contentGroupId);
             params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
             callBack.setLinkType(CallBack.LINK_TYPE_GET_WALL);
             mHttpTools.get(Constant.API_WALL_DETAIL, params, GET_DETAIL, callBack);
+        } else {
+            rlProgress.setVisibility(View.GONE);
         }
     }
 
@@ -789,6 +883,8 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     @Override
     public void onStop() {
         super.onStop();
+        // 隐藏键盘
+        UIUtil.hideKeyboard(getActivity(), getActivity().getCurrentFocus());
 
         if (popupwindow != null && popupwindow.isShowing()) {
             popupwindow.dismiss();
@@ -858,6 +954,11 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         // 没有退出编辑不用保存蓝草稿
         if (draftPreferences != null) {
             draftPreferences.edit().putBoolean(PREFERENCE_KEY_IS_SAVE, false).apply();
+        }
+
+        if (isEdit) {
+            // 进入编辑确定Wall是更新了
+            isUpate = true;
         }
 
         if (resultCode == Activity.RESULT_OK) {
@@ -935,6 +1036,21 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         if (requestCode == Constant.INTENT_REQUEST_OPEN_GPS && LocationUtil.isOPen(getActivity())) {
             openMap();
         }
+    }
+
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler.removeMessages(SHOW_PROGRESS);
+        mHandler.removeMessages(HIDE_PROGRESS);
+        mHandler.removeMessages(ACTION_FAILED);
+        mHandler.removeMessages(ACTION_SUCCEED);
+        mHandler.removeMessages(GET_WALL_SUCCEED);
+
     }
 
     private void addDataAndNotify(ArrayList<Uri> pickUris) {
@@ -1044,11 +1160,15 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
                 checkGPS();
                 break;
             case R.id.tv_privacy:
+                if (isEdit) {
+                    isUpate = true;
+                }
                 allRange = !allRange;
                 switchPrivacy(allRange);
                 break;
 
             case R.id.delete_video_view:
+                isUpate = isEdit;
                 clearVideo();
                 mAdapter.notifyItemRemoved(1);
                 break;
@@ -1091,6 +1211,10 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
          */
         intent.putExtra(MediaData.EXTRA_USE_UNIVERSAL, true);
         intent.putExtra(MediaData.USE_VIDEO_AVAILABLE, true);
+        String photoCount = wall == null ? null : wall.getPhoto_count();
+        boolean hadPhotos = !imageUris.isEmpty() || (!TextUtils.isEmpty(photoCount) && Integer.valueOf(photoCount) > 0);
+        LogUtil.d(TAG, "openPhotos& hadPhotos: " + hadPhotos);
+        intent.putExtra(SelectPhotosActivity.EXTRA_HAD_PHOTOS, hadPhotos);
         intent.putParcelableArrayListExtra(SelectPhotosActivity.EXTRA_SELECTED_PHOTOS, (ArrayList<? extends Parcelable>) imageUris);
         int residue = SelectPhotosActivity.MAX_SELECT - photoEntities.size();
         intent.putExtra(SelectPhotosActivity.EXTRA_RESIDUE, residue);
@@ -1163,7 +1287,13 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
      * 上传日记
      */
     public void submitWall() {
+        if (rlProgress.getVisibility() == View.VISIBLE) {
+            return;
+        }
+
         Log.i(TAG, "submitWall&");
+        // 隐藏键盘
+        UIUtil.hideKeyboard(getContext(), getActivity().getCurrentFocus());
         if (isEdit) {
             putWall();
             return;
@@ -1259,7 +1389,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
     public void putWall() {
         String text_content = wevContent.getRelText();
 
-        if (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri)) {
+        if (!isUpate && (TextUtils.isEmpty(text_content) && photoEntities.isEmpty() && Uri.EMPTY.equals(videoUri))) {
             // 没文字、没图片、没视频不能上传日记
             MessageUtil.showMessage(getActivity(), R.string.msg_no_content);
             return;
@@ -1333,7 +1463,6 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
         LogUtil.d(TAG, "params: " + requestInfo.jsonParam);
         callBack.setLinkType(CallBack.LINK_TYPE_PUT_WALL);
         mHttpTools.put(requestInfo, PUT_WALL, callBack);
-
     }
 
     private String getPhotoCaptionByPosition(int position) {
@@ -1550,7 +1679,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         @Override
         public void onResult(String string) {
-            LogUtil.i(TAG, "onResult# typy: " + linkType + " response: " + string);
+            LogUtil.d(TAG, "onResult# typy: " + linkType + " response: " + string);
             switch (linkType) {
                 case LINK_TYPE_GET_WALL:
                     wall = new Gson().fromJson(string, WallEntity.class);

@@ -43,6 +43,7 @@ import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.share.PreviewVideoActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.ui.wall.DiaryCommentActivity;
+import com.bondwithme.BondWithMe.ui.wall.DiaryInformationFragment;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallViewPicActivity;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
@@ -91,6 +92,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private static final String PUT_PHOTO_MAX = TAG + "_PUT_PHOTO_MAX";
 
     private WallViewClickListener mViewClickListener;
+    private int position = -1;
     private WallEntity wallEntity;
     private HttpTools mHttpTools;
     private Context context;
@@ -304,9 +306,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
             case R.id.tv_wall_agree_count:
             case R.id.tv_love_list:
-                if (Integer.valueOf(wallEntity.getLove_count()) > 0) {
-                    if (mViewClickListener != null) {
-                        mViewClickListener.showLovedMember(accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+                if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
+                    LogUtil.i(TAG, "is ADS can't show member");
+                } else {
+
+                    if (Integer.valueOf(wallEntity.getLove_count()) > 0) {
+                        if (mViewClickListener != null) {
+                            mViewClickListener.showLovedMember(accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
+                        }
                     }
                 }
                 break;
@@ -334,7 +341,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 intent.putExtra(Constant.CONTENT_ID, wallEntity.getContent_id());
                 intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
                 intent.putExtra(Constant.AGREE_COUNT, wallEntity.getLove_count());
-                fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
+                intent.putExtra(Constant.POSITION, position);
+                fragment.startActivityForResult(intent, Constant.INTENT_UPDATE_DIARY);
             }
             break;
 
@@ -351,7 +359,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     }
                 } else {
                     if (mViewClickListener != null) {
-                        mViewClickListener.showComments(wallEntity);
+                        mViewClickListener.showDiaryInformation(wallEntity);
                     }
                 }
                 break;
@@ -416,6 +424,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         String url = UrlUtil.generateUrl(Constant.GET_MULTI_ORIGINALPHOTO, params);
         intent.putExtra(Constant.REQUEST_URL, url);
         intent.putExtra(Constant.USER_ID, wallEntity.getUser_id());
+        intent.putExtra(Constant.POSITION, position);
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_PHOTOS);
     }
 
@@ -424,63 +433,40 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
      */
     private void updateLovedView() {
         int count = Integer.valueOf(wallEntity.getLove_count());
-        //        String text = tvLoveList.getText().toString();
-        //        String name = MainActivity.getUser().getUser_given_name();
         int resId;
 
         if (TextUtils.isEmpty(wallEntity.getLove_id())) {
             count += 1;
             resId = R.drawable.love_press;
             wallEntity.setLove_id(accountUserId);
-
-            //            if(count > 1) {
-            //                text += (name + " ");
-            //            } else {
-            //                text = name;
-            //            }
         } else {
             count -= 1;
             resId = R.drawable.love_normal;
             wallEntity.setLove_id(null);
-
-            //            if(count > 0) {
-            //                StringBuilder temp = new StringBuilder();
-            //                String split;
-            //                split = name + " ";
-            //
-            //                for(String str : text.split(split)) {
-            //                    temp.append(str);
-            //                }
-            //                text = temp.toString();
-            //            } else {
-            //                text = "";
-            //            }
         }
 
         wallEntity.setLove_count(String.valueOf(count));
         ibAgree.setImageResource(resId);
         tvAgreeCount.setText(String.format(tvAgreeCount.getContext().getString(R.string.loves_count), count));
-        //        tvLoveList.setText(text);
     }
 
-    private void doLove(final WallEntity wallEntity, final boolean love) {
-
+    private void doLove(WallEntity wallEntity, boolean love) {
         HashMap<String, String> params = new HashMap<>();
         params.put("content_id", wallEntity.getContent_id());
         params.put("love", love ? "1" : "0");// 0-取消，1-赞
         params.put("user_id", "" + accountUserId);
-
         RequestInfo requestInfo = new RequestInfo(Constant.API_WALL_LOVE, params);
         callBack.setLinkType(CallBack.LINK_TYPE_POST_LOVE);
         mHttpTools.post(requestInfo, POST_LOVE, callBack);
 
     }
 
-    public void setContent(WallEntity wallEntity, final Context context) {
+    public void setContent(WallEntity wallEntity, int position, final Context context) {
 
         this.wallEntity = wallEntity;
+        this.position = position;
 
-        VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(context, nivHead, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, wallEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
 
         String atDescription = wallEntity.getText_description();
         if (TextUtils.isEmpty(atDescription)) {
@@ -566,19 +552,28 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         //            ibDelete.setVisibility(View.GONE);
         //        }
 
+        String feelCode = wallEntity.getDofeel_code();
+        LogUtil.i(TAG, "setContent& feelCode: " + feelCode);
         try {
-            if (this.wallEntity.getDofeel_code() != null) {
-                StringBuilder b = new StringBuilder(this.wallEntity.getDofeel_code());
+            if (!TextUtils.isEmpty(feelCode)) {
+                iv_mood.setVisibility(View.VISIBLE);
+                StringBuilder b = new StringBuilder(feelCode);
                 int charIndex = this.wallEntity.getDofeel_code().lastIndexOf("_");
-                b.replace(charIndex, charIndex + 1, "/");
-
+                if (charIndex > 0 && b.length() > charIndex) {
+                    b.replace(charIndex, charIndex + 1, "/");
+                    String s = String.valueOf(b.charAt(charIndex + 1));
+                    // 为了兼容以前版本把心情名称的首字母都转为大写与当前心情包的文件相匹配
+                    b.replace(charIndex + 1, charIndex + 2, s.toUpperCase());
+                }
+                LogUtil.d(TAG, "setContent& mood: " + b.toString());
                 InputStream is = context.getAssets().open(b.toString());
                 iv_mood.setImageBitmap(BitmapFactory.decodeStream(is));
             } else {
                 iv_mood.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            iv_mood.setVisibility(View.GONE);
+            e.printStackTrace();
+//            iv_mood.setVisibility(View.GONE);
         }
 
         /*location*/
@@ -820,8 +815,10 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private void editDiaryAction() {
         Intent intent;
         intent = new Intent(context, NewDiaryActivity.class);
+        intent.putExtra(Constant.WALL_ENTITY, wallEntity);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
+        intent.putExtra(Constant.POSITION, position);
         fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_WALL);
     }
 
@@ -978,7 +975,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         Map<String, Object> params = new HashMap<>();
         params.put("content_creator_id", accountUserId);
         params.put("content_id", contentId);
-        params.put("photo_index", String.valueOf(index));
+        int photoMax;
+        String photoMaxStr = wallEntity.getPhoto_max();
+        if (TextUtils.isEmpty(photoMaxStr)) {
+            photoMax = 1;
+        } else {
+            photoMax = Integer.valueOf(photoMaxStr) + 1;
+        }
+        params.put("photo_index", String.valueOf(index + photoMax));
         params.put("photo_caption", "");
         params.put("file", f);
         params.put("multiple", multiple ? "1" : "0");
@@ -1005,7 +1009,13 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         @Override
         public void onStart() {
-
+            switch (linkType) {
+                case LINK_TYPE_POST_LOVE:
+                    if (fragment instanceof DiaryInformationFragment) {
+                        ((DiaryInformationFragment) fragment).setProgressVisibility(View.VISIBLE);
+                    }
+                    break;
+            }
         }
 
         @Override
@@ -1049,6 +1059,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 case LINK_TYPE_PUT_PHOTO_MAX:
                     submitLocalPhotos(wallEntity.getContent_id());
                     break;
+                case LINK_TYPE_POST_LOVE:
+                    LogUtil.d(TAG, "onResult& LINK_TYPE_POST_LOVE");
+                    if (fragment instanceof DiaryInformationFragment) {
+                        ((DiaryInformationFragment) fragment).setResultOK(false);
+                        ((DiaryInformationFragment) fragment).setProgressVisibility(View.GONE);
+                    }
+                    break;
+
             }
         }
 
@@ -1058,6 +1076,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 case LINK_TYPE_PUT_PHOTO_MAX:
                 case LINK_TYPE_SUBMIT_PICTURE:
                     mHandler.sendEmptyMessage(ACTION_POST_PHOTOS_FAIL);
+                    break;
+                case LINK_TYPE_POST_LOVE:
+                    if (fragment instanceof DiaryInformationFragment) {
+                        ((DiaryInformationFragment) fragment).setProgressVisibility(View.GONE);
+                    }
                     break;
             }
             e.printStackTrace();
@@ -1082,7 +1105,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 //            String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, accountUserId, photoEntity.getFile_id());
             String picUrl = String.format(Constant.API_GET_PIC, Constant.Module_Original, photoEntity.getUser_id(), photoEntity.getFile_id());
             /**wing modified*/
-            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context), true, new HttpCallback() {
+            mHttpTools.download(App.getContextInstance(), picUrl, PicturesCacheUtil.getCachePicPath(context, false), true, new HttpCallback() {
                 @Override
                 public void onStart() {
                 }
@@ -1090,14 +1113,16 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                 @Override
                 public void onFinish() {
                     downloadCount++;
+                    LogUtil.d(TAG, "debug onFinish& downloadCount = " + downloadCount + "; size = " + data.size());
                     if (downloadCount == data.size()) {
+                        downloadCount = 0;
                         mViewClickListener.savePhotoed(wallEntity, true);
                     }
                 }
 
                 @Override
                 public void onResult(String string) {
-
+                    LogUtil.d(TAG, "debug onResult& response: " + string);
                     /**wing modified*/
                     String path = null;
                     try {
@@ -1107,8 +1132,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         e.printStackTrace();
                     }
                     /**wing modified*/
-
-                    MessageUtil.showMessage(App.getContextInstance(), R.string.msg_action_successed);
                 }
 
                 @Override

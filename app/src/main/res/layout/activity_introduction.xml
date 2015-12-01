@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/introduction_background">
+
+    <!--<FrameLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/_0dp"-->
+    <!--android:layout_weight="8.0">-->
+
+    <com.bondwithme.BondWithMe.widget.viewpager.ScrollerViewPager
+        android:id="@+id/introduction_view_paper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/indicator" />
+
+    <com.bondwithme.BondWithMe.widget.SpringIndicator
+        android:id="@+id/indicator"
+        android:layout_width="146dp"
+        android:layout_height="28dp"
+        android:layout_above="@+id/ll_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/default_view_margin"
+        app:siIndicatorColor="@color/btn_gray_normal"
+        app:siIndicatorColors="@array/indicator_colors"
+        app:siSelectedTextColor="@android:color/white"
+        app:siTextColor="@color/color_primary_dark"
+        app:siTextSize="@dimen/si_default_text_size" />
+    <!--</FrameLayout>-->
+
+
+    <LinearLayout
+        android:id="@+id/ll_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/_12dp"
+        android:layout_marginLeft="@dimen/_12dp"
+        android:layout_marginRight="@dimen/_12dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_sign_up"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/_5dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/btn_stroke_bg"
+            android:gravity="center"
+            android:text="@string/text_start_sign_up"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_medium_size" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_5dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/btn_stroke_bg"
+            android:gravity="center"
+            android:text="@string/text_start_log_in"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_medium_size" />
+    </LinearLayout>
+</RelativeLayout>

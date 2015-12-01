@@ -27,13 +27,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.adapter.StickerHorizontalRecyclerAdapter;
 import com.bondwithme.BondWithMe.adapter.StickerHorizontalRecyclerNewAdapter;
 import com.bondwithme.BondWithMe.dao.LocalStickerInfoDao;
 import com.bondwithme.BondWithMe.interfaces.StickerViewClickListener;
 import com.bondwithme.BondWithMe.ui.more.sticker.StickerStoreActivity;
 import com.bondwithme.BondWithMe.util.AnimatedGifDrawable;
-import com.bondwithme.BondWithMe.util.AppInfoUtil;
 import com.bondwithme.BondWithMe.util.AudioPlayUtils;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.widget.NoScrollGridView;
@@ -111,7 +109,7 @@ public class StickerMainNewFragment extends BaseFragment<MainActivity> {
         @Override
         public void run() {
             super.run();
-            List<String> stickerList = LocalStickerInfoDao.getInstance(mContext).queryAllSticker();
+            List<String> stickerList = LocalStickerInfoDao.getInstance(mContext).queryAllSticker(true);
             for (String string : stickerList) {
                 if ("stickers".equals(MainActivity.STICKERS_NAME)) {
                     MainActivity.STICKERS_NAME = new LocalStickerInfoDao(mContext).getSavePath();
@@ -119,7 +117,7 @@ public class StickerMainNewFragment extends BaseFragment<MainActivity> {
                 String path = MainActivity.STICKERS_NAME + File.separator + string + File.separator + "S";
                 File file = new File(path);
                 if (!file.exists()) {
-                    break;
+                    continue;
                 }
                 File[] files = file.listFiles();
                 if (null != files && files.length > 0) {
@@ -148,7 +146,7 @@ public class StickerMainNewFragment extends BaseFragment<MainActivity> {
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AudioPlayUtils.stopAudio();
+                AudioPlayUtils.getManager().stop();
                 startActivity(new Intent(getActivity(), StickerStoreActivity.class));
             }
         });
@@ -329,7 +327,7 @@ public class StickerMainNewFragment extends BaseFragment<MainActivity> {
                             }
                             String sticker_name = fileName.substring(fileName.lastIndexOf(File.separator) + 1, fileName.lastIndexOf("."));
                             if (mViewClickListener != null) {
-                                AudioPlayUtils.stopAudio();
+                                AudioPlayUtils.getManager().stop();
                                 mViewClickListener.showComments(type, selectStickerName, sticker_name);
                             }
                         }

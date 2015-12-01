@@ -5,10 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -51,7 +57,6 @@ import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.MyTextUtil;
-import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.UIUtil;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.RoundProgressBarWidthNumber;
@@ -72,7 +77,7 @@ import java.util.TimerTask;
 /**
  * Created by quankun on 15/4/24.
  */
-public class MessageChatActivity extends BaseActivity implements View.OnTouchListener, StickerViewClickListener, View.OnLongClickListener {
+public class MessageChatActivity extends BaseActivity implements View.OnTouchListener, StickerViewClickListener, View.OnLongClickListener, SensorEventListener {
     private Context mContext;
 //    private ProgressDialog progressDialog;
     /**
@@ -97,7 +102,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private TextView locationTextView;//地图
     private TextView videoTextView;//视频
     private TextView contactTextView;//名片
-    private TextView sendTextView;//发送按钮
+    private ImageView sendTextView;//发送按钮
     private LinearLayout expandFunctionLinear;//加号
     private LinearLayout stickerLinear;//表情库
 
@@ -184,6 +189,13 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     private boolean isAudition = false;
 
     Map<String, MsgEntity> sendMap = new HashMap<>();
+
+    private AudioPlayUtils playerManager;
+    private Sensor sensor;
+    private PowerManager powerManager;
+    private PowerManager.WakeLock wakeLock;
+    private SensorManager sensorManager;
+    private HeadsetReceiver receiver;
 
     Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -400,6 +412,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     @Override
     protected void titleRightEvent() {
         Intent intent;
+        if (playerManager != null) {
+            playerManager.stop();
+        }
         if (userOrGroupType == 0) {
             intent = new Intent(mContext, FamilyProfileActivity.class);
             intent.putExtra("member_id", groupId);//传进来的,他人个人信息
@@ -468,7 +483,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
 
-        messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm, isGroupChat);
+        playerManager = AudioPlayUtils.getManager();
+        messageChatAdapter = new MessageChatAdapter(mContext, msgList, recyclerView, MessageChatActivity.this, llm, isGroupChat, playerManager);
         recyclerView.setAdapter(messageChatAdapter);
         getMsg(INITIAL_LIMIT, 0, GET_LATEST_MESSAGE);//接收对话消息
         mTimer = new Timer();
@@ -564,6 +580,18 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
         IntentFilter intentFilter = new IntentFilter(StickerStoreActivity.ACTION_FINISHED);
         stickerReceiver = new ModifyStickerReceiver();
         registerReceiver(stickerReceiver, intentFilter);
+
+        powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+
+        receiver = new HeadsetReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_HEADSET_PLUG);
+        filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        registerReceiver(receiver, filter);
     }
 
     @Override
@@ -575,7 +603,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
     protected void onDestroy() {
         super.onDestroy();
         mTimer.cancel();
-        AudioPlayUtils.stopAudio();
+        if (playerManager != null) {
+            playerManager.stop();
+        }
         unregisterReceiver(stickerReceiver);
     }
 
@@ -648,7 +678,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                     if (mlCount != 1) {
                         mlCount = 1;
                     }
-                    AudioPlayUtils.stopAudio();
+                    if (playerManager != null) {
+                        playerManager.stop();
+                    }
                     mic_left.setVisibility(View.VISIBLE);
                     mic_right.setVisibility(View.VISIBLE);
                     bend_line.setVisibility(View.VISIBLE);
@@ -668,6 +700,76 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 return true;
         }
         return false;
+    }
+
+    class HeadsetReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            switch (action) {
+                //插入和拔出耳机会触发此广播
+                case Intent.ACTION_HEADSET_PLUG:
+                    int state = intent.getIntExtra("state", 0);
+                    if (state == 1) {
+                        playerManager.changeToHeadsetMode();
+                    } else if (state == 0) {
+                        playerManager.resume();
+                    }
+                    break;
+                //拔出耳机会触发此广播,拔出不会触发,且此广播比上一个早,故可在此暂停播放,收到上一个广播时在恢复播放
+                case AudioManager.ACTION_AUDIO_BECOMING_NOISY:
+                    playerManager.pause();
+                    playerManager.changeToSpeakerMode();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        //耳机模式下直接返回
+        if (playerManager.getCurrentMode() == AudioPlayUtils.MODE_HEADSET) {
+            return;
+        }
+
+        float value = sensorEvent.values[0];
+        if (playerManager.isPlaying()) {
+            if (value == sensor.getMaximumRange()) {
+                playerManager.changeToSpeakerMode();
+                setScreenOn();
+            } else {
+                playerManager.changeToEarpieceMode();
+                setScreenOff();
+            }
+        } else {
+            if (value == sensor.getMaximumRange()) {
+                playerManager.changeToSpeakerMode();
+                setScreenOn();
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    private void setScreenOff() {
+        if (wakeLock == null) {
+            wakeLock = powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, MessageChatActivity.class.getSimpleName());
+        }
+        wakeLock.acquire();
+    }
+
+    private void setScreenOn() {
+        if (wakeLock != null) {
+            wakeLock.setReferenceCounted(false);
+            wakeLock.release();
+            wakeLock = null;
+        }
     }
 
     class ModifyStickerReceiver extends BroadcastReceiver {
@@ -755,7 +857,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 tvAddNewMember.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AudioPlayUtils.stopAudio();
+                        if (playerManager != null) {
+                            playerManager.stop();
+                        }
                         // Modify start by Jackie, Use custom recorder
                         Intent mIntent = new Intent(MediaData.ACTION_RECORDER_VIDEO);
 //                        Intent mIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -842,8 +946,8 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 break;
             case R.id.mic_iv://语音录制按钮
                 if (isAudition) {
-                    if (AudioPlayUtils.audioIsPlaying()) {
-                        AudioPlayUtils.stopAudio();
+                    if (playerManager != null && playerManager.isPlaying()) {
+                        playerManager.stop();
                         goneView(id_progressbar, null, 0);
                         id_progressbar.setProgress(0);
                         chat_mic_text.setText(MyDateUtils.formatRecordTime(mlCount));
@@ -852,7 +956,11 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                         if (audioFile != null && audioFile.exists()) {
                             handler.removeMessages(PLAY_AUDIO_HANDLER);
                             String path = audioFile.getAbsolutePath();
-                            AudioPlayUtils.getInstance(path, null, null).playAudio();
+//                            AudioPlayUtils.getInstance(path, null, null).playAudio();
+                            if (playerManager == null) {
+                                playerManager = AudioPlayUtils.getManager();
+                            }
+                            playerManager.play(path, null);
                             id_progressbar.setVisibility(View.VISIBLE);
                             id_progressbar.setMax(mlCount);
                             handler.sendEmptyMessage(PLAY_AUDIO_HANDLER);
@@ -864,7 +972,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             case R.id.mic_left://语音录制左边按钮
                 if (isAudition) {
                     isAudition = false;
-                    AudioPlayUtils.stopAudio();
+                    if (playerManager != null) {
+                        playerManager.stop();
+                    }
                     goneView(id_progressbar, null, 0);
                     handler.removeMessages(PLAY_AUDIO_HANDLER);
                     if (audioFile != null && audioFile.exists()) {
@@ -880,7 +990,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
                 break;
             case R.id.mic_right://语音录制右边按钮
                 if (isAudition) {
-                    AudioPlayUtils.stopAudio();
+                    if (playerManager != null) {
+                        playerManager.stop();
+                    }
                     isAudition = false;
                     goneView(id_progressbar, null, 0);
                     mic_left.setImageResource(R.drawable.chat_play);
@@ -1047,7 +1159,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
      * 打开相册
      */
     private void openAlbum() {
-        AudioPlayUtils.stopAudio();
+        if (playerManager != null) {
+            playerManager.stop();
+        }
         intent = new Intent(getApplicationContext(), SelectPhotosActivity.class);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -1153,7 +1267,7 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
 
                 // 如果是调用相机拍照时
                 case REQUEST_HEAD_CAMERA:
-                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP));
+                    uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(mContext, CACHE_PIC_NAME_TEMP,true));
                     handler.sendEmptyMessage(SEN_MESSAGE_FORM_CAMERA);
                     break;
 
@@ -1214,13 +1328,15 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
      * 打开相机
      */
     private void openCamera() {
-        AudioPlayUtils.stopAudio();
+        if (playerManager != null) {
+            playerManager.stop();
+        }
         intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra("camerasensortype", 2);
         // 下面这句指定调用相机拍照后的照片存储的路径
         intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri
                 .fromFile(PicturesCacheUtil.getCachePicFileByName(mContext,
-                        CACHE_PIC_NAME_TEMP)));
+                        CACHE_PIC_NAME_TEMP,true)));
         // 图片质量为高
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         intent.putExtra("return-data", false);
@@ -1260,7 +1376,9 @@ public class MessageChatActivity extends BaseActivity implements View.OnTouchLis
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() > 0) {
-                    AudioPlayUtils.stopAudio();
+                    if (playerManager != null) {
+                        playerManager.stop();
+                    }
                     visibleView(sendTextView, null, 0);
                     goneView(chat_mic_keyboard, null, 0);
                 } else {

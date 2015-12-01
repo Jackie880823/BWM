@@ -8,11 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class ViewPicAdapter extends RecyclerView.Adapter<ViewPicAdapter.VHItem> 
 
     public void add(List<PhotoEntity> newData) {
         data.addAll(newData);
-        notifyItemInserted(data.size());
+        notifyDataSetChanged();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ViewPicAdapter extends RecyclerView.Adapter<ViewPicAdapter.VHItem> 
         if (TextUtils.isEmpty(userId)) {
             userId = memberId;
         }
-        VolleyUtil.initNetworkImageView(mContext, holder.iv_pic, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, photo.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(mContext).display(holder.iv_pic, String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, photo.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
     }
 
 

@@ -136,7 +136,7 @@ public class DiaryInformationAdapter extends RecyclerView.Adapter<ViewHolder> {
             PhotoEntity entity = data.get(position - 1);
             imageHolder.setCaption(entity.getPhoto_caption());
             Uri uri;
-            String url = String.format(Constant.API_GET_PIC, Constant.Module_preview_m, userId, entity.getFile_id());
+            String url = String.format(Constant.API_GET_PIC, Constant.Module_Original, userId, entity.getFile_id());
             uri = Uri.parse(url);
             LogUtil.d(TAG, "onBindViewHolder& DiaryPhotoEntity uri: " + uri.toString());
             imageHolder.setImage(uri);
@@ -146,7 +146,7 @@ public class DiaryInformationAdapter extends RecyclerView.Adapter<ViewHolder> {
                     Intent intent = new Intent(context, WallViewPicActivity.class);
                     intent.putExtra(Constant.REQUEST_URL, request_url);
                     intent.putExtra(Constant.USER_ID, userId);
-                    intent.putExtra(Constant.POSITION, position - 1);
+                    intent.putExtra(Constant.PHOTO_POSITION, position - 1);
                     fragment.startActivityForResult(intent, Constant.INTENT_REQUEST_UPDATE_PHOTOS);
                 }
             });

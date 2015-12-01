@@ -33,6 +33,7 @@ import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.PushApi;
 import com.bondwithme.BondWithMe.util.SystemUtil;
 import com.bondwithme.BondWithMe.util.UniversalImageLoaderUtil;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
@@ -63,6 +64,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     private static final int CHECK_DELAY = 500;
     private Runnable check;
     private Handler handler;
+
 
     /**
      * 通知记录,方便count
@@ -248,6 +250,22 @@ public class App extends MultiDexApplication implements Application.ActivityLife
             changeLoginedUser(user);
 
         }
+    }
+
+    public static boolean isInteractiveTipFinish(){
+        if(appContext != null){
+            if(PreferencesUtil.getValue(appContext, InteractivePopupWindow.INTERACTIVE_TIP_TAG_POST,false) &&
+                    PreferencesUtil.getValue(appContext, InteractivePopupWindow.INTERACTIVE_TIP_SAVE_EVENT,false)){
+                return true;
+            }else {
+                return false;
+            }
+
+        }else {
+            return true;
+        }
+
+
     }
 
     public static void initToken(String user_login_id, AppTokenEntity tokenEntity) {
@@ -520,6 +538,7 @@ public class App extends MultiDexApplication implements Application.ActivityLife
                 notificaationGroupList.clear();
         }
     }
+
 
     @Override
     public void OnConnect(int netType) {

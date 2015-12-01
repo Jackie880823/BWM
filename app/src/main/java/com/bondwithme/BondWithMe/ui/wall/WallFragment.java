@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +30,10 @@ import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.WallUtil;
+import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
 import com.bondwithme.BondWithMe.widget.MyDialog;
 import com.bondwithme.BondWithMe.widget.MySwipeRefreshLayout;
 import com.google.gson.Gson;
@@ -89,6 +94,33 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     private boolean loading;
     LinearLayoutManager llm;
     private String member_id;//根据member查看的wall
+    public InteractivePopupWindow popupWindow;
+    private static final int GET_DELAY = 0x28;
+
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case GET_DELAY:
+                    String popText = getParentActivity().getResources().getString(R.string.text_tip_add_diary);
+                    if (TextUtils.isEmpty(popText)) return;
+
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popText, 0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            //存储本地
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, true);
+
+                        }
+                    });
+                    popupWindow.showPopupWindow(true);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void initView() {
@@ -238,6 +270,34 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
 
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (MainActivity.IS_INTERACTIVE_USE && !PreferencesUtil.getValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, false)) {
+                if (InteractivePopupWindow.firstOpPop) {
+                    String popText = getParentActivity().getResources().getString(R.string.text_tip_add_diary);
+                    if (TextUtils.isEmpty(popText)) return;
+
+                    popupWindow = new InteractivePopupWindow(getParentActivity(), getParentActivity().rightButton, popText, 0);
+                    popupWindow.setDismissListener(new InteractivePopupWindow.PopDismissListener() {
+                        @Override
+                        public void popDismiss() {
+                            PreferencesUtil.saveValue(getParentActivity(), InteractivePopupWindow.INTERACTIVE_TIP_ADD_DIARY, true);
+                            //存储本地
+                        }
+                    });
+                    popupWindow.showPopupWindow(true);
+                } else {
+                    handler.sendEmptyMessageDelayed(GET_DELAY, 1000);
+                    InteractivePopupWindow.firstOpPop = true;
+                }
+            }
+
+        }
+
+    }
+
     private void reInitDataStatus() {
         swipeRefreshLayout.setRefreshing(false);
         isRefresh = false;
@@ -252,15 +312,18 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     }
 
     /**
-     * 显示Wall详情包括评论
+     * 显示Wall详情
      */
     @Override
-    public void showComments(WallEntity wallEntity) {
+    public void showDiaryInformation(WallEntity wallEntity) {
         Intent intent;
         intent = new Intent(getActivity(), DiaryInformationActivity.class);
+        intent.putExtra(Constant.WALL_ENTITY, wallEntity);
         intent.putExtra(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
         intent.putExtra(Constant.GROUP_ID, wallEntity.getGroup_id());
-        startActivityForResult(intent, Constant.INTENT_REQUEST_COMMENT_WALL);
+        int position = adapter.getData().indexOf(wallEntity);
+        intent.putExtra(Constant.POSITION, position);
+        startActivityForResult(intent, Constant.INTENT_UPDATE_DIARY);
     }
 
     /**
@@ -302,16 +365,16 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
      */
     @Override
     public void remove(WallEntity wallEntity) {
-        showDeleteDialog(wallEntity.getContent_group_id());
+        showDeleteDialog(wallEntity);
     }
 
-    private void showDeleteDialog(final String content_group_id) {
+    private void showDeleteDialog(final WallEntity wallEntity) {
         removeAlertDialog = new MyDialog(getActivity(), getActivity().getString(R.string.text_tips_title), getActivity().getString(R.string.alert_diary_del));
         removeAlertDialog.setButtonAccept(getActivity().getString(R.string.ok), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, content_group_id), null);
+                RequestInfo requestInfo = new RequestInfo(String.format(Constant.API_WALL_DELETE, wallEntity.getContent_group_id()), null);
                 new HttpTools(getActivity()).put(requestInfo, PUT_REMOVE, new HttpCallback() {
                     @Override
                     public void onStart() {
@@ -326,7 +389,8 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     @Override
                     public void onResult(String string) {
 //                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                        refresh();
+                        int index = adapter.getData().indexOf(wallEntity);
+                        adapter.notifyItemRemoved(index);
                     }
 
                     @Override
@@ -383,7 +447,7 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     @Override
     public void addPhotoed(WallEntity wallEntity, boolean succeed) {
         if (succeed) {
-            refresh();
+            refresh(adapter.getData().indexOf(wallEntity));
         } else {
             if (vProgress != null) {
                 vProgress.setVisibility(View.GONE);
@@ -411,6 +475,35 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         LogUtil.i("WallFragment", "onActivityResult& requestCode = " + requestCode + "; resultCode = " + resultCode);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
+                case Constant.INTENT_UPDATE_DIARY: { // 更新了评论
+                    if (data == null) {
+                        return;
+                    }
+                    List<WallEntity> wallEntities = adapter.getData();
+
+                    int position = data.getIntExtra(Constant.POSITION, -1);
+                    LogUtil.d(TAG, "onActivityResult& position: " + position);
+
+                    if (position >= 0 && position < wallEntities.size()) {
+                        WallEntity wallEntity;
+                        wallEntity = (WallEntity) data.getSerializableExtra(Constant.WALL_ENTITY);
+                        if (wallEntity != null) {
+                            wallEntities.set(position, wallEntity);
+                            adapter.notifyItemChanged(position);
+                        }
+
+                        String commentCount = data.getStringExtra(Constant.COMMENT_COUNT);
+                        if (!TextUtils.isEmpty(commentCount)) {
+                            wallEntity = wallEntities.get(position);
+                            if (!wallEntity.getComment_count().equals(commentCount)) {
+                                wallEntity.setComment_count(commentCount);
+                                adapter.notifyItemChanged(position);
+                            }
+                        }
+                    }
+                }
+                break;
+
                 case Constant.INTENT_REQUEST_CREATE_WALL:
                     //wait a mement for the pic handle on server
                     try {
@@ -418,11 +511,21 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                case Constant.INTENT_REQUEST_COMMENT_WALL: // 更新了评论
-                case Constant.INTENT_REQUEST_UPDATE_WALL: // 更新了日志
-                case Constant.INTENT_REQUEST_UPDATE_PHOTOS: // 更新了图片的日志
                     refresh();
                     break;
+                case Constant.INTENT_REQUEST_UPDATE_WALL: // 更新了日志
+                case Constant.INTENT_REQUEST_UPDATE_PHOTOS:// 更新了图片的日志
+                {
+                    if (data == null) {
+                        LogUtil.w(TAG, "onActivityResult& result data is null");
+                        return;
+                    }
+
+                    int position = data.getIntExtra(Constant.POSITION, -1);
+                    refresh(position);
+                }
+                break;
+
                 case Constant.INTENT_REQUEST_HEAD_MULTI_PHOTO:
                     if (data != null && holder != null) {
                         ArrayList<Uri> pickUris;
@@ -448,5 +551,65 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
         isRefresh = true;
         startIndex = 0;
         requestData();
+    }
+
+    /**
+     * 刷新，重新获取指定项数据
+     */
+    private void refresh(final int position) {
+
+        final List<WallEntity> wallEntities = adapter.getData();
+        if (position < 0 || position >= wallEntities.size()) {
+            return;
+        }
+
+        WallEntity wallEntity = wallEntities.get(position);
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constant.CONTENT_GROUP_ID, wallEntity.getContent_group_id());
+        params.put(Constant.USER_ID, MainActivity.getUser().getUser_id());
+
+        String GET_DETAIL = "GET_DELAY";
+        new HttpTools(getContext()).get(Constant.API_WALL_DETAIL, params, GET_DETAIL, new HttpCallback() {
+            WallEntity wall;
+
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                if (wall == null) {
+                    getParentActivity().finish();
+                } else {
+                    wallEntities.set(position, wall);
+                    adapter.notifyItemChanged(position);
+                    vProgress.setVisibility(View.GONE);
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onResult(String response) {
+                LogUtil.i(TAG, "request& onResult# response: " + response);
+                wall = new Gson().fromJson(response, WallEntity.class);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(getActivity(), R.string.msg_action_failed);
+                getParentActivity().finish();
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
     }
 }

@@ -177,7 +177,7 @@ public class GroupNameSettingActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (PersonalPictureActivity.RESULT_OK == resultCode) {
+        if (RESULT_OK == resultCode) {
 
             switch (requestCode) {
                 case REQUEST_PHOTO:

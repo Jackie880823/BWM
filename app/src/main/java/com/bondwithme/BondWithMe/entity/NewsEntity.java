@@ -7,23 +7,6 @@ import java.io.Serializable;
  */
 public class NewsEntity implements Serializable {
 
-    //旧的news API
-//    private String action_user_id;
-//    private String receiver_user_id;
-//    private String reference_id;
-//    private String module_id;
-//    private String module_name;
-//    private String module_action;
-//    private String message_variable;
-//    private String status;
-//    private String creation_date;
-//    private String action_username;
-//    private String postowner_username;
-//    private String message;
-//    "release_date": "2015-09-24 00:00:00", //news datetime
-//    "release_timestamp": "1443052800", //news timestamp
-
-
     //新的news API
     private String release_date;     //news datetime
     private String release_timestamp;//news timestamp
@@ -32,6 +15,15 @@ public class NewsEntity implements Serializable {
     private String image;            //news image
     private String video;            //news video
     private String video_thumbnail;  //news video thumbnail
+    private boolean visibleOfTvMore;
+
+    public boolean isVisibleOfTvMore() {
+        return visibleOfTvMore;
+    }
+
+    public void setVisibleOfTvMore(boolean visibleOfTvMore) {
+        this.visibleOfTvMore = visibleOfTvMore;
+    }
 
     public String getRelease_date() {
         return release_date;

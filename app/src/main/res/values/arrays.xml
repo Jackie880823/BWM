@@ -660,4 +660,19 @@
         <item>263,ZW</item>
     </string-array>
 
+    <array name="indicator_colors">
+        <item>@color/indicator_1</item>
+        <item>@color/indicator_1</item>
+        <item>@color/indicator_1</item>
+        <item>@color/indicator_1</item>
+        <item>@color/indicator_1</item>
+    </array>
+
+    <string-array name="introduction_descriptions">
+        <item>@string/introduction_description_1</item>
+        <item>@string/introduction_description_2</item>
+        <item>@string/introduction_description_3</item>
+        <item>@string/introduction_description_4</item>
+        <item>@string/introduction_description_5</item>
+    </string-array>
 </resources>

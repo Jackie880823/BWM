@@ -186,3 +186,5 @@
 -dontwarn org.piwik.sdk.**
 -keep class org.piwik.sdk.** {*;}
 -keepclassmembers class org.piwik.sdk.** { *; }
+
+-dontwarn javax.annotation.**

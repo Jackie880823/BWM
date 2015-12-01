@@ -148,7 +148,6 @@
     <string name="text_message_user">Send a Message</string>
     <string name="text_add_new_member">Add New Member</string>
     <string name="text_create_new_group">Create New Group</string>
-    <string name="ftext_view_profile_family">View Profile</string>
     <string name="text_i_miss_you">I Miss You !</string>
     <string name="text_path_relationship"><![CDATA[Path & Relationship]]></string>
     <string name="text_send_message">Send Message</string>
@@ -475,8 +474,6 @@
     <string name="text_start_re_enter_password">Re-enter New Password</string>
     <string name="text_start_password_reset">Reset Password </string>
     <string name="text_start_successful">SUCCESSFUL!</string>
-    <string name="facebook_app_id">1655238261362116</string>
-    <!--<string name="facebook_app_id">802726666512653</string>-->
     <string name="text_start_third_party_prompt">Please enter your phone number to confirm your identity.</string>
     <string name="title_start_select_account">Select Account</string>
     <string name="text_start_thank_you">Thank you for signing up!</string>
@@ -651,8 +648,7 @@
     <string name="text_wall_view_pic_edit_no_change">Captions are not change</string>
     <string name="no_photo_2_save">No Photo to Save!</string>
     <string name="add_photo_before_title">Please remove your video before you can add new photo.</string>
-    <string name="text_add_caption">add caption</string>
-    
+
     <string name="text_add_members_search_hint">Search by ID/Username/Phone Number</string>
     <string name="text_add_members_options_head">Add family member to chat. share moments and create events. Start bonding now!</string>
     <string name="text_add_members_via_contact">Add via Contacts</string>
@@ -660,4 +656,25 @@
     <string name="text_add_members_qq">QQ Account</string>
     <string name="text_add_members_content">Members you may know</string>
 
+    <string name="text_add_caption">Add caption</string>
+
+    <string name="text_tip_add_member">Add member to build family tree and view their live updates in Diary.</string>
+    <string name="text_tip_add_photo">Write a post and add photos.</string>
+    <string name="text_tip_add_diary">Add your first diary.</string>
+    <string name="text_tip_feeling">How are you feeling?</string>
+    <string name="text_tip_tag_member">Tag members and they will receive alert.</string>
+    <string name="text_tip_allow_me">Allow only me to view or share to all members?</string>
+    <string name="text_tip_location">Where is the location?</string>
+    <string name="text_tip_tap_post">Tap to post.</string>
+    <string name="text_tip_create_event">Start creating upcoming event.</string>
+    <string name="text_tip_save_event">Save your event.</string>
+    <string name="text_tip_add_member_chatting">Add member to start chatting. </string>
+    <string name="text_tip_select_member_chatting">Select member to start chatting.</string>
+    <string name="text_tip_Download_stickie">Download fun stickies.</string>
+    <string name="introduction_description_1">A private and secure \nfamily social networking platform \nthat enables you to stay connected, \nmake plans and share special moments \nwith your family members, no matter \nwhere they are.</string>
+    <string name="introduction_description_2">Express your \nthoughts and feelings \nwith our fun Stickies!</string>
+    <string name="introduction_description_3">Organise \nfamily gatherings \nand Events easily.</string>
+    <string name="introduction_description_4">Share precious moments \nin your Diary, privately with \nyour loved ones.</string>
+    <string name="introduction_description_5">Connect \nwith your family members \nindividually or in a group chat.</string>
+    <string name="diary_hint">Share your moment here</string>
 </resources>
