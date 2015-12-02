@@ -95,16 +95,16 @@ public class Constant {
     /**
      * for api
      */
-//    public static final String API_SERVER = "http://dev.bondwith.me";
-//    public static final int TRACKER_SITE_ID = 3;//dev
+    public static final String API_SERVER = "http://dev.bondwith.me";
+    public static final int TRACKER_SITE_ID = 3;//dev
 
 
 //    public static final String API_SERVER = "http://pt.bondwith.me";
 //    public static final int TRACKER_SITE_ID = 4;//pt
 
 
-    public static final int TRACKER_SITE_ID = 5;//m
-    public static final String API_SERVER = "http://m.bondwith.me";
+//    public static final int TRACKER_SITE_ID = 5;//m
+//    public static final String API_SERVER = "http://m.bondwith.me";
 
 
     public static final String API_CHECK_VERSION = API_SERVER + "/bondwithme/index.php/api/appVersion";
@@ -157,7 +157,7 @@ public class Constant {
     public static final String API_GET_PHOTO = API_SERVER + "/bondwithme/index.php/api/%s/%s/fid/profile";
 
     /**
-     * 获取视频的链接，两个参数：1.content_creator_id; 2.视频文件名称
+     * 获取视频的链接，两个参数：1.content_creator_id; 2.视频文件名称`
      */
     public static final String API_GET_VIDEO = API_SERVER + "/bondwithme/index.php/api/video_preview/%s/fid/%s";
 
