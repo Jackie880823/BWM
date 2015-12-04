@@ -73,7 +73,7 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 itemView.llPrompt.setVisibility(View.GONE);
             }
 
-            VolleyUtil.initNetworkImageView(mContext, itemView.cni, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position - 1).getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            VolleyUtil.initNetworkImageView(mContext, itemView.cni, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position - 1).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             itemView.tvName.setText(mData.get(position - 1).getUser_given_name());
         }
     }

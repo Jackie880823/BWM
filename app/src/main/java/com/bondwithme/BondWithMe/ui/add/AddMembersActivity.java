@@ -1,4 +1,4 @@
-package com.bondwithme.BondWithMe.ui;
+package com.bondwithme.BondWithMe.ui.add;
 
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -12,6 +12,8 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.AddMembersAdapter;
 import com.bondwithme.BondWithMe.entity.RecommendEntity;
+import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;

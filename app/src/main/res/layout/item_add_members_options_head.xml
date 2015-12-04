@@ -51,6 +51,7 @@
         android:id="@+id/ll_facebook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,6 +81,7 @@
         android:id="@+id/ll_qq"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
