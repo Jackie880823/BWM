@@ -17,6 +17,7 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.EventAdapter;
 import com.bondwithme.BondWithMe.entity.BirthdayEntity;
 import com.bondwithme.BondWithMe.entity.EventEntity;
+import com.bondwithme.BondWithMe.entity.UpdateEvent;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
@@ -32,6 +33,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -111,6 +114,14 @@ public class EventFragment extends BaseFragment<MainActivity> {
                         popupWindowAddPhoto.showPopupWindowUp();
                     }
                     break;
+                case Constant.ACTION_EVENT_UPDATE_BIRTHDAY:
+                    swipeRefreshLayout.setRefreshing(true);
+                    isRefresh = true;
+                    startIndex = 0;
+                    eventStart.setVisibility(View.GONE);
+                    requestData();
+                    break;
+
             }
         }
     };
@@ -186,7 +197,17 @@ public class EventFragment extends BaseFragment<MainActivity> {
                     InteractivePopupWindow.firstOpPop = true;
                 }
             }
+            EventBus.getDefault().registerSticky(this);
 
+        }else {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    public void onEventMainThread(UpdateEvent event) {
+        if(event.getCount() == Constant.ACTION_EVENT_UPDATE_BIRTHDAY){
+            EventBus.getDefault().removeStickyEvent(event);
+            handler.sendEmptyMessage(Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
         }
     }
 
@@ -206,15 +227,8 @@ public class EventFragment extends BaseFragment<MainActivity> {
                 case Constant.ACTION_EVENT_CREATE:
                 case Constant.ACTION_EVENT_UPDATE:
                 case Constant.ACTION_EVENT_UPDATE_BIRTHDAY:
-                    swipeRefreshLayout.setRefreshing(true);
-                    isRefresh = true;
-                    startIndex = 0;
-                    eventStart.setVisibility(View.GONE);
-                    requestData();
+                    handler.sendEmptyMessage(Constant.ACTION_EVENT_UPDATE_BIRTHDAY);
                     break;
-//                case 3:
-//                    requestData();
-//                    break;
 
             }
         }
