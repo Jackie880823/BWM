@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_only_me"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_text_padding">
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_medium_size"
+            android:text="@string/text_only_me"
+            android:paddingLeft="@dimen/_10dp"
+            android:drawableLeft="@drawable/privacy_lock"
+            android:drawablePadding="@dimen/_10dp"
+            android:layout_centerVertical="true"/>
+
+
+        <RadioButton
+            android:id="@+id/rb_only_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_10dp"
+            android:button="@null"
+            android:background="@drawable/rbtn_green"
+            android:clickable="false"
+            />
+
+    </RelativeLayout>
+
+    <View style="@style/split_line_default" />
+
+    <RelativeLayout
+
+        android:id="@+id/re_all_member"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_text_padding">
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_medium_size"
+            android:text="@string/text_all_member"
+            android:drawableLeft="@drawable/privacy_open"
+            android:drawablePadding="@dimen/_10dp"
+            android:paddingLeft="@dimen/_10dp"
+            android:layout_centerVertical="true"/>
+
+
+        <RadioButton
+            android:id="@+id/rb_all_member"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_10dp"
+            android:button="@null"
+            android:background="@drawable/rbtn_green"
+            android:clickable="false"
+
+
+            />
+
+    </RelativeLayout>
+
+    <View style="@style/split_line_default" />
+    <RelativeLayout
+        android:id="@+id/rl_public"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_text_padding">
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_medium_size"
+            android:text="@string/text_public"
+            android:drawableLeft="@drawable/public_icon_small"
+            android:drawablePadding="@dimen/_10dp"
+            android:paddingLeft="@dimen/_10dp"
+            android:layout_centerVertical="true"/>
+
+
+        <RadioButton
+            android:id="@+id/rb_public"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/_10dp"
+            android:button="@null"
+            android:background="@drawable/rbtn_green"
+            android:clickable="false"
+            />
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>
