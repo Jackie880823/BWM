@@ -201,7 +201,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     private boolean isDetailed;
 
-
     private List<CompressBitmapTask> tasks = new ArrayList<>();
     private List<Uri> localPhotos = new ArrayList<>();
     private CallBack callBack = new CallBack();
