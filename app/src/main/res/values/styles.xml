@@ -1,7 +1,4 @@
-<resources
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/com.bondwithme.BondWithMe"
-    >
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/com.bondwithme.BondWithMe">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -238,7 +235,7 @@
         <item name="android:windowExitAnimation">@anim/snackbar_hide_animation</item>
     </style>
 
-    <style name="RedPoint" >
+    <style name="RedPoint">
         <item name="android:layout_width">@dimen/default_icon_width_height</item>
         <item name="android:layout_height">@dimen/default_icon_width_height</item>
         <item name="android:visibility">gone</item>
@@ -251,24 +248,34 @@
     </style>
 
     <style name="custom_dialog_no_dim" parent="@android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item><!--Dialog的windowFrame框为无 -->
-        <item name="android:windowIsFloating">true</item><!-- 是否漂现在activity上 -->
-        <item name="android:windowIsTranslucent">true</item><!-- 是否半透明 -->
+        <item name="android:windowFrame">@null</item>
+        <!--Dialog的windowFrame框为无 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否漂现在activity上 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 是否半透明 -->
         <item name="android:windowNoTitle">true</item>
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:windowBackground">@android:color/transparent</item><!--  去除黑色边框的关键设置项 -->
-        <item name="android:backgroundDimEnabled">false</item><!--屏幕背景是否变暗-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--  去除黑色边框的关键设置项 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!--屏幕背景是否变暗-->
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
 
     <style name="custom_dialog_with_dim" parent="@android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item><!--Dialog的windowFrame框为无 -->
-        <item name="android:windowIsFloating">true</item><!-- 是否漂现在activity上 -->
-        <item name="android:windowIsTranslucent">true</item><!-- 是否半透明 -->
+        <item name="android:windowFrame">@null</item>
+        <!--Dialog的windowFrame框为无 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 是否漂现在activity上 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 是否半透明 -->
         <item name="android:windowNoTitle">true</item>
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:windowBackground">@android:color/transparent</item><!--  去除黑色边框的关键设置项 -->
-        <item name="android:backgroundDimEnabled">true</item><!--屏幕背景是否变暗-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--  去除黑色边框的关键设置项 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!--屏幕背景是否变暗-->
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
 
@@ -279,6 +286,7 @@
         <item name="android:background">@color/high_light_color</item>
 
     </style>
+
     <style name="checkbox_default" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:layout_width">@dimen/_24dp</item>
         <item name="android:layout_height">@dimen/_24dp</item>
@@ -303,63 +311,59 @@
         <item name="android:button">@drawable/chat_expression</item>
     </style>
 
-    <style name="Widget_GifView" >
+    <style name="Widget_GifView">
         <!-- Customize your theme here. -->
     </style>
 
 
-
-    <style name="et_start_default" >
-        <item name="android:layout_width"> match_parent </item>
-        <item name="android:layout_height"> wrap_content </item>
-        <item name="android:padding"> @dimen/default_content_padding </item>
+    <style name="et_start_default">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/default_content_padding</item>
         <item name="android:background">@drawable/bg_stroke_corners_gray</item>
-        <item name="android:singleLine"> true </item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <style name="et_start_username" parent="et_start_default">
-        <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
-        <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
-        <item name="android:textSize"> @dimen/text_medium_size</item>
+        <item name="android:layout_marginRight">@dimen/default_content_padding</item>
+        <item name="android:layout_marginLeft">@dimen/default_content_padding</item>
+        <item name="android:textSize">@dimen/text_medium_size</item>
         <item name="android:inputType">text</item>
         <item name="android:hint">@string/text_start_username</item>
     </style>
 
     <style name="et_start_details_name" parent="et_start_default">
-        <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
-        <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
-        <item name="android:textSize"> @dimen/text_medium_size</item>
+        <item name="android:layout_marginRight">@dimen/default_content_padding</item>
+        <item name="android:layout_marginLeft">@dimen/default_content_padding</item>
+        <item name="android:textSize">@dimen/text_medium_size</item>
         <item name="android:inputType">text</item>
     </style>
 
     <style name="et_start_code" parent="et_start_default">
-        <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
-        <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
-        <item name="android:textSize"> @dimen/_30dp</item>
+        <item name="android:layout_marginRight">@dimen/default_content_padding</item>
+        <item name="android:layout_marginLeft">@dimen/default_content_padding</item>
+        <item name="android:textSize">@dimen/_30dp</item>
         <item name="android:gravity">center</item>
         <item name="android:inputType">numberSigned</item>
         <item name="android:hint">@string/text_start_enter_code</item>
     </style>
 
     <style name="et_start_phone" parent="et_start_default">
-        <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
-        <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
-        <item name="android:textSize"> @dimen/text_medium_size</item>
+        <item name="android:layout_marginRight">@dimen/default_content_padding</item>
+        <item name="android:layout_marginLeft">@dimen/default_content_padding</item>
+        <item name="android:textSize">@dimen/text_medium_size</item>
         <item name="android:inputType">numberSigned</item>
         <item name="android:digits">0123456789</item>
         <item name="android:hint">@string/text_start_phone_number</item>
     </style>
 
     <style name="et_start_password" parent="et_start_default">
-        <item name="android:layout_marginRight"> @dimen/default_content_padding</item>
-        <item name="android:layout_marginLeft"> @dimen/default_content_padding</item>
-        <item name="android:textSize"> @dimen/text_medium_size</item>
+        <item name="android:layout_marginRight">@dimen/default_content_padding</item>
+        <item name="android:layout_marginLeft">@dimen/default_content_padding</item>
+        <item name="android:textSize">@dimen/text_medium_size</item>
         <item name="android:inputType">textPassword</item>
         <item name="android:hint">@string/text_start_password</item>
     </style>
-
-
-
 
 
     <style name="tv_btn_start_default">
@@ -386,9 +390,6 @@
     </style>
 
 
-
-
-
     <style name="tv_start_default">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -407,7 +408,7 @@
     <style name="tv_start_country_code" parent="tv_start_default">
         <item name="android:minWidth">@dimen/activity_horizontal_margin</item>
         <item name="android:maxLength">6</item>
-        <item name="android:padding"> @dimen/default_content_padding </item>
+        <item name="android:padding">@dimen/default_content_padding</item>
         <item name="android:textSize">@dimen/text_medium_size</item>
         <item name="android:textColor">@color/default_text_color_dark</item>
         <item name="android:inputType">numberSigned</item>
@@ -420,13 +421,15 @@
     <style name="paper_button_style">
         <item name="android:layout_height">54dp</item>
         <item name="com.bondwithme.BondWithMe:paper_color">@color/tab_color_press4</item>
-        <item name="com.bondwithme.BondWithMe:paper_text_color">@color/default_text_color_dark</item>
+        <item name="com.bondwithme.BondWithMe:paper_text_color">@color/default_text_color_dark
+        </item>
     </style>
 
     <style name="text_empty_pages" parent="text_default">
         <item name="android:textColor">@color/default_text_color_dark</item>
         <item name="android:textSize">17dp</item>
     </style>
+
     <style name="NumberProgressBar_Default">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -445,12 +448,27 @@
     </style>
 
     <style name="sticker_dialog" parent="@android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item><!--边框-->
-        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
-        <item name="android:windowIsTranslucent">false</item><!--半透明-->
-        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowFrame">@null</item>
+        <!--边框-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item>
+        <!--半透明-->
+        <item name="android:windowNoTitle">true</item>
+        <!--无标题-->
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@color/transparent_color</item><!--背景透明-->
-        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+        <item name="android:windowBackground">@color/transparent_color</item>
+        <!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!--模糊-->
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

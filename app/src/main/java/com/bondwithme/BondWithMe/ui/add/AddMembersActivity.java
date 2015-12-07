@@ -55,6 +55,12 @@ public class AddMembersActivity extends BaseActivity {
     }
 
     @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+        rightButton.setImageResource(R.drawable.qrcode_button_icon);
+    }
+
+    @Override
     public void initView() {
         rv = getViewById(R.id.rv);
         vProgress = getViewById(R.id.rl_progress);
