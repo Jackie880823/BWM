@@ -63,7 +63,7 @@
                 android:layout_centerVertical="true"
                 android:scaleType="centerInside"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/add_member_press"/>
+                android:src="@drawable/add_member_icon"/>
     </RelativeLayout>
 
     <View
