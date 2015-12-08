@@ -1,16 +1,19 @@
 package com.bondwithme.BondWithMe.ui.share;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.Build;
+import android.support.v4.app.Fragment;
+import android.support.v7.internal.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -22,6 +25,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
+import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -30,6 +34,7 @@ import com.google.common.io.Files;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 /**
  * 浏览视频的{@link Activity}传入{@value #CONTENT_CREATOR_ID}和{@value #VIDEO_FILENAME}对应的值来获取
@@ -39,7 +44,7 @@ import java.io.IOException;
  * @author Jackie
  * @version 1.0
  */
-public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPreparedListener {
+public class PreviewVideoActivity extends BaseActivity implements MediaPlayer.OnPreparedListener {
 
     private static final String TAG = PreviewVideoActivity.class.getSimpleName();
 
@@ -79,8 +84,6 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
      */
     private VideoView videoView;
 
-    private ImageView imgSave;
-
     /**
      * 视频下载进度提示
      */
@@ -93,42 +96,39 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
 
     private String target;
 
+    @Override
+    public int getLayout() {
+        return R.layout.activity_preview_video;
+    }
+
     /**
-     * Called when the activity is starting.  This is where most initialization
-     * should go: calling {@link #setContentView(int)} to inflate the
-     * activity's UI, using {@link #findViewById} to programmatically interact
-     * with widgets in the UI, calling
-     * {@link #managedQuery(Uri, String[], String, String[], String)} to retrieve
-     * cursors for data being displayed, etc.
-     * <p/>
-     * <p>You can call {@link #finish} from within this function, in
-     * which case onDestroy() will be immediately called without any of the rest
-     * of the activity lifecycle ({@link #onStart}, {@link #onResume},
-     * {@link #onPause}, etc) executing.
-     * <p/>
-     * <p><em>Derived classes must call through to the super class's
-     * implementation of this method.  If they do not, an exception will be
-     * thrown.</em></p>
-     *
-     * @param savedInstanceState If the activity is being re-initialized after
-     *                           previously being shut down then this Bundle contains the data it most
-     *                           recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
-     * @see #onStart
-     * @see #onSaveInstanceState
-     * @see #onRestoreInstanceState
-     * @see #onPostCreate
+     * 初始底部栏，没有可以不操作
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    protected void initBottomBar() {
 
-        setContentView(R.layout.activity_preview_video);
+    }
 
-        videoView = (VideoView) findViewById(R.id.preview_video_view);
-        pbDownload = (NumberProgressBar) findViewById(R.id.download_progress);
-        imgSave = (ImageView) findViewById(R.id.img_save_video);
+    /**
+     * 设置title
+     */
+    @Override
+    protected void setTitle() {
+
+    }
+
+    /**
+     * TitilBar 右边事件
+     */
+    @Override
+    protected void titleRightEvent() {
+        popUpMenu();
+    }
+
+    @Override
+    public void initView() {
+        videoView = getViewById(R.id.preview_video_view);
+        pbDownload = getViewById(R.id.download_progress);
 
         MediaController controller = new MediaController(this);
         controller.setAnchorView(videoView);
@@ -137,6 +137,31 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
         videoView.setMediaController(controller);
         videoView.setOnPreparedListener(this);
         videoView.setKeepScreenOn(true);
+    }
+
+    @Override
+    protected void initTitleBar() {
+        super.initTitleBar();
+
+        // 需要新的图
+        titleBar.setBackgroundColor(Color.BLACK);
+        leftButton.setImageResource(R.drawable.back_press);
+        rightButton.setImageResource(R.drawable.option_dots_view);
+    }
+
+    @Override
+    public void requestData() {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    protected Fragment getFragment() {
+        return null;
     }
 
     /**
@@ -186,7 +211,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
             downloadVideo(url, target);
         } else {
             pbDownload.setVisibility(View.GONE);
-            imgSave.setVisibility(View.GONE);
+            rightButton.setVisibility(View.GONE);
             Uri video = Uri.parse(data.getStringExtra(EXTRA_VIDEO_URI));
             if (video != null && !Uri.EMPTY.equals(video)) {
                 videoView.setVideoURI(video);
@@ -293,20 +318,42 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
         mp.start();
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.img_save_video:
-                if (!TextUtils.isEmpty(target)) {
-                    try {
-                        File saveFile = FileUtil.saveVideoFile(this, true);
-                        LogUtil.i(TAG, "save video to " + saveFile.getPath());
-                        Files.copy(new File(target), saveFile);
-                        MessageUtil.showMessage(this, this.getString(R.string.saved_to_path) + saveFile.getPath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private void popUpMenu() {
+        android.support.v7.widget.PopupMenu popupMenu = new android.support.v7.widget.PopupMenu(this, rightButton);
+        popupMenu.getMenuInflater().inflate(R.menu.preview_video_menu, popupMenu.getMenu());
+
+
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_save_video:
+                        if (!TextUtils.isEmpty(target)) {
+                            try {
+                                File saveFile = FileUtil.saveVideoFile(PreviewVideoActivity.this, true);
+                                LogUtil.i(TAG, "save video to " + saveFile.getPath());
+                                Files.copy(new File(target), saveFile);
+                                MessageUtil.showMessage(PreviewVideoActivity.this, PreviewVideoActivity.this.getString(R.string.saved_to_path) + saveFile.getPath());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        break;
                 }
-                break;
+                return true;
+            }
+        });
+
+        try {
+            Field field = popupMenu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+            mHelper.setForceShowIcon(true);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
         }
+
+        popupMenu.show();
     }
 }

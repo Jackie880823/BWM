@@ -401,7 +401,7 @@
     <string name="text_group">Group</string>
     <string name="hint_comment_input">Type a comment…</string>
     <string name="text_character_and"><![CDATA[" & "]]></string>
-    <string name="saved_to_path">Photo saved to this device.</string>
+    <string name="saved_to_path">Saved to this device.</string>
     <string name="location_search_error">Location not found.</string>
 
     <string name="morning">AM</string>
@@ -638,6 +638,7 @@
 
     <string name="add_photo_to_this_post">Add Photo to this Post</string>
     <string name="save_all_photos">Save All Photos</string>
+    <string name="save_all_video">Save Video</string>
     <string name="edit_this_post">Edit this Post</string>
     <string name="delete_this_post">Delete this Post</string>
 

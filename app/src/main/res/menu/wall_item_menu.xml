@@ -9,7 +9,7 @@
         android:title="@string/add_photo_to_this_post" />
 
     <item
-        android:id="@+id/menu_save_all_photos"
+        android:id="@+id/menu_save_all_medias"
         android:icon="@drawable/option_save_all_photo"
         android:orderInCategory="90"
         android:title="@string/save_all_photos" />
