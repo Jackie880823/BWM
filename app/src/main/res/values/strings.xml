@@ -669,4 +669,11 @@
     <string name="introduction_description_4">Share precious moments \nin your Diary, privately with \nyour loved ones.</string>
     <string name="introduction_description_5">Connect \nwith your family members \nindividually or in a group chat.</string>
     <string name="diary_hint">Share your moment here</string>
+
+    <string name="profile_privacy">Profile\'s Privacy</string>
+    <string name="year_of_birth">Year of Birth</string>
+    <string name="text_public">Public</string>
+    <string name="text_only_me">Only Me</string>
+    <string name="text_all_member">All Member</string>
+
 </resources>

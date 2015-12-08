@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -23,9 +24,12 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.NumberProgressBar;
+import com.google.common.io.Files;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * 浏览视频的{@link Activity}传入{@value #CONTENT_CREATOR_ID}和{@value #VIDEO_FILENAME}对应的值来获取
@@ -66,7 +70,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
     /**
      * 视频存放路径
      */
-    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance(),false) + "/Video/";
+    public static final String VIDEO_PATH = FileUtil.getCacheFilePath(App.getContextInstance(), false) + "/Video/";
 
     /**
      * 播放视频控件，用于播放传入的{@link #CONTENT_CREATOR_ID}和{@link #VIDEO_FILENAME}的值对应在远程服务器中的视频
@@ -74,6 +78,8 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
      * @see VideoView
      */
     private VideoView videoView;
+
+    private ImageView imgSave;
 
     /**
      * 视频下载进度提示
@@ -84,6 +90,8 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
      * 下载视频的请求
      */
     private DownloadRequest request;
+
+    private String target;
 
     /**
      * Called when the activity is starting.  This is where most initialization
@@ -120,6 +128,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
 
         videoView = (VideoView) findViewById(R.id.preview_video_view);
         pbDownload = (NumberProgressBar) findViewById(R.id.download_progress);
+        imgSave = (ImageView) findViewById(R.id.img_save_video);
 
         MediaController controller = new MediaController(this);
         controller.setAnchorView(videoView);
@@ -157,29 +166,29 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
         Intent data = getIntent();
         String fileName = data.getStringExtra(VIDEO_FILENAME);
         Log.i(TAG, "onResume& fileName: " + fileName);
-        if(!TextUtils.isEmpty(fileName)) {
+        if (!TextUtils.isEmpty(fileName)) {
             String createdContentId = data.getStringExtra(CONTENT_CREATOR_ID);
             String url = String.format(Constant.API_GET_VIDEO, createdContentId, fileName);
 
             /*******为适应news、rewards中的视频下载，添加如下代码 **********/
-            if(createdContentId.equals("for_news_or_rewards")){
+            if (createdContentId.equals("for_news_or_rewards")) {
                 url = fileName;
                 fileName = url.substring(url.lastIndexOf('/') + 1);
-                LogUtil.d(TAG,"fileName" + fileName);
+                LogUtil.d(TAG, "fileName" + fileName);
             }
 
             String targetParent = VIDEO_PATH;
-            String target;
-            File file = new File(targetParent);
-            boolean canWrite = file.exists() || file.mkdir();
+            File cacheFile = new File(targetParent);
+            boolean canWrite = cacheFile.exists() || cacheFile.mkdir();
             //.....
-            target = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(this,false) + String.format("/%s", fileName);
+            target = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(this, false) + String.format("/%s", fileName);
 
             downloadVideo(url, target);
         } else {
             pbDownload.setVisibility(View.GONE);
+            imgSave.setVisibility(View.GONE);
             Uri video = Uri.parse(data.getStringExtra(EXTRA_VIDEO_URI));
-            if(video != null && !Uri.EMPTY.equals(video)){
+            if (video != null && !Uri.EMPTY.equals(video)) {
                 videoView.setVideoURI(video);
             }
         }
@@ -216,7 +225,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(request != null && !request.isCanceled()) {
+        if (request != null && !request.isCanceled()) {
             // 下载还在进行，需要停止下载
             request.stopDownload();
 
@@ -225,7 +234,7 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
 
     private void downloadVideo(String url, final String target) {
         Log.i(TAG, "downloadVideo& url: " + url + "; target: " + target);
-        request = new HttpTools(this).download(App.getContextInstance(),url, target, true, new HttpCallback() {
+        request = new HttpTools(this).download(App.getContextInstance(), url, target, true, new HttpCallback() {
             @Override
             public void onStart() {
                 pbDownload.setVisibility(View.VISIBLE);
@@ -248,9 +257,9 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
 
             @Override
             public void onError(Exception e) {
-                LogUtil.i(TAG, "downloadVideo&onLoading$ onError: " );
+                LogUtil.i(TAG, "downloadVideo&onLoading$ onError: ");
                 e.printStackTrace();
-                if(videoView.isPlaying()) {
+                if (videoView.isPlaying()) {
                     videoView.stopPlayback();
                 }
                 finish();
@@ -282,5 +291,22 @@ public class PreviewVideoActivity extends Activity implements MediaPlayer.OnPrep
     public void onPrepared(MediaPlayer mp) {
         //        videoView.setBackgroundResource(R.color.transparent_color);
         mp.start();
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.img_save_video:
+                if (!TextUtils.isEmpty(target)) {
+                    try {
+                        File saveFile = FileUtil.saveVideoFile(this, true);
+                        LogUtil.i(TAG, "save video to " + saveFile.getPath());
+                        Files.copy(new File(target), saveFile);
+                        MessageUtil.showMessage(this, this.getString(R.string.saved_to_path) + saveFile.getPath());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+        }
     }
 }
