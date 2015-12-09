@@ -98,9 +98,6 @@
     <string name="mail_subject_1">General Inquiry</string>
     <string name="mail_subject_2">Suggestion &amp; Feedback</string>
     <string name="mail_subject_3">Report a Problem</string>
-    <string name="text_sending">	\t Sending …</string>
-    <string name="text_waiting">	\t Waiting …</string>
-    <string name="text_loading">	\t Loading …</string>
     <string name="text_search_contact">Search here</string>
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">Please select at least 1 member.</string>
@@ -217,7 +214,7 @@
     <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" >	]]></string>
     <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
     <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" >	]]></string>
-    <string name="photo_position_no_arrow">	%1$d/%2$d</string>
+    <string name="photo_position_no_arrow"> %1$d/%2$d</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -16,12 +16,12 @@ import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -187,7 +187,10 @@ public class FamilyViewProfileActivity extends BaseActivity {
 //                DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
 //                tvBirthday.setText(dateFormat.format(date));
             }else {
-                tvBirthday.setText(this.getResources().getStringArray(R.array.months)[date.getMonth()] + " " + date.getDate());
+                /**wing modified for system month name desc*/
+//                tvBirthday.setText(this.getResources().getStringArray(R.array.months)[date.getMonth()] + " " + date.getDate());
+                tvBirthday.setText(MyDateUtils.getMonthNameArray(false)[date.getMonth()] + " " + date.getDate());
+                /**wing modified for system month name desc*/
             }
         }
     }
