@@ -399,7 +399,7 @@
     <string name="text_group">群组列表</string>
     <string name="hint_comment_input">亲，您有什么评论呢？</string>
     <string name="text_character_and"><![CDATA[" & "]]></string>
-    <string name="saved_to_path">照片已保存到设备上。</string>
+    <string name="saved_to_path">已保存到设备上。</string>
     <string name="location_search_error">地点未找到。</string>
 
     <string name="morning">上午</string>
@@ -635,6 +635,7 @@
 
     <string name="add_photo_to_this_post">添加照片到帖子</string>
     <string name="save_all_photos">保存所有照片</string>
+    <string name="save_all_video">保存视频</string>
     <string name="edit_this_post">编辑帖子</string>
     <string name="delete_this_post">删除帖子</string>
 
