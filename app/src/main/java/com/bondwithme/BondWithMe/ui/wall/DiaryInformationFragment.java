@@ -446,15 +446,15 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
     }
 
     @Override
-    public void savePhotoed(WallEntity wallEntity, boolean succeed) {
+    public void saved(WallEntity wallEntity, boolean succeed) {
         setProgressVisibility(View.GONE);
         if (!succeed) {
-            LogUtil.e(TAG, "save Photo Fail");
+            LogUtil.e(TAG, "save Fail");
         }
     }
 
     @Override
-    public void onSavePhoto() {
+    public void onSave() {
         setProgressVisibility(View.VISIBLE);
     }
 

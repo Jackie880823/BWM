@@ -98,9 +98,6 @@
     <string name="mail_subject_1">一般咨询</string>
     <string name="mail_subject_2">建议 &amp; 反馈</string>
     <string name="mail_subject_3">报告问题</string>
-    <string name="text_sending">\t 发送中 &#8230;</string>
-    <string name="text_waiting">\t 请稍等 &#8230;</string>
-    <string name="text_loading">\t 加载中 &#8230;</string>
     <string name="text_search_contact">在此处搜索</string>
     <string name="text_relationship">关系</string>
     <string name="msg_no_contact_select">请至少选择1名成员。</string>
@@ -402,7 +399,7 @@
     <string name="text_group">群组列表</string>
     <string name="hint_comment_input">亲，您有什么评论呢？</string>
     <string name="text_character_and"><![CDATA[" & "]]></string>
-    <string name="saved_to_path">照片已保存到设备上。</string>
+    <string name="saved_to_path">已保存到设备上。</string>
     <string name="location_search_error">地点未找到。</string>
 
     <string name="morning">上午</string>
@@ -638,6 +635,7 @@
 
     <string name="add_photo_to_this_post">添加照片到帖子</string>
     <string name="save_all_photos">保存所有照片</string>
+    <string name="save_all_video">保存视频</string>
     <string name="edit_this_post">编辑帖子</string>
     <string name="delete_this_post">删除帖子</string>
 
@@ -669,4 +667,10 @@
     <string name="introduction_description_4">在日记中与您的家人分享珍贵的时刻。</string>
     <string name="introduction_description_5">与家人通过单独或群聊保持联系。</string>
     <string name="diary_hint">在此分享你的时刻</string>
+
+    <string name="profile_privacy">Profile\'s Privacy</string>
+    <string name="year_of_birth">Year of Birth</string>
+    <string name="text_public">Public</string>
+    <string name="text_only_me">Only Me</string>
+    <string name="text_all_member">All Member</string>
 </resources>
