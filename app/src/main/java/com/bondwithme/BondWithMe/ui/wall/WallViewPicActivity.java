@@ -293,7 +293,9 @@ public class WallViewPicActivity extends BaseActivity {
             Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
             if (bitmap != null && !bitmap.isRecycled()) {
                 try {
-                    String path = PicturesCacheUtil.saveImageToGallery(this, bitmap, "wall");
+                    String path = PicturesCacheUtil.getPicPath(this,"wall");
+                    PicturesCacheUtil.saveToFile(path, bitmap);
+                    PicturesCacheUtil.saveImageToGallery(this, path, "wall");
                     MessageUtil.showMessage(this, this.getString(R.string.saved_to_path) + path);
                 } catch (Exception e) {
                     MessageUtil.showMessage(this, R.string.msg_action_failed);

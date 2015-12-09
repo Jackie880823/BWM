@@ -9,6 +9,7 @@ import com.bondwithme.BondWithMe.R;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.logging.Logger;
@@ -62,7 +63,29 @@ public class MyDateUtils extends android.text.format.DateUtils {
         if (fullFormat) {
             format_flags |= (DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME);
         }
+        Calendar cal = Calendar.getInstance();
         return DateUtils.formatDateTime(context, when, format_flags);
+    }
+
+    private static int[] months = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+
+    /**
+     * 获取1-12月的当前语言name array
+     * @param isFullName true显示全名,false显示缩写
+     * @return String[]
+     */
+    public static String[] getMonthNameArray(boolean isFullName) {
+        String[] xVals = new String[months.length];
+
+        for (int i = 0; i < months.length; i++) {
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat month_date = new SimpleDateFormat(isFullName?"MMMM":"MMM");
+            cal.set(Calendar.MONTH, months[i]);
+            String month_name = month_date.format(cal.getTime());
+
+            xVals[i]=month_name;
+        }
+        return xVals;
     }
 
     public static String EventformatTimeStampString(Context context, long when, boolean fullFormat) {
@@ -154,15 +177,16 @@ public class MyDateUtils extends android.text.format.DateUtils {
 
     /**
      * 得到时区的GMT偏移量
+     *
      * @return
      */
-    public static int getZoneTime(){
+    public static int getZoneTime() {
         int time;
         TimeZone timeZone = TimeZone.getDefault();
         //判断是否是夏利令时
-        if(timeZone.inDaylightTime(new Date()) && timeZone.useDaylightTime()){
+        if (timeZone.inDaylightTime(new Date()) && timeZone.useDaylightTime()) {
             time = timeZone.getRawOffset() + 3600000;
-        }else {
+        } else {
             time = timeZone.getRawOffset();
         }
         return time;
@@ -178,6 +202,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
 
     /**
      * 本地时间戳转带时区的字符default(yyy-MM-dd HH:mm:ss)形式
+     *
      * @param timestamp
      * @return
      */
@@ -260,7 +285,7 @@ public class MyDateUtils extends android.text.format.DateUtils {
     }
 
     public static String formatDuration(long duration) {
-        return DateUtils.formatElapsedTime(duration/1000);
+        return DateUtils.formatElapsedTime(duration / 1000);
     }
 
 //    public static String getUTCDateFromNowTime(Context context) {

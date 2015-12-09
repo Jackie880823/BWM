@@ -197,13 +197,21 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
             videoCursor = new CursorLoader(getActivity(), MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, select, null, videoOrderBy).loadInBackground();
         }
 
-
+        // 查找到的数据条目总数,用于初始化显示所有的媒体数据的ArrayList的大小
+        int dataCount = 0;
+        if (imageCursor != null) {
+            dataCount += imageCursor.getCount();
+        }
+        if (videoCursor != null) {
+            dataCount += videoCursor.getCount();
+        }
         String bucketsFirst = getParentActivity().getString(R.string.text_all);
-        ArrayList<MediaData> recent;
-        recent = new ArrayList<>();
+        ArrayList<MediaData> allMedias;
+        allMedias = new ArrayList<>(dataCount);
+        mMediaUris.put(bucketsFirst, allMedias);
+
         buckets = new ArrayList<>();
         buckets.add(bucketsFirst);
-        mMediaUris.put(bucketsFirst, recent);
 
         initHandler();
 
@@ -389,9 +397,9 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
     private void refreshAdapter() {
         if ((videoCursor == null || videoCursor.isClosed()) && (imageCursor == null || imageCursor.isClosed())) {
 
-            ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
+            ArrayList<MediaData> allMedias = mMediaUris.get(getParentActivity().getString(R.string.text_all));
             SortMediaComparator comparator = new SortMediaComparator();
-            Collections.sort(nearest, comparator);
+            Collections.sort(allMedias, comparator);
 
             getParentActivity().runOnUiThread(adapterRefresh);
         }
@@ -402,17 +410,12 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      */
     private void loadVideos() {
         synchronized (LOADER_VIDEO) {
-            if (videoCursor != null && !videoCursor.isClosed()) {
+            if (videoCursor != null && !videoCursor.isClosed() && videoCursor.getCount() > 0) {
 
                 String bucket;
                 bucket = getParentActivity().getString(R.string.text_video);
                 buckets.add(1, bucket);
-
-                if (videoCursor.isClosed()) {
-                    return;
-                }
-
-                mMediaUris.put(bucket, new ArrayList<MediaData>());
+                mMediaUris.put(bucket, new ArrayList<MediaData>(videoCursor.getCount()));
 
                 int uriColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns._ID);
                 int pathColumnIndex = videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.DATA);
@@ -526,11 +529,11 @@ public class SelectPhotosFragment extends BaseFragment<SelectPhotosActivity> {
      * @param mediaData data about of url
      */
     private synchronized void addToMediaMap(String bucket, MediaData mediaData) {
-        ArrayList<MediaData> nearest = mMediaUris.get(getParentActivity().getString(R.string.text_all));
-        nearest.add(mediaData);
-        if (nearest.size() == 50) {
+        ArrayList<MediaData> allMedias = mMediaUris.get(getParentActivity().getString(R.string.text_all));
+        allMedias.add(mediaData);
+        if (allMedias.size() == 50) {
             SortMediaComparator comparator = new SortMediaComparator();
-            Collections.sort(nearest, comparator);
+            Collections.sort(allMedias, comparator);
         }
 
         if (mMediaUris.containsKey(bucket)) {
