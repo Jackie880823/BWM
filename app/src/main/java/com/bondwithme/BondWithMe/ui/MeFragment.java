@@ -68,7 +68,6 @@ public class MeFragment extends BaseFragment<MeActivity> {
         rlWallPosting = getViewById(R.id.rl_wall_posting);
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
-//        headUrl = MainActivity.getUser().getProfile_url_ori();
         BitmapTools.getInstance(getActivity()).display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
 //        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());

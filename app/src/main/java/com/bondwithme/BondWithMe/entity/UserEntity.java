@@ -82,9 +82,6 @@ public class UserEntity implements Serializable {
 
     private String own_flag;
 
-    private String profile_url_ori;
-    private String profile_url;
-
     public String getJoin_group() {
         return join_group;
     }
@@ -483,21 +480,5 @@ public class UserEntity implements Serializable {
 
     public void setStickers(ForeignCollection<LocalStickerInfo> stickers) {
         this.stickers = stickers;
-    }
-
-    public String getProfile_url_ori() {
-        return profile_url_ori;
-    }
-
-    public void setProfile_url_ori(String profile_url_ori) {
-        this.profile_url_ori = profile_url_ori;
-    }
-
-    public String getProfile_url() {
-        return profile_url;
-    }
-
-    public void setProfile_url(String profile_url) {
-        this.profile_url = profile_url;
     }
 }
