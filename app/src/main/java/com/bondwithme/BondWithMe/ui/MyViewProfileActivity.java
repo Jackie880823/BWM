@@ -444,14 +444,9 @@ public class MyViewProfileActivity extends BaseActivity {
                 tvYearBirthday.setText(YearBirthday);
             }else {
                 int year = date.getYear() + 1900;
-<<<<<<< HEAD
-                tvBirthday.setText(date.getDate() + " " + this.getResources().getStringArray(R.array.months)[date.getMonth()]);
+//                tvBirthday.setText(date.getDate() + " " + this.getResources().getStringArray(R.array.months)[date.getMonth()]);
+                tvBirthday.setText(date.getDate() + " " + MyDateUtils.getMonthNameArray(false)[date.getMonth()]);
                 tvYearBirthday.setText(String.valueOf(year));
-=======
-                /**wing modified for system month name desc*/
-                tvBirthday.setText(MyDateUtils.getMonthNameArray(false)[date.getMonth()] + " " + date.getDate() + ", "  + String.valueOf(year));
-                /**wing modified for system month name desc*/
->>>>>>> 88f54315fd6daf8c186c295608ccc9b6fda12851
             }
         }
     }

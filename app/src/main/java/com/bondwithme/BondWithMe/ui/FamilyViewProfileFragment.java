@@ -21,6 +21,7 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -283,7 +284,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             }else {
 //                tvBirthday.setText(this.getResources().getStringArray(R.array.months)[date.getMonth()] + " " + date.getDate());
                 int year = date.getYear() + 1900;
-                tvBirthday.setText(date.getDate() + " " + this.getResources().getStringArray(R.array.months)[date.getMonth()]);
+                tvBirthday.setText(date.getDate() + " " + MyDateUtils.getMonthNameArray(false)[date.getMonth()]);
                 tvYearBirthday.setText(String.valueOf(year));
             }
         }
