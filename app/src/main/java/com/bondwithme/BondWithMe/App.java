@@ -69,15 +69,14 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     /**
      * 通知记录,方便count
      */
-    private static List<String> notificaationWallList = new ArrayList<>();
-    private static List<String> notificaationEventList = new ArrayList<>();
-    private static List<String> notificaationMemberList = new ArrayList<>();
-    private static List<String> notificaationMessageList = new ArrayList<>();
-    private static List<String> notificaationMissList = new ArrayList<>();
-    private static List<String> notificaationBigDayList = new ArrayList<>();
-    private static List<String> notificaationNewsList = new ArrayList<>();
-    private static List<String> notificaationRecommendList = new ArrayList<>();
-    private static List<String> notificaationGroupList = new ArrayList<>();
+    private static List<String> notificationWallList = new ArrayList<>();
+    private static List<String> notificationEventList = new ArrayList<>();
+    private static List<String> notificationMemberList = new ArrayList<>();
+    private static List<String> notificationMessageList = new ArrayList<>();
+    private static List<String> notificationMissList = new ArrayList<>();
+    private static List<String> notificationBigDayList = new ArrayList<>();
+    private static List<String> notificationNewsList = new ArrayList<>();
+    private static List<String> notificationGroupList = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -479,23 +478,21 @@ public class App extends MultiDexApplication implements Application.ActivityLife
 
         switch (messageType) {
             case BONDALERT_WALL:
-                return notificaationWallList;
+                return notificationWallList;
             case BONDALERT_EVENT:
-                return notificaationEventList;
+                return notificationEventList;
             case BONDALERT_MEMBER:
-                return notificaationMemberList;
+                return notificationMemberList;
             case BONDALERT_MESSAGE:
-                return notificaationMessageList;
+                return notificationMessageList;
             case BONDALERT_MISS:
-                return notificaationMissList;
+                return notificationMissList;
             case BONDALERT_BIGDAY:
-                return notificaationBigDayList;
+                return notificationBigDayList;
             case BONDALERT_NEWS:
-                return notificaationNewsList;
-            case BONDALERT_RECOMMENDED:
-                return notificaationRecommendList;
+                return notificationNewsList;
             case BONDALERT_GROUP:
-                return notificaationGroupList;
+                return notificationGroupList;
             default:
                 return new ArrayList<>();
         }
@@ -505,37 +502,34 @@ public class App extends MultiDexApplication implements Application.ActivityLife
      * 清除缓存的通知消息
      */
     public static void clearAllNotificationMsgs(){
-        notificaationWallList.clear();
-        notificaationEventList.clear();
-        notificaationMemberList.clear();
-        notificaationMessageList.clear();
-        notificaationMissList.clear();
-        notificaationBigDayList.clear();
-        notificaationNewsList.clear();
-        notificaationRecommendList.clear();
-        notificaationGroupList.clear();
+        notificationWallList.clear();
+        notificationEventList.clear();
+        notificationMemberList.clear();
+        notificationMessageList.clear();
+        notificationMissList.clear();
+        notificationBigDayList.clear();
+        notificationNewsList.clear();
+        notificationGroupList.clear();
     }
 
     public void clearNotificationMsgsByType(NotificationUtil.MessageType messageType) {
         switch (messageType) {
             case BONDALERT_WALL:
-                notificaationWallList.clear();
+                notificationWallList.clear();
             case BONDALERT_EVENT:
-                notificaationEventList.clear();
+                notificationEventList.clear();
             case BONDALERT_MEMBER:
-                notificaationMemberList.clear();
+                notificationMemberList.clear();
             case BONDALERT_MESSAGE:
-                notificaationMessageList.clear();
+                notificationMessageList.clear();
             case BONDALERT_MISS:
-                notificaationMissList.clear();
+                notificationMissList.clear();
             case BONDALERT_BIGDAY:
-                notificaationBigDayList.clear();
+                notificationBigDayList.clear();
             case BONDALERT_NEWS:
-                notificaationNewsList.clear();
-            case BONDALERT_RECOMMENDED:
-                notificaationRecommendList.clear();
+                notificationNewsList.clear();
             case BONDALERT_GROUP:
-                notificaationGroupList.clear();
+                notificationGroupList.clear();
         }
     }
 

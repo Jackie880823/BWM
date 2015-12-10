@@ -33,7 +33,6 @@ import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
-import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.util.NotificationUtil;
 import com.bondwithme.BondWithMe.util.PreferencesUtil;
 import com.bondwithme.BondWithMe.util.ZipUtils;
@@ -546,7 +545,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MISS).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_NEWS).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MEMBER).size() != 0
-                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_RECOMMENDED).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_GROUP).size() != 0
                 ) {
             doSomething(TabEnum.more);

@@ -14,10 +14,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
+import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.io.File;
@@ -32,6 +34,8 @@ public class MeFragment extends BaseFragment<MeActivity> {
     private RelativeLayout llViewProfile;
 
     private CircularNetworkImage cniMain;
+    private NetworkImageView imProfileImages;
+    private NetworkImageView imQrImages;
     private ImageView ivBottomLeft;
     private TextView tvName1;
     private TextView tvId1;
@@ -58,6 +62,8 @@ public class MeFragment extends BaseFragment<MeActivity> {
     @Override
     public void initView() {
         cniMain = getViewById(R.id.cni_main);
+        imProfileImages = getViewById(R.id.iv_profile_images);
+        imQrImages = getViewById(R.id.iv_profile_qr);
         ivBottomLeft = getViewById(R.id.civ_left);
         tvName1 = getViewById(R.id.tv_name1);
         tvId1 = getViewById(R.id.tv_id1);
@@ -69,6 +75,10 @@ public class MeFragment extends BaseFragment<MeActivity> {
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
         BitmapTools.getInstance(getActivity()).display(cniMain, headUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
+        BitmapTools.getInstance(getActivity()).display(imProfileImages, String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id()), R.drawable.my_profile_bunny, R.drawable.my_profile_bunny);
+        BitmapTools.getInstance(getActivity()).display(imQrImages, String.format(Constant.API_GET_PROFILE_QR, MainActivity.getUser().getUser_id()), R.drawable.qrcode_button, R.drawable.qrcode_button);
+
+
 //        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
 //        tvTitle.setText(MainActivity.getUser().getUser_given_name());
@@ -154,39 +164,25 @@ public class MeFragment extends BaseFragment<MeActivity> {
                     if (!TextUtils.isEmpty(data.getStringExtra("name"))) {
                         tvName1.setText(data.getStringExtra("name"));
                     }
-                    Uri new_pic = data.getParcelableExtra("new_pic");
-                    if (new_pic != null) {
-//                            cniMain.setImageDrawable();
-                        cniMain.setImageURI(new_pic);
+                    Uri head_pic = data.getParcelableExtra("head_pic");
+                    Uri background_pic = data.getParcelableExtra("background_pic");
+                    String background_url = background_pic.toString();
+                    if (head_pic != null) {
+                        cniMain.setImageURI(head_pic);
+                    }
+                    if(background_pic != null){
+                        if(background_url.contains("file://")){
+                            imProfileImages.setImageBitmap(BitmapFactory.decodeFile(background_url.substring(background_url.indexOf("file://") + 7)));
+                            LogUtil.w("background_pic_2",background_url.substring(background_url.indexOf("file://") + 7));
+
+
+                        }
                     }
                 }
-//                String etFirstName = data.getStringExtra("name");
-
-
-//                if (resultCode == getActivity().RESULT_OK) {
-//
-//                    getActivity().finish();
-//                    tvName1.setText(data.getStringExtra("name"));
-//                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                Thread.sleep(3 * 1000);
-//                                VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }).start();
-
-//                    initView();
-//                }
-//                break;
 
             default:
         }
+
     }
+
 }

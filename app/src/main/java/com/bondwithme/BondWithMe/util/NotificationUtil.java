@@ -48,7 +48,7 @@ public class NotificationUtil {
      * 通知类型
      */
     public enum MessageType {
-        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_NEWS("news"), BONDALERT_MEMBER("member"), BONDALERT_RECOMMENDED("recommended"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group");
+        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_NEWS("news"), BONDALERT_MEMBER("member"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group"),BONDALERT_INACTIVE("inactive");
         private String typeName;
 
         MessageType(String typeName) {
@@ -356,19 +356,6 @@ public class NotificationUtil {
                 newMsg = NotificationMessageGenerateUtil.getOtherMessage(context, action, jsonObjectExtras);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
-            case BONDALERT_RECOMMENDED:
-                smallIcon = R.drawable.bondalert_recommended_icon;
-
-                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_RECOMMENDED);
-                if (msgs.size() == 0) {
-                    intent = new Intent(context, RecommendActivity.class);
-                } else {
-                    //TODO
-                    intent = new Intent(context, RecommendActivity.class);
-                }
-                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_RECOMMENDED);
-                doNotificationHandle(MainActivity.TabEnum.more);
-                break;
             case BONDALERT_GROUP:
                 smallIcon = R.drawable.bondalert_group_icon;
 
@@ -381,6 +368,15 @@ public class NotificationUtil {
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_GROUP);
                 newMsg = NotificationMessageGenerateUtil.getGroupAlertMessage(context, action, action_owner,item_name);
+                doNotificationHandle(MainActivity.TabEnum.more);
+                break;
+            case BONDALERT_INACTIVE:
+                smallIcon = R.drawable.bondalert_recommended_icon;
+
+                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_INACTIVE);
+                intent = new Intent(context, RecommendActivity.class);
+                intent.putExtra(MSG_TYPE, MessageType.BONDALERT_INACTIVE);
+                newMsg = NotificationMessageGenerateUtil.getInactiveMessage(context, action, action_owner);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
 

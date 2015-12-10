@@ -129,7 +129,6 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 //        BitmapTools.getInstance(getActivity()).display(networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), 0, 0);
 
         networkImageView.setVisibility(View.VISIBLE);
-
 //        BitmapTools.getInstance(mContext).display(holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
 
         if (!TextUtils.isEmpty(getDofeelCode)) {
