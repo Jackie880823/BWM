@@ -124,6 +124,18 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     setDatePrivacy(userEntity.getLocation_flag(),rlRegion);
                     setDatePrivacy(userEntity.getMember_flag(),rlPhone);
 
+
+                    if(bwmId != null){
+                        flMember.setVisibility(View.VISIBLE);
+                        if("0".equals(userEntity.getMember_flag())){
+                            //如果不是好友
+                            btAddMember.setVisibility(View.VISIBLE);
+                        }else if("1".equals(userEntity.getMember_flag())){
+                            //如果是好友
+                            btMessage.setVisibility(View.VISIBLE);
+                        }
+                    }
+
                     tvFirstName.setText(userEntity.getUser_given_name());
                     tvLastName.setText(userEntity.getUser_surname());
                     String strDOB = userEntity.getUser_dob();
@@ -166,6 +178,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         useId = MainActivity.getUser().getUser_id();//MainActivity.
 //        memberId = getParentActivity().getIntent().getStringExtra("member_id");
         bwmId = getParentActivity().getIntent().getStringExtra("bwm_id");
+
         profileBackgroundId = getParentActivity().getIntent().getIntExtra("profile_image_id",6);
         cniMain = getViewById(R.id.cni_main);
         networkImageView = getViewById(R.id.iv_profile_images);
@@ -261,17 +274,6 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             setDatePrivacy(userEntity.getLocation_flag(),rlRegion);
             setDatePrivacy(userEntity.getMember_flag(),rlPhone);
 
-            if(bwmId != null){
-                flMember.setVisibility(View.VISIBLE);
-                if("0".equals(userEntity.getMember_flag())){
-                    //如果不是好友
-                    btAddMember.setVisibility(View.VISIBLE);
-                }else if("1".equals(userEntity.getMember_flag())){
-                    //如果是好友
-                    btMessage.setVisibility(View.VISIBLE);
-                }
-            }
-
             tvName1.setText(userEntity.getUser_given_name());
             tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
             if (userEntity.getUser_phone().length() > 0){
@@ -312,14 +314,13 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     e.printStackTrace();
                 }
             }
+        }else {
+            networkImageView.setDefaultImageResId(profileBackgroundId);
         }
 
 
-//        tvBirthday.setText(strDOB);
-
-
-
     }
+
     private void setTvBirthday(String strDOB) {
         if (strDOB != null && !strDOB.equals("0000-00-00")){
             Date date = null;

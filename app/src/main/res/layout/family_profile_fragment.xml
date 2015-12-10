@@ -399,7 +399,6 @@
                     android:textSize="@dimen/text_large_size"
                     android:visibility="gone"/>
 
-
             <include layout="@layout/progress_layout"/>
 
         </RelativeLayout>
