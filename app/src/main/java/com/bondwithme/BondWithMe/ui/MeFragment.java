@@ -68,16 +68,16 @@ public class MeFragment extends BaseFragment<MeActivity> {
         rlWallPosting = getViewById(R.id.rl_wall_posting);
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
-        BitmapTools.getInstance(getActivity()).display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(getActivity()).display(cniMain, headUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
 //        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
 //        tvTitle.setText(MainActivity.getUser().getUser_given_name());
-        tvId1.setText(getResources().getString(R.string.app_name) + " ID: " + MainActivity.getUser().getDis_bondwithme_id());
+        tvId1.setText(MainActivity.getUser().getDis_bondwithme_id());
         if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
         {
-            tvLoginId.setText(getResources().getString(R.string.login) + " ID: "+MainActivity.getUser().getUser_login_type());
+            tvLoginId.setText(MainActivity.getUser().getUser_login_type());
         }else {
-            tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
+            tvLoginId.setText(MainActivity.getUser().getUser_login_id());
         }
 
         String dofeel_code = MainActivity.getUser().getDofeel_code();

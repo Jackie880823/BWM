@@ -22,6 +22,8 @@
 
     <color name="default_content_bg">#e0e0e0</color>
     <color name="default_split_line">#e8e9ea</color>
+    <color name="default_wide_split_line">#f1f2f2</color>
+
 
     <color name="default_editor_panel_bg">#f7f7f7</color>
     <color name="default_unenable_item_bg">#a6C7C7C7</color><!--  65% -->

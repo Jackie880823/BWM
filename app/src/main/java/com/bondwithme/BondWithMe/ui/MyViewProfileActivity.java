@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
 import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
+import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -61,38 +63,39 @@ import java.util.TimeZone;
 public class MyViewProfileActivity extends BaseActivity {
     private CircularNetworkImage cniMain;
     private ImageView ivBottomLeft;
-    private TextView tvName1;
-    private TextView tvId1;
-    private TextView tvLoginId;
     private LinearLayout llResetPassword;
     private TextView etFirstName;
     private TextView etLastName;
-    //    private TextView tvAge;
-//    private RelativeLayout rlAge;
     private TextView tvBirthday;
-    private RelativeLayout rlBirthday;
+    private TextView tvYearBirthday;
+    private TextView rlBirthday;
     private TextView tvGender;
-    private RelativeLayout rlGender;
+    private TextView rlGender;
     private TextView etEmail;
     private EditText etPhone;
     private EditText etRegion;
+    private TextView tvChange;
+    private NetworkImageView imProfileImages;
+    private View vProgress;
+    private RelativeLayout RlView;
     private Dialog showSelectDialog;
     private Dialog showCameraAlbum;
     private Boolean isUploadName = false;
-//    private Boolean isUploadImage = false;
+    private Boolean isEit = false;
+    private int headOrBackdropImage;
 
-    private Boolean isUploadNameSuccess = false;
+    private Boolean isUploadNameSuccess = true;
     private Boolean isUploadImageSuccess = false;
-
 
     private String userGender;
 
-//    private ProgressDialog progressDialog;
-
-    private final static int REQUEST_PHOTO = 1;
+    private final static int REQUEST_HEAD_PHOTO = 1;
+    private final static int REQUEST_PROFILE_PHOTO = 3;
 
     Uri mCropImagedUri;
-    private String imagePath;
+    Uri mBackdropImagedUri;
+    private String headImagePath;
+    private String backgroundImagePath;
     private Context mContext;
     private String TAG;
 
@@ -119,7 +122,7 @@ public class MyViewProfileActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        rightButton.setImageResource(R.drawable.btn_done);
+        rightButton.setImageResource(R.drawable.edit_profile);
     }
 
     @Override
@@ -129,25 +132,60 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-        if (isHeaderChageed()) {
-            uploadImage();
-        }
-        else if (isProfileChanged()) {
-            updateProfile();
-
-        } else {
-            finish();
+        if(!isEit){
+            rightButton.setImageResource(R.drawable.ok_normal);
+            tvChange.setVisibility(View.VISIBLE);
+            ableEdit(true,RlView);
+            isEit = true;
+        }else {
+            update();
         }
     }
 
     @Override
     protected void titleLeftEvent() {
-//        Log.i("isProfileChanged===",isProfileChanged()+"");
         if (isProfileChanged()) {
             showNoFriendDialog();
         } else {
             super.titleLeftEvent();
         }
+    }
+
+    private void update(){
+
+        if (mCropImagedUri != null) {
+            uploadImage();
+
+        }
+        if(mBackdropImagedUri != null){
+            uploadBackdropImage();
+        }
+
+        //如果没有跟新图片
+        if(mBackdropImagedUri == null && mCropImagedUri == null){
+            if (isProfileChanged()) {
+                updateProfile();
+
+            } else {
+                finish();
+            }
+        }
+
+    }
+
+    private void ableEdit(boolean isEit,ViewGroup viewGroup){
+        if(viewGroup == null)return;
+
+        for(int i = 0; i < viewGroup.getChildCount(); i++){
+            View view = viewGroup.getChildAt(i);
+            if(view instanceof EditText){
+                view.setFocusable(isEit);
+                view.setFocusableInTouchMode(isEit);
+            }else if(view instanceof ViewGroup){
+                this.ableEdit(isEit, (ViewGroup) view);
+            }
+        }
+
     }
 
     private void showNoFriendDialog() {
@@ -176,12 +214,15 @@ public class MyViewProfileActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
-    private boolean isHeaderChageed() {
+    private int isHeaderChanged() {
         if (mCropImagedUri != null) {
-            return true;
+            return 1;
+        }else if(mBackdropImagedUri != null){
+            return 2;
         }
-        return false;
+        return 0;
     }
+
 
     private boolean isProfileChanged() {
         if (!TextUtils.isEmpty(etFirstName.getText().toString().trim()) && !etFirstName.getText().toString().trim().equals(MainActivity.getUser().getUser_given_name())) {
@@ -226,15 +267,6 @@ public class MyViewProfileActivity extends BaseActivity {
         }
         return false;
     }
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            showNoFriendDialog();
-//            return true;
-//        } else {
-//            return super.onKeyDown(keyCode, event);
-//        }
-//    }
 
     @Override
     protected Fragment getFragment() {
@@ -242,7 +274,9 @@ public class MyViewProfileActivity extends BaseActivity {
     }
 
     String headUrl;
+    String backdropHeadUrl;
     BitmapTools mBitmapTools;
+    BitmapTools mBackdropBitmapTools;
 
     @Override
     public void initView() {
@@ -252,9 +286,7 @@ public class MyViewProfileActivity extends BaseActivity {
         TAG = mContext.getClass().getSimpleName();
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
-        tvName1 = getViewById(R.id.tv_name1);
-        tvId1 = getViewById(R.id.tv_id1);
-        tvLoginId = getViewById(R.id.tv_login_id1);
+        RlView = (RelativeLayout) findViewById(R.id.rl_view);
 
         llResetPassword = (LinearLayout)getViewById(R.id.ll_reset_password);
 
@@ -265,30 +297,29 @@ public class MyViewProfileActivity extends BaseActivity {
 //        tvAge = getViewById(R.id.tv_age);
 //        rlAge = getViewById(R.id.rl_age);
         tvBirthday = getViewById(R.id.tv_birthday);
+        tvYearBirthday = getViewById(R.id.tv_year_birthday);
         rlBirthday = getViewById(R.id.rl_birthday);
         tvGender = getViewById(R.id.tv_gender);
         rlGender = getViewById(R.id.rl_gender);
         etEmail = getViewById(R.id.et_email);
         etPhone = getViewById(R.id.et_phone);
         etRegion = getViewById(R.id.et_region);
+        tvChange = getViewById(R.id.tv_change_text);
+        imProfileImages = getViewById(R.id.iv_profile_images);
+        vProgress = getViewById(R.id.rl_progress);
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
-
+        backdropHeadUrl = String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id());
         mBitmapTools = BitmapTools.getInstance(this);
-//        VolleyUtil.initNetworkImageView(MyViewProfileActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+        mBackdropBitmapTools = BitmapTools.getInstance(this);
+//        VolleyUtil.initNetworkImageView(this, imProfileImages, String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id()), 0, 0);
+
         mBitmapTools.display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
-        tvName1.setText(MainActivity.getUser().getUser_given_name());
+        mBackdropBitmapTools.display(imProfileImages,backdropHeadUrl,0,0);
         etFirstName.setText(MainActivity.getUser().getUser_given_name());
         etLastName.setText(MainActivity.getUser().getUser_surname());
         tvTitle.setText(MainActivity.getUser().getUser_given_name());
-        tvId1.setText(getResources().getString(R.string.app_name) + " ID: " + MainActivity.getUser().getDis_bondwithme_id());
-        if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
-        {
-            llResetPassword.setVisibility(View.INVISIBLE);
-            tvLoginId.setText(getResources().getString(R.string.login) + " ID: " + MainActivity.getUser().getUser_login_type());
-        }else {
-            tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
-        }
+
 
 
 //        tvAge.setText(MainActivity.getUser().getUser_dob());//需要做处理，年转为岁数
@@ -297,19 +328,6 @@ public class MyViewProfileActivity extends BaseActivity {
         strDOB = MainActivity.getUser().getUser_dob();
         LogUtil.d(TAG,"strDOB==="+strDOB);
         setTvBirthday(strDOB);
-
-//
-//        if (!TextUtils.isEmpty(MainActivity.getUser().getUser_dob()))
-//        {
-//            Timestamp ts;
-//            ts = Timestamp.valueOf(tvBirthday.getText().toString() + " 00:00:00");
-//            Calendar mCalendar = Calendar.getContextInstance(TimeZone.getDefault());
-//            mCalendar.setTimeInMillis(ts.getTime() + TimeZone.getDefault().getRawOffset());
-//            int age = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date())) -
-//              Integer.parseInt(new SimpleDateFormat("yyy").format(mCalendar.getTime()));
-//            tvAge.setText(String.valueOf(age));
-//        }
-
 
         if ("F".equals(MainActivity.getUser().getUser_gender())) {
             tvGender.setText(getResources().getString(R.string.text_female));
@@ -349,8 +367,6 @@ public class MyViewProfileActivity extends BaseActivity {
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
                 ivBottomLeft.setImageBitmap(bitmap);
 
-//                    Drawable da = Drawable.createFromStream(is, null);
-//                    ivBottomLeft.setImageDrawable(da);
             } catch (IOException e) {
             }
         }
@@ -359,6 +375,8 @@ public class MyViewProfileActivity extends BaseActivity {
         rlGender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!isEit)return;
+
                 showSelectDialog();
             }
         });
@@ -373,22 +391,42 @@ public class MyViewProfileActivity extends BaseActivity {
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCameraAlbum();
+                if(!isEit)return;
+
+                headOrBackdropImage = 1;
+                showCameraAlbum(REQUEST_HEAD_PHOTO,cniMain.getWidth(),cniMain.getHeight());
+
             }
         });
 
         rlBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!isEit)return;
+
                 showDateTimePicker();
             }
         });
+        imProfileImages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isEit)return;
+
+                headOrBackdropImage = 2;
+                showCameraAlbum(REQUEST_PROFILE_PHOTO,imProfileImages.getWidth(),imProfileImages.getHeight());
+
+            }
+        });
+
+        ableEdit(false,RlView);
     }
 
+    //设置生日
     private void setTvBirthday(String strDOB) {
         if (strDOB != null && !strDOB.equals("0000-00-00")){
             Date date = null;
             try {
+//                date = new SimpleDateFormat("yyyy-MM-dd").parse(strDOB);
                 date = new SimpleDateFormat("yyyy-MM-dd").parse(strDOB);
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -396,11 +434,19 @@ public class MyViewProfileActivity extends BaseActivity {
             //不同语言设置不同日期显示
             if (Locale.getDefault().toString().equals("zh_CN")){
 //            tvBirthday.setText(date.getYear()+"年" + date.getMonth() + "月" + date.getDay() + "日");
+//                DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
                 DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-                tvBirthday.setText(dateFormat.format(date));
+                String time = dateFormat.format(date).toString();
+                LogUtil.i("Profile_time",time);
+                String birthday = time.substring(5,time.length());
+                String YearBirthday = time.substring(0,5);
+                tvBirthday.setText(birthday);
+                tvYearBirthday.setText(YearBirthday);
             }else {
                 int year = date.getYear() + 1900;
-                tvBirthday.setText(this.getResources().getStringArray(R.array.months)[date.getMonth()] + " " + date.getDate() + ", "  + String.valueOf(year));
+//                tvBirthday.setText(date.getDate() + " " + this.getResources().getStringArray(R.array.months)[date.getMonth()]);
+                tvBirthday.setText(date.getDate() + " " + MyDateUtils.getMonthNameArray(false)[date.getMonth()]);
+                tvYearBirthday.setText(String.valueOf(year));
             }
         }
     }
@@ -418,11 +464,9 @@ public class MyViewProfileActivity extends BaseActivity {
 
     public void updateProfile() {
         if (!isProfileChanged()) {
-            finish();
+//            finish();
             return;
         }
-
-        isUploadName = true;
 
         if ("Male".equals(tvGender.getText().toString())) {
             userGender = "M";
@@ -447,11 +491,17 @@ public class MyViewProfileActivity extends BaseActivity {
         new HttpTools(MyViewProfileActivity.this).put(requestInfo, TAG, new HttpCallback() {
             @Override
             public void onStart() {
+                isUploadName = true;
+                isUploadNameSuccess = false;
+                if(vProgress.getVisibility() == View.GONE){
+                    vProgress.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             public void onFinish() {
-                finish();
+                isUploadNameSuccess = true;
+                laterFinish();
             }
 
             @Override
@@ -466,7 +516,6 @@ public class MyViewProfileActivity extends BaseActivity {
                         Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_fail_update_information), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_success_update_information), Toast.LENGTH_SHORT).show();
-                        isUploadNameSuccess = true;
                         App.changeLoginedUser(gson.fromJson(response, UserEntity.class));
                         List userList = new ArrayList<UserEntity>();
                         userList.add(gson.fromJson(response, UserEntity.class));
@@ -525,10 +574,10 @@ public class MyViewProfileActivity extends BaseActivity {
         showSelectDialog.show();
     }
 
-    private void showCameraAlbum() {
+    private  void showCameraAlbum(final int requestMember,final int photoWidth, final int photoHeight) {
+        LogUtil.i("photoWidth*photoHeight_1",photoWidth+"*"+photoHeight);
         LayoutInflater factory = LayoutInflater.from(this);
         final View selectIntention = factory.inflate(R.layout.dialog_camera_album, null);
-
         showCameraAlbum = new MyDialog(this, null, selectIntention);
 
         TextView tvCamera = (TextView) selectIntention.findViewById(R.id.tv_camera);
@@ -541,9 +590,14 @@ public class MyViewProfileActivity extends BaseActivity {
                 showCameraAlbum.dismiss();
                 Intent intent = new Intent(MyViewProfileActivity.this, PickAndCropPictureActivity.class);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_CAMERA);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, cniMain.getWidth());
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, cniMain.getHeight());
-                startActivityForResult(intent, REQUEST_PHOTO);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, photoWidth);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, photoHeight);
+                if(headOrBackdropImage == 2){
+                    intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
+                    intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
+                    intent.putExtra(PickAndCropPictureActivity.CACHE_PIC_NAME, "_background");
+                }
+                startActivityForResult(intent, requestMember);
             }
         });
 
@@ -553,9 +607,14 @@ public class MyViewProfileActivity extends BaseActivity {
                 showCameraAlbum.dismiss();
                 Intent intent = new Intent(MyViewProfileActivity.this, PickAndCropPictureActivity.class);
                 intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FROM, PickAndCropPictureActivity.REQUEST_FROM_PHOTO);
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, cniMain.getWidth());
-                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, cniMain.getHeight());
-                startActivityForResult(intent, REQUEST_PHOTO);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_WIDTH, photoWidth);
+                intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_FINAL_HEIGHT, photoHeight);
+                if(headOrBackdropImage == 2){
+                    intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_WIDTH, 16);
+                    intent.putExtra(PickAndCropPictureActivity.FLAG_PIC_ASPECT_HEIGHT, 9);
+                    intent.putExtra(PickAndCropPictureActivity.CACHE_PIC_NAME, "_background");
+                }
+                startActivityForResult(intent, requestMember);
             }
         });
         tv_cancel.setOnClickListener(new View.OnClickListener() {
@@ -569,22 +628,43 @@ public class MyViewProfileActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        Uri imagedUri = null;
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 // 取得裁剪后的图片
-                case REQUEST_PHOTO:
+                case REQUEST_HEAD_PHOTO:
                     if (data != null) {
                         mCropImagedUri = data.getParcelableExtra(PickAndCropPictureActivity.FINAL_PIC_URI);
                         Bitmap photo;
                         try {
-                            imagePath = mCropImagedUri.getPath();
-                            if (!TextUtils.isEmpty(imagePath)) {
+                            headImagePath = mCropImagedUri.getPath();
+                            if (!TextUtils.isEmpty(headImagePath)) {
 //								photo = MediaStore.Images.Media.getBitmap(getContentResolver(), mCropImagedUri);
                                 BitmapFactory.Options options = new BitmapFactory.Options();
                                 options.inPreferredConfig = Bitmap.Config.RGB_565;
                                 photo = BitmapFactory.decodeStream(MyViewProfileActivity.this.getContentResolver().openInputStream(mCropImagedUri), null, options);
                                 if (photo != null) {
-                                    setPicToView(photo);
+                                    setPicToView(cniMain,photo);
+                                }
+                            }
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                case REQUEST_PROFILE_PHOTO:
+                    if (data != null) {
+                        mBackdropImagedUri = data.getParcelableExtra(PickAndCropPictureActivity.FINAL_PIC_URI);
+                        Bitmap photo;
+                        try {
+                            backgroundImagePath = mBackdropImagedUri.getPath();
+                            if (!TextUtils.isEmpty(backgroundImagePath)) {
+//								photo = MediaStore.Images.Media.getBitmap(getContentResolver(), mCropImagedUri);
+                                BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                                photo = BitmapFactory.decodeStream(MyViewProfileActivity.this.getContentResolver().openInputStream(mBackdropImagedUri), null, options);
+                                if (photo != null) {
+                                    setPicToView(imProfileImages,photo);
                                 }
                             }
                         } catch (FileNotFoundException e) {
@@ -604,9 +684,9 @@ public class MyViewProfileActivity extends BaseActivity {
      *
      * @param photo
      */
-    private void setPicToView(Bitmap photo) {
+    private <T extends ImageView>void setPicToView(T view,Bitmap photo) {
         if (photo != null) {
-            cniMain.setImageBitmap(photo);
+            view.setImageBitmap(photo);
         }
     }
 
@@ -621,7 +701,6 @@ public class MyViewProfileActivity extends BaseActivity {
         if (!file.exists()) {
             return;
         }
-//        progressDialog.show();
 
         Map<String, Object> params = new HashMap<>();
         params.put("fileKey", "file");
@@ -634,12 +713,13 @@ public class MyViewProfileActivity extends BaseActivity {
         new HttpTools(this).upload(Constant.API_UPLOAD_PROFILE_PICTURE, params, TAG, new HttpCallback() {
             @Override
             public void onStart() {
-
+                vProgress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFinish() {
-
+                mCropImagedUri = null;
+                laterFinish();
             }
 
             @Override
@@ -649,7 +729,7 @@ public class MyViewProfileActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(response);
                     responseStatus = jsonObject.getString("response_status");
                     if (responseStatus.equals("Fail")) {
-                        Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_update_proPicFail), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, getResources().getString(R.string.text_update_proPicFail), Toast.LENGTH_SHORT).show();
 //                        progressDialog.dismiss();
 
                     } else {
@@ -661,12 +741,14 @@ public class MyViewProfileActivity extends BaseActivity {
                         /**wing modify 20150625 end*/
 
 //                        progressDialog.dismiss();
-                        Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, getResources().getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
                         isUploadImageSuccess = true;
                         intent = new Intent();
                         intent.putExtra("new_pic", Uri.fromFile(file));
                         setResult(RESULT_OK, intent);
-                        updateProfile();
+                        if(!isUploadName){
+                            updateProfile();
+                        }
                     }
                 } catch (JSONException e) {
 //                    progressDialog.dismiss();
@@ -676,8 +758,7 @@ public class MyViewProfileActivity extends BaseActivity {
 
             @Override
             public void onError(Exception e) {
-//                progressDialog.dismiss();
-                Toast.makeText(MyViewProfileActivity.this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -689,6 +770,104 @@ public class MyViewProfileActivity extends BaseActivity {
 
             }
         });
+    }
+
+    private void uploadBackdropImage(){
+        if (mBackdropImagedUri == null) {
+            return;
+        }
+        String path = LocalImageLoader.compressBitmap(this, FileUtil.getRealPathFromURI(this, mBackdropImagedUri), 1080, 608, false);
+        final File file = new File(path);
+//        isUploadImage = true;
+//        File f = new File(FileUtil.getRealPathFromURI(this, mCropImagedUri));
+        if (!file.exists()) {
+            return;
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("fileKey", "file");
+        params.put("fileName", "UploadProfilePicture" + MainActivity.getUser().getUser_id());
+        params.put("mimeType", "image/png");
+        params.put("file", file);
+        params.put("user_id", MainActivity.getUser().getUser_id());
+        new HttpTools(this).upload(Constant.API_POST_PIC_PROFILE, params, TAG, new HttpCallback() {
+            @Override
+            public void onStart() {
+                if(vProgress.getVisibility() == View.GONE){
+                    vProgress.setVisibility(View.VISIBLE);
+                }
+
+            }
+
+            @Override
+            public void onFinish() {
+                mBackdropImagedUri = null;
+                laterFinish();
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    String responseStatus;
+                    JSONObject jsonObject = new JSONObject(response);
+                    responseStatus = jsonObject.getString("response_status");
+                    if (responseStatus.equals("Fail")) {
+//                        Toast.makeText(this, getResources().getString(R.string.text_update_proPicFail), Toast.LENGTH_SHORT).show();
+//                        progressDialog.dismiss();
+
+                    } else {
+                        /**wing modify 20150625 begin*/
+                        //清除缓存
+                        mBackdropBitmapTools.clearMemoryCache();
+                        mBackdropBitmapTools.clearDiskCache(null);
+//                        mBitmapTools.clearMemoryCache(headUrl);
+                        /**wing modify 20150625 end*/
+
+//                        progressDialog.dismiss();
+//                        Toast.makeText(this, getResources().getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
+                        isUploadImageSuccess = true;
+//                        intent = new Intent();
+//                        intent.putExtra("new_pic", Uri.fromFile(file));
+//                        setResult(RESULT_OK, intent);
+                        if(!isUploadName){
+                            updateProfile();
+                        }
+                    }
+                } catch (JSONException e) {
+//                    progressDialog.dismiss();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+//                Toast.makeText(this, getResources().getString(R.string.text_error_try_again), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled() {
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
+    }
+
+    private void laterFinish(){
+        Boolean uploadFinish;
+        if(mCropImagedUri == null && mBackdropImagedUri == null){
+            uploadFinish = true;
+        }else {
+            uploadFinish = false;
+        }
+
+        if(uploadFinish == true && isUploadNameSuccess){
+            vProgress.setVisibility(View.GONE);
+            finish();
+        }
     }
 
     private MyDialog pickDateTimeDialog;
@@ -731,7 +910,7 @@ public class MyViewProfileActivity extends BaseActivity {
                 SimpleDateFormat defaultDateFormat = new SimpleDateFormat("yyy-MM-dd");
                 strDOB = defaultDateFormat.format(mCalendar.getTime());
                 setTvBirthday(strDOB);
-                int age = Integer.parseInt(new SimpleDateFormat("yyyy").format(new java.util.Date())) - Integer.parseInt(new SimpleDateFormat("yyy").format(mCalendar.getTime()));
+                int age = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date())) - Integer.parseInt(new SimpleDateFormat("yyy").format(mCalendar.getTime()));
 //                tvAge.setText(String.valueOf(age));
             }
         });
