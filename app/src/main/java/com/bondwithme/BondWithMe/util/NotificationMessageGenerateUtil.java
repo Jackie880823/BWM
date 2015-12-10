@@ -176,6 +176,14 @@ public class NotificationMessageGenerateUtil {
         return msg;
     }
 
+    /**
+     * 用于可以直接使用的msg(不需要拼装)
+     * @param context
+     * @param action
+     * @param jsonObjectExtras
+     * @return
+     * @throws JSONException
+     */
     public static String getOtherMessage(Context context, String action, JSONObject jsonObjectExtras) throws JSONException {
 
         String msg = null;
@@ -192,6 +200,14 @@ public class NotificationMessageGenerateUtil {
             msg = context.getString(R.string.notification_action_message_pending, action_owner, item_name);
         } else if ("reject".equals(action)) {
             msg = context.getString(R.string.notification_action_message_reject, action_owner, item_name);
+        }
+        return msg;
+    }
+
+    public static String getInactiveMessage(Context context, String action, String action_owner) throws JSONException {
+        String msg = null;
+        if("recommend".equals(action)){
+            msg = context.getString(R.string.notification_action_message_inactive_recommend, action_owner);
         }
         return msg;
     }
