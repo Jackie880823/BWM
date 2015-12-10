@@ -179,8 +179,8 @@ public class CaptureActivity extends BaseActivity implements Callback {
 			Intent resultIntent = new Intent(this, FamilyViewProfileActivity.class);
 //			Bundle bundle = new Bundle();
 			resultIntent.putExtra(SCAN_RESULT, resultString);
-//			startActivity(resultIntent);
-//			this.setResult(RESULT_OK, resultIntent);
+			startActivity(resultIntent);
+			this.setResult(RESULT_OK, resultIntent);
 		}
 //		CaptureActivity.this.finish();
 	}
