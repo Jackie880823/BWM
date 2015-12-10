@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +22,15 @@ import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +53,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private String memberId;//本人的memberId
     private String bwmId;//本人的memberId
     private String memberFlag;
+
+    public static final int CHOOSE_RELATION_CODE = 1;
 
     CircularNetworkImage cniMain;
     NetworkImageView networkImageView;
@@ -73,6 +80,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private View rlEmail;
     private View rlRegion;
     private View rlPhone;
+    private View flMember;
+    private Button btAddMember;
+    private Button btMessage;
 
     private static final int GET_USER_ENTITY = 0X11;
 
@@ -179,6 +189,34 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         rlRegion = getViewById(R.id.rl_region);
         rlPhone = getViewById(R.id.rl_phone);
 
+        flMember = getViewById(R.id.fl_member);
+        btAddMember = getViewById(R.id.btn_add_member);
+        btMessage = getViewById(R.id.btn_message);
+
+        btAddMember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getParentActivity(), RelationshipActivity.class);
+                intent.putExtra("member_id", userEntity.getUser_id());
+                startActivityForResult(intent, CHOOSE_RELATION_CODE);
+            }
+        });
+
+        btMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
+//                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                if(userEntity != null) {
+                    intent2.putExtra("type", 0);
+                    //如果上个页面没有groupId或者groupName
+                    intent2.putExtra("groupId", userEntity.getGroup_id());
+                    intent2.putExtra("titleName", userEntity.getUser_given_name());
+                    startActivity(intent2);
+                }
+            }
+        });
+
         cniMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,6 +250,17 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             setDatePrivacy(userEntity.getEmail_flag(),rlEmail);
             setDatePrivacy(userEntity.getLocation_flag(),rlRegion);
             setDatePrivacy(userEntity.getMember_flag(),rlPhone);
+
+            if(bwmId != null){
+                flMember.setVisibility(View.VISIBLE);
+                if("0".equals(userEntity.getMember_flag())){
+                    //如果不是好友
+                    btAddMember.setVisibility(View.VISIBLE);
+                }else if("1".equals(userEntity.getMember_flag())){
+                    //如果是好友
+                    btMessage.setVisibility(View.VISIBLE);
+                }
+            }
 
             tvName1.setText(userEntity.getUser_given_name());
             tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
@@ -291,34 +340,115 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     }
 
     private void setDatePrivacy(String dateFlag,View view){
-        if(memberFlag.equals("-0")){
-            //不是好友
-            switch (dateFlag){
-                case "0":
-                    view.setVisibility(View.GONE);
-                    break;
-                case "1":
-                    view.setVisibility(View.GONE);
-                    break;
-                case "2":
-                    view.setVisibility(View.VISIBLE);
+
+        switch (dateFlag) {
+            case "0":
+                view.setVisibility(View.GONE);
+                break;
+            case "1":
+                view.setVisibility(View.VISIBLE);
+                break;
+        }
+
+//        if(memberFlag.equals("-0")){
+//            //不是好友
+//            switch (dateFlag){
+//                case "0":
+//                    view.setVisibility(View.GONE);
+//                    break;
+//                case "1":
+//                    view.setVisibility(View.GONE);
+//                    break;
+//                case "2":
+//                    view.setVisibility(View.VISIBLE);
+//                    break;
+//            }
+//        }else {
+//            //是好友
+//            switch (dateFlag){
+//                case "0":
+//                    view.setVisibility(View.GONE);
+//                    break;
+//                case "1":
+//                    view.setVisibility(View.VISIBLE);
+//                    break;
+//                case "2":
+//                    view.setVisibility(View.VISIBLE);
+//                    break;
+//            }
+//        }
+    }
+
+    private void addUser(final String relationShip) {
+
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("user_id", MainActivity.getUser().getUser_id());
+        params.put("user_relationship_name", relationShip);
+        params.put("member_id", userEntity.getUser_id());
+
+        new HttpTools(getParentActivity()).post(Constant.API_ADD_MEMBER, params, this, new HttpCallback() {
+            @Override
+            public void onStart() {
+                vProgress.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                vProgress.setVisibility(View.GONE);
+                getParentActivity().finish();
+            }
+
+            @Override
+            public void onResult(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    if ("Success".equals(jsonObject.getString("response_status"))) {
+                        getParentActivity().setResult(getActivity().RESULT_OK);
+                        Toast.makeText(getParentActivity(), getResources().getString(R.string.text_success_add_member), Toast.LENGTH_SHORT).show();
+                        // finish();
+                    } else {
+                        Toast.makeText(getParentActivity(), getResources().getString(R.string.text_fail_add_member), Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                MessageUtil.showMessage(getParentActivity(), R.string.msg_action_failed);
+            }
+
+            @Override
+            public void onCancelled() {
+
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK){
+            switch (requestCode)
+            {
+                case CHOOSE_RELATION_CODE:
+                    userEntity.setTree_type_name(data.getStringExtra("relationship"));
+                    addUser(userEntity.getTree_type_name());
+                default:
                     break;
             }
-        }else {
-            //是好友
-            switch (dateFlag){
-                case "0":
-                    view.setVisibility(View.GONE);
-                    break;
-                case "1":
-                    view.setVisibility(View.VISIBLE);
-                    break;
-                case "2":
-                    view.setVisibility(View.VISIBLE);
-                    break;
-            }
+
         }
     }
+
     @Override
     public void requestData() {
         if(userEntity == null){
@@ -333,7 +463,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
             HashMap<String, String> params = new HashMap<>();
             params.put("condition", jsonParamsString);
-            vProgress.setVisibility(View.VISIBLE);
+//            vProgress.setVisibility(View.VISIBLE);
             String url = UrlUtil.generateUrl(Constant.API_MEMBER_PROFILE_DETAIL, params);
 
             new HttpTools(getActivity()).get(url, params, TAG, new HttpCallback() {
@@ -378,6 +508,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 }
             });
         }
+
 
     }
 }

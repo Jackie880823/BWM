@@ -82,7 +82,7 @@ public class UserEntity implements Serializable {
 
     private String own_flag;
 
-    /*0 代表仅自己可以看 (Only Me) 1 代表只有成员可以看 (All Members) 2代表公开资料 (Public)*/
+    /*0 代表隐藏 1 代表显示*/
     private String dob_date_flag;
     private String dob_year_flag;
     private String gender_flag;

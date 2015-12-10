@@ -76,6 +76,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private EditText etRegion;
     private TextView tvChange;
     private NetworkImageView imProfileImages;
+    private NetworkImageView imQrImages;
     private View vProgress;
     private RelativeLayout RlView;
     private Dialog showSelectDialog;
@@ -275,8 +276,10 @@ public class MyViewProfileActivity extends BaseActivity {
 
     String headUrl;
     String backdropHeadUrl;
+    String qrUrl;
     BitmapTools mBitmapTools;
     BitmapTools mBackdropBitmapTools;
+    BitmapTools mQrBitmapTools;
 
     @Override
     public void initView() {
@@ -306,24 +309,25 @@ public class MyViewProfileActivity extends BaseActivity {
         etRegion = getViewById(R.id.et_region);
         tvChange = getViewById(R.id.tv_change_text);
         imProfileImages = getViewById(R.id.iv_profile_images);
+        imQrImages = getViewById(R.id.iv_profile_qr);
         vProgress = getViewById(R.id.rl_progress);
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
         backdropHeadUrl = String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id());
+        qrUrl = String.format(Constant.API_GET_PROFILE_QR, MainActivity.getUser().getUser_id());
+
         mBitmapTools = BitmapTools.getInstance(this);
         mBackdropBitmapTools = BitmapTools.getInstance(this);
+        mQrBitmapTools = BitmapTools.getInstance(this);
 //        VolleyUtil.initNetworkImageView(this, imProfileImages, String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id()), 0, 0);
-
-        mBitmapTools.display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
-        mBackdropBitmapTools.display(imProfileImages,backdropHeadUrl,0,0);
+        mBitmapTools.display(cniMain, headUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
+        mBackdropBitmapTools.display(imProfileImages,backdropHeadUrl,R.drawable.my_profile_bunny,R.drawable.my_profile_bunny);
+        mQrBitmapTools.display(imQrImages,qrUrl,R.drawable.qrcode_button,R.drawable.qrcode_button);
         etFirstName.setText(MainActivity.getUser().getUser_given_name());
         etLastName.setText(MainActivity.getUser().getUser_surname());
         tvTitle.setText(MainActivity.getUser().getUser_given_name());
 
-
-
 //        tvAge.setText(MainActivity.getUser().getUser_dob());//需要做处理，年转为岁数
-
         //1990-09-10   1990年
         strDOB = MainActivity.getUser().getUser_dob();
         LogUtil.d(TAG,"strDOB==="+strDOB);
@@ -744,7 +748,7 @@ public class MyViewProfileActivity extends BaseActivity {
 //                        Toast.makeText(this, getResources().getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
                         isUploadImageSuccess = true;
                         intent = new Intent();
-                        intent.putExtra("new_pic", Uri.fromFile(file));
+                        intent.putExtra("head_pic", Uri.fromFile(file));
                         setResult(RESULT_OK, intent);
                         if(!isUploadName){
                             updateProfile();
@@ -826,9 +830,9 @@ public class MyViewProfileActivity extends BaseActivity {
 //                        progressDialog.dismiss();
 //                        Toast.makeText(this, getResources().getString(R.string.text_updateProPicSuccess), Toast.LENGTH_SHORT).show();
                         isUploadImageSuccess = true;
-//                        intent = new Intent();
-//                        intent.putExtra("new_pic", Uri.fromFile(file));
-//                        setResult(RESULT_OK, intent);
+                        intent = new Intent();
+                        intent.putExtra("background_pic", Uri.fromFile(file));
+                        setResult(RESULT_OK, intent);
                         if(!isUploadName){
                             updateProfile();
                         }
