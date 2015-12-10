@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
     <RelativeLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/fragment_main_top">
 
@@ -71,7 +71,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/_50dp"
             android:textColor="@color/default_text_color_while"
-            android:background="@drawable/btn_green_bg"/>
+            android:background="@drawable/btn_green_bg"
+            android:padding="@dimen/_12dp"/>
 
 
 </RelativeLayout>

@@ -17,6 +17,7 @@ import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
+import com.bondwithme.BondWithMe.ui.more.ViewQRCodeActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
@@ -39,6 +40,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
 
     private RelativeLayout rlAlbumGallery;
     private RelativeLayout rlWallPosting;
+    private RelativeLayout rlViewQRCode;
 
     public static MeFragment newInstance(String... params) {
         return createInstance(new MeFragment());
@@ -66,6 +68,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
         llViewProfile = getViewById(R.id.ll_view_profile);//跳转到My Profile
         rlAlbumGallery = getViewById(R.id.rl_album_gallery);
         rlWallPosting = getViewById(R.id.rl_wall_posting);
+        rlViewQRCode = getViewById(R.id.rl_view_qr);
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
         BitmapTools.getInstance(getActivity()).display(cniMain, headUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
@@ -93,6 +96,16 @@ public class MeFragment extends BaseFragment<MeActivity> {
             } catch (IOException e) {
             }
         }
+
+        //跳转到view QRCode 页面
+        rlViewQRCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intentQRCode = new Intent(getActivity(), ViewQRCodeActivity.class);
+                startActivity(intentQRCode);
+            }
+        });
 
         llViewProfile.setOnClickListener(new View.OnClickListener() {
             @Override

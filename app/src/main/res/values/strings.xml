@@ -675,7 +675,7 @@
     <string name="text_all_member">All Member</string>
     <string name="text_scan_qr">QR Code Reader</string>
     <string name="text_scan_it">Scan to add me!</string>
-    <string name="my_qr_code">MY QR Code</string>
+    <string name="my_qr_code">My QR Code</string>
     <string name="notification_action_message_inactive_recommend">%1$s is on BondWithMe. Add him/her.</string>
 
 

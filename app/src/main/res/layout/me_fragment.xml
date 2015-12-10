@@ -93,6 +93,7 @@
                     android:background="@color/default_wide_split_line"
                     android:layout_gravity="center"/>
                 <RelativeLayout
+                    android:id="@+id/rl_view_qr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp">

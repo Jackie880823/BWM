@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.zxing.camera.CameraManager;
 import com.bondwithme.BondWithMe.zxing.decoding.CaptureActivityHandler;
 import com.bondwithme.BondWithMe.zxing.decoding.InactivityTimer;
@@ -66,7 +68,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
 	private Button cancelScanButton;
 
 	int ifOpenLight = 0; // 判断是否开启闪光灯
-    public static String SCAN_RESULT = "result";
+    public static String SCAN_RESULT = "bwm_id";
 
 
     @Override
@@ -166,20 +168,21 @@ public class CaptureActivity extends BaseActivity implements Callback {
 		inactivityTimer.onActivity();
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
+        LogUtil.d("CaptureActivity","handleDecode()====resultString==="+resultString);
         resultString=resultString.substring(resultString.length()-10);
 		// FIXME
 		if (resultString.equals("")) {
 //			Toast.makeText(CaptureActivity.this, "扫描失败!", Toast.LENGTH_SHORT)
-//					.show();
+//                    .show();
 		} else {
-			// System.out.println("Result:"+resultString);
-			Intent resultIntent = new Intent();
-			Bundle bundle = new Bundle();
-			bundle.putString(SCAN_RESULT, resultString);
-			resultIntent.putExtras(bundle);
+            LogUtil.d("CaptureActivity","resultString==="+resultString);
+			Intent resultIntent = new Intent(this, FamilyViewProfileActivity.class);
+//			Bundle bundle = new Bundle();
+			resultIntent.putExtra(SCAN_RESULT, resultString);
+//			startActivity(resultIntent);
 //			this.setResult(RESULT_OK, resultIntent);
 		}
-		CaptureActivity.this.finish();
+//		CaptureActivity.this.finish();
 	}
 
 	/*
@@ -205,8 +208,6 @@ public class CaptureActivity extends BaseActivity implements Callback {
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case 1:
@@ -258,7 +259,6 @@ public class CaptureActivity extends BaseActivity implements Callback {
 
 		@Override
 		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
 
 			switch (msg.what) {
 			case 1:
