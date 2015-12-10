@@ -545,7 +545,6 @@ public class MainActivity extends BaseActivity implements NotificationUtil.Notif
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MISS).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_NEWS).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_MEMBER).size() != 0
-//                || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_RECOMMENDED).size() != 0
                 || App.getNotificationMsgsByType(NotificationUtil.MessageType.BONDALERT_GROUP).size() != 0
                 ) {
             doSomething(TabEnum.more);

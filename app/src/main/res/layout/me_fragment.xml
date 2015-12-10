@@ -16,7 +16,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <ImageView
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/iv_profile_images"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="fitStart"
@@ -149,11 +150,12 @@
                             android:text="laing"
                             android:textSize="@dimen/text_small_size"/>
                     </LinearLayout>
-                    <ImageView
+                    <com.android.volley.toolbox.NetworkImageView
+                        android:id="@+id/iv_profile_qr"
                         android:layout_width="@dimen/_60dp"
                         android:layout_height="@dimen/_60dp"
                         android:layout_centerVertical="true"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitCenter"
                         android:layout_alignParentRight="true"
                         android:src="@drawable/qrcode_button"/>
                 </RelativeLayout>

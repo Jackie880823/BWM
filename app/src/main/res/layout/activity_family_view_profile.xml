@@ -416,25 +416,25 @@
                 android:id="@+id/btn_add_member"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:background="@drawable/btn_chat_add_member_bg"
                 android:padding="@dimen/default_content_padding"
                 android:text="@string/text_add_member"
                 android:textColor="#ffffff"
                 android:textAllCaps="false"
                 android:typeface="normal"
+                android:visibility="gone"
                 android:textSize="@dimen/text_large_size"/>
             <Button
                 android:id="@+id/btn_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:background="@drawable/btn_chat_add_member_bg"
                 android:padding="@dimen/default_content_padding"
                 android:text="@string/text_send_message"
                 android:textColor="#ffffff"
                 android:textAllCaps="false"
                 android:typeface="normal"
+                android:visibility="gone"
                 android:textSize="@dimen/text_large_size"/>
         </RelativeLayout>
     </FrameLayout>
