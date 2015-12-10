@@ -1,58 +1,13 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
-import com.bondwithme.BondWithMe.entity.PhotoEntity;
-import com.bondwithme.BondWithMe.entity.UserEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
-import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.MyDateUtils;
-import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class FamilyViewProfileActivity extends BaseActivity {
 
-    CircularNetworkImage cniMain;
-    ImageView ivBottomLeft;
-    ImageView ivBottomRight;
-    TextView tvName1;
-    TextView tvId1;
-
-    TextView tvPhone;
-    TextView tvFirstName;
-    TextView tvLastName;
-    //    TextView tvAge;
-    TextView tvBirthday;
-    TextView tvGender;
-    TextView tvEmail;
-    TextView tvRegion;
-
-
-    UserEntity userEntity = new UserEntity();
-
-
-    @Override
-    public int getLayout() {
-        return R.layout.activity_family_view_profile;
-    }
 
     @Override
     protected void initBottomBar() {
@@ -83,117 +38,14 @@ public class FamilyViewProfileActivity extends BaseActivity {
 
     @Override
     protected Fragment getFragment() {
-        return null;
+        return new FamilyViewProfileFragment();
     }
 
     @Override
     public void initView() {
 
-        userEntity = (UserEntity) getIntent().getExtras().getSerializable("userEntity");
-
-        cniMain = getViewById(R.id.cni_main);
-        ivBottomLeft = getViewById(R.id.civ_left);
-        ivBottomRight = getViewById(R.id.civ_right);
-        tvName1 = getViewById(R.id.tv_name1);
-        tvId1 = getViewById(R.id.tv_id1);
-
-        tvPhone = getViewById(R.id.tv_phone);
-        tvFirstName = getViewById(R.id.tv_first_name);
-        tvLastName = getViewById(R.id.tv_last_name);
-//        tvAge = getViewById(R.id.tv_age);
-        tvBirthday = getViewById(R.id.tv_birthday);
-        tvGender = getViewById(R.id.tv_gender);
-        tvEmail = getViewById(R.id.tv_email);
-        tvRegion = getViewById(R.id.tv_region);
-
-        VolleyUtil.initNetworkImageView(FamilyViewProfileActivity.this, cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-        tvName1.setText(userEntity.getUser_given_name());
-        tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
-
-        if (userEntity.getUser_phone().length() > 0){
-            tvPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone());
-        }
-        tvFirstName.setText(userEntity.getUser_given_name());
-        tvLastName.setText(userEntity.getUser_surname());
-//        tvAge.setText(userEntity.getUser_dob());
-        String strDOB = userEntity.getUser_dob();
-        LogUtil.d("TAG", "strDOB===" + strDOB);
-        setTvBirthday(strDOB);
-
-//        tvBirthday.setText(strDOB);
-
-        cniMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(FamilyViewProfileActivity.this, ViewOriginalPicesActivity.class);
-
-                ArrayList<PhotoEntity> datas = new ArrayList();
-                PhotoEntity peData = new PhotoEntity();
-                peData.setUser_id(userEntity.getUser_id());
-                peData.setFile_id("profile");
-                peData.setPhoto_caption(Constant.Module_profile);
-                peData.setPhoto_multipe("false");
-                datas.add(peData);
-
-                intent.putExtra("is_data", true);
-                intent.putExtra("datas", datas);
-
-                startActivity(intent);
-            }
-        });
-
-        if ("F".equals(userEntity.getUser_gender())) {
-            /**
-             * begin QK
-             */
-            tvGender.setText(getResources().getString(R.string.text_female));
-        } else if ("M".equals(userEntity.getUser_gender())) {
-            tvGender.setText(getResources().getString(R.string.text_male));
-            /**
-             * end
-             */
-        }
-
-        tvEmail.setText(userEntity.getUser_email());
-        tvRegion.setText(userEntity.getUser_location_name());
-        String dofeel_code = userEntity.getDofeel_code();
-        if (!TextUtils.isEmpty(dofeel_code)) {
-            try {
-                String filePath = "";
-                if (dofeel_code.indexOf("_") != -1) {
-                    filePath = dofeel_code.replaceAll("_", File.separator);
-                }
-                InputStream is = FamilyViewProfileActivity.this.getAssets().open(filePath);
-                Bitmap bitmap = BitmapFactory.decodeStream(is);
-                ivBottomLeft.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 
-    private void setTvBirthday(String strDOB) {
-        if (strDOB != null && !strDOB.equals("0000-00-00")){
-            Date date = null;
-            try {
-                date = new SimpleDateFormat("yyyy-MM-dd").parse(strDOB);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            //不同语言设置不同日期显示
-            if (Locale.getDefault().toString().equals("zh_CN")){
-            tvBirthday.setText(date.getMonth() + "月" + date.getDay() + "日");
-//                DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-//                tvBirthday.setText(dateFormat.format(date));
-            }else {
-                /**wing modified for system month name desc*/
-//                tvBirthday.setText(this.getResources().getStringArray(R.array.months)[date.getMonth()] + " " + date.getDate());
-                tvBirthday.setText(MyDateUtils.getMonthNameArray(false)[date.getMonth()] + " " + date.getDate());
-                /**wing modified for system month name desc*/
-            }
-        }
-    }
 
     @Override
     public void requestData() {

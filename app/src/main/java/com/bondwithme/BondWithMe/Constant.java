@@ -431,4 +431,11 @@ public class Constant {
     //新的显示表情图
     public static final String API_STICKER_ORIGINAL_IMAGE = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fcode/%s/version/%s";
 
+    //profile背景图
+    public static final String API_GET_PIC_PROFILE = API_SERVER + "/bondwithme/index.php/api/photo_profile/%s/fid/cover";
+    public static final String API_POST_PIC_PROFILE = API_SERVER + "/bondwithme/index.php/api/userCoverPic";
+
+    public static final String API_GET_PROFILE_QR = API_SERVER + "/bondwithme/index.php/api/photo_profile/%s/fid/qr";
+
+
 }
