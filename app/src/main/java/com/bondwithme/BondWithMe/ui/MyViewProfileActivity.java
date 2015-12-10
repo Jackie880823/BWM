@@ -99,6 +99,7 @@ public class MyViewProfileActivity extends BaseActivity {
     private String backgroundImagePath;
     private Context mContext;
     private String TAG;
+    private int profileBackgroundId;
 
     String strDOB;
     /**
@@ -287,6 +288,7 @@ public class MyViewProfileActivity extends BaseActivity {
 //        progressDialog = new ProgressDialog(this, getResources().getString(R.string.text_dialog_loading));
         mContext = this;
         TAG = mContext.getClass().getSimpleName();
+        profileBackgroundId =  getIntent().getIntExtra("profile_image_id",0);
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
         RlView = (RelativeLayout) findViewById(R.id.rl_view);
@@ -321,7 +323,7 @@ public class MyViewProfileActivity extends BaseActivity {
         mQrBitmapTools = BitmapTools.getInstance(this);
 //        VolleyUtil.initNetworkImageView(this, imProfileImages, String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id()), 0, 0);
         mBitmapTools.display(cniMain, headUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
-        mBackdropBitmapTools.display(imProfileImages,backdropHeadUrl,R.drawable.my_profile_bunny,R.drawable.my_profile_bunny);
+        mBackdropBitmapTools.display(imProfileImages,backdropHeadUrl,profileBackgroundId,profileBackgroundId);
         mQrBitmapTools.display(imQrImages,qrUrl,R.drawable.qrcode_button,R.drawable.qrcode_button);
         etFirstName.setText(MainActivity.getUser().getUser_given_name());
         etLastName.setText(MainActivity.getUser().getUser_surname());

@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MeFragment extends BaseFragment<MeActivity> {
 
@@ -43,6 +44,8 @@ public class MeFragment extends BaseFragment<MeActivity> {
 
     private RelativeLayout rlAlbumGallery;
     private RelativeLayout rlWallPosting;
+    private int[] array;
+    private int profileBackgroundId;
 
     public static MeFragment newInstance(String... params) {
         return createInstance(new MeFragment());
@@ -73,9 +76,13 @@ public class MeFragment extends BaseFragment<MeActivity> {
         rlAlbumGallery = getViewById(R.id.rl_album_gallery);
         rlWallPosting = getViewById(R.id.rl_wall_posting);
 
+        array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
+                R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
+        profileBackgroundId = randomImageId(array);
+
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
         BitmapTools.getInstance(getActivity()).display(cniMain, headUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
-        BitmapTools.getInstance(getActivity()).display(imProfileImages, String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id()), R.drawable.my_profile_bunny, R.drawable.my_profile_bunny);
+        BitmapTools.getInstance(getActivity()).display(imProfileImages, String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id()), profileBackgroundId, profileBackgroundId);
         BitmapTools.getInstance(getActivity()).display(imQrImages, String.format(Constant.API_GET_PROFILE_QR, MainActivity.getUser().getUser_id()), R.drawable.qrcode_button, R.drawable.qrcode_button);
 
 
@@ -108,6 +115,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MyViewProfileActivity.class);
+                intent.putExtra("profile_image_id",profileBackgroundId);
                 startActivityForResult(intent, UPDATE_PROFILE);
             }
         });
@@ -183,6 +191,12 @@ public class MeFragment extends BaseFragment<MeActivity> {
             default:
         }
 
+    }
+
+    //获取一个背景图的随机id
+    public int randomImageId(int[] array){
+        int result = new Random().nextInt(5);
+        return array[result];
     }
 
 }

@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 /**
  * Created by liangzemian on 15/12/8.
@@ -83,6 +84,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private View flMember;
     private Button btAddMember;
     private Button btMessage;
+    private int[] array;
+    private int profileBackgroundId;
 
     private static final int GET_USER_ENTITY = 0X11;
 
@@ -163,6 +166,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         useId = MainActivity.getUser().getUser_id();//MainActivity.
 //        memberId = getParentActivity().getIntent().getStringExtra("member_id");
         bwmId = getParentActivity().getIntent().getStringExtra("bwm_id");
+        profileBackgroundId = getParentActivity().getIntent().getIntExtra("profile_image_id",6);
         cniMain = getViewById(R.id.cni_main);
         networkImageView = getViewById(R.id.iv_profile_images);
         ivBottomLeft = getViewById(R.id.civ_left);
@@ -192,6 +196,12 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         flMember = getViewById(R.id.fl_member);
         btAddMember = getViewById(R.id.btn_add_member);
         btMessage = getViewById(R.id.btn_message);
+
+        if(profileBackgroundId == 6){
+            array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
+                    R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
+            profileBackgroundId = randomImageId(array);
+        }
 
         btAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,7 +251,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
         if(userEntity != null){
             VolleyUtil.initNetworkImageView(getParentActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-            VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE,  userEntity.getUser_id()), 0, 0);
+            VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE,  userEntity.getUser_id()), profileBackgroundId, profileBackgroundId);
             memberFlag = userEntity.getMember_flag();
 
             setDatePrivacy(userEntity.getDob_date_flag(),rlBirthday);
@@ -509,6 +519,11 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             });
         }
 
+    }
 
+    //获取一个背景图的随机id
+    public int randomImageId(int[] array){
+        int result = new Random().nextInt(5);
+        return array[result];
     }
 }

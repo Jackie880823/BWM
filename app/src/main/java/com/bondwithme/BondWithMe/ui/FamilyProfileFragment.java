@@ -44,6 +44,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -78,6 +79,9 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
     private Button btnSendMessage;
     private UserEntity userEntity;
+
+    private int[] array;
+    private int profileBackgroundId;
 
     private static final int GET_USER_ENTITY = 0X11;
 
@@ -122,10 +126,14 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         btnSendMessage = getViewById(R.id.btn_message);
         networkImageView = getViewById(R.id.iv_profile_images);
 
+        array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
+                R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
+        profileBackgroundId = randomImageId(array);
+
 //        tvName1.setText(groupName);
         getParentActivity().tvTitle.setText(groupName);
         VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.network_image_default, R.drawable.network_image_default);
-        VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), 0, 0);
+        VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
 //        BitmapTools.getInstance(getActivity()).display(networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), 0, 0);
 
         networkImageView.setVisibility(View.VISIBLE);
@@ -168,7 +176,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                     //用户详情界面
                     Intent intent1 = new Intent(getActivity(), FamilyViewProfileActivity.class);
                     intent1.putExtra("userEntity", userEntity);
-//                    intent1.putExtra("bwm_id", "8000100552");
+                    intent1.putExtra("profile_image_id",profileBackgroundId);
                     startActivity(intent1);
                 }
             }
@@ -425,5 +433,11 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     public void onDestroy() {
         new HttpTools(getActivity()).cancelRequestByTag(Tag);
         super.onDestroy();
+    }
+
+    //获取一个背景图的随机id
+    public int randomImageId(int[] array){
+        int result = new Random().nextInt(5);
+        return array[result];
     }
 }

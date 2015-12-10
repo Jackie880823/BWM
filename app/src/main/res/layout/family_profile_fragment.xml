@@ -18,7 +18,6 @@
                         android:layout_height="wrap_content"
                         android:scaleType="fitStart"
                         android:adjustViewBounds="true"
-                        android:src="@drawable/my_profile_bunny"
                         />
                     <LinearLayout
                         android:layout_width="wrap_content"
