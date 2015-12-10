@@ -18,6 +18,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
+import com.bondwithme.BondWithMe.ui.more.ViewQRCodeActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
@@ -44,8 +45,12 @@ public class MeFragment extends BaseFragment<MeActivity> {
 
     private RelativeLayout rlAlbumGallery;
     private RelativeLayout rlWallPosting;
+<<<<<<< HEAD
     private int[] array;
     private int profileBackgroundId;
+=======
+    private RelativeLayout rlViewQRCode;
+>>>>>>> 2f795ea4e1666e5c00f590939989b1516edcd8e3
 
     public static MeFragment newInstance(String... params) {
         return createInstance(new MeFragment());
@@ -75,6 +80,7 @@ public class MeFragment extends BaseFragment<MeActivity> {
         llViewProfile = getViewById(R.id.ll_view_profile);//跳转到My Profile
         rlAlbumGallery = getViewById(R.id.rl_album_gallery);
         rlWallPosting = getViewById(R.id.rl_wall_posting);
+        rlViewQRCode = getViewById(R.id.rl_view_qr);
 
         array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
                 R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
@@ -110,6 +116,16 @@ public class MeFragment extends BaseFragment<MeActivity> {
             } catch (IOException e) {
             }
         }
+
+        //跳转到view QRCode 页面
+        rlViewQRCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intentQRCode = new Intent(getActivity(), ViewQRCodeActivity.class);
+                startActivity(intentQRCode);
+            }
+        });
 
         llViewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
