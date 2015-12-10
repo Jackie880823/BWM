@@ -45,12 +45,9 @@ public class MeFragment extends BaseFragment<MeActivity> {
 
     private RelativeLayout rlAlbumGallery;
     private RelativeLayout rlWallPosting;
-<<<<<<< HEAD
     private int[] array;
     private int profileBackgroundId;
-=======
     private RelativeLayout rlViewQRCode;
->>>>>>> 2f795ea4e1666e5c00f590939989b1516edcd8e3
 
     public static MeFragment newInstance(String... params) {
         return createInstance(new MeFragment());
