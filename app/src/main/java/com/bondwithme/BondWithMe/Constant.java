@@ -431,4 +431,6 @@ public class Constant {
     //新的显示表情图
     public static final String API_STICKER_ORIGINAL_IMAGE = API_SERVER + "/bondwithme/index.php/api/sticker_l/%s/fcode/%s/version/%s";
 
+    public static final String API_QRCode = API_SERVER + "/bondwithme/index.php/api/photo_profile/%s/fid/qr";
+
 }

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_main_top">
+
+
+        <SurfaceView
+            android:id="@+id/preview_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+
+        <com.bondwithme.BondWithMe.zxing.view.ViewfinderView
+            android:id="@+id/viewfinder_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+
+
+    </RelativeLayout>
+
+
+
+
+
+        
+        
+        <!--<Button -->
+            <!--android:id="@+id/openLight"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="80dp"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:text="开启闪光灯"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:onClick="IfOpenLight"-->
+            <!--android:background="#00000000"-->
+            <!--android:textSize="16sp"/>-->
+        <!-- -->
+        <!--<Button -->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="40dp"-->
+            <!--android:layout_below="@id/openLight"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:text="从相册中选取照片"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:onClick="pickPictureFromAblum"-->
+            <!--android:background="#00000000"-->
+            <!--android:textSize="16sp"/>-->
+
+        <Button
+            android:id="@+id/btn_my_qr"
+            android:layout_width="@dimen/_300dp"
+            android:layout_height="wrap_content"
+            android:text="@string/my_qr_code"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/_50dp"
+            android:textColor="@color/default_text_color_while"
+            android:background="@drawable/btn_green_bg"/>
+
+
+</RelativeLayout>

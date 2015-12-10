@@ -675,5 +675,9 @@
     <string name="text_public">Public</string>
     <string name="text_only_me">Only Me</string>
     <string name="text_all_member">All Member</string>
+    <string name="text_scan_qr">QR Code Reader</string>
+    <string name="text_scan_it">Scan to add me!</string>
+    <string name="my_qr_code">MY QR Code</string>
+
 
 </resources>

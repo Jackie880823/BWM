@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:tools="http://schemas.android.com/tools">
+
+    <include
+        android:id="@+id/fragment_main_top"
+        layout="@layout/title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" />
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/iv_qr"
+        android:layout_width="@dimen/_250dp"
+        android:layout_height="@dimen/_250dp"
+        android:layout_below="@+id/fragment_main_top"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_50dp"
+        />
+
+
+
+    <TextView
+        android:id="@+id/tv_scan_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_qr"
+        android:text="@string/text_scan_it"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/btn_scan_qr"
+        android:layout_width="@dimen/_300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/text_scan_qr"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/_50dp"
+        android:textColor="@color/default_text_color_while"
+        android:background="@drawable/btn_green_bg"/>
+
+</RelativeLayout>

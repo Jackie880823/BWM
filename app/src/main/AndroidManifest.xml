@@ -660,6 +660,19 @@
             android:name=".ui.more.ViewUrlPicActivity"
             android:configChanges="keyboardHidden|orientation|screenSize">
         </activity>
+
+        <activity
+            android:name=".ui.more.ViewQRCodeActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:configChanges="orientation|keyboardHidden"
+            android:name=".zxing.activity.CaptureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
     </application>
 
 </manifest>
