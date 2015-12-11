@@ -13,8 +13,8 @@
 
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/iv_qr"
-        android:layout_width="@dimen/_250dp"
-        android:layout_height="@dimen/_250dp"
+        android:layout_width="@dimen/_200dp"
+        android:layout_height="@dimen/_200dp"
         android:layout_below="@+id/fragment_main_top"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_50dp"

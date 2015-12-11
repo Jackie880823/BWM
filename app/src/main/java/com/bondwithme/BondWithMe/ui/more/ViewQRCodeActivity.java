@@ -58,7 +58,7 @@ public class ViewQRCodeActivity extends BaseActivity {
         tvScanHint = getViewById(R.id.tv_scan_hint);
         btnScanQRCode = getViewById(R.id.btn_scan_qr);
 
-        VolleyUtil.initNetworkImageView(this, ivQRCode, String.format(Constant.API_QRCode,MainActivity.getUser().getUser_id()));
+        VolleyUtil.initNetworkImageView(this, ivQRCode, String.format(Constant.API_QRCode,MainActivity.getUser().getUser_id()),R.drawable.network_image_default, R.drawable.network_image_default);
 
         btnScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
