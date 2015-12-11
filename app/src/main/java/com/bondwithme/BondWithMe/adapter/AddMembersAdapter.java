@@ -141,7 +141,29 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             llContacts.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mContext.startActivity(new Intent(mContext, AddContactMembersActivity.class));
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+                    dialog.setMessage(R.string.text_dialog_ask_contact);
+                    dialog.setCancelable(false);
+
+                    dialog.setNegativeButton(R.string.text_dont_allow, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    dialog.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mContext.startActivity(new Intent(mContext, AddContactMembersActivity.class));
+                        }
+                    });
+
+                    //请求后台运行，活动销毁了。会奔溃？？
+                    if (!((AddMembersActivity)mContext).isFinishing())
+                    {
+                        dialog.show();
+                    }
                 }
             });
         }
