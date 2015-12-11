@@ -652,7 +652,7 @@
 
     <string name="text_tip_add_member">添加成员到家庭树，在日记中查看他们的最新动态。</string>
     <string name="text_tip_add_photo">发一个帖子并添加一张照片。</string>
-    <string name="text_tip_add_diary">添加您的首个日记。</string>e
+    <string name="text_tip_add_diary">添加您的首个日记。</string>
     <string name="text_tip_feeling">亲，感觉怎么样？</string>
     <string name="text_tip_tag_member">艾特成员，他们将获得通告。</string>
     <string name="text_tip_allow_me">仅限我查看或分享至所有成员？</string>
@@ -669,4 +669,8 @@
     <string name="introduction_description_4">在日记中与您的家人分享珍贵的时刻。</string>
     <string name="introduction_description_5">与家人通过单独或群聊保持联系。</string>
     <string name="diary_hint">在此分享你的时刻</string>
+
+    <string name="text_s">的</string>
+    <string name="text_search_bwm_user_no_found">No Result found,Try again.</string>
+    <string name="text_invite_members_info">This app is cool,add me!</string>
 </resources>

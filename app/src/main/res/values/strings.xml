@@ -111,7 +111,7 @@
     <string name="text_location">Location</string>
     <string name="text_stickers">Stickies</string>
     <string name="text_video">Video</string>
-    <string name="text_contact">Contact</string>
+    <string name="text_contact">Contacts</string>
     <string name="text_done">Done</string>
     <string name="text_id">ID</string>
     <string name="text_first_name">First Name</string>
@@ -675,4 +675,9 @@
     <string name="introduction_description_4">Share precious moments \nin your Diary, privately with \nyour loved ones.</string>
     <string name="introduction_description_5">Connect \nwith your family members \nindividually or in a group chat.</string>
     <string name="diary_hint">Share your moment here</string>
+
+    <!-- &#160; 代表空格-->
+    <string name="text_s">\'s&#160;</string>
+    <string name="text_search_bwm_user_no_found">No Result found,Try again.</string>
+    <string name="text_invite_members_info">This app is cool,add me!</string>
 </resources>

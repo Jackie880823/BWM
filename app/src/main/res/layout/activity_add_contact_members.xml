@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_content_bg"
-    tools:context=".ui.add.AddMembersActivity">
+    >
     <include
         android:id="@+id/fragment_main_top"
         layout="@layout/title_view"
@@ -19,26 +20,26 @@
         android:background="@android:color/white"
         android:layout_below="@+id/fragment_main_top"
         >
-            <EditText
-                android:id="@+id/et_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/text_add_members_search_hint"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/iv_search"
-                android:textColor="@color/default_text_color_dark"
-                android:paddingLeft="@dimen/default_content_padding"
-                android:textSize="@dimen/text_small_size"
-                android:background="@null"
-                />
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/iv_search"
+            android:textColor="@color/default_text_color_dark"
+            android:paddingLeft="@dimen/default_content_padding"
+            android:textSize="@dimen/text_small_size"
+            android:background="@null"
+            />
 
-            <ImageView
-                android:id="@+id/iv_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:padding="@dimen/default_content_padding"
-                android:src="@drawable/search"/>
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="@dimen/default_content_padding"
+            android:src="@drawable/search"/>
 
     </RelativeLayout>
 

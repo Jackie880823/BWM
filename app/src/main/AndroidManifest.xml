@@ -166,7 +166,7 @@
             android:name=".ui.start.StartActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <!-- <activity android:name=".ui.LoginActivity"  android:screenOrientation="portrait"/> -->
         <!-- android:launchMode="singleInstance"  此Activity的单例模式慎，会与其它Activity完全独立使用不同的上下文资源，有导致资源、数据无法传递的危险 -->
@@ -649,17 +649,23 @@
 
         <activity
             android:name=".ui.wall.WallViewPicActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"></activity>
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".ui.wall.WallEditCaptionActivity"
             android:theme="@android:style/Theme.Translucent"
-            android:windowSoftInputMode="stateVisible"></activity>
+            android:windowSoftInputMode="stateVisible" />
         <activity
             android:name=".ui.more.ViewUrlPicActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"></activity>
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".ui.add.AddMembersActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.add.AddContactMembersActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.add.AddInviteMembersActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

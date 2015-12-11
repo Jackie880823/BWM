@@ -5,6 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 
+import com.bondwithme.BondWithMe.entity.ContactDetailEntity;
+import com.bondwithme.BondWithMe.entity.ContactMessageEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,4 +116,34 @@ public class ContactUtil {
         }
         return emails;
     }
+
+
+    /**
+     * 获取所有联系人的手机和email资料
+     * @param context
+     * @param cursor
+     * @return
+     */
+    public static List<ContactDetailEntity> getContactDetailEntities(Context context, Cursor cursor)
+    {
+        List<ContactDetailEntity> contactDetailEntities = new ArrayList<>();
+        ContactDetailEntity contactDetailEntity;
+        cursor.moveToFirst();
+        do
+        {
+            if (cursor.getCount() > 0 && cursor != null)
+            {
+                contactDetailEntity = new ContactDetailEntity();
+                contactDetailEntity.setDisplayName(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+                contactDetailEntity.setPhoneNumbers(ContactUtil.getContactPhones(context, cursor));
+                contactDetailEntity.setEmails(ContactUtil.getContactEmails(context, cursor));
+                contactDetailEntities.add(contactDetailEntity);
+            }
+
+        }
+        while (cursor.moveToNext());
+
+        return contactDetailEntities;
+    }
+
 }

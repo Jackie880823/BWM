@@ -44,57 +44,72 @@
                 android:layout_alignParentLeft="true"
                 android:src="@drawable/default_head_icon"/>
 
-            <TextView
-                android:id="@+id/tv_name"
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_toRightOf="@+id/cni"
                 android:layout_toLeftOf="@+id/fl"
-                android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/default_view_margin"
                 android:layout_marginLeft="@dimen/default_view_margin"
-                android:textColor="@color/default_text_color_dark"
-                android:textSize="@dimen/text_medium_size"
-                tools:text="Christopher"
-                />
+                android:layout_centerVertical="true"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/default_text_color_dark"
+                    tools:text="Christopher"/>
+                <TextView
+                    android:id="@+id/tv_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/default_text_color_dark"
+                    tools:text="Christopher"/>
+            </LinearLayout>
 
-            <FrameLayout
+
+        <FrameLayout
                 android:id="@+id/fl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true">
+                    <TextView
+                        android:id="@+id/tv_added"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_medium_size"
+                        android:visibility="gone"
+                        android:text="@string/text_added"/>
                     <ImageButton
                         android:id="@+id/ib_add"
-                        android:layout_width="@dimen/_35dp"
-                        android:layout_height="@dimen/_35dp"
+                        android:layout_width="@dimen/_32dp"
+                        android:layout_height="@dimen/_32dp"
                         android:visibility="gone"
                         android:background="@null"
-                        android:scaleType="centerInside"
+                        android:scaleType="fitXY"
                         android:src="@drawable/add_member_icon"
-                        tools:visibility="visible"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:textSize="@dimen/text_medium_size"
-                        android:text="@string/text_added"
-                        tools:text="Added"
-                        tools:visibility="gone"
                         />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageButton
+                        android:id="@+id/ib_pending"
+                        android:layout_width="@dimen/_32dp"
+                        android:layout_height="@dimen/_32dp"
                         android:visibility="gone"
-                        android:textSize="@dimen/text_medium_size"
-                        android:text="@string/text_awaiting"
-                        tools:text="Pending"
-                        tools:visibility="gone"/>
-
-            </FrameLayout>
+                        android:background="@null"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/pending_member_icon"
+                        />
+                    <ImageButton
+                        android:id="@+id/ib_invite"
+                        android:layout_width="@dimen/_36dp"
+                        android:layout_height="@dimen/_24dp"
+                        android:background="@null"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/invite_member_icon"
+                        />
+        </FrameLayout>
     </RelativeLayout>
 
     <View
