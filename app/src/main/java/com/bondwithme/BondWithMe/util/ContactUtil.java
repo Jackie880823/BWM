@@ -143,6 +143,8 @@ public class ContactUtil {
         }
         while (cursor.moveToNext());
 
+        cursor.close();
+
         return contactDetailEntities;
     }
 
