@@ -29,6 +29,7 @@ import com.bondwithme.BondWithMe.adapter.MessageGroupFragmentAdapter;
 import com.bondwithme.BondWithMe.adapter.MessagePrivateListAdapter;
 import com.bondwithme.BondWithMe.entity.GroupMessageEntity;
 import com.bondwithme.BondWithMe.entity.PrivateMessageEntity;
+import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.NetworkUtil;
 import com.bondwithme.BondWithMe.widget.InteractivePopupWindow;
@@ -145,7 +146,7 @@ public class MessageMainFragment extends BaseFragment<MainActivity> implements V
         tvAddNewMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), AddNewMembersActivity.class));
+                startActivity(new Intent(getActivity(), AddMembersActivity.class));
                 showSelectDialog.dismiss();
             }
         });

@@ -52,6 +52,7 @@ public final class ViewfinderView extends View {
 	private final int frameColor;
 	private final int laserColor;
 	private final int resultPointColor;
+    private final int textColor;
 	private int scannerAlpha;
 	private Collection<ResultPoint> possibleResultPoints;
 	private Collection<ResultPoint> lastPossibleResultPoints;
@@ -69,6 +70,7 @@ public final class ViewfinderView extends View {
 		frameColor = resources.getColor(R.color.viewfinder_frame);
 		laserColor = resources.getColor(R.color.viewfinder_laser);
 		resultPointColor = resources.getColor(R.color.possible_result_points);
+        textColor = resources.getColor(R.color.text_normal);
 		scannerAlpha = 0;
 		possibleResultPoints = new HashSet<ResultPoint>(5);
 	}
@@ -102,10 +104,6 @@ public final class ViewfinderView extends View {
 			paint.setAlpha(OPAQUE);
 			canvas.drawBitmap(resultBitmap, frame.left, frame.top, paint);
 		} else {
-
-			//画扫描框边上的角，总共8个部分 
-			// Draw a two pixel solid black border inside the framing rect
-            //			paint.setColor(frameColor);
             paint.setColor(getResources().getColor(R.color.green));
             canvas.drawRect(frame.left - 10,frame.top - 10,frame.left + 120, frame.top + 10,paint);
             canvas.drawRect(frame.left - 10,frame.top + 10,frame.left + 10, frame.bottom - 10,paint);
@@ -117,6 +115,20 @@ public final class ViewfinderView extends View {
 			// Draw a red "laser scanner" line through the middle to show
 			// decoding is active
 			 //画扫描框下面的字
+            paint.setColor(textColor);
+            paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+            paint.setTextSize(22);
+            String str = getResources().getString(R.string.scan_within_box);
+            int textWidth = (int)paint.measureText(str);
+            if ((frame.width() - textWidth) >= 0){
+                canvas.drawText(str,frame.left + (frame.width() - textWidth)/2,frame.bottom + 50,paint);
+            }else {
+                canvas.drawText(str,frame.left - (textWidth -frame.width())/2,frame.bottom + 50,paint);
+            }
+
+
+
+
 			paint.setColor(laserColor);
 			paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
 			scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;

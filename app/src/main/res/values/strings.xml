@@ -108,7 +108,7 @@
     <string name="text_location">Location</string>
     <string name="text_stickers">Stickies</string>
     <string name="text_video">Video</string>
-    <string name="text_contact">Contact</string>
+    <string name="text_contact">Contacts</string>
     <string name="text_done">Done</string>
     <string name="text_id">ID</string>
     <string name="text_first_name">First Name</string>
@@ -440,7 +440,6 @@
     <string name="text_sort">Sort</string>
 
 
-
     <string name="text_start_me_life_family">Me, My Life, My Family</string>
     <string name="text_start_phone_number">Phone Number</string>
     <string name="text_start_password">Password</string>
@@ -487,7 +486,6 @@
     <string name="text_msg_start_bonding">Chat day and night for free! Bond With Me now.</string>
 
     <string name="text_confirm_relation">Are you sure you want to add this member as your </string>
-
 
 
     <string name="text_long_press_display">Hold stickies to preview !</string>
@@ -646,6 +644,14 @@
     <string name="text_wall_view_pic_edit_no_change">Captions are not change</string>
     <string name="no_photo_2_save">No Photo to Save!</string>
     <string name="add_photo_before_title">Please remove your video before you can add new photo.</string>
+
+    <string name="text_add_members_search_hint">Search by ID/Username/Phone Number</string>
+    <string name="text_add_members_options_head">Add family member to chat. share moments and create events. Start bonding now!</string>
+    <string name="text_add_members_via_contact">Add via Contacts</string>
+    <string name="text_add_members_facebook">Facebook Account</string>
+    <string name="text_add_members_qq">QQ Account</string>
+    <string name="text_add_members_content">Members you may know</string>
+
     <string name="text_add_caption">Add caption</string>
 
     <string name="text_tip_add_member">Add member to build family tree and view their live updates in Diary.</string>
@@ -668,6 +674,10 @@
     <string name="introduction_description_5">Connect \nwith your family members \nindividually or in a group chat.</string>
     <string name="diary_hint">Share your moment here</string>
 
+    <!-- &#160; 代表空格-->
+    <string name="text_s">\'s&#160;</string>
+    <string name="text_search_bwm_user_no_found">No Result found,Try again.</string>
+    <string name="text_invite_members_info">This app is cool,add me!</string>
     <string name="profile_privacy">Profile\'s Privacy</string>
     <string name="year_of_birth">Year of Birth</string>
     <string name="text_public">Public</string>
@@ -678,7 +688,7 @@
     <string name="my_qr_code">My QR Code</string>
     <string name="notification_action_message_inactive_recommend">%1$s is on BondWithMe. Add him/her.</string>
     <string name="text_confirm">Confirm</string>
-
-
-
+    <string name="scan_within_box">Scan the QR Code within the box</string>
+    <string name="text_dont_allow">Don\'t Allow</string>
+    <string name="text_dialog_ask_contact">BondWithMe will use your Contacts to find other BondWithMe user you may know.</string>
 </resources>
