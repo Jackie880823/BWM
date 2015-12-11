@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/ll_prompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:longClickable="false"
+        android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_prompt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/text_add_members_content"
+                android:padding="@dimen/default_view_margin"
+                android:textSize="@dimen/text_small_size"
+                android:textColor="@color/default_text_color_light"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:background="@color/default_split_line"/>
+    </LinearLayout>
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_content_padding">
+            <com.bondwithme.BondWithMe.widget.CircularNetworkImage
+                android:id="@+id/cni"
+                android:layout_width="@dimen/default_user_head_width_height"
+                android:layout_height="@dimen/default_user_head_width_height"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/cni"
+                android:layout_toLeftOf="@+id/ib_add"
+                android:layout_marginRight="@dimen/default_view_margin"
+                android:layout_marginLeft="@dimen/default_view_margin"
+                android:layout_centerVertical="true"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/default_text_color_dark"
+                        tools:text="Christopher"/>
+                    <TextView
+                        android:id="@+id/tv_relationship"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/default_text_color_dark"
+                        tools:text="Christopher"/>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/ib_add"
+                android:layout_width="@dimen/_32dp"
+                android:layout_height="@dimen/_32dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/add_member_icon"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1dp"
+        android:background="@color/default_split_line"/>
+</LinearLayout>

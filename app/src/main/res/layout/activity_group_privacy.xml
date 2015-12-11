@@ -12,91 +12,248 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true" />
 
-    <LinearLayout
-        android:id="@+id/ll_group_privacy"
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/send_layout"
-        android:layout_below="@+id/fragment_main_top"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/default_view_margin"
-        android:visibility="invisible">
+        android:layout_below="@+id/fragment_main_top">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/ll_group_privacy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/default_content_padding">
+
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/default_view_margin"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_content_padding">
+
+                <TextView
+                    style="@style/text_title_default"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/cb_to_other"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/text_to_other"
+                    android:textColor="@color/default_text_color_dark" />
+
+                <CheckBox
+                    android:id="@+id/cb_to_other"
+                    style="@style/checkbox_default"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <View style="@style/split_line_default" />
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_content_padding">
+
+                <TextView
+                    style="@style/text_title_default"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/cb_to_me"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/text_to_me"
+                    android:textColor="@color/default_text_color_dark" />
+
+                <CheckBox
+                    android:id="@+id/cb_to_me"
+                    style="@style/checkbox_default"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <View style="@style/split_line_default" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_content_padding">
+
+                <TextView
+                    style="@style/text_title_default"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/cb_group_chat"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/text_group_chat"
+                    android:textColor="@color/default_text_color_dark" />
+
+                <CheckBox
+                    android:id="@+id/cb_group_chat"
+                    style="@style/checkbox_default"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <View style="@style/split_line_default" />
+
 
             <TextView
-                style="@style/text_title_default"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/cb_to_other"
-                android:layout_alignParentLeft="true"
-                android:text="@string/text_to_other"
-                android:textColor="@color/default_text_color_dark" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/_10dp"
+                android:background="@color/default_unenable_item_bg"
+                android:text="@string/profile_privacy"/>
 
-            <CheckBox
-                android:id="@+id/cb_to_other"
-                style="@style/checkbox_default"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                 />
+            <LinearLayout
+                android:id="@+id/ll_birthday_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_content_padding"
+                android:orientation="vertical">
 
-        </RelativeLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_birthday"
+                    android:textColor="@color/default_text_color_dark"
+                    />
 
-        <View style="@style/split_line_default" />
+                <TextView
+                    android:id="@+id/tv_birthday_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+            <View style="@style/split_line_default" />
+
+            <LinearLayout
+                android:id="@+id/ll_yearOfBirth_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_content_padding"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/year_of_birth"
+                    android:textColor="@color/default_text_color_dark"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_yearOfBirth_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    />
+            </LinearLayout>
+            <View style="@style/split_line_default" />
+
+            <LinearLayout
+                android:id="@+id/ll_gender_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_content_padding"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_gender"
+                    android:textColor="@color/default_text_color_dark"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_gender_privacy"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    />
+            </LinearLayout>
+            <View style="@style/split_line_default" />
+
+            <LinearLayout
+                android:id="@+id/ll_email_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_content_padding"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_email"
+                    android:textColor="@color/default_text_color_dark"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_email_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    />
+            </LinearLayout>
+            <View style="@style/split_line_default" />
+            <LinearLayout
+                android:id="@+id/ll_region_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_content_padding"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_region"
+                    android:textColor="@color/default_text_color_dark"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_region_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    />
+            </LinearLayout>
+            <View style="@style/split_line_default" />
+            <LinearLayout
+                android:id="@+id/ll_phone_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/default_content_padding"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_phone"
+                    android:textColor="@color/default_text_color_dark"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_phone_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    />
+            </LinearLayout>
+            <View style="@style/split_line_default" />
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_content_padding">
+        </LinearLayout>
 
-            <TextView
-                style="@style/text_title_default"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/cb_to_me"
-                android:layout_alignParentLeft="true"
-                android:text="@string/text_to_me"
-                android:textColor="@color/default_text_color_dark" />
 
-            <CheckBox
-                android:id="@+id/cb_to_me"
-                style="@style/checkbox_default"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                 />
+    </ScrollView>
 
-        </RelativeLayout>
 
-        <View style="@style/split_line_default" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/default_content_padding">
-
-            <TextView
-                style="@style/text_title_default"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/cb_group_chat"
-                android:layout_alignParentLeft="true"
-                android:text="@string/text_group_chat"
-                android:textColor="@color/default_text_color_dark" />
-
-            <CheckBox
-                android:id="@+id/cb_group_chat"
-                style="@style/checkbox_default"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                 />
-
-        </RelativeLayout>
-
-        <View style="@style/split_line_default" />
-
-    </LinearLayout>
 
     <RelativeLayout
         android:layout_below="@+id/fragment_main_top"

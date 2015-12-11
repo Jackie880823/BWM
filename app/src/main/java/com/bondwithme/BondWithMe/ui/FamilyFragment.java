@@ -39,6 +39,7 @@ import com.bondwithme.BondWithMe.entity.FamilyGroupEntity;
 import com.bondwithme.BondWithMe.entity.FamilyMemberEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
 import com.bondwithme.BondWithMe.ui.family.FamilyTreeActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -909,7 +910,7 @@ public class FamilyFragment extends BaseFragment<MainActivity> implements View.O
             @Override
             public void onClick(View v) {
                 //打开添加成员页面
-                startActivity(new Intent(getActivity(), AddNewMembersActivity.class));
+                startActivity(new Intent(getActivity(), AddMembersActivity.class));
                 showSelectDialog.dismiss();
             }
         });

@@ -14,16 +14,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.ext.tools.BitmapTools;
+import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
+import com.bondwithme.BondWithMe.ui.more.ViewQRCodeActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MeFragment extends BaseFragment<MeActivity> {
 
@@ -32,6 +36,8 @@ public class MeFragment extends BaseFragment<MeActivity> {
     private RelativeLayout llViewProfile;
 
     private CircularNetworkImage cniMain;
+    private NetworkImageView imProfileImages;
+    private NetworkImageView imQrImages;
     private ImageView ivBottomLeft;
     private TextView tvName1;
     private TextView tvId1;
@@ -39,6 +45,9 @@ public class MeFragment extends BaseFragment<MeActivity> {
 
     private RelativeLayout rlAlbumGallery;
     private RelativeLayout rlWallPosting;
+    private int[] array;
+    private int profileBackgroundId;
+    private RelativeLayout rlViewQRCode;
 
     public static MeFragment newInstance(String... params) {
         return createInstance(new MeFragment());
@@ -58,6 +67,8 @@ public class MeFragment extends BaseFragment<MeActivity> {
     @Override
     public void initView() {
         cniMain = getViewById(R.id.cni_main);
+        imProfileImages = getViewById(R.id.iv_profile_images);
+        imQrImages = getViewById(R.id.iv_profile_qr);
         ivBottomLeft = getViewById(R.id.civ_left);
         tvName1 = getViewById(R.id.tv_name1);
         tvId1 = getViewById(R.id.tv_id1);
@@ -66,18 +77,27 @@ public class MeFragment extends BaseFragment<MeActivity> {
         llViewProfile = getViewById(R.id.ll_view_profile);//跳转到My Profile
         rlAlbumGallery = getViewById(R.id.rl_album_gallery);
         rlWallPosting = getViewById(R.id.rl_wall_posting);
+        rlViewQRCode = getViewById(R.id.rl_view_qr);
+
+        array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
+                R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
+        profileBackgroundId = randomImageId(array);
 
         headUrl = String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id());
-        BitmapTools.getInstance(getActivity()).display(cniMain, headUrl, R.drawable.network_image_default, R.drawable.network_image_default);
+        BitmapTools.getInstance(getActivity()).display(cniMain, headUrl, R.drawable.default_head_icon, R.drawable.default_head_icon);
+        BitmapTools.getInstance(getActivity()).display(imProfileImages, String.format(Constant.API_GET_PIC_PROFILE, MainActivity.getUser().getUser_id()), profileBackgroundId, profileBackgroundId);
+        BitmapTools.getInstance(getActivity()).display(imQrImages, String.format(Constant.API_GET_PROFILE_QR, MainActivity.getUser().getUser_id()), R.drawable.qrcode_button, R.drawable.qrcode_button);
+
+
 //        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
         tvName1.setText(MainActivity.getUser().getUser_given_name());
 //        tvTitle.setText(MainActivity.getUser().getUser_given_name());
-        tvId1.setText(getResources().getString(R.string.app_name) + " ID: " + MainActivity.getUser().getDis_bondwithme_id());
+        tvId1.setText(MainActivity.getUser().getDis_bondwithme_id());
         if(Constant.TYPE_FACEBOOK.equals(MainActivity.getUser().getUser_login_type()))
         {
-            tvLoginId.setText(getResources().getString(R.string.login) + " ID: "+MainActivity.getUser().getUser_login_type());
+            tvLoginId.setText(MainActivity.getUser().getUser_login_type());
         }else {
-            tvLoginId.setText(getResources().getString(R.string.login)+ " ID: " + MainActivity.getUser().getUser_login_id());
+            tvLoginId.setText(MainActivity.getUser().getUser_login_id());
         }
 
         String dofeel_code = MainActivity.getUser().getDofeel_code();
@@ -94,10 +114,21 @@ public class MeFragment extends BaseFragment<MeActivity> {
             }
         }
 
+        //跳转到view QRCode 页面
+        rlViewQRCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intentQRCode = new Intent(getActivity(), ViewQRCodeActivity.class);
+                startActivity(intentQRCode);
+            }
+        });
+
         llViewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MyViewProfileActivity.class);
+                intent.putExtra("profile_image_id",profileBackgroundId);
                 startActivityForResult(intent, UPDATE_PROFILE);
             }
         });
@@ -154,39 +185,31 @@ public class MeFragment extends BaseFragment<MeActivity> {
                     if (!TextUtils.isEmpty(data.getStringExtra("name"))) {
                         tvName1.setText(data.getStringExtra("name"));
                     }
-                    Uri new_pic = data.getParcelableExtra("new_pic");
-                    if (new_pic != null) {
-//                            cniMain.setImageDrawable();
-                        cniMain.setImageURI(new_pic);
+                    Uri head_pic = data.getParcelableExtra("head_pic");
+                    Uri background_pic = data.getParcelableExtra("background_pic");
+                    String background_url = background_pic.toString();
+                    if (head_pic != null) {
+                        cniMain.setImageURI(head_pic);
+                    }
+                    if(background_pic != null){
+                        if(background_url.contains("file://")){
+                            imProfileImages.setImageBitmap(BitmapFactory.decodeFile(background_url.substring(background_url.indexOf("file://") + 7)));
+                            LogUtil.w("background_pic_2",background_url.substring(background_url.indexOf("file://") + 7));
+
+
+                        }
                     }
                 }
-//                String etFirstName = data.getStringExtra("name");
-
-
-//                if (resultCode == getActivity().RESULT_OK) {
-//
-//                    getActivity().finish();
-//                    tvName1.setText(data.getStringExtra("name"));
-//                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                Thread.sleep(3 * 1000);
-//                                VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, MainActivity.getUser().getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
-//
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }).start();
-
-//                    initView();
-//                }
-//                break;
 
             default:
         }
+
     }
+
+    //获取一个背景图的随机id
+    public int randomImageId(int[] array){
+        int result = new Random().nextInt(5);
+        return array[result];
+    }
+
 }

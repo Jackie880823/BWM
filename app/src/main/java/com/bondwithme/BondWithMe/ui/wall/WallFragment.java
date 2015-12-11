@@ -457,14 +457,14 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
     }
 
     @Override
-    public void savePhotoed(WallEntity wallEntity, boolean succeed) {
+    public void saved(WallEntity wallEntity, boolean succeed) {
         if (vProgress != null) {
             vProgress.setVisibility(View.GONE);
         }
     }
 
     @Override
-    public void onSavePhoto() {
+    public void onSave() {
         if (vProgress != null) {
             vProgress.setVisibility(View.VISIBLE);
         }

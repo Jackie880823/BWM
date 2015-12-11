@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
@@ -48,10 +49,23 @@ public class PickAndCropPictureActivity extends Activity {
      * 头像缓存文件名称
      */
     public final static String CACHE_PIC_NAME = "head_cache";
+    private String headCache = CACHE_PIC_NAME;
     /**
      * 临时文件用户裁剪
      */
     public String CACHE_PIC_NAME_TEMP;
+
+    /**
+     * 图片宽比例
+     */
+    public final static String FLAG_PIC_ASPECT_WIDTH = "pic_aspect_width";
+    /**
+     * 图片高比例
+     */
+    public final static String FLAG_PIC_ASPECT_HEIGHT = "pic_aspect_height";
+    private int picAspectWidth;
+    private int picAspectHeight;
+
 
 
     @Override
@@ -61,6 +75,10 @@ public class PickAndCropPictureActivity extends Activity {
         picFinalWidth = getIntent().getIntExtra(FLAG_PIC_FINAL_WIDTH, 100);
         picFinalHeight = getIntent().getIntExtra(FLAG_PIC_FINAL_HEIGHT, 100);
         needCrop = getIntent().getBooleanExtra(FLAG_CROP, true);
+        picAspectWidth = getIntent().getIntExtra(FLAG_PIC_ASPECT_WIDTH,1);
+        picAspectHeight = getIntent().getIntExtra(FLAG_PIC_ASPECT_HEIGHT,1);
+        headCache = headCache + getIntent().getStringExtra(CACHE_PIC_NAME);
+        LogUtil.i("photoWidth*photoHeight_2",picFinalWidth+"*"+picFinalHeight);
         doAction();
     }
 
@@ -68,6 +86,7 @@ public class PickAndCropPictureActivity extends Activity {
         Intent intent;
         switch(picFrom) {
             case REQUEST_FROM_PHOTO:
+                //打开选择照片
                 intent = new Intent(this, SelectPhotosActivity.class);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
                 intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -96,6 +115,7 @@ public class PickAndCropPictureActivity extends Activity {
             switch(requestCode) {
                 // 如果是直接从相册获取
                 case REQUEST_FROM_PHOTO:
+                    LogUtil.i("Pick_onActivityResult","REQUEST_FROM_PHOTO");
                     if(data != null) {
                         Uri uri;
                         uri = data.getData();
@@ -218,8 +238,9 @@ public class PickAndCropPictureActivity extends Activity {
             }
             String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
             Uri source = Uri.fromFile(new File(path));
-            File f = PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME,true);
+            File f = PicturesCacheUtil.getCachePicFileByName(this, headCache,true);
             mCropImagedUri = Uri.fromFile(f);
-            Crop.of(source, mCropImagedUri).asSquare().start(this, REQUEST_PIC_FINAL);
+
+            Crop.of(source, mCropImagedUri).withAspect(picAspectWidth,picAspectHeight).start(this, REQUEST_PIC_FINAL);
     }
 }

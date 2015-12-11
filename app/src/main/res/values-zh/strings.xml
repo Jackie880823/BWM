@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">伴我玩</string>
     <string name="title_tab_diary">日记</string>
     <string name="title_tab_chat">信息</string>
     <string name="title_tab_event">活动</string>
     <string name="title_tab_more">更多</string>
-
-    <!--<string name="msg_google_service_not_found">No valid Google Play Services APK found</string>-->
 
     <string name="title_event_detail">详情</string>
     <string name="title_diary_comment">评论</string>
@@ -72,9 +70,6 @@
     <!-- xxhdip 取google免费最大图片 -->
     <string name="google_map_pic_size">640x640</string>
 
-    <!--<string name="text_location">地理位置</string>-->
-    <!--<string name="text_tag">do what</string>-->
-    <!--<string name="text_face">图标</string>-->
     <string name="text_send">发送</string>
     <string name="title_pick_date_time">活动的日期 &amp; 时间</string>
     <string name="accept">确定</string>
@@ -104,8 +99,6 @@
     <string name="text_search_contact">在此处搜索</string>
     <string name="text_relationship">关系</string>
     <string name="msg_no_contact_select">请至少选择1名成员。</string>
-
-
 
     <string name="text_via_contact">通过联系人</string>
     <string name="text_ID_name">通过伴我玩 帐号/用户名</string>
@@ -154,7 +147,7 @@
     <string name="text_path_relationship">途径&amp;关系</string>
     <string name="text_send_message">聊天</string>
 
-    <!--Bond Alert界面-->
+    <!-- Bond Alert 界面 -->
 
     <string name="title_add_new_members">添加新成员</string>
     <string name="title_album_gallery">相册</string>
@@ -208,7 +201,9 @@
     <string name="text_fail_add_member">添加成员失败，请重试。</string>
     <string name="title_select_relationship">设置关系</string>
 
+
     <string name="title_select_members">选择成员</string>
+
 
     <string name="text_lwait_for_respons">待成员回复。</string>
 
@@ -295,12 +290,10 @@
     <string name="text_birthday_alert_reminder">生日提醒</string>
     <string name="text_group_privacy">隐私</string>
 
-
     <string name="text_upcoming_birthdays">即将过生日的成员</string>
     <string name="text_today_birthday">今日寿星</string>
     <string name="text_today_birthday_on"> &#160;的生日在今天!</string>
     <string name="text_upcoming_birthdays_on"> &#160;的生日在</string>
-
     <string name="text_d">天 </string>
     <string name="text_left">后</string>
 
@@ -340,6 +333,7 @@
     <string name="text_personal_information">个人资料</string>
 
     <string name="text_sign_up_username_warning">不少于5位.</string>
+
 
     <string name="hint_mail">您的电子邮件地址</string>
     <string name="hint_subject">选择主题</string>
@@ -414,6 +408,7 @@
     <string name="text_new_everyone">所有成员</string>
     <string name="text_new_family">我的家庭</string>
 
+
     <string name="text_sticker_store">表情商店</string>
     <string name="download_stickers">已下载的表情</string>
     <string name="inside_download">下载</string>
@@ -437,10 +432,11 @@
     <string name="text_add_relationship_empty">选择关系</string>
     <string name="msg_service_not_available">Google服务目前无法使用。请稍后再试。</string>
     <string name="action_invitation_successful">邀请柬发送成功。</string>
-    <string name="log_out">你是否确定登出？</string>
     <string name="text_add_group_photo">添加照片</string>
+    <string name="log_out">你是否确定登出？</string>
     <string name="text_recorder_stickies">重排表情在聊天界面上的顺序。</string>
     <string name="text_sort">排序</string>
+
 
 
     <string name="text_start_me_life_family">我，我的生活，我的家庭</string>
@@ -491,8 +487,8 @@
     <string name="text_confirm_relation">确定要将此成员添加为您的</string>
 
 
-    <string name="text_long_press_display">长按可预览表情。</string>
 
+    <string name="text_long_press_display">长按可预览表情。</string>
 
     <string name="no_member">赶快添加成员开始聊天吧！</string>
     <string name="no_group">你新建群组，与您的亲人促进感情。</string>
@@ -517,9 +513,6 @@
     <string name="miss_already_you">你已经发送过 Miss 了,耐心等待.</string>
     <string name="text_archive_data">没有存档</string>
 
-    <string name="text_message_chat_post_audio">[音频]</string>
-    <string name="text_message_chat_post_video">[视频]</string>
-
     <string name="text_no_date_diary">暂无动态通告</string>
     <string name="text_no_date_event">暂无活动通告</string>
     <string name="text_no_date_bigday">暂无大日子通告</string>
@@ -528,16 +521,13 @@
     <string name="text_no_date_members">暂无成员通告</string>
     <string name="text_no_date_recommended">暂无推荐通告</string>
     <string name="text_no_date_group">暂无群组通告</string>
+    <string name="text_hold_and_speak">按住说话</string>
 
     <string name="loves_count">%d 赞</string>
+    <string name="text_message_chat_post_audio">[音频]</string>
+    <string name="text_message_chat_post_video">[视频]</string>
     <string name="notification_title_expand">新的消息</string>
     <string name="select_photos_or_video">选择照片或视频</string>
-    <string name="will_remove_photos">如果您选择了一个视频，之前的照片将被删除。是否继续？</string>
-    <string name="will_remove_selected_video">如果您选择了一个照片，之前的视频将被删除。是否继续？</string>
-    <string name="text_all_select">全选</string>
-    <string name="text_inverse_select">反选</string>
-    <string name="text_delete">删除</string>
-    <string name="text_cancel_all">取消全选</string>
 
     <string name="text_evnt_empty_happ_with">幸福就是</string>
     <string name="text_evnt_empty_love_one">与您的亲人联络感情！</string>
@@ -546,6 +536,13 @@
     <string name="text_empty_add_member_startbond">轻按"＋"符号添加成员吧！</string>
     <string name="text_empty_add_group_newgroup">轻按"+"创建新群组 </string>
     <string name="text_empty_add_group_loveone">与您的亲人促进感情吧！</string>
+
+    <string name="will_remove_photos">如果您选择了一个视频，之前的照片将被删除。是否继续？</string>
+    <string name="will_remove_selected_video">如果您选择了一个照片，之前的视频将被删除。是否继续？</string>
+    <string name="text_all_select">全选</string>
+    <string name="text_inverse_select">反选</string>
+    <string name="text_delete">删除</string>
+    <string name="text_cancel_all">取消全选</string>
     <string name="text_message_break_ice">将冰山劈开！</string>
     <string name="text_video_too_big">所选视频太大</string>
     <string name="text_chat_send_video">视频文件大小为%1$s，确定要发送吗？</string>
@@ -602,30 +599,28 @@
     <string name="text_audio_release">松手发送</string>
     <string name="text_audio_loosen_audition">松手重播</string>
     <string name="text_audio_cancle_send">松手取消发送</string>
-    <string name="text_previous">上一个</string>
+    <string name="text_recording_video">录制视频</string>
+    <string name="text_take_photos">拍摄照片</string>
+    <string name="text_record_audio_too_short">录音时间太短</string>
     <string name="text_can_record_time">还能够录制%1$s秒</string>
+    <string name="text_previous">上一个</string>
 
     <string name="say_thanks_for_report">谢谢您的报告!</string>
     <!-- add about recorder video by Jackie -->
     <string name="recording_video">录制视频</string>
     <string name="video_start">录像开始</string>
     <string name="ask_send">是否发送？</string>
-    <string name="text_processing">正在加载</string>
+    <string name="text_processing" tools:ignore="TypographyEllipsis">正在加载&#8230;</string>
     <string name="recording_error">录制出错，停止录制</string>
     <string name="prompt">提示</string>
     <string name="open_the_equipment_failure">打开设备失败！</string>
     <string name="no_sd_card">没有SD卡！</string>
-
-    <string name="text_recording_video">录制视频</string>
-    <string name="text_take_photos">拍摄照片</string>
-    <string name="text_record_audio_too_short">录音时间太短</string>
-    <string name="text_hold_and_speak">按住说话</string>
     <string name="show_video_limit">只显示大小不超过20M的视频</string>
     <string name="open_gps_title">需要提高位置信息的精确度</string>
     <string name="use_gps_hint">请使用GPS确定位置</string>
+    <string name="text_collapse">收起</string>
     <string name="text_tag">Tag</string>
     <string name="text_feeling">心情</string>
-    <string name="text_collapse">收起</string>
     <string name="text_message_copy">复制</string>
 
     <string name="title_rewards">奖励</string>
@@ -652,7 +647,7 @@
 
     <string name="text_tip_add_member">添加成员到家庭树，在日记中查看他们的最新动态。</string>
     <string name="text_tip_add_photo">发一个帖子并添加一张照片。</string>
-    <string name="text_tip_add_diary">添加您的首个日记。</string>e
+    <string name="text_tip_add_diary">添加您的首个日记。</string>
     <string name="text_tip_feeling">亲，感觉怎么样？</string>
     <string name="text_tip_tag_member">艾特成员，他们将获得通告。</string>
     <string name="text_tip_allow_me">仅限我查看或分享至所有成员？</string>
@@ -669,4 +664,15 @@
     <string name="introduction_description_4">在日记中与您的家人分享珍贵的时刻。</string>
     <string name="introduction_description_5">与家人通过单独或群聊保持联系。</string>
     <string name="diary_hint">在此分享你的时刻</string>
-</resources>
+
+    <string name="text_s">的</string>
+    <string name="text_search_bwm_user_no_found">No Result found,Try again.</string>
+    <string name="text_invite_members_info">This app is cool,add me!</string>
+    <string name="profile_privacy">Profile\'s Privacy</string>
+    <string name="year_of_birth">Year of Birth</string>
+    <string name="text_public">Public</string>
+    <string name="text_only_me">Only Me</string>
+    <string name="text_all_member">All Member</string>
+    <string name="notification_action_message_inactive_recommend">%1$s 加入了伴我玩。快加他／她呗！</string>
+    <string name="text_confirm">确定</string>
+</resources>												
