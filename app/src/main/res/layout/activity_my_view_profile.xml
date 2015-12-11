@@ -86,13 +86,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-
                 android:layout_below="@+id/ll_card">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/default_split_line" />
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:background="@color/default_wide_split_line"
                     android:layout_gravity="center"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/default_split_line" />
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

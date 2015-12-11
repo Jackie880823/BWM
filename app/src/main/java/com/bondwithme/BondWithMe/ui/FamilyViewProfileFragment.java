@@ -52,7 +52,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private final static String TAG = "FamilyViewProfileFragment";
     private String useId;//本人Id，这个将来是全局变量
     private String memberId;//本人的memberId
-    private String bwmId;//本人的memberId
+    private String bwmId;//本人的bwmId
     private String memberFlag;
 
     public static final int CHOOSE_RELATION_CODE = 1;
@@ -125,7 +125,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     setDatePrivacy(userEntity.getMember_flag(),rlPhone);
 
 
-                    if(bwmId != null){
+                    if(bwmId != null || memberId != null){
                         flMember.setVisibility(View.VISIBLE);
                         if("0".equals(userEntity.getMember_flag())){
                             //如果不是好友
@@ -179,7 +179,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     public void initView() {
         userEntity = (UserEntity) getParentActivity().getIntent().getExtras().getSerializable("userEntity");
         useId = MainActivity.getUser().getUser_id();//MainActivity.
-//        memberId = getParentActivity().getIntent().getStringExtra("member_id");
+        memberId = getParentActivity().getIntent().getStringExtra("member_id");
         bwmId = getParentActivity().getIntent().getStringExtra("bwm_id");
 
         profileBackgroundId = getParentActivity().getIntent().getIntExtra("profile_image_id",6);
@@ -352,7 +352,6 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     }
 
     private void setDatePrivacy(String dateFlag,View view){
-
         switch (dateFlag) {
             case "0":
                 view.setVisibility(View.GONE);

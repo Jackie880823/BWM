@@ -89,9 +89,19 @@
                 android:layout_below="@+id/ll_card">
                 <View
                     android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/default_split_line" />
+                <View
+                    android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:background="@color/default_wide_split_line"
                     android:layout_gravity="center"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/default_split_line" />
                 <RelativeLayout
                     android:id="@+id/rl_view_qr"
                     android:layout_width="match_parent"
@@ -160,10 +170,19 @@
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/default_split_line" />
+                <View
+                    android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:background="@color/default_wide_split_line"
                     android:layout_gravity="center"/>
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center"
+                    android:background="@color/default_split_line" />
                 <RelativeLayout
                     android:id="@+id/ll_view_profile"
                     android:layout_width="match_parent"
