@@ -111,9 +111,12 @@ public class ContactUtil {
                 null);
 
         List<String> emails = new ArrayList<>();
-        if(emailCursor!=null) {
-            while (emailCursor.moveToNext()) {
+        if (emailCursor.moveToFirst()) {
+            do {
                 emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
+            }while (emailCursor.moveToNext());
+            if(!emailCursor.isClosed()){
+                emailCursor.close();
             }
         }
         return emails;
@@ -126,7 +129,7 @@ public class ContactUtil {
      * @param cursor
      * @return
      */
-    public static List<ContactDetailEntity> getContactDetailEntities(Context context, Cursor cursor)
+    public static List<ContactDetailEntity>     getContactDetailEntities(Context context, Cursor cursor)
     {
         List<ContactDetailEntity> contactDetailEntities = new ArrayList<>();
         ContactDetailEntity contactDetailEntity;
