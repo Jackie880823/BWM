@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.ui.add;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -49,6 +50,7 @@ public class AddContactMembersActivity extends BaseActivity {
     private final String TAG = getClass().getSimpleName();
 
     private final int REQUEST_CONTACT_DETAIL_SUCCESSFUL = 0;
+    private final int GET_CONTACT = 1;
 
     private final int ADD_MEMBER = 1;
     private final int PENDING_MEMBER = 2;
@@ -97,6 +99,10 @@ public class AddContactMembersActivity extends BaseActivity {
                             }
                         }
                     });
+                    break;
+
+                case GET_CONTACT:
+                    getData();
                     break;
             }
         }
@@ -291,9 +297,17 @@ public class AddContactMembersActivity extends BaseActivity {
         ivSearch = getViewById(R.id.iv_search);
 
         rv.setLayoutManager(new LinearLayoutManager(this));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                contactDetailEntities = ContactUtil.getContactDetailEntities(AddContactMembersActivity.this, ContactUtil.getContacts(AddContactMembersActivity.this, null, null, null, null));
+                handler.sendEmptyMessage(GET_CONTACT);
+            }
+        }).start();
 //        获取联系人手机和邮箱
-        contactDetailEntities = ContactUtil.getContactDetailEntities(this, ContactUtil.getContacts(this, null, null, null, null));
-        
+
+
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -336,6 +350,11 @@ public class AddContactMembersActivity extends BaseActivity {
      */
     @Override
     public void requestData() {
+
+    }
+
+    private void getData()
+    {
         Map<String, String> params = new HashMap<>();
         params.put("user_id", MainActivity.getUser().getUser_id());
         params.put("user_country_code", MainActivity.getUser().getUser_country_code());
