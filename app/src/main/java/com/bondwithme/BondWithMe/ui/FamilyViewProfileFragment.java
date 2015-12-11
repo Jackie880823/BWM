@@ -138,6 +138,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
                     tvFirstName.setText(userEntity.getUser_given_name());
                     tvLastName.setText(userEntity.getUser_surname());
+                    if(userEntity.getUser_phone_number().size() >0){
+                      tvPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone_number().get(0));
+                    }
                     String strDOB = userEntity.getUser_dob();
                     LogUtil.d("TAG", "strDOB===" + strDOB);
                     setTvBirthday(strDOB);
@@ -244,9 +247,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             @Override
             public void onClick(View v) {
                 if(userEntity == null)return;
-
                 Intent intent = new Intent(getParentActivity(), ViewOriginalPicesActivity.class);
-
                 ArrayList<PhotoEntity> datas = new ArrayList();
                 PhotoEntity peData = new PhotoEntity();
                 peData.setUser_id(userEntity.getUser_id());
@@ -276,8 +277,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
             tvName1.setText(userEntity.getUser_given_name());
             tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
-            if (userEntity.getUser_phone().length() > 0){
-                tvPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone());
+            if(userEntity.getUser_phone_number().size() > 0){
+                tvPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone_number().get(0));
             }
             tvFirstName.setText(userEntity.getUser_given_name());
             tvLastName.setText(userEntity.getUser_surname());

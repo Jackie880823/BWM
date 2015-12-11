@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.ForeignCollectionField;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by wing on 15/1/23.
@@ -58,7 +59,15 @@ public class UserEntity implements Serializable {
     private String fam_accept_flag;
     private String group_new_post;
     private String group_member_response;
+    private List<String> user_phone_number;
 
+    public List<String> getUser_phone_number() {
+        return user_phone_number;
+    }
+
+    public void setUser_phone_number(List<String> user_phone_number) {
+        this.user_phone_number = user_phone_number;
+    }
 //    private AppTokenEntity token;
 
     /*chat*/
