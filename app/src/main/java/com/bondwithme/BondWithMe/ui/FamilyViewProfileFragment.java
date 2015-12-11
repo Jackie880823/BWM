@@ -352,7 +352,6 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     }
 
     private void setDatePrivacy(String dateFlag,View view){
-
         switch (dateFlag) {
             case "0":
                 view.setVisibility(View.GONE);
