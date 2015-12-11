@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
 import com.bondwithme.BondWithMe.App;
@@ -94,7 +95,7 @@ public class FileUtil {
      * @param context
      * @return
      */
-    public static String getCacheFilePath(Context context,boolean isOut) {
+    public static String getCacheFilePath(Context context, boolean isOut) {
         File f = getSaveRootPath(context, isOut);
 
         f = new File(f.getAbsolutePath() + CACHE_DIR_NAME);
@@ -230,16 +231,36 @@ public class FileUtil {
         return filePath;
     }
 
-    public static File saveVideoFile(Context mContext) {
-        return new File(getVideoRootPath(mContext) + File.separator + System.currentTimeMillis() + ".mp4");
+    /**
+     * 获取视频保存文件
+     * @param mContext
+     * @param isOutPath 网络相关的请不要使用true!!!!!,其它可考虑是否保存在app外(沙盒)
+     * @return
+     */
+    public static File saveVideoFile(Context mContext, boolean isOutPath) {
+        /** Modify by Jackie
+         * 防止Context因生命周期没被收回导致的内存泄漏
+         * 非涉及UI的Context都使用getApplicationContext()
+         */
+        // return new File(getVideoRootPath(mContext) + File.separator + System.currentTimeMillis() + ".mp4");
+
+        return new File(getVideoRootPath(mContext.getApplicationContext(), isOutPath) + File.separator + System.currentTimeMillis() + ".mp4");
     }
 
     public static String getPDFSavePath(Context mContext) {
-        return getPDFRootPath(mContext) + String.format("/cache_%s.pdf", "" + System.currentTimeMillis());
+        /** Modify by Jackie
+         * 防止Context因生命周期没被收回导致的内存泄漏
+         * 非涉及UI的Context都使用getApplicationContext()
+         */
+        return getPDFRootPath(mContext.getApplicationContext()) + String.format("/cache_%s.pdf", "" + System.currentTimeMillis());
     }
 
     public static String getPDFRootPath(Context mContext) {
-        File bootFile = getSaveRootPath(mContext, true);
+        /** Modify by Jackie
+         * 防止Context因生命周期没被收回导致的内存泄漏
+         * 非涉及UI的Context都使用getApplicationContext()
+         */
+        File bootFile = getSaveRootPath(mContext.getApplicationContext(), true);
         String filePath = bootFile.getAbsolutePath();
         filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + PDF;
         File file = new File(filePath);
@@ -250,9 +271,30 @@ public class FileUtil {
     }
 
     public static String getVideoRootPath(Context mContext) {
-        File bootFile = getSaveRootPath(mContext, false);
+        return getVideoRootPath(mContext, false);
+
+    }
+
+    /**
+     * 获取视频保存的根路径
+     *
+     * @param mContext
+     * @param isOutPath 网络相关的请不要使用true!!!!!,其它可考虑是否保存在app外(沙盒)
+     * @return
+     */
+    @NonNull
+    private static String getVideoRootPath(Context mContext, boolean isOutPath) {
+        /** Modify by Jackie
+         * 防止Context因生命周期没被收回导致的内存泄漏
+         * 非涉及UI的Context都使用getApplicationContext()
+         */
+        File bootFile = getSaveRootPath(mContext.getApplicationContext(), isOutPath);
         String filePath = bootFile.getAbsolutePath();
-        filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + VIDEO;
+        if (isOutPath) {
+            filePath = filePath + File.separator + VIDEO;
+        } else {
+            filePath = filePath + File.separator + App.getLoginedUser().getUser_id() + File.separator + VIDEO;
+        }
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdirs();
@@ -270,7 +312,6 @@ public class FileUtil {
     }
 
     /**
-     *
      * @param mContext
      * @param stickerPath 表情包名
      * @param stickerName

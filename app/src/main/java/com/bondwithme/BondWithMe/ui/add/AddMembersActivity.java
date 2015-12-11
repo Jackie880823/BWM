@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,9 +22,11 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.adapter.AddMembersAdapter;
 import com.bondwithme.BondWithMe.entity.RecommendEntity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.RelationshipActivity;
 import com.bondwithme.BondWithMe.util.MessageUtil;
+import com.bondwithme.BondWithMe.zxing.activity.CaptureActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -77,7 +80,7 @@ public class AddMembersActivity extends BaseActivity{
 
     @Override
     protected void titleRightEvent() {
-
+        startActivity(new Intent(this, CaptureActivity.class));
     }
 
     @Override
@@ -121,10 +124,11 @@ public class AddMembersActivity extends BaseActivity{
 
                         @Override
                         public void onResult(String string) {
+                            Log.d(TAG,"---------" + string);
                             try {
                                 JSONObject jsonObject = new JSONObject(string);
                                 if (Constant.SUCCESS.equals(jsonObject.get("response_status"))) {
-                                    Intent intent = new Intent(AddMembersActivity.this, RelationshipActivity.class);
+                                    Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
                                     intent.putExtra("member_id", jsonObject.getString("member_id"));
                                     startActivity(intent);
                                 } else {
@@ -195,7 +199,7 @@ public class AddMembersActivity extends BaseActivity{
                 adapter.setOnAddIconClickListener(new AddMembersAdapter.OnAddIconClickListener() {
                     @Override
                     public void onAddIconClick(RecommendEntity recommendEntity) {
-                        Intent intent = new Intent(AddMembersActivity.this, RelationshipActivity.class);
+                        Intent intent = new Intent(AddMembersActivity.this, FamilyViewProfileActivity.class);
                         intent.putExtra("member_id", recommendEntity.getUser_id());
                         startActivityForResult(intent, ADD_MEMBER);
                     }

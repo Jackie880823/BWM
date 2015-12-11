@@ -25,6 +25,7 @@ import com.bondwithme.BondWithMe.entity.ContactDetailEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.ui.AddMemberWorkFlow;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
+import com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.RelationshipActivity;
 import com.bondwithme.BondWithMe.util.ContactUtil;
@@ -201,7 +202,7 @@ public class AddContactMembersActivity extends BaseActivity {
     }
 
     private void doAdd(int position, ContactDetailEntity contactDetailEntity) {
-        Intent intent = new Intent(this, RelationshipActivity.class);
+        Intent intent = new Intent(this, FamilyViewProfileActivity.class);
         if (!TextUtils.isEmpty(contactDetailEntity.getUser_id()))
         {
             intent.putExtra("member_id", contactDetailEntity.getUser_id());
@@ -210,7 +211,7 @@ public class AddContactMembersActivity extends BaseActivity {
     }
 
     private void doAdded(int position, ContactDetailEntity contactDetailEntity) {
-        Intent intent = new Intent(this, RelationshipActivity.class);
+        Intent intent = new Intent(this, FamilyViewProfileActivity.class);
         if (!TextUtils.isEmpty(contactDetailEntity.getUser_id()))
         {
             intent.putExtra("member_id", contactDetailEntity.getUser_id());

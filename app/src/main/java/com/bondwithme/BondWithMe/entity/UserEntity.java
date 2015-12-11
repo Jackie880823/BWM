@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.ForeignCollectionField;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by wing on 15/1/23.
@@ -58,7 +59,15 @@ public class UserEntity implements Serializable {
     private String fam_accept_flag;
     private String group_new_post;
     private String group_member_response;
+    private List<String> user_phone_number;
 
+    public List<String> getUser_phone_number() {
+        return user_phone_number;
+    }
+
+    public void setUser_phone_number(List<String> user_phone_number) {
+        this.user_phone_number = user_phone_number;
+    }
 //    private AppTokenEntity token;
 
     /*chat*/
@@ -81,6 +90,71 @@ public class UserEntity implements Serializable {
     private String added_flag;
 
     private String own_flag;
+
+    /*0 代表隐藏 1 代表显示*/
+    private String dob_date_flag;
+    private String dob_year_flag;
+    private String gender_flag;
+    private String email_flag;
+    private String phone_flag;
+    private String location_flag;
+    private String member_flag;
+
+    public String getDob_date_flag() {
+        return dob_date_flag;
+    }
+
+    public void setDob_date_flag(String dob_date_flag) {
+        this.dob_date_flag = dob_date_flag;
+    }
+
+    public String getDob_year_flag() {
+        return dob_year_flag;
+    }
+
+    public void setDob_year_flag(String dob_year_flag) {
+        this.dob_year_flag = dob_year_flag;
+    }
+
+    public String getGender_flag() {
+        return gender_flag;
+    }
+
+    public void setGender_flag(String gender_flag) {
+        this.gender_flag = gender_flag;
+    }
+
+    public String getEmail_flag() {
+        return email_flag;
+    }
+
+    public void setEmail_flag(String email_flag) {
+        this.email_flag = email_flag;
+    }
+
+    public String getPhone_flag() {
+        return phone_flag;
+    }
+
+    public void setPhone_flag(String phone_flag) {
+        this.phone_flag = phone_flag;
+    }
+
+    public String getLocation_flag() {
+        return location_flag;
+    }
+
+    public void setLocation_flag(String location_flag) {
+        this.location_flag = location_flag;
+    }
+
+    public String getMember_flag() {
+        return member_flag;
+    }
+
+    public void setMember_flag(String member_flag) {
+        this.member_flag = member_flag;
+    }
 
     public String getJoin_group() {
         return join_group;

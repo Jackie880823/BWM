@@ -46,6 +46,7 @@ import com.bondwithme.BondWithMe.ui.wall.DiaryCommentActivity;
 import com.bondwithme.BondWithMe.ui.wall.DiaryInformationFragment;
 import com.bondwithme.BondWithMe.ui.wall.NewDiaryActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallViewPicActivity;
+import com.bondwithme.BondWithMe.util.FileUtil;
 import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LocationUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
@@ -56,6 +57,7 @@ import com.bondwithme.BondWithMe.util.WallUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.bondwithme.BondWithMe.widget.FreedomSelectionTextView;
 import com.bondwithme.BondWithMe.widget.MyDialog;
+import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -200,7 +202,6 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
     private boolean needFull = false;
 
     private boolean isDetailed;
-
 
     private List<CompressBitmapTask> tasks = new ArrayList<>();
     private List<Uri> localPhotos = new ArrayList<>();
@@ -738,8 +739,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
         String photoCount = wallEntity.getPhoto_count();
 
-        if (TextUtils.isEmpty(photoCount) || Integer.valueOf(photoCount) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())) { // 没有图片不需要显示:保存图片功能
-            popupMenu.getMenu().findItem(R.id.menu_save_all_photos).setVisible(false);
+        if (TextUtils.isEmpty(photoCount) || Integer.valueOf(photoCount) <= 0) { // 没有图片不需要显示:保存图片功能
+            if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {
+                popupMenu.getMenu().findItem(R.id.menu_save_all_medias).setVisible(false);
+            } else {
+                popupMenu.getMenu().findItem(R.id.menu_save_all_medias).setTitle(context.getString(R.string.save_all_video));
+            }
         }
 
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -774,9 +779,14 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                             openPhotos();
                         }
                         break;
-                    case R.id.menu_save_all_photos:
-                        LogUtil.d(TAG, "onMenuItemClick&  save all photos");
-                        savePhotos();
+                    case R.id.menu_save_all_medias:
+                        LogUtil.d(TAG, "onMenuItemClick&  save all media");
+                        String photoCount = wallEntity.getPhoto_count();
+                        if (!TextUtils.isEmpty(photoCount) && Integer.valueOf(photoCount) > 0) {
+                            savePhotos();
+                        } else if (!TextUtils.isEmpty(wallEntity.getVideo_filename())) {
+                            saveVideo();
+                        }
                         break;
                     case R.id.menu_edit_this_post:
                         editDiaryAction();
@@ -831,7 +841,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         LogUtil.d(TAG, "GET_WALL_SUCCEED photoCount = " + photoCount);
         if (photoCount > 0) {
             /**wing add*/
-            mViewClickListener.onSavePhoto();
+            mViewClickListener.onSave();
             /**wing add*/
             Map<String, String> condition = new HashMap<>();
             condition.put("content_id", wallEntity.getContent_id());
@@ -845,6 +855,31 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             LogUtil.e(TAG, "save Photo Fail");
         }
 //        String.format(Constant.API_GET_PIC, Constant.Module_Original, userId, photoEntity.getFile_id());
+    }
+
+
+    private void saveVideo() {
+        mViewClickListener.onSave();
+        String createdContentId = wallEntity.getContent_creator_id();
+        String fileName = wallEntity.getVideo_filename();
+        String url;
+        url = String.format(Constant.API_GET_VIDEO, createdContentId, fileName);
+
+        /*******为适应news、rewards中的视频下载，添加如下代码 **********/
+        if (createdContentId.equals("for_news_or_rewards")) {
+            url = fileName;
+            fileName = url.substring(url.lastIndexOf('/') + 1);
+            LogUtil.d(TAG, "fileName" + fileName);
+        }
+
+        String targetParent = PreviewVideoActivity.VIDEO_PATH;
+        File cacheFile = new File(targetParent);
+        boolean canWrite = cacheFile.exists() || cacheFile.mkdir();
+        String saveVideoPath;
+        saveVideoPath = canWrite ? targetParent + fileName : FileUtil.getCacheFilePath(context, false) + String.format("/%s", fileName);
+
+        callBack.setLinkType(CallBack.LINK_TYPE_SAVE_VIDEO);
+        new HttpTools(context).download(context, url, saveVideoPath, true, callBack);
     }
 
     /**
@@ -996,7 +1031,8 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
         public static final int LINK_TYPE_SUBMIT_PICTURE = 2;
         public static final int LINK_TYPE_POST_LOVE = 3;
         public static final int LINK_TYPE_SAVE_PHOTOS = 4;
-        public static final int LINK_TYPE_PUT_PHOTO_MAX = 5;
+        public static final int LINK_TYPE_SAVE_VIDEO = 5;
+        public static final int LINK_TYPE_PUT_PHOTO_MAX = 6;
 
         /**
          * 当前回调标识，用于识别当前同调用类别
@@ -1066,6 +1102,23 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                         ((DiaryInformationFragment) fragment).setProgressVisibility(View.GONE);
                     }
                     break;
+                case LINK_TYPE_SAVE_VIDEO:
+                    if (!TextUtils.isEmpty(response) && response.contains("/data/data/")) {
+                        try {
+
+                            Files.copy(new File(response),  FileUtil.saveVideoFile(context, true));
+                            mViewClickListener.saved(wallEntity, true);
+                        } catch (IOException e) {
+                            mViewClickListener.saved(wallEntity, false);
+                            e.printStackTrace();
+                        }
+                    } else {
+                        mViewClickListener.saved(wallEntity, true);
+                    }
+                    break;
+
+                default:
+                    break;
 
             }
         }
@@ -1081,6 +1134,11 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     if (fragment instanceof DiaryInformationFragment) {
                         ((DiaryInformationFragment) fragment).setProgressVisibility(View.GONE);
                     }
+                    break;
+                case LINK_TYPE_SAVE_VIDEO:
+                    mViewClickListener.saved(wallEntity, false);
+                    break;
+                default:
                     break;
             }
             e.printStackTrace();
@@ -1116,7 +1174,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     LogUtil.d(TAG, "debug onFinish& downloadCount = " + downloadCount + "; size = " + data.size());
                     if (downloadCount == data.size()) {
                         downloadCount = 0;
-                        mViewClickListener.savePhotoed(wallEntity, true);
+                        mViewClickListener.saved(wallEntity, true);
                     }
                 }
 
@@ -1136,7 +1194,7 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
                 @Override
                 public void onError(Exception e) {
-                    mViewClickListener.savePhotoed(wallEntity, false);
+                    mViewClickListener.saved(wallEntity, false);
                     e.printStackTrace();
                 }
 

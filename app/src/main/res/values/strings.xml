@@ -98,9 +98,6 @@
     <string name="mail_subject_1">General Inquiry</string>
     <string name="mail_subject_2">Suggestion &amp; Feedback</string>
     <string name="mail_subject_3">Report a Problem</string>
-    <string name="text_sending">	\t Sending …</string>
-    <string name="text_waiting">	\t Waiting …</string>
-    <string name="text_loading">	\t Loading …</string>
     <string name="text_search_contact">Search here</string>
     <string name="text_relationship">Relationship</string>
     <string name="msg_no_contact_select">Please select at least 1 member.</string>
@@ -217,7 +214,7 @@
     <string name="photo_position_double_arrow"><![CDATA[<" "%1$d/%2$d" >	]]></string>
     <string name="photo_position_left_arrow"><![CDATA[<" "%1$d/%2$d"   "]]></string>
     <string name="photo_position_right_arrow"><![CDATA["   "%1$d/%2$d" >	]]></string>
-    <string name="photo_position_no_arrow">	%1$d/%2$d</string>
+    <string name="photo_position_no_arrow"> %1$d/%2$d</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -401,7 +398,7 @@
     <string name="text_group">Group</string>
     <string name="hint_comment_input">Type a comment…</string>
     <string name="text_character_and"><![CDATA[" & "]]></string>
-    <string name="saved_to_path">Photo saved to this device.</string>
+    <string name="saved_to_path">Saved to this device.</string>
     <string name="location_search_error">Location not found.</string>
 
     <string name="morning">AM</string>
@@ -636,6 +633,7 @@
 
     <string name="add_photo_to_this_post">Add Photo to this Post</string>
     <string name="save_all_photos">Save All Photos</string>
+    <string name="save_all_video">Save Video</string>
     <string name="edit_this_post">Edit this Post</string>
     <string name="delete_this_post">Delete this Post</string>
 
@@ -680,4 +678,14 @@
     <string name="text_s">\'s&#160;</string>
     <string name="text_search_bwm_user_no_found">No Result found,Try again.</string>
     <string name="text_invite_members_info">This app is cool,add me!</string>
+    <string name="profile_privacy">Profile\'s Privacy</string>
+    <string name="year_of_birth">Year of Birth</string>
+    <string name="text_public">Public</string>
+    <string name="text_only_me">Only Me</string>
+    <string name="text_all_member">All Member</string>
+    <string name="text_scan_qr">QR Code Reader</string>
+    <string name="text_scan_it">Scan to add me!</string>
+    <string name="my_qr_code">My QR Code</string>
+    <string name="notification_action_message_inactive_recommend">%1$s is on BondWithMe. Add him/her.</string>
+    <string name="text_confirm">Confirm</string>
 </resources>
