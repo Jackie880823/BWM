@@ -675,4 +675,6 @@
     <string name="text_all_member">All Member</string>
     <string name="notification_action_message_inactive_recommend">%1$s 加入了伴我玩。快加他／她呗！</string>
     <string name="text_confirm">确定</string>
+    <string name="text_dont_allow">Don\'t Allow</string>
+    <string name="text_dialog_ask_contact">BondWithMe will use your Contacts to find other BondWithMe user you may know.</string>
 </resources>												

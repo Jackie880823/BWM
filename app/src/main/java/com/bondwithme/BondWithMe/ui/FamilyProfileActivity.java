@@ -23,6 +23,7 @@ public class FamilyProfileActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
+        rightButton.setImageResource(R.drawable.profile_add_message);
         rightButton.setVisibility(View.VISIBLE);
     }
 

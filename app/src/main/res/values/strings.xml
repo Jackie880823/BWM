@@ -689,4 +689,6 @@
     <string name="notification_action_message_inactive_recommend">%1$s is on BondWithMe. Add him/her.</string>
     <string name="text_confirm">Confirm</string>
     <string name="scan_within_box">Scan the QR Code within the box</string>
+    <string name="text_dont_allow">Don\'t Allow</string>
+    <string name="text_dialog_ask_contact">BondWithMe will use your Contacts to find other BondWithMe user you may know.</string>
 </resources>
