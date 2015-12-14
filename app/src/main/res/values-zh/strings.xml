@@ -681,4 +681,5 @@
     <string name="text_confirm">确定</string>
     <string name="text_dont_allow">Don\'t Allow</string>
     <string name="text_dialog_ask_contact">BondWithMe will use your Contacts to find other BondWithMe user you may know.</string>
+    <string name="text_qr">的二维码</string>
 </resources>												
