@@ -2,6 +2,7 @@ package com.bondwithme.BondWithMe.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.ContactDetailEntity;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.util.List;
@@ -49,7 +51,11 @@ public class AddContactMemberAdapter extends RecyclerView.Adapter<AddContactMemb
 
     @Override
     public void onBindViewHolder(ContactMemberViewHolder holder, int position) {
-        VolleyUtil.initNetworkImageView(mContext, holder.cniv, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+        if (!TextUtils.isEmpty(mData.get(position).getUser_id()))
+        {
+            VolleyUtil.initNetworkImageView(mContext, holder.cniv, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+            LogUtil.d("idididididid" , "id"   +  "这个请求了头像");
+        }
         holder.tvName.setText(mData.get(position).getDisplayName());
         holder.tvId.setText(mData.get(position).getUser_login_id());
         switch (mData.get(position).getMemberType())
