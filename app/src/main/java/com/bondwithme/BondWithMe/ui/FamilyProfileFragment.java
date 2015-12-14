@@ -290,6 +290,18 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getParentActivity().rightButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getParentActivity().rightButton.setVisibility(View.INVISIBLE);
+    }
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
