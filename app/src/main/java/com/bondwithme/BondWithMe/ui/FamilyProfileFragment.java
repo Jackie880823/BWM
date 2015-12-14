@@ -419,6 +419,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
+                LogUtil.e("response====",response+"");
                 List<UserEntity> data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
                 if ((data != null) && (data.size() > 0)) {
