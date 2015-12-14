@@ -148,7 +148,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     tvFirstName.setText(userEntity.getUser_given_name());
                     tvLastName.setText(userEntity.getUser_surname());
                     if(userEntity.getUser_phone_number().size() >0){
-                      tvPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone_number().get(0));
+                      tvPhone.setText("+" + userEntity.getUser_phone_number().get(0));
                     }
                     String strDOB = userEntity.getUser_dob();
                     LogUtil.d("TAG", "strDOB===" + strDOB);
@@ -273,7 +273,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         });
 
         if(userEntity != null){
-            VolleyUtil.initNetworkImageView(getParentActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+            VolleyUtil.initNetworkImageView(getParentActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE,  userEntity.getUser_id()), profileBackgroundId, profileBackgroundId);
             memberFlag = userEntity.getMember_flag();
 
