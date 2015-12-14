@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import com.bondwithme.BondWithMe.entity.ContactDetailEntity;
-import com.bondwithme.BondWithMe.entity.ContactMessageEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class ContactUtil {
                         ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "="
                                 + contactId, null, null);
                 if (phone.moveToFirst()) {
-                    for (; !phone.isAfterLast(); phone.moveToNext()) {
+                    do {
                         int index = phone
                                 .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                         int typeindex = phone
@@ -63,10 +62,10 @@ public class ContactUtil {
 //                  default:
 //                      break;
 //                  }
-                    }
-                    if (!phone.isClosed()) {
-                        phone.close();
-                    }
+                    }while (phone.moveToNext());
+                }
+                if (!phone.isClosed()) {
+                    phone.close();
                 }
             }
             return phoneNumbers;
@@ -86,9 +85,12 @@ public class ContactUtil {
                 null);
 
         List<String> emails = new ArrayList<>();
-        if(emailCursor!=null) {
-            while (emailCursor.moveToNext()) {
+        if (emailCursor.moveToFirst()) {
+            do {
                 emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
+            }while (emailCursor.moveToNext());
+            if(!emailCursor.isClosed()){
+                emailCursor.close();
             }
         }
         return emails;
@@ -109,9 +111,12 @@ public class ContactUtil {
                 null);
 
         List<String> emails = new ArrayList<>();
-        if(emailCursor!=null) {
-            while (emailCursor.moveToNext()) {
+        if (emailCursor.moveToFirst()) {
+            do {
                 emails.add(emailCursor.getString(emailCursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
+            }while (emailCursor.moveToNext());
+            if(!emailCursor.isClosed()){
+                emailCursor.close();
             }
         }
         return emails;
@@ -124,7 +129,7 @@ public class ContactUtil {
      * @param cursor
      * @return
      */
-    public static List<ContactDetailEntity> getContactDetailEntities(Context context, Cursor cursor)
+    public static List<ContactDetailEntity>     getContactDetailEntities(Context context, Cursor cursor)
     {
         List<ContactDetailEntity> contactDetailEntities = new ArrayList<>();
         ContactDetailEntity contactDetailEntity;
@@ -139,11 +144,12 @@ public class ContactUtil {
                 contactDetailEntity.setEmails(ContactUtil.getContactEmails(context, cursor));
                 contactDetailEntities.add(contactDetailEntity);
             }
-
         }
         while (cursor.moveToNext());
 
-        cursor.close();
+        if(!cursor.isClosed()) {
+            cursor.close();
+        }
 
         return contactDetailEntities;
     }

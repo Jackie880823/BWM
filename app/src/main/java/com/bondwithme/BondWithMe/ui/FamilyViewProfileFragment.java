@@ -1,14 +1,18 @@
 package com.bondwithme.BondWithMe.ui;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +25,7 @@ import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.util.DensityUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.MyDateUtils;
@@ -106,6 +111,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
 
     Handler handler = new Handler() {
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -134,6 +140,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                             //如果是好友
                             btMessage.setVisibility(View.VISIBLE);
                         }
+                        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+                        layoutParam.setMargins(0,0,0, DensityUtil.dip2px(getParentActivity(), 50));
+                        rlPhone.setLayoutParams(layoutParam);
                     }
 
                     tvFirstName.setText(userEntity.getUser_given_name());
@@ -278,7 +287,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             tvName1.setText(userEntity.getUser_given_name());
             tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
             if(userEntity.getUser_phone_number().size() > 0){
-                tvPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone_number().get(0));
+//                tvPhone.setText("+" + userEntity.getUser_country_code() + " " + userEntity.getUser_phone_number().get(0));
+                tvPhone.setText("+" + userEntity.getUser_phone_number().get(0));
             }
             tvFirstName.setText(userEntity.getUser_given_name());
             tvLastName.setText(userEntity.getUser_surname());
