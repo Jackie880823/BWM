@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity;
+import com.bondwithme.BondWithMe.ui.more.ViewQRCodeActivity;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.zxing.camera.CameraManager;
 import com.bondwithme.BondWithMe.zxing.decoding.CaptureActivityHandler;
@@ -107,6 +108,7 @@ public class CaptureActivity extends BaseActivity implements Callback {
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
 
+
     }
 
     @Override
@@ -133,10 +135,10 @@ public class CaptureActivity extends BaseActivity implements Callback {
 
 		// quit the scan view
 		cancelScanButton.setOnClickListener(new OnClickListener() {
-
 			@Override
-			public void onClick(View v) {
-				CaptureActivity.this.finish();
+			public void onClick(View view) {
+				Intent intentQRCode = new Intent(CaptureActivity.this, ViewQRCodeActivity.class);
+				startActivity(intentQRCode);
 			}
 		});
 	}
