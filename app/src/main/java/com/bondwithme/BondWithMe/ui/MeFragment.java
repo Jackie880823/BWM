@@ -20,7 +20,6 @@ import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.ui.more.ViewQRCodeActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
-import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
 import java.io.File;
@@ -187,16 +186,13 @@ public class MeFragment extends BaseFragment<MeActivity> {
                     }
                     Uri head_pic = data.getParcelableExtra("head_pic");
                     Uri background_pic = data.getParcelableExtra("background_pic");
-                    String background_url = background_pic.toString();
                     if (head_pic != null) {
                         cniMain.setImageURI(head_pic);
                     }
                     if(background_pic != null){
+                        String background_url = background_pic.toString();
                         if(background_url.contains("file://")){
                             imProfileImages.setImageBitmap(BitmapFactory.decodeFile(background_url.substring(background_url.indexOf("file://") + 7)));
-                            LogUtil.w("background_pic_2",background_url.substring(background_url.indexOf("file://") + 7));
-
-
                         }
                     }
                 }

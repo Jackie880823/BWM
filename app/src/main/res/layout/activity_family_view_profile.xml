@@ -21,22 +21,12 @@
                 android:orientation="horizontal"
                 android:background="@color/default_content_bg">
 
-                <!--<com.android.volley.toolbox.NetworkImageView-->
-                    <!--android:id="@+id/iv_profile_images"-->
-                    <!--style="@style/ListImageDefault"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:scaleType="fitStart"-->
-                    <!--android:adjustViewBounds="true"-->
-                    <!--android:src="@drawable/my_profile_bunny"-->
-                    <!--/>-->
                 <com.android.volley.toolbox.NetworkImageView
                     android:id="@+id/iv_profile_images"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="fitStart"
-                    android:adjustViewBounds="true"
-                    />
+                    android:adjustViewBounds="true" />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -356,12 +346,10 @@
                         android:layout_gravity="center"/>
                 </RelativeLayout>
 
-
                 <RelativeLayout
                     android:id="@+id/rl_phone"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_50dp">
+                    android:layout_height="wrap_content">
                     <View
                         android:id="@+id/line"
                         android:layout_width="match_parent"
@@ -407,6 +395,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
+        android:orientation="vertical"
         android:background="@android:color/white">
         <RelativeLayout
             android:layout_width="match_parent"
