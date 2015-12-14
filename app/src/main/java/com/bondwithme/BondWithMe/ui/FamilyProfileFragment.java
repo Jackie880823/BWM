@@ -27,6 +27,7 @@ import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.ui.more.ViewQRCodeActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -76,6 +77,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     private RelativeLayout rlPathRelationship;
     private RelativeLayout rlAlbumGallery;
     private RelativeLayout rlWallPosting;
+    private RelativeLayout rvToQR;
 
     private Button btnSendMessage;
     private UserEntity userEntity;
@@ -125,6 +127,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlWallPosting = getViewById(R.id.rl_wall_posting);
         btnSendMessage = getViewById(R.id.btn_message);
         networkImageView = getViewById(R.id.iv_profile_images);
+        rvToQR = getViewById(R.id.rl_to_qr);
 
         array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
                 R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
@@ -166,6 +169,20 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 intent.putExtra("is_data", true);
                 intent.putExtra("datas", datas);
                 startActivity(intent);
+            }
+        });
+
+
+        rvToQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userEntity != null)
+                {
+                    Intent toQRIntent = new Intent(getActivity(), ViewQRCodeActivity.class);
+                    toQRIntent.putExtra("userEntity", userEntity);
+                    startActivity(toQRIntent);
+                }
+
             }
         });
 
