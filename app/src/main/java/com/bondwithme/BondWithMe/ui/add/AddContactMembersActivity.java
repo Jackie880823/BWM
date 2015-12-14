@@ -2,7 +2,6 @@ package com.bondwithme.BondWithMe.ui.add;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -28,7 +27,6 @@ import com.bondwithme.BondWithMe.ui.AddMemberWorkFlow;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.RelationshipActivity;
 import com.bondwithme.BondWithMe.util.ContactUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
@@ -322,13 +320,11 @@ public class AddContactMembersActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (TextUtils.isEmpty(etSearch.getText().toString())) {
-                    if (adapter != null)
-                    {
+                    if (adapter != null) {
                         adapter.changeData(serverContactDetailEntities);
                     }
                 } else {
-                    if (adapter != null)
-                    {
+                    if (adapter != null) {
                         searchContactDetailEntities.clear();
                         for (int i = 0; i < serverContactDetailEntities.size(); i++) {
                             if (serverContactDetailEntities.get(i).getDisplayName().toLowerCase().startsWith((etSearch.getText().toString().toLowerCase()))) {
@@ -372,11 +368,8 @@ public class AddContactMembersActivity extends BaseActivity {
 //        Log.d(TAG, "requestData: =list====" + new Gson().toJson(list));
 
 
-        LogUtil.d(TAG, "requestData: =contactDetailEntities==" + new Gson().toJson(contactDetailEntities));
+        LogUtil.d(TAG, "requestData: ======" + UrlUtil.mapToJsonstring(params));
 
-        Map<String, String> testParams = new HashMap<>();
-        testParams.put("", new Gson().toJson(contactDetailEntities));
-        LogUtil.d(TAG,"requestData: =contactDetailEntities==jsonparams" + UrlUtil.mapToJsonstring(testParams));
 
 
         new HttpTools(this).post(Constant.API_MATCH_CONTACT_LIST, params, TAG, new HttpCallback() {

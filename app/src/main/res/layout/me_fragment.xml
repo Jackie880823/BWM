@@ -94,7 +94,7 @@
                     android:background="@color/default_split_line" />
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
+                    android:layout_height="3dp"
                     android:background="@color/default_wide_split_line"
                     android:layout_gravity="center"/>
                 <View
@@ -175,7 +175,7 @@
                     android:background="@color/default_split_line" />
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
+                    android:layout_height="3dp"
                     android:background="@color/default_wide_split_line"
                     android:layout_gravity="center"/>
                 <View

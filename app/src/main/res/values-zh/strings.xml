@@ -668,13 +668,18 @@
     <string name="text_s">的</string>
     <string name="text_search_bwm_user_no_found">No Result found,Try again.</string>
     <string name="text_invite_members_info">This app is cool,add me!</string>
-    <string name="profile_privacy">Profile\'s Privacy</string>
-    <string name="year_of_birth">Year of Birth</string>
-    <string name="text_public">Public</string>
-    <string name="text_only_me">Only Me</string>
-    <string name="text_all_member">All Member</string>
+    <string name="profile_privacy">个人资料隐私</string>
+    <string name="year_of_birth">出生年份</string>
+    <string name="text_public">公众</string>
+    <string name="text_only_me">私有</string>
+    <string name="text_all_member">所有</string>
+    <string name="text_scan_qr">扫一扫</string>
+    <string name="text_scan_it">扫一扫二维码，加我伴我玩！</string>
+    <string name="my_qr_code">我的二维码</string>
+    <string name="scan_within_box">将框框对准二维码即可自动扫描</string>
     <string name="notification_action_message_inactive_recommend">%1$s 加入了伴我玩。快加他／她呗！</string>
     <string name="text_confirm">确定</string>
     <string name="text_dont_allow">Don\'t Allow</string>
     <string name="text_dialog_ask_contact">BondWithMe will use your Contacts to find other BondWithMe user you may know.</string>
+    <string name="text_qr">的二维码</string>
 </resources>												

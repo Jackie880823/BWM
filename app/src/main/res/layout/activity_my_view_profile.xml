@@ -94,7 +94,7 @@
                     android:background="@color/default_split_line" />
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
+                    android:layout_height="3dp"
                     android:background="@color/default_wide_split_line"
                     android:layout_gravity="center"/>
                 <View
@@ -329,8 +329,18 @@
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
+                    android:layout_height="1dp"
+                    android:background="@color/default_split_line"
+                    android:layout_gravity="center"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
                     android:background="@color/default_wide_split_line"
+                    android:layout_gravity="center"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/default_split_line"
                     android:layout_gravity="center"/>
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -359,8 +369,18 @@
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="5dp"
+                    android:layout_height="1dp"
+                    android:background="@color/default_split_line"
+                    android:layout_gravity="center"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
                     android:background="@color/default_wide_split_line"
+                    android:layout_gravity="center"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/default_split_line"
                     android:layout_gravity="center"/>
                 <LinearLayout
                     android:id="@+id/ll_reset_password"
