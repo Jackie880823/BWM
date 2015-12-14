@@ -131,7 +131,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     setDatePrivacy(userEntity.getMember_flag(),rlPhone);
 
 
-                    if(bwmId != null || memberId != null){
+                    if((bwmId != null || memberId != null) && !useId.equals(userEntity.getUser_id())){
                         flMember.setVisibility(View.VISIBLE);
                         if("0".equals(userEntity.getMember_flag())){
                             //如果不是好友
