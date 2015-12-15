@@ -55,7 +55,8 @@
                     android:visibility="gone"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
-                    android:text="Tap to change cover and profile photo."/>
+                    android:textColor="@color/default_text_color_while"
+                    android:text="@string/text_profile_change_prompt"/>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -214,7 +215,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_10dp"
-                            android:text="Year of Birth"/>
+                            android:text="@string/text_profile_year_of_birth"/>
                         <TextView
                             android:id="@+id/tv_year_birthday"
                             android:layout_width="match_parent"
@@ -251,7 +252,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_10dp"
-                            android:text="Gender"/>
+                            android:text="@string/text_gender"/>
                         <TextView
                             android:id="@+id/tv_gender"
                             android:layout_width="wrap_content"
@@ -283,7 +284,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_10dp"
-                            android:text="Email"/>
+                            android:text="@string/text_email"/>
                         <EditText
                             android:id="@+id/et_email"
                             android:layout_width="match_parent"
@@ -314,7 +315,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_10dp"
-                            android:text="Region"/>
+                            android:text="@string/text_region"/>
                         <EditText
                             android:id="@+id/et_region"
                             android:layout_width="match_parent"
@@ -355,7 +356,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_10dp"
-                            android:text="Phone"/>
+                            android:text="@string/text_phone"/>
                         <EditText
                             android:id="@+id/et_phone"
                             android:layout_width="wrap_content"

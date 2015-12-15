@@ -219,7 +219,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_10dp"
-                            android:text="Year of Birth"/>
+                            android:text="@string/text_profile_year_of_birth"/>
                         <TextView
                             android:id="@+id/tv_year_birthday"
                             android:layout_width="match_parent"
@@ -258,7 +258,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_10dp"
-                            android:text="Gender"/>
+                            android:text="@string/text_gender"/>
                         <TextView
                             android:id="@+id/tv_gender"
                             android:layout_width="wrap_content"
@@ -292,7 +292,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_10dp"
-                            android:text="Email"/>
+                            android:text="@string/text_email"/>
                         <TextView
                             android:id="@+id/tv_email"
                             android:layout_width="match_parent"
@@ -326,7 +326,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_10dp"
-                            android:text="Region"/>
+                            android:text="@string/text_region"/>
                         <TextView
                             android:id="@+id/tv_region"
                             android:layout_width="match_parent"
@@ -372,7 +372,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/_10dp"
-                            android:text="Phone"/>
+                            android:text="@string/text_phone"/>
                         <TextView
                             android:id="@+id/tv_phone"
                             android:layout_width="wrap_content"
