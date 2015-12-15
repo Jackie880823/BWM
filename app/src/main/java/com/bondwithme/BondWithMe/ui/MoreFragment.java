@@ -14,6 +14,7 @@ import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
 import com.bondwithme.BondWithMe.ui.more.AboutActivity;
 import com.bondwithme.BondWithMe.ui.more.ArchiveActivity;
 import com.bondwithme.BondWithMe.ui.more.MoreSettingActivity;
@@ -96,21 +97,22 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
         getViewById(R.id.btn_bond_alert).setOnClickListener(this);
         getViewById(R.id.btn_me).setOnClickListener(this);
 //        getViewById(R.id.btn_family).setOnClickListener(this);
-        getViewById(R.id.btn_share).setOnClickListener(this);
+//        getViewById(R.id.btn_share).setOnClickListener(this);
         getViewById(R.id.btn_setting).setOnClickListener(this);
         getViewById(R.id.btn_sticker_store).setOnClickListener(this);
         getViewById(R.id.btn_about_us).setOnClickListener(this);
 //        getViewById(R.id.btn_contact_us).setOnClickListener(this);
 //        getViewById(R.id.btn_terms).setOnClickListener(this);
         getViewById(R.id.btn_archive).setOnClickListener(this);
-        getViewById(R.id.btn_alert_member).setOnClickListener(this);
+//        getViewById(R.id.btn_alert_member).setOnClickListener(this);
         getViewById(R.id.btn_alert_news).setOnClickListener(this);
-        getViewById(R.id.btn_alert_recommend).setOnClickListener(this);
+//        getViewById(R.id.btn_alert_recommend).setOnClickListener(this);
         getViewById(R.id.btn_rewards).setOnClickListener(this);
+        getViewById(R.id.btn_add_member).setOnClickListener(this);
 
         news_alert_num = getViewById(R.id.news_alert_num);
-        member_alert_num = getViewById(R.id.member_alert_num);
-        recommend_alert_num = getViewById(R.id.recommend_alert_num);
+//        member_alert_num = getViewById(R.id.member_alert_num);
+//        recommend_alert_num = getViewById(R.id.recommend_alert_num);
         rewards_num = getViewById(R.id.rewards_alert_num);
 
         tvVersion = getViewById(R.id.tv_version);
@@ -137,9 +139,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 
     private void bondDatas(JSONObject jsonObject) throws JSONException {
         checkDataAndBond2View(news_alert_num,jsonObject.getString("news"));
-        checkDataAndBond2View(member_alert_num,jsonObject.getString("member"));
-        checkDataAndBond2View(recommend_alert_num,jsonObject.getString("recommended"));
-        checkDataAndBond2View(rewards_num,jsonObject.getString("reward"));
+//        checkDataAndBond2View(member_alert_num,jsonObject.getString("member"));
+//        checkDataAndBond2View(recommend_alert_num,jsonObject.getString("recommended"));
+//        checkDataAndBond2View(rewards_num,jsonObject.getString("reward"));
     }
 
     private void checkDataAndBond2View(TextView view, String countString){
@@ -225,7 +227,7 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
                     int countOfRecommended = Integer.valueOf(jsonObject.getString("recommended"));
                     int countOfRewards = Integer.valueOf(jsonObject.getString("reward"));
                     LogUtil.d(TAG,"countOfNews======"+countOfNews+"countOfRewards========="+countOfRewards);
-                    int count = countOfTotal - countOfNews - countOfMember - countOfRecommended;
+                    int count = countOfTotal - countOfNews - countOfRecommended;
                     if (count > 0) {
                         Log.d("","mmmmmmmmm" + "mmmmmmm>0");
                         tv_num.setVisibility(View.VISIBLE);
@@ -273,9 +275,9 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
 //            case R.id.btn_family:
 //                goFamily();
 //                break;
-            case R.id.btn_share:
-                shareApp();
-                break;
+//            case R.id.btn_share:
+//                shareApp();
+//                break;
             case R.id.btn_setting:
                 goSetting();
                 break;
@@ -285,25 +287,34 @@ public class MoreFragment extends BaseFragment<MainActivity> implements View.OnC
             case R.id.btn_archive:
                 goArchive();
                 break;
-            case R.id.btn_alert_member:
-                v.findViewById(R.id.member_alert_num).setVisibility(View.GONE);
-                goMember();
-                break;
+//            case R.id.btn_alert_member:
+//                v.findViewById(R.id.member_alert_num).setVisibility(View.GONE);
+//                goMember();
+//                break;
             case R.id.btn_alert_news:
                 v.findViewById(R.id.news_alert_num).setVisibility(View.GONE);
                 goNews();
                 break;
-            case R.id.btn_alert_recommend:
-                v.findViewById(R.id.recommend_alert_num).setVisibility(View.GONE);
-                goRecommendAlert();
-                break;
+//            case R.id.btn_alert_recommend:
+//                v.findViewById(R.id.recommend_alert_num).setVisibility(View.GONE);
+//                goRecommendAlert();
+//                break;
             case R.id.btn_about_us:
                 goAbout();
                 break;
             case R.id.btn_rewards:
                 goRewards();
                 break;
+
+            case R.id.btn_add_member:
+                goAddMember();
+                break;
         }
+    }
+
+    private void goAddMember() {
+        Intent intent = new Intent(getActivity(), AddMembersActivity.class);
+        startActivity(intent);
     }
 
     private void goRewards() {
