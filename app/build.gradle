@@ -148,8 +148,6 @@ repositories {
 
 dependencies {
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
-    //for 突破65535的限制
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':Volley')
     compile project(':PhotoView')
     compile project(':mupdflibrary')
@@ -164,6 +162,8 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     compile project(':piwik_sdk')
+    //for 突破65535的限制
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.+'
     compile 'com.android.support:support-annotations:22.2.1'
     compile 'com.android.support:appcompat-v7:22.2.1'
