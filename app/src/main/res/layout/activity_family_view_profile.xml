@@ -94,15 +94,17 @@
                     android:layout_height="3dp"
                     android:background="@color/default_wide_split_line"
                     android:layout_gravity="center"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/default_split_line"
+                    android:layout_gravity="center"/>
                 <RelativeLayout
                     android:id="@+id/rl_first_name"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/default_split_line"
-                        android:layout_gravity="center"/>
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -136,7 +138,8 @@
                 <RelativeLayout
                     android:id="@+id/rl_last_name"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -170,7 +173,8 @@
                 <RelativeLayout
                     android:id="@+id/rl_birthday"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -208,7 +212,8 @@
                 <RelativeLayout
                     android:id="@+id/rl_year_birthday"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -243,7 +248,8 @@
                 <RelativeLayout
                     android:id="@+id/rl_gender"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -281,7 +287,8 @@
                 <RelativeLayout
                     android:id="@+id/rl_email"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -315,7 +322,8 @@
                 <RelativeLayout
                     android:id="@+id/rl_region"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -349,7 +357,8 @@
                 <RelativeLayout
                     android:id="@+id/rl_phone"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
                     <View
                         android:id="@+id/line"
                         android:layout_width="match_parent"
