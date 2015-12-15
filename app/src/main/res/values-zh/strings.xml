@@ -685,4 +685,6 @@
 
     <string name="text_profile_year_of_birth">Year of Birth</string>
     <string name="text_profile_change_prompt">Tap to change cover and profile photo.</string>
+
+    <string name="text_invalid_qr">二维码无效!</string>
 </resources>
