@@ -110,7 +110,7 @@
                     style="@style/text_dark_default"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/default_view_margin"
-                    android:text="@string/text_me" />
+                    android:text="@string/text_add_member" />
 
             </LinearLayout>
 
