@@ -643,6 +643,14 @@
     <string name="text_wall_view_pic_edit_no_change">描述没改变</string>
     <string name="no_photo_2_save">No Photo to Save!</string>
     <string name="add_photo_before_title">添加照片前需要删除视频</string>
+
+    <string name="text_add_members_search_hint">搜索帐号／用户名/手机号码</string>
+    <string name="text_add_members_options_head">添加新成员以便开始聊天，分享动态和制定计划！</string>
+    <string name="text_add_members_via_contact">通过联系人添加成员</string>
+    <string name="text_add_members_facebook">Facebook Account</string>
+    <string name="text_add_members_qq">QQ Account</string>
+    <string name="text_add_members_content">成员推荐</string>
+
     <string name="text_add_caption">添加图片描述</string>
 
     <string name="text_tip_add_member">添加成员到家庭树，在日记中查看他们的最新动态。</string>
@@ -666,8 +674,8 @@
     <string name="diary_hint">在此分享你的时刻</string>
 
     <string name="text_s">的</string>
-    <string name="text_search_bwm_user_no_found">No Result found,Try again.</string>
-    <string name="text_invite_members_info">This app is cool,add me!</string>
+    <string name="text_search_bwm_user_no_found">搜索无结果。请重试。</string>
+    <string name="text_invite_members_info">这应用好酷哦！快加我吧！</string>
     <string name="profile_privacy">个人资料隐私</string>
     <string name="year_of_birth">出生年份</string>
     <string name="text_public">公众</string>
@@ -679,8 +687,8 @@
     <string name="scan_within_box">将框框对准二维码即可自动扫描</string>
     <string name="notification_action_message_inactive_recommend">%1$s 加入了伴我玩。快加他／她呗！</string>
     <string name="text_confirm">确定</string>
-    <string name="text_dont_allow">Don\'t Allow</string>
-    <string name="text_dialog_ask_contact">BondWithMe will use your Contacts to find other BondWithMe user you may know.</string>
+    <string name="text_dont_allow">不允许</string>
+    <string name="text_dialog_ask_contact">此功能需访问您的手机通讯录。</string>
     <string name="text_qr">的二维码</string>
 
     <string name="text_profile_year_of_birth">Year of Birth</string>
