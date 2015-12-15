@@ -80,6 +80,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     TextView tvRegion;
     private View vProgress;
 
+    private View rlFirstName;
+    private View rlListName;
     private View rlBirthday;
     private View rlYearBirthday;
     private View rlGender;
@@ -123,6 +125,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
                     VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE,  userEntity.getUser_id()), 0, 0);
 
+                    rlFirstName.setVisibility(View.VISIBLE);
+                    rlListName.setVisibility(View.VISIBLE);
                     setDatePrivacy(userEntity.getDob_date_flag(),rlBirthday);
                     setDatePrivacy(userEntity.getDob_year_flag(),rlYearBirthday);
                     setDatePrivacy(userEntity.getGender_flag(),rlGender);
@@ -211,6 +215,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         vProgress = getViewById(R.id.rl_progress);
         vProgress.setVisibility(View.GONE);
 
+        rlFirstName = getViewById(R.id.rl_first_name);
+        rlListName = getViewById(R.id.rl_last_name);
         rlBirthday = getViewById(R.id.rl_birthday);
         rlYearBirthday = getViewById(R.id.rl_year_birthday);
         rlGender = getViewById(R.id.rl_gender);
@@ -277,6 +283,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE,  userEntity.getUser_id()), profileBackgroundId, profileBackgroundId);
             memberFlag = userEntity.getMember_flag();
 
+            rlFirstName.setVisibility(View.VISIBLE);
+            rlListName.setVisibility(View.VISIBLE);
             setDatePrivacy(userEntity.getDob_date_flag(),rlBirthday);
             setDatePrivacy(userEntity.getDob_year_flag(),rlYearBirthday);
             setDatePrivacy(userEntity.getGender_flag(),rlGender);

@@ -239,34 +239,55 @@ public final class CameraManager {
 	 * 
 	 * @return The rectangle to draw on screen in window coordinates.
 	 */
+//	public Rect getFramingRect() {
+//		Point screenResolution = configManager.getScreenResolution();
+//		if (framingRect == null) {
+//			if (camera == null) {
+//				return null;
+//			}
+//			int width = screenResolution.x * 3 / 4;
+//			if (width < MIN_FRAME_WIDTH) {
+//				width = MIN_FRAME_WIDTH;
+//			} else if (width > MAX_FRAME_WIDTH) {
+//				width = MAX_FRAME_WIDTH;
+//			}
+////			int height = screenResolution.y * 3 / 4;
+//            int height = width;
+//			if (height < MIN_FRAME_HEIGHT) {
+//				height = MIN_FRAME_HEIGHT;
+//			} else if (height > MAX_FRAME_HEIGHT) {
+//				height = MAX_FRAME_HEIGHT;
+//			}
+//            Log.d("width===="+width,"       height===="+height);
+//			int leftOffset = (screenResolution.x - width) / 2;
+//			int topOffset = (screenResolution.y - height) / 3;
+//			framingRect = new Rect(leftOffset, topOffset, leftOffset + width,
+//					topOffset + height);
+//			Log.d(TAG, "Calculated framing rect: " + framingRect);
+//		}
+//		return framingRect;
+//	}
 	public Rect getFramingRect() {
 		Point screenResolution = configManager.getScreenResolution();
 		if (framingRect == null) {
 			if (camera == null) {
 				return null;
-			}
-			int width = screenResolution.x * 3 / 4;
-			if (width < MIN_FRAME_WIDTH) {
-				width = MIN_FRAME_WIDTH;
-			} else if (width > MAX_FRAME_WIDTH) {
-				width = MAX_FRAME_WIDTH;
-			}
-//			int height = screenResolution.y * 3 / 4;
-            int height = width;
-			if (height < MIN_FRAME_HEIGHT) {
-				height = MIN_FRAME_HEIGHT;
-			} else if (height > MAX_FRAME_HEIGHT) {
-				height = MAX_FRAME_HEIGHT;
-			}
-            Log.d("width===="+width,"       height===="+height);
+				}
+
+			//修改之后
+			int width = screenResolution.x * 6 / 10;
+			int height = screenResolution.y * 4 / 10;
+
 			int leftOffset = (screenResolution.x - width) / 2;
 			int topOffset = (screenResolution.y - height) / 3;
-			framingRect = new Rect(leftOffset, topOffset, leftOffset + width,
-					topOffset + height);
+			framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
+
+
 			Log.d(TAG, "Calculated framing rect: " + framingRect);
-		}
+			}
 		return framingRect;
 	}
+
 
 	/**
 	 * Like {@link #getFramingRect} but coordinates are in terms of the preview
