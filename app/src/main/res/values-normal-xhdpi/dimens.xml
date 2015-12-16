@@ -162,4 +162,7 @@
     <dimen name="si_default_text_size">8sp</dimen>
     <dimen name="si_default_radius_max">8dp</dimen>
     <dimen name="si_default_radius_min">2dp</dimen>
+
+    <!-- New Diary bottom navigation distance between icon and text  -->
+    <dimen name="new_diary_bottom_icon_and_text">-10dp</dimen>
 </resources>

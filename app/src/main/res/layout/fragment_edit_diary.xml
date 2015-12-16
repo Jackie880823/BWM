@@ -14,11 +14,16 @@
 
     </android.support.v7.widget.RecyclerView>
 
+
+    <View
+        android:layout_above="@+id/option_bar"
+        style="@style/split_line_default" />
     <LinearLayout
         android:id="@+id/option_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
         android:background="@drawable/bg_white_gray"
         android:orientation="horizontal">
 
@@ -28,12 +33,12 @@
             android:layout_height="@dimen/default_user_head_width_height"
             android:layout_marginTop="@dimen/default_view_margin"
             android:layout_weight="1"
-            android:drawablePadding="@dimen/_10dp"
+            android:drawablePadding="@dimen/new_diary_bottom_icon_and_text"
             android:drawableTop="@drawable/action_camera"
             android:gravity="center"
             android:text="@string/text_camera"
-            android:textColor="@color/default_text_color_dark"
-            android:textSize="@dimen/text_medium_size" />
+            android:textColor="@color/btn_bg_color_gray_normal"
+            android:textSize="@dimen/text_mirco_size" />
 
         <TextView
             android:id="@+id/tv_tag"
@@ -41,12 +46,12 @@
             android:layout_height="@dimen/default_user_head_width_height"
             android:layout_marginTop="@dimen/default_view_margin"
             android:layout_weight="1"
-            android:drawablePadding="@dimen/_10dp"
+            android:drawablePadding="@dimen/new_diary_bottom_icon_and_text"
             android:drawableTop="@drawable/action_tag"
             android:gravity="center"
             android:text="@string/text_tag"
-            android:textColor="@color/default_text_color_dark"
-            android:textSize="@dimen/text_medium_size" />
+            android:textColor="@color/btn_bg_color_gray_normal"
+            android:textSize="@dimen/text_mirco_size" />
 
         <TextView
             android:id="@+id/tv_feeling"
@@ -54,12 +59,12 @@
             android:layout_height="@dimen/default_user_head_width_height"
             android:layout_marginTop="@dimen/default_view_margin"
             android:layout_weight="1"
-            android:drawablePadding="@dimen/_10dp"
+            android:drawablePadding="@dimen/new_diary_bottom_icon_and_text"
             android:drawableTop="@drawable/action_feeling"
             android:gravity="center"
             android:text="@string/text_feeling"
-            android:textColor="@color/default_text_color_dark"
-            android:textSize="@dimen/text_medium_size" />
+            android:textColor="@color/btn_bg_color_gray_normal"
+            android:textSize="@dimen/text_mirco_size" />
 
         <TextView
             android:id="@+id/tv_location"
@@ -67,12 +72,12 @@
             android:layout_height="@dimen/default_user_head_width_height"
             android:layout_marginTop="@dimen/default_view_margin"
             android:layout_weight="1"
-            android:drawablePadding="@dimen/_10dp"
+            android:drawablePadding="@dimen/new_diary_bottom_icon_and_text"
             android:drawableTop="@drawable/action_location"
             android:gravity="center"
             android:text="@string/text_location"
-            android:textColor="@color/default_text_color_dark"
-            android:textSize="@dimen/text_medium_size" />
+            android:textColor="@color/btn_bg_color_gray_normal"
+            android:textSize="@dimen/text_mirco_size" />
 
         <TextView
             android:id="@+id/tv_privacy"
@@ -80,12 +85,12 @@
             android:layout_height="@dimen/default_user_head_width_height"
             android:layout_marginTop="@dimen/default_view_margin"
             android:layout_weight="1"
-            android:drawablePadding="@dimen/_10dp"
+            android:drawablePadding="@dimen/new_diary_bottom_icon_and_text"
             android:drawableTop="@drawable/privacy_lock"
             android:gravity="center"
             android:text="@string/text_private"
-            android:textColor="@color/default_text_color_dark"
-            android:textSize="@dimen/text_medium_size" />
+            android:textColor="@color/btn_bg_color_gray_normal"
+            android:textSize="@dimen/text_mirco_size" />
     </LinearLayout>
 
     <include layout="@layout/progress_layout" />
