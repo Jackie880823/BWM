@@ -103,7 +103,7 @@
                         android:layout_width="@dimen/default_small_button_width_height"
                         android:layout_height="@dimen/default_small_button_width_height"
                         android:layout_centerInParent="true"
-                        android:src="@drawable/add_member_icon" />
+                        android:src="@drawable/add_member_white" />
                 </RelativeLayout>
 
                 <TextView
