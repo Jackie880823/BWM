@@ -95,7 +95,6 @@
     <string name="mail_subject_3">报告问题</string>
     <string name="text_sending">\t 发送中 &#8230;</string>
     <string name="text_waiting">\t 请稍等 &#8230;</string>
-    <string name="text_loading">\t 加载中 &#8230;</string>
     <string name="text_search_contact">在此处搜索</string>
     <string name="text_relationship">关系</string>
     <string name="msg_no_contact_select">请至少选择1名成员。</string>
