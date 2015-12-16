@@ -20,12 +20,12 @@ import com.bondwithme.BondWithMe.ui.AlertGroupActivity;
 import com.bondwithme.BondWithMe.ui.AlertWallActivity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.EventDetailActivity;
+import com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.MemberActivity;
 import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 import com.bondwithme.BondWithMe.ui.MissListActivity;
 import com.bondwithme.BondWithMe.ui.NewsActivity;
-import com.bondwithme.BondWithMe.ui.RecommendActivity;
 import com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity;
 import com.bondwithme.BondWithMe.ui.wall.DiaryInformationActivity;
 
@@ -374,8 +374,9 @@ public class NotificationUtil {
                 smallIcon = R.drawable.bondalert_recommended_icon;
 
                 msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_INACTIVE);
-                intent = new Intent(context, RecommendActivity.class);
+                intent = new Intent(context, FamilyViewProfileActivity.class);
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_INACTIVE);
+                intent.putExtra("member_id", action_owner_id);
                 newMsg = NotificationMessageGenerateUtil.getInactiveMessage(context, action, action_owner);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
