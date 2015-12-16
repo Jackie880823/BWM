@@ -30,6 +30,7 @@ public class ViewQRCodeActivity extends BaseActivity {
     private UserEntity userEntity;
     private String userId;
     private String userName;
+    private String viewMyQR;
 
     @Override
     public int getLayout() {
@@ -44,11 +45,6 @@ public class ViewQRCodeActivity extends BaseActivity {
     @Override
     protected void setTitle() {
         rightButton.setVisibility(View.INVISIBLE);
-        if (userEntity != null){
-            tvTitle.setText(userName + getResources().getString(R.string.text_qr));
-        }else {
-            tvTitle.setText(R.string.my_qr_code);
-        }
     }
 
     @Override
@@ -63,36 +59,63 @@ public class ViewQRCodeActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        if (bundle != null){
-            userEntity = (UserEntity)bundle.getSerializable("userEntity");
-        }
+
         ivQRCode = getViewById(R.id.iv_qr);
         tvScanHint = getViewById(R.id.tv_scan_hint);
         btnScanQRCode = getViewById(R.id.btn_scan_qr);
 
-        if (userEntity != null){
-            userId = userEntity.getUser_id();
-            userName = userEntity.getUser_given_name();
-            LogUtil.d("ViewQRCodeActivity","userId=========="+userId);
-        }else {
-            userId = MainActivity.getUser().getUser_id();
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        LogUtil.d("ViewQRCodeActivity_initView()", "=====");
+        if (bundle != null){
+            userEntity = (UserEntity)bundle.getSerializable("userEntity");
         }
-
-        VolleyUtil.initNetworkImageView(this, ivQRCode, String.format(Constant.API_QRCode,userId),R.drawable.network_image_default, R.drawable.network_image_default);
 
         btnScanQRCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent scanIntent = new Intent(ViewQRCodeActivity.this, CaptureActivity.class);
-                startActivity(scanIntent);
+                startActivityForResult(scanIntent, 1);
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (userEntity != null){
+            userId = userEntity.getUser_id();
+            userName = userEntity.getUser_given_name();
+            tvTitle.setText(userName + getResources().getString(R.string.text_qr));
+            LogUtil.d("ViewQRCodeActivity_onResume()", "userId==========" + userId + "userName==========" + userName);
+        }else {
+            userId = MainActivity.getUser().getUser_id();
+            tvTitle.setText(R.string.my_qr_code);
+        }
+
+        VolleyUtil.initNetworkImageView(this, ivQRCode, String.format(Constant.API_QRCode, userId), R.drawable.network_image_default, R.drawable.network_image_default);
 
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LogUtil.d("ViewQRCodeActivity_onActivityResult()","ppppp");
+        switch (resultCode){
+            case 1:
+                viewMyQR = (String)data.getExtras().get("from_scan");
+                LogUtil.d("ViewQRCodeActivity_onActivityResult()", "=====from_scan=====" + viewMyQR);
+                if ("view_my_qr".equals(viewMyQR)){
+                    if (userEntity != null){
+                        userEntity = null;
+                    }
+                }
+                break;
+        }
+    }
 
     @Override
     public void requestData() {

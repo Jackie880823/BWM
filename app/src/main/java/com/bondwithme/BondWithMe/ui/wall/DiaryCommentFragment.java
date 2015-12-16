@@ -278,14 +278,10 @@ public class DiaryCommentFragment extends BaseFragment<DiaryCommentActivity> {
 
         mHttpTools.get(url, params, GET_COMMENTS, new HttpCallback() {
             @Override
-            public void onStart() {
-                vProgress.setVisibility(View.VISIBLE);
-            }
+            public void onStart() {}
 
             @Override
-            public void onFinish() {
-                vProgress.setVisibility(View.GONE);
-            }
+            public void onFinish() {}
 
             @Override
             public void onResult(String response) {

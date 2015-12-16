@@ -38,7 +38,7 @@ import java.util.List;
  * Created 10/21/15.
  *
  * @author Jackie
- * @version 1.0
+ * @version 1.1
  */
 public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
     private static final int VIEW_TYPE_HEAD = 0;
@@ -143,7 +143,7 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         LogUtil.d(TAG, "onBindViewHolder& position = " + position);
         if (position > 0) {
             if (isPhoto) {
@@ -162,9 +162,11 @@ public class EditDiaryAdapter extends RecyclerView.Adapter<ViewHolder> {
                 imageHolder.ivDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LogUtil.d(TAG, "onClick& position = " + position + "; entities size " + entities.size());
+                        int index = entities.indexOf(entity);
+                        LogUtil.d(TAG, "onClick& position = " + index + "; entities size " + entities.size());
                         listener.deletePhoto(entity);
-                        notifyDataSetChanged();
+                        /* 因为此Adapter包含一个头View,所以在删除数据的View时位置是对应位置+1 */
+                        notifyItemRemoved(index + 1);
                     }
                 });
                 ((ImageHolder) holder).setTag(entity);
