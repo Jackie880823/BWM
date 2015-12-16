@@ -691,8 +691,8 @@
     <string name="text_dialog_ask_contact">此功能需访问您的手机通讯录。</string>
     <string name="text_qr">的二维码</string>
 
-    <string name="text_profile_year_of_birth">Year of Birth</string>
-    <string name="text_profile_change_prompt">Tap to change cover and profile photo.</string>
+    <string name="text_profile_year_of_birth">出生年份</string>
+    <string name="text_profile_change_prompt">点击更换背景或者头像照片。</string>
 
     <string name="text_invalid_qr">二维码无效!</string>
 </resources>

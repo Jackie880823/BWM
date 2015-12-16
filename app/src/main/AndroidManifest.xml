@@ -678,7 +678,7 @@
         <activity
             android:name=".ui.more.ViewQRCodeActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            >
         </activity>
 
         <activity
@@ -687,7 +687,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:launchMode="singleTask">
+            >
         </activity>
     </application>
 
