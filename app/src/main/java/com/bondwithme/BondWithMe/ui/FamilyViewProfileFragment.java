@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
@@ -93,6 +92,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
     private Button btMessage;
     private int[] array;
     private int profileBackgroundId;
+    private String stFemale;
+    private String stMale;
 
     private static final int GET_USER_ENTITY = 0X11;
 
@@ -161,9 +162,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                         /**
                          * begin QK
                          */
-                        tvGender.setText(getResources().getString(R.string.text_female));
+                        tvGender.setText(stFemale);
                     } else if ("M".equals(userEntity.getUser_gender())) {
-                        tvGender.setText(getResources().getString(R.string.text_male));
+                        tvGender.setText(stMale);
                         /**
                          * end
                          */
@@ -227,6 +228,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
         flMember = getViewById(R.id.fl_member);
         btAddMember = getViewById(R.id.btn_add_member);
         btMessage = getViewById(R.id.btn_message);
+
+        stFemale = getResources().getString(R.string.text_female);
+        stMale = getResources().getString(R.string.text_male);
 
         if(profileBackgroundId == 6){
             array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
@@ -309,9 +313,9 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                 /**
                  * begin QK
                  */
-                tvGender.setText(getResources().getString(R.string.text_female));
+                tvGender.setText(stFemale);
             } else if ("M".equals(userEntity.getUser_gender())) {
-                tvGender.setText(getResources().getString(R.string.text_male));
+                tvGender.setText(stMale);
                 /**
                  * end
                  */
@@ -433,10 +437,10 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     JSONObject jsonObject = new JSONObject(response);
                     if ("Success".equals(jsonObject.getString("response_status"))) {
                         getParentActivity().setResult(getActivity().RESULT_OK);
-                        Toast.makeText(getParentActivity(), getResources().getString(R.string.text_success_add_member), Toast.LENGTH_SHORT).show();
+                        MessageUtil.showMessage(getContext(),getResources().getString(R.string.text_success_add_member));
                         // finish();
                     } else {
-                        Toast.makeText(getParentActivity(), getResources().getString(R.string.text_fail_add_member), Toast.LENGTH_SHORT).show();
+                        MessageUtil.showMessage(getContext(),getResources().getString(R.string.text_fail_add_member));
                     }
 
                 } catch (JSONException e) {
@@ -523,7 +527,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 
                 @Override
                 public void onError(Exception e) {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.text_error), Toast.LENGTH_SHORT).show();
+                    MessageUtil.showMessage(getContext(),getResources().getString(R.string.text_error));
                 }
 
                 @Override
