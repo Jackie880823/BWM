@@ -389,7 +389,9 @@ public class WallFragment extends BaseFragment<MainActivity> implements WallView
                     @Override
                     public void onResult(String string) {
 //                        MessageUtil.showMessage(getActivity(), R.string.msg_action_successed);
-                        int index = adapter.getData().indexOf(wallEntity);
+                        List<WallEntity> data = adapter.getData();
+                        int index = data.indexOf(wallEntity);
+                        data.remove(wallEntity);
                         adapter.notifyItemRemoved(index);
                     }
 
