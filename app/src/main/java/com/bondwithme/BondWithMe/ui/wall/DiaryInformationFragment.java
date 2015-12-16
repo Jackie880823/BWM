@@ -19,6 +19,7 @@ import com.bondwithme.BondWithMe.adapter.WallHolder;
 import com.bondwithme.BondWithMe.entity.WallCommentEntity;
 import com.bondwithme.BondWithMe.entity.WallEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
+import com.bondwithme.BondWithMe.interfaces.DiaryInformationFragmentListener;
 import com.bondwithme.BondWithMe.interfaces.WallViewClickListener;
 import com.bondwithme.BondWithMe.ui.BaseFragment;
 import com.bondwithme.BondWithMe.ui.MainActivity;
@@ -46,6 +47,8 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
 
     private static final String GET_DETAIL = TAG + "_GET_DETAIL";
     private static final String POST_DELETE = TAG + "_POST_DELETE";
+
+    private DiaryInformationFragmentListener mListener;
 
     private WallHolder holder;
 
@@ -76,6 +79,10 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
         super();
 
         // Required empty public constructor
+    }
+
+    public void setListener(DiaryInformationFragmentListener mListener) {
+        this.mListener = mListener;
     }
 
     @Override
@@ -110,6 +117,10 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                     if (wall != null) {
                         setWallContext();
                         updatePhotoList();
+                    }
+
+                    if (mListener != null) {
+                        mListener.onLoadedEntity(wall);
                     }
                 } else {
                     setWallContext();
@@ -232,6 +243,10 @@ public class DiaryInformationFragment extends BaseFragment<DiaryInformationActiv
                 wall = new Gson().fromJson(response, WallEntity.class);
                 if (isUpdate) {
                     setResultOK(false);
+                }
+
+                if (mListener != null) {
+                    mListener.onLoadedEntity(wall);
                 }
             }
 

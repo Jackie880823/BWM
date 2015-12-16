@@ -219,6 +219,15 @@ public class PreviewVideoActivity extends BaseActivity implements MediaPlayer.On
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (videoView.isPlaying()) {
+            videoView.pause();
+            videoView.stopPlayback();
+        }
+    }
+
     /**
      * Perform any final cleanup before an activity is destroyed.  This can
      * happen either because the activity is finishing (someone called
@@ -334,6 +343,12 @@ public class PreviewVideoActivity extends BaseActivity implements MediaPlayer.On
                                 File saveFile = FileUtil.saveVideoFile(PreviewVideoActivity.this, true);
                                 LogUtil.i(TAG, "save video to " + saveFile.getPath());
                                 Files.copy(new File(target), saveFile);
+
+                                // 通知媒体库更新文件
+                                Intent updateIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(saveFile));
+                                updateIntent.setData(Uri.fromFile(saveFile));
+                                PreviewVideoActivity.this.sendBroadcast(updateIntent);
+
                                 MessageUtil.showMessage(PreviewVideoActivity.this, PreviewVideoActivity.this.getString(R.string.saved_to_path) + saveFile.getPath());
                             } catch (IOException e) {
                                 e.printStackTrace();

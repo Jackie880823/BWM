@@ -135,12 +135,12 @@ public class CaptureActivity extends BaseActivity implements Callback {
 
 		// quit the scan view
 		cancelScanButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Intent intentQRCode = new Intent(CaptureActivity.this, ViewQRCodeActivity.class);
-				startActivity(intentQRCode);
-			}
-		});
+            @Override
+            public void onClick(View view) {
+                Intent intentQRCode = new Intent(CaptureActivity.this, ViewQRCodeActivity.class);
+                startActivity(intentQRCode);
+            }
+        });
 	}
 
 	@Override
@@ -171,19 +171,20 @@ public class CaptureActivity extends BaseActivity implements Callback {
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
         LogUtil.d("CaptureActivity","handleDecode()====resultString==="+resultString);
-        resultString=resultString.substring(resultString.length()-10);
-		// FIXME
-		if (resultString.equals("")) {
-//			Toast.makeText(CaptureActivity.this, "扫描失败!", Toast.LENGTH_SHORT)
-//                    .show();
-		} else {
+        if (resultString.contains("bondwith.me")){
+            resultString=resultString.substring(resultString.length()-10);
             LogUtil.d("CaptureActivity","resultString==="+resultString);
-			Intent resultIntent = new Intent(this, FamilyViewProfileActivity.class);
+            Intent resultIntent = new Intent(this, FamilyViewProfileActivity.class);
 //			Bundle bundle = new Bundle();
-			resultIntent.putExtra(SCAN_RESULT, resultString);
-			startActivity(resultIntent);
-			this.setResult(RESULT_OK, resultIntent);
-		}
+            resultIntent.putExtra(SCAN_RESULT, resultString);
+            startActivity(resultIntent);
+//            this.setResult(RESULT_OK, resultIntent);
+        }else {
+            Toast.makeText(CaptureActivity.this, getString(R.string.text_invalid_qr), Toast.LENGTH_SHORT)
+                    .show();
+            CaptureActivity.this.finish();
+        }
+
 //		CaptureActivity.this.finish();
 	}
 

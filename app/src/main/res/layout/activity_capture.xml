@@ -71,7 +71,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/_50dp"
             android:textColor="@color/default_text_color_while"
-            android:background="@drawable/btn_green_bg"
+            android:background="@drawable/btn_green_qr"
             android:padding="@dimen/_12dp"/>
 
 

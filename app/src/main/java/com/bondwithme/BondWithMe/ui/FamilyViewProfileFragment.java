@@ -122,7 +122,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     userEntity = (UserEntity) msg.obj;
                     if(userEntity == null)return;
 
-                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+                    VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
                     VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE,  userEntity.getUser_id()), 0, 0);
 
                     rlFirstName.setVisibility(View.VISIBLE);
