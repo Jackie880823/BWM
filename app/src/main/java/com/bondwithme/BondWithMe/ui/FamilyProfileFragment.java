@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.tools.HttpTools;
+import com.android.volley.toolbox.NetworkImageView;
 import com.bondwithme.BondWithMe.App;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
@@ -26,7 +27,9 @@ import com.bondwithme.BondWithMe.entity.PhotoEntity;
 import com.bondwithme.BondWithMe.entity.UserEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
 import com.bondwithme.BondWithMe.http.VolleyUtil;
+import com.bondwithme.BondWithMe.ui.more.ViewQRCodeActivity;
 import com.bondwithme.BondWithMe.ui.wall.WallFragment;
+import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.google.gson.Gson;
@@ -42,6 +45,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -68,13 +72,18 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     private TextView tvId1;
     private ImageButton ibMiss;
     private RelativeLayout llViewProfile;
+    private NetworkImageView networkImageView;
 
     private RelativeLayout rlPathRelationship;
     private RelativeLayout rlAlbumGallery;
     private RelativeLayout rlWallPosting;
+    private RelativeLayout rvToQR;
 
     private Button btnSendMessage;
     private UserEntity userEntity;
+
+    private int[] array;
+    private int profileBackgroundId;
 
     private static final int GET_USER_ENTITY = 0X11;
 
@@ -109,7 +118,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
         ivBottomRight = getViewById(R.id.civ_right);
-        tvName1 = getViewById(R.id.tv_name);
+        tvName1 = getViewById(R.id.tv_login_id1);
         tvId1 = getViewById(R.id.tv_id1);
         ibMiss = getViewById(R.id.iv_miss);
         llViewProfile = getViewById(R.id.ll_view_profile);
@@ -117,10 +126,22 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         rlAlbumGallery = getViewById(R.id.rl_album_gallery);
         rlWallPosting = getViewById(R.id.rl_wall_posting);
         btnSendMessage = getViewById(R.id.btn_message);
+        networkImageView = getViewById(R.id.iv_profile_images);
+        rvToQR = getViewById(R.id.rl_to_qr);
 
-        tvName1.setText(groupName);
+        array = new int[]{R.drawable.profile_background_0,R.drawable.profile_background_1,R.drawable.profile_background_2,
+                R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
+        profileBackgroundId = randomImageId(array);
+
+//        tvName1.setText(groupName);
         getParentActivity().tvTitle.setText(groupName);
-        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.network_image_default, R.drawable.network_image_default);
+        VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, memberId), R.drawable.default_head_icon, R.drawable.default_head_icon);
+        VolleyUtil.initNetworkImageView(getActivity(), networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), profileBackgroundId, profileBackgroundId);
+//        BitmapTools.getInstance(getActivity()).display(networkImageView, String.format(Constant.API_GET_PIC_PROFILE, memberId), 0, 0);
+
+        networkImageView.setVisibility(View.VISIBLE);
+//        BitmapTools.getInstance(mContext).display(holder.imArchiveImages, String.format(Constant.API_GET_PIC, Constant.Module_preview, archive.getUser_id(), archive.getFile_id()), R.drawable.network_image_default, R.drawable.network_image_default);
+
         if (!TextUtils.isEmpty(getDofeelCode)) {
             try {
                 String filePath = "";
@@ -151,6 +172,20 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             }
         });
 
+
+        rvToQR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (userEntity != null)
+                {
+                    Intent toQRIntent = new Intent(getActivity(), ViewQRCodeActivity.class);
+                    toQRIntent.putExtra("userEntity", userEntity);
+                    startActivity(toQRIntent);
+                }
+
+            }
+        });
+
         llViewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,6 +193,8 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                     //用户详情界面
                     Intent intent1 = new Intent(getActivity(), FamilyViewProfileActivity.class);
                     intent1.putExtra("userEntity", userEntity);
+                    intent1.putExtra("profile_image_id",profileBackgroundId);
+//                    intent1.putExtra("bwm_id","8000105652");
                     startActivity(intent1);
                 }
             }
@@ -232,6 +269,37 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                 ft.commit();
             }
         });
+
+//        getParentActivity().rightButton.setEnabled(false);
+        getParentActivity().setCommandlistener(new BaseFragmentActivity.CommandListener() {
+            @Override
+            public boolean execute(View v) {
+                if(v.getId() == getParentActivity().rightButton.getId()){
+                    Intent intent2 = new Intent(getActivity(), MessageChatActivity.class);
+//                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    if(userEntity != null) {
+                        intent2.putExtra("type", 0);
+                        //如果上个页面没有groupId或者groupName
+                        intent2.putExtra("groupId", userEntity.getGroup_id());
+                        intent2.putExtra("titleName", userEntity.getUser_given_name());
+                        startActivity(intent2);
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getParentActivity().rightButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getParentActivity().rightButton.setVisibility(View.INVISIBLE);
     }
 
     Handler handler = new Handler() {
@@ -245,10 +313,11 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
                         VolleyUtil.initNetworkImageView(getActivity(), cniMain, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, userEntity.getUser_id()), R.drawable.network_image_default, R.drawable.network_image_default);
                     }
                     if(TextUtils.isEmpty(groupName)){
-                        tvName1.setText(userEntity.getUser_given_name());
+                        tvName1.setText(userEntity.getUser_login_id());
                         getParentActivity().tvTitle.setText(userEntity.getUser_given_name());
                     }
-                    tvId1.setText(getResources().getString(R.string.app_name) + " ID: "+ userEntity.getDis_bondwithme_id());
+//                    tvName1.setText(userEntity.getUser_login_id());
+                    tvId1.setText(userEntity.getDis_bondwithme_id());
                     if(TextUtils.isEmpty(getDofeelCode)){
                         String dofeel_code = userEntity.getDofeel_code();
                         if (!TextUtils.isEmpty(dofeel_code)) {
@@ -344,6 +413,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         String jsonParamsString = UrlUtil.mapToJsonstring(jsonParams);
         HashMap<String, String> params = new HashMap<>();
         params.put("condition", jsonParamsString);
+        LogUtil.w("requestData_","user_id="+useId+"member_id="+memberId);
         String url = UrlUtil.generateUrl(Constant.API_MEMBER_PROFILE_DETAIL, params);
 
         new HttpTools(getActivity()).get(url, params, Tag, new HttpCallback() {
@@ -361,6 +431,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
             public void onResult(String response) {
                 GsonBuilder gsonb = new GsonBuilder();
                 Gson gson = gsonb.create();
+                LogUtil.e("response====",response+"");
                 List<UserEntity> data = gson.fromJson(response, new TypeToken<ArrayList<UserEntity>>() {
                 }.getType());
                 if ((data != null) && (data.size() > 0)) {
@@ -393,5 +464,11 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
     public void onDestroy() {
         new HttpTools(getActivity()).cancelRequestByTag(Tag);
         super.onDestroy();
+    }
+
+    //获取一个背景图的随机id
+    public int randomImageId(int[] array){
+        int result = new Random().nextInt(5);
+        return array[result];
     }
 }

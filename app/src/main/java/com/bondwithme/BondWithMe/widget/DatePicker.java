@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
 import com.bondwithme.BondWithMe.R;
+import com.bondwithme.BondWithMe.util.MyDateUtils;
 import com.bondwithme.BondWithMe.widget.NumberPicker.OnValueChangeListener;
 
 import java.util.Calendar;
@@ -82,21 +83,10 @@ public class DatePicker extends FrameLayout {
 
 	private void initMonthDisplay() {
 
-        mMonthDisplay = mContext.getResources().getStringArray(R.array.months);
-
-//		mMonthDisplay = new String[12];
-//		mMonthDisplay[0] = "Jan";
-//		mMonthDisplay[1] = "Feb";
-//		mMonthDisplay[2] = "Mar";
-//		mMonthDisplay[3] = "Apr";
-//		mMonthDisplay[4] = "May";
-//		mMonthDisplay[5] = "Jun";
-//		mMonthDisplay[6] = "Jul";
-//		mMonthDisplay[7] = "Aug";
-//		mMonthDisplay[8] = "Sep";
-//		mMonthDisplay[9] = "Oct";
-//		mMonthDisplay[10] = "Nov";
-//		mMonthDisplay[11] = "Dec";
+		/**wing modified for system month name desc*/
+//        mMonthDisplay = mContext.getResources().getStringArray(R.array.months);
+        mMonthDisplay = MyDateUtils.getMonthNameArray(false);
+		/**wing modified for system month name desc*/
 	}
 
 	private void updateDate() {

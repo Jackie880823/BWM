@@ -13,6 +13,26 @@ import java.util.List;
         private List<String> phoneNumbers;
         private List<String> emails;
 
+        private String user_id;
+        private String dis_bondwithme_id;
+        private String user_login_id;
+        private String memberType;
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public String getDis_bondwithme_id() {
+        return dis_bondwithme_id;
+    }
+
+    public String getUser_login_id() {
+        return user_login_id;
+    }
+
+    public String getMemberType() {
+        return memberType;
+    }
 
     public String getDisplayName() {
         return displayName;

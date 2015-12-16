@@ -174,7 +174,7 @@ public class GroupPrivacyActivity extends BaseActivity {
         }
 
         changePrivacyDialog.setCanceledOnTouchOutside(false);
-        changePrivacyDialog.setButtonCancel(R.string.cancel, new View.OnClickListener() {
+        changePrivacyDialog.setButtonCancel(R.string.text_confirm, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 changePrivacyDialog.dismiss();

@@ -23,7 +23,8 @@ public class FamilyProfileActivity extends BaseActivity {
     @Override
     protected void initTitleBar() {
         super.initTitleBar();
-        rightButton.setVisibility(View.INVISIBLE);
+        rightButton.setImageResource(R.drawable.profile_add_message);
+        rightButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -33,7 +34,8 @@ public class FamilyProfileActivity extends BaseActivity {
 
     @Override
     protected void titleRightEvent() {
-
+        if(commandlistener!=null)
+            commandlistener.execute(rightButton);
     }
 
     @Override

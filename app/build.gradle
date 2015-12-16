@@ -18,8 +18,8 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 59   //TODO
-        versionName "2.1.0" //TODO
+        versionCode 60   //TODO
+        versionName "2.1.1" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -32,64 +32,64 @@ android {
         checkReleaseBuilds true //TODO release change to true
         abortOnError false
     }
-    signingConfigs {
-
-        debug {
-            // No debug config
-        }
-        release {
-            storeFile file(KEY_FILE_PATH)
-            storePassword KEYSTORE_PASSWORD
-            keyAlias KEYSTORE_ALIAS
-            keyPassword KEY_PASSWORD
-        }
-
-    }
-
-
-    buildTypes {
-        debug {
-            // 显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "true"
-            minifyEnabled false
-            zipAlignEnabled false
-            shrinkResources false
-            signingConfig signingConfigs.debug
-        }
-
-//        test {
-//            minifyEnabled false //TODO
-//            // 不显示Log
+//    signingConfigs {
+//
+//        debug {
+//            // No debug config
+//        }
+//        release {
+//            storeFile file(KEY_FILE_PATH)
+//            storePassword KEYSTORE_PASSWORD
+//            keyAlias KEYSTORE_ALIAS
+//            keyPassword KEY_PASSWORD
+//        }
+//
+//    }
+//
+//
+//    buildTypes {
+//        debug {
+//            // 显示Log
 //            buildConfigField "boolean", "LOG_DEBUG", "true"
-//            zipAlignEnabled false //TODO
-//            // 移除无用的resource文件
+//            minifyEnabled false
+//            zipAlignEnabled false
 //            shrinkResources false
+//            signingConfig signingConfigs.debug
+//        }
+//
+////        test {
+////            minifyEnabled false //TODO
+////            // 不显示Log
+////            buildConfigField "boolean", "LOG_DEBUG", "true"
+////            zipAlignEnabled false //TODO
+////            // 移除无用的resource文件
+////            shrinkResources false
+////            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+////            signingConfig signingConfigs.release
+////        }
+//
+//        release {
+//            minifyEnabled true //TODO
+//            // 不显示Log
+//            buildConfigField "boolean", "LOG_DEBUG", "false"
+//            zipAlignEnabled true //TODO
+//            // 移除无用的resource文件
+//            shrinkResources true
 //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 //            signingConfig signingConfigs.release
 //        }
-
-        release {
-            minifyEnabled true //TODO
-            // 不显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "false"
-            zipAlignEnabled true //TODO
-            // 移除无用的resource文件
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-        }
-
-        applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                def outputFile = output.outputFile
-                if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                    // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
-                    def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
-                    output.outputFile = new File(outputFile.parent, fileName)
-                }
-            }
-        }
-    }
+//
+//        applicationVariants.all { variant ->
+//            variant.outputs.each { output ->
+//                def outputFile = output.outputFile
+//                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+//                    // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
+//                    def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+//                    output.outputFile = new File(outputFile.parent, fileName)
+//                }
+//            }
+//        }
+//    }
     // 多渠道打包
     productFlavors {
 //        wandoujia {}
@@ -148,8 +148,6 @@ repositories {
 
 dependencies {
     //    compile 'com.github.navasmdc:MaterialDesign:1.+@aar'
-    //for 突破65535的限制
-    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':Volley')
     compile project(':PhotoView')
     compile project(':mupdflibrary')
@@ -157,23 +155,25 @@ dependencies {
     compile project(':facebook')
     compile project(':ImageCrop')
     //    compile 'com.android.support:gridlayout-v7:21.0.3'
-    compile 'com.android.support:multidex:1.0.+'
-    compile 'com.android.support:support-annotations:22.2.+'
-    compile 'com.android.support:appcompat-v7:22.2.+'
-    compile 'com.android.support:support-v4:22.2.+'
-    compile 'com.android.support:recyclerview-v7:22.2.+'
-    compile 'com.android.support:cardview-v7:22.2.+'
-    compile 'com.google.android.gms:play-services:7.5.0'
-    compile 'com.google.code.gson:gson:2.3.1'
-    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
     /** 第三方图片处理库  */
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile('org.apache.httpcomponents:httpmime:4.5') {
         // avoid "is ignored for the default configuration X" warnings
         // since httpclient is included in the android SDK.
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
     }
     compile project(':piwik_sdk')
+    //for 突破65535的限制
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:multidex:1.0.+'
+    compile 'com.android.support:support-annotations:22.2.1'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.android.support:cardview-v7:22.2.1'
+    compile 'com.google.android.gms:play-services:8.3.0'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.6'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile 'com.google.guava:guava:18.0'
     compile 'de.greenrobot:eventbus:2.4.0'
 }

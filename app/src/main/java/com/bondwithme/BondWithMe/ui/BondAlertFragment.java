@@ -1,6 +1,5 @@
 package com.bondwithme.BondWithMe.ui;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,6 +30,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
     private TextView event_alert_num;
     private TextView bigday_alert_num;
     private TextView miss_alert_num;
+    private TextView member_alert_num;
 
     private TextView group_alert_num;
 
@@ -64,6 +64,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         getViewById(R.id.btn_alert_bigday).setOnClickListener(this);
         getViewById(R.id.btn_alert_wall).setOnClickListener(this);
         getViewById(R.id.btn_alert_event).setOnClickListener(this);
+        getViewById(R.id.btn_alert_member).setOnClickListener(this);
 
         getViewById(R.id.btn_alert_group).setOnClickListener(this);
 
@@ -71,7 +72,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         event_alert_num = getViewById(R.id.event_alert_num);
         bigday_alert_num = getViewById(R.id.bigday_alert_num);
         miss_alert_num = getViewById(R.id.miss_alert_num);
-
+        member_alert_num = getViewById(R.id.member_alert_num);
         group_alert_num = getViewById(R.id.group_alert_num);
 
     }
@@ -82,6 +83,7 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
         checkDataAndBond2View(bigday_alert_num, jsonObject.getString("bigDay"));
         checkDataAndBond2View(miss_alert_num,jsonObject.getString("miss"));
         checkDataAndBond2View(group_alert_num,jsonObject.getString("group"));
+        checkDataAndBond2View(member_alert_num,jsonObject.getString("member"));
 
     }
 
@@ -177,7 +179,16 @@ public class BondAlertFragment extends BaseFragment<BondAlertActivity> implement
                 v.findViewById(R.id.group_alert_num).setVisibility(View.GONE);
                 goGroupAlert();
                 break;
+            case R.id.btn_alert_member:
+                v.findViewById(R.id.member_alert_num).setVisibility(View.GONE);
+                goMemberAlert();
+                break;
         }
+    }
+
+    private void goMemberAlert() {
+        Intent intent = new Intent(getActivity(), MemberActivity.class);
+        startActivity(intent);
     }
 
     private void goBigDay() {

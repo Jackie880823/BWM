@@ -1,16 +1,26 @@
 package com.bondwithme.BondWithMe.http;
 
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.util.LruCache;
+import android.util.LruCache;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.bondwithme.BondWithMe.App;
+import com.bondwithme.BondWithMe.http.cache.ImageLreCache;
 
 
 public class VolleySingleton {
+
+
+    // 取运行内存阈值的1/8作为图片缓存
+    private static final int MEM_CACHE_SIZE = 1024 * 1024 * ((ActivityManager) App.getContextInstance()
+            .getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass() / 6;
+    private static ImageLreCache mImageLreCache = new ImageLreCache(MEM_CACHE_SIZE,"images",MEM_CACHE_SIZE*3);
+
     private static VolleySingleton mInstance = null;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
@@ -27,6 +37,9 @@ public class VolleySingleton {
                 return mCache.get(url);
             }
         });
+
+//        mImageLoader = new ImageLoader(mRequestQueue,mImageLreCache);
+
     }
 
 
