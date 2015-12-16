@@ -138,11 +138,12 @@ public class AudioPlayUtils {
      */
     private void initAudioManager() {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
-        } else {
-            audioManager.setMode(AudioManager.MODE_IN_CALL);
-        }
+        audioManager.setMode(AudioManager.MODE_NORMAL);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//            audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+//        } else {
+//            audioManager.setMode(AudioManager.MODE_IN_CALL);
+//        }
         audioManager.setSpeakerphoneOn(true);            //默认为扬声器播放
     }
 
@@ -215,6 +216,12 @@ public class AudioPlayUtils {
         currentMode = MODE_EARPIECE;
         audioManager.setSpeakerphoneOn(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            audioManager.setMode(AudioManager.MODE_IN_COMMUNICATION);
+        } else {
+            audioManager.setMode(AudioManager.MODE_IN_CALL);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
                     audioManager.getStreamMaxVolume(AudioManager.MODE_IN_COMMUNICATION), AudioManager.FX_KEY_CLICK);
         } else {
@@ -237,6 +244,7 @@ public class AudioPlayUtils {
     public void changeToSpeakerMode() {
         currentMode = MODE_SPEAKER;
         audioManager.setSpeakerphoneOn(true);
+        audioManager.setMode(AudioManager.MODE_NORMAL);
     }
 
     public void resetPlayMode() {
