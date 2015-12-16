@@ -51,7 +51,6 @@
                         <TextView
                             android:id="@+id/owner_name"
                             style="@style/text_user_name"
-                            android:text="fjlfsjldfsj"
                             android:textColor="@color/default_text_color_dark"
                             android:textSize="@dimen/text_medium_size" />
 

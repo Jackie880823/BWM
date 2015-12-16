@@ -104,7 +104,7 @@ public final class ViewfinderView extends View {
 			paint.setAlpha(OPAQUE);
 			canvas.drawBitmap(resultBitmap, frame.left, frame.top, paint);
 		} else {
-            paint.setColor(getResources().getColor(R.color.green));
+            paint.setColor(getResources().getColor(R.color.indicator_5));
             canvas.drawRect(frame.left - 10,frame.top - 10,frame.left + 120, frame.top + 10,paint);
             canvas.drawRect(frame.left - 10,frame.top + 10,frame.left + 10, frame.bottom - 10,paint);
             canvas.drawRect(frame.left - 10,frame.bottom - 10,frame.left + 120, frame.bottom + 10,paint);
