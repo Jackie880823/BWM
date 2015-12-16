@@ -622,7 +622,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            if (myList == null || position > myList.size()) {
+            if (myList == null || position > myList.size() || position < 0) {
                 return;
             }
             final MsgEntity msgEntity = myList.get(position);
@@ -802,7 +802,7 @@ public class MessageChatAdapter extends RecyclerView.Adapter<MessageChatAdapter.
         if (holder == null) {
             return;
         }
-        if (myList == null || position > myList.size()) {
+        if (myList == null || position > myList.size() || position < 0) {
             return;
         }
         final MsgEntity msgEntity = myList.get(position);
