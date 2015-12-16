@@ -138,7 +138,10 @@ public class CaptureActivity extends BaseActivity implements Callback {
             @Override
             public void onClick(View view) {
                 Intent intentQRCode = new Intent(CaptureActivity.this, ViewQRCodeActivity.class);
-                startActivity(intentQRCode);
+                intentQRCode.putExtra("from_scan", "view_my_qr");
+//                startActivity(intentQRCode);
+                CaptureActivity.this.setResult(1,intentQRCode);
+                CaptureActivity.this.finish();
             }
         });
 	}
