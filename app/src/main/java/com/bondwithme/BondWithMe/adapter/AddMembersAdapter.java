@@ -14,27 +14,20 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.db.converter.StringColumnConverter;
 import com.android.volley.ext.HttpCallback;
 import com.android.volley.ext.RequestInfo;
+import com.android.volley.ext.tools.BitmapTools;
 import com.android.volley.ext.tools.HttpTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.RecommendEntity;
 import com.bondwithme.BondWithMe.http.UrlUtil;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.ui.MainActivity;
-import com.bondwithme.BondWithMe.ui.RelationshipActivity;
 import com.bondwithme.BondWithMe.ui.add.AddContactMembersActivity;
 import com.bondwithme.BondWithMe.ui.add.AddMembersActivity;
-import com.bondwithme.BondWithMe.util.LogUtil;
-import com.bondwithme.BondWithMe.util.MessageUtil;
 import com.bondwithme.BondWithMe.util.RelationshipUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -97,7 +90,8 @@ public class AddMembersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 itemView.llPrompt.setVisibility(View.GONE);
             }
 
-            VolleyUtil.initNetworkImageView(mContext, itemView.cni, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position - 1).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+            BitmapTools.getInstance(mContext).display(itemView.cni, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position - 1).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+//            VolleyUtil.initNetworkImageView(mContext, itemView.cni, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position - 1).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
             itemView.tvName.setText(mData.get(position - 1).getUser_given_name());
             itemView.tvRelationship.setText(mData.get(position - 1).getUser_recommend() + mContext.getResources().getText(R.string.text_s) + RelationshipUtil.getRelationshipName(mContext, mData.get(position - 1).getUser_recom_rel()));
         }

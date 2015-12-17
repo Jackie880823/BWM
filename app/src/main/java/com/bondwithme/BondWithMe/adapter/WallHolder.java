@@ -537,21 +537,12 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             if (TextUtils.isEmpty(wallEntity.getVideo_filename())) {
                 llWallsImage.setVisibility(View.GONE);
             }
-        } else if ((!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 || !TextUtils.isEmpty(wallEntity.getVideo_filename())))) {
-            // 不是当前用户：没有图片或者有视频都不需要显更多功能按钮
+        } else if ((!accountUserId.equals(this.wallEntity.getUser_id()) && (Integer.valueOf(wallEntity.getPhoto_count()) <= 0 && TextUtils.isEmpty(wallEntity.getVideo_filename())))) {
+            // 不是当前用户：没有图片也没有视频都不需要显更多功能按钮
             btnOption.setVisibility(View.GONE);
         } else {
-            if (!isDetailed) {
                 btnOption.setVisibility(View.VISIBLE);
-            }
         }
-
-         /*is owner wall*/
-        //        if (!TextUtils.isEmpty(wall.getUser_id())&&wall.getUser_id().equals("49")) {
-        //            ibDelete.setVisibility(View.VISIBLE);
-        //        } else {
-        //            ibDelete.setVisibility(View.GONE);
-        //        }
 
         String feelCode = wallEntity.getDofeel_code();
         LogUtil.i(TAG, "setContent& feelCode: " + feelCode);
@@ -574,23 +565,9 @@ public class WallHolder extends RecyclerView.ViewHolder implements View.OnClickL
             }
         } catch (Exception e) {
             e.printStackTrace();
-//            iv_mood.setVisibility(View.GONE);
         }
 
-        /*location*/
-        //        if (TextUtils.isEmpty(wall.getLoc_name())) {
-        //            at.setVisibility(View.GONE);
-        //        } else {
-        //            at.setVisibility(View.VISIBLE);
-        //            tvLocation.setText(wall.getLoc_name());
-        //        }
-        //        int count = Integer.valueOf(this.wallEntity.getLove_count());
         tvAgreeCount.setText(String.format(tvAgreeCount.getContext().getString(R.string.loves_count), Integer.valueOf(this.wallEntity.getLove_count())));
-        //        if(count > 0) {
-        //            WallUtil.getLoveList(mHttpTools, tvLoveList, accountUserId, wallEntity.getContent_id(), WallUtil.LOVE_MEMBER_WALL_TYPE);
-        //        } else {
-        //            tvLoveList.setText("");
-        //        }
 
         if (WallEntity.CONTENT_TYPE_ADS.equals(wallEntity.getContent_type())) {
             llComment.setVisibility(View.INVISIBLE);

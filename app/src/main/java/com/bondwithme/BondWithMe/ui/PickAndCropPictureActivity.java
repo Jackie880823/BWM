@@ -2,22 +2,18 @@ package com.bondwithme.BondWithMe.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.widget.Toast;
 
-import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.http.PicturesCacheUtil;
 import com.bondwithme.BondWithMe.ui.share.SelectPhotosActivity;
-import com.bondwithme.BondWithMe.util.FileUtil;
+import com.bondwithme.BondWithMe.util.LocalImageLoader;
 import com.bondwithme.BondWithMe.util.LogUtil;
+import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class PickAndCropPictureActivity extends Activity {
 
@@ -71,7 +67,6 @@ public class PickAndCropPictureActivity extends Activity {
     private int picAspectHeight;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,16 +74,16 @@ public class PickAndCropPictureActivity extends Activity {
         picFinalWidth = getIntent().getIntExtra(FLAG_PIC_FINAL_WIDTH, 100);
         picFinalHeight = getIntent().getIntExtra(FLAG_PIC_FINAL_HEIGHT, 100);
         needCrop = getIntent().getBooleanExtra(FLAG_CROP, true);
-        picAspectWidth = getIntent().getIntExtra(FLAG_PIC_ASPECT_WIDTH,1);
-        picAspectHeight = getIntent().getIntExtra(FLAG_PIC_ASPECT_HEIGHT,1);
+        picAspectWidth = getIntent().getIntExtra(FLAG_PIC_ASPECT_WIDTH, 1);
+        picAspectHeight = getIntent().getIntExtra(FLAG_PIC_ASPECT_HEIGHT, 1);
         headCache = headCache + getIntent().getStringExtra(CACHE_PIC_NAME);
-        LogUtil.i("photoWidth*photoHeight_2",picFinalWidth+"*"+picFinalHeight);
+        LogUtil.i("photoWidth*photoHeight_2", picFinalWidth + "*" + picFinalHeight);
         doAction();
     }
 
     private void doAction() {
         Intent intent;
-        switch(picFrom) {
+        switch (picFrom) {
             case REQUEST_FROM_PHOTO:
                 //打开选择照片
                 intent = new Intent(this, SelectPhotosActivity.class);
@@ -104,7 +99,7 @@ public class PickAndCropPictureActivity extends Activity {
 
                 CACHE_PIC_NAME_TEMP = System.currentTimeMillis() + "_head_cache_temp.png";
                 // 下面这句指定调用相机拍照后的照片存储的路径
-                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP,true)));
+                intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP, true)));
                 // 图片质量为高
                 intent2.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                 intent2.putExtra("return-data", false);
@@ -115,18 +110,18 @@ public class PickAndCropPictureActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(RESULT_OK == resultCode) {
-            switch(requestCode) {
+        if (RESULT_OK == resultCode) {
+            switch (requestCode) {
                 // 如果是直接从相册获取
                 case REQUEST_FROM_PHOTO:
-                    LogUtil.i("Pick_onActivityResult","REQUEST_FROM_PHOTO");
-                    if(data != null) {
+                    LogUtil.i("Pick_onActivityResult", "REQUEST_FROM_PHOTO");
+                    if (data != null) {
                         Uri uri;
                         uri = data.getData();
-                        if(needCrop) {
+                        if (needCrop) {
                             try {
                                 startPhotoZoom(uri, true);
-                            } catch(IOException e) {
+                            } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         } else {
@@ -139,11 +134,11 @@ public class PickAndCropPictureActivity extends Activity {
 
                 // 如果是调用相机拍照时
                 case REQUEST_FROM_CAMERA:
-                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP,true));
-                    if(needCrop) {
+                    Uri uri = Uri.fromFile(PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME_TEMP, true));
+                    if (needCrop) {
                         try {
                             startPhotoZoom(uri, false);
-                        } catch(IOException e) {
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     } else {
@@ -182,71 +177,64 @@ public class PickAndCropPictureActivity extends Activity {
      */
     public void startPhotoZoom(Uri uri, boolean fromPhoto) throws IOException {
 
-        String path = FileUtil.getRealPathFromURI(this, uri);
-        if(uri == null || path == null) {
-            return;
-        }
-
-        //        /**
-        //         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
-        //         */
-        //        int degree = LocalImageLoader.readPictureDegree(path);
-        //
-        //        if (fromPhoto&&degree != 0) {
-        //
-        //            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(this, uri);
-        ////            /**
-        ////             * 把图片旋转为正的方向
-        ////             */
-        //            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
-        //            byte[] newBytes = LocalImageLoader.bitmap2bytes(bitmap);
-        //            File file = new File(path);
-        //            file.delete();
-        //            FileOutputStream fos = new FileOutputStream(path);
-        //            fos.write(newBytes);
-        //            fos.flush();
-        //
-        //            fos.close();
-        //            bitmap.recycle();
-        //        }
-
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
-        List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, 0);
-        int size = list.size();
-        if(size == 0) {
-            Toast.makeText(this, getResources().getString(R.string.text_no_found_reduce), Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
-            intent.putExtra("crop", "true");
-            // aspectX aspectY 是宽高的比例
-            intent.putExtra("aspectX", picAspectWidth);
-            intent.putExtra("aspectY", picAspectHeight);
-            // outputX outputY 是裁剪图片宽高
-            intent.putExtra("outputX", picFinalWidth);
-            intent.putExtra("outputY", picFinalHeight);
-            // //防止毛边
-            // intent.putExtra("scale", true);//黑边
-            // intent.putExtra("scaleUpIfNeeded", true);//黑边
-            intent.putExtra("return-data", false);
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
-            intent.putExtra("noFaceDetection", true);
-            File f = PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME + System.currentTimeMillis() + ".png", true);
-            mCropImagedUri = Uri.fromFile(f);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
-            startActivityForResult(intent, REQUEST_PIC_FINAL);
-        }
+//        String path = FileUtil.getRealPathFromURI(this, uri);
+//        if (uri == null || path == null) {
+//            return;
+//        }
+//
+////        /**
+////         * 获取图片的旋转角度，有些系统把拍照的图片旋转了，有的没有旋转
+////         */
+////        int degree = LocalImageLoader.readPictureDegree(path);
+////
+////        if (fromPhoto && degree != 0) {
+////
+////            Bitmap bitmap = LocalImageLoader.loadBitmapFromFile(this, uri);
+////            //            /**
+////            //             * 把图片旋转为正的方向
+////            //             */
+////            bitmap = LocalImageLoader.rotaingImageView(degree, bitmap);
+////            PicturesCacheUtil.saveToFile(path, bitmap);
+////        }
+//
+//        Intent intent = new Intent("com.android.camera.action.CROP");
+//
+//        intent.setDataAndType(uri, "image/*");
+//        List<ResolveInfo> list = getPackageManager().queryIntentActivities(intent, 0);
+//        int size = list.size();
+//        if (size == 0) {
+//            Toast.makeText(this, getResources().getString(R.string.text_no_found_reduce), Toast.LENGTH_SHORT).show();
+//            return;
+//        } else {
+//            // 下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
+//            intent.putExtra("crop", "true");
+//            // aspectX aspectY 是宽高的比例
+//            intent.putExtra("aspectX", picAspectWidth);
+//            intent.putExtra("aspectY", picAspectHeight);
+//            // outputX outputY 是裁剪图片宽高
+//            intent.putExtra("outputX", picFinalWidth);
+//            intent.putExtra("outputY", picFinalHeight);
+//            // //防止毛边
+//            // intent.putExtra("scale", true);//黑边
+//            // intent.putExtra("scaleUpIfNeeded", true);//黑边
+//            intent.putExtra("return-data", false);
+//            intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
+//            intent.putExtra("noFaceDetection", true);
+//            File f = PicturesCacheUtil.getCachePicFileByName(this, CACHE_PIC_NAME + System.currentTimeMillis() + ".png", true);
+//            mCropImagedUri = Uri.fromFile(f);
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCropImagedUri);
+//            startActivityForResult(intent, REQUEST_PIC_FINAL);
+//        }
 
         /**使用第三方*/
-//            if (uri == null || uri.getPath() == null) {
-//                return;
-//            }
-//            String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
-//            Uri source = Uri.fromFile(new File(path));
-//            File f = PicturesCacheUtil.getCachePicFileByName(this, headCache,true);
-//            mCropImagedUri = Uri.fromFile(f);
-//
-//            Crop.of(source, mCropImagedUri).withAspect(picAspectWidth,picAspectHeight).start(this, REQUEST_PIC_FINAL);
+            if (uri == null || uri.getPath() == null) {
+                return;
+            }
+            String path = LocalImageLoader.compressBitmap(this, uri, 400, 480, false);
+            Uri source = Uri.fromFile(new File(path));
+            File f = PicturesCacheUtil.getCachePicFileByName(this, headCache,true);
+            mCropImagedUri = Uri.fromFile(f);
+
+            Crop.of(source, mCropImagedUri).withAspect(picAspectWidth,picAspectHeight).start(this, REQUEST_PIC_FINAL);
     }
 }

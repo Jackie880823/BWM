@@ -18,8 +18,8 @@ android {
         applicationId "com.bondwithme.BondWithMe"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 60   //TODO
-        versionName "2.1.1" //TODO
+        versionCode 61   //TODO
+        versionName "2.2.0.0" //TODO
 
         // dex突破65535的限制
         multiDexEnabled true
@@ -32,64 +32,53 @@ android {
         checkReleaseBuilds true //TODO release change to true
         abortOnError false
     }
-//    signingConfigs {
-//
-//        debug {
-//            // No debug config
-//        }
-//        release {
-//            storeFile file(KEY_FILE_PATH)
-//            storePassword KEYSTORE_PASSWORD
-//            keyAlias KEYSTORE_ALIAS
-//            keyPassword KEY_PASSWORD
-//        }
-//
-//    }
-//
-//
-//    buildTypes {
-//        debug {
-//            // 显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "true"
-//            minifyEnabled false
-//            zipAlignEnabled false
-//            shrinkResources false
-//            signingConfig signingConfigs.debug
-//        }
-//
-////        test {
-////            minifyEnabled false //TODO
-////            // 不显示Log
-////            buildConfigField "boolean", "LOG_DEBUG", "true"
-////            zipAlignEnabled false //TODO
-////            // 移除无用的resource文件
-////            shrinkResources false
-////            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-////            signingConfig signingConfigs.release
-////        }
-//
-//        release {
-//            minifyEnabled true //TODO
-//            // 不显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "false"
-//            zipAlignEnabled true //TODO
-//            // 移除无用的resource文件
-//            shrinkResources true
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.release
-//        }
-//
-//        applicationVariants.all { variant ->
-//            variant.outputs.each { output ->
-//                def outputFile = output.outputFile
-//                if (outputFile != null && outputFile.name.endsWith('.apk')) {
-//                    // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
-//                    def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
-//                    output.outputFile = new File(outputFile.parent, fileName)
-//                }
-//            }
-//        }
-//    }
+    signingConfigs {
+
+        debug {
+            // No debug config
+        }
+        release {
+            storeFile file(KEY_FILE_PATH)
+            storePassword KEYSTORE_PASSWORD
+            keyAlias KEYSTORE_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+
+    }
+
+
+    buildTypes {
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+
+        release {
+            minifyEnabled false //TODO
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            zipAlignEnabled true //TODO
+            // 移除无用的resource文件
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                def outputFile = output.outputFile
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    // 输出apk名称为bwm_v1.0_2015-01-15_wandoujia.apk
+                    def fileName = "bwm_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                    output.outputFile = new File(outputFile.parent, fileName)
+                }
+            }
+        }
+    }
     // 多渠道打包
     productFlavors {
 //        wandoujia {}
@@ -176,4 +165,5 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile 'com.google.guava:guava:18.0'
     compile 'de.greenrobot:eventbus:2.4.0'
+
 }

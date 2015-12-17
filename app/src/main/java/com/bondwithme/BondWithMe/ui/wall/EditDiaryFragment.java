@@ -843,7 +843,7 @@ public class EditDiaryFragment extends BaseFragment<NewDiaryActivity> implements
 
         if (allRange) {
             drawable = resources.getDrawable(R.drawable.privacy_open);
-            tvPrivacy.setText(R.string.text_all);
+            tvPrivacy.setText(R.string.text_all_member);
         } else {
             drawable = resources.getDrawable(R.drawable.privacy_lock);
             tvPrivacy.setText(R.string.text_private);
