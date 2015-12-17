@@ -105,16 +105,22 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
         Intent intent = getActivity().getIntent();
         useId = MainActivity.getUser().getUser_id();//MainActivity.
+        userEntity = (UserEntity) getParentActivity().getIntent().getExtras().getSerializable("userEntity");
         memberId = intent.getStringExtra("member_id");
         groupId = intent.getStringExtra("groupId");
         groupName = intent.getStringExtra("groupName");
+        getDofeelCode = intent.getStringExtra("getDofeel_code");
+
+        if(groupId == null && userEntity != null){
+            groupId = userEntity.getGroup_id();
+            groupName = userEntity.getUser_given_name();
+            getDofeelCode = userEntity.getDofeel_code();
+        }
         vProgress = getViewById(R.id.rl_progress);
-        if(TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)){
+        if((TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupName)) || userEntity != null){
             //如果上个页面没传进groupId或者groupName，显示进度条
             vProgress.setVisibility(View.VISIBLE);
         }
-        getDofeelCode = intent.getStringExtra("getDofeel_code");
-
         cniMain = getViewById(R.id.cni_main);
         ivBottomLeft = getViewById(R.id.civ_left);
         ivBottomRight = getViewById(R.id.civ_right);
@@ -290,6 +296,7 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
         });
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -341,51 +348,54 @@ public class FamilyProfileFragment extends BaseFragment<FamilyProfileActivity> {
 
 
     private void getHasMiss() {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("from_user_id", MainActivity.getUser().getUser_id());
-        params.put("to_user_id", memberId);
-        params.put("to_user_fullname", userEntity.getUser_given_name());
-        new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params, Tag, new HttpCallback() {
-            @Override
-            public void onStart() {
-            }
-
-            @Override
-            public void onFinish() {
-            }
-
-            @Override
-            public void onResult(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    if (-1 != jsonObject.getString("message").indexOf("already")) {
-                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
-                    } else {
-                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
-
-                    }
-
-                } catch (JSONException e) {
-                    MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
-                    e.printStackTrace();
+        if(userEntity == null){
+            HashMap<String, String> params = new HashMap<>();
+            params.put("from_user_id", MainActivity.getUser().getUser_id());
+            params.put("to_user_id", memberId);
+            params.put("to_user_fullname", userEntity.getUser_given_name());
+            new HttpTools(getActivity()).post(Constant.API_MISS_MEMBER, params, Tag, new HttpCallback() {
+                @Override
+                public void onStart() {
                 }
-            }
 
-            @Override
-            public void onError(Exception e) {
-                MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
-            }
+                @Override
+                public void onFinish() {
+                }
 
-            @Override
-            public void onCancelled() {
+                @Override
+                public void onResult(String response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if (-1 != jsonObject.getString("message").indexOf("already")) {
+                            MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_already_you));
+                        } else {
+                            MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.miss_you));
 
-            }
+                        }
 
-            @Override
-            public void onLoading(long count, long current) {
+                    } catch (JSONException e) {
+                        MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
+                        e.printStackTrace();
+                    }
+                }
 
-            }
-        });
+                @Override
+                public void onError(Exception e) {
+                    MessageUtil.getInstance(getActivity()).showShortToast(getResources().getString(R.string.text_error));
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+
+                @Override
+                public void onLoading(long count, long current) {
+
+                }
+            });
+        }
+
     }
 
     @Override
