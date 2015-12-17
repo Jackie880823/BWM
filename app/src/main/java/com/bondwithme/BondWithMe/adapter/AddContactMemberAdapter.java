@@ -7,12 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.ext.tools.BitmapTools;
 import com.bondwithme.BondWithMe.Constant;
 import com.bondwithme.BondWithMe.R;
 import com.bondwithme.BondWithMe.entity.ContactDetailEntity;
-import com.bondwithme.BondWithMe.http.VolleyUtil;
 import com.bondwithme.BondWithMe.util.LogUtil;
 import com.bondwithme.BondWithMe.widget.CircularNetworkImage;
 
@@ -21,7 +22,7 @@ import java.util.List;
 /**
  * Created by christepherzhang on 15/12/9.
  */
-public class AddContactMemberAdapter extends RecyclerView.Adapter<AddContactMemberAdapter.ContactMemberViewHolder>{
+public class AddContactMemberAdapter extends RecyclerView.Adapter<AddContactMemberAdapter.ContactMemberViewHolder> {
 
     private final Context mContext;
     private List<ContactDetailEntity> mData;
@@ -38,8 +39,7 @@ public class AddContactMemberAdapter extends RecyclerView.Adapter<AddContactMemb
         mLayoutInflater = LayoutInflater.from(mContext);
     }
 
-    public void changeData(List<ContactDetailEntity> newData)
-    {
+    public void changeData(List<ContactDetailEntity> newData) {
         mData = newData;
         notifyDataSetChanged();
     }
@@ -53,13 +53,27 @@ public class AddContactMemberAdapter extends RecyclerView.Adapter<AddContactMemb
     public void onBindViewHolder(ContactMemberViewHolder holder, int position) {
         if (!TextUtils.isEmpty(mData.get(position).getUser_id()))
         {
-            VolleyUtil.initNetworkImageView(mContext, holder.cniv, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
-            LogUtil.d("idididididid" , "id"   +  "这个请求了头像");
+            BitmapTools.getInstance(mContext).display(holder.cniv, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
         }
+        else
+        {
+            holder.cniv.setImageUrl(null, null);
+            holder.cniv.setDefaultImageResId(R.drawable.default_head_icon);
+            holder.cniv.setErrorImageResId(R.drawable.default_group_head_icon);
+        }
+
+//        if (!TextUtils.isEmpty(mData.get(position).getUser_id()))
+//        {
+//            BitmapTools.getInstance(mContext).display(holder.cniv, String.format(Constant.API_GET_PHOTO, Constant.Module_profile, mData.get(position).getUser_id()), R.drawable.default_head_icon, R.drawable.default_head_icon);
+//        }
+//        else
+//        {
+//            holder.cniv.setDefaultImageResId();
+//        }
+
         holder.tvName.setText(mData.get(position).getDisplayName());
         holder.tvId.setText(mData.get(position).getUser_login_id());
-        switch (mData.get(position).getMemberType())
-        {
+        switch (mData.get(position).getMemberType()) {
             case INVITE:
                 holder.ibInvite.setVisibility(View.VISIBLE);
                 holder.ibPending.setVisibility(View.GONE);
@@ -98,8 +112,7 @@ public class AddContactMemberAdapter extends RecyclerView.Adapter<AddContactMemb
         return mData.size();
     }
 
-    public class ContactMemberViewHolder extends RecyclerView.ViewHolder
-    {
+    public class ContactMemberViewHolder extends RecyclerView.ViewHolder {
         private CircularNetworkImage cniv;
         private TextView tvName;
         private TextView tvId;
@@ -160,19 +173,13 @@ public class AddContactMemberAdapter extends RecyclerView.Adapter<AddContactMemb
 
     private OnIconClickListener onIconClickListener;
 
-    public interface OnIconClickListener
-    {
+    public interface OnIconClickListener {
         void onIconClick(View v, int position, ContactDetailEntity contactDetailEntity);
     }
 
-    public void setOnIconClickListener(OnIconClickListener onIconClickListener)
-    {
+    public void setOnIconClickListener(OnIconClickListener onIconClickListener) {
         this.onIconClickListener = onIconClickListener;
     }
-
-
-
-
 
 
 }

@@ -206,7 +206,7 @@ public class NotificationMessageGenerateUtil {
 
     public static String getInactiveMessage(Context context, String action, String action_owner) throws JSONException {
         String msg = null;
-        if("recommend".equals(action)){
+        if("recommendMem".equals(action)){
             msg = context.getString(R.string.notification_action_message_inactive_recommend, action_owner);
         }
         return msg;

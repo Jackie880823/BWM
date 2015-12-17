@@ -189,7 +189,7 @@ public class NetworkImageView extends ImageView {
         }
         else {
             /**wing modified for show loacl image*/
-//            setImageBitmap(null);
+            setImageBitmap(null);
         }
     }
 
