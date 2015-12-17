@@ -134,21 +134,7 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     setDatePrivacy(userEntity.getEmail_flag(),rlEmail);
                     setDatePrivacy(userEntity.getLocation_flag(),rlRegion);
                     setDatePrivacy(userEntity.getMember_flag(),rlPhone);
-
-
-                    if((bwmId != null || memberId != null) && !useId.equals(userEntity.getUser_id())){
-                        flMember.setVisibility(View.VISIBLE);
-                        if("0".equals(userEntity.getMember_flag())){
-                            //如果不是好友
-                            btAddMember.setVisibility(View.VISIBLE);
-                        }else if("1".equals(userEntity.getMember_flag())){
-                            //如果是好友
-                            btMessage.setVisibility(View.VISIBLE);
-                        }
-                        LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
-                        layoutParam.setMargins(0,0,0, DensityUtil.dip2px(getParentActivity(), 50));
-                        rlPhone.setLayoutParams(layoutParam);
-                    }
+                    showMessageButton();
 
                     tvFirstName.setText(userEntity.getUser_given_name());
                     tvLastName.setText(userEntity.getUser_surname());
@@ -237,6 +223,8 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
                     R.drawable.profile_background_3,R.drawable.profile_background_4,R.drawable.profile_background_5};
             profileBackgroundId = randomImageId(array);
         }
+
+        showMessageButton();
 
         btAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -412,6 +400,22 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
 //        }
     }
 
+
+    private void showMessageButton(){
+        if((bwmId != null || memberId != null) && !useId.equals(userEntity.getUser_id())){
+            flMember.setVisibility(View.VISIBLE);
+            if("0".equals(userEntity.getMember_flag())){
+                //如果不是好友
+                btAddMember.setVisibility(View.VISIBLE);
+            }else if("1".equals(userEntity.getMember_flag())){
+                //如果是好友
+//                            btMessage.setVisibility(View.VISIBLE);
+            }
+            LinearLayout.LayoutParams layoutParam = new LinearLayout.LayoutParams( ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+            layoutParam.setMargins(0,0,0, DensityUtil.dip2px(getParentActivity(), 50));
+            rlPhone.setLayoutParams(layoutParam);
+        }
+    }
     private void addUser(final String relationShip) {
 
         HashMap<String, String> params = new HashMap<String, String>();

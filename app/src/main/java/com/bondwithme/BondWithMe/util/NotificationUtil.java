@@ -20,12 +20,12 @@ import com.bondwithme.BondWithMe.ui.AlertGroupActivity;
 import com.bondwithme.BondWithMe.ui.AlertWallActivity;
 import com.bondwithme.BondWithMe.ui.BaseActivity;
 import com.bondwithme.BondWithMe.ui.EventDetailActivity;
+import com.bondwithme.BondWithMe.ui.FamilyViewProfileActivity;
 import com.bondwithme.BondWithMe.ui.MainActivity;
 import com.bondwithme.BondWithMe.ui.MemberActivity;
 import com.bondwithme.BondWithMe.ui.MessageChatActivity;
 import com.bondwithme.BondWithMe.ui.MissListActivity;
 import com.bondwithme.BondWithMe.ui.NewsActivity;
-import com.bondwithme.BondWithMe.ui.RecommendActivity;
 import com.bondwithme.BondWithMe.ui.more.BondAlert.BigDayActivity;
 import com.bondwithme.BondWithMe.ui.wall.DiaryInformationActivity;
 
@@ -48,7 +48,7 @@ public class NotificationUtil {
      * 通知类型
      */
     public enum MessageType {
-        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_NEWS("news"), BONDALERT_MEMBER("member"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group"),BONDALERT_INACTIVE("inactive");
+        BONDALERT_WALL("wall"), BONDALERT_EVENT("event"), BONDALERT_BIGDAY("bigday"), BONDALERT_MISS("miss"), BONDALERT_NEWS("news"), BONDALERT_MEMBER("member"), BONDALERT_MESSAGE("message"), BONDALERT_GROUP("group"), BONDALERT_INACTIVE("inactive");
         private String typeName;
 
         MessageType(String typeName) {
@@ -198,6 +198,7 @@ public class NotificationUtil {
     private static Intent intentGroup;
 
 
+    static String newMsg = null;
     private static Intent getFowwordIntent(Context context, Bundle bundle, boolean isGCM) throws JSONException {
 
         List<String> msgs = null;
@@ -249,8 +250,6 @@ public class NotificationUtil {
         if (msgType == null) {
             return null;
         }
-
-        String newMsg = null;
 
         switch (msgType) {
             case BONDALERT_WALL:
@@ -367,33 +366,35 @@ public class NotificationUtil {
                     intent = new Intent(context, AlertGroupActivity.class);
                 }
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_GROUP);
-                newMsg = NotificationMessageGenerateUtil.getGroupAlertMessage(context, action, action_owner,item_name);
+                newMsg = NotificationMessageGenerateUtil.getGroupAlertMessage(context, action, action_owner, item_name);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
             case BONDALERT_INACTIVE:
                 smallIcon = R.drawable.bondalert_recommended_icon;
 
-                msgs = App.getContextInstance().getNotificationMsgsByType(MessageType.BONDALERT_INACTIVE);
-                intent = new Intent(context, RecommendActivity.class);
+                intent = new Intent(context, FamilyViewProfileActivity.class);
                 intent.putExtra(MSG_TYPE, MessageType.BONDALERT_INACTIVE);
+                intent.putExtra("member_id", action_owner_id);
                 newMsg = NotificationMessageGenerateUtil.getInactiveMessage(context, action, action_owner);
                 doNotificationHandle(MainActivity.TabEnum.more);
                 break;
 
         }
 
+        if (msgs != null) {
+            msgs.add(newMsg);
+            isOnlyOneModel = false;
+        } else {
+            isOnlyOneModel = true;
+        }
 
-        msgs.add(newMsg);
-//        if (isGCM) {
-//            msgs.add(bundle.getString("message"));
-//        } else {
-//            msgs.add(bundle.getString(JPushInterface.EXTRA_MESSAGE));
-//        }
-
-//        currentMsgs = msgs;
         return intent;
     }
-//    private static List<String> currentMsgs = new ArrayList<>();
+
+    /**
+     * 是否为单模式(只有一条)，双模式为(可显示为一条和多条list)
+     */
+    private static boolean isOnlyOneModel = true;
 
     private static Intent goWallDetailIntent(Context mContext, String content_group_id, String group_id) {
         Intent intent = new Intent(mContext, DiaryInformationActivity.class);
@@ -413,7 +414,7 @@ public class NotificationUtil {
         PendingIntent contentIntent = null;
         Intent intent = getFowwordIntent(context, msg, isGCM);
         //应用在前台不发通知,不写在最前面是因为需要刷新红点(getFowwordIntent里)
-        if(App.isForeground()) {
+        if (App.isForeground()) {
             return null;
         }
 
@@ -427,20 +428,22 @@ public class NotificationUtil {
             return null;
         }
 
-        Notification notification;
+        Notification notification = null;
         String title = null;
-        String message = null;
         if (isGCM) {
             title = msg.getString("title");
         } else {
             title = msg.getString(JPushInterface.EXTRA_TITLE);
         }
-
-//        if (msgs.size() == 1) {
+        if (isOnlyOneModel) {
+            notification = getSingleNotification(context, contentIntent, title,newMsg,1);
+        } else {
+            //        if (msgs.size() == 1) {
             notification = getSingleNotification(context, contentIntent, title);
-//        } else {
-//        notification = getInboxStyleNotification(context, contentIntent, title);
-//        }
+            //        } else {
+            //        notification = getInboxStyleNotification(context, contentIntent, title);
+            //        }
+        }
         if (notification != null) {
             notification.priority = Notification.PRIORITY_HIGH;
             notification.defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS;
@@ -450,6 +453,7 @@ public class NotificationUtil {
 
     /**
      * 清除手机上的通知
+     *
      * @param context
      */
     public static void clearNotification(Context context) {
@@ -511,23 +515,19 @@ public class NotificationUtil {
      */
     private static final int MAX_SHOW = 3;
 
-    private static Notification getSingleNotification(Context context, PendingIntent contentIntent, String title) {
-        List<String> currentMsgs = App.getContextInstance().getNotificationMsgsByType(msgType);
-        if (currentMsgs == null || currentMsgs.size() == 0) {
-            return null;
-        }
+    private static Notification getSingleNotification(Context context, PendingIntent contentIntent, String title, String msg, int msgCount) {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setContentTitle(title)
-                        .setContentText(currentMsgs.get(currentMsgs.size() - 1));
+                        .setContentText(msg);
         if (smallIcon != -1) {
             mBuilder.setSmallIcon(smallIcon);
         }
         mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
         //暂时不启用
-        if(currentMsgs.size()>1) {
-            mBuilder.setNumber(currentMsgs.size());
+        if (msgCount > 1) {
+            mBuilder.setNumber(msgCount);
         }
         mBuilder.setTicker(title);
         mBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -538,6 +538,18 @@ public class NotificationUtil {
         mBuilder.setAutoCancel(true);
 
         return mBuilder.build();
+    }
+
+    private static Notification getSingleNotification(Context context, PendingIntent contentIntent, String title) {
+
+        List<String> currentMsgs = App.getContextInstance().getNotificationMsgsByType(msgType);
+        if (currentMsgs == null || currentMsgs.size() == 0) {
+            return null;
+        }
+
+        String msg = currentMsgs.get(currentMsgs.size() - 1);
+
+        return getSingleNotification(context, contentIntent, title, msg, currentMsgs.size());
     }
 
     private static Notification getInboxStyleNotification(Context context, PendingIntent resultPendingIntent, String title) {

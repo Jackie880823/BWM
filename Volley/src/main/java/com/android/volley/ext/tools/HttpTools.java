@@ -354,7 +354,7 @@ public class HttpTools {
      */
     public <T> void sendRequest(Request<T> request,Object tag) {
     	if (sRequestQueue == null) {
-            sRequestQueue = Volley.newNoCacheRequestQueue(mContext);
+            init(mContext);
         }
     	request.setTag(tag);
         sRequestQueue.add(request);
@@ -362,7 +362,7 @@ public class HttpTools {
 
     private void sendRequest(final int method, final RequestInfo requestInfo,Object tag, final HttpCallback httpResult) {
         if (sRequestQueue == null) {
-            sRequestQueue = Volley.newNoCacheRequestQueue(mContext);
+            init(mContext);
         }
         if (httpResult != null) {
             httpResult.onStart();

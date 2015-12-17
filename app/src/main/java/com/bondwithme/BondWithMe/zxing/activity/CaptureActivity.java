@@ -299,6 +299,14 @@ public class CaptureActivity extends BaseActivity implements Callback {
 
 	};
 
+	@Override
+	protected void onStop() {
+		CameraManager.get().stopPreview();
+		CameraManager.get().closeLight();
+		CameraManager.get().closeDriver();
+		super.onStop();
+	}
+
 	/**
 	 * 扫描二维码图片的方法
 	 * 
