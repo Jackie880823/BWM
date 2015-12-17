@@ -224,8 +224,10 @@ public class FamilyViewProfileFragment extends BaseFragment<FamilyViewProfileAct
             profileBackgroundId = randomImageId(array);
         }
 
-        showMessageButton();
+        if(userEntity != null){
+            showMessageButton();
 
+        }
         btAddMember.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
